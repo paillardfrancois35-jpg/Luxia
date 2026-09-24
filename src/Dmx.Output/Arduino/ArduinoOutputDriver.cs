@@ -137,8 +137,8 @@ public sealed class ArduinoOutputDriver : OutputDriver
                 Logger.LogWarning("Firmware {Version} plus ancien que la version attendue {Minimum}", identity.FirmwareVersion, MinimumFirmwareVersion);
             }
 
-            SetState(OutputConnectionState.Connected, Describe(port, identity, forced: false));
             PortSelected?.Invoke(this, port);
+            SetState(OutputConnectionState.Connected, Describe(port, identity, forced: false));
             return true;
         }
 #pragma warning disable CA1031 // Port occupé ou disparu : on passe au suivant.
