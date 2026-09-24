@@ -65,3 +65,5 @@ dotnet_diagnostic.CA1707.severity = none
 # Méthodes de test : pas de ConfigureAwait.
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA1515.severity = none
+# Délais courts dans les tests : jeton d'annulation xUnit non exigé.
+dotnet_diagnostic.xUnit1051.severity = none
