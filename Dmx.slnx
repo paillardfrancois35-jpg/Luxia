@@ -3,6 +3,7 @@
     <Project Path="src/Dmx.App/Dmx.App.csproj" />
     <Project Path="src/Dmx.Core/Dmx.Core.csproj" />
     <Project Path="src/Dmx.Engine/Dmx.Engine.csproj" />
+    <Project Path="src/Dmx.Hosting/Dmx.Hosting.csproj" />
     <Project Path="src/Dmx.Messaging/Dmx.Messaging.csproj" />
     <Project Path="src/Dmx.Output/Dmx.Output.csproj" />
     <Project Path="src/Dmx.Persistence/Dmx.Persistence.csproj" />
