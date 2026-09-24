@@ -33,6 +33,9 @@ internal static class Commands
               gigue [--duree s] [--frequence 40]
                   Mesure la cadence et la gigue du moteur (GEN-030, GEN-031), sortie Nulle.
 
+              projet dossier [--nom "Nom"] [--description "…"]
+                  Crée le projet s'il n'existe pas, sinon l'ouvre et affiche sa fiche (et les éventuels problèmes).
+
               relire fichier.dmxrec [--canaux 1-16]
                   Résume un enregistrement de trames : durée, trames, instants d'allumage de chaque canal.
             """);
@@ -200,6 +203,36 @@ internal static class Commands
         var ok = Math.Abs(stats.MeasuredRateHz - stats.TargetRateHz) <= 0.5 && stats.P99Lateness < TimeSpan.FromMilliseconds(5);
         Console.WriteLine(ok ? "Résultat : CONFORME (GEN-030, GEN-031)" : "Résultat : NON CONFORME");
         return ok ? 0 : 1;
+    }
+
+    public static int Project(Arguments args)
+    {
+        if (args.Positional.Count == 0)
+        {
+            Console.Error.WriteLine("Dossier du projet manquant.");
+            return 2;
+        }
+
+        var folder = Path.GetFullPath(args.Positional[0]);
+        if (!File.Exists(Path.Combine(folder, ProjectStore.ProjectFileName)))
+        {
+            var name = args.Get("nom") ?? Path.GetFileName(folder);
+            ProjectStore.Create(folder, name, args.Get("description"));
+            Console.WriteLine($"Projet créé : {folder}");
+        }
+
+        var report = ProjectStore.Open(folder);
+        foreach (var message in report.Messages)
+        {
+            Console.WriteLine(message);
+        }
+
+        if (report.Info is { } info)
+        {
+            Console.WriteLine($"{info.Name} ({info.Id}) – créé le {info.CreatedUtc.ToLocalTime():dd/MM/yyyy HH:mm}");
+        }
+
+        return report.Succeeded ? 0 : 1;
     }
 
     public static int Replay(Arguments args)

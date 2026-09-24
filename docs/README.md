@@ -38,6 +38,8 @@ Application C# (Avalonia, Windows) de pilotage d'éclairage, alternative légèr
 | [30 – Plan de tests](30-plan-de-tests.md) | Stratégie, niveaux, jeux de données, scénarios, check-lists de jalons |
 | [40 – Feuille de route](40-feuille-de-route.md) | Phases, preuves de concept, travaux de contenu, conduite du projet, démonstrations |
 | [41 – Show de référence](41-show-de-reference.md) | Le show complet construit au fil des phases avec le parc réel (plan d'adresses, palettes, scènes, shows) + samples par mécanique |
+| [50 – Format des données](50-format-des-donnees.md) | Fichiers JSON et binaires de l'application (tenu au fil du développement) |
+| [demos/](demos/) | Guides de démonstration par phase (`P0-fondations.md`…) |
 | [99 – Carnet d'idées](99-idees.md) | Idées en attente |
 
 ## Autres

@@ -215,7 +215,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-021 | `SurchargerAttribut` | appareil(s), attribut, valeur | Moteur (console / programmeur) | P4 |
 | CMD-022 | `LibérerSurcharges` | tout / canal / appareil | Moteur | P1 |
 | CMD-023 | `IdentifierAppareil` | appareil, actif / inactif | Moteur | P3 |
-| CMD-024 | `TesterSortie` | actif / inactif, univers, plage de canaux, canaux exclus, valeur de test, durée par canal | Moteur (écran Sorties) | P0 |
+| CMD-024 | `TesterSortie` | actif / inactif, univers, plage de canaux, canaux exclus, valeur de test, durée par canal, une passe / en boucle, forme (chenillard / rampe) | Moteur (écran Sorties) | P0 |
 | CMD-030 | `Fumée` | appui / relâche, ou rafale (durée) | Moteur | P5 |
 | CMD-040 | `TapTempo` | — | Audio / Horloge | P7 |
 | CMD-041 | `ChoisirSourceTempo` | audio / tap / fixe (+ BPM) | Horloge | P7 |
@@ -522,3 +522,5 @@ Cela se fait **à la maison**, jamais en soirée (P7).
 | D17 | 2026-09-24 | Chaque phase livre un projet de démonstration sur le parc réel + guide de découverte ; les exemples servent aussi de tests de non-régression. | Demande utilisateur, doc 40 §7 |
 | D18 | 2026-09-24 | Conception de contenu (scènes, séquences, shows) assistée par une IA **à la maison**, par écriture directe des fichiers JSON du projet ; jamais en soirée. Exigences GEN-130 à 134. | Demande utilisateur |
 | D19 | 2026-09-24 | Le test de sortie (chenillard) passe par la commande `TesterSortie` (CMD-024), traitée par le moteur ; il sera soumis aux limiteurs de sûreté dès leur existence (P5). Canaux exclus et valeur de test réglables (fumée exclue par défaut). | Q16, Q17 |
+| D20 | 2026-09-24 | Projet d'assemblage **`Dmx.Hosting`** (non prévu au doc 00 §7) : journal technique et assemblage des modules, partagé par l'application et `Dmx.Tools.Headless`. Pas de conteneur d'injection de dépendances en P0 (assemblage explicite, plus lisible) ; à reconsidérer quand les écrans se multiplieront. | Développement P0 |
+| D21 | 2026-09-24 | Tant que le test de sortie est actif, il **remplace** la restitution de l'univers testé (un seul canal allumé) : c'est un outil de diagnostic, pas une couche. | Développement P0 |

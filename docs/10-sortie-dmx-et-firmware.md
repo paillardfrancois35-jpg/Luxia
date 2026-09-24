@@ -141,7 +141,24 @@ shield en mode émission, terminaison 120 Ω en bout de chaîne.
 | T-SORT-08 | Matériel (S) | **Banc renifleur** : un second Arduino + shield en réception DMX renvoie la trame lue au PC ; comparaison automatique trame émise / trame lue. |
 | T-SORT-09 | Matériel | Compatibilité : piloter l'interface depuis un logiciel tiers compatible Enttec (ex. QLC+). |
 
-## 9. Points ouverts
+## 9. Notes de réalisation (P0)
+
+> Écarts et précisions constatés au développement (doc 40 §6).
+
+| Sujet | Réalisation |
+|---|---|
+| SORT-010 – ports sondés | Par défaut, seuls le **dernier port utilisé** et les ports dont l'identifiant USB est une carte Arduino (VID 2341 / 2A03) sont sondés ; le chargeur de démarrage (PID 0036) est ignoré. Option « sonder aussi les ports non Arduino » (désactivée par défaut) : certains ports virtuels (Bluetooth) bloquent longtemps à l'ouverture et envoyer des octets à un appareil inconnu n'est pas anodin. |
+| SORT-010 – identification | Label 77 d'abord ; à défaut label 10 (une vraie interface Enttec est alors acceptée comme « Compatible Enttec »). Délai de réponse : 400 ms. |
+| SORT-004 – états | « Connexion… » n'est affiché qu'à la première tentative ; les tentatives suivantes (toutes les secondes) gardent l'état Déconnecté / Erreur, pour ne pas inonder le journal. Le compteur d'erreurs augmente à chaque **entrée** dans l'état Erreur. |
+| SORT-007 – test | Réalisé par la commande `TesterSortie` (CMD-024, D19) ; le test **remplace** la restitution de l'univers testé (D21). Forme supplémentaire « rampe » (tous les canaux varient) pour l'endurance T-SORT-07. |
+| SORT-007 – limite | Un chenillard canal par canal n'allume pas un appareil à gradateur maître (PAR 7 canaux…) : voir Q23. |
+| SORT-049 | Le firmware émet au moins **24 canaux** par trame DMX, même si le message en contient moins. |
+| Label 3 | Réponse : version mineure, version majeure, break (9 × 10,67 µs), MAB (1 × 10,67 µs), débit (40). |
+| EVT-002 `TrameÉmise` | Non publié sur le bus en P0 : l'interface lit la dernière trame du moteur à son rythme (état observable, doc 02 §6.4). À publier si le simulateur (P3) en a besoin. |
+| Arrêt propre | À la fermeture, une trame de blackout est envoyée à toutes les sorties avant l'arrêt des pilotes : les appareils s'éteignent tout de suite (le fondu de GEN-061 viendra en P5). |
+| Outil | `dmx-headless` : `ports`, `lancer`, `endurance`, `gigue`, `relire`, `projet`. |
+
+## 10. Points ouverts
 
 - Utilisation du **DMX sans fil** en soirée : latence et pertes à mesurer (aucune exigence logicielle particulière, la ligne étant rafraîchie en continu).
 - Rôle éventuel du **décodeur DMX512 générique** (bandes LED ?) : à préciser si utilisé ; il se patche comme un appareil générique.

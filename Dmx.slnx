@@ -12,6 +12,7 @@
     <Project Path="tests/Dmx.Architecture.Tests/Dmx.Architecture.Tests.csproj" />
     <Project Path="tests/Dmx.Core.Tests/Dmx.Core.Tests.csproj" />
     <Project Path="tests/Dmx.Engine.Tests/Dmx.Engine.Tests.csproj" />
+    <Project Path="tests/Dmx.Integration.Tests/Dmx.Integration.Tests.csproj" />
     <Project Path="tests/Dmx.Output.Tests/Dmx.Output.Tests.csproj" />
     <Project Path="tests/Dmx.Persistence.Tests/Dmx.Persistence.Tests.csproj" />
   </Folder>

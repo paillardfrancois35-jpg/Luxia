@@ -13,6 +13,7 @@ return arguments.Command switch
     "lancer" => await Commands.RunAsync(arguments).ConfigureAwait(false),
     "endurance" => await Commands.EnduranceAsync(arguments).ConfigureAwait(false),
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),
+    "projet" => Commands.Project(arguments),
     "relire" => Commands.Replay(arguments),
     _ => Commands.Help(),
 };

@@ -12,7 +12,7 @@
 | Framework | **.NET 10** (LTS), `net10.0` ; `net10.0-windows` uniquement pour ce qui dépend de Windows (application, API Windows) |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
-| Hôte | `Microsoft.Extensions.Hosting` : injection de dépendances, configuration, journalisation |
+| Assemblage | Projet `Dmx.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
 | Journal | `Microsoft.Extensions.Logging` en façade, **Serilog** pour les fichiers tournants (GEN-110) |
 | JSON | `System.Text.Json` uniquement |
 | Série | `System.IO.Ports` |
@@ -62,6 +62,7 @@ DMX/
 | `Dmx.Engine` | Core, Messaging — **jamais** d'un pilote concret, de l'UI, de l'audio |
 | `Dmx.Output` | Core, Messaging |
 | `Dmx.Persistence` | Core |
+| `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.*` | tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
 | `Dmx.App`, `tools/*` | tout (composition) |
 
@@ -99,7 +100,9 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Emplacement | `tests/<Projet>.Tests` ; données dans `tests/assets/` |
 | Nommage | `Methode_Condition_ResultatAttendu` (anglais) ; `DisplayName` en français si utile |
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
-| Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus par défaut** (`dotnet test --filter "Categorie!=Materiel"`) |
+| Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
+| Commandes | `dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
+| Intégration | `tests/Dmx.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
 
@@ -140,3 +143,4 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Date | Modification |
 |---|---|
 | 2026-09-24 | Version initiale (Q21, Q22). |
+| 2026-09-24 | P0 : projet `Dmx.Hosting` (D20), commandes de test Microsoft.Testing.Platform, projet de tests d'intégration, test d'architecture par réflexion (sans NetArchTest). |
