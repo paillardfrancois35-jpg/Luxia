@@ -1,0 +1,20 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+TestResults/
+*.binlog
+
+# IDE
+.idea/
+.vscode/
+
+# Arduino
+firmware/**/build/
+
+# Journaux et enregistrements temporaires
+*.log
+logs/
+*.tmp
