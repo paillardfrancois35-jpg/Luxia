@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../Dmx.Core/Dmx.Core.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
 </Project>

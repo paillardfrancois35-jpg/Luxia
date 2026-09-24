@@ -57,6 +57,7 @@ dotnet_naming_symbols.private_static_readonly.required_modifiers = static, reado
 dotnet_diagnostic.CA1303.severity = none
 # CA1848 : délégués LoggerMessage non exigés hors code temps réel.
 dotnet_diagnostic.CA1848.severity = suggestion
+dotnet_diagnostic.CA1873.severity = suggestion
 
 [tests/**.cs]
 # Noms de tests Methode_Condition_Resultat (doc 03 §6).
