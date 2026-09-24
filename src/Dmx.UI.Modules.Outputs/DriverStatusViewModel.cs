@@ -2,8 +2,9 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Dmx.Messaging.Events;
 using Dmx.Output;
+using Dmx.UI.Controls;
 
-namespace Dmx.App.ViewModels;
+namespace Dmx.UI.Modules.Outputs;
 
 /// <summary>Ligne d'état d'un pilote de sortie (SORT-004, SORT-007).</summary>
 public sealed partial class DriverStatusViewModel : ViewModelBase

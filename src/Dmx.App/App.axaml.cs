@@ -37,7 +37,9 @@ public partial class App : Application
             _runtime = new DmxRuntime(DataPaths.Default, _loggers);
             _runtime.Start();
 
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel(_runtime) };
+            var window = new MainWindow();
+            window.DataContext = new MainWindowViewModel(_runtime, new Services.DialogService(() => window));
+            desktop.MainWindow = window;
             desktop.Exit += (_, _) => Shutdown();
         }
 

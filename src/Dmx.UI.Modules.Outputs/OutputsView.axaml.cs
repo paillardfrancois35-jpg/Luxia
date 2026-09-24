@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Dmx.App.Views;
+namespace Dmx.UI.Modules.Outputs;
 
 /// <summary>Écran « Sorties ».</summary>
 public partial class OutputsView : UserControl

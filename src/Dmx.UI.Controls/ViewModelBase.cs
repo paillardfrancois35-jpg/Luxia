@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Dmx.App.ViewModels;
+namespace Dmx.UI.Controls;
 
 /// <summary>Base des modèles de vue.</summary>
 public abstract class ViewModelBase : ObservableObject

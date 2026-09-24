@@ -19,6 +19,9 @@
     <ProjectReference Include="../Dmx.Output/Dmx.Output.csproj" />
     <ProjectReference Include="../Dmx.Persistence/Dmx.Persistence.csproj" />
     <ProjectReference Include="../Dmx.Hosting/Dmx.Hosting.csproj" />
+    <ProjectReference Include="../Dmx.UI.Controls/Dmx.UI.Controls.csproj" />
+    <ProjectReference Include="../Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
+    <ProjectReference Include="../Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ namespace Dmx.App;
 /// <summary>Fenêtre principale.</summary>
 public partial class MainWindow : Window
 {
-    private readonly DispatcherTimer _refresh = new() { Interval = TimeSpan.FromMilliseconds(250) };
+    private readonly DispatcherTimer _refresh = new() { Interval = TimeSpan.FromMilliseconds(50) };
 
     /// <summary>Crée la fenêtre.</summary>
     public MainWindow()

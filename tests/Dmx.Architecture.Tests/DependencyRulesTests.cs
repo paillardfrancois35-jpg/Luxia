@@ -35,6 +35,18 @@ public sealed class DependencyRulesTests
     }
 
     [Theory]
+    [InlineData("Dmx.UI.Controls")]
+    [InlineData("Dmx.UI.Modules.Console")]
+    [InlineData("Dmx.UI.Modules.Outputs")]
+    [Trait("Exigence", "GEN-003")]
+    public void UserInterfaceModules_DoNotReferenceApplication(string project)
+    {
+        var assembly = Assembly.Load(project);
+
+        assembly.GetReferencedAssemblies().Select(a => a.Name!).ShouldNotContain("DMX");
+    }
+
+    [Theory]
     [MemberData(nameof(Projects))]
     [Trait("Exigence", "GEN-001")]
     public void Project_DoesNotReferenceUserInterface(string project)

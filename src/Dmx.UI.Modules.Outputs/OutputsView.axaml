@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:Dmx.App.ViewModels"
-             x:Class="Dmx.App.Views.OutputsView"
+             xmlns:vm="using:Dmx.UI.Modules.Outputs"
+             x:Class="Dmx.UI.Modules.Outputs.OutputsView"
              x:DataType="vm:OutputsViewModel">
   <ScrollViewer>
     <StackPanel Margin="16" Spacing="16">

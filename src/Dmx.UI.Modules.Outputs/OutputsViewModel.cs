@@ -4,13 +4,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dmx.Core.Settings;
 using Dmx.Hosting;
+using Dmx.UI.Controls;
 
-namespace Dmx.App.ViewModels;
+namespace Dmx.UI.Modules.Outputs;
 
 /// <summary>
 /// Écran « Sorties » (SORT-007) : état des pilotes, réglages de l'Arduino, chenillard de test, enregistreur.
 /// </summary>
-public sealed partial class OutputsViewModel : ViewModelBase
+public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
 {
     /// <summary>Libellé du choix « détection automatique » dans la liste des ports.</summary>
     public const string AutomaticPort = "Automatique";
@@ -93,7 +94,7 @@ public sealed partial class OutputsViewModel : ViewModelBase
     /// <summary>Message de chargement des préférences (à signaler une fois).</summary>
     public string? PreferencesMessage => _runtime.PreferencesLoadMessage;
 
-    /// <summary>Rafraîchissement périodique (appelé par la vue, 4 fois par seconde).</summary>
+    /// <inheritdoc />
     public void Refresh()
     {
         var routes = _runtime.Router.Routes;

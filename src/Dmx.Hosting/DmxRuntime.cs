@@ -50,7 +50,12 @@ public sealed class DmxRuntime : IAsyncDisposable
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
         Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>());
         Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
+        Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
+        Project.OpenLast();
     }
+
+    /// <summary>Projet ouvert.</summary>
+    public ProjectSession Project { get; }
 
     /// <summary>Emplacements des données.</summary>
     public DataPaths Paths { get; }
@@ -207,6 +212,23 @@ public sealed class DmxRuntime : IAsyncDisposable
 
     /// <summary>Arrête le chenillard de test.</summary>
     public void StopTest(CommandOrigin origin = CommandOrigin.User) => Engine.Send(TestOutputCommand.Stop(origin));
+
+    /// <summary>Impose des valeurs brutes (console, CMD-020).</summary>
+    public void SetChannels(int universe, IReadOnlyList<ChannelValue> values, CommandOrigin origin = CommandOrigin.User) =>
+        Engine.Send(new OverrideChannelsCommand(origin, universe, values));
+
+    /// <summary>Libère des canaux (null = tous les canaux de l'univers ; univers null = tout, CMD-022).</summary>
+    public void ReleaseChannels(int? universe, IReadOnlyList<int>? channels, CommandOrigin origin = CommandOrigin.User) =>
+        Engine.Send(new ReleaseOverridesCommand(origin, universe, channels));
+
+    /// <summary>Rappelle un instantané : les surcharges de son univers sont remplacées par les siennes (CONS-010).</summary>
+    public void RecallSnapshot(Core.Snapshots.ConsoleSnapshot snapshot, CommandOrigin origin = CommandOrigin.User)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+        Engine.Send(new ReleaseOverridesCommand(origin, snapshot.Universe));
+        Engine.Send(new OverrideChannelsCommand(origin, snapshot.Universe, [.. snapshot.Channels.Select(c => new ChannelValue(c.Channel, c.Value))]));
+        _logger.LogInformation("Instantané rappelé : {Nom}", snapshot.Name);
+    }
 
     /// <summary>Démarre l'enregistrement des trames de l'univers 1 (SORT-061).</summary>
     /// <param name="path">Fichier ; par défaut <c>Documents\DMX\Enregistrements\trames-horodatage.dmxrec</c>.</param>
