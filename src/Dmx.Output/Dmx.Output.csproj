@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Dmx.Core/Dmx.Core.csproj" />
+    <ProjectReference Include="../Dmx.Messaging/Dmx.Messaging.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="System.IO.Ports" />
+  </ItemGroup>
+
+</Project>

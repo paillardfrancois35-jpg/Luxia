@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>dmx-headless</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <ProjectReference Include="../../src/Dmx.Core/Dmx.Core.csproj" />
+    <ProjectReference Include="../../src/Dmx.Messaging/Dmx.Messaging.csproj" />
+    <ProjectReference Include="../../src/Dmx.Engine/Dmx.Engine.csproj" />
+    <ProjectReference Include="../../src/Dmx.Output/Dmx.Output.csproj" />
+    <ProjectReference Include="../../src/Dmx.Persistence/Dmx.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

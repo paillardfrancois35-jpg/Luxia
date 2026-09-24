@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Dmx.App/Dmx.App.csproj" />
+    <Project Path="src/Dmx.Core/Dmx.Core.csproj" />
+    <Project Path="src/Dmx.Engine/Dmx.Engine.csproj" />
+    <Project Path="src/Dmx.Messaging/Dmx.Messaging.csproj" />
+    <Project Path="src/Dmx.Output/Dmx.Output.csproj" />
+    <Project Path="src/Dmx.Persistence/Dmx.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Dmx.Architecture.Tests/Dmx.Architecture.Tests.csproj" />
+    <Project Path="tests/Dmx.Core.Tests/Dmx.Core.Tests.csproj" />
+    <Project Path="tests/Dmx.Engine.Tests/Dmx.Engine.Tests.csproj" />
+    <Project Path="tests/Dmx.Output.Tests/Dmx.Output.Tests.csproj" />
+    <Project Path="tests/Dmx.Persistence.Tests/Dmx.Persistence.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Dmx.Tools.Headless/Dmx.Tools.Headless.csproj" />
+  </Folder>
+</Solution>
