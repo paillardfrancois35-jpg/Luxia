@@ -159,6 +159,26 @@ public sealed class RenderEngineTests
         copy[6].ShouldBe((byte)128);
     }
 
+    [Fact]
+    [Trait("Exigence", "CMD-024")]
+    public void TestPattern_Ramp_VariesAllChannelsBelowValue_AndSkipsExcluded()
+    {
+        var engine = new RenderEngine(_sink, _clock);
+        engine.Send(Test(new ChannelRange(1, 512), [180], TimeSpan.FromSeconds(4), value: 128) with { Mode = TestPatternMode.Ramp });
+
+        engine.Tick();
+        var first = _sink.Last();
+        _clock.Advance(Period);
+        engine.Tick();
+        var second = _sink.Last();
+
+        first.ShouldAllBe(v => v <= 128);
+        first[179].ShouldBe((byte)0);
+        second[179].ShouldBe((byte)0);
+        first.Count(v => v > 0).ShouldBeGreaterThan(400);
+        Enumerable.Range(0, 512).Count(i => first[i] != second[i]).ShouldBeGreaterThan(300);
+    }
+
     private static TestOutputCommand Test(ChannelRange range, int[] excluded, TimeSpan step, byte value = 128) =>
         new(CommandOrigin.Tool, true, 1, range, excluded, value, step);
 

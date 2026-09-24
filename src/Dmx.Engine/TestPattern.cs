@@ -52,6 +52,12 @@ internal sealed class TestPattern
         }
 
         var stepTicks = Math.Max(command.StepDuration.Ticks, 1);
+        if (command.Mode == TestPatternMode.Ramp)
+        {
+            RenderRamp(command, frame, (now - _start).Ticks, stepTicks);
+            return;
+        }
+
         var step = (now - _start).Ticks / stepTicks;
         if (step >= _channels.Length && !command.Loop)
         {
@@ -66,5 +72,20 @@ internal sealed class TestPattern
         // D19 : le test remplace la restitution de l'univers ; seul le canal courant est allumé.
         frame.Clear();
         frame[channel] = command.Value;
+    }
+
+    private void RenderRamp(TestOutputCommand command, DmxFrame frame, long elapsedTicks, long periodTicks)
+    {
+        frame.Clear();
+        var values = frame.Values;
+        for (var i = 0; i < _channels.Length; i++)
+        {
+            // Onde triangulaire 0 → valeur → 0, décalée d'un canal à l'autre : toutes les valeurs changent à chaque tick.
+            var phase = ((elapsedTicks + (periodTicks * i / _channels.Length)) % periodTicks) / (double)periodTicks;
+            var level = phase < 0.5 ? phase * 2 : (1 - phase) * 2;
+            values[_channels[i] - 1] = (byte)Math.Round(level * command.Value);
+        }
+
+        _currentChannel = 0;
     }
 }

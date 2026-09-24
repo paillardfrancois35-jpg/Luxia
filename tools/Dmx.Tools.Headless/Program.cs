@@ -11,6 +11,7 @@ return arguments.Command switch
 {
     "ports" => Commands.Ports(),
     "lancer" => await Commands.RunAsync(arguments).ConfigureAwait(false),
+    "endurance" => await Commands.EnduranceAsync(arguments).ConfigureAwait(false),
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),
     "relire" => Commands.Replay(arguments),
     _ => Commands.Help(),

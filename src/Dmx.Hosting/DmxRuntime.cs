@@ -155,9 +155,21 @@ public sealed class DmxRuntime : IAsyncDisposable
         Preferences.Update(p => p with { TickRateHz = Loop.RateHz });
     }
 
-    /// <summary>Lance le chenillard de test (CMD-024) avec ces réglages, enregistrés dans les préférences.</summary>
+    /// <summary>Lance le chenillard de test (CMD-024) avec ces réglages.</summary>
+    /// <param name="settings">Réglages du test.</param>
+    /// <param name="origin">Origine de la commande.</param>
+    /// <param name="loop">Recommencer au début après le dernier canal.</param>
+    /// <param name="universe">Univers testé.</param>
+    /// <param name="remember">Enregistrer les réglages dans les préférences (écran Sorties).</param>
+    /// <param name="mode">Chenillard ou rampe (endurance).</param>
     /// <returns>Message d'erreur si les réglages sont invalides, sinon null.</returns>
-    public string? StartTest(TestOutputPreferences settings, CommandOrigin origin = CommandOrigin.User, bool loop = true, int universe = 1)
+    public string? StartTest(
+        TestOutputPreferences settings,
+        CommandOrigin origin = CommandOrigin.User,
+        bool loop = true,
+        int universe = 1,
+        bool remember = true,
+        TestPatternMode mode = TestPatternMode.Chase)
     {
         ArgumentNullException.ThrowIfNull(settings);
         if (!ChannelRange.TryParse(settings.Range, out var range))
@@ -175,7 +187,11 @@ public sealed class DmxRuntime : IAsyncDisposable
             return "La durée par canal doit être comprise entre 50 ms et 60 s.";
         }
 
-        Preferences.Update(p => p with { TestOutput = settings });
+        if (remember)
+        {
+            Preferences.Update(p => p with { TestOutput = settings });
+        }
+
         Engine.Send(new TestOutputCommand(
             origin,
             true,
@@ -184,7 +200,8 @@ public sealed class DmxRuntime : IAsyncDisposable
             excluded,
             settings.ValueByte,
             TimeSpan.FromMilliseconds(settings.StepMilliseconds),
-            loop));
+            loop,
+            mode));
         return null;
     }
 

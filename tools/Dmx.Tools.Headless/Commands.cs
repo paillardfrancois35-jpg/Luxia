@@ -26,6 +26,10 @@ internal static class Commands
                   Démarre le moteur et les sorties des préférences (ou la sortie Nulle avec --nul).
                   --test lance le chenillard de test (CMD-024) ; Ctrl+C arrête proprement (blackout).
 
+              endurance [--duree 3600] [--nul] [--canaux 1-512] [--exclus 180] [--valeur 50] [--periode ms]
+                  T-SORT-07 : tous les canaux varient en continu (rampe) ; rapport de cadence, trames/s et erreurs.
+                  Prudence avec les appareils branchés : la fumée (180) est exclue, valeur plafonnée à 50 % par défaut.
+
               gigue [--duree s] [--frequence 40]
                   Mesure la cadence et la gigue du moteur (GEN-030, GEN-031), sortie Nulle.
 
@@ -80,7 +84,7 @@ internal static class Commands
                 ValuePercent = args.GetInt("valeur", runtime.Preferences.Current.TestOutput.ValuePercent),
                 StepMilliseconds = args.GetInt("pas", runtime.Preferences.Current.TestOutput.StepMilliseconds),
             };
-            var error = runtime.StartTest(settings, CommandOrigin.Tool, loop: !args.Has("une-fois"));
+            var error = runtime.StartTest(settings, CommandOrigin.Tool, loop: !args.Has("une-fois"), remember: false);
             if (error is not null)
             {
                 Console.Error.WriteLine(error);
@@ -125,6 +129,52 @@ internal static class Commands
             Console.WriteLine($"Enregistrement fermé : {recorded}");
         }
 
+        return 0;
+    }
+
+    public static async Task<int> EnduranceAsync(Arguments args)
+    {
+        using var loggers = TechnicalLog.Create(DataPaths.Default.Logs, console: false);
+        await using var runtime = new DmxRuntime(DataPaths.Default, loggers);
+        var duration = TimeSpan.FromSeconds(args.GetDouble("duree", 3600));
+        runtime.Start(forceNullOutput: args.Has("nul"));
+
+        var settings = new TestOutputPreferences
+        {
+            Range = args.Get("canaux") ?? "1-512",
+            ExcludedChannels = args.Get("exclus") ?? "180",
+            ValuePercent = args.GetInt("valeur", 50),
+            StepMilliseconds = args.GetInt("periode", 4000),
+        };
+        var error = runtime.StartTest(settings, CommandOrigin.Tool, remember: false, mode: TestPatternMode.Ramp);
+        if (error is not null)
+        {
+            Console.Error.WriteLine(error);
+            return 2;
+        }
+
+        Console.WriteLine($"Endurance pendant {duration.TotalMinutes:F0} min : canaux {settings.Range}, exclus {settings.ExcludedChannels}, max {settings.ValuePercent} %");
+        var started = DateTime.UtcNow;
+        var minFps = double.MaxValue;
+        while (DateTime.UtcNow - started < duration)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(Math.Min(60, duration.TotalSeconds))).ConfigureAwait(false);
+            PrintStatus(runtime);
+            foreach (var route in runtime.Router.Routes.Where(r => r.Driver.Status.State == Messaging.Events.OutputConnectionState.Connected))
+            {
+                minFps = Math.Min(minFps, route.Driver.Status.FramesPerSecond);
+            }
+        }
+
+        runtime.StopTest(CommandOrigin.Tool);
+        var stats = runtime.Loop.Statistics;
+        PrintJitterReport(stats);
+        foreach (var (universe, driver) in runtime.Router.Routes)
+        {
+            Console.WriteLine($"  {driver.Name} (univers {universe}) : état {driver.Status.State}, erreurs {driver.Status.ErrorCount}");
+        }
+
+        Console.WriteLine($"  Trames/s minimales observées (pilotes connectés) : {(minFps == double.MaxValue ? 0 : minFps):F1}");
         return 0;
     }
 
