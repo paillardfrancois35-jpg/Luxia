@@ -13,8 +13,8 @@ namespace Dmx.Engine;
 /// le cadencement est fourni de l'extérieur (<see cref="Timing.TickLoop"/> en temps réel, appel direct en temps virtuel).
 /// </summary>
 /// <remarks>
-/// P0 : sortie en blackout (GEN-060) et test de sortie (CMD-024). Les étapes suivantes de la chaîne de rendu
-/// (doc 02 §9) s'ajoutent phase par phase.
+/// P0 : sortie en blackout (GEN-060) et test de sortie (CMD-024). P1 : surcharges brutes de la console (étape 11).
+/// Les autres étapes de la chaîne de rendu (doc 02 §9) s'ajoutent phase par phase.
 /// </remarks>
 public sealed class RenderEngine : ICommandSink
 {
@@ -26,6 +26,7 @@ public sealed class RenderEngine : ICommandSink
     private readonly DmxFrame[] _published;
     private readonly Lock _publishedLock = new();
     private readonly TestPattern _testPattern = new();
+    private readonly ChannelOverrides[] _overrides;
     private long _tickCount;
 
     /// <summary>Crée un moteur.</summary>
@@ -43,6 +44,7 @@ public sealed class RenderEngine : ICommandSink
         _logger = logger ?? NullLogger<RenderEngine>.Instance;
         _frames = [.. Enumerable.Range(0, universeCount).Select(_ => new DmxFrame())];
         _published = [.. Enumerable.Range(0, universeCount).Select(_ => new DmxFrame())];
+        _overrides = [.. Enumerable.Range(0, universeCount).Select(_ => new ChannelOverrides())];
     }
 
     /// <summary>Nombre d'univers calculés.</summary>
@@ -79,6 +81,10 @@ public sealed class RenderEngine : ICommandSink
             // Étape 1 de la chaîne (P0) : tout à 0 = blackout de démarrage (GEN-060).
             frame.Clear();
 
+            // Étape 11 : surcharges brutes de la console (CONS-003).
+            // TODO(P4, GEN-042) : blackout et limites de sûreté appliqués aussi aux surcharges brutes.
+            _overrides[u].ApplyTo(frame);
+
             // Test de sortie : remplace toute la restitution de l'univers testé (D19).
             _testPattern.Render(u + 1, frame, now);
 
@@ -104,10 +110,45 @@ public sealed class RenderEngine : ICommandSink
         }
     }
 
+    /// <summary>Nombre de canaux surchargés dans un univers.</summary>
+    public int OverrideCount(int universe) => _overrides[CheckUniverse(universe) - 1].Count;
+
+    /// <summary>Copie les surcharges d'un univers : -1 = canal libre, sinon valeur imposée.</summary>
+    public void CopyOverrides(int universe, Span<short> destination) => _overrides[CheckUniverse(universe) - 1].CopyTo(destination);
+
+    private int CheckUniverse(int universe)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(universe, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(universe, _frames.Length);
+        return universe;
+    }
+
     private void Apply(Command command, TimeSpan now)
     {
         switch (command)
         {
+            case OverrideChannelsCommand overrideCommand:
+                if (overrideCommand.Universe < 1 || overrideCommand.Universe > _frames.Length)
+                {
+                    _logger.LogWarning("SurchargerCanal refusée : univers {Univers} inexistant", overrideCommand.Universe);
+                    return;
+                }
+
+                _overrides[overrideCommand.Universe - 1].Set(overrideCommand.Values);
+                break;
+
+            case ReleaseOverridesCommand release:
+                foreach (var (index, overrides) in _overrides.Index())
+                {
+                    if (release.Universe is null || release.Universe == index + 1)
+                    {
+                        overrides.Release(release.Channels);
+                    }
+                }
+
+                _logger.LogDebug("LibérerSurcharges (origine {Origine})", release.Origin);
+                break;
+
             case TestOutputCommand test:
                 if (test.Universe < 1 || test.Universe > _frames.Length)
                 {
