@@ -143,7 +143,7 @@ public abstract class OutputDriver : IDisposable
             {
                 State = state,
                 Message = message,
-                ErrorCount = _status.ErrorCount + (state == OutputConnectionState.Error ? 1 : 0),
+                ErrorCount = _status.ErrorCount + (state == OutputConnectionState.Error && changed ? 1 : 0),
                 FramesPerSecond = state == OutputConnectionState.Connected ? _status.FramesPerSecond : 0,
             };
             status = _status;
@@ -158,6 +158,7 @@ public abstract class OutputDriver : IDisposable
     private void Run()
     {
         var nextAttempt = TimeSpan.Zero;
+        var attempts = 0;
         var clock = Stopwatch.StartNew();
 
         while (_running)
@@ -170,12 +171,20 @@ public abstract class OutputDriver : IDisposable
                     continue;
                 }
 
-                SetState(OutputConnectionState.Connecting, Status.Message);
+                // « Connexion… » n'est affiché qu'à la première tentative : les essais suivants, toutes les secondes,
+                // ne font pas clignoter l'état (ni déborder le journal).
+                if (attempts++ == 0)
+                {
+                    SetState(OutputConnectionState.Connecting, Status.Message);
+                }
+
                 if (!TryConnect())
                 {
                     nextAttempt = clock.Elapsed + ReconnectDelay;
                     continue;
                 }
+
+                attempts = 0;
             }
 
             if (!_frameAvailable.WaitOne(ReconnectDelay) || !_running)

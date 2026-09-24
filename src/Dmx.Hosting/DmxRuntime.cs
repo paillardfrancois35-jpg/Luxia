@@ -42,7 +42,8 @@ public sealed class DmxRuntime : IAsyncDisposable
         Clock = clock ?? new SystemClock();
 
         Preferences = new PreferencesStore(paths.PreferencesFile, loggers.CreateLogger<PreferencesStore>());
-        PreferencesLoadMessage = Preferences.Load().Message;
+        var loaded = Preferences.Load();
+        PreferencesLoadMessage = loaded.Status == Persistence.Json.LoadStatus.Missing ? null : loaded.Message;
 
         Bus = new EventBus(loggers.CreateLogger<EventBus>());
         Router = new OutputRouter(Bus, loggers.CreateLogger<OutputRouter>());

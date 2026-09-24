@@ -13,14 +13,12 @@
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <PackageReference Include="Avalonia.Fonts.Inter" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <PackageReference Include="Serilog.Extensions.Logging" />
-    <PackageReference Include="Serilog.Sinks.File" />
     <ProjectReference Include="../Dmx.Core/Dmx.Core.csproj" />
     <ProjectReference Include="../Dmx.Messaging/Dmx.Messaging.csproj" />
     <ProjectReference Include="../Dmx.Engine/Dmx.Engine.csproj" />
     <ProjectReference Include="../Dmx.Output/Dmx.Output.csproj" />
     <ProjectReference Include="../Dmx.Persistence/Dmx.Persistence.csproj" />
+    <ProjectReference Include="../Dmx.Hosting/Dmx.Hosting.csproj" />
   </ItemGroup>
 
 </Project>

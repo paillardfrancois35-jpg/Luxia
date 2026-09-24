@@ -1,7 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Dmx.App.ViewModels"
+        xmlns:views="using:Dmx.App.Views"
         x:Class="Dmx.App.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Title="DMX"
-        Width="900" Height="600">
-  <TextBlock Text="DMX – phase P0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" />
+        Width="1100" Height="760"
+        MinWidth="800" MinHeight="500">
+  <views:OutputsView DataContext="{Binding Outputs}" />
 </Window>
