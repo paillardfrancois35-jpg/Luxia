@@ -35,6 +35,13 @@ public partial class App : Application
             };
 
             _runtime = new DmxRuntime(DataPaths.Default, _loggers);
+
+            // DMX.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
+            if (desktop.Args is [var projectFolder, ..] && Directory.Exists(projectFolder))
+            {
+                _runtime.Project.Open(Path.GetFullPath(projectFolder));
+            }
+
             _runtime.Start();
 
             var window = new MainWindow();

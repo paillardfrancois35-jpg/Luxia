@@ -33,3 +33,26 @@ une seule valeur à 128) et le moteur actuel, rejoué en temps virtuel, reprodui
 | Élément | Statut | Retour |
 |---|---|---|
 | Chaque appareil réagit au chenillard | ⏳ en attente | |
+
+## P1 – Console (2026-09-24)
+
+### Ajouté
+
+| Élément | Fichier | Description |
+|---|---|---|
+| 6 instantanés de console (catégorie « Phase P1 ») | `console.json` | PAR 1 en blanc ; PAR 1 à 4 en blanc ; PAR 1 à 4 en rouge à 50 % ; Lyre 1 au centre ; Lyres 1 et 2 au centre ; UV plein |
+
+Valeurs établies à partir des notices : LPC008S 7 canaux (fiche `betopper-lpc008s.md`), lyre Tomshine 11 canaux
+(Pan, Pan fin, Tilt, Tilt fin, couleur, gobo, obturateur, gradateur, vitesse, contrôle, mode), BeamZ BUV463 7 canaux
+(maître, 4 rangées UV, strobe / vitesse, programmes). Détail dans le guide `docs/demos/P1-console.md`.
+
+### Non-régression
+
+Test `ReferenceShowP1Tests` : le projet s'ouvre sans message ; chaque instantané, rappelé par le moteur, produit
+exactement ses canaux ; aucun ne touche la fumée (180) ni les canaux de contrôle des lyres (120, 135).
+
+### Validation par l'utilisateur
+
+| Élément | Statut | Retour |
+|---|---|---|
+| Canaux conformes au plan d'adresses (chaque instantané allume ce qui est annoncé) | ⏳ en attente | |

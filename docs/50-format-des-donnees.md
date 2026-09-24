@@ -92,7 +92,35 @@ Un projet est un **dossier** ; `projet.json` en est la fiche d'identité. Les au
 | `name` | Nom affiché |
 | `createdUtc`, `modifiedUtc` | Dates ISO 8601 en UTC |
 
-## 5. Enregistrement de trames `.dmxrec` (format binaire 1)
+## 5. Projet : `console.json` (format 1)
+
+Instantanés de console (CONS-010) : faders pris, rappelables d'un clic.
+
+```json
+{
+  "formatVersion": 1,
+  "snapshots": [
+    {
+      "id": "5bf11614-9c8b-51d5-b3ba-35dda6554557",
+      "name": "PAR 1 en blanc",
+      "category": "Phase P1",
+      "description": "Ce qu'on doit observer…",
+      "universe": 1,
+      "channels": [ { "channel": 1, "value": 255 }, { "channel": 2, "value": 255 } ]
+    }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `id` | Identifiant stable |
+| `name` | Nom affiché (unique dans le projet, sans tenir compte de la casse) |
+| `category` | Regroupement ; « Phase Pn » pour le contenu livré par une phase et pas encore validé (doc 41 REF-3) |
+| `universe` | Univers (1 = premier) |
+| `channels` | Canaux (1-512) et valeurs (0-255) imposés au rappel ; les autres faders de l'univers sont libérés |
+
+## 6. Enregistrement de trames `.dmxrec` (format binaire 1)
 
 Fichier binaire compact (SORT-060), petit-boutiste.
 
@@ -105,8 +133,9 @@ Une **longueur 0** signifie « trame identique à la précédente » : un univer
 Une fin de fichier tronquée (arrêt brutal) est tolérée à la lecture : seules les trames complètes sont relues.
 Lecture : `dmx-headless relire fichier.dmxrec`.
 
-## 6. Historique
+## 7. Historique
 
 | Date | Modification |
 |---|---|
 | 2026-09-24 | P0 : règles communes, `preferences.json`, `projet.json`, `.dmxrec`. |
+| 2026-09-24 | P1 : `console.json` (instantanés). |
