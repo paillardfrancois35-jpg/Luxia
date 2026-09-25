@@ -15,7 +15,7 @@
 | [GEN-003](exigences/GEN-003.md) | I | Atelier et Live indépendants | Réalisé | DependencyRulesTests.UserInterfaceModules_DoNotReferenceApplication |
 | [GEN-030](exigences/GEN-030.md) | I | Tick à 40 Hz (25-44 Hz) | Réalisé, à valider sur matériel | TickLoopTests.RateHz_IsClampedTo25To44<br>TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
 | [GEN-031](exigences/GEN-031.md) | I | Gigue du tick < 5 ms | Réalisé, à valider sur matériel | TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
-| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
+| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
 | [GEN-051](exigences/GEN-051.md) | I | Version de format et migrations | Réalisé | VersionedJsonFileTests.Load_OldVersion_MigratesAndKeepsBackup |
 | [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid |
 | [GEN-060](exigences/GEN-060.md) | I | Blackout au démarrage | Réalisé | RenderEngineTests.Tick_WithoutAnything_ProducesBlackoutFrame |
@@ -56,9 +56,9 @@
 | [SORT-060](exigences/SORT-060.md) | I | Enregistreur de trames | Réalisé | ConsoleLatencyTests.Override_AppearsInRecordedFrame_OnNextTick<br>RecordingTests.IdenticalFrames_AreStoredCompactly<br>RecordingTests.RecorderDriver_AttachedHot_WritesFramesToFile<br>RecordingTests.WriteThenRead_RoundTripsFramesAndTimestamps<br>(+2) |
 | [SORT-061](exigences/SORT-061.md) | I | Enregistreur activable à chaud | Réalisé | RecordingTests.RecorderDriver_AttachedHot_WritesFramesToFile |
 
-## P1 – 22 exigences, 11 couvertes par des tests automatiques
+## P1 – 22 exigences, 13 couvertes par des tests automatiques
 
-> Non réalisé : 2 · Partiel : 3 · Reporté (P3) : 1 · Reporté (P4-P5) : 1 · Réalisé : 15
+> Non réalisé : 2 · Partiel : 2 · Reporté (P4-P5) : 1 · Réalisé : 17
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -68,13 +68,13 @@
 | [CONS-004](exigences/CONS-004.md) | I | Commandes de libération et de page | Réalisé | ChannelOverrideTests.ReleaseAll_ClearsEveryUniverse<br>ConsoleViewModelTests.PageToFull_ThenReleasePage<br>ConsoleViewModelTests.ReleaseSelection_OnlyReleasesSelectedChannels |
 | [CONS-005](exigences/CONS-005.md) | I | Le fader affiche la valeur émise | Réalisé | ConsoleViewModelTests.FaderRequest_OverridesChannel_AndFaderShowsEmittedValue |
 | [CONS-006](exigences/CONS-006.md) | I | Sélection multiple de faders | Réalisé | ConsoleViewModelTests.ClickWithoutModifier_OutsideSelection_SelectsOnlyThatFader<br>ConsoleViewModelTests.MultiSelection_Absolute_SetsSameValue<br>ConsoleViewModelTests.MultiSelection_Relative_MovesAllByTheSameDelta |
-| [CONS-007](exigences/CONS-007.md) | M | Appareil, attribut et plage sur le fader | Reporté (P3) |  |
+| [CONS-007](exigences/CONS-007.md) | M | Appareil, attribut et plage sur le fader | Réalisé | ConsoleViewModelTests.Fader_PatchedChannelWithCapabilities_ShowsRangeNameInsteadOfPercent<br>ConsoleViewModelTests.MonitorHover_PatchedChannel_ShowsFixtureAndAttribute<br>PatchLookupTests.FindChannel_DifferentUniverse_ReturnsNull<br>PatchLookupTests.FindChannel_OutsideRange_ReturnsNull<br>(+1) |
 | [CONS-008](exigences/CONS-008.md) | M | Surcharges soumises au blackout et à la sûreté | Reporté (P4-P5) |  |
 | [CONS-009](exigences/CONS-009.md) | M | Choix de l'univers | Réalisé |  |
 | [CONS-010](exigences/CONS-010.md) | S | Instantanés de console | Réalisé | ConsoleViewModelTests.Snapshot_SaveReleaseRecall_RestoresOverrides<br>ReferenceShowP1Tests.ReferenceShow_LoadsWithSnapshots<br>ReferenceShowP1Tests.Snapshot_RecalledByEngine_ProducesExactlyItsChannels |
 | [CONS-040](exigences/CONS-040.md) | I | Moniteur de sortie 512 cases | Réalisé |  |
-| [CONS-041](exigences/CONS-041.md) | I | Infos au survol du moniteur | Réalisé | ConsoleViewModelTests.MonitorHover_DescribesChannel |
-| [CONS-043](exigences/CONS-043.md) | M | Délimitation des appareils et surcharges dans le moniteur | Partiel |  |
+| [CONS-041](exigences/CONS-041.md) | I | Infos au survol du moniteur | Réalisé | ConsoleViewModelTests.MonitorHover_DescribesChannel<br>ConsoleViewModelTests.MonitorHover_PatchedChannel_ShowsFixtureAndAttribute |
+| [CONS-043](exigences/CONS-043.md) | M | Délimitation des appareils et surcharges dans le moniteur | Réalisé | ConsoleViewModelTests.FixtureBoundaries_ReflectsPatch<br>PatchLookupTests.FixtureRanges_ReturnsOneRangePerFixture |
 | [CONS-044](exigences/CONS-044.md) | S | Moniteur dans une fenêtre séparée | Non réalisé |  |
 | [GEN-090](exigences/GEN-090.md) | I | Latence action → trame < 50 ms | Réalisé | ConsoleLatencyTests.Override_ReachesDriver_InLessThan50Milliseconds |
 | [GEN-100](exigences/GEN-100.md) | I | Interface en français | Réalisé |  |
@@ -121,26 +121,61 @@
 | [CONS-060](exigences/CONS-060.md) | I | Composant « faders d'un appareil » réutilisable | Réalisé | LibraryViewModelTests.LiveTest_PatchesAtAddress_RangeClickSendsMedian_StopReleases |
 | [GEN-020](exigences/GEN-020.md) | I | Valeurs internes normalisées 0-1 | Réalisé | DmxConversionTests.Half_Is128In8Bit_And0x8000In16Bit<br>DmxConversionTests.SixteenBit_KeepsMoreResolutionThan8Bit<br>DmxConversionTests.To8Bit_ClampsAndRounds |
 | [GEN-021](exigences/GEN-021.md) | I | Affichage dans l'unité la plus parlante | Réalisé | DmxConversionTests.Describe_UsesMostMeaningfulUnit |
-| [GEN-052](exigences/GEN-052.md) | I | Identifiants stables | Réalisé | PreferencesAndProjectTests.Project_CreateThenOpen |
+| [GEN-052](exigences/GEN-052.md) | I | Identifiants stables | Réalisé | PreferencesAndProjectTests.Project_CreateThenOpen<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips |
 | [GEN-058](exigences/GEN-058.md) | S | Chemins relatifs (projet déplaçable) | Non réalisé |  |
 | [GEN-102](exigences/GEN-102.md) | I | Annuler / rétablir (50 niveaux minimum) | Réalisé | LibraryViewModelTests.Editor_UndoRedo<br>LibraryViewModelTests.History_Keeps100Levels |
 | [GEN-105](exigences/GEN-105.md) | M | Recherche dans les longues listes | Réalisé |  |
 
-## P3 – 12 exigences, 0 couvertes par des tests automatiques
+## P3 – 47 exigences, 14 couvertes par des tests automatiques
 
-> Sans fiche : 11 · À faire : 1
+> Partiel : 2 · Réalisé : 4 · Sans fiche : 41
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [CONS-020](exigences/CONS-020.md) | I | (fiche manquante) | Sans fiche |  |
-| [CONS-021](exigences/CONS-021.md) | I | (fiche manquante) | Sans fiche |  |
-| [CONS-022](exigences/CONS-022.md) | I | (fiche manquante) | Sans fiche |  |
-| [CONS-023](exigences/CONS-023.md) | M | (fiche manquante) | Sans fiche |  |
-| [CONS-024](exigences/CONS-024.md) | M | (fiche manquante) | Sans fiche |  |
+| [CONS-020](exigences/CONS-020.md) | I | Faders regroupés par appareil patché | Réalisé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel<br>ConsoleViewModelTests.DeviceMode_Leaving_KeepsOverridesAsRealConsoleValues |
+| [CONS-021](exigences/CONS-021.md) | I | Outil adapté par type d'attribut | Partiel | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel |
+| [CONS-022](exigences/CONS-022.md) | I | Surcharge d'attribut soumise à la chaîne de rendu | Partiel |  |
+| [CONS-023](exigences/CONS-023.md) | M | Clic sur une plage et balayage | Réalisé |  |
+| [CONS-024](exigences/CONS-024.md) | M | Bouton Identifier par appareil | Réalisé | ConsoleViewModelTests.Identify_LightsIntensityChannel_WithoutTouchingColor_AndReleasesOnStop |
 | [GEN-004](exigences/GEN-004.md) | M | (fiche manquante) | Sans fiche |  |
-| [GEN-053](exigences/GEN-053.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-053](exigences/GEN-053.md) | I | (fiche manquante) | Sans fiche | FixtureUpdateImpactTests.ForLibraryUpdate_ModeRemovedInNewDefinition_IsFlagged<br>StoresTests.ProjectFixtureLibrary_EnsureCopied_CopiesFixtureIntoProjectFolder<br>StoresTests.ProjectFixtureLibrary_EnsureCopied_ModifyingSharedCopyAfterwards_DoesNotAffectProject<br>StoresTests.ProjectFixtureLibrary_UpdateFrom_ReplacesProjectCopy |
 | [GEN-122](exigences/GEN-122.md) | M | (fiche manquante) | Sans fiche |  |
-| [SORT-008](exigences/SORT-008.md) | M | Canaux maintenus pendant le test de sortie | À faire |  |
+| [INST-001](exigences/INST-001.md) | I | (fiche manquante) | Sans fiche | StoresTests.InstallationStore_Missing_ReturnsDefaultWithOneUniverse |
+| [INST-002](exigences/INST-002.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-003](exigences/INST-003.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-010](exigences/INST-010.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-011](exigences/INST-011.md) | I | (fiche manquante) | Sans fiche | PatchRulesTests.PlanMultiple_FourParsSevenChannels_GivesReferenceShowAddresses<br>PatchRulesTests.PlanMultiple_WithGap_LeavesReserve |
+| [INST-012](exigences/INST-012.md) | I | (fiche manquante) | Sans fiche | PatchRulesTests.FindFreeAddress_NoRoomLeft_ReturnsNull<br>PatchRulesTests.FindFreeAddress_SkipsOccupiedRanges |
+| [INST-013](exigences/INST-013.md) | I | (fiche manquante) | Sans fiche | PatchRulesTests.DetectOverlaps_DifferentUniverses_NoOverlap<br>PatchRulesTests.DetectOverlaps_FindsOverlappingRange |
+| [INST-014](exigences/INST-014.md) | M | (fiche manquante) | Sans fiche | PatchRulesTests.DetectOverlaps_SameGroupButDifferentMode_StillOverlaps<br>PatchRulesTests.DetectOverlaps_Twins_SameAddress_NoOverlap |
+| [INST-015](exigences/INST-015.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-016](exigences/INST-016.md) | I | (fiche manquante) | Sans fiche | FixtureUpdateImpactTests.ForModeChange_FromRichToSimpleMode_ReportsLostChannels<br>FixtureUpdateImpactTests.ForModeChange_SameMode_IsEmpty |
+| [INST-017](exigences/INST-017.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-018](exigences/INST-018.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-019](exigences/INST-019.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-020](exigences/INST-020.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-021](exigences/INST-021.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-030](exigences/INST-030.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-031](exigences/INST-031.md) | I | (fiche manquante) | Sans fiche | AutoSelectionsTests.Build_AllFixtures_IsOrderedByAddress<br>AutoSelectionsTests.Build_GroupsByCategoryAndByModel<br>AutoSelectionsTests.Build_NewFixtureAdded_AppearsWithoutAnyStoredState |
+| [INST-032](exigences/INST-032.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-033](exigences/INST-033.md) | M | (fiche manquante) | Sans fiche | SelectionRulesTests.FirstAndSecondHalf_SplitInTheMiddle<br>SelectionRulesTests.OddAndEven_SplitByRank<br>SelectionRulesTests.OrderByPosition_LeftToRight_SortsByX<br>SelectionRulesTests.OrderByPosition_UnplacedFixture_KeepsOriginalRankAtTheEnd<br>(+1) |
+| [INST-034](exigences/INST-034.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-050](exigences/INST-050.md) | I | (fiche manquante) | Sans fiche | StoresTests.VenueStore_Missing_ReturnsDefaultGenericVenue<br>StoresTests.VenueStore_SaveThenLoad_KeepsActiveVenue |
+| [INST-051](exigences/INST-051.md) | I | (fiche manquante) | Sans fiche |  |
+| [INST-052](exigences/INST-052.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-001](exigences/SIM-001.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-002](exigences/SIM-002.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-003](exigences/SIM-003.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-004](exigences/SIM-004.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-005](exigences/SIM-005.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-006](exigences/SIM-006.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-007](exigences/SIM-007.md) | M | (fiche manquante) | Sans fiche |  |
+| [SIM-008](exigences/SIM-008.md) | M | (fiche manquante) | Sans fiche |  |
+| [SIM-009](exigences/SIM-009.md) | M | (fiche manquante) | Sans fiche |  |
+| [SIM-010](exigences/SIM-010.md) | M | (fiche manquante) | Sans fiche |  |
+| [SIM-012](exigences/SIM-012.md) | I | (fiche manquante) | Sans fiche |  |
+| [SIM-013](exigences/SIM-013.md) | S | (fiche manquante) | Sans fiche |  |
+| [SORT-008](exigences/SORT-008.md) | M | Canaux maintenus pendant le test de sortie | Réalisé | RenderEngineTests.TestPattern_HeldChannels_RespectExcludedChannels<br>RenderEngineTests.TestPattern_HeldChannels_StayLitForTheWholeChase |
 | [SORT-062](exigences/SORT-062.md) | I | (fiche manquante) | Sans fiche |  |
 | [SORT-063](exigences/SORT-063.md) | S | (fiche manquante) | Sans fiche |  |
 | [SORT-064](exigences/SORT-064.md) | S | (fiche manquante) | Sans fiche |  |

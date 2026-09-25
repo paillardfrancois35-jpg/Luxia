@@ -124,6 +124,7 @@
 | [BIB-100](BIB-100.md) | Signaler visiblement une erreur de validation et amener sur l'onglet concerné | P2 | M | À faire |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
+| [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
@@ -131,17 +132,22 @@
 | [CONS-004](CONS-004.md) | Commandes de libération et de page | P1 | I | Réalisé |
 | [CONS-005](CONS-005.md) | Le fader affiche la valeur émise | P1 | I | Réalisé |
 | [CONS-006](CONS-006.md) | Sélection multiple de faders | P1 | I | Réalisé |
-| [CONS-007](CONS-007.md) | Appareil, attribut et plage sur le fader | P1 | M | Reporté (P3) |
+| [CONS-007](CONS-007.md) | Appareil, attribut et plage sur le fader | P1 | M | Réalisé |
 | [CONS-008](CONS-008.md) | Surcharges soumises au blackout et à la sûreté | P1 | M | Reporté (P4-P5) |
 | [CONS-009](CONS-009.md) | Choix de l'univers | P1 | M | Réalisé |
 | [CONS-010](CONS-010.md) | Instantanés de console | P1 | S | Réalisé |
+| [CONS-020](CONS-020.md) | Faders regroupés par appareil patché | P3 | I | Réalisé |
+| [CONS-021](CONS-021.md) | Outil adapté par type d'attribut | P3 | I | Partiel |
+| [CONS-022](CONS-022.md) | Surcharge d'attribut soumise à la chaîne de rendu | P3 | I | Partiel |
+| [CONS-023](CONS-023.md) | Clic sur une plage et balayage | P3 | M | Réalisé |
+| [CONS-024](CONS-024.md) | Bouton Identifier par appareil | P3 | M | Réalisé |
 | [CONS-040](CONS-040.md) | Moniteur de sortie 512 cases | P1 | I | Réalisé |
 | [CONS-041](CONS-041.md) | Infos au survol du moniteur | P1 | I | Réalisé |
-| [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Partiel |
+| [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Réalisé |
 | [CONS-044](CONS-044.md) | Moniteur dans une fenêtre séparée | P1 | S | Non réalisé |
 | [CONS-060](CONS-060.md) | Composant « faders d'un appareil » réutilisable | P2 | I | Réalisé |
 | [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | À faire |
-| [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | À faire |
+| [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -186,7 +192,7 @@
 | [SORT-005](SORT-005.md) | Moteur actif sans aucune sortie | P0 | I | Réalisé |
 | [SORT-006](SORT-006.md) | Configuration des sorties dans les préférences du poste | P0 | I | Réalisé |
 | [SORT-007](SORT-007.md) | Écran « Sorties » et test de sortie | P0 | M | Réalisé |
-| [SORT-008](SORT-008.md) | Canaux maintenus pendant le test de sortie | P3 | M | À faire |
+| [SORT-008](SORT-008.md) | Canaux maintenus pendant le test de sortie | P3 | M | Réalisé |
 | [SORT-010](SORT-010.md) | Détection automatique de l'Arduino | P0 | I | Réalisé, à valider sur matériel |
 | [SORT-011](SORT-011.md) | Dernier port essayé en premier | P0 | I | Réalisé |
 | [SORT-012](SORT-012.md) | Jamais 1200 bauds, DTR actif | P0 | I | Réalisé |
