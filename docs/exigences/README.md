@@ -120,6 +120,7 @@
 | [BIB-096](BIB-096.md) | Test en direct : saisie d'une valeur au clavier | P2 | S | À faire |
 | [BIB-097](BIB-097.md) | Barre de défilement horizontale trop fine | P2 | S | À faire |
 | [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | À faire |
+| [BIB-099](BIB-099.md) | Mode découverte : ergonomie de « Nouvelle plage ici » | P2 | M | À faire |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
