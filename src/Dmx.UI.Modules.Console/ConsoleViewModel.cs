@@ -142,8 +142,18 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         {
             channel.Update(_frame[channel.Channel - 1], _overrides[channel.Channel - 1] >= 0);
 
-            // CONS-007 : appareil et attribut, toujours à jour (recalculé à chaque rafraîchissement).
-            channel.Caption = PatchInfo(channel.Channel) is { } info ? $"{info.Fixture.Name} {info.Channel.Name}" : string.Empty;
+            // CONS-007 : appareil, attribut et nom de plage courante, toujours à jour.
+            if (PatchInfo(channel.Channel) is { } info)
+            {
+                channel.Caption = $"{info.Fixture.Name} {info.Channel.Name}";
+                var described = DmxConversion.Describe(info.Channel, channel.Value, info.Type.Physical);
+                var dash = described.IndexOf('–', StringComparison.Ordinal);
+                channel.PercentText = dash >= 0 ? described[(dash + 1)..].Trim() : described;
+            }
+            else
+            {
+                channel.Caption = string.Empty;
+            }
         }
 
         if (IsDeviceMode)

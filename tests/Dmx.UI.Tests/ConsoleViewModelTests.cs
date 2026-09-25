@@ -218,6 +218,17 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "CONS-007")]
+    public void Fader_PatchedChannelWithCapabilities_ShowsRangeNameInsteadOfPercent()
+    {
+        PatchAt(GenericFixtures.Strobe, "2 canaux", 8, "Strobe 1");
+        SetAndTick((9, 50));
+
+        _console.Channels[8].Caption.ShouldBe("Strobe 1 Vitesse");
+        _console.Channels[8].PercentText.ShouldContain("Strobe lent");
+    }
+
+    [Fact]
     [Trait("Exigence", "CONS-043")]
     public void FixtureBoundaries_ReflectsPatch()
     {
