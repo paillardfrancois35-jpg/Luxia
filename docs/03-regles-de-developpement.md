@@ -115,9 +115,10 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Élément | Règle |
 |---|---|
 | Dépôt | **Local uniquement** (pas de distant) |
-| Branches | `main` toujours stable ; **une branche par étape vérifiable** (`p0/boucle-40hz`, `p0/pilote-arduino`…), fusionnée dans `main` après validation de l'utilisateur (`--no-ff`) |
+| Responsabilité | **Les opérations Git sont à la charge de l'IA de développement** (décision de l'utilisateur, 2026-09-25) : commits au fil des étapes ; fusion dans `main` et étiquette de version **à chaque validation d'un passage important par l'utilisateur**. |
+| Branches | `main` ne reçoit que du validé ; une branche par phase (`p0/fondations`, `p1/console`…) avec un commit par étape vérifiable ; fusion dans `main` (`--no-ff`) après validation |
 | Commits | En français, format `type(module): résumé` ; types : `feat`, `fix`, `test`, `docs`, `refactor`, `build`, `chore`, `firmware` ; le corps cite les exigences (`Exigences : SORT-001, SORT-003`) |
-| Étiquettes | Une par phase livrée : `p0`, `p1`… |
+| Étiquettes | Une par passage validé : `p0`, `p1`… (annotée, message = ce qui a été validé) |
 | Fichiers exclus | `bin/`, `obj/`, `.vs/`, `*.user`, fichiers de build Arduino, journaux, enregistrements temporaires |
 
 ## 8. Données et fichiers
