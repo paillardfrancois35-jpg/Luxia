@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/OpenLightingProject/open-fixture-library/master/schemas/fixture.json",
+  "name": "Fog 1000",
+  "categories": [
+    "Smoke"
+  ],
+  "meta": {
+    "authors": [
+      "Test"
+    ],
+    "createDate": "2026-09-25",
+    "lastModifyDate": "2026-09-25"
+  },
+  "availableChannels": {
+    "Fog": {
+      "capabilities": [
+        {
+          "dmxRange": [
+            0,
+            9
+          ],
+          "type": "NoFunction"
+        },
+        {
+          "dmxRange": [
+            10,
+            255
+          ],
+          "type": "FogOutput",
+          "fogOutputStart": "0%",
+          "fogOutputEnd": "100%"
+        }
+      ]
+    }
+  },
+  "modes": [
+    {
+      "name": "1-channel",
+      "channels": [
+        "Fog"
+      ]
+    }
+  ]
+}

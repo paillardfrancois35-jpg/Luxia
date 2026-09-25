@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/OpenLightingProject/open-fixture-library/master/schemas/fixture.json",
+  "name": "Strobe 750",
+  "categories": [
+    "Strobe"
+  ],
+  "meta": {
+    "authors": [
+      "Test"
+    ],
+    "createDate": "2026-09-25",
+    "lastModifyDate": "2026-09-25"
+  },
+  "availableChannels": {
+    "Intensity": {
+      "capability": {
+        "type": "Intensity"
+      }
+    },
+    "Speed": {
+      "capability": {
+        "type": "StrobeSpeed",
+        "speedStart": "1Hz",
+        "speedEnd": "25Hz"
+      }
+    },
+    "Blades": {
+      "capability": {
+        "type": "BladeInsertion",
+        "blade": "Top",
+        "insertionStart": "0%",
+        "insertionEnd": "100%"
+      }
+    }
+  },
+  "modes": [
+    {
+      "name": "3-channel",
+      "channels": [
+        "Intensity",
+        "Speed",
+        "Blades"
+      ]
+    }
+  ]
+}
