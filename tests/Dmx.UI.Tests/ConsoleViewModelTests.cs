@@ -1,3 +1,5 @@
+using Dmx.Fixtures;
+using Dmx.Patch.Model;
 using Dmx.UI.Controls;
 using Dmx.UI.Modules.Console;
 
@@ -200,6 +202,99 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
         await _console.SaveSnapshotCommand.ExecuteAsync(null);
 
         _console.Message!.ShouldContain("projet");
+    }
+
+    [Fact]
+    [Trait("Exigence", "CONS-007")]
+    [Trait("Exigence", "CONS-041")]
+    public void MonitorHover_PatchedChannel_ShowsFixtureAndAttribute()
+    {
+        PatchRgbAt(8, "PAR 1");
+        SetAndTick((8, 200));
+
+        _console.OnMonitorHover(8);
+
+        _console.HoverText.ShouldContain("PAR 1 Rouge");
+    }
+
+    [Fact]
+    [Trait("Exigence", "CONS-043")]
+    public void FixtureBoundaries_ReflectsPatch()
+    {
+        PatchRgbAt(8, "PAR 1");
+
+        _console.FixtureBoundaries.ShouldBe([(8, 10)]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "CONS-020")]
+    [Trait("Exigence", "CONS-021")]
+    public void DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel()
+    {
+        PatchRgbAt(8, "PAR 1");
+
+        _console.IsDeviceMode = true;
+
+        _console.DeviceFixtures.Count.ShouldBe(1);
+        var faders = _console.DeviceFixtures[0];
+        faders.Channels.Count.ShouldBe(3);
+        faders.Summary.ShouldContain("PAR");
+
+        faders.SetValue(faders.Channels[0], 200);
+        _host.Tick();
+
+        _host.Frame()[7].ShouldBe((byte)200); // canal 8 = index 7 (rouge)
+    }
+
+    [Fact]
+    [Trait("Exigence", "CONS-020")]
+    public void DeviceMode_Leaving_KeepsOverridesAsRealConsoleValues()
+    {
+        PatchRgbAt(8, "PAR 1");
+        _console.IsDeviceMode = true;
+        _console.DeviceFixtures[0].SetValue(_console.DeviceFixtures[0].Channels[0], 200);
+        _host.Tick();
+
+        _console.IsDeviceMode = false;
+        _host.Tick();
+
+        // Detach() ne libère pas les surcharges (à la différence du test en direct de la bibliothèque, BIB-063).
+        _host.Frame()[7].ShouldBe((byte)200);
+    }
+
+    [Fact]
+    [Trait("Exigence", "CMD-023")]
+    [Trait("Exigence", "CONS-024")]
+    public void Identify_LightsIntensityChannel_WithoutTouchingColor_AndReleasesOnStop()
+    {
+        // GenericFixtures.Rgbw « 5 canaux » : dim, r, g, b, w — dim est le seul canal d'intensité.
+        PatchAt(GenericFixtures.Rgbw, "5 canaux", 20, "Gros PAR 1");
+        _console.IsDeviceMode = true;
+        var faders = _console.DeviceFixtures[0];
+
+        faders.ToggleIdentifyCommand.Execute(null);
+        faders.Refresh();
+        _host.Tick();
+
+        faders.Identifying.ShouldBeTrue();
+        _host.Frame()[19].ShouldBe((byte)255); // canal 20 = dim
+        _host.Frame()[20].ShouldBe((byte)0); // rouge jamais touché
+
+        faders.ToggleIdentifyCommand.Execute(null);
+        _host.Tick();
+
+        faders.Identifying.ShouldBeFalse();
+        _host.Frame()[19].ShouldBe((byte)0); // libéré : retombe à la valeur par défaut du canal (0)
+    }
+
+    private void PatchRgbAt(int address, string name) => PatchAt(GenericFixtures.Rgb, "3 canaux", address, name);
+
+    private void PatchAt(Dmx.Fixtures.Model.FixtureType type, string modeName, int address, string name)
+    {
+        _host.Runtime.Project.Create(_host.ProjectFolder, "Essai");
+        _host.Runtime.Project.FixtureLibrary!.EnsureCopied(type);
+        var fixture = new PatchedFixture { FixtureTypeId = type.Id, ModeName = modeName, Address = address, Name = name };
+        _host.Runtime.Project.SaveInstallation(new Installation { Fixtures = [fixture] });
     }
 
     private void SetAndTick(params (int Channel, byte Value)[] values)

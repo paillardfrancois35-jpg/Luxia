@@ -6,6 +6,7 @@ using Dmx.Core.Dmx;
 using Dmx.Fixtures.Model;
 using Dmx.Hosting;
 using Dmx.Messaging.Commands;
+using Dmx.Patch.Rules;
 using Dmx.UI.Controls;
 
 namespace Dmx.UI.Modules.Console;
@@ -18,14 +19,21 @@ namespace Dmx.UI.Modules.Console;
 /// </summary>
 public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
 {
+    private static readonly TimeSpan IdentifyPeriod = TimeSpan.FromMilliseconds(400);
+
     private readonly DmxRuntime _runtime;
     private readonly byte[] _frame = new byte[DmxConstants.ChannelCount];
     private readonly short[] _overrides = new short[DmxConstants.ChannelCount];
     private long _discoveryLast;
     private double _discoveryPosition;
+    private IReadOnlyList<(int Channel, byte Value)> _identifyChannels = [];
+    private long _identifyStart;
 
     [ObservableProperty]
     private bool _isActive;
+
+    [ObservableProperty]
+    private bool _identifying;
 
     [ObservableProperty]
     private string _summary = string.Empty;
@@ -63,9 +71,104 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
 
     /// <summary>
     /// Place l'appareil (patch temporaire) et active le composant : les canaux sont pris à leur valeur par défaut.
-    /// Renvoie un message d'erreur si l'adresse ne convient pas.
+    /// Renvoie un message d'erreur si l'adresse ne convient pas. Sert au test en direct de la bibliothèque
+    /// (BIB-060 à 063) : appareil jetable, surcharges libérées à l'arrêt (<see cref="Stop"/>).
     /// </summary>
     public string? Start(FixtureType fixture, FixtureMode mode, int address, int universe = 1)
+    {
+        var error = Setup(fixture, mode, address, universe, displayName: null);
+        if (error is not null)
+        {
+            return error;
+        }
+
+        // Valeurs par défaut du modèle (étape 1 de la chaîne de rendu) : l'appareil démarre dans un état connu.
+        _runtime.SetChannels(universe, [.. Channels.Select(c => new ChannelValue(c.AbsoluteChannel, (byte)(c.Part == ChannelPart.Fine ? 0 : c.Definition.Default)))]);
+        return null;
+    }
+
+    /// <summary>
+    /// Place l'appareil **déjà patché** (Console en mode appareils, CONS-020) : à la différence de <see cref="Start"/>,
+    /// n'écrit aucune valeur par défaut (ce sont de vraies surcharges de console, pas un essai jetable) et
+    /// <see cref="Detach"/> ne les libère pas (elles se libèrent par les commandes habituelles de la console, CONS-004).
+    /// </summary>
+    /// <param name="fixture">Modèle.</param>
+    /// <param name="mode">Mode utilisé.</param>
+    /// <param name="address">Adresse patchée.</param>
+    /// <param name="universe">Univers patché.</param>
+    /// <param name="displayName">Nom donné par l'utilisateur au patch (INST-017), affiché au lieu du nom du modèle.</param>
+    public string? Attach(FixtureType fixture, FixtureMode mode, int address, int universe, string displayName) =>
+        Setup(fixture, mode, address, universe, displayName);
+
+    /// <summary>Retire l'appareil de l'affichage (Console, changement de mode ou d'univers) sans toucher aux surcharges.</summary>
+    public void Detach()
+    {
+        StopDiscovery();
+        StopIdentifyInternal();
+        Channels.Clear();
+        IsActive = false;
+        Summary = string.Empty;
+    }
+
+    /// <summary>
+    /// Identifier l'appareil (CMD-023, INST-019, CONS-024, SIM-009) : ses canaux d'intensité clignotent,
+    /// sans toucher couleur ni position ; les autres appareils ne changent pas.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleIdentify()
+    {
+        if (Identifying)
+        {
+            StopIdentifyInternal();
+            return;
+        }
+
+        if (_identifyChannels.Count == 0)
+        {
+            return;
+        }
+
+        Identifying = true;
+        _identifyStart = Stopwatch.GetTimestamp();
+    }
+
+    private void StopIdentifyInternal()
+    {
+        if (!Identifying)
+        {
+            return;
+        }
+
+        Identifying = false;
+        _runtime.ReleaseChannels(Universe, [.. _identifyChannels.Select(c => c.Channel)]);
+    }
+
+    private void AdvanceIdentify()
+    {
+        if (!Identifying)
+        {
+            return;
+        }
+
+        var elapsed = Stopwatch.GetElapsedTime(_identifyStart);
+        var on = elapsed.Ticks / IdentifyPeriod.Ticks % 2 == 0;
+        _runtime.SetChannels(Universe, [.. _identifyChannels.Select(c => new ChannelValue(c.Channel, on ? c.Value : (byte)0))]);
+    }
+
+    /// <summary>Arrête le test : patch temporaire et surcharges supprimés (BIB-063).</summary>
+    [RelayCommand]
+    public void Stop()
+    {
+        var channels = Channels.Select(c => c.AbsoluteChannel).ToList();
+        var universe = Universe;
+        Detach();
+        if (channels.Count > 0)
+        {
+            _runtime.ReleaseChannels(universe, channels);
+        }
+    }
+
+    private string? Setup(FixtureType fixture, FixtureMode mode, int address, int universe, string? displayName)
     {
         ArgumentNullException.ThrowIfNull(fixture);
         ArgumentNullException.ThrowIfNull(mode);
@@ -74,9 +177,10 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
             return string.Create(CultureInfo.CurrentCulture, $"Adresse invalide : le mode occupe {mode.ChannelCount} canaux, l'adresse doit être entre 1 et {DmxConstants.ChannelCount - mode.ChannelCount + 1}.");
         }
 
-        Stop();
+        Detach();
         Address = address;
         Universe = universe;
+        _identifyChannels = IdentifyRules.IdentifyChannels(fixture, mode, address);
         for (var i = 0; i < mode.Channels.Count; i++)
         {
             var slot = mode.Channels[i];
@@ -87,26 +191,10 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
             }
         }
 
-        // Valeurs par défaut du modèle (étape 1 de la chaîne de rendu) : l'appareil démarre dans un état connu.
-        _runtime.SetChannels(universe, [.. Channels.Select(c => new ChannelValue(c.AbsoluteChannel, (byte)(c.Part == ChannelPart.Fine ? 0 : c.Definition.Default)))]);
         IsActive = true;
-        Summary = string.Create(CultureInfo.CurrentCulture, $"{fixture.DisplayName} – {mode.Name} – adresse {address} à {address + mode.ChannelCount - 1} (univers {universe})");
+        var name = string.IsNullOrWhiteSpace(displayName) ? fixture.DisplayName : displayName;
+        Summary = string.Create(CultureInfo.CurrentCulture, $"{name} – {mode.Name} – adresse {address} à {address + mode.ChannelCount - 1} (univers {universe})");
         return null;
-    }
-
-    /// <summary>Arrête le test : patch temporaire et surcharges supprimés (BIB-063).</summary>
-    [RelayCommand]
-    public void Stop()
-    {
-        StopDiscovery();
-        if (Channels.Count > 0)
-        {
-            _runtime.ReleaseChannels(Universe, [.. Channels.Select(c => c.AbsoluteChannel)]);
-        }
-
-        Channels.Clear();
-        IsActive = false;
-        Summary = string.Empty;
     }
 
     /// <summary>Règle un canal (fader, saisie).</summary>
@@ -200,6 +288,7 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
         }
 
         AdvanceDiscovery();
+        AdvanceIdentify();
         _runtime.Engine.CopyLastFrame(Universe, _frame);
         _runtime.Engine.CopyOverrides(Universe, _overrides);
         foreach (var channel in Channels)

@@ -28,6 +28,9 @@ public sealed partial class ChannelViewModel : ViewModelBase
     [ObservableProperty]
     private string _percentText = "0 %";
 
+    [ObservableProperty]
+    private string _caption = string.Empty;
+
     /// <summary>Crée la tranche.</summary>
     public ChannelViewModel(int channel) => Channel = channel;
 
@@ -36,9 +39,6 @@ public sealed partial class ChannelViewModel : ViewModelBase
 
     /// <summary>Numéro affiché.</summary>
     public string ChannelText => Channel.ToString(CultureInfo.CurrentCulture);
-
-    /// <summary>Appareil et attribut, dès que le patch existera (CONS-007, P3).</summary>
-    public string Caption { get; set; } = string.Empty;
 
     /// <summary>Valeur saisie localement (affichée tout de suite).</summary>
     public void SetLocal(int value)

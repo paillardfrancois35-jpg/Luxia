@@ -8,8 +8,8 @@ namespace Dmx.UI.Controls;
 
 /// <summary>
 /// Moniteur de sortie (CONS-040) : grille de 512 cases (32 × 16) dont la luminosité suit la valeur émise ;
-/// canaux surchargés encadrés en orange (CONS-043) ; survol → <see cref="ChannelHovered"/> (CONS-041) ;
-/// clic → <see cref="ChannelClicked"/>.
+/// canaux surchargés encadrés en orange, appareils délimités par un trait (CONS-043) ; case survolée encadrée
+/// aussitôt (CONS-092) ; survol → <see cref="ChannelHovered"/> (CONS-041) ; clic → <see cref="ChannelClicked"/>.
 /// </summary>
 public sealed class OutputMonitor : Control
 {
@@ -30,8 +30,12 @@ public sealed class OutputMonitor : Control
     private static readonly IPen GridPen = new Pen(new SolidColorBrush(Color.Parse("#30363D")), 1);
     private static readonly IPen OverriddenPen = new Pen(new SolidColorBrush(Color.Parse("#F0883E")), 2);
     private static readonly IPen HighlightPen = new Pen(new SolidColorBrush(Color.Parse("#58A6FF")), 2);
+    private static readonly IPen FixtureBoundaryPen = new Pen(new SolidColorBrush(Color.Parse("#8B949E")), 1.5);
+    private static readonly IPen HoverPen = new Pen(new SolidColorBrush(Color.Parse("#F6F8FA")), 2);
 
     private int _hovered;
+    private int[] _owner = [];
+    private IReadOnlyList<(int First, int Last)> _fixtureBoundaries = [];
 
     static OutputMonitor()
     {
@@ -52,6 +56,32 @@ public sealed class OutputMonitor : Control
 
     /// <summary>Premier et dernier canal mis en évidence (page affichée par la console), 0 si aucun.</summary>
     public (int First, int Last) Highlight { get; set; }
+
+    /// <summary>
+    /// Plages de canaux d'un même appareil patché (CONS-043) : délimitées par un trait entre appareils voisins.
+    /// </summary>
+    public IReadOnlyList<(int First, int Last)> FixtureBoundaries
+    {
+        get => _fixtureBoundaries;
+        set
+        {
+            if (ReferenceEquals(_fixtureBoundaries, value))
+            {
+                return;
+            }
+
+            _fixtureBoundaries = value;
+            _owner = new int[Values.Length];
+            Array.Fill(_owner, -1);
+            for (var r = 0; r < value.Count; r++)
+            {
+                for (var c = value[r].First; c <= value[r].Last && c <= Values.Length; c++)
+                {
+                    _owner[c - 1] = r;
+                }
+            }
+        }
+    }
 
     /// <inheritdoc cref="RevisionProperty"/>
     public int Revision
@@ -104,6 +134,44 @@ public sealed class OutputMonitor : Control
                 context.DrawLine(HighlightPen, rect.BottomLeft, rect.BottomRight);
             }
         }
+
+        // CONS-043 : un trait entre deux appareils voisins (haut/bas/gauche/droite selon le voisin réellement différent).
+        for (var i = 0; i < _owner.Length && i < Values.Length; i++)
+        {
+            var owner = _owner[i];
+            if (owner < 0)
+            {
+                continue;
+            }
+
+            var rect = CellRect(i, cellWidth, cellHeight);
+            var column = i % Columns;
+            if (column == 0 || _owner[i - 1] != owner)
+            {
+                context.DrawLine(FixtureBoundaryPen, rect.TopLeft, rect.BottomLeft);
+            }
+
+            if (column == Columns - 1 || _owner[i + 1] != owner)
+            {
+                context.DrawLine(FixtureBoundaryPen, rect.TopRight, rect.BottomRight);
+            }
+
+            if (i < Columns || _owner[i - Columns] != owner)
+            {
+                context.DrawLine(FixtureBoundaryPen, rect.TopLeft, rect.TopRight);
+            }
+
+            if (i + Columns >= Values.Length || _owner[i + Columns] != owner)
+            {
+                context.DrawLine(FixtureBoundaryPen, rect.BottomLeft, rect.BottomRight);
+            }
+        }
+
+        // CONS-092 : cadre immédiat autour de la case survolée (pas d'info-bulle standard, trop lente).
+        if (_hovered is > 0 and <= Rows * Columns)
+        {
+            context.DrawRectangle(HoverPen, CellRect(_hovered - 1, cellWidth, cellHeight).Deflate(1));
+        }
     }
 
     /// <inheritdoc />
@@ -115,6 +183,7 @@ public sealed class OutputMonitor : Control
         if (channel != _hovered)
         {
             _hovered = channel;
+            InvalidateVisual();
             ChannelHovered?.Invoke(this, channel);
         }
     }
@@ -124,6 +193,7 @@ public sealed class OutputMonitor : Control
     {
         base.OnPointerExited(e);
         _hovered = 0;
+        InvalidateVisual();
         ChannelHovered?.Invoke(this, 0);
     }
 
