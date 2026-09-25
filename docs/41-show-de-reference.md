@@ -37,7 +37,7 @@ Adresses « rondes » pour faciliter le réglage sur les appareils, avec des **r
 | Gros PAR 1 et 2 | 2 | Betopper LPC010 / LPC120 – mode à définir | 31, 41 | ≤ 10 | 50 |
 | Barres 1 et 2 | 2 | BeamZ LCB803 – **24CH** (4 sections, menu `ChNd 24Ch`) *(proposé : 48CH ne tient pas dans la réserve)* | 51, 81 | 24 | 110 |
 | Lyres 1 et 2 | 2 | Tomshine – **11CH** (Pan/Tilt 16 bits) | 111, 126 | 11 | 140 |
-| Effet multi-têtes | 1 | WZYBUTA 150 W – **16CH** | 141 | 16 | 160 |
+| Effet multi-têtes | 1 | WZYBUTA 150 W – **20CH** (mode 1, couleur commune) *(proposé : 64CH ne tient pas dans la réserve)* | 141 | 20 | 160 |
 | UV 1 et 2 | 2 | BeamZ BUV463 – **7CH** | 161, 168 | 7 | 175 |
 | Fumée | 1 | Générique « Machine à fumée » – 1CH | 180 | 1 | 180 |
 

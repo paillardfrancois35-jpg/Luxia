@@ -178,33 +178,47 @@ fixture("BeamZ", "BUV463", "uv", [
     "Projecteur UV 24 × 3 W (85 W), 4 rangées de LED pilotables (cellules 1 à 4).",
     {"sourceType": "LED UV", "power": 85}, EQ + "UV/BeamZ/BUV463/BeamZ-BUV463.pdf")
 
-# 6. WZYBUTA 150 W, effet 4 têtes (16 canaux) — tableau traduit automatiquement dans 5 langues (p. 7, 12, 17, 22, 27),
-#    menu p. 6 : addr A001-A512, CHnd = Ch16, SLnd = SL1 (mode console). Le recoupement des traductions précise
-#    les canaux 8 et 16 ; le reste est à vérifier en direct (Q25).
+# 6. WZYBUTA Moving Head 150 W — d'après la définition ScanLibrary (Daslight) de l'utilisateur (captures dans
+#    docs/Equipements/WZYBUTA/…, 2026-09-25) : mode 1 = 20 canaux, mode 2 = 64 canaux. 4 barrettes amovibles
+#    (Tilt 1-4) de 3 projecteurs RGBW chacune = 12 cellules en 64 canaux. La notice (tableau 16 canaux) ne correspond pas.
+WZ_EFFECT = [cap(0, 5, "Sans fonction", "noFunction"), cap(6, 128, "Effets automatiques 01-04", "program"),
+             cap(129, 255, "Effets au son", "program")]
+WZ_MOTOR = [cap(0, 15, "Sans fonction", "noFunction"), cap(16, 128, "Effets automatiques des moteurs 01-04", "program"),
+            cap(129, 255, "Effets des moteurs au son", "program")]
+WZ_UNKNOWN = "Absent des captures ScanLibrary : fonction inconnue (Q25)."
 fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
-    ch("x", "Moteur principal (rotation)", "rotation",
-       notes="Constaté par l'utilisateur : rotation du moteur principal dans un sens ou dans l'autre, vitesse selon la valeur. "
-             "Plages (arrêt, sens horaire, sens antihoraire, vitesse croissante ou décroissante) à relever en mode découverte (Q25)."),
-    *[ch("y%d" % i, "Moteur Y%d (tête %d)" % (i, i), "rotation", cell=i, notes="« Y motor running » : mouvement de la tête (à vérifier : vitesse ou position ?).") for i in range(1, 5)],
-    ch("master", "Gradateur maître", "intensity", notes="« Master switch » : gradateur maître d'après l'utilisateur (probable, à confirmer)."),
-    ch("flash", "Stroboscope des LED", "shutter", [cap(0, 0, "Pas de strobe (probable)"), cap(1, 254, "Stroboscope des LED, lent → rapide (sens à vérifier)", "progressive", "strobe"), cap(255, 255, "Reset")],
-       notes="« Stroboscope à billes, 255 réinitialisation active » (FR) : 255 = reset de l'appareil, ne pas y laisser la valeur."),
-    ch("auto", "Chenillard automatique des LED", "program", [cap(0, 5, "Sans fonction", "noFunction"), cap(6, 255, "Défilement automatique des LED", "program")],
-       notes="« Les perles s'en vont » (FR) / « Lamp beads walk by themselves » : chenillard interne des LED à partir de 6."),
-    ch("xyauto", "Mouvement automatique XY", "program", notes="« XY autopropulsé » : mouvement automatique des moteurs (seuil de déclenchement à vérifier)."),
-    ch("autospeed", "Vitesse des automatismes", "programSpeed"),
-    ch("r", "Rouge", "red", [cap(0, 15, "Éteint (à vérifier)"), cap(16, 255, "Rouge 0-100 %", "progressive", param=("pourcentage", 0, 100, "%"))],
-       notes="Notice : plage utile 16-255 ; mention « 1-9 réglage de la luminosité » non comprise (à vérifier)."),
-    ch("g", "Vert", "green", notes="Mention « 1-9 réglage de la luminosité » non comprise (à vérifier)."),
-    ch("b", "Bleu", "blue", notes="Mention « 1-9 réglage de la luminosité » non comprise (à vérifier)."),
-    ch("w", "Blanc", "white", [cap(0, 127, "Blanc 0-100 %", "progressive", param=("pourcentage", 0, 100, "%")), cap(128, 255, "Inconnu (à découvrir)")],
-       notes="Notice : plage utile 0-127 ; 128-255 non documenté."),
-    ch("blank", "Vide", "noFunction"),
-    ch("total", "Flash général", "shutter", notes="EN « totalise » / DE « totalisieren », mais FR « écran clignotant » et ES « flash de pantalla » : flash global (à vérifier)."),
-], [mode("16 canaux", "16CH", "CHnd = Ch16, SLnd = SL1, addr A001", "x", "y1", "y2", "y3", "y4", "master", "flash", "auto", "xyauto", "autospeed",
-         "r", "g", "b", "w", "blank", "total")],
-    "Effet à moteur tournant + 4 têtes pivotantes, 150 W. Menu : addr (A001-A512), CHnd (Ch16), SLnd (Auto, Soun, SL1 = console, SL2), "
-    "SHnd (effets), SEnS (sensibilité son), rESt (usine). Tableau DMX traduit automatiquement : définition À VÉRIFIER en mode découverte (Q25).",
+    ch("pan", "Pan (plateau)", "pan", notes="Position du plateau ; amplitude inconnue."),
+    ch("panmotor", "Rotation continue du plateau", "panContinuous", [
+        cap(0, 85, "Sans rotation", "noFunction"),
+        cap(86, 171, "Rotation sens 1, vitesse variable", "progressive", param=("vitesse", 0, 100, "%")),
+        cap(172, 255, "Rotation sens 2, vitesse variable", "progressive", param=("vitesse", 0, 100, "%"))],
+       notes="ScanLibrary : « Rotation of X Motor 1 / 2 ». Sens de variation de la vitesse à vérifier."),
+    *[ch("tilt%d" % i, "Tilt barrette %d" % i, "tilt", notes="Barrette %d = projecteurs %d à %d." % (i, 3 * i - 2, 3 * i))
+      for i in range(1, 5)],
+    ch("speed", "Vitesse Pan / Tilt", "panTiltSpeed"),
+    ch("dim", "Gradateur maître", "intensity"),
+    ch("strobe", "Strobe", "shutter", [cap(0, 9, "Pas de strobe", "open", "open"),
+                                       cap(10, 249, "Strobe lent → rapide", "progressive", "strobe"),
+                                       cap(250, 255, "Pas de strobe", "open", "open")]),
+    ch("effect", "Effets des LED", "program", WZ_EFFECT),
+    ch("motoreffect", "Effets des moteurs", "program", WZ_MOTOR),
+    ch("effectspeed", "Vitesse des effets / sensibilité au son", "programSpeed"),
+    ch("r", "Rouge (tous les projecteurs)", "red"), ch("g", "Vert (tous les projecteurs)", "green"),
+    ch("b", "Bleu (tous les projecteurs)", "blue"), ch("w", "Blanc (tous les projecteurs)", "white"),
+    *[c for n in range(1, 13) for c in (
+        ch("r%d" % n, "Rouge %d" % n, "red", cell=n), ch("g%d" % n, "Vert %d" % n, "green", cell=n),
+        ch("b%d" % n, "Bleu %d" % n, "blue", cell=n), ch("w%d" % n, "Blanc %d" % n, "white", cell=n))],
+    *[ch("x%d" % n, "Inconnu %d" % n, "generic", notes=WZ_UNKNOWN) for n in range(1, 4)],
+    ch("reset", "Reset", "reset", [cap(0, 250, "Sans fonction", "noFunction"), cap(251, 255, "Reset")],
+       notes="Ne jamais animer : 251-255 = reset de l'appareil."),
+], [mode("20 canaux", "20CH", "mode 1 (réglage du menu à noter)", "pan", "panmotor", "tilt1", "tilt2", "tilt3", "tilt4", "speed",
+         "dim", "strobe", "effect", "motoreffect", "effectspeed", "r", "g", "b", "w", "x1", "x2", "x3", "reset"),
+    mode("64 canaux", "64CH", "mode 2 (réglage du menu à noter)", "pan", "panmotor", "tilt1", "tilt2", "tilt3", "tilt4", "speed",
+         "dim", "strobe", "effect", "motoreffect", "effectspeed",
+         *["%s%d" % (c, n) for n in range(1, 13) for c in "rgbw"], "x1", "x2", "x3", "reset")],
+    "Effet « moving head » 150 W : plateau rotatif (Pan + rotation continue), 4 barrettes amovibles inclinables (Tilt 1-4) "
+    "de 3 projecteurs RGBW. Mode 20 canaux : couleur commune ; mode 64 canaux : RGBW par projecteur (12 cellules). "
+    "Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) inconnus.",
     {"sourceType": "LED RGBW", "power": 150},
     EQ + "WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf")
 

@@ -46,6 +46,20 @@ public sealed class ParkLibraryTests
     }
 
     [Fact]
+    [Trait("Exigence", "BIB-001")]
+    [Trait("Exigence", "BIB-003")]
+    public void Wzybuta_20And64Channels_12CellsIn64()
+    {
+        var effect = Get("Effet 4 têtes 150 W");
+
+        effect.Modes.Select(m => m.ChannelCount).ShouldBe([20, 64]);
+        effect.Modes[1].Channels[12].ShouldBe(new ModeChannel("r1"));
+        effect.Modes[1].Channels[59].ShouldBe(new ModeChannel("w12"));
+        effect.Channels.Max(c => c.Cell).ShouldBe(12);
+        effect.Channel("reset")!.Attribute.ShouldBe(AttributeKind.Reset);
+    }
+
+    [Fact]
     [Trait("Exigence", "BIB-003")]
     public void Lyre_11Channels_Has16BitPanTilt_9ChannelsCoarseOnly()
     {

@@ -79,4 +79,4 @@ Barre LCB803 : notice incomplète (Q24), générique « RGB » en attendant.
 | Élément | Statut | Retour |
 |---|---|---|
 | Plages vérifiées en direct sur chaque appareil (T-BIB-05) | ⏳ en attente | |
-| Définition de l'effet WZYBUTA (Q25) | ⏳ en attente | |
+| Définition de l'effet WZYBUTA (Q25) | 🟡 20CH / 64CH saisis d'après ScanLibrary ; canaux 17-19 inconnus | 2026-09-25 |
