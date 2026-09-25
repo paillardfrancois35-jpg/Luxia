@@ -76,7 +76,7 @@
           "min": 101,
           "max": 150,
           "kind": "program",
-          "label": "Fondu"
+          "label": "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)"
         },
         {
           "min": 151,

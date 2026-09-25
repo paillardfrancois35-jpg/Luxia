@@ -78,7 +78,7 @@ fixture("Betopper", "LPC008S", "par", [
        notes="La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct)."),
     ch("fn", "Sélecteur de fonction", "mode", [
         cap(0, 50, "Gradation DMX"), cap(51, 100, "Sortie couleur (8 couleurs, choix par CH7)", "program"),
-        cap(101, 150, "Fondu", "program"), cap(151, 200, "Transition", "program"),
+        cap(101, 150, "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)", "program"), cap(151, 200, "Transition", "program"),
         cap(201, 250, "Pulsation", "program"), cap(251, 255, "Audio (sensibilité par CH7)", "program")]),
     ch("speed", "Vitesse", "programSpeed", [cap(0, 255, "Vitesse des fonctions lent → rapide (ou choix de couleur)", "progressive", param=PCT)]),
 ], [mode("3 canaux", "3CH", "d001", "r", "g", "b"),

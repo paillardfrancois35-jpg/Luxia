@@ -494,41 +494,6 @@
           "value": 0
         }
       ]
-    },
-    {
-      "id": "51d4d213-f7a4-418c-bfe9-58bc83c95d9e",
-      "name": "3-RGB",
-      "universe": 1,
-      "channels": [
-        {
-          "channel": 1,
-          "value": 104
-        },
-        {
-          "channel": 2,
-          "value": 159
-        },
-        {
-          "channel": 8,
-          "value": 71
-        },
-        {
-          "channel": 10,
-          "value": 123
-        },
-        {
-          "channel": 15,
-          "value": 48
-        },
-        {
-          "channel": 18,
-          "value": 124
-        },
-        {
-          "channel": 120,
-          "value": 205
-        }
-      ]
     }
   ]
 }

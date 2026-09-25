@@ -39,3 +39,4 @@
 | 2026-09-24 | Claude | Développement | `87237c9` feat(console): console en mode canaux, moniteur, instantanés, coquille de l'application |
 | 2026-09-24 | Claude | Développement | `bff6da6` docs(p1): démonstration P1, instantanés du show de référence, notes de réalisation |
 | 2026-09-24 | Claude | Note | 6 instantanés dans le show de référence (PAR, lyres, UV), établis d'après les notices ; un test vérifie qu'aucun ne touche la fumée (180) ni le Reset des lyres (120, 135). |
+| 2026-09-25 | Claude | Écart | Un essai en direct de l'utilisateur (instantané « 3-RGB », fader 120 laissé à 205) a été écrit par l'application dans le fichier échantillon `samples/Show de référence/console.json` (le dossier était ouvert comme projet de test), puis committé par mégarde (`32996cf`) : 2 tests d'intégration en échec. Retiré, tests remis au vert. À l'avenir : ouvrir un dossier de travail séparé pour les essais manuels, jamais le show de référence livré. |
