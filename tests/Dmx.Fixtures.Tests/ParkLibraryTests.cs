@@ -1,0 +1,78 @@
+using Dmx.Fixtures.Model;
+using Dmx.Fixtures.Rules;
+
+namespace Dmx.Fixtures.Tests;
+
+/// <summary>Définitions des appareils du parc (doc 12 annexe A, doc 41 §11 P2) : chargées et valides.</summary>
+public sealed class ParkLibraryTests
+{
+    private static readonly FixtureLibrary Library = LoadLibrary();
+
+    [Fact]
+    [Trait("Exigence", "BIB-001")]
+    public void ParkLibrary_LoadsSixModels_WithoutMessage()
+    {
+        Library.Messages.ShouldBeEmpty();
+        Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(6);
+    }
+
+    [Theory]
+    [InlineData("LPC008S")]
+    [InlineData("LPC010")]
+    [InlineData("LPC120")]
+    [InlineData("Mini lyre gobo")]
+    [InlineData("BUV463")]
+    [InlineData("Effet 4 têtes 150 W")]
+    [Trait("Exigence", "BIB-004")]
+    public void ParkModel_HasNoValidationError(string model)
+    {
+        var issues = FixtureValidator.Validate(Get(model));
+
+        issues.Where(i => i.Severity == IssueSeverity.Error).ShouldBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-005")]
+    [Trait("Exigence", "BIB-006")]
+    public void Lpc008s_ModesAndIntensityRules()
+    {
+        var par = Get("LPC008S");
+
+        par.Modes.Select(m => (m.ChannelCount, m.DeviceSetting)).ShouldBe([(3, "d001"), (7, "A001")]);
+        FixtureRules.HasVirtualIntensity(par, par.Modes[0]).ShouldBeTrue();
+        FixtureRules.HasVirtualIntensity(par, par.Modes[1]).ShouldBeFalse();
+        FixtureRules.Safety(par.Channel("strobe")!).ShouldBe(SafetyTags.Strobe);
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-003")]
+    public void Lyre_11Channels_Has16BitPanTilt_9ChannelsCoarseOnly()
+    {
+        var lyre = Get("Mini lyre gobo");
+
+        lyre.Modes[1].ChannelCount.ShouldBe(11);
+        lyre.Modes[1].Channels[1].ShouldBe(new ModeChannel("pan", ChannelPart.Fine));
+        lyre.Modes[0].ChannelCount.ShouldBe(9);
+        lyre.Channel("control")!.Attribute.ShouldBe(AttributeKind.Reset);
+        lyre.Channel("shutter")!.CapabilityAt(12)!.Strobe.ShouldBe(StrobeEffect.Open);
+        FixtureRules.Safety(lyre.Channel("pan")!).ShouldBe(SafetyTags.Movement);
+    }
+
+    [Fact]
+    public void Buv463_HasFourUvCells()
+    {
+        var uv = Get("BUV463");
+
+        FixtureRules.CellCount(uv, uv.Modes[0]).ShouldBe(4);
+        FixtureRules.FollowsIntensity(uv, uv.Modes[0], uv.Channel("uv1")!).ShouldBeFalse(); // le maître porte l'intensité
+    }
+
+    private static FixtureType Get(string model) => Library.Entries.Single(e => e.Fixture.Model == model).Fixture;
+
+    private static FixtureLibrary LoadLibrary()
+    {
+        var library = new FixtureLibrary(Path.Combine(AppContext.BaseDirectory, "samples", "Bibliothèque"));
+        library.Load();
+        return library;
+    }
+}

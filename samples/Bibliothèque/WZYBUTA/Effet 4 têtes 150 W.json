@@ -1,0 +1,194 @@
+{
+  "formatVersion": 1,
+  "id": "df9703ac-9b8e-5299-b255-52d18923f4ab",
+  "manufacturer": "WZYBUTA",
+  "model": "Effet 4 têtes 150 W",
+  "category": "effect",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "Effet à moteur tournant + 4 têtes pivotantes, 150 W. Tableau DMX ambigu (traduction) : définition À VÉRIFIER avec le mode découverte (Q25).",
+  "manual": "docs/Equipements/WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf",
+  "physical": {
+    "sourceType": "LED RGBW",
+    "power": 150
+  },
+  "channels": [
+    {
+      "key": "x",
+      "name": "Moteur X (rotation)",
+      "attribute": "rotation",
+      "notes": "« X motor running » : rotation du plateau (à vérifier)."
+    },
+    {
+      "key": "y1",
+      "name": "Moteur Y1 (tête 1)",
+      "attribute": "rotation",
+      "cell": 1
+    },
+    {
+      "key": "y2",
+      "name": "Moteur Y2 (tête 2)",
+      "attribute": "rotation",
+      "cell": 2
+    },
+    {
+      "key": "y3",
+      "name": "Moteur Y3 (tête 3)",
+      "attribute": "rotation",
+      "cell": 3
+    },
+    {
+      "key": "y4",
+      "name": "Moteur Y4 (tête 4)",
+      "attribute": "rotation",
+      "cell": 4
+    },
+    {
+      "key": "master",
+      "name": "Interrupteur général",
+      "attribute": "intensity",
+      "notes": "« Master switch » : gradateur ou marche/arrêt (à vérifier)."
+    },
+    {
+      "key": "flash",
+      "name": "Flash des LED",
+      "attribute": "shutter",
+      "notes": "255 = reset d'après la notice.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 254,
+          "kind": "progressive",
+          "label": "Flash lent → rapide (à vérifier)",
+          "strobe": "strobe"
+        },
+        {
+          "min": 255,
+          "max": 255,
+          "kind": "fixed",
+          "label": "Reset (« 255 active reset »)"
+        }
+      ]
+    },
+    {
+      "key": "auto",
+      "name": "Programmes des LED",
+      "attribute": "program",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 5,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 6,
+          "max": 255,
+          "kind": "program",
+          "label": "Défilement automatique des LED"
+        }
+      ]
+    },
+    {
+      "key": "xyauto",
+      "name": "Mouvement automatique XY",
+      "attribute": "program"
+    },
+    {
+      "key": "autospeed",
+      "name": "Vitesse des programmes",
+      "attribute": "programSpeed"
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red",
+      "notes": "« 16-255 » et « 1-9 brightness » dans la notice : à vérifier."
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue"
+    },
+    {
+      "key": "w",
+      "name": "Blanc",
+      "attribute": "white",
+      "notes": "« 0-127 » dans la notice : à vérifier."
+    },
+    {
+      "key": "blank",
+      "name": "Vide",
+      "attribute": "noFunction"
+    },
+    {
+      "key": "total",
+      "name": "« Totalise »",
+      "attribute": "generic",
+      "notes": "Fonction inconnue (traduction) : à découvrir en direct."
+    }
+  ],
+  "modes": [
+    {
+      "name": "16 canaux",
+      "shortName": "16CH",
+      "deviceSetting": "à vérifier sur l'appareil",
+      "channels": [
+        {
+          "channel": "x"
+        },
+        {
+          "channel": "y1"
+        },
+        {
+          "channel": "y2"
+        },
+        {
+          "channel": "y3"
+        },
+        {
+          "channel": "y4"
+        },
+        {
+          "channel": "master"
+        },
+        {
+          "channel": "flash"
+        },
+        {
+          "channel": "auto"
+        },
+        {
+          "channel": "xyauto"
+        },
+        {
+          "channel": "autospeed"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        },
+        {
+          "channel": "blank"
+        },
+        {
+          "channel": "total"
+        }
+      ]
+    }
+  ]
+}

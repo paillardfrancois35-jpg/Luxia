@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <None Include="assets/**/*" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="../../samples/Bibliothèque/**/*" LinkBase="samples/Bibliothèque" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../samples/BibliothÃ¨que/**/*" LinkBase="samples/BibliothÃ¨que" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
