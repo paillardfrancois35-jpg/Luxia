@@ -116,7 +116,7 @@
 | [BIB-084](BIB-084.md) | Export OFL | P2 | S | Non réalisé |
 | [BIB-093](BIB-093.md) | Groupe fabricant non déplié après une recherche | P2 | S | À faire |
 | [BIB-094](BIB-094.md) | LPC008S, plage « Fondu » du sélecteur de fonction à revoir | P2 | S | À faire |
-| [BIB-095](BIB-095.md) | Tomshine Mini lyre gobo, définition refaite d'après la vraie notice | P2 | M | Réalisé à valider sur matériel |
+| [BIB-095](BIB-095.md) | Tomshine Mini lyre gobo, définition refaite d'après la vraie notice | P2 | M | Validé |
 | [BIB-096](BIB-096.md) | Test en direct : saisie d'une valeur au clavier | P2 | S | À faire |
 | [BIB-097](BIB-097.md) | Barre de défilement horizontale trop fine | P2 | S | À faire |
 | [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | À faire |
