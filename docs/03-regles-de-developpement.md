@@ -63,6 +63,7 @@ DMX/
 | `Dmx.Output` | Core, Messaging |
 | `Dmx.Persistence` | Core |
 | `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
+| `Dmx.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
 | `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
@@ -147,6 +148,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 
 | Date | Modification |
 |---|---|
+| 2026-09-26 | P3 : projet `Dmx.Patch` (Core, Persistence, Fixtures) pour l'installation, les sélections et les lieux (doc 13, doc 00 §7.2). |
 | 2026-09-24 | Version initiale (Q21, Q22). |
 | 2026-09-25 | Fiches d'exigences `docs/exigences/` (demande de l'utilisateur) : suivi par exigence façon Redmine, source du statut de la matrice 31. |
 | 2026-09-25 | P1-P2 : projets d'interface par écran (D22), CA1822 en suggestion pour les projets d'interface (liaisons), CA1309 désactivée (tris affichés en français), matrice `tools/matrice-exigences.py`. |
