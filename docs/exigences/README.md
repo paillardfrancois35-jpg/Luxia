@@ -119,6 +119,7 @@
 | [BIB-095](BIB-095.md) | Tomshine Mini lyre gobo, définition refaite d'après la vraie notice | P2 | M | Réalisé à valider sur matériel |
 | [BIB-096](BIB-096.md) | Test en direct : saisie d'une valeur au clavier | P2 | S | À faire |
 | [BIB-097](BIB-097.md) | Barre de défilement horizontale trop fine | P2 | S | À faire |
+| [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | À faire |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |

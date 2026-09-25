@@ -18,3 +18,4 @@
 | 2026-09-25 | Test en direct : saisie clavier de la valeur d'un canal (comme sur les faders Console) | Bibliothèque (BIB-060/061) | Retenu : BIB-096 (P2) |
 | 2026-09-25 | Barre de défilement horizontale trop fine, difficile à attraper au survol | Bibliothèque | Retenu : BIB-097 (P2) |
 | 2026-09-25 | **Nom de l'application : « LuXia »** (choisi par l'utilisateur ; actuellement « DMX » partout dans le code, les docs et l'exécutable). À reprendre au moment opportun : nom du dépôt, `Dmx.slnx`, namespaces `Dmx.*`, exécutable `DMX.exe`, dossiers de données `%AppData%\DMX`, `Documents\DMX`, titre de fenêtre, docs. Gros renommage transverse, pas fait à la volée pour ne pas casser une phase en cours. | Transverse | À faire au moment opportun (pas de phase fixée) |
+| 2026-09-25 | Import de la bibliothèque : case à cocher « Écraser si déjà existant » pour remplacer un modèle déjà présent | Bibliothèque (BIB-082) | Retenu : BIB-098 (P3) |
