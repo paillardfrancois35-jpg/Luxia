@@ -3,6 +3,7 @@
     <Project Path="src/Dmx.App/Dmx.App.csproj" />
     <Project Path="src/Dmx.Core/Dmx.Core.csproj" />
     <Project Path="src/Dmx.Engine/Dmx.Engine.csproj" />
+    <Project Path="src/Dmx.Fixtures/Dmx.Fixtures.csproj" />
     <Project Path="src/Dmx.Hosting/Dmx.Hosting.csproj" />
     <Project Path="src/Dmx.Messaging/Dmx.Messaging.csproj" />
     <Project Path="src/Dmx.Output/Dmx.Output.csproj" />
@@ -15,6 +16,7 @@
     <Project Path="tests/Dmx.Architecture.Tests/Dmx.Architecture.Tests.csproj" />
     <Project Path="tests/Dmx.Core.Tests/Dmx.Core.Tests.csproj" />
     <Project Path="tests/Dmx.Engine.Tests/Dmx.Engine.Tests.csproj" />
+    <Project Path="tests/Dmx.Fixtures.Tests/Dmx.Fixtures.Tests.csproj" />
     <Project Path="tests/Dmx.Integration.Tests/Dmx.Integration.Tests.csproj" />
     <Project Path="tests/Dmx.Output.Tests/Dmx.Output.Tests.csproj" />
     <Project Path="tests/Dmx.Persistence.Tests/Dmx.Persistence.Tests.csproj" />

@@ -58,6 +58,8 @@ dotnet_diagnostic.CA1303.severity = none
 # CA1848 : délégués LoggerMessage non exigés hors code temps réel.
 dotnet_diagnostic.CA1848.severity = suggestion
 dotnet_diagnostic.CA1873.severity = suggestion
+# CA1309 : les tris affichés à l'utilisateur suivent l'ordre alphabétique français (culture), voulu.
+dotnet_diagnostic.CA1309.severity = none
 
 [tests/**.cs]
 # Noms de tests Methode_Condition_Resultat (doc 03 §6).
