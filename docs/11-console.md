@@ -88,6 +88,7 @@ Deux usages principaux :
 | CONS-044 (S) | Non réalisé. |
 | Test de sortie | Tant qu'il est actif, le chenillard de test remplace aussi les faders pris (D21). |
 | Figer | Le bouton « Figer » de la maquette viendra avec CMD-003 (P5). |
+| CONS-060 | Réalisé en P2 : `FixtureFadersView` (module Console), utilisé par le test en direct de la bibliothèque ; valeurs brutes en P2, attributs en P4. |
 | Rafraîchissement | L'interface lit la trame et les surcharges du moteur 20 fois par seconde ; après une action, la valeur demandée reste affichée 150 ms, le temps que le moteur l'applique (pas de retour en arrière visible). |
 
 ## 8. Tests

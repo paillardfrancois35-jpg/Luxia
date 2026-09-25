@@ -56,3 +56,27 @@ exactement ses canaux ; aucun ne touche la fumée (180) ni les canaux de contrô
 | Élément | Statut | Retour |
 |---|---|---|
 | Canaux conformes au plan d'adresses (chaque instantané allume ce qui est annoncé) | ⏳ en attente | |
+
+## P2 – Bibliothèque (2026-09-25)
+
+### Ajouté
+
+| Élément | Emplacement | Description |
+|---|---|---|
+| Définitions des appareils du parc | `samples/Bibliothèque/` | LPC008S, LPC010, LPC120, mini lyre Tomshine, BUV463, effet WZYBUTA (à vérifier) |
+
+Les définitions sont dans une **bibliothèque d'exemple**, pas encore dans le projet : la copie des modèles utilisés dans le
+projet (GEN-053) arrive avec le patch (P3). Pour les utiliser : Bibliothèque → Importer un dossier → `samples/Bibliothèque`.
+Barre LCB803 : notice incomplète (Q24), générique « RGB » en attendant.
+
+### Non-régression
+
+`ParkLibraryTests` : les 6 définitions se chargent sans message et sans erreur de validation ; déductions vérifiées
+(intensité virtuelle du LPC008S en 3 canaux, Pan/Tilt 16 bits de la lyre en 11 canaux, 4 cellules UV).
+
+### Validation par l'utilisateur
+
+| Élément | Statut | Retour |
+|---|---|---|
+| Plages vérifiées en direct sur chaque appareil (T-BIB-05) | ⏳ en attente | |
+| Définition de l'effet WZYBUTA (Q25) | ⏳ en attente | |

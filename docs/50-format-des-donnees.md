@@ -120,7 +120,50 @@ Instantanés de console (CONS-010) : faders pris, rappelables d'un clic.
 | `universe` | Univers (1 = premier) |
 | `channels` | Canaux (1-512) et valeurs (0-255) imposés au rappel ; les autres faders de l'univers sont libérés |
 
-## 6. Enregistrement de trames `.dmxrec` (format binaire 1)
+## 6. Bibliothèque : modèle d'appareil (format 1)
+
+Un fichier par modèle : `Bibliothèque\<fabricant>\<modèle>.json` (doc 12 §8). Exemple réduit (PAR 3 / 7 canaux) :
+
+```json
+{
+  "formatVersion": 1,
+  "id": "0b6d…",
+  "manufacturer": "Betopper",
+  "model": "LPC008S",
+  "category": "par",
+  "version": 1,
+  "source": "manual",
+  "notes": "Menu d001 = 3 canaux, A001 = 7 canaux.",
+  "physical": { "sourceType": "LED RGB 3-en-1", "power": 180 },
+  "channels": [
+    { "key": "dim", "name": "CH1 Gradation générale", "attribute": "intensity" },
+    { "key": "r", "name": "Rouge", "attribute": "red" },
+    { "key": "strobe", "name": "Strobe", "attribute": "shutter",
+      "capabilities": [
+        { "min": 0, "max": 10, "kind": "closed", "label": "Éteint", "strobe": "closed" },
+        { "min": 11, "max": 255, "kind": "progressive", "label": "Strobe lent → rapide", "strobe": "strobe",
+          "parameter": { "nature": "fréquence", "start": 1, "end": 20, "unit": "Hz" } } ] }
+  ],
+  "modes": [
+    { "name": "3 canaux", "shortName": "3CH", "deviceSetting": "d001", "channels": [ { "channel": "r" } ] },
+    { "name": "7 canaux", "shortName": "7CH", "deviceSetting": "A001",
+      "channels": [ { "channel": "dim" }, { "channel": "r" }, { "channel": "strobe" } ] }
+  ]
+}
+```
+
+| Élément | Propriétés | Valeurs |
+|---|---|---|
+| Modèle | `manufacturer`, `model`, `reference`, `category`, `version`, `author`, `source`, `derivedFrom`, `notes`, `manual`, `photo`, `physical`, `wheels`, `channels`, `modes` | `category` : `par`, `ledBar`, `movingHead`, `effect`, `strobe`, `uv`, `smoke`, `laser`, `dimmer`, `other` ; `source` : `manual`, `ofl`, `qlcPlus`, `generic` |
+| `physical` | `sourceType`, `beamAngle`, `panRange`, `tiltRange` (degrés), `power` (W), `warmupSeconds` | |
+| Canal | `key` (unique), `name`, `attribute`, `cell` (0 = appareil), `resolution` (`bit8` / `bit16`), `default`, `rest`, `identify`, `inverted`, `followsIntensity` (absent = déduit), `safety` (absent = déduit ; `strobe`, `smoke`, `movement`, combinables « strobe, movement »), `wheel` (clé de roue), `capabilities`, `notes` | `attribute` : `intensity`, `cellIntensity`, `red`, `green`, `blue`, `white`, `warmWhite`, `amber`, `uv`, `cyan`, `magenta`, `yellow`, `lime`, `colorWheel`, `colorMacro`, `colorTemperature`, `pan`, `tilt`, `panContinuous`, `tiltContinuous`, `panTiltSpeed`, `shutter`, `gobo`, `goboRotation`, `prism`, `prismRotation`, `focus`, `zoom`, `iris`, `frost`, `rotation`, `rotationSpeed`, `program`, `programSpeed`, `soundSensitivity`, `mode`, `smoke`, `fan`, `reset`, `maintenance`, `lampControl`, `generic`, `noFunction` |
+| Plage | `min`, `max` (inclus, 0-255), `kind`, `label`, `strobe`, `parameter` { `nature`, `start`, `end`, `unit` }, `colors` (« #RRGGBB », 1 ou 2), `wheelSlot`, `autoPalette` | `kind` : `fixed`, `progressive`, `wheelSlot`, `rotation`, `program`, `noFunction`, `closed`, `open` ; `strobe` : `closed`, `open`, `strobe`, `pulse`, `random` |
+| Mode | `name`, `shortName`, `deviceSetting`, `channels` : liste ordonnée de { `channel` (clé), `part` (`coarse` par défaut, `fine` pour l'octet fin d'un canal 16 bits) } | la position 1 est à l'adresse de l'appareil |
+| Roue | `key`, `name`, `kind` (`color` / `gobo`), `slots` : { `name`, `colors`, `image` } | |
+
+Règles de validation : doc 12 §3 (BIB-004) et §10.
+
+## 7. Enregistrement de trames `.dmxrec` (format binaire 1)
 
 Fichier binaire compact (SORT-060), petit-boutiste.
 
@@ -133,9 +176,10 @@ Une **longueur 0** signifie « trame identique à la précédente » : un univer
 Une fin de fichier tronquée (arrêt brutal) est tolérée à la lecture : seules les trames complètes sont relues.
 Lecture : `dmx-headless relire fichier.dmxrec`.
 
-## 7. Historique
+## 8. Historique
 
 | Date | Modification |
 |---|---|
 | 2026-09-24 | P0 : règles communes, `preferences.json`, `projet.json`, `.dmxrec`. |
 | 2026-09-24 | P1 : `console.json` (instantanés). |
+| 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |

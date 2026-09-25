@@ -213,12 +213,34 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 
 ---
 
+## 10. Notes de réalisation (P2)
+
+| Sujet | Réalisation |
+|---|---|
+| Modèle | Projet `Dmx.Fixtures`. Attribut = `AttributeKind` (liste du §2.3). Une définition 16 bits a une seule clé ; ses octets grossier et fin sont deux positions `coarse` / `fine` d'un mode. Plage = `Capability`. Format de fichier : doc 50 §6. |
+| BIB-003 | Passer un canal en 16 bits ajoute l'octet fin juste après l'octet grossier dans chaque mode (déplaçable) ; revenir en 8 bits le retire. |
+| BIB-004 | Erreurs : identité vide, clé ou nom de mode en double, plages invalides ou qui se chevauchent, mode sans canal, plus de 512 canaux, même canal à deux positions, canal inconnu, octet fin d'un canal 8 bits, canal fin orphelin, roue inconnue. Avertissements : trous (y compris début / fin de 0-255), 16 bits sans octet fin dans un mode. L'enregistrement est refusé s'il reste une erreur. |
+| BIB-006 | Émetteur d'une cellule : suit l'intensité si ni l'appareil ni sa cellule n'ont de gradateur. L'éditeur affiche la valeur déduite pour le mode choisi. |
+| BIB-007 | Plage d'effet Strobe, Pulsation ou Aléatoire → étiquette « strobe », même sur un canal Programme. Étiquettes imposables (case « automatique » décochée). |
+| BIB-009 | Version incrémentée à chaque enregistrement d'un modèle déjà présent. |
+| BIB-010 | « Dupliquer » : nouvel identifiant, « (copie) », `derivedFrom`, remarque « Dérivé de … ». C'est aussi la façon de modifier un générique (lecture seule). |
+| BIB-021 | Glisser-déposer dans la liste des positions (appui sur une ligne, relâche sur une autre) + boutons ▲ ▼. |
+| BIB-022 | Barre 0-255 : frontières déplaçables à la souris entre plages adjacentes. |
+| BIB-024 | Annuler / rétablir : 100 niveaux (état complet du modèle, immuable). |
+| BIB-060 | Le test en direct prend les canaux à leur **valeur par défaut**, en surcharges brutes (CMD-020) : l'étape « attributs » du moteur arrive en P4. |
+| BIB-061, 062 | Clic plage = médiane ; clic frontière = borne exacte ; découverte : balayage (1-100 valeurs/s), pause, ±1, « Nouvelle plage ici » coupe la plage courante à cette valeur. |
+| BIB-080, 081 | Fichiers de référence **rédigés** au format OFL / QLC+ (`tests/Dmx.Fixtures.Tests/assets`) : aucun téléchargement n'a été fait sans l'accord de l'utilisateur. À compléter par de vrais fichiers téléchargés. |
+| BIB-082, 083 | Import par lots hors du fil de l'interface avec progression ; un modèle déjà présent (même fabricant + modèle, ou même identifiant) n'est **pas** écrasé (« = » au rapport). |
+| Unités (GEN-021) | Faders d'appareil : nom de plage, degrés (Pan/Tilt si l'amplitude est connue), % (intensités, émetteurs), sinon 0-255. |
+| Non réalisés | BIB-027 (S, ouvrir notice / photo : seul le chemin est saisi), BIB-084 (S, export OFL). |
+| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : notice incomplète (Q24). WZYBUTA : à vérifier (Q25). Lyre : obturateur ouvert par défaut (12). |
+
 ## Annexe A – Appareils du parc (état de la documentation)
 
 | Rôle | Qté | Modèle | Modes connus | Documentation | État de la définition |
 |---|---|---|---|---|---|
 | PAR | 4 | Betopper LPC008S (RGB) | 3CH (`d001`), 7CH (`A001`) | PDF + fiche `betopper-lpc008s.md` | Tableau complet connu – à saisir |
-| Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | ? | PDF sans texte extractible | **En attente** des tableaux fournis par l'utilisateur |
+| Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | 4CH (`d001`), 8CH (`A001`) | PDF image (lus par rendu en P2) | **Saisi** (`samples/Bibliothèque/Betopper/`) |
 | Lyre | 2 | Tomshine (lyre à gobos) | 9CH, 11CH (Pan/Tilt 16 bits en 11CH) | PDF texte | À saisir |
 | UV | 2 | BeamZ BUV463 (UV strobe) | 7CH | PDF texte | À saisir |
 | Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | ? (cellules probables) | PDF image | À lire |

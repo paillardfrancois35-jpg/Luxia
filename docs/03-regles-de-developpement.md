@@ -64,7 +64,8 @@ DMX/
 | `Dmx.Persistence` | Core |
 | `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
-| `Dmx.UI.*` | tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
+| `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
+| `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
 | `Dmx.App`, `tools/*` | tout (composition) |
 
 Ces règles sont **vérifiées par un test d'architecture** (`Dmx.Architecture.Tests`), qui échoue en cas de violation.
@@ -144,4 +145,5 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Date | Modification |
 |---|---|
 | 2026-09-24 | Version initiale (Q21, Q22). |
+| 2026-09-25 | P1-P2 : projets d'interface par écran (D22), CA1822 en suggestion pour les projets d'interface (liaisons), CA1309 désactivée (tris affichés en français), matrice `tools/matrice-exigences.py`. |
 | 2026-09-24 | P0 : projet `Dmx.Hosting` (D20), commandes de test Microsoft.Testing.Platform, projet de tests d'intégration, test d'architecture par réflexion (sans NetArchTest). |
