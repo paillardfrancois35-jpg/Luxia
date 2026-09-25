@@ -25,7 +25,7 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            _loggers = TechnicalLog.Create(DataPaths.Default.Logs);
+            _loggers = TechnicalLog.Create(DataPaths.Current.Logs);
             var logger = _loggers.CreateLogger<App>();
             Dispatcher.UIThread.UnhandledException += (_, e) =>
             {
@@ -34,7 +34,7 @@ public partial class App : Application
                 e.Handled = true;
             };
 
-            _runtime = new DmxRuntime(DataPaths.Default, _loggers);
+            _runtime = new DmxRuntime(DataPaths.Current, _loggers);
 
             // DMX.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
             if (desktop.Args is [var projectFolder, ..] && Directory.Exists(projectFolder))

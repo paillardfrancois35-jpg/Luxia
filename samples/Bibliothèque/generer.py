@@ -145,7 +145,8 @@ fixture("Tomshine", "Mini lyre gobo", "movingHead", [
         cap(0, 63, "Choix du gobo (emplacements à relever)", "wheelSlot"), cap(64, 127, "Gobo tremblant"),
         cap(128, 189, "Rotation rapide → lente", "rotation"), cap(190, 193, "Arrêt de la roue"),
         cap(194, 255, "Rotation lente → rapide", "rotation")]),
-    ch("shutter", "Obturateur / strobe", "shutter", SHUTTER, rest=0, identify=12),
+    ch("shutter", "Obturateur / strobe", "shutter", SHUTTER, default=12, rest=0, identify=12,
+       notes="Défaut 12 = obturateur ouvert : la lyre éclaire dès que le gradateur monte."),
     ch("dim", "Gradateur", "intensity"),
     ch("speed", "Vitesse Pan/Tilt", "panTiltSpeed", [cap(0, 255, "Rapide → lente", "progressive", param=("vitesse", 100, 0, "%"))]),
     ch("control", "Contrôle", "reset", [

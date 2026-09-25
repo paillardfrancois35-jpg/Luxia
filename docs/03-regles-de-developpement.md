@@ -62,6 +62,7 @@ DMX/
 | `Dmx.Engine` | Core, Messaging — **jamais** d'un pilote concret, de l'UI, de l'audio |
 | `Dmx.Output` | Core, Messaging |
 | `Dmx.Persistence` | Core |
+| `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.*` | tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
 | `Dmx.App`, `tools/*` | tout (composition) |

@@ -131,8 +131,10 @@
       "key": "shutter",
       "name": "Obturateur / strobe",
       "attribute": "shutter",
+      "default": 12,
       "rest": 0,
       "identify": 12,
+      "notes": "Défaut 12 = obturateur ouvert : la lyre éclaire dès que le gradateur monte.",
       "capabilities": [
         {
           "min": 0,

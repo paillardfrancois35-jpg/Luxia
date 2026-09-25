@@ -6,6 +6,7 @@
     <ProjectReference Include="../Dmx.Engine/Dmx.Engine.csproj" />
     <ProjectReference Include="../Dmx.Output/Dmx.Output.csproj" />
     <ProjectReference Include="../Dmx.Persistence/Dmx.Persistence.csproj" />
+    <ProjectReference Include="../Dmx.Fixtures/Dmx.Fixtures.csproj" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.File" />

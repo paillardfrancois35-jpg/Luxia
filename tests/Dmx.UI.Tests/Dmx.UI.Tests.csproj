@@ -10,6 +10,11 @@
     <PackageReference Include="Shouldly" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
+    <ProjectReference Include="../../src/Dmx.UI.Modules.Library/Dmx.UI.Modules.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../samples/Bibliothèque/**/*.json" LinkBase="samples/Bibliothèque" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

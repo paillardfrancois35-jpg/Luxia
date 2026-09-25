@@ -3,6 +3,7 @@
         xmlns:vm="using:Dmx.App.ViewModels"
         xmlns:console="using:Dmx.UI.Modules.Console"
         xmlns:outputs="using:Dmx.UI.Modules.Outputs"
+        xmlns:library="using:Dmx.UI.Modules.Library"
         x:Class="Dmx.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -50,6 +51,9 @@
       <ContentControl.DataTemplates>
         <DataTemplate DataType="console:ConsoleViewModel">
           <console:ConsoleView />
+        </DataTemplate>
+        <DataTemplate DataType="library:LibraryViewModel">
+          <library:LibraryView />
         </DataTemplate>
         <DataTemplate DataType="outputs:OutputsViewModel">
           <outputs:OutputsView />

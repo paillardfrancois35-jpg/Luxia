@@ -14,6 +14,7 @@
     <ProjectReference Include="../../src/Dmx.Output/Dmx.Output.csproj" />
     <ProjectReference Include="../../src/Dmx.Persistence/Dmx.Persistence.csproj" />
     <ProjectReference Include="../../src/Dmx.Hosting/Dmx.Hosting.csproj" />
+    <ProjectReference Include="../../src/Dmx.Fixtures/Dmx.Fixtures.csproj" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
   </ItemGroup>

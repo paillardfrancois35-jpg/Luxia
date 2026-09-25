@@ -15,7 +15,8 @@ public sealed class DependencyRulesTests
         ["Dmx.Engine"] = ["Dmx.Core", "Dmx.Messaging"],
         ["Dmx.Output"] = ["Dmx.Core", "Dmx.Messaging"],
         ["Dmx.Persistence"] = ["Dmx.Core"],
-        ["Dmx.Hosting"] = ["Dmx.Core", "Dmx.Messaging", "Dmx.Engine", "Dmx.Output", "Dmx.Persistence"],
+        ["Dmx.Fixtures"] = ["Dmx.Core", "Dmx.Persistence"],
+        ["Dmx.Hosting"] = ["Dmx.Core", "Dmx.Messaging", "Dmx.Engine", "Dmx.Output", "Dmx.Persistence", "Dmx.Fixtures"],
     };
 
     public static TheoryData<string> Projects => [.. Allowed.Keys];

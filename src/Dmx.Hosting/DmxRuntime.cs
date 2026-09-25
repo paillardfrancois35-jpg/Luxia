@@ -52,7 +52,12 @@ public sealed class DmxRuntime : IAsyncDisposable
         Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
+        Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
+        Library.Load();
     }
+
+    /// <summary>Bibliothèque d'appareils (<c>Documents\DMX\Bibliothèque</c>).</summary>
+    public Fixtures.FixtureLibrary Library { get; }
 
     /// <summary>Projet ouvert.</summary>
     public ProjectSession Project { get; }

@@ -69,3 +69,7 @@ dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA1515.severity = none
 # Délais courts dans les tests : jeton d'annulation xUnit non exigé.
 dotnet_diagnostic.xUnit1051.severity = none
+
+[src/Dmx.UI.**.cs]
+# Liaisons de données : les listes de choix sont exposées en propriétés d'instance.
+dotnet_diagnostic.CA1822.severity = suggestion

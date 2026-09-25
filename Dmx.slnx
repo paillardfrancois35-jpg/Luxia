@@ -10,6 +10,7 @@
     <Project Path="src/Dmx.Persistence/Dmx.Persistence.csproj" />
     <Project Path="src/Dmx.UI.Controls/Dmx.UI.Controls.csproj" />
     <Project Path="src/Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
+    <Project Path="src/Dmx.UI.Modules.Library/Dmx.UI.Modules.Library.csproj" />
     <Project Path="src/Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
   </Folder>
   <Folder Name="/tests/">

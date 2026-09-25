@@ -22,6 +22,7 @@
     <ProjectReference Include="../Dmx.UI.Controls/Dmx.UI.Controls.csproj" />
     <ProjectReference Include="../Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
     <ProjectReference Include="../Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
+    <ProjectReference Include="../Dmx.UI.Modules.Library/Dmx.UI.Modules.Library.csproj" />
   </ItemGroup>
 
 </Project>

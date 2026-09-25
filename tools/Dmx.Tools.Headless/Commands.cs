@@ -63,8 +63,8 @@ internal static class Commands
 
     public static async Task<int> RunAsync(Arguments args)
     {
-        using var loggers = TechnicalLog.Create(DataPaths.Default.Logs, console: true);
-        await using var runtime = new DmxRuntime(DataPaths.Default, loggers);
+        using var loggers = TechnicalLog.Create(DataPaths.Current.Logs, console: true);
+        await using var runtime = new DmxRuntime(DataPaths.Current, loggers);
         if (args.Has("frequence"))
         {
             runtime.Loop.RateHz = args.GetDouble("frequence", 40);
@@ -137,8 +137,8 @@ internal static class Commands
 
     public static async Task<int> EnduranceAsync(Arguments args)
     {
-        using var loggers = TechnicalLog.Create(DataPaths.Default.Logs, console: false);
-        await using var runtime = new DmxRuntime(DataPaths.Default, loggers);
+        using var loggers = TechnicalLog.Create(DataPaths.Current.Logs, console: false);
+        await using var runtime = new DmxRuntime(DataPaths.Current, loggers);
         var duration = TimeSpan.FromSeconds(args.GetDouble("duree", 3600));
         runtime.Start(forceNullOutput: args.Has("nul"));
 
@@ -183,8 +183,8 @@ internal static class Commands
 
     public static async Task<int> JitterAsync(Arguments args)
     {
-        using var loggers = TechnicalLog.Create(DataPaths.Default.Logs, console: false, LogEventLevel.Warning);
-        await using var runtime = new DmxRuntime(DataPaths.Default, loggers);
+        using var loggers = TechnicalLog.Create(DataPaths.Current.Logs, console: false, LogEventLevel.Warning);
+        await using var runtime = new DmxRuntime(DataPaths.Current, loggers);
         runtime.Loop.RateHz = args.GetDouble("frequence", 40);
         var duration = TimeSpan.FromSeconds(args.GetDouble("duree", 60));
 

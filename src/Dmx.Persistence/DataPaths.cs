@@ -12,6 +12,18 @@ public sealed record DataPaths(string DocumentsRoot, string AppDataRoot)
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DMX"),
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DMX"));
 
+    /// <summary>Variable d'environnement qui redirige toutes les données (poste de démonstration, essais).</summary>
+    public const string OverrideVariable = "DMX_DOSSIER_DONNEES";
+
+    /// <summary>
+    /// Emplacements effectifs : ceux de <see cref="Default"/>, ou <c>&lt;dossier&gt;\Documents</c> et <c>&lt;dossier&gt;\AppData</c>
+    /// si la variable <see cref="OverrideVariable"/> est définie.
+    /// </summary>
+    public static DataPaths Current =>
+        Environment.GetEnvironmentVariable(OverrideVariable) is { Length: > 0 } root
+            ? new DataPaths(Path.Combine(root, "Documents"), Path.Combine(root, "AppData"))
+            : Default;
+
     /// <summary>Bibliothèque d'appareils (partagée).</summary>
     public string Library => Path.Combine(DocumentsRoot, "Bibliothèque");
 
