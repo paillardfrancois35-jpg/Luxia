@@ -182,10 +182,12 @@ fixture("BeamZ", "BUV463", "uv", [
 #    menu p. 6 : addr A001-A512, CHnd = Ch16, SLnd = SL1 (mode console). Le recoupement des traductions précise
 #    les canaux 8 et 16 ; le reste est à vérifier en direct (Q25).
 fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
-    ch("x", "Moteur X (rotation)", "rotation", notes="« X motor running » : rotation du plateau (à vérifier : vitesse ou position ?)."),
+    ch("x", "Moteur principal (rotation)", "rotation",
+       notes="Constaté par l'utilisateur : rotation du moteur principal dans un sens ou dans l'autre, vitesse selon la valeur. "
+             "Plages (arrêt, sens horaire, sens antihoraire, vitesse croissante ou décroissante) à relever en mode découverte (Q25)."),
     *[ch("y%d" % i, "Moteur Y%d (tête %d)" % (i, i), "rotation", cell=i, notes="« Y motor running » : mouvement de la tête (à vérifier : vitesse ou position ?).") for i in range(1, 5)],
-    ch("master", "Interrupteur général", "intensity", notes="« Master switch » / « Hauptschalter » : gradateur ou marche / arrêt (à vérifier)."),
-    ch("flash", "Stroboscope des LED", "shutter", [cap(0, 254, "Stroboscope des LED (à vérifier : 0 = arrêt ?)", "progressive", "strobe"), cap(255, 255, "Reset")],
+    ch("master", "Gradateur maître", "intensity", notes="« Master switch » : gradateur maître d'après l'utilisateur (probable, à confirmer)."),
+    ch("flash", "Stroboscope des LED", "shutter", [cap(0, 0, "Pas de strobe (probable)"), cap(1, 254, "Stroboscope des LED, lent → rapide (sens à vérifier)", "progressive", "strobe"), cap(255, 255, "Reset")],
        notes="« Stroboscope à billes, 255 réinitialisation active » (FR) : 255 = reset de l'appareil, ne pas y laisser la valeur."),
     ch("auto", "Chenillard automatique des LED", "program", [cap(0, 5, "Sans fonction", "noFunction"), cap(6, 255, "Défilement automatique des LED", "program")],
        notes="« Les perles s'en vont » (FR) / « Lamp beads walk by themselves » : chenillard interne des LED à partir de 6."),

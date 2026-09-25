@@ -16,9 +16,9 @@
   "channels": [
     {
       "key": "x",
-      "name": "Moteur X (rotation)",
+      "name": "Moteur principal (rotation)",
       "attribute": "rotation",
-      "notes": "« X motor running » : rotation du plateau (à vérifier : vitesse ou position ?)."
+      "notes": "Constaté par l'utilisateur : rotation du moteur principal dans un sens ou dans l'autre, vitesse selon la valeur. Plages (arrêt, sens horaire, sens antihoraire, vitesse croissante ou décroissante) à relever en mode découverte (Q25)."
     },
     {
       "key": "y1",
@@ -50,9 +50,9 @@
     },
     {
       "key": "master",
-      "name": "Interrupteur général",
+      "name": "Gradateur maître",
       "attribute": "intensity",
-      "notes": "« Master switch » / « Hauptschalter » : gradateur ou marche / arrêt (à vérifier)."
+      "notes": "« Master switch » : gradateur maître d'après l'utilisateur (probable, à confirmer)."
     },
     {
       "key": "flash",
@@ -62,9 +62,15 @@
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe (probable)"
+        },
+        {
+          "min": 1,
           "max": 254,
           "kind": "progressive",
-          "label": "Stroboscope des LED (à vérifier : 0 = arrêt ?)",
+          "label": "Stroboscope des LED, lent → rapide (sens à vérifier)",
           "strobe": "strobe"
         },
         {
