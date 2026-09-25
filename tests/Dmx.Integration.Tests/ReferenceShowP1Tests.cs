@@ -11,8 +11,9 @@ public sealed class ReferenceShowP1Tests
 {
     private static readonly string Folder = Path.Combine(AppContext.BaseDirectory, "samples", "Show de référence");
 
-    /// <summary>Canaux à ne jamais toucher dans un instantané de démonstration : fumée, contrôle (Reset) des lyres.</summary>
-    private static readonly int[] Forbidden = [180, 120, 135];
+    /// <summary>Canaux à ne jamais toucher dans un instantané de démonstration : la fumée. La lyre du parc (Tomshine)
+    /// n'a pas de canal de reset séparé (revu le 2026-09-25 d'après la vraie notice) : rien à protéger de ce côté.</summary>
+    private static readonly int[] Forbidden = [180];
 
     public static TheoryData<string> SnapshotNames => [.. Load().Snapshots.Select(s => s.Name)];
 

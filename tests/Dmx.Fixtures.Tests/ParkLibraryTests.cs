@@ -68,8 +68,7 @@ public sealed class ParkLibraryTests
         lyre.Modes[1].ChannelCount.ShouldBe(11);
         lyre.Modes[1].Channels[1].ShouldBe(new ModeChannel("pan", ChannelPart.Fine));
         lyre.Modes[0].ChannelCount.ShouldBe(9);
-        lyre.Channel("control")!.Attribute.ShouldBe(AttributeKind.Reset);
-        lyre.Channel("shutter")!.CapabilityAt(12)!.Strobe.ShouldBe(StrobeEffect.Open);
+        lyre.Channel("shutter")!.CapabilityAt(0)!.Strobe.ShouldBe(StrobeEffect.Open);
         FixtureRules.Safety(lyre.Channel("pan")!).ShouldBe(SafetyTags.Movement);
     }
 

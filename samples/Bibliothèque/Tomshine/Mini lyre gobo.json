@@ -7,8 +7,8 @@
   "version": 1,
   "author": "DMX (depuis la notice)",
   "source": "manual",
-  "notes": "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 180°. En 11 canaux, Pan et Tilt sont en 16 bits.",
-  "manual": "docs/Equipements/Gobo/Tomshine/81ej8MIZpBL.pdf",
+  "notes": "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 180°. En 11 canaux, Pan et Tilt sont en 16 bits. Pas de canal de reset séparé sur cet appareil (à la différence d'autres lyres) : aucune protection de type « Reset » n'est nécessaire pour ce modèle.",
+  "manual": "docs/Equipements/Gobo/81ej8MIZpBL.pdf",
   "physical": {
     "sourceType": "LED blanche",
     "beamAngle": 11,
@@ -18,7 +18,7 @@
   "channels": [
     {
       "key": "pan",
-      "name": "Pan",
+      "name": "Pan (horizontale)",
       "attribute": "pan",
       "resolution": "bit16",
       "default": 128,
@@ -39,7 +39,7 @@
     },
     {
       "key": "tilt",
-      "name": "Tilt",
+      "name": "Tilt (inclinaison)",
       "attribute": "tilt",
       "resolution": "bit16",
       "default": 128,
@@ -57,167 +57,6 @@
           }
         }
       ]
-    },
-    {
-      "key": "color",
-      "name": "Roue de couleur",
-      "attribute": "colorWheel",
-      "notes": "Les emplacements de couleur (nombre, couleurs, bornes) sont à relever avec le mode découverte.",
-      "capabilities": [
-        {
-          "min": 0,
-          "max": 127,
-          "kind": "wheelSlot",
-          "label": "Choix de couleur (emplacements à relever)"
-        },
-        {
-          "min": 128,
-          "max": 189,
-          "kind": "rotation",
-          "label": "Rotation rapide → lente"
-        },
-        {
-          "min": 190,
-          "max": 193,
-          "kind": "fixed",
-          "label": "Arrêt de la roue"
-        },
-        {
-          "min": 194,
-          "max": 255,
-          "kind": "rotation",
-          "label": "Rotation lente → rapide"
-        }
-      ]
-    },
-    {
-      "key": "gobo",
-      "name": "Roue de gobos",
-      "attribute": "gobo",
-      "capabilities": [
-        {
-          "min": 0,
-          "max": 63,
-          "kind": "wheelSlot",
-          "label": "Choix du gobo (emplacements à relever)"
-        },
-        {
-          "min": 64,
-          "max": 127,
-          "kind": "fixed",
-          "label": "Gobo tremblant"
-        },
-        {
-          "min": 128,
-          "max": 189,
-          "kind": "rotation",
-          "label": "Rotation rapide → lente"
-        },
-        {
-          "min": 190,
-          "max": 193,
-          "kind": "fixed",
-          "label": "Arrêt de la roue"
-        },
-        {
-          "min": 194,
-          "max": 255,
-          "kind": "rotation",
-          "label": "Rotation lente → rapide"
-        }
-      ]
-    },
-    {
-      "key": "shutter",
-      "name": "Obturateur / strobe",
-      "attribute": "shutter",
-      "default": 12,
-      "rest": 0,
-      "identify": 12,
-      "notes": "Défaut 12 = obturateur ouvert : la lyre éclaire dès que le gradateur monte.",
-      "capabilities": [
-        {
-          "min": 0,
-          "max": 7,
-          "kind": "closed",
-          "label": "Éteint",
-          "strobe": "closed"
-        },
-        {
-          "min": 8,
-          "max": 15,
-          "kind": "open",
-          "label": "Allumé",
-          "strobe": "open"
-        },
-        {
-          "min": 16,
-          "max": 131,
-          "kind": "progressive",
-          "label": "Strobe lent → rapide",
-          "strobe": "strobe",
-          "parameter": {
-            "nature": "vitesse",
-            "start": 0,
-            "end": 100,
-            "unit": "%"
-          }
-        },
-        {
-          "min": 132,
-          "max": 139,
-          "kind": "open",
-          "label": "Allumé",
-          "strobe": "open"
-        },
-        {
-          "min": 140,
-          "max": 181,
-          "kind": "progressive",
-          "label": "Fermeture rapide, ouverture lente",
-          "strobe": "pulse"
-        },
-        {
-          "min": 182,
-          "max": 189,
-          "kind": "open",
-          "label": "Allumé",
-          "strobe": "open"
-        },
-        {
-          "min": 190,
-          "max": 231,
-          "kind": "progressive",
-          "label": "Ouverture rapide, fermeture lente",
-          "strobe": "pulse"
-        },
-        {
-          "min": 232,
-          "max": 239,
-          "kind": "open",
-          "label": "Allumé",
-          "strobe": "open"
-        },
-        {
-          "min": 240,
-          "max": 247,
-          "kind": "fixed",
-          "label": "Strobe aléatoire",
-          "strobe": "random"
-        },
-        {
-          "min": 248,
-          "max": 255,
-          "kind": "open",
-          "label": "Allumé",
-          "strobe": "open"
-        }
-      ]
-    },
-    {
-      "key": "dim",
-      "name": "Gradateur",
-      "attribute": "intensity"
     },
     {
       "key": "speed",
@@ -239,67 +78,116 @@
       ]
     },
     {
-      "key": "control",
-      "name": "Contrôle",
-      "attribute": "reset",
-      "notes": "Ne jamais animer : 200-209 = reset de la lyre.",
+      "key": "dim",
+      "name": "Gradateur",
+      "attribute": "intensity"
+    },
+    {
+      "key": "shutter",
+      "name": "Obturateur / strobe",
+      "attribute": "shutter",
+      "default": 0,
+      "rest": 0,
+      "notes": "Notice : pas de fermeture séparée, la lyre éclaire dès que le gradateur monte (défaut 0 = pas de strobe).",
       "capabilities": [
         {
           "min": 0,
-          "max": 69,
-          "kind": "noFunction",
-          "label": "Sans fonction"
+          "max": 7,
+          "kind": "open",
+          "label": "Sans fonction (obturateur ouvert, pas de strobe)",
+          "strobe": "open"
         },
         {
-          "min": 70,
-          "max": 79,
-          "kind": "fixed",
-          "label": "Noir pendant les mouvements X/Y"
-        },
-        {
-          "min": 80,
-          "max": 89,
-          "kind": "noFunction",
-          "label": "Sans fonction"
-        },
-        {
-          "min": 90,
+          "min": 8,
           "max": 99,
-          "kind": "fixed",
-          "label": "Noir pendant la roue de couleur"
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe"
         },
         {
           "min": 100,
-          "max": 109,
-          "kind": "noFunction",
-          "label": "Sans fonction"
+          "max": 149,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe"
         },
         {
-          "min": 110,
-          "max": 119,
-          "kind": "fixed",
-          "label": "Noir pendant la roue de gobos"
-        },
-        {
-          "min": 120,
+          "min": 150,
           "max": 199,
-          "kind": "noFunction",
-          "label": "Sans fonction"
+          "kind": "progressive",
+          "label": "Strobe, effet 1",
+          "strobe": "strobe"
         },
         {
           "min": 200,
-          "max": 209,
-          "kind": "fixed",
-          "label": "Reset"
+          "max": 245,
+          "kind": "progressive",
+          "label": "Strobe, effet 2",
+          "strobe": "strobe"
         },
         {
-          "min": 210,
-          "max": 249,
+          "min": 246,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe, effet le plus rapide",
+          "strobe": "strobe"
+        }
+      ]
+    },
+    {
+      "key": "color",
+      "name": "Roue de couleur",
+      "attribute": "colorWheel",
+      "notes": "La notice ne détaille pas les emplacements de couleur dans cette plage : à relever avec le mode découverte.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 7,
           "kind": "noFunction",
           "label": "Sans fonction"
         },
         {
-          "min": 250,
+          "min": 8,
+          "max": 255,
+          "kind": "program",
+          "label": "Couleur : rotation automatique (emplacements et vitesse à vérifier en direct)"
+        }
+      ]
+    },
+    {
+      "key": "gobo",
+      "name": "Motif (roue de gobos)",
+      "attribute": "gobo",
+      "notes": "La notice ne donne aucune plage détaillée pour ce canal : à relever avec le mode découverte.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Sélection / défilement des gobos (emplacements à vérifier en direct)"
+        }
+      ]
+    },
+    {
+      "key": "son",
+      "name": "Son",
+      "attribute": "mode",
+      "notes": "Traduction ambiguë de la notice : ce canal semble régler la vitesse de la rotation automatique de couleur puis basculer en contrôle par le son au-delà de 200 (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 7,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 8,
+          "max": 199,
+          "kind": "program",
+          "label": "Couleur : vitesse de la rotation automatique (à vérifier en direct)"
+        },
+        {
+          "min": 200,
           "max": 255,
           "kind": "fixed",
           "label": "Contrôle par le son"
@@ -307,45 +195,15 @@
       ]
     },
     {
-      "key": "mode",
-      "name": "Mode d'effet",
-      "attribute": "mode",
+      "key": "vitesse",
+      "name": "Vitesse (effets)",
+      "attribute": "programSpeed",
       "capabilities": [
         {
           "min": 0,
-          "max": 20,
-          "kind": "fixed",
-          "label": "Effets standard"
-        },
-        {
-          "min": 21,
-          "max": 40,
-          "kind": "fixed",
-          "label": "Effets scène"
-        },
-        {
-          "min": 41,
-          "max": 60,
-          "kind": "fixed",
-          "label": "Effets TV"
-        },
-        {
-          "min": 61,
-          "max": 80,
-          "kind": "fixed",
-          "label": "Effets architecture"
-        },
-        {
-          "min": 81,
-          "max": 100,
-          "kind": "fixed",
-          "label": "Effets théâtre"
-        },
-        {
-          "min": 101,
           "max": 255,
-          "kind": "fixed",
-          "label": "Standard (défaut)"
+          "kind": "progressive",
+          "label": "Vitesse des effets (fonction exacte à vérifier en direct)"
         }
       ]
     }
@@ -363,25 +221,25 @@
           "channel": "tilt"
         },
         {
+          "channel": "speed"
+        },
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "shutter"
+        },
+        {
           "channel": "color"
         },
         {
           "channel": "gobo"
         },
         {
-          "channel": "shutter"
+          "channel": "son"
         },
         {
-          "channel": "dim"
-        },
-        {
-          "channel": "speed"
-        },
-        {
-          "channel": "control"
-        },
-        {
-          "channel": "mode"
+          "channel": "vitesse"
         }
       ]
     },
@@ -405,25 +263,25 @@
           "part": "fine"
         },
         {
+          "channel": "speed"
+        },
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "shutter"
+        },
+        {
           "channel": "color"
         },
         {
           "channel": "gobo"
         },
         {
-          "channel": "shutter"
+          "channel": "son"
         },
         {
-          "channel": "dim"
-        },
-        {
-          "channel": "speed"
-        },
-        {
-          "channel": "control"
-        },
-        {
-          "channel": "mode"
+          "channel": "vitesse"
         }
       ]
     }

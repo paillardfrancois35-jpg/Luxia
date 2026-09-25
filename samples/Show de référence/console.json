@@ -309,15 +309,15 @@
         },
         {
           "channel": 116,
-          "value": 0
+          "value": 255
         },
         {
           "channel": 117,
-          "value": 12
+          "value": 0
         },
         {
           "channel": 118,
-          "value": 255
+          "value": 0
         },
         {
           "channel": 119,
@@ -362,15 +362,15 @@
         },
         {
           "channel": 116,
-          "value": 0
+          "value": 255
         },
         {
           "channel": 117,
-          "value": 12
+          "value": 0
         },
         {
           "channel": 118,
-          "value": 255
+          "value": 0
         },
         {
           "channel": 119,
@@ -406,15 +406,15 @@
         },
         {
           "channel": 131,
-          "value": 0
+          "value": 255
         },
         {
           "channel": 132,
-          "value": 12
+          "value": 0
         },
         {
           "channel": 133,
-          "value": 255
+          "value": 0
         },
         {
           "channel": 134,

@@ -63,7 +63,7 @@ exactement ses canaux ; aucun ne touche la fumée (180) ni les canaux de contrô
 
 | Élément | Emplacement | Description |
 |---|---|---|
-| Définitions des appareils du parc | `samples/Bibliothèque/` | LPC008S, LPC010, LPC120, mini lyre Tomshine, BUV463, effet WZYBUTA (à vérifier) |
+| Définitions des appareils du parc | `samples/Bibliothèque/` | LPC008S, LPC010, LPC120, mini lyre Tomshine (refaite le 25/09, BIB-095), BUV463, effet WZYBUTA (à vérifier) |
 
 Les définitions sont dans une **bibliothèque d'exemple**, pas encore dans le projet : la copie des modèles utilisés dans le
 projet (GEN-053) arrive avec le patch (P3). Pour les utiliser : Bibliothèque → Importer un dossier → `samples/Bibliothèque`.

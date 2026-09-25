@@ -114,6 +114,9 @@
 | [BIB-082](BIB-082.md) | Rapport d'import | P2 | I | Réalisé |
 | [BIB-083](BIB-083.md) | Import par lots sans figer l'interface | P2 | M | Réalisé |
 | [BIB-084](BIB-084.md) | Export OFL | P2 | S | Non réalisé |
+| [BIB-093](BIB-093.md) | Groupe fabricant non déplié après une recherche | P2 | S | À faire |
+| [BIB-094](BIB-094.md) | LPC008S, plage « Fondu » du sélecteur de fonction à revoir | P2 | S | À faire |
+| [BIB-095](BIB-095.md) | Tomshine Mini lyre gobo, définition refaite d'après la vraie notice | P2 | M | Partiel |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
@@ -132,6 +135,8 @@
 | [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Partiel |
 | [CONS-044](CONS-044.md) | Moniteur dans une fenêtre séparée | P1 | S | Non réalisé |
 | [CONS-060](CONS-060.md) | Composant « faders d'un appareil » réutilisable | P2 | I | Réalisé |
+| [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | À faire |
+| [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | À faire |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

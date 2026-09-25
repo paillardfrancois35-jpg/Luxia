@@ -12,5 +12,6 @@
 | Console (CONS-043) | Retenu : CONS-092 (P3, survol immédiat du moniteur) |
 | Bibliothèque (BIB-020) | Retenu : BIB-093 (P2, déplier le groupe filtré) |
 | Bibliothèque (BIB-001) | Retenu : BIB-094 (P2, LPC008S plage « Fondu » à revoir) |
+| Bibliothèque (BIB-001) | Retenu : BIB-095 (P2, lyre Tomshine refaite d'après la vraie notice) |
 | 2026-09-24 | Test de sortie en **mode rampe** (tous les canaux varient) : réalisé pour l'endurance T-SORT-07 (`dmx-headless endurance`) | Sortie | Réalisé (P0) |
 | 2026-09-26 | Empêcher la mise en veille du PC tant que l'application émet (demande temporaire à Windows), cf. Q26 | Sortie / transverse | Retenu : GEN-096 (D23), réalisé |

@@ -78,7 +78,7 @@ C'est normal : un chenillard **canal par canal** vérifie la **ligne et les adre
 → Q23 : des canaux « maintenus » pendant le test seront ajoutés en P3 (SORT-008). En attendant, testez les couleurs du mode 7 canaux avec la Console.
 
 **Sûreté** : le canal 180 (machine à fumée du show de référence) est **exclu par défaut** et la valeur est modérée (50 %),
-pour ne déclencher ni la fumée, ni les canaux Reset / contrôle des lyres et de l'effet multi-têtes.
+pour ne déclencher ni la fumée, ni les canaux Reset de l'effet multi-têtes (WZYBUTA).
 
 **Illustre** : SORT-007, CMD-024 `TesterSortie` (D19), GEN-002 (le test passe par une commande du moteur).
 

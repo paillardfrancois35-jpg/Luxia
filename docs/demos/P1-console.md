@@ -78,9 +78,10 @@ Le nom de l'appareil et de l'attribut au survol viendront avec le patch (P3).
 | Lyres 1 et 2 au centre | 111-121, 126-136 | les deux lyres au centre |
 | UV plein | 161-174 | les deux UV à fond |
 
-**Piège (règle montrée)** : aucun instantané ne touche le canal **180** (fumée) ni les canaux de **contrôle / Reset** des lyres (120 et 135) :
-un test automatique le vérifie. Pour essayer : prendre le fader 120, le monter vers 205 : la lyre 1 se **réinitialise** (Reset, plage 200-209) — c'est
-exactement ce que l'on veut éviter par erreur ; les limites de sûreté (P5) protégeront la fumée, même à la console (GEN-042).
+**Piège (règle montrée)** : aucun instantané ne touche le canal **180** (fumée) : un test automatique le vérifie.
+Les limites de sûreté (P5) protégeront la fumée, même à la console (GEN-042).
+
+(La lyre Tomshine du parc n'a pas de canal de reset séparé, à la différence d'autres appareils comme l'effet WZYBUTA — voir BIB-095.)
 
 **Mémoriser** : prendre quelques faders, « Mémoriser les faders pris… », donner un nom ; l'instantané est écrit dans `console.json` du projet.
 **Supprimer** demande confirmation (GEN-103).
