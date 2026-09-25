@@ -7,7 +7,7 @@
   "version": 1,
   "author": "DMX (depuis la notice)",
   "source": "manual",
-  "notes": "Effet « moving head » 150 W : plateau rotatif (Pan + rotation continue), 4 barrettes amovibles inclinables (Tilt 1-4) de 3 projecteurs RGBW. Mode 20 canaux : couleur commune ; mode 64 canaux : RGBW par projecteur (12 cellules). Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) inconnus.",
+  "notes": "Effet « moving head » 150 W : plateau rotatif (Pan + rotation continue), 4 barrettes amovibles inclinables (Tilt 1-4) de 3 projecteurs RGBW. Mode 20 canaux : couleur commune ; mode 64 canaux : RGBW par projecteur (12 cellules). Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) : laser optionnel, absent (inutilisés).",
   "manual": "docs/Equipements/WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf",
   "physical": {
     "sourceType": "LED RGBW",
@@ -485,21 +485,21 @@
     },
     {
       "key": "x1",
-      "name": "Inconnu 1",
-      "attribute": "generic",
-      "notes": "Absent des captures ScanLibrary : fonction inconnue (Q25)."
+      "name": "Laser 1 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
     },
     {
       "key": "x2",
-      "name": "Inconnu 2",
-      "attribute": "generic",
-      "notes": "Absent des captures ScanLibrary : fonction inconnue (Q25)."
+      "name": "Laser 2 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
     },
     {
       "key": "x3",
-      "name": "Inconnu 3",
-      "attribute": "generic",
-      "notes": "Absent des captures ScanLibrary : fonction inconnue (Q25)."
+      "name": "Laser 3 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
     },
     {
       "key": "reset",

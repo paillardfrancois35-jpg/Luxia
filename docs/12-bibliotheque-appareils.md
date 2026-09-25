@@ -244,7 +244,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | Lyre | 2 | Tomshine (lyre à gobos) | 9CH, 11CH (Pan/Tilt 16 bits en 11CH) | PDF texte | À saisir |
 | UV | 2 | BeamZ BUV463 (UV strobe) | 7CH | PDF texte | À saisir |
 | Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | 3, 6, 12, 24, 48CH (menu `ChNd`) ; 2 / 4 / 8 sections | Pages fournies le 2026-09-25 (Q24) | **Saisi** (`samples/Bibliothèque/BeamZ/LCB803.json`) |
-| Effet multi-têtes | 1 | WZYBUTA Moving Head 150 W (plateau + 4 barrettes de 3 projecteurs RGBW) | 20CH, 64CH (la notice décrit un 16CH qui ne correspond pas) | Captures ScanLibrary de l'utilisateur (2026-09-25) | **Saisi** (12 cellules en 64CH ; canaux 17-19 / 61-63 inconnus, Q25) |
+| Effet multi-têtes | 1 | WZYBUTA Moving Head 150 W (plateau + 4 barrettes de 3 projecteurs RGBW) | 20CH, 64CH (la notice décrit un 16CH qui ne correspond pas) | Captures ScanLibrary de l'utilisateur (2026-09-25) | **Saisi** (12 cellules en 64CH ; canaux 17-19 / 61-63 = laser optionnel absent) |
 | Fumée | 1 | — | 1CH | — | Modèle générique « Machine à fumée » |
 
 Chaque définition sera **vérifiée sur le matériel** avec le test en direct (BIB-060) avant la phase P3.

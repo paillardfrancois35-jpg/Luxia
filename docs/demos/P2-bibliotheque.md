@@ -27,7 +27,7 @@
 | Betopper LPC120 | 4CH (`d001`), 8CH (`A001`) | CH8 = paramètre qui dépend de CH7 |
 | Tomshine Mini lyre gobo | 9CH, 11CH | Pan / Tilt 16 bits en 11CH ; canal Contrôle 200-209 = **Reset** |
 | BeamZ BUV463 | 7CH | 4 rangées UV = 4 cellules |
-| WZYBUTA Effet 4 têtes 150 W | 20CH, 64CH | 12 cellules RGBW en 64CH ; dernier canal = **Reset** (251-255) ; 3 canaux inconnus (Q25) |
+| WZYBUTA Effet 4 têtes 150 W | 20CH, 64CH | 12 cellules RGBW en 64CH ; dernier canal = **Reset** (251-255) ; 3 canaux laser inutilisés (option absente) |
 | BeamZ LCB803 | 3, 6, 12, 24, 48CH | 2 / 4 / 8 sections = cellules ; 24CH retenu pour le show |
 
 
@@ -73,7 +73,7 @@ Lyre à l'adresse 111 (mode 11CH). Test en direct à l'adresse **111** :
 5. Retour à **Canaux et modes** : renommez les plages créées (« Rouge », « Vert »…), mettez leur couleur (`#FF0000`).
 6. **Enregistrer** : la version du modèle passe à 2.
 
-Pour l'effet WZYBUTA, découvrez les canaux 17 à 19 (mode 20 canaux) et renommez-les (Q25).
+Pour l'effet WZYBUTA, découvrez le canal 2 (rotation continue) : dans chaque sens, la vitesse monte-t-elle ou descend-elle avec la valeur ? (Q25)
 
 ## Exemple 6 – Créer un modèle de A à Z (BIB-021 à 024)
 

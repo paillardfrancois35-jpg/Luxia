@@ -185,7 +185,7 @@ WZ_EFFECT = [cap(0, 5, "Sans fonction", "noFunction"), cap(6, 128, "Effets autom
              cap(129, 255, "Effets au son", "program")]
 WZ_MOTOR = [cap(0, 15, "Sans fonction", "noFunction"), cap(16, 128, "Effets automatiques des moteurs 01-04", "program"),
             cap(129, 255, "Effets des moteurs au son", "program")]
-WZ_UNKNOWN = "Absent des captures ScanLibrary : fonction inconnue (Q25)."
+WZ_LASER = "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
 fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
     ch("pan", "Pan (plateau)", "pan", notes="Position du plateau ; amplitude inconnue."),
     ch("panmotor", "Rotation continue du plateau", "panContinuous", [
@@ -208,7 +208,7 @@ fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
     *[c for n in range(1, 13) for c in (
         ch("r%d" % n, "Rouge %d" % n, "red", cell=n), ch("g%d" % n, "Vert %d" % n, "green", cell=n),
         ch("b%d" % n, "Bleu %d" % n, "blue", cell=n), ch("w%d" % n, "Blanc %d" % n, "white", cell=n))],
-    *[ch("x%d" % n, "Inconnu %d" % n, "generic", notes=WZ_UNKNOWN) for n in range(1, 4)],
+    *[ch("x%d" % n, "Laser %d (option absente)" % n, "noFunction", notes=WZ_LASER) for n in range(1, 4)],
     ch("reset", "Reset", "reset", [cap(0, 250, "Sans fonction", "noFunction"), cap(251, 255, "Reset")],
        notes="Ne jamais animer : 251-255 = reset de l'appareil."),
 ], [mode("20 canaux", "20CH", "mode 1 (réglage du menu à noter)", "pan", "panmotor", "tilt1", "tilt2", "tilt3", "tilt4", "speed",
@@ -218,7 +218,7 @@ fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
          *["%s%d" % (c, n) for n in range(1, 13) for c in "rgbw"], "x1", "x2", "x3", "reset")],
     "Effet « moving head » 150 W : plateau rotatif (Pan + rotation continue), 4 barrettes amovibles inclinables (Tilt 1-4) "
     "de 3 projecteurs RGBW. Mode 20 canaux : couleur commune ; mode 64 canaux : RGBW par projecteur (12 cellules). "
-    "Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) inconnus.",
+    "Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) : laser optionnel, absent (inutilisés).",
     {"sourceType": "LED RGBW", "power": 150},
     EQ + "WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf")
 
