@@ -118,7 +118,8 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Responsabilité | **Les opérations Git sont à la charge de l'IA de développement** (décision de l'utilisateur, 2026-09-25) : commits au fil des étapes ; fusion dans `main` et étiquette de version **à chaque validation d'un passage important par l'utilisateur**. |
 | Branches | `main` ne reçoit que du validé ; une branche par phase (`p0/fondations`, `p1/console`…) avec un commit par étape vérifiable ; fusion dans `main` (`--no-ff`) après validation |
 | Commits | En français, format `type(module): résumé` ; types : `feat`, `fix`, `test`, `docs`, `refactor`, `build`, `chore`, `firmware` ; le corps cite les exigences (`Exigences : SORT-001, SORT-003`) |
-| Étiquettes | Une par passage validé : `p0`, `p1`… (annotée, message = ce qui a été validé) |
+| Étiquettes | Numérotation choisie par l'utilisateur le 2026-09-25 (remplace `p0`, `p1`…) : `v1.001`, `v1.002`… — une par **validation** de l'utilisateur, sur `main`, +1 à chaque fois. Annotée, message = ce qui a été validé. |
+| Étiquettes intermédiaires | Pendant le développement d'un passage **non encore validé**, chaque commit notable sur sa branche est étiqueté `v1.0NN.MMM` (`NN` = le numéro de la prochaine validation attendue, `MMM` +1 à chaque étiquette). Objectif : distinguer d'un coup d'œil une version encore en cours de dev d'une version validée. À la validation, `v1.0NN.MMM` disparaît au profit de `v1.0NN` sur `main`, et `MMM` repart de `001` pour le passage suivant. |
 | Fichiers exclus | `bin/`, `obj/`, `.vs/`, `*.user`, fichiers de build Arduino, journaux, enregistrements temporaires |
 
 ## 8. Données et fichiers
