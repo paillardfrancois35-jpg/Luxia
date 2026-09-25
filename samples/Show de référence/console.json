@@ -1,0 +1,499 @@
+{
+  "formatVersion": 1,
+  "snapshots": [
+    {
+      "id": "5bf11614-9c8b-51d5-b3ba-35dda6554557",
+      "name": "PAR 1 en blanc",
+      "category": "Phase P1",
+      "description": "PAR 1 (LPC008S, 7 canaux, adresse 1) : gradateur 255, rouge, vert, bleu à 255, strobe et fonctions à 0. Le PAR 1 s'allume en blanc à pleine puissance.",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 1,
+          "value": 255
+        },
+        {
+          "channel": 2,
+          "value": 255
+        },
+        {
+          "channel": 3,
+          "value": 255
+        },
+        {
+          "channel": 4,
+          "value": 255
+        },
+        {
+          "channel": 5,
+          "value": 0
+        },
+        {
+          "channel": 6,
+          "value": 0
+        },
+        {
+          "channel": 7,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "3cde9266-02d1-528e-bfad-31313c882e17",
+      "name": "PAR 1 à 4 en blanc",
+      "category": "Phase P1",
+      "description": "Les 4 PAR (adresses 1, 8, 15, 22) en blanc. Si un PAR reste éteint : vérifier son adresse (A001, A008, A015, A022) et son mode 7 canaux.",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 1,
+          "value": 255
+        },
+        {
+          "channel": 2,
+          "value": 255
+        },
+        {
+          "channel": 3,
+          "value": 255
+        },
+        {
+          "channel": 4,
+          "value": 255
+        },
+        {
+          "channel": 5,
+          "value": 0
+        },
+        {
+          "channel": 6,
+          "value": 0
+        },
+        {
+          "channel": 7,
+          "value": 0
+        },
+        {
+          "channel": 8,
+          "value": 255
+        },
+        {
+          "channel": 9,
+          "value": 255
+        },
+        {
+          "channel": 10,
+          "value": 255
+        },
+        {
+          "channel": 11,
+          "value": 255
+        },
+        {
+          "channel": 12,
+          "value": 0
+        },
+        {
+          "channel": 13,
+          "value": 0
+        },
+        {
+          "channel": 14,
+          "value": 0
+        },
+        {
+          "channel": 15,
+          "value": 255
+        },
+        {
+          "channel": 16,
+          "value": 255
+        },
+        {
+          "channel": 17,
+          "value": 255
+        },
+        {
+          "channel": 18,
+          "value": 255
+        },
+        {
+          "channel": 19,
+          "value": 0
+        },
+        {
+          "channel": 20,
+          "value": 0
+        },
+        {
+          "channel": 21,
+          "value": 0
+        },
+        {
+          "channel": 22,
+          "value": 255
+        },
+        {
+          "channel": 23,
+          "value": 255
+        },
+        {
+          "channel": 24,
+          "value": 255
+        },
+        {
+          "channel": 25,
+          "value": 255
+        },
+        {
+          "channel": 26,
+          "value": 0
+        },
+        {
+          "channel": 27,
+          "value": 0
+        },
+        {
+          "channel": 28,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "961d2037-b9c0-55c6-a47a-c9a26ba9dac8",
+      "name": "PAR 1 à 4 en rouge à 50 %",
+      "category": "Phase P1",
+      "description": "Gradateur à 128 et rouge à 255 : les 4 PAR en rouge à mi-puissance. Illustre le gradateur maître (canal 1 de chaque PAR).",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 1,
+          "value": 128
+        },
+        {
+          "channel": 2,
+          "value": 255
+        },
+        {
+          "channel": 3,
+          "value": 0
+        },
+        {
+          "channel": 4,
+          "value": 0
+        },
+        {
+          "channel": 5,
+          "value": 0
+        },
+        {
+          "channel": 6,
+          "value": 0
+        },
+        {
+          "channel": 7,
+          "value": 0
+        },
+        {
+          "channel": 8,
+          "value": 128
+        },
+        {
+          "channel": 9,
+          "value": 255
+        },
+        {
+          "channel": 10,
+          "value": 0
+        },
+        {
+          "channel": 11,
+          "value": 0
+        },
+        {
+          "channel": 12,
+          "value": 0
+        },
+        {
+          "channel": 13,
+          "value": 0
+        },
+        {
+          "channel": 14,
+          "value": 0
+        },
+        {
+          "channel": 15,
+          "value": 128
+        },
+        {
+          "channel": 16,
+          "value": 255
+        },
+        {
+          "channel": 17,
+          "value": 0
+        },
+        {
+          "channel": 18,
+          "value": 0
+        },
+        {
+          "channel": 19,
+          "value": 0
+        },
+        {
+          "channel": 20,
+          "value": 0
+        },
+        {
+          "channel": 21,
+          "value": 0
+        },
+        {
+          "channel": 22,
+          "value": 128
+        },
+        {
+          "channel": 23,
+          "value": 255
+        },
+        {
+          "channel": 24,
+          "value": 0
+        },
+        {
+          "channel": 25,
+          "value": 0
+        },
+        {
+          "channel": 26,
+          "value": 0
+        },
+        {
+          "channel": 27,
+          "value": 0
+        },
+        {
+          "channel": 28,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "6b0a1ee2-df41-5597-b76c-f4c8c9cbee20",
+      "name": "Lyre 1 au centre",
+      "category": "Phase P1",
+      "description": "Lyre 1 (Tomshine 11 canaux, adresse 111) : Pan et Tilt au milieu (128), obturateur ouvert (12), gradateur 255, couleur et gobo à 0 (blanc, ouvert). Canal 120 (Reset) laissé à 0.",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 111,
+          "value": 128
+        },
+        {
+          "channel": 112,
+          "value": 0
+        },
+        {
+          "channel": 113,
+          "value": 128
+        },
+        {
+          "channel": 114,
+          "value": 0
+        },
+        {
+          "channel": 115,
+          "value": 0
+        },
+        {
+          "channel": 116,
+          "value": 255
+        },
+        {
+          "channel": 117,
+          "value": 0
+        },
+        {
+          "channel": 118,
+          "value": 0
+        },
+        {
+          "channel": 119,
+          "value": 0
+        },
+        {
+          "channel": 120,
+          "value": 0
+        },
+        {
+          "channel": 121,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "4940da6e-3443-5bfd-814a-f7a27627aa17",
+      "name": "Lyres 1 et 2 au centre",
+      "category": "Phase P1",
+      "description": "Les deux lyres (adresses 111 et 126) au centre, en blanc.",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 111,
+          "value": 128
+        },
+        {
+          "channel": 112,
+          "value": 0
+        },
+        {
+          "channel": 113,
+          "value": 128
+        },
+        {
+          "channel": 114,
+          "value": 0
+        },
+        {
+          "channel": 115,
+          "value": 0
+        },
+        {
+          "channel": 116,
+          "value": 255
+        },
+        {
+          "channel": 117,
+          "value": 0
+        },
+        {
+          "channel": 118,
+          "value": 0
+        },
+        {
+          "channel": 119,
+          "value": 0
+        },
+        {
+          "channel": 120,
+          "value": 0
+        },
+        {
+          "channel": 121,
+          "value": 0
+        },
+        {
+          "channel": 126,
+          "value": 128
+        },
+        {
+          "channel": 127,
+          "value": 0
+        },
+        {
+          "channel": 128,
+          "value": 128
+        },
+        {
+          "channel": 129,
+          "value": 0
+        },
+        {
+          "channel": 130,
+          "value": 0
+        },
+        {
+          "channel": 131,
+          "value": 255
+        },
+        {
+          "channel": 132,
+          "value": 0
+        },
+        {
+          "channel": 133,
+          "value": 0
+        },
+        {
+          "channel": 134,
+          "value": 0
+        },
+        {
+          "channel": 135,
+          "value": 0
+        },
+        {
+          "channel": 136,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "6eba6649-a26d-59cd-a450-e1bf4285a62f",
+      "name": "UV plein",
+      "category": "Phase P1",
+      "description": "UV 1 et 2 (BeamZ BUV463, 7 canaux, adresses 161 et 168) : maître et 4 rangées de LED UV à 255, strobe et programmes à 0.",
+      "universe": 1,
+      "channels": [
+        {
+          "channel": 161,
+          "value": 255
+        },
+        {
+          "channel": 162,
+          "value": 255
+        },
+        {
+          "channel": 163,
+          "value": 255
+        },
+        {
+          "channel": 164,
+          "value": 255
+        },
+        {
+          "channel": 165,
+          "value": 255
+        },
+        {
+          "channel": 166,
+          "value": 0
+        },
+        {
+          "channel": 167,
+          "value": 0
+        },
+        {
+          "channel": 168,
+          "value": 255
+        },
+        {
+          "channel": 169,
+          "value": 255
+        },
+        {
+          "channel": 170,
+          "value": 255
+        },
+        {
+          "channel": 171,
+          "value": 255
+        },
+        {
+          "channel": 172,
+          "value": 255
+        },
+        {
+          "channel": 173,
+          "value": 0
+        },
+        {
+          "channel": 174,
+          "value": 0
+        }
+      ]
+    }
+  ]
+}

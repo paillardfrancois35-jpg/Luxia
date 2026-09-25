@@ -74,7 +74,24 @@ Deux usages principaux :
 | CONS-060 | I | P2 | Le composant « faders d'un appareil » est réutilisable dans l'éditeur de bibliothèque pour le **test en direct** d'un modèle (BIB-060) (GEN-004). | Même composant, même comportement. |
 | CONS-061 | S | P5 | Une page de console peut être affectée aux faders d'un APC mini. | Faders physiques → canaux. |
 
-## 7. Tests
+## 7. Notes de réalisation (P1)
+
+| Sujet | Réalisation |
+|---|---|
+| CONS-001 | 16, 32 ou 48 faders par page selon la largeur (tranches de 42 px) ; pages en boucle. |
+| CONS-002 | Glisser **relatif** (pas de saut au point cliqué) ; un clic simple prend le fader à sa valeur actuelle. Saisie directe dans la case sous le fader (ou double-clic), `%` accepté. |
+| CONS-006 | Ctrl+clic : ajouter / retirer ; Maj+clic : plage ; clic simple hors sélection : sélection de ce seul fader ; Échap : désélection. Mode relatif par défaut. |
+| CONS-007, CONS-041 | Nom d'appareil, attribut et plage : dès le patch (P3). En P1, numéro, valeur, pourcentage et état « pris ». |
+| CONS-008 | Blackout (P4) et limites de sûreté (P5) pas encore disponibles : les surcharges brutes ne sont pas encore limitées. `TODO(P4, GEN-042)` dans le moteur. |
+| CONS-010 | Réalisé (demandé par les démonstrations P1) : instantanés rangés dans le projet (`console.json`, doc 50) ; un rappel remplace les faders pris de l'univers. |
+| CONS-043 | Canaux surchargés encadrés en orange dans le moniteur ; délimitation par appareil en P3. |
+| CONS-044 (S) | Non réalisé. |
+| Test de sortie | Tant qu'il est actif, le chenillard de test remplace aussi les faders pris (D21). |
+| Figer | Le bouton « Figer » de la maquette viendra avec CMD-003 (P5). |
+| CONS-060 | Réalisé en P2 : `FixtureFadersView` (module Console), utilisé par le test en direct de la bibliothèque ; valeurs brutes en P2, attributs en P4. |
+| Rafraîchissement | L'interface lit la trame et les surcharges du moteur 20 fois par seconde ; après une action, la valeur demandée reste affichée 150 ms, le temps que le moteur l'applique (pas de retour en arrière visible). |
+
+## 8. Tests
 
 | Test | Type | Contenu |
 |---|---|---|

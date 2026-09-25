@@ -1,0 +1,184 @@
+{
+  "formatVersion": 1,
+  "id": "76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8",
+  "manufacturer": "Betopper",
+  "model": "LPC120",
+  "category": "par",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "PAR LED RGBW 60 × 2 W (120 W). d001 = 4 canaux, A001 = 8 canaux. Tableau lu dans la notice (rendu image, P2).",
+  "manual": "docs/Equipements/PAR/BETOPPER/LPC120/LPC120_-Betopper_60x2W_RGBW_4-in-1_DJ_Wedding_Par_Lights-manual.pdf",
+  "physical": {
+    "sourceType": "LED RGBW 4-en-1",
+    "power": 120
+  },
+  "channels": [
+    {
+      "key": "dim",
+      "name": "CH1 Gradation totale",
+      "attribute": "intensity"
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red"
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue"
+    },
+    {
+      "key": "w",
+      "name": "Blanc",
+      "attribute": "white"
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe",
+      "attribute": "shutter",
+      "notes": "Plages non détaillées par la notice (0 = sans strobe ? à vérifier).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "effect",
+      "name": "Effet",
+      "attribute": "mode",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 10,
+          "kind": "fixed",
+          "label": "Gradation DMX"
+        },
+        {
+          "min": 11,
+          "max": 50,
+          "kind": "program",
+          "label": "7 couleurs haut IRC"
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "16 couleurs"
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Saut de 16 couleurs"
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Dégradé multicolore"
+        },
+        {
+          "min": 201,
+          "max": 250,
+          "kind": "program",
+          "label": "Pulsation multicolore"
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "program",
+          "label": "Son, 9 couleurs"
+        }
+      ]
+    },
+    {
+      "key": "param",
+      "name": "Paramètre de l'effet",
+      "attribute": "programSpeed",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Selon CH7 : couleur (pas de 16), vitesse, effet sonore",
+          "parameter": {
+            "nature": "paramètre",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "4 canaux",
+      "shortName": "4CH",
+      "deviceSetting": "d001",
+      "channels": [
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        }
+      ]
+    },
+    {
+      "name": "8 canaux",
+      "shortName": "8CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "effect"
+        },
+        {
+          "channel": "param"
+        }
+      ]
+    }
+  ]
+}

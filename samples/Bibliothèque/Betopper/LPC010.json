@@ -1,0 +1,232 @@
+{
+  "formatVersion": 1,
+  "id": "7a714e3c-f7bf-5e2a-81df-34a67a08e536",
+  "manufacturer": "Betopper",
+  "model": "LPC010",
+  "category": "par",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "PAR LED RGBW 54 × 4 W (120 W). Menu d001 = 4 canaux, A001 = 8 canaux. Tableau lu dans la notice (rendu image, P2).",
+  "manual": "docs/Equipements/PAR/BETOPPER/LPC010/Betopper_54x4w_RGBW_4-in-1_High_CRI_Par_Light_LPC010_LPC010-H_User_Manual.pdf",
+  "physical": {
+    "sourceType": "LED RGBW 4-en-1",
+    "power": 120
+  },
+  "channels": [
+    {
+      "key": "dim",
+      "name": "CH1 Gradation générale",
+      "attribute": "intensity"
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red"
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue"
+    },
+    {
+      "key": "w",
+      "name": "Blanc",
+      "attribute": "white"
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe",
+      "attribute": "shutter",
+      "notes": "Plages non détaillées par la notice (0 = sans strobe ? à vérifier).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "effect",
+      "name": "Effet",
+      "attribute": "mode",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 10,
+          "kind": "fixed",
+          "label": "Gradation 0-100 %"
+        },
+        {
+          "min": 11,
+          "max": 50,
+          "kind": "program",
+          "label": "9 couleurs haut IRC (2800 K → 8000 K)"
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "Sortie couleur"
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Saut de couleurs"
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Fondu de couleurs"
+        },
+        {
+          "min": 201,
+          "max": 250,
+          "kind": "program",
+          "label": "Pulsation"
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "program",
+          "label": "Contrôle par le son"
+        }
+      ]
+    },
+    {
+      "key": "control",
+      "name": "Contrôle",
+      "attribute": "maintenance",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 10,
+          "kind": "noFunction",
+          "label": "Réservé"
+        },
+        {
+          "min": 11,
+          "max": 20,
+          "kind": "fixed",
+          "label": "Courbe de gradation : linéaire"
+        },
+        {
+          "min": 21,
+          "max": 30,
+          "kind": "fixed",
+          "label": "Courbe : carré"
+        },
+        {
+          "min": 31,
+          "max": 40,
+          "kind": "fixed",
+          "label": "Courbe : carré inverse"
+        },
+        {
+          "min": 41,
+          "max": 50,
+          "kind": "fixed",
+          "label": "Courbe : en S"
+        },
+        {
+          "min": 51,
+          "max": 60,
+          "kind": "fixed",
+          "label": "Ventilateur : auto"
+        },
+        {
+          "min": 61,
+          "max": 70,
+          "kind": "fixed",
+          "label": "Ventilateur : studio"
+        },
+        {
+          "min": 71,
+          "max": 80,
+          "kind": "noFunction",
+          "label": "Réservé"
+        },
+        {
+          "min": 81,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Vitesse de l'effet CH7 0-100 %",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "4 canaux",
+      "shortName": "4CH",
+      "deviceSetting": "d001",
+      "channels": [
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        }
+      ]
+    },
+    {
+      "name": "8 canaux",
+      "shortName": "8CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "effect"
+        },
+        {
+          "channel": "control"
+        }
+      ]
+    }
+  ]
+}

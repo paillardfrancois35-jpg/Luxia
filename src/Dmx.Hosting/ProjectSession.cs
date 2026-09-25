@@ -1,0 +1,95 @@
+using Dmx.Core.Projects;
+using Dmx.Core.Snapshots;
+using Dmx.Persistence;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace Dmx.Hosting;
+
+/// <summary>
+/// Projet ouvert : dossier, fiche, parties chargées (instantanés de console en P1).
+/// Le dernier projet ouvert est mémorisé dans les préférences et rouvert au démarrage.
+/// </summary>
+public sealed class ProjectSession
+{
+    private readonly PreferencesStore _preferences;
+    private readonly ILogger _logger;
+
+    /// <summary>Crée la session (aucun projet ouvert).</summary>
+    public ProjectSession(PreferencesStore preferences, ILogger<ProjectSession>? logger = null)
+    {
+        ArgumentNullException.ThrowIfNull(preferences);
+        _preferences = preferences;
+        _logger = logger ?? NullLogger<ProjectSession>.Instance;
+    }
+
+    /// <summary>Dossier du projet ouvert.</summary>
+    public string? Folder { get; private set; }
+
+    /// <summary>Fiche du projet ouvert.</summary>
+    public ProjectInfo? Info { get; private set; }
+
+    /// <summary>Instantanés de console du projet.</summary>
+    public ConsoleData Console { get; private set; } = new();
+
+    /// <summary>Messages du dernier chargement (migrations, fichiers mis de côté).</summary>
+    public IReadOnlyList<string> Messages { get; private set; } = [];
+
+    /// <summary>Levé après ouverture, création ou fermeture d'un projet.</summary>
+    public event EventHandler? Changed;
+
+    /// <summary>Rouvre le dernier projet s'il existe encore.</summary>
+    public void OpenLast()
+    {
+        var last = _preferences.Current.LastProjectPath;
+        if (!string.IsNullOrWhiteSpace(last) && File.Exists(Path.Combine(last, ProjectStore.ProjectFileName)))
+        {
+            Open(last);
+        }
+    }
+
+    /// <summary>Ouvre un projet ; renvoie <c>false</c> (avec messages) s'il est illisible.</summary>
+    public bool Open(string folder)
+    {
+        var report = ProjectStore.Open(folder);
+        var messages = new List<string>(report.Messages);
+        if (!report.Succeeded)
+        {
+            Messages = messages;
+            _logger.LogWarning("Ouverture du projet impossible : {Dossier}", folder);
+            return false;
+        }
+
+        var (console, consoleMessage) = ProjectPartStore.Load(folder, ProjectPartStore.ConsoleFileName, ProjectPartStore.ConsoleType, () => new ConsoleData());
+        if (consoleMessage is not null)
+        {
+            messages.Add(consoleMessage);
+        }
+
+        Folder = folder;
+        Info = report.Info;
+        Console = console;
+        Messages = messages;
+        _preferences.Update(p => p with { LastProjectPath = folder });
+        _logger.LogInformation("Projet ouvert : {Nom} ({Dossier})", Info!.Name, folder);
+        Changed?.Invoke(this, EventArgs.Empty);
+        return true;
+    }
+
+    /// <summary>Crée un projet et l'ouvre.</summary>
+    public void Create(string folder, string name)
+    {
+        ProjectStore.Create(folder, name);
+        Open(folder);
+    }
+
+    /// <summary>Remplace les instantanés et les enregistre.</summary>
+    public void SaveConsole(ConsoleData data)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        ProjectPartStore.Save(folder, ProjectPartStore.ConsoleFileName, data, ProjectPartStore.ConsoleType);
+        Console = data;
+        Info = ProjectStore.Save(folder, Info!);
+    }
+}

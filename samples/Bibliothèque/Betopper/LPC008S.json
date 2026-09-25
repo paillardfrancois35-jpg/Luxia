@@ -1,0 +1,167 @@
+{
+  "formatVersion": 1,
+  "id": "69c4332f-88e8-5432-abae-d2b716eb1e02",
+  "manufacturer": "Betopper",
+  "model": "LPC008S",
+  "category": "par",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "PAR LED RGB 54 × 3 W. Menu d001 = mode 3 canaux, A001 = mode 7 canaux (le menu d'adresse choisit le mode).",
+  "manual": "docs/Equipements/PAR/BETOPPER/LPC008S/LPC007-LPC008_LPC08-H_BETOPPER_DJ_PAR_Light_User_Manual.pdf",
+  "physical": {
+    "sourceType": "LED RGB 3-en-1",
+    "power": 180
+  },
+  "channels": [
+    {
+      "key": "dim",
+      "name": "CH1 Gradation générale",
+      "attribute": "intensity"
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red"
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue"
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe général",
+      "attribute": "shutter",
+      "notes": "La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "fn",
+      "name": "Sélecteur de fonction",
+      "attribute": "mode",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 50,
+          "kind": "fixed",
+          "label": "Gradation DMX"
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "Sortie couleur (8 couleurs, choix par CH7)"
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)"
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Transition"
+        },
+        {
+          "min": 201,
+          "max": 250,
+          "kind": "program",
+          "label": "Pulsation"
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "program",
+          "label": "Audio (sensibilité par CH7)"
+        }
+      ]
+    },
+    {
+      "key": "speed",
+      "name": "Vitesse",
+      "attribute": "programSpeed",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Vitesse des fonctions lent → rapide (ou choix de couleur)",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "3 canaux",
+      "shortName": "3CH",
+      "deviceSetting": "d001",
+      "channels": [
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        }
+      ]
+    },
+    {
+      "name": "7 canaux",
+      "shortName": "7CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "fn"
+        },
+        {
+          "channel": "speed"
+        }
+      ]
+    }
+  ]
+}

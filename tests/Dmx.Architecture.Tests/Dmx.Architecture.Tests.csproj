@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Shouldly" />
+    <ProjectReference Include="../../src/Dmx.Core/Dmx.Core.csproj" />
+    <ProjectReference Include="../../src/Dmx.Messaging/Dmx.Messaging.csproj" />
+    <ProjectReference Include="../../src/Dmx.Engine/Dmx.Engine.csproj" />
+    <ProjectReference Include="../../src/Dmx.Output/Dmx.Output.csproj" />
+    <ProjectReference Include="../../src/Dmx.Persistence/Dmx.Persistence.csproj" />
+    <ProjectReference Include="../../src/Dmx.Hosting/Dmx.Hosting.csproj" />
+    <ProjectReference Include="../../src/Dmx.Fixtures/Dmx.Fixtures.csproj" />
+    <ProjectReference Include="../../src/Dmx.UI.Modules.Console/Dmx.UI.Modules.Console.csproj" />
+    <ProjectReference Include="../../src/Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+
+</Project>

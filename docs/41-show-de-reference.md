@@ -35,9 +35,9 @@ Adresses « rondes » pour faciliter le réglage sur les appareils, avec des **r
 |---|---|---|---|---|---|
 | PAR 1 à 4 | 4 | Betopper LPC008S – **7CH** (`A001`) | 1, 8, 15, 22 | 7 | 30 |
 | Gros PAR 1 et 2 | 2 | Betopper LPC010 / LPC120 – mode à définir | 31, 41 | ≤ 10 | 50 |
-| Barres 1 et 2 | 2 | BeamZ LCB803 – mode à définir (pixels si disponible) | 51, 81 | ≤ 30 | 110 |
+| Barres 1 et 2 | 2 | BeamZ LCB803 – **24CH** (4 sections, menu `ChNd 24Ch`) *(proposé : 48CH ne tient pas dans la réserve)* | 51, 81 | 24 | 110 |
 | Lyres 1 et 2 | 2 | Tomshine – **11CH** (Pan/Tilt 16 bits) | 111, 126 | 11 | 140 |
-| Effet multi-têtes | 1 | WZYBUTA 150 W – **16CH** | 141 | 16 | 160 |
+| Effet multi-têtes | 1 | WZYBUTA 150 W – **20CH** (mode 1, couleur commune) *(proposé : 64CH ne tient pas dans la réserve)* | 141 | 20 | 160 |
 | UV 1 et 2 | 2 | BeamZ BUV463 – **7CH** | 161, 168 | 7 | 175 |
 | Fumée | 1 | Générique « Machine à fumée » – 1CH | 180 | 1 | 180 |
 
@@ -130,9 +130,9 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 
 | Phase | Ajouts au show de référence | Validation par l'utilisateur |
 |---|---|---|
-| P0 | Squelette du projet (fichier projet versionné) ; enregistrement d'un chenillard de test canaux 1-180, **canal 180 (fumée) exclu**, valeur de test 50 % (pour ne pas déclencher fumée ni canaux Reset/contrôle des lyres et de l'effet) ; `JOURNAL.md`. La configuration de sortie n'est **pas** dans le show : elle est dans les préférences du poste (SORT-006, Q15). | Chaque appareil réagit |
+| P0 | Squelette du projet (fichier projet versionné) ; enregistrement d'un chenillard de test canaux 1-180, **canal 180 (fumée) exclu**, valeur de test 50 % (pour ne pas déclencher la fumée ni les canaux Reset des lyres et de l'effet WZYBUTA) ; `JOURNAL.md`. La configuration de sortie n'est **pas** dans le show : elle est dans les préférences du poste (SORT-006, Q15). | Chaque appareil réagit |
 | P1 | Instantanés de console par appareil | Canaux conformes au plan d'adresses |
-| P2 | Définitions de tous les appareils | Plages vérifiées en direct |
+| P2 | Définitions de tous les appareils (bibliothèque d'exemple `samples/Bibliothèque/` ; copie dans le projet à partir de P3, GEN-053) | Plages vérifiées en direct |
 | P3 | Installation (§2), sélections (§4), lieux (§3), fiche d'installation | Adresses réglées sur les appareils, identification OK |
 | P4 | Palettes (§5, hors thèmes), scènes statiques et chenillards simples (§7) | Rendu simulateur puis matériel |
 | P5 | Couches (§6), flashs, ambiance, positions calibrées, disposition Live, affectation APC mini | **Jalon 1** : soirée manuelle avec ce show |

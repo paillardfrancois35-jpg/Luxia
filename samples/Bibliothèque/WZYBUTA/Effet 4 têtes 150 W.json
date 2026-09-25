@@ -1,0 +1,793 @@
+{
+  "formatVersion": 1,
+  "id": "df9703ac-9b8e-5299-b255-52d18923f4ab",
+  "manufacturer": "WZYBUTA",
+  "model": "Effet 4 têtes 150 W",
+  "category": "effect",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "Effet « moving head » 150 W : plateau rotatif (Pan + rotation continue), 4 barrettes amovibles inclinables (Tilt 1-4) de 3 projecteurs RGBW. Mode 20 canaux : couleur commune ; mode 64 canaux : RGBW par projecteur (12 cellules). Source : définition ScanLibrary (Daslight) de l'utilisateur. Canaux 17-19 (20CH) / 61-63 (64CH) : laser optionnel, absent (inutilisés).",
+  "manual": "docs/Equipements/WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf",
+  "physical": {
+    "sourceType": "LED RGBW",
+    "power": 150
+  },
+  "channels": [
+    {
+      "key": "pan",
+      "name": "Pan (plateau)",
+      "attribute": "pan",
+      "notes": "Position du plateau ; amplitude inconnue."
+    },
+    {
+      "key": "panmotor",
+      "name": "Rotation continue du plateau",
+      "attribute": "panContinuous",
+      "notes": "ScanLibrary : « Rotation of X Motor 1 / 2 ». Sens de variation de la vitesse à vérifier.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 85,
+          "kind": "noFunction",
+          "label": "Sans rotation"
+        },
+        {
+          "min": 86,
+          "max": 171,
+          "kind": "progressive",
+          "label": "Rotation sens 1, vitesse variable",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        },
+        {
+          "min": 172,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Rotation sens 2, vitesse variable",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "tilt1",
+      "name": "Tilt barrette 1",
+      "attribute": "tilt",
+      "notes": "Barrette 1 = projecteurs 1 à 3."
+    },
+    {
+      "key": "tilt2",
+      "name": "Tilt barrette 2",
+      "attribute": "tilt",
+      "notes": "Barrette 2 = projecteurs 4 à 6."
+    },
+    {
+      "key": "tilt3",
+      "name": "Tilt barrette 3",
+      "attribute": "tilt",
+      "notes": "Barrette 3 = projecteurs 7 à 9."
+    },
+    {
+      "key": "tilt4",
+      "name": "Tilt barrette 4",
+      "attribute": "tilt",
+      "notes": "Barrette 4 = projecteurs 10 à 12."
+    },
+    {
+      "key": "speed",
+      "name": "Vitesse Pan / Tilt",
+      "attribute": "panTiltSpeed"
+    },
+    {
+      "key": "dim",
+      "name": "Gradateur maître",
+      "attribute": "intensity"
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe",
+      "attribute": "shutter",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 9,
+          "kind": "open",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 10,
+          "max": 249,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe"
+        },
+        {
+          "min": 250,
+          "max": 255,
+          "kind": "open",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        }
+      ]
+    },
+    {
+      "key": "effect",
+      "name": "Effets des LED",
+      "attribute": "program",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 5,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 6,
+          "max": 128,
+          "kind": "program",
+          "label": "Effets automatiques 01-04"
+        },
+        {
+          "min": 129,
+          "max": 255,
+          "kind": "program",
+          "label": "Effets au son"
+        }
+      ]
+    },
+    {
+      "key": "motoreffect",
+      "name": "Effets des moteurs",
+      "attribute": "program",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 15,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 16,
+          "max": 128,
+          "kind": "program",
+          "label": "Effets automatiques des moteurs 01-04"
+        },
+        {
+          "min": 129,
+          "max": 255,
+          "kind": "program",
+          "label": "Effets des moteurs au son"
+        }
+      ]
+    },
+    {
+      "key": "effectspeed",
+      "name": "Vitesse des effets / sensibilité au son",
+      "attribute": "programSpeed"
+    },
+    {
+      "key": "r",
+      "name": "Rouge (tous les projecteurs)",
+      "attribute": "red"
+    },
+    {
+      "key": "g",
+      "name": "Vert (tous les projecteurs)",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu (tous les projecteurs)",
+      "attribute": "blue"
+    },
+    {
+      "key": "w",
+      "name": "Blanc (tous les projecteurs)",
+      "attribute": "white"
+    },
+    {
+      "key": "r1",
+      "name": "Rouge 1",
+      "attribute": "red",
+      "cell": 1
+    },
+    {
+      "key": "g1",
+      "name": "Vert 1",
+      "attribute": "green",
+      "cell": 1
+    },
+    {
+      "key": "b1",
+      "name": "Bleu 1",
+      "attribute": "blue",
+      "cell": 1
+    },
+    {
+      "key": "w1",
+      "name": "Blanc 1",
+      "attribute": "white",
+      "cell": 1
+    },
+    {
+      "key": "r2",
+      "name": "Rouge 2",
+      "attribute": "red",
+      "cell": 2
+    },
+    {
+      "key": "g2",
+      "name": "Vert 2",
+      "attribute": "green",
+      "cell": 2
+    },
+    {
+      "key": "b2",
+      "name": "Bleu 2",
+      "attribute": "blue",
+      "cell": 2
+    },
+    {
+      "key": "w2",
+      "name": "Blanc 2",
+      "attribute": "white",
+      "cell": 2
+    },
+    {
+      "key": "r3",
+      "name": "Rouge 3",
+      "attribute": "red",
+      "cell": 3
+    },
+    {
+      "key": "g3",
+      "name": "Vert 3",
+      "attribute": "green",
+      "cell": 3
+    },
+    {
+      "key": "b3",
+      "name": "Bleu 3",
+      "attribute": "blue",
+      "cell": 3
+    },
+    {
+      "key": "w3",
+      "name": "Blanc 3",
+      "attribute": "white",
+      "cell": 3
+    },
+    {
+      "key": "r4",
+      "name": "Rouge 4",
+      "attribute": "red",
+      "cell": 4
+    },
+    {
+      "key": "g4",
+      "name": "Vert 4",
+      "attribute": "green",
+      "cell": 4
+    },
+    {
+      "key": "b4",
+      "name": "Bleu 4",
+      "attribute": "blue",
+      "cell": 4
+    },
+    {
+      "key": "w4",
+      "name": "Blanc 4",
+      "attribute": "white",
+      "cell": 4
+    },
+    {
+      "key": "r5",
+      "name": "Rouge 5",
+      "attribute": "red",
+      "cell": 5
+    },
+    {
+      "key": "g5",
+      "name": "Vert 5",
+      "attribute": "green",
+      "cell": 5
+    },
+    {
+      "key": "b5",
+      "name": "Bleu 5",
+      "attribute": "blue",
+      "cell": 5
+    },
+    {
+      "key": "w5",
+      "name": "Blanc 5",
+      "attribute": "white",
+      "cell": 5
+    },
+    {
+      "key": "r6",
+      "name": "Rouge 6",
+      "attribute": "red",
+      "cell": 6
+    },
+    {
+      "key": "g6",
+      "name": "Vert 6",
+      "attribute": "green",
+      "cell": 6
+    },
+    {
+      "key": "b6",
+      "name": "Bleu 6",
+      "attribute": "blue",
+      "cell": 6
+    },
+    {
+      "key": "w6",
+      "name": "Blanc 6",
+      "attribute": "white",
+      "cell": 6
+    },
+    {
+      "key": "r7",
+      "name": "Rouge 7",
+      "attribute": "red",
+      "cell": 7
+    },
+    {
+      "key": "g7",
+      "name": "Vert 7",
+      "attribute": "green",
+      "cell": 7
+    },
+    {
+      "key": "b7",
+      "name": "Bleu 7",
+      "attribute": "blue",
+      "cell": 7
+    },
+    {
+      "key": "w7",
+      "name": "Blanc 7",
+      "attribute": "white",
+      "cell": 7
+    },
+    {
+      "key": "r8",
+      "name": "Rouge 8",
+      "attribute": "red",
+      "cell": 8
+    },
+    {
+      "key": "g8",
+      "name": "Vert 8",
+      "attribute": "green",
+      "cell": 8
+    },
+    {
+      "key": "b8",
+      "name": "Bleu 8",
+      "attribute": "blue",
+      "cell": 8
+    },
+    {
+      "key": "w8",
+      "name": "Blanc 8",
+      "attribute": "white",
+      "cell": 8
+    },
+    {
+      "key": "r9",
+      "name": "Rouge 9",
+      "attribute": "red",
+      "cell": 9
+    },
+    {
+      "key": "g9",
+      "name": "Vert 9",
+      "attribute": "green",
+      "cell": 9
+    },
+    {
+      "key": "b9",
+      "name": "Bleu 9",
+      "attribute": "blue",
+      "cell": 9
+    },
+    {
+      "key": "w9",
+      "name": "Blanc 9",
+      "attribute": "white",
+      "cell": 9
+    },
+    {
+      "key": "r10",
+      "name": "Rouge 10",
+      "attribute": "red",
+      "cell": 10
+    },
+    {
+      "key": "g10",
+      "name": "Vert 10",
+      "attribute": "green",
+      "cell": 10
+    },
+    {
+      "key": "b10",
+      "name": "Bleu 10",
+      "attribute": "blue",
+      "cell": 10
+    },
+    {
+      "key": "w10",
+      "name": "Blanc 10",
+      "attribute": "white",
+      "cell": 10
+    },
+    {
+      "key": "r11",
+      "name": "Rouge 11",
+      "attribute": "red",
+      "cell": 11
+    },
+    {
+      "key": "g11",
+      "name": "Vert 11",
+      "attribute": "green",
+      "cell": 11
+    },
+    {
+      "key": "b11",
+      "name": "Bleu 11",
+      "attribute": "blue",
+      "cell": 11
+    },
+    {
+      "key": "w11",
+      "name": "Blanc 11",
+      "attribute": "white",
+      "cell": 11
+    },
+    {
+      "key": "r12",
+      "name": "Rouge 12",
+      "attribute": "red",
+      "cell": 12
+    },
+    {
+      "key": "g12",
+      "name": "Vert 12",
+      "attribute": "green",
+      "cell": 12
+    },
+    {
+      "key": "b12",
+      "name": "Bleu 12",
+      "attribute": "blue",
+      "cell": 12
+    },
+    {
+      "key": "w12",
+      "name": "Blanc 12",
+      "attribute": "white",
+      "cell": 12
+    },
+    {
+      "key": "x1",
+      "name": "Laser 1 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
+    },
+    {
+      "key": "x2",
+      "name": "Laser 2 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
+    },
+    {
+      "key": "x3",
+      "name": "Laser 3 (option absente)",
+      "attribute": "noFunction",
+      "notes": "Commande du laser optionnel, absent de l'appareil du parc : inutilisé."
+    },
+    {
+      "key": "reset",
+      "name": "Reset",
+      "attribute": "reset",
+      "notes": "Ne jamais animer : 251-255 = reset de l'appareil.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 250,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "fixed",
+          "label": "Reset"
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "20 canaux",
+      "shortName": "20CH",
+      "deviceSetting": "mode 1 (réglage du menu à noter)",
+      "channels": [
+        {
+          "channel": "pan"
+        },
+        {
+          "channel": "panmotor"
+        },
+        {
+          "channel": "tilt1"
+        },
+        {
+          "channel": "tilt2"
+        },
+        {
+          "channel": "tilt3"
+        },
+        {
+          "channel": "tilt4"
+        },
+        {
+          "channel": "speed"
+        },
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "effect"
+        },
+        {
+          "channel": "motoreffect"
+        },
+        {
+          "channel": "effectspeed"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "w"
+        },
+        {
+          "channel": "x1"
+        },
+        {
+          "channel": "x2"
+        },
+        {
+          "channel": "x3"
+        },
+        {
+          "channel": "reset"
+        }
+      ]
+    },
+    {
+      "name": "64 canaux",
+      "shortName": "64CH",
+      "deviceSetting": "mode 2 (réglage du menu à noter)",
+      "channels": [
+        {
+          "channel": "pan"
+        },
+        {
+          "channel": "panmotor"
+        },
+        {
+          "channel": "tilt1"
+        },
+        {
+          "channel": "tilt2"
+        },
+        {
+          "channel": "tilt3"
+        },
+        {
+          "channel": "tilt4"
+        },
+        {
+          "channel": "speed"
+        },
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "effect"
+        },
+        {
+          "channel": "motoreffect"
+        },
+        {
+          "channel": "effectspeed"
+        },
+        {
+          "channel": "r1"
+        },
+        {
+          "channel": "g1"
+        },
+        {
+          "channel": "b1"
+        },
+        {
+          "channel": "w1"
+        },
+        {
+          "channel": "r2"
+        },
+        {
+          "channel": "g2"
+        },
+        {
+          "channel": "b2"
+        },
+        {
+          "channel": "w2"
+        },
+        {
+          "channel": "r3"
+        },
+        {
+          "channel": "g3"
+        },
+        {
+          "channel": "b3"
+        },
+        {
+          "channel": "w3"
+        },
+        {
+          "channel": "r4"
+        },
+        {
+          "channel": "g4"
+        },
+        {
+          "channel": "b4"
+        },
+        {
+          "channel": "w4"
+        },
+        {
+          "channel": "r5"
+        },
+        {
+          "channel": "g5"
+        },
+        {
+          "channel": "b5"
+        },
+        {
+          "channel": "w5"
+        },
+        {
+          "channel": "r6"
+        },
+        {
+          "channel": "g6"
+        },
+        {
+          "channel": "b6"
+        },
+        {
+          "channel": "w6"
+        },
+        {
+          "channel": "r7"
+        },
+        {
+          "channel": "g7"
+        },
+        {
+          "channel": "b7"
+        },
+        {
+          "channel": "w7"
+        },
+        {
+          "channel": "r8"
+        },
+        {
+          "channel": "g8"
+        },
+        {
+          "channel": "b8"
+        },
+        {
+          "channel": "w8"
+        },
+        {
+          "channel": "r9"
+        },
+        {
+          "channel": "g9"
+        },
+        {
+          "channel": "b9"
+        },
+        {
+          "channel": "w9"
+        },
+        {
+          "channel": "r10"
+        },
+        {
+          "channel": "g10"
+        },
+        {
+          "channel": "b10"
+        },
+        {
+          "channel": "w10"
+        },
+        {
+          "channel": "r11"
+        },
+        {
+          "channel": "g11"
+        },
+        {
+          "channel": "b11"
+        },
+        {
+          "channel": "w11"
+        },
+        {
+          "channel": "r12"
+        },
+        {
+          "channel": "g12"
+        },
+        {
+          "channel": "b12"
+        },
+        {
+          "channel": "w12"
+        },
+        {
+          "channel": "x1"
+        },
+        {
+          "channel": "x2"
+        },
+        {
+          "channel": "x3"
+        },
+        {
+          "channel": "reset"
+        }
+      ]
+    }
+  ]
+}

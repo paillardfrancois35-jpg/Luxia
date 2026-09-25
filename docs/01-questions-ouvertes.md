@@ -24,11 +24,11 @@
 | Rôle | Qté | Modèle | Canaux connus | Reste à vérifier |
 |---|---|---|---|---|
 | PAR | 4 | Betopper LPC008S (RGB) | 3 / 7 ch | — |
-| Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | ? | Tableau DMX : les notices sont des PDF vectoriels sans texte extractible → à lire lors de la rédaction de la bibliothèque |
+| Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | 4 / 8 ch | ✅ Tableaux lus en P2 (rendu des PDF en images) |
 | Lyres | 2 (identiques) | Tomshine (lyre gobo) | 9 / 11 ch | — |
 | UV | 2 | BeamZ BUV463 | 7 ch | — |
 | Barres | 2 | BeamZ LCB803 | ? | Tableau DMX (PDF image) |
-| Effet multi-têtes | 1 | WZYBUTA 150 W (moteur tournant + 4 têtes pivotantes) | 16 ch | — |
+| Effet multi-têtes | 1 | WZYBUTA 150 W (plateau tournant + 4 barrettes de 3 projecteurs RGBW) | 20 ch / 64 ch | — |
 | Fumée | 1 | — | 1 ch | — |
 | Contrôleurs | 2 | AKAI APC mini MK1 et MK2 | — | — |
 | Interface DMX | 1 | Arduino Leonardo + shield Conceptinetics CTC-DRA-10-R2 | — | — |
@@ -46,3 +46,7 @@
 | Q20 | POC firmware | *Proposition : le POC est versionné tel quel au premier commit puis remplacé par `firmware/arduino-dmx` (historique conservé dans Git) ; le dossier `Arduino/` disparaît.* | ✅ | Accepté : POC versionné au premier commit puis remplacé par `firmware/arduino-dmx`. |
 | Q21 | Règles de développement | Valider les propositions (langue du code, style C#, structure, dépendances, bibliothèques, tests, Git, commentaires) avant rédaction de `docs/03-regles-de-developpement.md`. | ✅ | Toutes les propositions acceptées → [03](03-regles-de-developpement.md). |
 | Q22 | Git | Dépôt distant (GitHub privé ? autre ?) ou dépôt local uniquement ? | ✅ | **Dépôt local uniquement.** |
+| Q23 | Test de sortie | Un chenillard **canal par canal** n'allume rien sur un appareil à gradateur maître (PAR en 7 canaux, lyres, UV…) : le maître est à 0 quand la couleur passe, et inversement. Ajouter au test une liste de **canaux maintenus** à la valeur de test pendant tout le chenillard (ex. `1, 8, 15, 22` = maîtres des 4 PAR) ? *(proposition : oui, en P1, noté au carnet d'idées ; en attendant, le guide P0 conseille le mode 3 canaux pour le test)* | ✅ | Utilisateur : **oui, en P3** → exigence SORT-008 (canaux maintenus pendant le test de sortie). |
+| Q24 | Bibliothèque – barre LED | La notice `LCB803` du dépôt ne contient que la couverture et une page blanche (2 pages sur 32) : **le tableau DMX de la barre BeamZ LCB803 manque**. Pouvez-vous fournir la notice complète (ou une photo du tableau des modes) ? *En attendant, la barre est décrite par un générique « RGB 3 canaux » signalé comme provisoire.* | ✅ | Notice fournie (pages 1, 5, 6, 27-29) le 2026-09-25 : 5 modes (3, 6, 12, 24, 48 canaux), sections de 6 canaux → définition `samples/Bibliothèque/BeamZ/LCB803.json`. |
+| Q25 | Bibliothèque – effet WZYBUTA | Le tableau 16 canaux de l'effet multi-têtes est ambigu (traduction) : canal 6 « Master switch », 7 « flash, **255 = reset** », 8 « programmes 6-255 », 11-14 « rouge/vert/bleu/blanc 1-9 », 16 « totalise ». La définition livrée est marquée « à vérifier en direct » : pourrez-vous la vérifier avec le mode **découverte** de l'éditeur (P2) ? | 🟡 | Utilisateur (25/09, soir) : l'appareil a en réalité un mode 1 = **20 canaux** et un mode 2 = **64 canaux** (définition ScanLibrary de Daslight, captures déposées) ; le tableau 16 canaux de la notice ne s'applique pas. Définition refaite ; plan du show : 20CH à l'adresse 141. Canaux 17-19 / 61-63 = laser optionnel absent (inutilisés). **Reste ouvert** : réglage du menu de l'appareil qui choisit 20 ou 64 canaux (question précisée le 25/09) ; variation de vitesse du canal 2 dans chaque sens (vérification par l'utilisateur). |
+| Q26 | Veille du PC | La mise en veille du poste ne peut pas être allongée (réglage imposé). Or un PC qui s'endort en soirée coupe la lumière (chien de garde → noir). *Proposition : l'application demande elle-même à Windows de rester éveillée tant qu'elle émet (`SetThreadExecutionState`, demande temporaire propre au processus, sans toucher aux réglages), aussi pour `dmx-headless gigue`. Et mesure de gigue ramenée à 15 min (≈ 36 000 ticks, suffisant pour le 99e centile) ; l'endurance longue reste le rôle de GEN-092 (6 h, P10).* | ✅ | Utilisateur : mesure ramenée à **15 min** ; **blocage de la veille** par l'application → GEN-096, D23. |

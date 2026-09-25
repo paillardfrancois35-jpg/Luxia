@@ -12,7 +12,7 @@
 | Framework | **.NET 10** (LTS), `net10.0` ; `net10.0-windows` uniquement pour ce qui dépend de Windows (application, API Windows) |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
-| Hôte | `Microsoft.Extensions.Hosting` : injection de dépendances, configuration, journalisation |
+| Assemblage | Projet `Dmx.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
 | Journal | `Microsoft.Extensions.Logging` en façade, **Serilog** pour les fichiers tournants (GEN-110) |
 | JSON | `System.Text.Json` uniquement |
 | Série | `System.IO.Ports` |
@@ -62,7 +62,10 @@ DMX/
 | `Dmx.Engine` | Core, Messaging — **jamais** d'un pilote concret, de l'UI, de l'audio |
 | `Dmx.Output` | Core, Messaging |
 | `Dmx.Persistence` | Core |
-| `Dmx.UI.*` | tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
+| `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
+| `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
+| `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
+| `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
 | `Dmx.App`, `tools/*` | tout (composition) |
 
 Ces règles sont **vérifiées par un test d'architecture** (`Dmx.Architecture.Tests`), qui échoue en cas de violation.
@@ -99,7 +102,9 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Emplacement | `tests/<Projet>.Tests` ; données dans `tests/assets/` |
 | Nommage | `Methode_Condition_ResultatAttendu` (anglais) ; `DisplayName` en français si utile |
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
-| Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus par défaut** (`dotnet test --filter "Categorie!=Materiel"`) |
+| Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
+| Commandes | `dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
+| Intégration | `tests/Dmx.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
 
@@ -110,9 +115,11 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Élément | Règle |
 |---|---|
 | Dépôt | **Local uniquement** (pas de distant) |
-| Branches | `main` toujours stable ; **une branche par étape vérifiable** (`p0/boucle-40hz`, `p0/pilote-arduino`…), fusionnée dans `main` après validation de l'utilisateur (`--no-ff`) |
+| Responsabilité | **Les opérations Git sont à la charge de l'IA de développement** (décision de l'utilisateur, 2026-09-25) : commits au fil des étapes ; fusion dans `main` et étiquette de version **à chaque validation d'un passage important par l'utilisateur**. |
+| Branches | `main` ne reçoit que du validé ; une branche par phase (`p0/fondations`, `p1/console`…) avec un commit par étape vérifiable ; fusion dans `main` (`--no-ff`) après validation |
 | Commits | En français, format `type(module): résumé` ; types : `feat`, `fix`, `test`, `docs`, `refactor`, `build`, `chore`, `firmware` ; le corps cite les exigences (`Exigences : SORT-001, SORT-003`) |
-| Étiquettes | Une par phase livrée : `p0`, `p1`… |
+| Étiquettes | Numérotation choisie par l'utilisateur le 2026-09-25 (remplace `p0`, `p1`…) : `v1.001`, `v1.002`… — une par **validation** de l'utilisateur, sur `main`, +1 à chaque fois. Annotée, message = ce qui a été validé. |
+| Étiquettes intermédiaires | Pendant le développement d'un passage **non encore validé**, chaque commit notable sur sa branche est étiqueté `v1.0NN.MMM` (`NN` = le numéro de la prochaine validation attendue, `MMM` +1 à chaque étiquette). Objectif : distinguer d'un coup d'œil une version encore en cours de dev d'une version validée. À la validation, `v1.0NN.MMM` disparaît au profit de `v1.0NN` sur `main`, et `MMM` repart de `001` pour le passage suivant. |
 | Fichiers exclus | `bin/`, `obj/`, `.vs/`, `*.user`, fichiers de build Arduino, journaux, enregistrements temporaires |
 
 ## 8. Données et fichiers
@@ -130,7 +137,8 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 
 ## 10. Conduite
 
-- Divergence avec le cahier des charges : signalée, puis reportée dans le document concerné.
+- **Fiches d'exigences** (`docs/exigences/<ID>.md`, règles F1 à F7 de leur README) : une fiche par exigence travaillée ; toute question, réponse, décision, écart, développement, test ou validation qui la concerne y est ajouté (historique ajout seul). Revenir sur une décision = nouvelle entrée qui cite l'ancienne et explique ce qui a changé. La fiche fait foi pour le statut.
+- Divergence avec le cahier des charges : signalée, puis reportée dans le document concerné **et** dans la fiche de l'exigence.
 - Nouvelle idée : `docs/99-idees.md`. Question : `docs/01-questions-ouvertes.md`, reposée jusqu'à réponse.
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
 - Chaque phase se livre avec ses démonstrations (doc 40 §7, doc 41).
@@ -140,3 +148,6 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Date | Modification |
 |---|---|
 | 2026-09-24 | Version initiale (Q21, Q22). |
+| 2026-09-25 | Fiches d'exigences `docs/exigences/` (demande de l'utilisateur) : suivi par exigence façon Redmine, source du statut de la matrice 31. |
+| 2026-09-25 | P1-P2 : projets d'interface par écran (D22), CA1822 en suggestion pour les projets d'interface (liaisons), CA1309 désactivée (tris affichés en français), matrice `tools/matrice-exigences.py`. |
+| 2026-09-24 | P0 : projet `Dmx.Hosting` (D20), commandes de test Microsoft.Testing.Platform, projet de tests d'intégration, test d'architecture par réflexion (sans NetArchTest). |

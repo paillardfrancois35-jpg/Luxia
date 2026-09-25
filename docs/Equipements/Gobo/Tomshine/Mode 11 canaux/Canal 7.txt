@@ -1,0 +1,9 @@
+0-7 : rien (ouvert)
+8 - 131 : strombo croissant (131 à fond)
+132 - 139 : Ouvert
+140 - 181 : fondu de fermé à ouvert vitesse décroissante (140 le plus rapide)
+182 - 189 : ouvert 
+190 - 231 : fondu de ouvert à fermé vitesse décroissante (190 le plus rapide)
+232 - 239 : ouvert
+240 - 247: strombo aléatoire
+248 - 255 : Ouvert

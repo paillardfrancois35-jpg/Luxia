@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE FixtureDefinition>
+<FixtureDefinition xmlns="http://www.qlcplus.org/FixtureDefinition">
+ <Creator>
+  <Name>Q Light Controller Plus</Name>
+  <Version>4.12.7</Version>
+  <Author>Test</Author>
+ </Creator>
+ <Manufacturer>Acme</Manufacturer>
+ <Model>Wash 7</Model>
+ <Type>Moving Head</Type>
+ <Channel Name="Pan" Preset="PositionPan"/>
+ <Channel Name="Pan fine" Preset="PositionPanFine"/>
+ <Channel Name="Tilt" Preset="PositionTilt"/>
+ <Channel Name="Tilt fine" Preset="PositionTiltFine"/>
+ <Channel Name="Dimmer" Preset="IntensityMasterDimmer"/>
+ <Channel Name="Red" Preset="IntensityRed"/>
+ <Channel Name="Green" Preset="IntensityGreen"/>
+ <Channel Name="Blue" Preset="IntensityBlue"/>
+ <Channel Name="White" Preset="IntensityWhite"/>
+ <Channel Name="Shutter">
+  <Group Byte="0">Shutter</Group>
+  <Capability Min="0" Max="9" Preset="ShutterClose">Blackout</Capability>
+  <Capability Min="10" Max="249" Preset="StrobeSlowToFast">Strobe slow to fast</Capability>
+  <Capability Min="250" Max="255" Preset="ShutterOpen">Open</Capability>
+ </Channel>
+ <Channel Name="Colour macros">
+  <Group Byte="0">Colour</Group>
+  <Capability Min="0" Max="15" Preset="ColorMacro" Res="#ff0000">Red</Capability>
+  <Capability Min="16" Max="31" Preset="ColorMacro" Res="#00ff00">Green</Capability>
+  <Capability Min="32" Max="255">Rainbow</Capability>
+ </Channel>
+ <Channel Name="Sparkle" Preset="EffectSparkle"/>
+ <Mode Name="14 Channel">
+  <Channel Number="0">Pan</Channel>
+  <Channel Number="1">Pan fine</Channel>
+  <Channel Number="2">Tilt</Channel>
+  <Channel Number="3">Tilt fine</Channel>
+  <Channel Number="4">Dimmer</Channel>
+  <Channel Number="5">Red</Channel>
+  <Channel Number="6">Green</Channel>
+  <Channel Number="7">Blue</Channel>
+  <Channel Number="8">White</Channel>
+  <Channel Number="9">Shutter</Channel>
+  <Channel Number="10">Colour macros</Channel>
+  <Channel Number="11">Sparkle</Channel>
+ </Mode>
+ <Physical>
+  <Bulb Type="LED" Lumens="0" ColourTemperature="0"/>
+  <Dimensions Weight="5" Width="200" Height="300" Depth="200"/>
+  <Lens Name="Other" DegreesMin="10" DegreesMax="30"/>
+  <Focus Type="Head" PanMax="540" TiltMax="270"/>
+  <Technical PowerConsumption="120" DmxConnector="3-pin"/>
+ </Physical>
+</FixtureDefinition>
