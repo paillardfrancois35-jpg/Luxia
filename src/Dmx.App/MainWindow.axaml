@@ -5,6 +5,7 @@
         xmlns:outputs="using:Dmx.UI.Modules.Outputs"
         xmlns:library="using:Dmx.UI.Modules.Library"
         xmlns:installation="using:Dmx.UI.Modules.Installation"
+        xmlns:simulator="using:Dmx.UI.Modules.Simulator"
         x:Class="Dmx.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -58,6 +59,9 @@
         </DataTemplate>
         <DataTemplate DataType="installation:InstallationViewModel">
           <installation:InstallationView />
+        </DataTemplate>
+        <DataTemplate DataType="simulator:SimulatorViewModel">
+          <simulator:SimulatorView />
         </DataTemplate>
         <DataTemplate DataType="outputs:OutputsViewModel">
           <outputs:OutputsView />

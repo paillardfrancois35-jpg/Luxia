@@ -20,6 +20,7 @@
     <ProjectReference Include="../../src/Dmx.UI.Modules.Outputs/Dmx.UI.Modules.Outputs.csproj" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Library/Dmx.UI.Modules.Library.csproj" />
     <ProjectReference Include="../../src/Dmx.UI.Modules.Installation/Dmx.UI.Modules.Installation.csproj" />
+    <ProjectReference Include="../../src/Dmx.UI.Modules.Simulator/Dmx.UI.Modules.Simulator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

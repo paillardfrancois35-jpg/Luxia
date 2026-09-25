@@ -54,6 +54,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Dmx.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
             new NavigationItem("Installation", "▦", new Dmx.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),
+            new NavigationItem("Simulateur", "◎", new Dmx.UI.Modules.Simulator.SimulatorViewModel(runtime)),
             new NavigationItem("Sorties", "⇄", new OutputsViewModel(runtime)),
         ];
         _selectedPage = Pages[0];
