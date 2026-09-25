@@ -56,3 +56,18 @@ DMX et les décode grâce au patch et aux définitions d'appareils. Ce qui s'y v
 | T-SIM-01 | Unitaire | Décodage : trames de référence → couleurs, intensités, directions attendues pour chaque modèle du parc. |
 | T-SIM-02 | Performance | 30 images/s avec tout le parc animé ; aucune gigue induite sur le moteur. |
 | T-SIM-03 | Manuel | Comparaison visuelle simulateur / matériel réel sur 10 scènes types (jalon 1). |
+
+## 6. Notes de réalisation (P3)
+
+> Écarts et précisions constatés au développement (doc 40 §6). Détail complet dans les fiches d'exigences.
+
+| Sujet | Réalisation |
+|---|---|
+| SORT-062 (pilote Simulateur) | Pas de pilote `IOutputDriver` séparé : le simulateur lit `RenderEngine.CopyLastFrame` directement (même mécanisme non bloquant que le moniteur de la console). |
+| SIM-003 | Décodage complet dans `Dmx.Patch.Rules.FixtureDecoder`, réutilisable hors du simulateur (couleurs, intensité virtuelle BIB-006, roues, strobe, cellules, Pan/Tilt). |
+| SIM-004 | Vue de dessus uniquement : le Tilt ne raccourcit pas le faisceau à l'écran (la vue de face, SIM-013, n'est pas faite). |
+| SIM-006 | Une seule source pour l'instant (« Sortie ») ; Aperçu (P4, mode aveugle) et Lecture (SORT-063, S) viendront plus tard. |
+| SIM-009 | L'identification (CMD-023) se voit sans code dédié : elle agit par de vraies surcharges de canaux, décodées normalement. |
+| SIM-012 | Strobe signalé par une icône fixe, jamais animé à la fréquence réelle (protection photosensible sans ambiguïté). |
+| Non fait | SIM-007 (fenêtre détachable), SIM-008 (zones interdites / repères, dépend de P5), SIM-010 (sélection reprise par le programmeur, dépend de P4), SIM-013 (vue de face, S). |
+| Écran | `Dmx.UI.Modules.Simulator` + contrôle `Dmx.UI.Controls.SimulatorCanvas`. |
