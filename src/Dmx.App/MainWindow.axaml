@@ -4,6 +4,7 @@
         xmlns:console="using:Dmx.UI.Modules.Console"
         xmlns:outputs="using:Dmx.UI.Modules.Outputs"
         xmlns:library="using:Dmx.UI.Modules.Library"
+        xmlns:installation="using:Dmx.UI.Modules.Installation"
         x:Class="Dmx.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -54,6 +55,9 @@
         </DataTemplate>
         <DataTemplate DataType="library:LibraryViewModel">
           <library:LibraryView />
+        </DataTemplate>
+        <DataTemplate DataType="installation:InstallationViewModel">
+          <installation:InstallationView />
         </DataTemplate>
         <DataTemplate DataType="outputs:OutputsViewModel">
           <outputs:OutputsView />

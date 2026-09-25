@@ -40,6 +40,8 @@ public sealed class DependencyRulesTests
     [InlineData("Dmx.UI.Controls")]
     [InlineData("Dmx.UI.Modules.Console")]
     [InlineData("Dmx.UI.Modules.Outputs")]
+    [InlineData("Dmx.UI.Modules.Library")]
+    [InlineData("Dmx.UI.Modules.Installation")]
     [Trait("Exigence", "GEN-003")]
     public void UserInterfaceModules_DoNotReferenceApplication(string project)
     {

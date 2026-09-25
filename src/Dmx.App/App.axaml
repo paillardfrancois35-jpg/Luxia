@@ -20,5 +20,9 @@
       <Setter Property="Spacing" Value="4" />
       <Setter Property="Margin" Value="0,0,16,8" />
     </Style>
+    <!-- Action destructrice (suppression) : la confirmation (GEN-103) reste la protection principale, ceci n'est qu'un repère visuel. -->
+    <Style Selector="Button.danger">
+      <Setter Property="Foreground" Value="#F85149" />
+    </Style>
   </Application.Styles>
 </Application>
