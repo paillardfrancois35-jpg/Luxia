@@ -32,3 +32,4 @@
 | 2026-09-24 | Utilisateur | Réponse | Utilisateur : arduino-cli ; compilation libre ; **chaque téléversement sur la carte lui est demandé au préalable**. |
 | 2026-09-24 | Claude | Développement | `ebcebf0` firmware: interface Enttec (labels 3, 6, 10, 77, 0x11), chien de garde 2 s |
 | 2026-09-25 | Utilisateur | Test | Débranchement de l'USB (perte d'alimentation de la carte, pas le chien de garde) : PAR éteint en ~3,5 s ; le même essai en débranchant seulement le câble DMX au PAR (Arduino toujours alimenté) donne le même délai 3-4 s. **Confirmé : ce délai vient du PAR lui-même** (comportement propre à sa perte de signal), pas du firmware. |
+| 2026-09-25 | Utilisateur | Test | T-SORT-06 (Arduino alimenté, application tuée en plein chenillard) : extinction rapide (≤ 2 s), LED de la carte fixe. **Validé.** |
