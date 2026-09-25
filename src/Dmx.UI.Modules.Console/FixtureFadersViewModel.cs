@@ -83,7 +83,7 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
             var definition = fixture.Channel(slot.Channel);
             if (definition is not null)
             {
-                Channels.Add(new FixtureChannelViewModel(i + 1, address + i, definition, slot.Part));
+                Channels.Add(new FixtureChannelViewModel(i + 1, address + i, definition, slot.Part, fixture.Physical));
             }
         }
 

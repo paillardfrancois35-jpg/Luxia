@@ -141,6 +141,7 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
     [Trait("Exigence", "BIB-060")]
     [Trait("Exigence", "BIB-061")]
     [Trait("Exigence", "BIB-063")]
+    [Trait("Exigence", "CONS-060")]
     public void LiveTest_PatchesAtAddress_RangeClickSendsMedian_StopReleases()
     {
         _library.Open(GenericFixtures.Strobe.Id);
@@ -180,6 +181,7 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
     [Fact]
     [Trait("Exigence", "BIB-083")]
     [Trait("Exigence", "BIB-082")]
+    [Trait("Exigence", "GEN-109")]
     public async Task Import_SavesNewModels_SkipsExisting_AndReports()
     {
         var folder = Path.Combine(AppContext.BaseDirectory, "samples", "Bibliothèque");

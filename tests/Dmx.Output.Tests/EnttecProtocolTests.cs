@@ -104,4 +104,9 @@ public sealed class EnttecProtocolTests
     [Fact]
     public void TryParseIdentity_OtherDevice_IsRejected() =>
         EnttecProtocol.TryParseIdentity("HELLO"u8, out _).ShouldBeFalse();
+
+    [Fact]
+    [Trait("Exigence", "SORT-012")]
+    public void SerialPort_IsNeverOpenedAt1200Baud() =>
+        SystemSerialPortProvider.BaudRate.ShouldNotBe(1200); // 1200 bauds = passage du Leonardo en programmation
 }

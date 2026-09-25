@@ -8,6 +8,8 @@ namespace Dmx.UI.Modules.Console;
 /// <summary>Un canal d'un appareil dans le composant « faders d'un appareil » (CONS-060).</summary>
 public sealed partial class FixtureChannelViewModel : ViewModelBase
 {
+    private readonly PhysicalInfo? _physical;
+
     [ObservableProperty]
     private int _value;
 
@@ -21,9 +23,10 @@ public sealed partial class FixtureChannelViewModel : ViewModelBase
     private bool _isDiscovering;
 
     /// <summary>Crée la tranche.</summary>
-    public FixtureChannelViewModel(int position, int absoluteChannel, ChannelDefinition definition, ChannelPart part)
+    public FixtureChannelViewModel(int position, int absoluteChannel, ChannelDefinition definition, ChannelPart part, PhysicalInfo? physical = null)
     {
         ArgumentNullException.ThrowIfNull(definition);
+        _physical = physical;
         Position = position;
         AbsoluteChannel = absoluteChannel;
         Definition = definition;
@@ -67,10 +70,10 @@ public sealed partial class FixtureChannelViewModel : ViewModelBase
 
     private void UpdateRange()
     {
-        var range = Part == ChannelPart.Fine ? null : Definition.CapabilityAt(Value);
-        CurrentRange = range is null
-            ? string.Create(CultureInfo.CurrentCulture, $"{Value} ({Math.Round(Value * 100 / 255.0)} %)")
-            : string.Create(CultureInfo.CurrentCulture, $"{Value} – {range.Label}");
+        // GEN-021 : nom de plage, degrés (Pan / Tilt), % (intensités), sinon valeur brute.
+        CurrentRange = Part == ChannelPart.Fine
+            ? string.Create(CultureInfo.CurrentCulture, $"{Value} (octet fin)")
+            : Dmx.Fixtures.Rules.DmxConversion.Describe(Definition, Value, _physical);
     }
 }
 

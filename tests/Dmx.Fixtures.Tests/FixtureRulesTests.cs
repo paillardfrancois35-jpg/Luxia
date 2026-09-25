@@ -100,6 +100,7 @@ public sealed class FixtureRulesTests
 
     [Fact]
     [Trait("Exigence", "BIB-005")]
+    [Trait("Exigence", "BIB-026")]
     public void SettingSheet_ShowsChannelCountAndDeviceSetting()
     {
         var par = Samples.Par;

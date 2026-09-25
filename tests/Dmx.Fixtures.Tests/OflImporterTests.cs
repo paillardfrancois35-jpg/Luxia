@@ -46,6 +46,7 @@ public sealed class OflImporterTests
     [Fact]
     [Trait("Exigence", "BIB-080")]
     [Trait("Exigence", "BIB-003")]
+    [Trait("Exigence", "BIB-008")]
     public void Spot_FineChannelsAreOneAttribute_AndWheelsCarryColors()
     {
         var spot = Import("acme/spot-60.json");
