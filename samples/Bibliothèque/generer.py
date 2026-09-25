@@ -127,42 +127,73 @@ fixture("Betopper", "LPC120", "par", [
     {"sourceType": "LED RGBW 4-en-1", "power": 120},
     EQ + "PAR/BETOPPER/LPC120/LPC120_-Betopper_60x2W_RGBW_4-in-1_DJ_Wedding_Par_Lights-manual.pdf")
 
-# 4. Tomshine mini lyre à gobos (9 / 11 canaux) — refait le 2026-09-25 d'après la photo du tableau réel de la notice
-#    (docs/Equipements/Gobo/Tomshine/20260925_212331.jpg) : la version précédente (roue de couleur/gobo à emplacements,
-#    canal Contrôle avec reset 200-209) ne correspondait pas à cet appareil, qui n'a pas de canal de reset séparé.
+# 4. Tomshine mini lyre à gobos (9 / 11 canaux) — définition en 11 canaux confirmée le 2026-09-25 par une source fiable
+#    (Open Fixture Library, open-fixture-library.org/tomshine/80w-mini-gobo-moving-head) ET par l'utilisateur, qui a
+#    revérifié en direct le canal 7 (Strobe) dont la fiche OFL restait incomplète (voir Canal 7 ci-dessous).
+#    Le mode 9 canaux n'a pas de source indépendante : dérivé du mode 11 canaux en retirant les octets fins (Pan/Tilt),
+#    comme le mode 11 fonctionne c'est jugé secondaire par l'utilisateur.
 SHUTTER = [
     cap(0, 7, "Sans fonction (obturateur ouvert, pas de strobe)", "open", "open"),
-    cap(8, 99, "Strobe lent → rapide", "progressive", "strobe"), cap(100, 149, "Strobe rapide → lent", "progressive", "strobe"),
-    cap(150, 199, "Strobe, effet 1", "progressive", "strobe"), cap(200, 245, "Strobe, effet 2", "progressive", "strobe"),
-    cap(246, 255, "Strobe, effet le plus rapide", "progressive", "strobe")]
+    cap(8, 131, "Strobe croissant (131 = le plus rapide)", "progressive", "strobe"),
+    cap(132, 139, "Sans fonction (ouvert)", "open", "open"),
+    cap(140, 181, "Fondu fermé → ouvert, vitesse décroissante (140 = le plus rapide)", "progressive", "pulse"),
+    cap(182, 189, "Sans fonction (ouvert)", "open", "open"),
+    cap(190, 231, "Fondu ouvert → fermé, vitesse décroissante (190 = le plus rapide)", "progressive", "pulse"),
+    cap(232, 239, "Sans fonction (ouvert)", "open", "open"),
+    cap(240, 247, "Strobe aléatoire", "fixed", "random"),
+    cap(248, 255, "Sans fonction (ouvert)", "open", "open")]
+COLOR_WHEEL = [
+    cap(0, 7, "Ouvert (pas de couleur)", "wheelSlot", colors=[]),
+    cap(8, 15, "Rouge", "wheelSlot", colors=["#FF0000"]), cap(16, 24, "Vert", "wheelSlot", colors=["#00FF00"]),
+    cap(25, 31, "Bleu", "wheelSlot", colors=["#0000FF"]), cap(32, 39, "Jaune", "wheelSlot", colors=["#FFFF00"]),
+    cap(40, 47, "Orange", "wheelSlot", colors=["#FFA500"]), cap(48, 55, "Cyan", "wheelSlot", colors=["#00FFFF"]),
+    cap(56, 63, "Rose", "wheelSlot", colors=["#FF69B4"]),
+    cap(64, 71, "Partagé Ouvert / Rouge", "wheelSlot", colors=["#FFFFFF", "#FF0000"]),
+    cap(72, 79, "Partagé Rouge / Vert", "wheelSlot", colors=["#FF0000", "#00FF00"]),
+    cap(80, 87, "Partagé Vert / Bleu", "wheelSlot", colors=["#00FF00", "#0000FF"]),
+    cap(88, 95, "Partagé Bleu / Jaune", "wheelSlot", colors=["#0000FF", "#FFFF00"]),
+    cap(96, 103, "Partagé Jaune / Orange", "wheelSlot", colors=["#FFFF00", "#FFA500"]),
+    cap(104, 111, "Partagé Orange / Cyan", "wheelSlot", colors=["#FFA500", "#00FFFF"]),
+    cap(112, 119, "Partagé Cyan / Rose", "wheelSlot", colors=["#00FFFF", "#FF69B4"]),
+    cap(120, 127, "Partagé Rose / Ouvert", "wheelSlot", colors=["#FF69B4", "#FFFFFF"]),
+    cap(128, 191, "Rotation de la roue, sens horaire, lent → rapide", "rotation"),
+    cap(192, 255, "Rotation de la roue, sens antihoraire, lent → rapide", "rotation")]
+GOBO_WHEEL = [
+    cap(0, 7, "Ouvert (pas de gobo)", "wheelSlot"), cap(8, 15, "Gobo doubles lignes étoile", "wheelSlot"),
+    cap(16, 23, "Gobo flèches carrées", "wheelSlot"), cap(24, 31, "Gobo gouttes circulaires", "wheelSlot"),
+    cap(32, 39, "Gobo étoile à 5 branches", "wheelSlot"), cap(40, 47, "Gobo pierres", "wheelSlot"),
+    cap(48, 55, "Gobo croissant", "wheelSlot"), cap(56, 63, "Gobo fleur quadrillée", "wheelSlot"),
+    cap(64, 71, "Ouvert, tremblement lent → rapide", "progressive"),
+    cap(72, 79, "Doubles lignes étoile, tremblement lent → rapide", "progressive"),
+    cap(80, 87, "Flèches carrées, tremblement lent → rapide", "progressive"),
+    cap(88, 95, "Gouttes circulaires, tremblement lent → rapide", "progressive"),
+    cap(96, 103, "Étoile à 5 branches, tremblement lent → rapide", "progressive"),
+    cap(104, 111, "Pierres, tremblement lent → rapide", "progressive"),
+    cap(112, 119, "Croissant, tremblement lent → rapide", "progressive"),
+    cap(120, 127, "Fleur quadrillée, tremblement lent → rapide", "progressive"),
+    cap(128, 191, "Rotation de la roue, sens horaire, lent → rapide", "rotation"),
+    cap(192, 255, "Rotation de la roue, sens antihoraire, lent → rapide", "rotation")]
 fixture("Tomshine", "Mini lyre gobo", "movingHead", [
     ch("pan", "Pan (horizontale)", "pan", [cap(0, 255, "Pan 0 → 540°", "progressive", param=("angle", 0, 540, "°"))], resolution="bit16", default=128),
-    ch("tilt", "Tilt (inclinaison)", "tilt", [cap(0, 255, "Tilt 0 → 180°", "progressive", param=("angle", 0, 180, "°"))], resolution="bit16", default=128),
+    ch("tilt", "Tilt (inclinaison)", "tilt", [cap(0, 255, "Tilt 0 → 230°", "progressive", param=("angle", 0, 230, "°"))], resolution="bit16", default=128),
     ch("speed", "Vitesse Pan/Tilt", "panTiltSpeed", [cap(0, 255, "Rapide → lente", "progressive", param=("vitesse", 100, 0, "%"))]),
     ch("dim", "Gradateur", "intensity"),
     ch("shutter", "Obturateur / strobe", "shutter", SHUTTER, default=0, rest=0,
-       notes="Notice : pas de fermeture séparée, la lyre éclaire dès que le gradateur monte (défaut 0 = pas de strobe)."),
-    ch("color", "Roue de couleur", "colorWheel", [
-        cap(0, 7, "Sans fonction", "noFunction"),
-        cap(8, 255, "Couleur : rotation automatique (emplacements et vitesse à vérifier en direct)", "program")],
-       notes="La notice ne détaille pas les emplacements de couleur dans cette plage : à relever avec le mode découverte."),
-    ch("gobo", "Motif (roue de gobos)", "gobo", [cap(0, 255, "Sélection / défilement des gobos (emplacements à vérifier en direct)", "program")],
-       notes="La notice ne donne aucune plage détaillée pour ce canal : à relever avec le mode découverte."),
-    ch("son", "Son", "mode", [
-        cap(0, 7, "Sans fonction", "noFunction"),
-        cap(8, 199, "Couleur : vitesse de la rotation automatique (à vérifier en direct)", "program"),
-        cap(200, 255, "Contrôle par le son")],
-       notes="Traduction ambiguë de la notice : ce canal semble régler la vitesse de la rotation automatique de couleur "
-             "puis basculer en contrôle par le son au-delà de 200 (à vérifier en direct)."),
-    ch("vitesse", "Vitesse (effets)", "programSpeed", [cap(0, 255, "Vitesse des effets (fonction exacte à vérifier en direct)", "progressive")]),
-], [mode("9 canaux", "9CH", "CH9", "pan", "tilt", "speed", "dim", "shutter", "color", "gobo", "son", "vitesse"),
-    mode("11 canaux", "11CH", "CH11", "pan", fine("pan"), "tilt", fine("tilt"), "speed", "dim", "shutter", "color", "gobo", "son", "vitesse")],
-    "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 180°. En 11 canaux, Pan et Tilt sont en 16 bits. "
-    "Pas de canal de reset séparé sur cet appareil (à la différence d'autres lyres) : aucune protection de type "
-    "« Reset » n'est nécessaire pour ce modèle.",
-    {"sourceType": "LED blanche", "beamAngle": 11, "panRange": 540, "tiltRange": 180})
-    # Pas de notice jointe (BIB-095) : le PDF "81ej8MIZpBL.pdf" déposé initialement ne correspondait pas à cet
-    # appareil ; retiré le 2026-09-25. Source réelle = les deux photos du tableau DMX (docs/Equipements/Gobo/Tomshine/).
+       notes="Canal revérifié entièrement en direct par l'utilisateur le 2026-09-25 (la fiche Open Fixture Library restait incomplète sur ce canal)."),
+    ch("color", "Roue de couleur", "colorWheel", COLOR_WHEEL),
+    ch("gobo", "Roue de gobos", "gobo", GOBO_WHEEL),
+    ch("son", "Mode son", "soundSensitivity", [
+        cap(0, 127, "Sans fonction", "noFunction"),
+        cap(128, 255, "Mouvement aléatoire avec couleurs et motifs (sensibilité au son croissante)", "progressive")]),
+    ch("control", "Reset", "reset", [cap(0, 254, "Sans fonction", "noFunction"), cap(255, 255, "Reset")],
+       notes="Ne jamais animer : 255 = reset de la lyre."),
+], [mode("9 canaux", "9CH", "CH9", "pan", "tilt", "speed", "dim", "shutter", "color", "gobo", "son", "control"),
+    mode("11 canaux", "11CH", "CH11", "pan", fine("pan"), "tilt", fine("tilt"), "speed", "dim", "shutter", "color", "gobo", "son", "control")],
+    "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 230°. En 11 canaux, Pan et Tilt sont en 16 bits. "
+    "Définition en 11 canaux confirmée par Open Fixture Library et vérification en direct (BIB-095). Le mode 9 canaux "
+    "est dérivé du mode 11 canaux (mêmes canaux, sans les octets fins de Pan/Tilt) et n'a pas de source indépendante.",
+    {"sourceType": "LED blanche", "beamAngle": 11, "panRange": 540, "tiltRange": 230},
+    reference="https://open-fixture-library.org/tomshine/80w-mini-gobo-moving-head")
 
 # 5. BeamZ BUV463 (UV)
 fixture("BeamZ", "BUV463", "uv", [

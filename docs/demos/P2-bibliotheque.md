@@ -25,7 +25,7 @@
 | Betopper LPC008S | 3CH (`d001`), 7CH (`A001`) | Intensité virtuelle en 3 canaux |
 | Betopper LPC010 | 4CH (`d001`), 8CH (`A001`) | Tableau lu dans la notice (PDF image) |
 | Betopper LPC120 | 4CH (`d001`), 8CH (`A001`) | CH8 = paramètre qui dépend de CH7 |
-| Tomshine Mini lyre gobo | 9CH, 11CH | Pan / Tilt 16 bits en 11CH ; pas de canal de reset séparé sur ce modèle |
+| Tomshine Mini lyre gobo | 9CH, 11CH | Pan / Tilt 16 bits en 11CH ; canal **Reset** en dernière position (255 = reset) |
 | BeamZ BUV463 | 7CH | 4 rangées UV = 4 cellules |
 | WZYBUTA Effet 4 têtes 150 W | 20CH, 64CH | 12 cellules RGBW en 64CH ; dernier canal = **Reset** (251-255) ; 3 canaux laser inutilisés (option absente) |
 | BeamZ LCB803 | 3, 6, 12, 24, 48CH | 2 / 4 / 8 sections = cellules ; 24CH retenu pour le show |
@@ -61,8 +61,9 @@ Lyre à l'adresse 111 (mode 11CH). Test en direct à l'adresse **111** :
 - l'obturateur est **ouvert par défaut** (12) : montez le Gradateur, la lyre éclaire ;
 - Pan et Tilt : 128 = centre ; l'affichage indique la valeur (le degré s'affiche quand l'amplitude est connue) ;
 - cliquez les plages de l'**Obturateur** une à une (Éteint, Allumé, Strobe lent → rapide, pulsations, aléatoire) ;
-- Cette lyre n'a **pas** de canal de reset séparé (revu le 2026-09-25 d'après la vraie notice, BIB-095). Le canal **Son** règle la vitesse de la rotation
-  automatique de couleur, puis bascule en contrôle par le son au-delà de 200 — à vérifier en direct, sans risque de réinitialisation.
+- **Piège (règle montrée)** : le dernier canal (121 en 11CH) est le **Reset** : 0-254 sans fonction, 255 = reset. Ne cliquez dessus que
+  volontairement. Le canal **Son** (juste avant) est sans danger : 0-127 sans fonction, 128-255 mouvement aléatoire avec couleurs et motifs,
+  sensibilité au son croissante.
 
 ## Exemple 5 – Découvrir un canal inconnu (BIB-062) : l'effet WZYBUTA ou la roue de couleur de la lyre
 

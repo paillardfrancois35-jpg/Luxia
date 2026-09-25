@@ -233,7 +233,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | BIB-082, 083 | Import par lots hors du fil de l'interface avec progression ; un modèle déjà présent (même fabricant + modèle, ou même identifiant) n'est **pas** écrasé (« = » au rapport). |
 | Unités (GEN-021) | Faders d'appareil : nom de plage, degrés (Pan/Tilt si l'amplitude est connue), % (intensités, émetteurs), sinon 0-255. |
 | Non réalisés | BIB-027 (S, ouvrir notice / photo : seul le chemin est saisi), BIB-084 (S, export OFL). |
-| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; strobe et programme « rapide → lent » sans plage d'arrêt documentée, à vérifier. WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25 d'après une photo de la vraie notice (BIB-095) ; pas de canal de reset séparé sur ce modèle ; obturateur ouvert par défaut (0). |
+| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; strobe et programme « rapide → lent » sans plage d'arrêt documentée, à vérifier. WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25, confirmée par Open Fixture Library et vérification en direct de l'utilisateur (BIB-095) ; Tilt 0-230° (pas 180°) ; obturateur ouvert par défaut (0) ; canal Reset en dernière position (121 en 11CH). |
 
 ## Annexe A – Appareils du parc (état de la documentation)
 

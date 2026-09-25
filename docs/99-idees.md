@@ -14,5 +14,7 @@
 | 2026-09-25 | Moniteur de sortie : numéro de canal immédiat au survol + cadre, pas d'info-bulle lente (retour utilisateur, guide P1) | Console (CONS-043) | Retenu : CONS-092 (P3) |
 | 2026-09-25 | Recherche / filtre dans la Bibliothèque : déplier automatiquement le groupe fabricant filtré (retour utilisateur, guide P2) | Bibliothèque (BIB-020) | Retenu : BIB-093 (P2) |
 | 2026-09-25 | LPC008S : la plage « Fondu » (101-150) du Sélecteur de fonction ne correspond pas au rendu réel de l'appareil (retour utilisateur, guide P2) | Bibliothèque (BIB-001) | Retenu : BIB-094 (P2) |
-| 2026-09-25 | Tomshine Mini lyre gobo : définition d'amorçage fausse, refaite d'après une photo de la vraie notice | Bibliothèque (BIB-001) | Retenu : BIB-095 (P2) |
+| 2026-09-25 | Tomshine Mini lyre gobo : définition d'amorçage fausse, refaite d'après Open Fixture Library + vérification en direct | Bibliothèque (BIB-001) | Retenu : BIB-095 (P2) |
+| 2026-09-25 | Test en direct : saisie clavier de la valeur d'un canal (comme sur les faders Console) | Bibliothèque (BIB-060/061) | Retenu : BIB-096 (P2) |
+| 2026-09-25 | Barre de défilement horizontale trop fine, difficile à attraper au survol | Bibliothèque | Retenu : BIB-097 (P2) |
 | 2026-09-25 | **Nom de l'application : « LuXia »** (choisi par l'utilisateur ; actuellement « DMX » partout dans le code, les docs et l'exécutable). À reprendre au moment opportun : nom du dépôt, `Dmx.slnx`, namespaces `Dmx.*`, exécutable `DMX.exe`, dossiers de données `%AppData%\DMX`, `Documents\DMX`, titre de fenêtre, docs. Gros renommage transverse, pas fait à la volée pour ne pas casser une phase en cours. | Transverse | À faire au moment opportun (pas de phase fixée) |

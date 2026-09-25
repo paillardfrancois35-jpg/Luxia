@@ -7,12 +7,13 @@
   "version": 1,
   "author": "DMX (depuis la notice)",
   "source": "manual",
-  "notes": "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 180°. En 11 canaux, Pan et Tilt sont en 16 bits. Pas de canal de reset séparé sur cet appareil (à la différence d'autres lyres) : aucune protection de type « Reset » n'est nécessaire pour ce modèle.",
+  "notes": "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 230°. En 11 canaux, Pan et Tilt sont en 16 bits. Définition en 11 canaux confirmée par Open Fixture Library et vérification en direct (BIB-095). Le mode 9 canaux est dérivé du mode 11 canaux (mêmes canaux, sans les octets fins de Pan/Tilt) et n'a pas de source indépendante.",
+  "reference": "https://open-fixture-library.org/tomshine/80w-mini-gobo-moving-head",
   "physical": {
     "sourceType": "LED blanche",
     "beamAngle": 11,
     "panRange": 540,
-    "tiltRange": 180
+    "tiltRange": 230
   },
   "channels": [
     {
@@ -47,11 +48,11 @@
           "min": 0,
           "max": 255,
           "kind": "progressive",
-          "label": "Tilt 0 → 180°",
+          "label": "Tilt 0 → 230°",
           "parameter": {
             "nature": "angle",
             "start": 0,
-            "end": 180,
+            "end": 230,
             "unit": "°"
           }
         }
@@ -87,7 +88,7 @@
       "attribute": "shutter",
       "default": 0,
       "rest": 0,
-      "notes": "Notice : pas de fermeture séparée, la lyre éclaire dès que le gradateur monte (défaut 0 = pas de strobe).",
+      "notes": "Canal revérifié entièrement en direct par l'utilisateur le 2026-09-25 (la fiche Open Fixture Library restait incomplète sur ce canal).",
       "capabilities": [
         {
           "min": 0,
@@ -98,38 +99,59 @@
         },
         {
           "min": 8,
-          "max": 99,
+          "max": 131,
           "kind": "progressive",
-          "label": "Strobe lent → rapide",
+          "label": "Strobe croissant (131 = le plus rapide)",
           "strobe": "strobe"
         },
         {
-          "min": 100,
-          "max": 149,
-          "kind": "progressive",
-          "label": "Strobe rapide → lent",
-          "strobe": "strobe"
+          "min": 132,
+          "max": 139,
+          "kind": "open",
+          "label": "Sans fonction (ouvert)",
+          "strobe": "open"
         },
         {
-          "min": 150,
-          "max": 199,
+          "min": 140,
+          "max": 181,
           "kind": "progressive",
-          "label": "Strobe, effet 1",
-          "strobe": "strobe"
+          "label": "Fondu fermé → ouvert, vitesse décroissante (140 = le plus rapide)",
+          "strobe": "pulse"
         },
         {
-          "min": 200,
-          "max": 245,
-          "kind": "progressive",
-          "label": "Strobe, effet 2",
-          "strobe": "strobe"
+          "min": 182,
+          "max": 189,
+          "kind": "open",
+          "label": "Sans fonction (ouvert)",
+          "strobe": "open"
         },
         {
-          "min": 246,
+          "min": 190,
+          "max": 231,
+          "kind": "progressive",
+          "label": "Fondu ouvert → fermé, vitesse décroissante (190 = le plus rapide)",
+          "strobe": "pulse"
+        },
+        {
+          "min": 232,
+          "max": 239,
+          "kind": "open",
+          "label": "Sans fonction (ouvert)",
+          "strobe": "open"
+        },
+        {
+          "min": 240,
+          "max": 247,
+          "kind": "fixed",
+          "label": "Strobe aléatoire",
+          "strobe": "random"
+        },
+        {
+          "min": 248,
           "max": 255,
-          "kind": "progressive",
-          "label": "Strobe, effet le plus rapide",
-          "strobe": "strobe"
+          "kind": "open",
+          "label": "Sans fonction (ouvert)",
+          "strobe": "open"
         }
       ]
     },
@@ -137,72 +159,321 @@
       "key": "color",
       "name": "Roue de couleur",
       "attribute": "colorWheel",
-      "notes": "La notice ne détaille pas les emplacements de couleur dans cette plage : à relever avec le mode découverte.",
       "capabilities": [
         {
           "min": 0,
           "max": 7,
-          "kind": "noFunction",
-          "label": "Sans fonction"
+          "kind": "wheelSlot",
+          "label": "Ouvert (pas de couleur)"
         },
         {
           "min": 8,
+          "max": 15,
+          "kind": "wheelSlot",
+          "label": "Rouge",
+          "colors": [
+            "#FF0000"
+          ]
+        },
+        {
+          "min": 16,
+          "max": 24,
+          "kind": "wheelSlot",
+          "label": "Vert",
+          "colors": [
+            "#00FF00"
+          ]
+        },
+        {
+          "min": 25,
+          "max": 31,
+          "kind": "wheelSlot",
+          "label": "Bleu",
+          "colors": [
+            "#0000FF"
+          ]
+        },
+        {
+          "min": 32,
+          "max": 39,
+          "kind": "wheelSlot",
+          "label": "Jaune",
+          "colors": [
+            "#FFFF00"
+          ]
+        },
+        {
+          "min": 40,
+          "max": 47,
+          "kind": "wheelSlot",
+          "label": "Orange",
+          "colors": [
+            "#FFA500"
+          ]
+        },
+        {
+          "min": 48,
+          "max": 55,
+          "kind": "wheelSlot",
+          "label": "Cyan",
+          "colors": [
+            "#00FFFF"
+          ]
+        },
+        {
+          "min": 56,
+          "max": 63,
+          "kind": "wheelSlot",
+          "label": "Rose",
+          "colors": [
+            "#FF69B4"
+          ]
+        },
+        {
+          "min": 64,
+          "max": 71,
+          "kind": "wheelSlot",
+          "label": "Partagé Ouvert / Rouge",
+          "colors": [
+            "#FFFFFF",
+            "#FF0000"
+          ]
+        },
+        {
+          "min": 72,
+          "max": 79,
+          "kind": "wheelSlot",
+          "label": "Partagé Rouge / Vert",
+          "colors": [
+            "#FF0000",
+            "#00FF00"
+          ]
+        },
+        {
+          "min": 80,
+          "max": 87,
+          "kind": "wheelSlot",
+          "label": "Partagé Vert / Bleu",
+          "colors": [
+            "#00FF00",
+            "#0000FF"
+          ]
+        },
+        {
+          "min": 88,
+          "max": 95,
+          "kind": "wheelSlot",
+          "label": "Partagé Bleu / Jaune",
+          "colors": [
+            "#0000FF",
+            "#FFFF00"
+          ]
+        },
+        {
+          "min": 96,
+          "max": 103,
+          "kind": "wheelSlot",
+          "label": "Partagé Jaune / Orange",
+          "colors": [
+            "#FFFF00",
+            "#FFA500"
+          ]
+        },
+        {
+          "min": 104,
+          "max": 111,
+          "kind": "wheelSlot",
+          "label": "Partagé Orange / Cyan",
+          "colors": [
+            "#FFA500",
+            "#00FFFF"
+          ]
+        },
+        {
+          "min": 112,
+          "max": 119,
+          "kind": "wheelSlot",
+          "label": "Partagé Cyan / Rose",
+          "colors": [
+            "#00FFFF",
+            "#FF69B4"
+          ]
+        },
+        {
+          "min": 120,
+          "max": 127,
+          "kind": "wheelSlot",
+          "label": "Partagé Rose / Ouvert",
+          "colors": [
+            "#FF69B4",
+            "#FFFFFF"
+          ]
+        },
+        {
+          "min": 128,
+          "max": 191,
+          "kind": "rotation",
+          "label": "Rotation de la roue, sens horaire, lent → rapide"
+        },
+        {
+          "min": 192,
           "max": 255,
-          "kind": "program",
-          "label": "Couleur : rotation automatique (emplacements et vitesse à vérifier en direct)"
+          "kind": "rotation",
+          "label": "Rotation de la roue, sens antihoraire, lent → rapide"
         }
       ]
     },
     {
       "key": "gobo",
-      "name": "Motif (roue de gobos)",
+      "name": "Roue de gobos",
       "attribute": "gobo",
-      "notes": "La notice ne donne aucune plage détaillée pour ce canal : à relever avec le mode découverte.",
       "capabilities": [
         {
           "min": 0,
+          "max": 7,
+          "kind": "wheelSlot",
+          "label": "Ouvert (pas de gobo)"
+        },
+        {
+          "min": 8,
+          "max": 15,
+          "kind": "wheelSlot",
+          "label": "Gobo doubles lignes étoile"
+        },
+        {
+          "min": 16,
+          "max": 23,
+          "kind": "wheelSlot",
+          "label": "Gobo flèches carrées"
+        },
+        {
+          "min": 24,
+          "max": 31,
+          "kind": "wheelSlot",
+          "label": "Gobo gouttes circulaires"
+        },
+        {
+          "min": 32,
+          "max": 39,
+          "kind": "wheelSlot",
+          "label": "Gobo étoile à 5 branches"
+        },
+        {
+          "min": 40,
+          "max": 47,
+          "kind": "wheelSlot",
+          "label": "Gobo pierres"
+        },
+        {
+          "min": 48,
+          "max": 55,
+          "kind": "wheelSlot",
+          "label": "Gobo croissant"
+        },
+        {
+          "min": 56,
+          "max": 63,
+          "kind": "wheelSlot",
+          "label": "Gobo fleur quadrillée"
+        },
+        {
+          "min": 64,
+          "max": 71,
+          "kind": "progressive",
+          "label": "Ouvert, tremblement lent → rapide"
+        },
+        {
+          "min": 72,
+          "max": 79,
+          "kind": "progressive",
+          "label": "Doubles lignes étoile, tremblement lent → rapide"
+        },
+        {
+          "min": 80,
+          "max": 87,
+          "kind": "progressive",
+          "label": "Flèches carrées, tremblement lent → rapide"
+        },
+        {
+          "min": 88,
+          "max": 95,
+          "kind": "progressive",
+          "label": "Gouttes circulaires, tremblement lent → rapide"
+        },
+        {
+          "min": 96,
+          "max": 103,
+          "kind": "progressive",
+          "label": "Étoile à 5 branches, tremblement lent → rapide"
+        },
+        {
+          "min": 104,
+          "max": 111,
+          "kind": "progressive",
+          "label": "Pierres, tremblement lent → rapide"
+        },
+        {
+          "min": 112,
+          "max": 119,
+          "kind": "progressive",
+          "label": "Croissant, tremblement lent → rapide"
+        },
+        {
+          "min": 120,
+          "max": 127,
+          "kind": "progressive",
+          "label": "Fleur quadrillée, tremblement lent → rapide"
+        },
+        {
+          "min": 128,
+          "max": 191,
+          "kind": "rotation",
+          "label": "Rotation de la roue, sens horaire, lent → rapide"
+        },
+        {
+          "min": 192,
           "max": 255,
-          "kind": "program",
-          "label": "Sélection / défilement des gobos (emplacements à vérifier en direct)"
+          "kind": "rotation",
+          "label": "Rotation de la roue, sens antihoraire, lent → rapide"
         }
       ]
     },
     {
       "key": "son",
-      "name": "Son",
-      "attribute": "mode",
-      "notes": "Traduction ambiguë de la notice : ce canal semble régler la vitesse de la rotation automatique de couleur puis basculer en contrôle par le son au-delà de 200 (à vérifier en direct).",
+      "name": "Mode son",
+      "attribute": "soundSensitivity",
       "capabilities": [
         {
           "min": 0,
-          "max": 7,
+          "max": 127,
           "kind": "noFunction",
           "label": "Sans fonction"
         },
         {
-          "min": 8,
-          "max": 199,
-          "kind": "program",
-          "label": "Couleur : vitesse de la rotation automatique (à vérifier en direct)"
-        },
-        {
-          "min": 200,
+          "min": 128,
           "max": 255,
-          "kind": "fixed",
-          "label": "Contrôle par le son"
+          "kind": "progressive",
+          "label": "Mouvement aléatoire avec couleurs et motifs (sensibilité au son croissante)"
         }
       ]
     },
     {
-      "key": "vitesse",
-      "name": "Vitesse (effets)",
-      "attribute": "programSpeed",
+      "key": "control",
+      "name": "Reset",
+      "attribute": "reset",
+      "notes": "Ne jamais animer : 255 = reset de la lyre.",
       "capabilities": [
         {
           "min": 0,
+          "max": 254,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 255,
           "max": 255,
-          "kind": "progressive",
-          "label": "Vitesse des effets (fonction exacte à vérifier en direct)"
+          "kind": "fixed",
+          "label": "Reset"
         }
       ]
     }
@@ -238,7 +509,7 @@
           "channel": "son"
         },
         {
-          "channel": "vitesse"
+          "channel": "control"
         }
       ]
     },
@@ -280,7 +551,7 @@
           "channel": "son"
         },
         {
-          "channel": "vitesse"
+          "channel": "control"
         }
       ]
     }

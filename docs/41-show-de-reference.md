@@ -130,7 +130,7 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 
 | Phase | Ajouts au show de référence | Validation par l'utilisateur |
 |---|---|---|
-| P0 | Squelette du projet (fichier projet versionné) ; enregistrement d'un chenillard de test canaux 1-180, **canal 180 (fumée) exclu**, valeur de test 50 % (pour ne pas déclencher la fumée ni les canaux Reset de l'effet WZYBUTA (la lyre Tomshine du parc n'a pas de canal de reset séparé)) ; `JOURNAL.md`. La configuration de sortie n'est **pas** dans le show : elle est dans les préférences du poste (SORT-006, Q15). | Chaque appareil réagit |
+| P0 | Squelette du projet (fichier projet versionné) ; enregistrement d'un chenillard de test canaux 1-180, **canal 180 (fumée) exclu**, valeur de test 50 % (pour ne pas déclencher la fumée ni les canaux Reset des lyres et de l'effet WZYBUTA) ; `JOURNAL.md`. La configuration de sortie n'est **pas** dans le show : elle est dans les préférences du poste (SORT-006, Q15). | Chaque appareil réagit |
 | P1 | Instantanés de console par appareil | Canaux conformes au plan d'adresses |
 | P2 | Définitions de tous les appareils (bibliothèque d'exemple `samples/Bibliothèque/` ; copie dans le projet à partir de P3, GEN-053) | Plages vérifiées en direct |
 | P3 | Installation (§2), sélections (§4), lieux (§3), fiche d'installation | Adresses réglées sur les appareils, identification OK |

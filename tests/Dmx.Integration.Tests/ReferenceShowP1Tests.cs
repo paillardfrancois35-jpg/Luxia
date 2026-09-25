@@ -11,9 +11,9 @@ public sealed class ReferenceShowP1Tests
 {
     private static readonly string Folder = Path.Combine(AppContext.BaseDirectory, "samples", "Show de référence");
 
-    /// <summary>Canaux à ne jamais toucher dans un instantané de démonstration : la fumée. La lyre du parc (Tomshine)
-    /// n'a pas de canal de reset séparé (revu le 2026-09-25 d'après la vraie notice) : rien à protéger de ce côté.</summary>
-    private static readonly int[] Forbidden = [180];
+    /// <summary>Canaux à ne jamais toucher dans un instantané de démonstration : fumée, canal Reset des lyres (BIB-095 :
+    /// confirmé le 25/09 par Open Fixture Library, le canal Reset est le dernier de chaque mode, donc 121 et 136 ici).</summary>
+    private static readonly int[] Forbidden = [180, 121, 136];
 
     public static TheoryData<string> SnapshotNames => [.. Load().Snapshots.Select(s => s.Name)];
 
