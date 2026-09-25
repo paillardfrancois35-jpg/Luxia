@@ -9,6 +9,7 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Shouldly" />
     <ProjectReference Include="../../src/Dmx.Hosting/Dmx.Hosting.csproj" />
+    <ProjectReference Include="../../src/Dmx.Patch/Dmx.Patch.csproj" />
   </ItemGroup>
 
   <ItemGroup>

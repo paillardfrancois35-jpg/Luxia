@@ -80,3 +80,26 @@ Barre LCB803 : notice incomplète (Q24), générique « RGB » en attendant.
 |---|---|---|
 | Plages vérifiées en direct sur chaque appareil (T-BIB-05) | ⏳ en attente | |
 | Définition de l'effet WZYBUTA (Q25) | 🟡 20CH / 64CH saisis d'après ScanLibrary ; reste le sens de variation du canal 2 et le réglage du menu | 2026-09-25 |
+
+## P3 – Installation + Simulateur (2026-09-26)
+
+### Ajouté
+
+| Élément | Fichier | Description |
+|---|---|---|
+| Copie des modèles utilisés (GEN-053) | `Bibliothèque/<fabricant>/<modèle>.json` | 6 définitions du parc, copiées telles quelles depuis `samples/Bibliothèque/` |
+| Installation : univers, patch des 14 appareils | `installation.json` | Adresses conformes au plan (doc 41 §2) ; Gros PAR patchés en **Betopper LPC120, mode 8 canaux** (choix provisoire, Q27) |
+| Lieu « Générique » | `lieux.json` | 12 × 8 m, deux totems (2 PAR + 1 gros PAR + 1 lyre chacun), barres au sol devant, effet au centre, UV en façade, fumée au fond ; disposition à corriger selon l'installation réelle (doc 41 §3, à valider) |
+
+### Non-régression
+
+`ReferenceShowP3Tests` : l'installation se charge sans message, 14 appareils aux adresses du plan, aucun chevauchement,
+chaque modèle utilisé est présent dans la copie du projet, chaque appareil est placé et présent dans le lieu « Générique ».
+
+### Validation par l'utilisateur
+
+| Élément | Statut | Retour |
+|---|---|---|
+| Modèle réel des gros PAR (LPC010 ou LPC120) et son mode (Q27) | ⏳ en attente | |
+| Disposition du lieu « Générique » conforme à l'installation réelle (doc 41 §13) | ⏳ en attente | |
+| Adresses réglées sur les appareils, identification OK (doc 41 §11) | ⏳ en attente | |
