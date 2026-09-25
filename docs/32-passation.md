@@ -24,6 +24,10 @@
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
   - Mesure de gigue de **15 min** (D23) : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **prévue le 2026-09-26 au matin** avec l'utilisateur.
 - **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA : points restants à vérifier en direct par l'utilisateur).
+- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.slnx`,
+  namespaces `Dmx.*`, `DMX.exe`, `%AppData%\DMX`, `Documents\DMX`, docs). **Pas encore fait** : renommage transverse volontairement reporté
+  « au moment opportun » (voir doc 99) — ne pas l'oublier à l'approche d'une livraison ou d'un jalon important. Demander confirmation avant
+  de s'y lancer (ampleur du renommage à évaluer avec l'utilisateur : juste l'UI/les docs, ou aussi le code et les dossiers de données).
 
 ## 2. Lire avant de coder (dans cet ordre)
 
