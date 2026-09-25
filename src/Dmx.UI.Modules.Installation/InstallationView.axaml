@@ -153,6 +153,10 @@
                 <Button Content="Impairs" Command="{Binding ReorderSelectionCommand}" CommandParameter="odd" />
                 <Button Content="1re moitié" Command="{Binding ReorderSelectionCommand}" CommandParameter="first-half" />
                 <Button Content="2e moitié" Command="{Binding ReorderSelectionCommand}" CommandParameter="second-half" />
+                <Button Content="Gauche→droite" Command="{Binding ReorderSelectionCommand}" CommandParameter="left-right"
+                        ToolTip.Tip="Selon la position au plan du lieu actif" />
+                <Button Content="Avant→arrière" Command="{Binding ReorderSelectionCommand}" CommandParameter="front-back" />
+                <Button Content="Centre→extérieur" Command="{Binding ReorderSelectionCommand}" CommandParameter="center-out" />
                 <Button Content="Supprimer…" Command="{Binding DeleteSelectionCommand}" Classes="danger" />
               </StackPanel>
               <ListBox ItemsSource="{Binding Selections}" SelectedItem="{Binding SelectedSelection}">

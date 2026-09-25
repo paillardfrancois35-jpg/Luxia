@@ -182,6 +182,29 @@ public sealed class InstallationViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "INST-033")]
+    public void ReorderSelection_ByPosition_UsesActiveVenuePlacements()
+    {
+        Patch(GenericFixtures.Rgb, "3 canaux", 1, "PAR 1");
+        Patch(GenericFixtures.Rgb, "3 canaux", 10, "PAR 2");
+        _vm.PatchRows[0].IsChecked = true;
+        _vm.PatchRows[1].IsChecked = true;
+        _vm.NewSelectionName = "PAR";
+        _vm.CreateSelectionCommand.Execute(null);
+
+        // Le second appareil (index 1) est placé plus à gauche (X plus petit) que le premier.
+        _vm.SelectedVenue!.Placements.Single(p => p.FixtureId == _vm.PatchRows[1].Id).X = 0;
+        _vm.SelectedVenue!.Placements.Single(p => p.FixtureId == _vm.PatchRows[0].Id).X = 5;
+        _vm.SavePlacementsCommand.Execute(null);
+
+        _vm.SelectedSelection = _vm.Selections[0];
+        _vm.ReorderSelectionCommand.Execute("left-right");
+
+        var ids = _host.Runtime.Project.Installation.Selections.Single().Items.Select(i => i.FixtureId).ToList();
+        ids.ShouldBe([_vm.PatchRows[1].Id, _vm.PatchRows[0].Id]);
+    }
+
+    [Fact]
     [Trait("Exigence", "INST-031")]
     public void AutoSelections_IncludeAllAndByCategory()
     {

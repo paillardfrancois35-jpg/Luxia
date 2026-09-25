@@ -385,6 +385,9 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             "even" => SelectionRules.Even(items),
             "first-half" => SelectionRules.FirstHalf(items),
             "second-half" => SelectionRules.SecondHalf(items),
+            "left-right" when _runtime.Project.Venues.Active is { } venue => SelectionRules.OrderByPosition(items, venue, PositionOrder.LeftToRight),
+            "front-back" when _runtime.Project.Venues.Active is { } venue => SelectionRules.OrderByPosition(items, venue, PositionOrder.FrontToBack),
+            "center-out" when _runtime.Project.Venues.Active is { } venue => SelectionRules.OrderByPosition(items, venue, PositionOrder.CenterOutward),
             _ => items,
         };
         var installation = _runtime.Project.Installation;
