@@ -136,7 +136,8 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 
 ## 10. Conduite
 
-- Divergence avec le cahier des charges : signalée, puis reportée dans le document concerné.
+- **Fiches d'exigences** (`docs/exigences/<ID>.md`, règles F1 à F7 de leur README) : une fiche par exigence travaillée ; toute question, réponse, décision, écart, développement, test ou validation qui la concerne y est ajouté (historique ajout seul). Revenir sur une décision = nouvelle entrée qui cite l'ancienne et explique ce qui a changé. La fiche fait foi pour le statut.
+- Divergence avec le cahier des charges : signalée, puis reportée dans le document concerné **et** dans la fiche de l'exigence.
 - Nouvelle idée : `docs/99-idees.md`. Question : `docs/01-questions-ouvertes.md`, reposée jusqu'à réponse.
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
 - Chaque phase se livre avec ses démonstrations (doc 40 §7, doc 41).
@@ -146,5 +147,6 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Date | Modification |
 |---|---|
 | 2026-09-24 | Version initiale (Q21, Q22). |
+| 2026-09-25 | Fiches d'exigences `docs/exigences/` (demande de l'utilisateur) : suivi par exigence façon Redmine, source du statut de la matrice 31. |
 | 2026-09-25 | P1-P2 : projets d'interface par écran (D22), CA1822 en suggestion pour les projets d'interface (liaisons), CA1309 désactivée (tris affichés en français), matrice `tools/matrice-exigences.py`. |
 | 2026-09-24 | P0 : projet `Dmx.Hosting` (D20), commandes de test Microsoft.Testing.Platform, projet de tests d'intégration, test d'architecture par réflexion (sans NetArchTest). |

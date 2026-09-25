@@ -12,7 +12,8 @@
 | P2 – Bibliothèque | Développée | `p2/bibliotheque` | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
 | P3 – Installation + Simulateur | À faire | — | — | — |
 
-- **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md) (réalisé, à valider sur matériel, partiel, reporté, non réalisé).
+- **Fiches d'exigences** : [exigences/](exigences/README.md) — une fiche par exigence travaillée, avec statut et **historique complet** (questions, décisions et leur pourquoi, écarts, commits, tests, validations). **Lire la fiche avant de toucher à une exigence.**
+- **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches.
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
   - CONS-007 et la délimitation des appareils dans le moniteur (CONS-043) → P3 (patch).
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
@@ -25,7 +26,7 @@
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D22), [glossaire](glossaire.md).
 2. [03 – Règles de développement](03-regles-de-developpement.md) (langue, style, structure, tests, Git).
-3. Ce document, puis la matrice [31](31-matrice-exigences.md).
+3. Ce document, puis la matrice [31](31-matrice-exigences.md) et les [fiches d'exigences](exigences/README.md) concernées.
 4. [40 – Feuille de route](40-feuille-de-route.md) §2 et §7 pour la phase visée, [41 – Show de référence](41-show-de-reference.md) §11.
 5. Le cahier des charges du module de la phase (doc 10 à 23) **et ses « Notes de réalisation »** (doc 10 §9, 11 §7, 12 §10).
 6. [50 – Format des données](50-format-des-donnees.md) si la phase touche aux fichiers.
@@ -67,10 +68,10 @@ dotnet run --project src/Dmx.App -- "samples/Show de référence"
 
 1. Vérifier que la phase précédente est **validée** (tableau §1) ; sinon, demander.
 2. Créer la branche `pN/<nom>` depuis la dernière branche validée (ou `main` une fois fusionnée).
-3. Lister les exigences de la phase (doc du module, colonne Phase) et les points « Reporté (PN) » de la matrice.
+3. Lister les exigences de la phase (doc du module, colonne Phase) et les points « Reporté (PN) » de la matrice ; ouvrir une fiche par exigence (modèle dans `exigences/README.md`) au moment d'y travailler.
 4. Développer par étapes vérifiables, un commit par étape (doc 03 §7), tests verts et sans avertissement.
 5. Livrer : guide `docs/demos/PN-*.md`, ajouts au show de référence + `JOURNAL.md`, notes de réalisation dans le doc du module,
-   statuts mis à jour dans `tools/matrice-exigences.py` puis matrice régénérée, **ce document mis à jour**.
+   fiches d'exigences à jour (statut + historique), matrice et index régénérés (`python tools/matrice-exigences.py …`), **ce document mis à jour**.
 
 Modèle de message pour ouvrir une discussion :
 
@@ -82,3 +83,4 @@ Modèle de message pour ouvrir une discussion :
 | Date | Fin de | Remarque |
 |---|---|---|
 | 2026-09-25 | P2 | P0-P2 développées d'une traite, validation matérielle en attente. |
+| 2026-09-25 | P2 | Fiches d'exigences créées pour les 110 exigences travaillées (historique reconstitué depuis les discussions et Git). |
