@@ -17,6 +17,7 @@
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
   - CONS-007 et la délimitation des appareils dans le moniteur (CONS-043) → P3 (patch).
   - SORT-008 (canaux maintenus pendant le test de sortie, Q23) → P3.
+  - CONS-091 (écart conservé au-delà des bornes en relatif, retour utilisateur du 25/09) → P4.
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.

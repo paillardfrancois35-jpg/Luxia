@@ -7,7 +7,7 @@
 | **Phase** | P1 |
 | **Source** | [doc 11 – 3. Exigences – mode canaux (P1)](../11-console.md) |
 | **Remarque** | — |
-| **Liens** | — |
+| **Liens** | CONS-091 |
 
 ## Description
 
@@ -34,3 +34,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 11, 3. Exigences – mode canaux (P1)). |
 | 2026-09-24 | Claude | Développement | `87237c9` feat(console): console en mode canaux, moniteur, instantanés, coquille de l'application |
 | 2026-09-24 | Claude | Note | Ctrl+clic : ajouter / retirer ; Maj+clic : plage ; clic simple hors sélection : ce seul fader ; Échap : désélection ; mode relatif par défaut. |
+| 2026-09-25 | Utilisateur | Écart | Déplacement relatif multiple : l'écart entre canaux est perdu si un canal dépasse 0 ou 255 puis qu'on rebaisse (faux mouvement de souris). Nouvelle exigence CONS-091 (P4). |
