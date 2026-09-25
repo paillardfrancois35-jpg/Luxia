@@ -19,7 +19,7 @@
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
-  - Mesure de gigue d'une heure à refaire, veille du PC désactivée (GEN-030 / 031).
+  - Mesure de gigue d'une heure à refaire, veille du PC désactivée (GEN-030 / 031) : **prévue le 2026-09-26 au matin** avec l'utilisateur.
 - **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q23 (canaux maintenus pendant le test), Q24 (notice LCB803), Q25 (tableau WZYBUTA).
 
 ## 2. Lire avant de coder (dans cet ordre)
