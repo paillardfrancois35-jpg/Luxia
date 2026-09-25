@@ -117,6 +117,8 @@
                         <Button Content="Renommer" Tag="{Binding}" Click="OnRenameClicked" />
                         <Button Content="Déplacer" Tag="{Binding}" Click="OnMoveClicked" />
                         <Button Content="Changer de mode" Tag="{Binding}" Click="OnChangeModeClicked" />
+                        <Button Content="Mettre à jour" Tag="{Binding}" Click="OnUpdateFromLibraryClicked"
+                                ToolTip.Tip="Reprendre la version courante du modèle depuis la bibliothèque partagée (GEN-053)" />
                         <ToggleButton Content="Identifier" IsChecked="{Binding Identifying, Mode=OneWay}" Tag="{Binding}" Click="OnIdentifyClicked" />
                         <Button Content="Supprimer" Tag="{Binding}" Click="OnDeleteClicked" Classes="danger" />
                       </WrapPanel>

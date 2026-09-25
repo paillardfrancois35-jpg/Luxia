@@ -120,6 +120,42 @@ public sealed class InstallationViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "GEN-053")]
+    public async Task UpdateFromLibrary_WithImpact_AsksConfirmation()
+    {
+        // Modèle « du commerce » (pas un générique de l'application, pour ne pas être toujours déjà présent).
+        var older = new Dmx.Fixtures.Model.FixtureType
+        {
+            Manufacturer = "Betopper",
+            Model = "LPC008S",
+            Version = 1,
+            Channels = [new Dmx.Fixtures.Model.ChannelDefinition { Key = "r", Name = "Rouge", Attribute = Dmx.Fixtures.Model.AttributeKind.Red }],
+            Modes = [new Dmx.Fixtures.Model.FixtureMode { Name = "1 canal", Channels = [new Dmx.Fixtures.Model.ModeChannel("r")] }],
+        };
+        _host.Runtime.Project.FixtureLibrary!.EnsureCopied(older);
+        var installation = _host.Runtime.Project.Installation;
+        var fixture = new PatchedFixture { FixtureTypeId = older.Id, ModeName = "1 canal", Address = 1, Name = "PAR 1" };
+        _host.Runtime.Project.SaveInstallation(installation with { Fixtures = [fixture] });
+        _vm = new InstallationViewModel(_host.Runtime, _host.Dialogs);
+        var row = _vm.PatchRows[0];
+
+        // La bibliothèque partagée reçoit une version 2 qui retire le mode « 1 canal ».
+        var newer = older with { Version = 2, Modes = [older.Modes[0] with { Name = "2 canaux" }] };
+        var sharedLibrary = new Dmx.Fixtures.FixtureLibrary(_host.Runtime.Library.Folder);
+        Dmx.Persistence.Json.VersionedJsonFile.Save(sharedLibrary.PathFor(newer), newer, Dmx.Fixtures.FixtureLibrary.DocumentType);
+        _host.Runtime.Library.Load();
+
+        _host.Dialogs.ConfirmAnswer = false;
+        await _vm.UpdateFromLibraryAsync(row);
+        _host.Runtime.Project.FixtureLibrary!.Find(older.Id)!.Version.ShouldBe(1);
+
+        _host.Dialogs.ConfirmAnswer = true;
+        await _vm.UpdateFromLibraryAsync(row);
+        _host.Runtime.Project.FixtureLibrary!.Find(older.Id)!.Version.ShouldBe(2);
+        _host.Dialogs.Confirmations.Last().ShouldContain("repatché");
+    }
+
+    [Fact]
     [Trait("Exigence", "INST-020")]
     [Trait("Exigence", "GEN-103")]
     public async Task DeleteFixture_AsksConfirmation()

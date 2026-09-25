@@ -231,6 +231,31 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         Replace(row.Fixture with { ModeName = row.EditModeName });
     }
 
+    /// <summary>
+    /// Reprend la version courante du modèle depuis la bibliothèque partagée (GEN-053), après confirmation s'il y a
+    /// un impact sur le mode utilisé.
+    /// </summary>
+    internal async Task UpdateFromLibraryAsync(PatchRowViewModel row)
+    {
+        ArgumentNullException.ThrowIfNull(row);
+        var shared = _runtime.Library.Entries.FirstOrDefault(e => e.Fixture.Id == row.Fixture.FixtureTypeId)?.Fixture;
+        if (shared is null || row.Type is null || shared.Version == row.Type.Version)
+        {
+            Message = "Aucune mise à jour disponible pour ce modèle.";
+            return;
+        }
+
+        var impact = FixtureUpdateImpact.ForLibraryUpdate(row.Type, shared, row.ModeName);
+        if (!impact.IsEmpty && !await _dialogs.ConfirmAsync("Mettre à jour le modèle", $"{row.Name} : {impact.Summary()} Continuer ?").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        _runtime.Project.FixtureLibrary!.UpdateFrom(shared);
+        LoadAll();
+        Message = $"Modèle « {shared.DisplayName} » mis à jour (version {shared.Version}).";
+    }
+
     /// <summary>Supprime un appareil, après confirmation (INST-020, GEN-103).</summary>
     internal async Task DeleteFixtureAsync(PatchRowViewModel row)
     {

@@ -43,6 +43,14 @@ public partial class InstallationView : UserControl
         }
     }
 
+    private async void OnUpdateFromLibraryClicked(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Control { Tag: PatchRowViewModel row } && ViewModel is { } vm)
+        {
+            await vm.UpdateFromLibraryAsync(row).ConfigureAwait(true);
+        }
+    }
+
     private async void OnDeleteClicked(object? sender, RoutedEventArgs e)
     {
         if (sender is Control { Tag: PatchRowViewModel row } && ViewModel is { } vm)
