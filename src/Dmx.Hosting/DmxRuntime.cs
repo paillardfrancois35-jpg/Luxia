@@ -200,6 +200,11 @@ public sealed class DmxRuntime : IAsyncDisposable
             return $"Canaux exclus invalides : « {settings.ExcludedChannels} » (ex. 180 ou 1, 5-8).";
         }
 
+        if (!ChannelList.TryParse(settings.HeldChannels, out var held))
+        {
+            return $"Canaux maintenus invalides : « {settings.HeldChannels} » (ex. 1, 8, 15, 22).";
+        }
+
         if (settings.StepMilliseconds is < 50 or > 60_000)
         {
             return "La durée par canal doit être comprise entre 50 ms et 60 s.";
@@ -219,7 +224,8 @@ public sealed class DmxRuntime : IAsyncDisposable
             settings.ValueByte,
             TimeSpan.FromMilliseconds(settings.StepMilliseconds),
             loop,
-            mode));
+            mode,
+            held));
         return null;
     }
 

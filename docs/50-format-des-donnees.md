@@ -52,6 +52,7 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
   "testOutput": {
     "range": "1-16",
     "excludedChannels": "180",
+    "heldChannels": "1, 8, 15, 22",
     "valuePercent": 50,
     "stepMilliseconds": 1000
   }
@@ -69,6 +70,7 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
 | `outputs.arduino.probeAllPorts` | booléen | Sonder aussi les ports série qui ne sont pas des cartes Arduino |
 | `testOutput.range` | `"1-16"` | Plage du chenillard de test |
 | `testOutput.excludedChannels` | `"180"`, `"1, 5-8"` | Canaux jamais allumés par le test |
+| `testOutput.heldChannels` | `""`, `"1, 8, 15, 22"` | Canaux maintenus à la valeur de test pendant tout le chenillard (SORT-008) |
 | `testOutput.valuePercent` | 0 à 100 | Valeur de test (50 % = 128) |
 
 ## 4. Projet : `projet.json` (format 1)

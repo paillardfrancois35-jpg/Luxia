@@ -40,6 +40,9 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
     private string _testExcluded = string.Empty;
 
     [ObservableProperty]
+    private string _testHeld = string.Empty;
+
+    [ObservableProperty]
     private decimal _testValuePercent;
 
     [ObservableProperty]
@@ -77,6 +80,7 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
         ProbeAllPorts = arduino.ProbeAllPorts;
         TestRange = prefs.TestOutput.Range;
         TestExcluded = prefs.TestOutput.ExcludedChannels;
+        TestHeld = prefs.TestOutput.HeldChannels;
         TestValuePercent = prefs.TestOutput.ValuePercent;
         TestStepMilliseconds = prefs.TestOutput.StepMilliseconds;
         TickRate = (decimal)runtime.Loop.RateHz;
@@ -188,6 +192,7 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
         {
             Range = TestRange,
             ExcludedChannels = TestExcluded,
+            HeldChannels = TestHeld,
             ValuePercent = (int)TestValuePercent,
             StepMilliseconds = (int)TestStepMilliseconds,
         });

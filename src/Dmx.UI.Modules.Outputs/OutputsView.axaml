@@ -86,6 +86,10 @@
               <TextBox Text="{Binding TestExcluded}" Width="160" Watermark="180" />
             </StackPanel>
             <StackPanel Classes="field">
+              <TextBlock Text="Canaux maintenus" />
+              <TextBox Text="{Binding TestHeld}" Width="160" Watermark="1, 8, 15, 22" />
+            </StackPanel>
+            <StackPanel Classes="field">
               <TextBlock Text="Valeur (%)" />
               <NumericUpDown Value="{Binding TestValuePercent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" Width="130" />
             </StackPanel>
@@ -94,7 +98,7 @@
               <NumericUpDown Value="{Binding TestStepMilliseconds}" Minimum="50" Maximum="60000" Increment="100" FormatString="0" Width="150" />
             </StackPanel>
           </WrapPanel>
-          <TextBlock Text="La fumée (canal 180) est exclue par défaut ; valeur modérée pour ne pas déclencher les canaux Reset / contrôle." Opacity="0.6" TextWrapping="Wrap" />
+          <TextBlock Text="La fumée (canal 180) est exclue par défaut ; valeur modérée pour ne pas déclencher les canaux Reset / contrôle. Les canaux maintenus (ex. maîtres des PAR à gradateur) restent à la valeur de test pendant tout le chenillard (SORT-008)." Opacity="0.6" TextWrapping="Wrap" />
           <StackPanel Orientation="Horizontal" Spacing="8">
             <Button Content="Démarrer le test" Command="{Binding StartTestCommand}" />
             <Button Content="Arrêter" Command="{Binding StopTestCommand}" />

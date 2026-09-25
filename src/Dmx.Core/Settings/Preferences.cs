@@ -93,6 +93,12 @@ public sealed record TestOutputPreferences
     /// <summary>Canaux exclus (180 = fumée du show de référence).</summary>
     public string ExcludedChannels { get; init; } = "180";
 
+    /// <summary>
+    /// Canaux maintenus à la valeur de test pendant tout le chenillard (SORT-008, Q23) : les maîtres des appareils
+    /// à gradateur maître (sinon leurs autres canaux — couleur, roue… — restent invisibles pendant leur propre passage).
+    /// </summary>
+    public string HeldChannels { get; init; } = string.Empty;
+
     /// <summary>Valeur de test en pourcentage (50 % par défaut).</summary>
     public int ValuePercent { get; init; } = 50;
 

@@ -134,6 +134,39 @@ public sealed class RenderEngineTests
     }
 
     [Fact]
+    [Trait("Exigence", "SORT-008")]
+    public void TestPattern_HeldChannels_StayLitForTheWholeChase()
+    {
+        var engine = new RenderEngine(_sink, _clock);
+        engine.Send(Test(new ChannelRange(2, 4), [], TimeSpan.FromMilliseconds(100)) with { HeldChannels = [1, 8] });
+
+        var lit = new List<int>();
+        for (var i = 0; i < 3; i++)
+        {
+            engine.Tick();
+            var frame = _sink.Last();
+            frame[0].ShouldBe((byte)128);
+            frame[7].ShouldBe((byte)128);
+            lit.Add(LitChannel(frame[1..]) + 1);
+            _clock.Advance(TimeSpan.FromMilliseconds(100));
+        }
+
+        lit.ShouldBe([2, 3, 4]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "SORT-008")]
+    public void TestPattern_HeldChannels_RespectExcludedChannels()
+    {
+        var engine = new RenderEngine(_sink, _clock);
+        engine.Send(Test(new ChannelRange(1, 3), [180], TimeSpan.FromSeconds(1)) with { HeldChannels = [180] });
+
+        engine.Tick();
+
+        _sink.Last()[179].ShouldBe((byte)0);
+    }
+
+    [Fact]
     [Trait("Exigence", "GEN-011")]
     public void Commands_InSameTick_AreAppliedInArrivalOrder()
     {
