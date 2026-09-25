@@ -142,12 +142,13 @@ shield en mode émission, terminaison 120 Ω en bout de chaîne.
 | T-SORT-08 | Matériel (S) | **Banc renifleur** : un second Arduino + shield en réception DMX renvoie la trame lue au PC ; comparaison automatique trame émise / trame lue. |
 | T-SORT-09 | Matériel | Compatibilité : piloter l'interface depuis un logiciel tiers compatible Enttec (ex. QLC+). |
 
-## 9. Notes de réalisation (P0)
+## 9. Notes de réalisation (P0, P3)
 
 > Écarts et précisions constatés au développement (doc 40 §6).
 
 | Sujet | Réalisation |
 |---|---|
+| SORT-008 (P3) | `TesterSortie` (CMD-024) accepte `HeldChannels` : ces canaux restent à la valeur de test pendant tout le chenillard (réglage « Canaux maintenus » à l'écran Sorties). Un canal à la fois exclu et maintenu reste exclu. |
 | SORT-010 – ports sondés | Par défaut, seuls le **dernier port utilisé** et les ports dont l'identifiant USB est une carte Arduino (VID 2341 / 2A03) sont sondés ; le chargeur de démarrage (PID 0036) est ignoré. Option « sonder aussi les ports non Arduino » (désactivée par défaut) : certains ports virtuels (Bluetooth) bloquent longtemps à l'ouverture et envoyer des octets à un appareil inconnu n'est pas anodin. |
 | SORT-010 – identification | Label 77 d'abord ; à défaut label 10 (une vraie interface Enttec est alors acceptée comme « Compatible Enttec »). Délai de réponse : 400 ms. |
 | SORT-004 – états | « Connexion… » n'est affiché qu'à la première tentative ; les tentatives suivantes (toutes les secondes) gardent l'état Déconnecté / Erreur, pour ne pas inonder le journal. Le compteur d'erreurs augmente à chaque **entrée** dans l'état Erreur. |
