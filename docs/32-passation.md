@@ -21,6 +21,7 @@
   - CONS-092 (survol immédiat du moniteur, retour utilisateur du 25/09) → P3, avec CONS-043.
   - BIB-098 (case « écraser si déjà existant » à l'import) → P3, avec GEN-053.
   - BIB-099 (modale de nommage en mode découverte) → P2, avant validation finale de la P2.
+  - BIB-100 (signaler l'erreur de validation + focus automatique sur l'onglet) → P2, avant validation finale de la P2.
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
