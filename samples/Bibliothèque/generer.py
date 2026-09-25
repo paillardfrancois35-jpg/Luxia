@@ -160,8 +160,9 @@ fixture("Tomshine", "Mini lyre gobo", "movingHead", [
     "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 180°. En 11 canaux, Pan et Tilt sont en 16 bits. "
     "Pas de canal de reset séparé sur cet appareil (à la différence d'autres lyres) : aucune protection de type "
     "« Reset » n'est nécessaire pour ce modèle.",
-    {"sourceType": "LED blanche", "beamAngle": 11, "panRange": 540, "tiltRange": 180},
-    EQ + "Gobo/81ej8MIZpBL.pdf")
+    {"sourceType": "LED blanche", "beamAngle": 11, "panRange": 540, "tiltRange": 180})
+    # Pas de notice jointe (BIB-095) : le PDF "81ej8MIZpBL.pdf" déposé initialement ne correspondait pas à cet
+    # appareil ; retiré le 2026-09-25. Source réelle = les deux photos du tableau DMX (docs/Equipements/Gobo/Tomshine/).
 
 # 5. BeamZ BUV463 (UV)
 fixture("BeamZ", "BUV463", "uv", [
