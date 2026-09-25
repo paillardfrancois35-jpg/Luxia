@@ -75,7 +75,7 @@ arduino-cli upload --fqbn arduino:avr:leonardo -p COMx firmware/arduino-dmx
 seul n'allume rien car les couleurs sont à 0, et les canaux 2-4 (couleurs) seuls n'allument rien car le maître est à 0.
 Le canal 6 à 50 % (valeur 128) place le PAR dans son programme interne « fondu » : il peut s'animer seul pendant 1 s.
 C'est normal : un chenillard **canal par canal** vérifie la **ligne et les adresses**, pas le rendu d'un appareil à gradateur maître.
-→ Question Q23 (canaux « maintenus » pendant le test), voir `docs/01-questions-ouvertes.md`.
+→ Q23 : des canaux « maintenus » pendant le test seront ajoutés en P3 (SORT-008). En attendant, testez les couleurs du mode 7 canaux avec la Console.
 
 **Sûreté** : le canal 180 (machine à fumée du show de référence) est **exclu par défaut** et la valeur est modérée (50 %),
 pour ne déclencher ni la fumée, ni les canaux Reset / contrôle des lyres et de l'effet multi-têtes.

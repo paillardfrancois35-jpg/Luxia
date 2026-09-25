@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -125,3 +125,22 @@
 | [GEN-058](exigences/GEN-058.md) | S | Chemins relatifs (projet déplaçable) | Non réalisé |  |
 | [GEN-102](exigences/GEN-102.md) | I | Annuler / rétablir (50 niveaux minimum) | Réalisé | LibraryViewModelTests.Editor_UndoRedo<br>LibraryViewModelTests.History_Keeps100Levels |
 | [GEN-105](exigences/GEN-105.md) | M | Recherche dans les longues listes | Réalisé |  |
+
+## P3 – 12 exigences, 0 couvertes par des tests automatiques
+
+> Sans fiche : 11 · À faire : 1
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [CONS-020](exigences/CONS-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [CONS-021](exigences/CONS-021.md) | I | (fiche manquante) | Sans fiche |  |
+| [CONS-022](exigences/CONS-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [CONS-023](exigences/CONS-023.md) | M | (fiche manquante) | Sans fiche |  |
+| [CONS-024](exigences/CONS-024.md) | M | (fiche manquante) | Sans fiche |  |
+| [GEN-004](exigences/GEN-004.md) | M | (fiche manquante) | Sans fiche |  |
+| [GEN-053](exigences/GEN-053.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-122](exigences/GEN-122.md) | M | (fiche manquante) | Sans fiche |  |
+| [SORT-008](exigences/SORT-008.md) | M | Canaux maintenus pendant le test de sortie | À faire |  |
+| [SORT-062](exigences/SORT-062.md) | I | (fiche manquante) | Sans fiche |  |
+| [SORT-063](exigences/SORT-063.md) | S | (fiche manquante) | Sans fiche |  |
+| [SORT-064](exigences/SORT-064.md) | S | (fiche manquante) | Sans fiche |  |

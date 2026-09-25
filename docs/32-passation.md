@@ -16,11 +16,12 @@
 - **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches.
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
   - CONS-007 et la délimitation des appareils dans le moniteur (CONS-043) → P3 (patch).
+  - SORT-008 (canaux maintenus pendant le test de sortie, Q23) → P3.
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
   - Mesure de gigue de **15 min** (D23) : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **prévue le 2026-09-26 au matin** avec l'utilisateur.
-- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q23 (canaux maintenus pendant le test), Q25 (tableau WZYBUTA, vérification prévue par l'utilisateur).
+- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA : points restants à vérifier en direct par l'utilisateur).
 
 ## 2. Lire avant de coder (dans cet ordre)
 

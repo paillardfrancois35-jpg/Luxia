@@ -176,6 +176,7 @@
 | [SORT-005](SORT-005.md) | Moteur actif sans aucune sortie | P0 | I | Réalisé |
 | [SORT-006](SORT-006.md) | Configuration des sorties dans les préférences du poste | P0 | I | Réalisé |
 | [SORT-007](SORT-007.md) | Écran « Sorties » et test de sortie | P0 | M | Réalisé |
+| [SORT-008](SORT-008.md) | Canaux maintenus pendant le test de sortie | P3 | M | À faire |
 | [SORT-010](SORT-010.md) | Détection automatique de l'Arduino | P0 | I | Réalisé, à valider sur matériel |
 | [SORT-011](SORT-011.md) | Dernier port essayé en premier | P0 | I | Réalisé |
 | [SORT-012](SORT-012.md) | Jamais 1200 bauds, DTR actif | P0 | I | Réalisé |

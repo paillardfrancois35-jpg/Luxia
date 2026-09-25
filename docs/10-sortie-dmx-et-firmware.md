@@ -39,6 +39,7 @@ Le module Sortie reçoit du moteur, à chaque tick, une trame de 512 octets par 
 | SORT-004 | I | P0 | Chaque pilote publie son état : `Déconnecté`, `Connexion…`, `Connecté`, `Erreur` (+ message), trames/s effectives, nombre d'erreurs. | Affichage dans l'indicateur permanent (GEN-104). |
 | SORT-005 | I | P0 | Le moteur continue de fonctionner quand aucun pilote n'est connecté. | Démarrage sans Arduino : moteur actif, simulateur fonctionnel. |
 | SORT-006 | I | P0 | La configuration des sorties (univers → pilotes, paramètres) est enregistrée dans les **préférences du poste**, pas dans le projet (un projet doit s'ouvrir sur un autre PC avec un autre port). | Ouvrir le projet sur un autre PC : pas d'erreur, sortie à configurer ou détectée. |
+| SORT-008 | M | P3 | Test de sortie : liste de **canaux maintenus** à la valeur de test pendant tout le chenillard (ex. `1, 8, 15, 22` = gradateurs maîtres des 4 PAR), pour voir réagir les appareils à gradateur maître ; jamais un canal exclu. | PAR en 7 canaux, canal 1 maintenu : le chenillard sur 2, 3, 4 donne rouge, vert, bleu. |
 | SORT-007 | M | P0 | Écran « Sorties » : liste des pilotes, état, port, trames/s, bouton reconnecter, bouton test (chenillard canal par canal via la commande `TesterSortie`, CMD-024) avec **plage réglable** (par défaut 1-16), **liste de canaux exclus** réglable (par défaut : 180, fumée) et **valeur de test** réglable (par défaut 50 %), afin de ne déclencher ni la fumée ni les canaux Reset/contrôle (Q16). | Revue. |
 
 ## 4. Exigences – pilote Arduino (côté PC)

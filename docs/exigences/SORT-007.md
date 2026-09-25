@@ -7,7 +7,7 @@
 | **Phase** | P0 |
 | **Source** | [doc 10 – 3. Exigences – routage et supervision (côté PC)](../10-sortie-dmx-et-firmware.md) |
 | **Remarque** | — |
-| **Liens** | CMD-024, D19, D21, GEN-002, Q16, Q17, Q18, Q23 |
+| **Liens** | SORT-008, CMD-024, D19, D21, GEN-002, Q16, Q17, Q18, Q23 |
 
 ## Description
 
@@ -52,3 +52,4 @@
 | 2026-09-24 | Claude | Développement | `a719192` feat(moteur): mode rampe du test de sortie et commande d'endurance |
 | 2026-09-24 | Claude | Note | Enregistrement de démonstration `samples/Show de référence/Enregistrements/P0-chenillard-1-180.dmxrec` (180 exclu, 50 %, 250 ms), rejoué en temps virtuel par un test de non-régression. |
 | 2026-09-25 | Utilisateur | Question | Q23 : demande de précision (« quelle est la question exactement ? ») ; question reformulée avec un exemple (PAR en 7 canaux à l'adresse 1 : maintenir le canal 1 à 50 % pendant que le chenillard passe sur 2, 3, 4). En attente de réponse. |
+| 2026-09-25 | Utilisateur | Réponse | Q23 : oui, les canaux maintenus sont ajoutés en P3 → nouvelle exigence SORT-008. |
