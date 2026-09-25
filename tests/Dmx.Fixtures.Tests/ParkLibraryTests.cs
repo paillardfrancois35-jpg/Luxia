@@ -10,10 +10,10 @@ public sealed class ParkLibraryTests
 
     [Fact]
     [Trait("Exigence", "BIB-001")]
-    public void ParkLibrary_LoadsSixModels_WithoutMessage()
+    public void ParkLibrary_LoadsSevenModels_WithoutMessage()
     {
         Library.Messages.ShouldBeEmpty();
-        Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(6);
+        Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
     }
 
     [Theory]
@@ -23,6 +23,7 @@ public sealed class ParkLibraryTests
     [InlineData("Mini lyre gobo")]
     [InlineData("BUV463")]
     [InlineData("Effet 4 têtes 150 W")]
+    [InlineData("LCB803")]
     [Trait("Exigence", "BIB-004")]
     public void ParkModel_HasNoValidationError(string model)
     {
@@ -65,6 +66,18 @@ public sealed class ParkLibraryTests
 
         FixtureRules.CellCount(uv, uv.Modes[0]).ShouldBe(4);
         FixtureRules.FollowsIntensity(uv, uv.Modes[0], uv.Channel("uv1")!).ShouldBeFalse(); // le maître porte l'intensité
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-001")]
+    public void Lcb803_SectionsBecomeCells()
+    {
+        var bar = Get("LCB803");
+
+        bar.Modes.Select(m => m.ChannelCount).ShouldBe([3, 6, 12, 24, 48]);
+        bar.Modes.Select(m => FixtureRules.CellCount(bar, m)).ShouldBe([0, 0, 2, 4, 8]);
+        FixtureRules.HasVirtualIntensity(bar, bar.Modes[0]).ShouldBeTrue();
+        FixtureRules.FollowsIntensity(bar, bar.Modes[3], bar.Channel("r2")!).ShouldBeFalse(); // la section a son gradateur
     }
 
     private static FixtureType Get(string model) => Library.Entries.Single(e => e.Fixture.Model == model).Fixture;

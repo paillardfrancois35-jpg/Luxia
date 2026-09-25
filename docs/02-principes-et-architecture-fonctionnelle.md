@@ -288,8 +288,8 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
 |---|---|---|---|---|
-| GEN-030 | I | P0 | Le moteur est cadencé par un **tick** régulier, par défaut **40 Hz**, réglable de 25 à 44 Hz. | Mesure sur 1 h : fréquence moyenne 40 ± 0,5 Hz. |
-| GEN-031 | I | P0 | La gigue du tick doit rester inférieure à 5 ms (99e centile) sur un PC standard, interface ouverte. | Mesure sur 1 h, rapport de gigue. |
+| GEN-030 | I | P0 | Le moteur est cadencé par un **tick** régulier, par défaut **40 Hz**, réglable de 25 à 44 Hz. | Mesure de 15 min (≈ 36 000 ticks) : fréquence moyenne 40 ± 0,5 Hz. *(1 h avant D23.)* |
+| GEN-031 | I | P0 | La gigue du tick doit rester inférieure à 5 ms (99e centile) sur un PC standard, interface ouverte. | Mesure de 15 min, rapport de gigue (`dmx-headless gigue`). *(1 h avant D23.)* |
 | GEN-032 | I | P4 | Les calculs du moteur utilisent le **temps écoulé réel** (et non le nombre de ticks) : un tick en retard ne ralentit pas les fondus. | Test : ticks irréguliers simulés → fondu de 2 s terminé à 2 s ± 1 tick. |
 | GEN-033 | I | P4 | Toutes les horloges sont **injectables** pour les tests (temps virtuel). | Tests moteur exécutés en temps virtuel, 1 h simulée en quelques secondes. |
 | GEN-034 | I | P7 | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît (break, silence) et se recale quand il revient. | Test sur fichier avec break de 8 s : pas d'arrêt des temps. |
@@ -431,6 +431,7 @@ Un **Projet** est un **dossier** de fichiers JSON (plutôt qu'un fichier unique)
 | GEN-092 | I | P10 | **Endurance** : 6 h de fonctionnement continu en mode auto sans dégradation (mémoire stable, CPU stable, gigue conforme). | Test d'endurance en simulateur (outil sans interface) + une soirée réelle. |
 | GEN-093 | I | P0 | Une erreur dans un module secondaire (audio, style, MIDI, simulateur) ne doit ni arrêter le moteur ni la sortie : le module est désactivé et signalé. | Test : exception forcée dans l'analyse audio → lumière continue, alerte en Live. |
 | GEN-094 | M | P5 | Utilisation CPU moyenne < 15 % en Live (hors simulateur 3D) sur un PC portable standard. | Mesure. |
+| GEN-096 | I | P0 | Tant que l'application émet, le PC **ne se met pas en veille** : demande temporaire au système, propre au processus, sans modifier les réglages du poste (l'écran peut s'éteindre). | PC réglé sur une veille courte : aucune veille pendant l'émission ; veille de nouveau possible après fermeture. |
 | GEN-095 | M | P5 | **Reprise après plantage** : au redémarrage, proposition de revenir au dernier état de restitution connu (projet, scènes actives, mode). | Tuer le processus en Live, relancer → reprise proposée. |
 
 ---
@@ -525,3 +526,4 @@ Cela se fait **à la maison**, jamais en soirée (P7).
 | D20 | 2026-09-24 | Projet d'assemblage **`Dmx.Hosting`** (non prévu au doc 00 §7) : journal technique et assemblage des modules, partagé par l'application et `Dmx.Tools.Headless`. Pas de conteneur d'injection de dépendances en P0 (assemblage explicite, plus lisible) ; à reconsidérer quand les écrans se multiplieront. | Développement P0 |
 | D21 | 2026-09-24 | Tant que le test de sortie est actif, il **remplace** la restitution de l'univers testé (un seul canal allumé) : c'est un outil de diagnostic, pas une couche. | Développement P0 |
 | D22 | 2026-09-25 | Les définitions du parc sont livrées comme **bibliothèque d'exemple** (`samples/Bibliothèque/`), importable ; la copie dans le projet (GEN-053) viendra avec le patch (P3). Projets d'interface : `Dmx.UI.Controls` + un projet par écran (`Dmx.UI.Modules.Console`, `.Library`, `.Outputs`), conformément au doc 00 §7. | Développement P2 |
+| D23 | 2026-09-25 | Mesure de cadence et de gigue (GEN-030 / 031) ramenée d'**1 h à 15 min** (≈ 36 000 ticks, suffisant pour un 99e centile ; la stabilité longue relève de GEN-092). L'application **empêche la mise en veille** du PC pendant l'émission (nouvelle exigence GEN-096) : la veille du poste ne peut pas être allongée et une veille en soirée couperait la lumière. | Q26 |

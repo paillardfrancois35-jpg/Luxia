@@ -1,0 +1,953 @@
+{
+  "formatVersion": 1,
+  "id": "2a20f1ad-225b-5dc7-abf2-0bc6e3133373",
+  "manufacturer": "BeamZ",
+  "model": "LCB803",
+  "category": "ledBar",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "Barre LED 80 × RGB 3-en-1 (60 W), 986 mm. Mode choisi par le menu ChNd, adresse par Addr. 12 / 24 / 48 canaux = 2 / 4 / 8 sections indépendantes (cellules). Show de référence : 24 canaux (4 sections) tient dans la réserve du plan d'adresses (51-74 et 81-104) ; 48 canaux ne tient pas.",
+  "reference": "150.561",
+  "manual": "docs/Equipements/LED BAR/BeamZ/LCB803/Mode d'emploi BeamZ LCB803 (Français - 32 des pages) - P27.pdf",
+  "physical": {
+    "sourceType": "LED RGB 3-en-1",
+    "power": 60
+  },
+  "channels": [
+    {
+      "key": "r-3ch",
+      "name": "Rouge (mode 3 canaux)",
+      "attribute": "red"
+    },
+    {
+      "key": "g-3ch",
+      "name": "Vert (mode 3 canaux)",
+      "attribute": "green"
+    },
+    {
+      "key": "b-3ch",
+      "name": "Bleu (mode 3 canaux)",
+      "attribute": "blue"
+    },
+    {
+      "key": "dim",
+      "name": "Gradateur",
+      "attribute": "intensity",
+      "cell": 0
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe",
+      "attribute": "shutter",
+      "cell": 0,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red",
+      "cell": 0
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green",
+      "cell": 0
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue",
+      "cell": 0
+    },
+    {
+      "key": "auto",
+      "name": "Programme auto",
+      "attribute": "program",
+      "cell": 0,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim1",
+      "name": "Gradateur (section 1)",
+      "attribute": "cellIntensity",
+      "cell": 1
+    },
+    {
+      "key": "strobe1",
+      "name": "Strobe (section 1)",
+      "attribute": "shutter",
+      "cell": 1,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r1",
+      "name": "Rouge (section 1)",
+      "attribute": "red",
+      "cell": 1
+    },
+    {
+      "key": "g1",
+      "name": "Vert (section 1)",
+      "attribute": "green",
+      "cell": 1
+    },
+    {
+      "key": "b1",
+      "name": "Bleu (section 1)",
+      "attribute": "blue",
+      "cell": 1
+    },
+    {
+      "key": "auto1",
+      "name": "Programme auto (section 1)",
+      "attribute": "program",
+      "cell": 1,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim2",
+      "name": "Gradateur (section 2)",
+      "attribute": "cellIntensity",
+      "cell": 2
+    },
+    {
+      "key": "strobe2",
+      "name": "Strobe (section 2)",
+      "attribute": "shutter",
+      "cell": 2,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r2",
+      "name": "Rouge (section 2)",
+      "attribute": "red",
+      "cell": 2
+    },
+    {
+      "key": "g2",
+      "name": "Vert (section 2)",
+      "attribute": "green",
+      "cell": 2
+    },
+    {
+      "key": "b2",
+      "name": "Bleu (section 2)",
+      "attribute": "blue",
+      "cell": 2
+    },
+    {
+      "key": "auto2",
+      "name": "Programme auto (section 2)",
+      "attribute": "program",
+      "cell": 2,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim3",
+      "name": "Gradateur (section 3)",
+      "attribute": "cellIntensity",
+      "cell": 3
+    },
+    {
+      "key": "strobe3",
+      "name": "Strobe (section 3)",
+      "attribute": "shutter",
+      "cell": 3,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r3",
+      "name": "Rouge (section 3)",
+      "attribute": "red",
+      "cell": 3
+    },
+    {
+      "key": "g3",
+      "name": "Vert (section 3)",
+      "attribute": "green",
+      "cell": 3
+    },
+    {
+      "key": "b3",
+      "name": "Bleu (section 3)",
+      "attribute": "blue",
+      "cell": 3
+    },
+    {
+      "key": "auto3",
+      "name": "Programme auto (section 3)",
+      "attribute": "program",
+      "cell": 3,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim4",
+      "name": "Gradateur (section 4)",
+      "attribute": "cellIntensity",
+      "cell": 4
+    },
+    {
+      "key": "strobe4",
+      "name": "Strobe (section 4)",
+      "attribute": "shutter",
+      "cell": 4,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r4",
+      "name": "Rouge (section 4)",
+      "attribute": "red",
+      "cell": 4
+    },
+    {
+      "key": "g4",
+      "name": "Vert (section 4)",
+      "attribute": "green",
+      "cell": 4
+    },
+    {
+      "key": "b4",
+      "name": "Bleu (section 4)",
+      "attribute": "blue",
+      "cell": 4
+    },
+    {
+      "key": "auto4",
+      "name": "Programme auto (section 4)",
+      "attribute": "program",
+      "cell": 4,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim5",
+      "name": "Gradateur (section 5)",
+      "attribute": "cellIntensity",
+      "cell": 5
+    },
+    {
+      "key": "strobe5",
+      "name": "Strobe (section 5)",
+      "attribute": "shutter",
+      "cell": 5,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r5",
+      "name": "Rouge (section 5)",
+      "attribute": "red",
+      "cell": 5
+    },
+    {
+      "key": "g5",
+      "name": "Vert (section 5)",
+      "attribute": "green",
+      "cell": 5
+    },
+    {
+      "key": "b5",
+      "name": "Bleu (section 5)",
+      "attribute": "blue",
+      "cell": 5
+    },
+    {
+      "key": "auto5",
+      "name": "Programme auto (section 5)",
+      "attribute": "program",
+      "cell": 5,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim6",
+      "name": "Gradateur (section 6)",
+      "attribute": "cellIntensity",
+      "cell": 6
+    },
+    {
+      "key": "strobe6",
+      "name": "Strobe (section 6)",
+      "attribute": "shutter",
+      "cell": 6,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r6",
+      "name": "Rouge (section 6)",
+      "attribute": "red",
+      "cell": 6
+    },
+    {
+      "key": "g6",
+      "name": "Vert (section 6)",
+      "attribute": "green",
+      "cell": 6
+    },
+    {
+      "key": "b6",
+      "name": "Bleu (section 6)",
+      "attribute": "blue",
+      "cell": 6
+    },
+    {
+      "key": "auto6",
+      "name": "Programme auto (section 6)",
+      "attribute": "program",
+      "cell": 6,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim7",
+      "name": "Gradateur (section 7)",
+      "attribute": "cellIntensity",
+      "cell": 7
+    },
+    {
+      "key": "strobe7",
+      "name": "Strobe (section 7)",
+      "attribute": "shutter",
+      "cell": 7,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r7",
+      "name": "Rouge (section 7)",
+      "attribute": "red",
+      "cell": 7
+    },
+    {
+      "key": "g7",
+      "name": "Vert (section 7)",
+      "attribute": "green",
+      "cell": 7
+    },
+    {
+      "key": "b7",
+      "name": "Bleu (section 7)",
+      "attribute": "blue",
+      "cell": 7
+    },
+    {
+      "key": "auto7",
+      "name": "Programme auto (section 7)",
+      "attribute": "program",
+      "cell": 7,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "dim8",
+      "name": "Gradateur (section 8)",
+      "attribute": "cellIntensity",
+      "cell": 8
+    },
+    {
+      "key": "strobe8",
+      "name": "Strobe (section 8)",
+      "attribute": "shutter",
+      "cell": 8,
+      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe rapide → lent",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "r8",
+      "name": "Rouge (section 8)",
+      "attribute": "red",
+      "cell": 8
+    },
+    {
+      "key": "g8",
+      "name": "Vert (section 8)",
+      "attribute": "green",
+      "cell": 8
+    },
+    {
+      "key": "b8",
+      "name": "Bleu (section 8)",
+      "attribute": "blue",
+      "cell": 8
+    },
+    {
+      "key": "auto8",
+      "name": "Programme auto (section 8)",
+      "attribute": "program",
+      "cell": 8,
+      "notes": "Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct).",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "program",
+          "label": "Programme auto rapide → lent",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 100,
+            "end": 0,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "3 canaux",
+      "shortName": "3CH",
+      "deviceSetting": "ChNd 3Ch + A001",
+      "channels": [
+        {
+          "channel": "r-3ch"
+        },
+        {
+          "channel": "g-3ch"
+        },
+        {
+          "channel": "b-3ch"
+        }
+      ]
+    },
+    {
+      "name": "6 canaux",
+      "shortName": "6CH",
+      "deviceSetting": "ChNd 6Ch + A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "auto"
+        }
+      ]
+    },
+    {
+      "name": "12 canaux",
+      "shortName": "12CH",
+      "deviceSetting": "ChNd 12Ch + A001",
+      "channels": [
+        {
+          "channel": "dim1"
+        },
+        {
+          "channel": "strobe1"
+        },
+        {
+          "channel": "r1"
+        },
+        {
+          "channel": "g1"
+        },
+        {
+          "channel": "b1"
+        },
+        {
+          "channel": "auto1"
+        },
+        {
+          "channel": "dim2"
+        },
+        {
+          "channel": "strobe2"
+        },
+        {
+          "channel": "r2"
+        },
+        {
+          "channel": "g2"
+        },
+        {
+          "channel": "b2"
+        },
+        {
+          "channel": "auto2"
+        }
+      ]
+    },
+    {
+      "name": "24 canaux",
+      "shortName": "24CH",
+      "deviceSetting": "ChNd 24Ch + A001",
+      "channels": [
+        {
+          "channel": "dim1"
+        },
+        {
+          "channel": "strobe1"
+        },
+        {
+          "channel": "r1"
+        },
+        {
+          "channel": "g1"
+        },
+        {
+          "channel": "b1"
+        },
+        {
+          "channel": "auto1"
+        },
+        {
+          "channel": "dim2"
+        },
+        {
+          "channel": "strobe2"
+        },
+        {
+          "channel": "r2"
+        },
+        {
+          "channel": "g2"
+        },
+        {
+          "channel": "b2"
+        },
+        {
+          "channel": "auto2"
+        },
+        {
+          "channel": "dim3"
+        },
+        {
+          "channel": "strobe3"
+        },
+        {
+          "channel": "r3"
+        },
+        {
+          "channel": "g3"
+        },
+        {
+          "channel": "b3"
+        },
+        {
+          "channel": "auto3"
+        },
+        {
+          "channel": "dim4"
+        },
+        {
+          "channel": "strobe4"
+        },
+        {
+          "channel": "r4"
+        },
+        {
+          "channel": "g4"
+        },
+        {
+          "channel": "b4"
+        },
+        {
+          "channel": "auto4"
+        }
+      ]
+    },
+    {
+      "name": "48 canaux",
+      "shortName": "48CH",
+      "deviceSetting": "ChNd 48Ch + A001",
+      "channels": [
+        {
+          "channel": "dim1"
+        },
+        {
+          "channel": "strobe1"
+        },
+        {
+          "channel": "r1"
+        },
+        {
+          "channel": "g1"
+        },
+        {
+          "channel": "b1"
+        },
+        {
+          "channel": "auto1"
+        },
+        {
+          "channel": "dim2"
+        },
+        {
+          "channel": "strobe2"
+        },
+        {
+          "channel": "r2"
+        },
+        {
+          "channel": "g2"
+        },
+        {
+          "channel": "b2"
+        },
+        {
+          "channel": "auto2"
+        },
+        {
+          "channel": "dim3"
+        },
+        {
+          "channel": "strobe3"
+        },
+        {
+          "channel": "r3"
+        },
+        {
+          "channel": "g3"
+        },
+        {
+          "channel": "b3"
+        },
+        {
+          "channel": "auto3"
+        },
+        {
+          "channel": "dim4"
+        },
+        {
+          "channel": "strobe4"
+        },
+        {
+          "channel": "r4"
+        },
+        {
+          "channel": "g4"
+        },
+        {
+          "channel": "b4"
+        },
+        {
+          "channel": "auto4"
+        },
+        {
+          "channel": "dim5"
+        },
+        {
+          "channel": "strobe5"
+        },
+        {
+          "channel": "r5"
+        },
+        {
+          "channel": "g5"
+        },
+        {
+          "channel": "b5"
+        },
+        {
+          "channel": "auto5"
+        },
+        {
+          "channel": "dim6"
+        },
+        {
+          "channel": "strobe6"
+        },
+        {
+          "channel": "r6"
+        },
+        {
+          "channel": "g6"
+        },
+        {
+          "channel": "b6"
+        },
+        {
+          "channel": "auto6"
+        },
+        {
+          "channel": "dim7"
+        },
+        {
+          "channel": "strobe7"
+        },
+        {
+          "channel": "r7"
+        },
+        {
+          "channel": "g7"
+        },
+        {
+          "channel": "b7"
+        },
+        {
+          "channel": "auto7"
+        },
+        {
+          "channel": "dim8"
+        },
+        {
+          "channel": "strobe8"
+        },
+        {
+          "channel": "r8"
+        },
+        {
+          "channel": "g8"
+        },
+        {
+          "channel": "b8"
+        },
+        {
+          "channel": "auto8"
+        }
+      ]
+    }
+  ]
+}

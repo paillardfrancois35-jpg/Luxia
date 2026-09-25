@@ -188,11 +188,11 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
         var files = FixtureImporter.FindFiles(folder);
 
         await _library.ImportAsync(files);
-        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(6);
-        _library.ImportReport.Count(l => l.StartsWith('✓')).ShouldBe(6);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+        _library.ImportReport.Count(l => l.StartsWith('✓')).ShouldBe(7);
 
         await _library.ImportAsync(files);
         _library.ImportReport.ShouldAllBe(l => l.StartsWith('='));
-        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(6);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
     }
 }

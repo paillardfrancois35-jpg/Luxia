@@ -198,3 +198,40 @@ fixture("WZYBUTA", "Effet 4 têtes 150 W", "effect", [
     "Effet à moteur tournant + 4 têtes pivotantes, 150 W. Tableau DMX ambigu (traduction) : définition À VÉRIFIER avec le mode découverte (Q25).",
     {"sourceType": "LED RGBW", "power": 150},
     EQ + "WZYBUTA/WZYBUTA 150W Moving Head LED Party Light User Manual/WZYBUTA 150W Moving Head LED Party Light User Manual.pdf")
+
+# 7. BeamZ LCB803 (barre 80 × RGB 3-en-1) — notice pages 27-29 fournies le 2026-09-25 (Q24).
+#    Sections de 6 canaux (gradateur, strobe, R, G, B, programme) ; 2, 4 ou 8 sections selon le mode.
+def lcb_section(n, cell):
+    s = "" if cell == 0 else "%d" % n
+    lbl = "" if cell == 0 else " (section %d)" % n
+    return [
+        ch("dim" + s, "Gradateur" + lbl, "intensity" if cell == 0 else "cellIntensity", cell=cell),
+        ch("strobe" + s, "Strobe" + lbl, "shutter", [cap(0, 255, "Strobe rapide → lent", "progressive", "strobe", ("vitesse", 100, 0, "%"))], cell=cell,
+           notes="Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct)."),
+        ch("r" + s, "Rouge" + lbl, "red", cell=cell), ch("g" + s, "Vert" + lbl, "green", cell=cell), ch("b" + s, "Bleu" + lbl, "blue", cell=cell),
+        ch("auto" + s, "Programme auto" + lbl, "program", [cap(0, 255, "Programme auto rapide → lent", "program", param=("vitesse", 100, 0, "%"))], cell=cell,
+           notes="Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct)."),
+    ]
+
+
+LCB_CHANNELS = [ch("r-3ch", "Rouge (mode 3 canaux)", "red"), ch("g-3ch", "Vert (mode 3 canaux)", "green"), ch("b-3ch", "Bleu (mode 3 canaux)", "blue")]
+LCB_CHANNELS += lcb_section(0, 0)
+for n in range(1, 9):
+    LCB_CHANNELS += lcb_section(n, n)
+
+
+def lcb_mode(sections):
+    keys = [k + str(n) for n in range(1, sections + 1) for k in ("dim", "strobe", "r", "g", "b", "auto")]
+    return mode("%d canaux" % (6 * sections), "%dCH" % (6 * sections), "ChNd %dCh + A001" % (6 * sections), *keys)
+
+
+fixture("BeamZ", "LCB803", "ledBar", LCB_CHANNELS, [
+    mode("3 canaux", "3CH", "ChNd 3Ch + A001", "r-3ch", "g-3ch", "b-3ch"),
+    mode("6 canaux", "6CH", "ChNd 6Ch + A001", "dim", "strobe", "r", "g", "b", "auto"),
+    lcb_mode(2), lcb_mode(4), lcb_mode(8)],
+    "Barre LED 80 × RGB 3-en-1 (60 W), 986 mm. Mode choisi par le menu ChNd, adresse par Addr. "
+    "12 / 24 / 48 canaux = 2 / 4 / 8 sections indépendantes (cellules). Show de référence : 24 canaux (4 sections) "
+    "tient dans la réserve du plan d'adresses (51-74 et 81-104) ; 48 canaux ne tient pas.",
+    {"sourceType": "LED RGB 3-en-1", "power": 60},
+    EQ + "LED BAR/BeamZ/LCB803/Mode d'emploi BeamZ LCB803 (Français - 32 des pages) - P27.pdf",
+    reference="150.561")

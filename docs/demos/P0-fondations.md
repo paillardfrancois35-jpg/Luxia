@@ -112,7 +112,7 @@ dmx-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1
 
 | Mesure | Commande | Attendu |
 |---|---|---|
-| Cadence et gigue, 1 h | `dmx-headless gigue --duree 3600` | 40 ± 0,5 Hz ; gigue p99 < 5 ms (GEN-030, GEN-031) — *mesuré sur 20 s : 40,04 Hz, p99 0,8 ms* |
+| Cadence et gigue, 15 min (D23) | `dmx-headless gigue` (900 s par défaut ; la veille du PC est bloquée pendant la mesure, GEN-096) | 40 ± 0,5 Hz ; gigue p99 < 5 ms (GEN-030, GEN-031) — *mesuré sur 20 s : 40,04 Hz, p99 0,8 ms* |
 | Endurance matériel, 1 h, 512 canaux | `dmx-headless endurance --duree 3600` (Arduino branché, **appareils débranchés ou PAR seul**) | aucune erreur, ~40 trames/s constantes (T-SORT-07) |
 | Ligne DMX plus rapide | écran Sorties, « Canaux émis » = 30 | le firmware émet des trames courtes (SORT-049) ; le PAR réagit de la même façon |
 | Compatibilité Enttec | QLC+ → sortie « DMX USB » | **à tester** (T-SORT-09) : QLC+ cherche les Enttec via le pilote FTDI ; le Leonardo (USB natif) risque de ne pas être listé |

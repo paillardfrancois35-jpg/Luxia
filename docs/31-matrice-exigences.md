@@ -4,9 +4,9 @@
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
-## P0 – 44 exigences, 30 couvertes par des tests automatiques
+## P0 – 45 exigences, 31 couvertes par des tests automatiques
 
-> Réalisé : 30 · Réalisé, à valider sur matériel : 14
+> Réalisé : 30 · Réalisé, à valider sur matériel : 15
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -23,6 +23,7 @@
 | [GEN-081](exigences/GEN-081.md) | I | Arrêt anormal de l'application : noir en 2 s | Réalisé, à valider sur matériel |  |
 | [GEN-091](exigences/GEN-091.md) | I | Sortie déconnectée non bloquante, reconnexion < 3 s | Réalisé, à valider sur matériel | ArduinoOutputDriverTests.Unplug_ThenReplug_ReconnectsWithinThreeSeconds |
 | [GEN-093](exigences/GEN-093.md) | I | Panne d'un module secondaire isolée | Réalisé | TickLoopTests.Run_TickThrows_LoopContinues |
+| [GEN-096](exigences/GEN-096.md) | I | Pas de mise en veille du PC pendant l'émission | Réalisé, à valider sur matériel | SleepInhibitorTests.StartThenStop_SetsAndReleasesTheRequest |
 | [GEN-110](exigences/GEN-110.md) | I | Journal technique | Réalisé |  |
 | [GEN-120](exigences/GEN-120.md) | I | Fonctionnement hors-ligne | Réalisé |  |
 | [SORT-001](exigences/SORT-001.md) | I | Univers vers plusieurs pilotes | Réalisé | OutputRouterTests.Submit_OneUniverseToTwoDrivers_BothReceiveIdenticalFrames<br>OutputRouterTests.Submit_OtherUniverse_IsNotRouted |
@@ -90,7 +91,7 @@
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [BIB-001](exigences/BIB-001.md) | I | Modèle de données complet d'un appareil | Réalisé | FixtureLibraryTests.SaveThenLoad_IsLossless<br>ParkLibraryTests.ParkLibrary_LoadsSixModels_WithoutMessage |
+| [BIB-001](exigences/BIB-001.md) | I | Modèle de données complet d'un appareil | Réalisé | FixtureLibraryTests.SaveThenLoad_IsLossless<br>ParkLibraryTests.Lcb803_SectionsBecomeCells<br>ParkLibraryTests.ParkLibrary_LoadsSevenModels_WithoutMessage |
 | [BIB-002](exigences/BIB-002.md) | I | Au moins un mode ; définitions de canaux partagées | Réalisé | FixtureValidatorTests.FixtureWithoutMode_IsAnError |
 | [BIB-003](exigences/BIB-003.md) | I | Attribut 16 bits = un seul attribut sur deux canaux | Réalisé | FixtureEditsTests.SetResolution_16Bit_AddsFineAfterCoarse_AndBackTo8BitRemovesIt<br>FixtureValidatorTests.CoarseWithoutFine_IsAWarning<br>OflImporterTests.Spot_FineChannelsAreOneAttribute_AndWheelsCarryColors<br>ParkLibraryTests.Lyre_11Channels_Has16BitPanTilt_9ChannelsCoarseOnly<br>(+1) |
 | [BIB-004](exigences/BIB-004.md) | I | Validation d'un modèle | Réalisé | FixtureValidatorTests.FineOf8BitChannel_IsAnError<br>FixtureValidatorTests.GapBetweenRanges_IsAWarning<br>FixtureValidatorTests.ModeWithoutChannel_IsAnError<br>FixtureValidatorTests.OrphanFineChannel_IsAnError<br>(+5) |

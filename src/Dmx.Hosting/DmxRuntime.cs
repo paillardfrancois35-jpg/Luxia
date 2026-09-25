@@ -27,6 +27,7 @@ public sealed class DmxRuntime : IAsyncDisposable
     private readonly Lock _lock = new();
     private ArduinoOutputDriver? _arduino;
     private RecorderOutputDriver? _recorder;
+    private readonly SleepInhibitor _sleepInhibitor;
     private bool _started;
     private bool _stopped;
 
@@ -52,6 +53,7 @@ public sealed class DmxRuntime : IAsyncDisposable
         Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
+        _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
     }
@@ -92,6 +94,9 @@ public sealed class DmxRuntime : IAsyncDisposable
     /// <summary>Enregistreur actif.</summary>
     public RecorderOutputDriver? Recorder => _recorder;
 
+    /// <summary>La mise en veille du PC est bloquée (GEN-096).</summary>
+    public bool IsSleepBlocked => _sleepInhibitor.IsActive;
+
     /// <summary>Ports série présents (diagnostic).</summary>
     public IReadOnlyList<SerialPortInfo> SerialPorts => _serialPorts.GetPorts();
 
@@ -117,6 +122,9 @@ public sealed class DmxRuntime : IAsyncDisposable
             }
 
             Loop.Start();
+
+            // GEN-096 : une mise en veille couperait la lumière (plus de trames → chien de garde → noir).
+            _sleepInhibitor.Start();
         }
     }
 
@@ -278,6 +286,7 @@ public sealed class DmxRuntime : IAsyncDisposable
         }
 
         Loop.Stop();
+        _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();
         for (var u = 1; u <= Engine.UniverseCount; u++)
         {

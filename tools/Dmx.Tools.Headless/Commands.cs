@@ -30,7 +30,7 @@ internal static class Commands
                   T-SORT-07 : tous les canaux varient en continu (rampe) ; rapport de cadence, trames/s et erreurs.
                   Prudence avec les appareils branchés : la fumée (180) est exclue, valeur plafonnée à 50 % par défaut.
 
-              gigue [--duree s] [--frequence 40]
+              gigue [--duree s (900 = 15 min par défaut)] [--frequence 40]
                   Mesure la cadence et la gigue du moteur (GEN-030, GEN-031), sortie Nulle.
 
               projet dossier [--nom "Nom"] [--description "…"]
@@ -186,10 +186,11 @@ internal static class Commands
         using var loggers = TechnicalLog.Create(DataPaths.Current.Logs, console: false, LogEventLevel.Warning);
         await using var runtime = new DmxRuntime(DataPaths.Current, loggers);
         runtime.Loop.RateHz = args.GetDouble("frequence", 40);
-        var duration = TimeSpan.FromSeconds(args.GetDouble("duree", 60));
+        var duration = TimeSpan.FromSeconds(args.GetDouble("duree", 900));
 
         runtime.Start(forceNullOutput: true);
         Console.WriteLine($"Mesure de la cadence pendant {duration.TotalSeconds:F0} s à {runtime.Loop.RateHz:F1} Hz…");
+        Console.WriteLine(runtime.IsSleepBlocked ? "Mise en veille du PC bloquée pendant la mesure." : "Attention : la mise en veille du PC n'a pas pu être bloquée.");
         var started = DateTime.UtcNow;
         while (DateTime.UtcNow - started < duration)
         {

@@ -233,7 +233,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | BIB-082, 083 | Import par lots hors du fil de l'interface avec progression ; un modèle déjà présent (même fabricant + modèle, ou même identifiant) n'est **pas** écrasé (« = » au rapport). |
 | Unités (GEN-021) | Faders d'appareil : nom de plage, degrés (Pan/Tilt si l'amplitude est connue), % (intensités, émetteurs), sinon 0-255. |
 | Non réalisés | BIB-027 (S, ouvrir notice / photo : seul le chemin est saisi), BIB-084 (S, export OFL). |
-| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : notice incomplète (Q24). WZYBUTA : à vérifier (Q25). Lyre : obturateur ouvert par défaut (12). |
+| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; strobe et programme « rapide → lent » sans plage d'arrêt documentée, à vérifier. WZYBUTA : à vérifier (Q25). Lyre : obturateur ouvert par défaut (12). |
 
 ## Annexe A – Appareils du parc (état de la documentation)
 
@@ -243,7 +243,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | 4CH (`d001`), 8CH (`A001`) | PDF image (lus par rendu en P2) | **Saisi** (`samples/Bibliothèque/Betopper/`) |
 | Lyre | 2 | Tomshine (lyre à gobos) | 9CH, 11CH (Pan/Tilt 16 bits en 11CH) | PDF texte | À saisir |
 | UV | 2 | BeamZ BUV463 (UV strobe) | 7CH | PDF texte | À saisir |
-| Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | ? (cellules probables) | PDF image | À lire |
+| Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | 3, 6, 12, 24, 48CH (menu `ChNd`) ; 2 / 4 / 8 sections | Pages fournies le 2026-09-25 (Q24) | **Saisi** (`samples/Bibliothèque/BeamZ/LCB803.json`) |
 | Effet multi-têtes | 1 | WZYBUTA 150 W (4 têtes, moteurs Y1-Y4) | 16CH | PDF texte | À saisir (cellules = 4 têtes) |
 | Fumée | 1 | — | 1CH | — | Modèle générique « Machine à fumée » |
 

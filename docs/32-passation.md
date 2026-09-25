@@ -19,12 +19,12 @@
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
-  - Mesure de gigue d'une heure à refaire, veille du PC désactivée (GEN-030 / 031) : **prévue le 2026-09-26 au matin** avec l'utilisateur.
-- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q23 (canaux maintenus pendant le test), Q24 (notice LCB803), Q25 (tableau WZYBUTA).
+  - Mesure de gigue de **15 min** (D23) : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **prévue le 2026-09-26 au matin** avec l'utilisateur.
+- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q23 (canaux maintenus pendant le test), Q25 (tableau WZYBUTA, vérification prévue par l'utilisateur).
 
 ## 2. Lire avant de coder (dans cet ordre)
 
-1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D22), [glossaire](glossaire.md).
+1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D23), [glossaire](glossaire.md).
 2. [03 – Règles de développement](03-regles-de-developpement.md) (langue, style, structure, tests, Git).
 3. Ce document, puis la matrice [31](31-matrice-exigences.md) et les [fiches d'exigences](exigences/README.md) concernées.
 4. [40 – Feuille de route](40-feuille-de-route.md) §2 et §7 pour la phase visée, [41 – Show de référence](41-show-de-reference.md) §11.

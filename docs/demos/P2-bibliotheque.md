@@ -17,7 +17,7 @@
 
 1. Lancer l'application : **Bibliothèque** dans la navigation.
 2. **Importer un dossier…** → choisir `samples/Bibliothèque`.
-3. Le rapport d'import indique « ✓ » pour 6 modèles ; ils sont copiés dans `Documents\DMX\Bibliothèque\<fabricant>\<modèle>.json`.
+3. Le rapport d'import indique « ✓ » pour 7 modèles ; ils sont copiés dans `Documents\DMX\Bibliothèque\<fabricant>\<modèle>.json`.
    Relancer l'import : « = déjà dans la bibliothèque, non importé » (rien n'est écrasé).
 
 | Modèle | Modes | Particularités |
@@ -28,8 +28,8 @@
 | Tomshine Mini lyre gobo | 9CH, 11CH | Pan / Tilt 16 bits en 11CH ; canal Contrôle 200-209 = **Reset** |
 | BeamZ BUV463 | 7CH | 4 rangées UV = 4 cellules |
 | WZYBUTA Effet 4 têtes 150 W | 16CH | **À vérifier** (tableau ambigu, Q25) |
+| BeamZ LCB803 | 3, 6, 12, 24, 48CH | 2 / 4 / 8 sections = cellules ; 24CH retenu pour le show |
 
-La barre **BeamZ LCB803** manque (notice incomplète, Q24) : utiliser en attendant le générique « RGB ».
 
 ---
 

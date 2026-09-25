@@ -156,6 +156,7 @@
 | [GEN-090](GEN-090.md) | Latence action → trame < 50 ms | P1 | I | Réalisé |
 | [GEN-091](GEN-091.md) | Sortie déconnectée non bloquante, reconnexion < 3 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-093](GEN-093.md) | Panne d'un module secondaire isolée | P0 | I | Réalisé |
+| [GEN-096](GEN-096.md) | Pas de mise en veille du PC pendant l'émission | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-100](GEN-100.md) | Interface en français | P1 | I | Réalisé |
 | [GEN-101](GEN-101.md) | Thème sombre | P1 | I | Réalisé |
 | [GEN-102](GEN-102.md) | Annuler / rétablir (50 niveaux minimum) | P2 | I | Réalisé |
