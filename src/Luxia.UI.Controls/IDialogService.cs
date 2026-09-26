@@ -9,6 +9,9 @@ public interface IDialogService
     /// <summary>Demande confirmation d'une action destructrice (GEN-103).</summary>
     Task<bool> ConfirmAsync(string title, string message);
 
+    /// <summary>Affiche un texte en lecture seule, copiable (diagnostic, « À propos »).</summary>
+    Task ShowInfoAsync(string title, string message);
+
     /// <summary>Demande un texte (nom d'un instantané, d'un projet…) ; null si annulé.</summary>
     Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null);
 

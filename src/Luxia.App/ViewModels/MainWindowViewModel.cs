@@ -130,6 +130,40 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    private Task ShowAboutAsync() => _dialogs.ShowInfoAsync("À propos de LuXia", BuildDiagnostics());
+
+    /// <summary>Texte de diagnostic copiable (exécutable, dossiers, préférences, projet) : à donner en cas d'analyse.</summary>
+    private string BuildDiagnostics()
+    {
+        var process = System.Diagnostics.Process.GetCurrentProcess();
+        var paths = _runtime.Paths;
+        var prefs = _runtime.Preferences.Current;
+        var project = _runtime.Project;
+        var lines = new List<string>
+        {
+            $"LuXia v{Version}",
+            $"Généré le {DateTime.Now:yyyy-MM-dd HH:mm:ss}",
+            string.Empty,
+            $"Exécutable : {Environment.ProcessPath ?? "?"}",
+            $"Répertoire de travail : {Environment.CurrentDirectory}",
+            $"Processus : PID {process.Id}, démarré {process.StartTime:yyyy-MM-dd HH:mm:ss}",
+            $".NET : {System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription}",
+            $"OS : {System.Runtime.InteropServices.RuntimeInformation.OSDescription}",
+            string.Empty,
+            $"Dossier Documents : {paths.DocumentsRoot}",
+            $"Dossier AppData : {paths.AppDataRoot}",
+            $"Fichier de préférences : {paths.PreferencesFile} (existe : {(File.Exists(paths.PreferencesFile) ? "oui" : "non")})",
+            $"Dernier projet en mémoire (préférences) : {prefs.LastProjectPath ?? "(aucun)"}",
+            string.Empty,
+            $"Projet ouvert : {project.Info?.Name ?? "Aucun"}",
+            $"Dossier du projet : {project.Folder ?? "—"}",
+            string.Empty,
+            $"Sortie Arduino : port {prefs.Outputs.Arduino.LastPort ?? "(détection auto)"}, protocole {prefs.Outputs.Arduino.Protocol}",
+        };
+        return string.Join(Environment.NewLine, lines);
+    }
+
     private void UpdateProject()
     {
         ProjectName = _runtime.Project.Info?.Name ?? "Aucun projet";

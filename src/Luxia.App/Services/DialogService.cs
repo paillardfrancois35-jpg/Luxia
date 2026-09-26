@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Layout;
 using Avalonia.Platform.Storage;
 using Luxia.UI.Controls;
@@ -24,6 +25,40 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
         no.Click += (_, _) => dialog.Close(false);
         dialog.Content = Layout(new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap }, yes, no);
         return await dialog.ShowDialog<bool>(window).ConfigureAwait(true);
+    }
+
+    public async Task ShowInfoAsync(string title, string message)
+    {
+        var window = Owner();
+        if (window is null)
+        {
+            return;
+        }
+
+        var dialog = CreateDialog(title);
+        var box = new TextBox
+        {
+            Text = message,
+            IsReadOnly = true,
+            AcceptsReturn = true,
+            TextWrapping = Avalonia.Media.TextWrapping.NoWrap,
+            FontFamily = new Avalonia.Media.FontFamily("Consolas"),
+            Width = 500,
+            Height = 320,
+        };
+        var copy = new Button { Content = "Copier", MinWidth = 80 };
+        var close = new Button { Content = "Fermer", IsDefault = true, IsCancel = true, MinWidth = 80 };
+        copy.Click += async (_, _) =>
+        {
+            var clipboard = TopLevel.GetTopLevel(dialog)?.Clipboard;
+            if (clipboard is not null)
+            {
+                await clipboard.SetTextAsync(message).ConfigureAwait(true);
+            }
+        };
+        close.Click += (_, _) => dialog.Close();
+        dialog.Content = Layout(new ScrollViewer { Content = box }, copy, close);
+        await dialog.ShowDialog(window).ConfigureAwait(true);
     }
 
     public async Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null)

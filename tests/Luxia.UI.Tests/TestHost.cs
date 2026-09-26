@@ -83,6 +83,14 @@ internal sealed class FakeDialogs : IDialogService
     public Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null) =>
         Task.FromResult(TextAnswers.Count > 0 ? TextAnswers.Dequeue() : null);
 
+    public List<string> ShownInfo { get; } = [];
+
+    public Task ShowInfoAsync(string title, string message)
+    {
+        ShownInfo.Add(message);
+        return Task.CompletedTask;
+    }
+
     public Task<string?> PickFolderAsync(string title) => Task.FromResult<string?>(null);
 
     public Task<IReadOnlyList<string>> PickFilesAsync(string title, bool allowMultiple, params string[] extensions) =>

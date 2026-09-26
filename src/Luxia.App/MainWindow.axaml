@@ -21,6 +21,9 @@
         <MenuItem Header="_Nouveau…" Command="{Binding NewProjectCommand}" />
         <MenuItem Header="_Ouvrir…" Command="{Binding OpenProjectCommand}" />
       </MenuItem>
+      <MenuItem Header="_Aide">
+        <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
+      </MenuItem>
     </Menu>
 
     <!-- Barre d'état permanente (GEN-104) -->
