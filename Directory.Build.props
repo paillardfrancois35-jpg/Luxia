@@ -16,6 +16,7 @@
     <Company>DMX</Company>
     <Product>DMX</Product>
     <Version>1.002</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <!-- Projets de tests : documentation XML non exigée. -->

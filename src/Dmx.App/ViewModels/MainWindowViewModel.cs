@@ -133,7 +133,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     private void UpdateProject()
     {
         ProjectName = _runtime.Project.Info?.Name ?? "Aucun projet";
-        Title = _runtime.Project.Info is { } info ? $"DMX v{Version} – {info.Name}" : $"DMX v{Version}";
+        Title = _runtime.Project.Info is { } info ? $"LuXia v{Version} – {info.Name}" : $"LuXia v{Version}";
         ProjectMessage = _runtime.Project.Messages.Count > 0 ? string.Join(" ", _runtime.Project.Messages) : null;
     }
 
