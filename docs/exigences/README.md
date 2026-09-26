@@ -218,8 +218,8 @@
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Réalisé |
-| [GEN-131](GEN-131.md) | Outil de validation d'un projet | P4 | I | Réalisé |
-| [GEN-132](GEN-132.md) | Outil qui joue une scène et la résume | P4 | M | Réalisé |
+| [GEN-131](GEN-131.md) | Outil de validation d'un projet | P4 | I | Validé |
+| [GEN-132](GEN-132.md) | Outil qui joue une scène et la résume | P4 | M | Validé |
 | [GEN-133](GEN-133.md) | Contenu généré rangé à part, jamais écrasant | P4 | I | Réalisé |
 | [INST-001](INST-001.md) | Un ou plusieurs univers, numérotés et nommables | P3 | I | Réalisé |
 | [INST-002](INST-002.md) | Lien univers → pilotes dans les préférences | P3 | I | Réalisé |
