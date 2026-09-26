@@ -53,10 +53,20 @@ public sealed class ProjectSession
     public void OpenLast()
     {
         var last = _preferences.Current.LastProjectPath;
-        if (!string.IsNullOrWhiteSpace(last) && File.Exists(Path.Combine(last, ProjectStore.ProjectFileName)))
+        if (string.IsNullOrWhiteSpace(last))
         {
-            Open(last);
+            _logger.LogInformation("Démarrage : aucun dernier projet enregistré.");
+            return;
         }
+
+        if (!File.Exists(Path.Combine(last, ProjectStore.ProjectFileName)))
+        {
+            _logger.LogWarning("Démarrage : dernier projet introuvable, non rouvert : {Dossier}", last);
+            return;
+        }
+
+        _logger.LogInformation("Démarrage : reprise automatique du dernier projet : {Dossier}", last);
+        Open(last);
     }
 
     /// <summary>Ouvre un projet ; renvoie <c>false</c> (avec messages) s'il est illisible.</summary>
