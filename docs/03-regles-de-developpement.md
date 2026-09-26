@@ -66,6 +66,7 @@ LuXia/
 | `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
 | `Dmx.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
 | `Luxia.Scenes` | Core, Messaging, Engine, Persistence, Fixtures, Patch (scènes, palettes, couches ; compilation vers le moteur, D26) |
+| `Luxia.Midi` | Core, Messaging, Engine, Persistence (contrôleurs APC mini : profils, traduction en commandes, retour lumineux, ports Windows `winmm` ; ne connaît ni les couches ni les scènes du projet, l'hôte lui fournit la disposition du Live) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
 | `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |

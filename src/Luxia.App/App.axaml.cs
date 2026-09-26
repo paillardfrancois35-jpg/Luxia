@@ -66,7 +66,7 @@ public partial class App : Application
             }));
             Avalonia.Logging.Logger.Sink = new Services.AvaloniaLogSink(_loggers.CreateLogger("Avalonia"));
 
-            _runtime = new LuxiaRuntime(DataPaths.Current, _loggers);
+            _runtime = new LuxiaRuntime(DataPaths.Current, _loggers, midiPorts: new Midi.WinMmMidiPorts());
 
             // LuXia.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
             if (desktop.Args is [var projectFolder, ..] && Directory.Exists(projectFolder))

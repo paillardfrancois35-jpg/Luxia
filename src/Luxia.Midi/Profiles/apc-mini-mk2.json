@@ -1,0 +1,37 @@
+{
+  "name": "AKAI APC mini mk2",
+  "shortName": "APC mini MK2",
+  "notes": "Protocole de l'APC mini mk2 publié par AKAI : grille notes 0-63 (0 = en bas à gauche), boutons du bas 100-107 (LED rouges), boutons de droite 112-119 de haut en bas (LED vertes), Shift 122, faders CC 48-56 (56 = master). LED des pads : note-on dont le canal règle l'effet (canaux 1-7 luminosité 10 à 100 %, 8-11 pulsation, 12-16 clignotement) et la vélocité la couleur dans une palette de 128. Seules quelques couleurs franches de la palette sont listées ici. À confirmer sur l'appareil (les notices du dépôt ne donnent pas la table MIDI).",
+  "portNames": [ "APC mini mk2" ],
+  "excludedPortNames": [ "MIDIIN", "MIDIOUT" ],
+  "gridBottomLeftNote": 0,
+  "bottomButtons": [ 100, 101, 102, 103, 104, 105, 106, 107 ],
+  "rightButtons": [ 112, 113, 114, 115, 116, 117, 118, 119 ],
+  "shiftNote": 122,
+  "faders": [ 48, 49, 50, 51, 52, 53, 54, 55, 56 ],
+  "pads": {
+    "rgb": true,
+    "available": { "channel": 1, "velocity": 0 },
+    "active": { "channel": 6, "velocity": 0 },
+    "fadingIn": { "channel": 9, "velocity": 0 },
+    "palette": [
+      { "index": 3, "color": "#FFFFFF" },
+      { "index": 5, "color": "#FF0000" },
+      { "index": 8, "color": "#FFBD6C" },
+      { "index": 9, "color": "#FF5400" },
+      { "index": 13, "color": "#FFFF00" },
+      { "index": 17, "color": "#54FF00" },
+      { "index": 21, "color": "#00FF00" },
+      { "index": 29, "color": "#00FF55" },
+      { "index": 33, "color": "#00FF99" },
+      { "index": 37, "color": "#00A9FF" },
+      { "index": 41, "color": "#0055FF" },
+      { "index": 45, "color": "#0000FF" },
+      { "index": 49, "color": "#5400FF" },
+      { "index": 53, "color": "#FF00FF" },
+      { "index": 57, "color": "#FF0054" },
+      { "index": 60, "color": "#FF1500" }
+    ]
+  },
+  "buttons": { "on": 1, "blink": 2 }
+}

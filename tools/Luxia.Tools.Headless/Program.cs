@@ -10,6 +10,7 @@ var arguments = new Arguments(args);
 return arguments.Command switch
 {
     "ports" => Commands.Ports(),
+    "midi" => Commands.Midi(arguments),
     "lancer" => await Commands.RunAsync(arguments).ConfigureAwait(false),
     "endurance" => await Commands.EnduranceAsync(arguments).ConfigureAwait(false),
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),

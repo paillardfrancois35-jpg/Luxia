@@ -47,6 +47,10 @@
       <Border Classes="pill" Margin="0,0,6,4" Background="{Binding OutputAlert, Converter={x:Static vm:LiveView.AlertBackground}}">
         <TextBlock Text="{Binding OutputText}" FontWeight="SemiBold" />
       </Border>
+      <Border Classes="pill" Margin="0,0,6,4" Background="#161B22"
+              IsVisible="{Binding ControllersText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <TextBlock Text="{Binding ControllersText}" />
+      </Border>
       <Border Classes="pill" Margin="0,0,6,4" Background="#1F6FEB" IsVisible="{Binding Frozen}">
         <TextBlock Text="❄ FIGÉ" FontWeight="Bold" />
       </Border>

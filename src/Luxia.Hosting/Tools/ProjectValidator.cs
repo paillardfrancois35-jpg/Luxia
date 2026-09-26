@@ -36,6 +36,7 @@ public static class ProjectValidator
         var (layers, layersMessage) = LayerStore.Load(folder);
         var (safety, safetyMessage) = SafetyStore.Load(folder);
         var (live, liveMessage) = LiveStore.Load(folder);
+        var (midi, midiMessage) = Midi.MidiStore.Load(folder);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
@@ -43,6 +44,7 @@ public static class ProjectValidator
         AddLoadMessage(issues, LayerStore.FileName, layersMessage);
         AddLoadMessage(issues, SafetyStore.FileName, safetyMessage);
         AddLoadMessage(issues, LiveStore.FileName, liveMessage);
+        AddLoadMessage(issues, Midi.MidiStore.FileName, midiMessage);
 
         var library = new ProjectFixtureLibrary(folder);
         var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
@@ -52,6 +54,7 @@ public static class ProjectValidator
         issues.AddRange(CheckPalettes(palettes));
         issues.AddRange(CheckSafety(safety));
         issues.AddRange(CheckLive(live, scenes, layers));
+        issues.AddRange(CheckMidi(midi, scenes, layers));
         return issues;
     }
 
@@ -116,6 +119,41 @@ public static class ProjectValidator
         if (live.SmokeBurstSeconds is <= 0 or > 60)
         {
             yield return Warning(file, "Live", "smokeBurstSeconds", "rafale de fumée hors de 0-60 s");
+        }
+    }
+
+    private static IEnumerable<CompileIssue> CheckMidi(Midi.MidiSettings midi, SceneSet scenes, LayerSet layers)
+    {
+        var file = Midi.MidiStore.FileName;
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        var layerIds = layers.Layers.Select(l => l.Id).ToHashSet();
+        foreach (var (binding, index) in midi.Bindings.Select((b, i) => (b, i)))
+        {
+            var where = string.Create(CultureInfo.CurrentCulture, $"affectation {index + 1} (« {binding.Control} »)");
+            if (Midi.MidiControl.Parse(binding.Control) is not { } control)
+            {
+                yield return Error(file, where, "control", "contrôle illisible : « pad <colonne> <ligne> », « bas <n> », « droite <n> » ou « fader <n> »");
+                continue;
+            }
+
+            var needsScene = binding.Action is Midi.MidiAction.LaunchScene or Midi.MidiAction.FlashScene;
+            var needsLayer = binding.Action is Midi.MidiAction.StopLayer or Midi.MidiAction.LayerMaster;
+            if (needsScene && (binding.SceneId is not { } scene || !sceneIds.Contains(scene)))
+            {
+                yield return Error(file, where, "sceneId", "scène absente ou introuvable");
+            }
+
+            if (needsLayer && (binding.LayerId is not { } layer || !layerIds.Contains(layer)))
+            {
+                yield return Error(file, where, "layerId", "couche absente ou introuvable");
+            }
+
+            var fader = control.Kind == Midi.MidiControlKind.Fader;
+            var continuous = binding.Action is Midi.MidiAction.LayerMaster or Midi.MidiAction.GrandMaster;
+            if (fader != continuous && binding.Action != Midi.MidiAction.None)
+            {
+                yield return Warning(file, where, "action", fader ? "un fader ne pilote qu'un master (couche ou Grand Master)" : "un master se pilote par un fader");
+            }
         }
     }
 

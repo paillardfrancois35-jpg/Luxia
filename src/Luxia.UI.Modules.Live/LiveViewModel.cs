@@ -12,6 +12,7 @@ using Luxia.Messaging.Events;
 using Luxia.Patch.Rules;
 using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
 
 namespace Luxia.UI.Modules.Live;
@@ -41,6 +42,9 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     [ObservableProperty]
     private bool _outputAlert;
+
+    [ObservableProperty]
+    private string _controllersText = string.Empty;
 
     [ObservableProperty]
     private bool _frozen;
@@ -395,11 +399,11 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         var selectedLayer = Columns.FirstOrDefault(c => c.IsSelected)?.Layer.Id;
         Columns.Clear();
         var live = project.Live;
-        foreach (var layer in project.Layers.Layers.OrderBy(l => l.Priority).Where(l => !live.HiddenLayerIds.Contains(l.Id)))
+        foreach (var (layer, scenes) in LiveRules.Columns(live, project.Layers, project.Scenes))
         {
             var column = new LayerColumnViewModel(layer, (c, value) => Send(new SetLayerMasterCommand(CommandOrigin.User, c.Layer.Id, value / 100)));
             var index = 1;
-            foreach (var scene in project.Scenes.Scenes.Where(s => s.LayerId == layer.Id && s.VisibleInLive))
+            foreach (var scene in scenes)
             {
                 column.Scenes.Add(new LiveSceneViewModel(scene, column, index++));
             }
@@ -414,16 +418,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         }
 
         // Scènes des boutons FLASH et STROBE : réglées dans live.json, sinon déduites de la couche Flash.
-        var flashLayers = project.Layers.Layers.Where(l => l.Kind == LayerKind.Flash).Select(l => l.Id).ToHashSet();
-        var flashScenes = project.Scenes.Scenes.Where(s => flashLayers.Contains(s.LayerId)).ToList();
-        var ids = project.Scenes.Scenes.Select(s => s.Id).ToHashSet();
-        _flashScene = live.FlashSceneId is { } flash && ids.Contains(flash)
-            ? flash
-            : (flashScenes.FirstOrDefault(s => s.Name.Contains("flash", StringComparison.OrdinalIgnoreCase)
-                && !s.Name.Contains("strobe", StringComparison.OrdinalIgnoreCase)) ?? flashScenes.FirstOrDefault())?.Id;
-        _strobeScene = live.StrobeSceneId is { } strobe && ids.Contains(strobe)
-            ? strobe
-            : flashScenes.FirstOrDefault(s => s.Name.Contains("strobe", StringComparison.OrdinalIgnoreCase))?.Id;
+        (_flashScene, _strobeScene) = LiveRules.PermanentScenes(live, project.Layers, project.Scenes);
         OnPropertyChanged(nameof(HasFlash));
         OnPropertyChanged(nameof(HasStrobe));
 
@@ -473,6 +468,10 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     private void RefreshOutput()
     {
+        // Contrôleurs MIDI branchés (MIDI-001, MIDI-006) : visibles d'un coup d'œil.
+        var controllers = _runtime.Midi?.Connected ?? [];
+        ControllersText = controllers.Count == 0 ? string.Empty : "🎛 " + string.Join(", ", controllers);
+
         var main = _runtime.Router.Routes.FirstOrDefault(r => r.Driver.Id != Output.Drivers.RecorderOutputDriver.DriverId);
         if (main.Driver is null)
         {

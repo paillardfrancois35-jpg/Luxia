@@ -53,6 +53,9 @@ public sealed class ProjectSession
     /// <summary>Couches (doc 17 §1) ; modèle par défaut si le projet n'en a pas encore (D28).</summary>
     public LayerSet Layers { get; private set; } = LayerSet.Default();
 
+    /// <summary>Réglages MIDI (<c>midi.json</c>, affectations modifiées, MIDI-007) ; affectation par défaut si absents.</summary>
+    public Midi.MidiSettings Midi { get; private set; } = new();
+
     /// <summary>Réglages de l'écran Live (<c>live.json</c>, doc 18) ; déduits des couches si absents.</summary>
     public LiveSettings Live { get; private set; } = new();
 
@@ -131,6 +134,12 @@ public sealed class ProjectSession
             messages.Add(liveMessage);
         }
 
+        var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
+        if (midiMessage is not null)
+        {
+            messages.Add(midiMessage);
+        }
+
         Folder = folder;
         Info = report.Info;
         Console = console;
@@ -141,6 +150,7 @@ public sealed class ProjectSession
         Layers = layers;
         Safety = safety;
         Live = live;
+        Midi = midi;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -254,11 +264,10 @@ public sealed class ProjectSession
         var messages = new List<string>();
         (Scenes, Palettes, Layers, Safety) = LoadShowParts(folder, messages);
         var (live, liveMessage) = LiveStore.Load(folder);
+        var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
         Live = live;
-        if (liveMessage is not null)
-        {
-            messages.Add(liveMessage);
-        }
+        Midi = midi;
+        messages.AddRange(new[] { liveMessage, midiMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

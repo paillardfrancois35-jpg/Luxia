@@ -3,9 +3,11 @@ using Luxia.Core.Dmx;
 using Luxia.Core.Settings;
 using Luxia.Core.Time;
 using Luxia.Engine;
+using Luxia.Engine.Model;
 using Luxia.Engine.Timing;
 using Luxia.Messaging.Commands;
 using Luxia.Messaging.Events;
+using Luxia.Midi;
 using Luxia.Output;
 using Luxia.Output.Arduino;
 using Luxia.Output.Drivers;
@@ -31,9 +33,15 @@ public sealed class LuxiaRuntime : IAsyncDisposable
     private bool _started;
     private bool _stopped;
     private bool _previewActive;
+    private MidiLayout _midiLayout = MidiLayout.Empty;
 
     /// <summary>Assemble les modules (sans rien démarrer).</summary>
-    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null)
+    /// <param name="paths">Emplacements des données.</param>
+    /// <param name="loggers">Journaux.</param>
+    /// <param name="serialPorts">Ports série (Arduino) ; ceux du système par défaut.</param>
+    /// <param name="clock">Horloge ; réelle par défaut.</param>
+    /// <param name="midiPorts">Ports MIDI (APC mini, doc 18b) ; <c>null</c> = pas de contrôleur (outils, tests).</param>
+    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(loggers);
@@ -58,6 +66,13 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
         Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
+
+        // Contrôleurs MIDI : mêmes colonnes et mêmes boutons que l'écran Live, relus à chaque recompilation.
+        Show.Compiled += (_, _) => _midiLayout = BuildMidiLayout();
+        _midiLayout = BuildMidiLayout();
+        Midi = midiPorts is null
+            ? null
+            : new MidiService(midiPorts, Engine, () => Engine.Snapshot, () => _midiLayout, loggers.CreateLogger<MidiService>());
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -89,6 +104,9 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Message éventuel issu du chargement des préférences (migration, fichier mis de côté).</summary>
     public string? PreferencesLoadMessage { get; }
+
+    /// <summary>Contrôleurs MIDI (APC mini, doc 18b) ; <c>null</c> sans ports MIDI.</summary>
+    public MidiService? Midi { get; }
 
     /// <summary>Bus d'événements.</summary>
     public EventBus Bus { get; }
@@ -149,6 +167,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             }
 
             Loop.Start();
+            Midi?.Start();
 
             // GEN-096 : une mise en veille couperait la lumière (plus de trames → chien de garde → noir).
             _sleepInhibitor.Start();
@@ -334,6 +353,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             _stopped = true;
         }
 
+        Midi?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();
@@ -346,6 +366,27 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router.Dispose();
         await Bus.DisposeAsync().ConfigureAwait(false);
         _logger.LogInformation("Arrêt de LuXia");
+    }
+
+    /// <summary>Disposition des contrôleurs MIDI d'après le projet : colonnes du Live, boutons, affectations (MIDI-002, MIDI-007).</summary>
+    private MidiLayout BuildMidiLayout()
+    {
+        var project = Project;
+        var live = project.Live;
+        var (flash, strobe) = Scenes.Rules.LiveRules.PermanentScenes(live, project.Layers, project.Scenes);
+        return new MidiLayout
+        {
+            Columns = [.. Scenes.Rules.LiveRules.Columns(live, project.Layers, project.Scenes)
+                .Select(c => new MidiColumn(
+                    c.Layer.Id,
+                    c.Layer.Kind == LayerKind.Flash,
+                    [.. c.Scenes.Select(s => new MidiSceneSlot(s.Id, s.Color))]))],
+            FlashSceneId = flash,
+            StrobeSceneId = strobe,
+            SmokeBurstSeconds = live.SmokeBurstSeconds,
+            ActiveClickRestarts = live.ActiveSceneClick == Scenes.Model.ActiveSceneClick.Restart,
+            Bindings = project.Midi.Bindings,
+        };
     }
 
     private void TickEngines()

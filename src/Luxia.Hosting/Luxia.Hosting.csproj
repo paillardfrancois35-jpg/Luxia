@@ -14,6 +14,7 @@
     <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
     <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
     <ProjectReference Include="../Luxia.Scenes/Luxia.Scenes.csproj" />
+    <ProjectReference Include="../Luxia.Midi/Luxia.Midi.csproj" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.File" />

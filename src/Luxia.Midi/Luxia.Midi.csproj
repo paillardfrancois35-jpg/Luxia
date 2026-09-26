@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Appels natifs générés (LibraryImport) vers winmm.dll : accès MIDI de Windows, sans dépendance NuGet (Q31). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Messaging/Luxia.Messaging.csproj" />
+    <ProjectReference Include="../Luxia.Engine/Luxia.Engine.csproj" />
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Profils des contrôleurs : données, pas code (doc 18b §2). -->
+    <EmbeddedResource Include="Profiles/*.json" LogicalName="Luxia.Midi.Profiles.%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Midi.Tests" />
+  </ItemGroup>
+
+</Project>
