@@ -1,0 +1,289 @@
+{
+  "formatVersion": 1,
+  "palettes": [
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000001",
+      "name": "Blanc",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 1,
+        "b": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000002",
+      "name": "Blanc chaud",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0.78,
+        "b": 0.45
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000003",
+      "name": "Rouge",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0,
+        "b": 0
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000004",
+      "name": "Orange",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0.4,
+        "b": 0
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000005",
+      "name": "Ambre",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0.5,
+        "b": 0
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000006",
+      "name": "Jaune",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0.9,
+        "b": 0
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000007",
+      "name": "Vert",
+      "kind": "color",
+      "light": {
+        "r": 0,
+        "g": 1,
+        "b": 0
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000008",
+      "name": "Cyan",
+      "kind": "color",
+      "light": {
+        "r": 0,
+        "g": 1,
+        "b": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000009",
+      "name": "Bleu",
+      "kind": "color",
+      "light": {
+        "r": 0,
+        "g": 0,
+        "b": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000010",
+      "name": "Lavande",
+      "kind": "color",
+      "light": {
+        "r": 0.6,
+        "g": 0.45,
+        "b": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000011",
+      "name": "Magenta",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0,
+        "b": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000012",
+      "name": "Rose",
+      "kind": "color",
+      "light": {
+        "r": 1,
+        "g": 0.35,
+        "b": 0.6
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000013",
+      "name": "UV",
+      "kind": "color",
+      "light": {
+        "r": 0.3,
+        "g": 0,
+        "b": 1,
+        "uv": 1
+      }
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000101",
+      "name": "Plein",
+      "kind": "intensity",
+      "color": "#E3B341",
+      "level": 1
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000102",
+      "name": "70 %",
+      "kind": "intensity",
+      "color": "#E3B341",
+      "level": 0.7
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000103",
+      "name": "50 %",
+      "kind": "intensity",
+      "color": "#E3B341",
+      "level": 0.5
+    },
+    {
+      "id": "9a1e0001-0000-4000-8000-000000000104",
+      "name": "Veilleuse",
+      "kind": "intensity",
+      "color": "#E3B341",
+      "level": 0.15
+    },
+    {
+      "id": "6310f1c5-e498-5b0a-b0a9-9937e3483b10",
+      "name": "Piste centre",
+      "kind": "position",
+      "color": "#58A6FF",
+      "values": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "tilt",
+          "level": 0.7
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "tilt",
+          "level": 0.7
+        }
+      ]
+    },
+    {
+      "id": "87250ab3-5078-5c50-bda5-df75534a23e4",
+      "name": "Plafond",
+      "kind": "position",
+      "color": "#8B949E",
+      "values": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "tilt",
+          "level": 0.2
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "tilt",
+          "level": 0.2
+        }
+      ]
+    },
+    {
+      "id": "58b53734-7e42-5fb5-92e1-5e74479cdba2",
+      "name": "Croisé",
+      "kind": "position",
+      "color": "#A371F7",
+      "values": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "pan",
+          "level": 0.42
+        },
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "tilt",
+          "level": 0.65
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "pan",
+          "level": 0.58
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "tilt",
+          "level": 0.65
+        }
+      ]
+    },
+    {
+      "id": "a7cd8711-7129-5a9d-9387-d827a861f0e7",
+      "name": "Repos",
+      "kind": "position",
+      "color": "#30363D",
+      "values": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "attribute": "tilt",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "pan",
+          "level": 0.5
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "attribute": "tilt",
+          "level": 0.5
+        }
+      ]
+    },
+    {
+      "id": "d30c3fbf-2876-5c33-9a93-8e7af5ade83b",
+      "name": "Gobo étoile",
+      "kind": "beam",
+      "color": "#D29922",
+      "values": [
+        {
+          "fixtureTypeId": "a96ce0f1-9631-5579-a950-410b6887284c",
+          "channel": "gobo",
+          "level": 0.1411764705882353
+        }
+      ]
+    }
+  ]
+}

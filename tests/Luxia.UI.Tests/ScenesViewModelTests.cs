@@ -177,11 +177,11 @@ public sealed class ScenesViewModelTests : IAsyncLifetime
         SelectFixture("Lyre 1");
         _vm.Programmer.PositionTools.Single(t => t.Attribute == AttributeKind.Tilt).Percent = 30;
         _host.Tick();
-        _host.Dialogs.TextAnswers.Enqueue("Piste centre");
+        _host.Dialogs.TextAnswers.Enqueue("Essai position");
 
         await _vm.Palettes.SaveFromProgrammerCommand.ExecuteAsync("Position");
 
-        var palette = _host.Runtime.Project.Palettes.Palettes.Single(p => p.Name == "Piste centre");
+        var palette = _host.Runtime.Project.Palettes.Palettes.Single(p => p.Name == "Essai position");
         palette.Kind.ShouldBe(PaletteKind.Position);
         palette.Values.Single(v => v.Attribute == AttributeKind.Tilt).Level.ShouldBe(0.3, 0.01);
         _vm.Palettes.Positions.ShouldContain(b => b.Palette.Id == palette.Id);
@@ -207,16 +207,16 @@ public sealed class ScenesViewModelTests : IAsyncLifetime
     [Trait("Exigence", "SCN-012")]
     public async Task Filter_ByNameAndCategory()
     {
-        await NewSceneAsync("Blanc chaud");
-        await NewSceneAsync("Lyres au centre");
-        _vm.Editor.Category = "Mouvements";
+        await NewSceneAsync("Essai zèbre");
+        await NewSceneAsync("Essai girafe");
+        _vm.Editor.Category = "Catégorie d'essai";
 
-        _vm.Filter = "blanc";
-        _vm.Scenes.Select(s => s.Scene.Name).ShouldBe(["Blanc chaud"]);
+        _vm.Filter = "zèbre";
+        _vm.Scenes.Select(s => s.Scene.Name).ShouldBe(["Essai zèbre"]);
 
         _vm.Filter = string.Empty;
-        _vm.CategoryFilter = "Mouvements";
-        _vm.Scenes.Select(s => s.Scene.Name).ShouldBe(["Lyres au centre"]);
+        _vm.CategoryFilter = "Catégorie d'essai";
+        _vm.Scenes.Select(s => s.Scene.Name).ShouldBe(["Essai girafe"]);
     }
 
     [Fact]

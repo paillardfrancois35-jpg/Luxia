@@ -109,7 +109,7 @@ public static class ScenarioRunner
             if (!previous.TryGetValue(fixture.Fixture.Id, out var before) || before != text)
             {
                 previous[fixture.Fixture.Id] = text;
-                if (before is not null || text != "éteint")
+                if (before is not null || !text.StartsWith("éteint", StringComparison.Ordinal))
                 {
                     lines.Add($"{Time(now)}  {fixture.Fixture.Name} : {text}");
                 }

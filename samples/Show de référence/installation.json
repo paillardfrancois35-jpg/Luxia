@@ -232,5 +232,44 @@
       }
     }
   ],
-  "selections": []
+  "selections": [
+    {
+      "id": "c8e491d0-0f5a-51df-967b-f09789e342a4",
+      "name": "PAR gauche → droite",
+      "color": "#F85149",
+      "items": [
+        {
+          "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+          "cell": 0
+        },
+        {
+          "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+          "cell": 0
+        },
+        {
+          "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+          "cell": 0
+        },
+        {
+          "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+          "cell": 0
+        }
+      ]
+    },
+    {
+      "id": "bf6cf187-9437-577d-82b7-79ef0ecd47c7",
+      "name": "Lyres",
+      "color": "#58A6FF",
+      "items": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "cell": 0
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "cell": 0
+        }
+      ]
+    }
+  ]
 }
