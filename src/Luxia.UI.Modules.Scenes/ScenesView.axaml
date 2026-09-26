@@ -421,7 +421,11 @@
             <ItemsControl ItemsSource="{Binding Colors}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
             <TextBlock Text="Intensité" FontWeight="SemiBold" />
             <ItemsControl ItemsSource="{Binding Intensities}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
-            <TextBlock Text="Positions" FontWeight="SemiBold" />
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Content="Zones interdites…" FontSize="11" Padding="6,2" Click="OnZonesClicked"
+                      ToolTip.Tip="Zones que les lyres ne doivent jamais viser dans ce lieu (INST-053)" />
+              <TextBlock Text="{Binding PositionsTitle}" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" />
+            </DockPanel>
             <ItemsControl ItemsSource="{Binding Positions}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
             <TextBlock Text="Faisceau" FontWeight="SemiBold" />
             <ItemsControl ItemsSource="{Binding Beams}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />

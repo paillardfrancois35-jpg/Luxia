@@ -162,6 +162,19 @@ public sealed class SafetyTests
 
     [Fact]
     [Trait("Exigence", "MOT-082")]
+    public void NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit()
+    {
+        PanTiltZone[] zones = [new(0.3, 0.7, 0.8, 1)];
+        var pan = 0.5;
+        var tilt = 0.97;
+
+        SafetyLimiter.NearestAllowed(zones, ref pan, ref tilt).ShouldBeTrue();
+
+        tilt.ShouldBe(0.8, 1e-9, "la butée à 100 % fait partie de la zone : on ressort par le bas");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-082")]
     public void NearestAllowed_WithOverlappingZones_AvoidsAllOfThem()
     {
         PanTiltZone[] zones = [new(0.3, 0.7, 0.8, 1), new(0.2, 0.8, 0.7, 0.85)];

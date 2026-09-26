@@ -20,6 +20,12 @@ public sealed record PaletteValue
     /// <summary>Canal précis (clé de la définition).</summary>
     public string? Channel { get; init; }
 
+    /// <summary>
+    /// Lieu de la valeur (palettes de position, PAL-004) ; absent = lieu « Générique », valeur de repli des lieux où la
+    /// position n'a pas été calibrée (PAL-008).
+    /// </summary>
+    public Guid? VenueId { get; init; }
+
     /// <summary>Valeur normalisée 0-1.</summary>
     public double Level { get; init; }
 }

@@ -103,6 +103,16 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
         Capture("Couches", layers);
         layers.Close();
     }
+
+    // Zones interdites (INST-053), fenêtre à part, avec une zone d'exemple sur la lyre sélectionnée.
+    if (scenes.CreateZonesEditor() is { } zonesEditor)
+    {
+        zonesEditor.AddFromProgrammerCommand.Execute(null);
+        var zones = new ZonesWindow { DataContext = zonesEditor };
+        zones.Show();
+        Capture("Zones interdites", zones);
+        zones.Close();
+    }
 }
 
 // Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.

@@ -50,6 +50,15 @@ public partial class ScenesView : UserControl
         }
     }
 
+    private void OnZonesClicked(object? sender, RoutedEventArgs e)
+    {
+        // Non modale : on vise avec le programmeur pendant que la fenêtre est ouverte.
+        if (ViewModel?.CreateZonesEditor() is { } editor && TopLevel.GetTopLevel(this) is Window owner)
+        {
+            new ZonesWindow { DataContext = editor }.Show(owner);
+        }
+    }
+
     private void OnShortcutClicked(object? sender, RoutedEventArgs e) =>
         ViewModel?.Programmer.SelectCommand.Execute((sender as Control)?.Tag as SelectionShortcut);
 }

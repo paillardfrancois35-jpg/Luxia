@@ -10,6 +10,7 @@ using Luxia.Messaging.Commands;
 using Luxia.Patch;
 using Luxia.Patch.Model;
 using Luxia.Patch.Rules;
+using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
 using Microsoft.Extensions.Logging;
 
@@ -500,9 +501,13 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
-        var copy = SelectedVenue.ToVenue() with { Id = Guid.NewGuid(), Name = $"{SelectedVenue.Name} (copie)" };
+        var source = SelectedVenue.ToVenue();
+        var copy = source with { Id = Guid.NewGuid(), Name = $"{SelectedVenue.Name} (copie)" };
         _logger.LogInformation("Lieu : « {Nom} » dupliqué en « {Copie} ».", SelectedVenue.Name, copy.Name);
         SaveVenueSet(_runtime.Project.Venues.Venues.Append(copy).ToList(), _runtime.Project.Venues.ActiveVenueId);
+
+        // INST-054 : la copie reprend les positions calibrées du lieu (et ses zones interdites, copiées avec le lieu).
+        _runtime.Project.SavePalettes(VenuePalettes.CopyVenue(_runtime.Project.Palettes, VenuePalettes.Key(source), copy.Id));
     }
 
     /// <summary>Choisit le lieu actif (INST-050).</summary>

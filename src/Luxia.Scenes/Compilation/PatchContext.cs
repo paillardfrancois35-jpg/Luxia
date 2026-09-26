@@ -58,7 +58,15 @@ public sealed class PatchContext
 
         Fixtures = fixtures;
         Problems = problems;
+        Venue = venue;
+        VenueKey = Rules.VenuePalettes.Key(venue);
     }
+
+    /// <summary>Lieu actif.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>Clé du lieu actif pour les palettes de position (<c>null</c> = « Générique », PAL-004).</summary>
+    public Guid? VenueKey { get; }
 
     /// <summary>Appareils résolus, dans l'ordre du patch (univers, adresse).</summary>
     public IReadOnlyList<FixtureInfo> Fixtures { get; }

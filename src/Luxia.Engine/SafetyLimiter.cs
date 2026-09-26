@@ -362,6 +362,20 @@ internal sealed class SafetyLimiter
     /// </summary>
     internal static bool NearestAllowed(IReadOnlyList<PanTiltZone> zones, ref double pan, ref double tilt)
     {
+        // Une zone qui touche une butée (0 ou 100 %) s'étend au-delà : la butée elle-même n'est pas un bord autorisé,
+        // sinon une zone « vers le public » jusqu'au Tilt maximal laisserait la lyre collée à ce maximum.
+        Span<PanTiltZone> open = stackalloc PanTiltZone[zones.Count];
+        for (var i = 0; i < zones.Count; i++)
+        {
+            var z = zones[i];
+            open[i] = new PanTiltZone(z.PanMin <= 0 ? -1 : z.PanMin, z.PanMax >= 1 ? 2 : z.PanMax, z.TiltMin <= 0 ? -1 : z.TiltMin, z.TiltMax >= 1 ? 2 : z.TiltMax);
+        }
+
+        return NearestAllowed(open, ref pan, ref tilt);
+    }
+
+    private static bool NearestAllowed(ReadOnlySpan<PanTiltZone> zones, ref double pan, ref double tilt)
+    {
         var inside = false;
         foreach (var zone in zones)
         {
