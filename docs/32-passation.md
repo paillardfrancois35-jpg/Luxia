@@ -1,7 +1,7 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P3 validée et fusionnée.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, renommage LuXia effectué, P4 sur le point de démarrer.
 
 ## 1. Où en est-on
 
@@ -30,7 +30,15 @@
 - **Renommage en « LuXia » effectué le 2026-09-26** (avant P4, décision utilisateur) : solution `LuXia.sln`, namespaces `Luxia.*`, exécutable
   `LuXia.exe`, outil `luxia-headless`, dossiers de données (`%AppData%\LuXia`, `Documents\LuXia`, migration automatique au premier lancement
   depuis les anciens dossiers `DMX`), docs. Le sous-espace de noms `Luxia.Core.Dmx` (protocole) et le format `.dmxrec` restent inchangés :
-  « DMX » y désigne le protocole DMX-512, pas l'application.
+  « DMX » y désigne le protocole DMX-512, pas l'application. **Carte du code (§3) et commandes (§4) mises à jour en conséquence.**
+- **Menu Aide → À propos (2026-09-26)** : boîte de dialogue copiable (exécutable, dossiers, préférences, dernier projet en mémoire vs projet
+  réellement ouvert) — très utile pour tout diagnostic à distance, à réutiliser/étendre si besoin en P4.
+- **Verrou mono-instance (2026-09-26, `Program.cs`)** : deux `LuXia.exe` lancés en même temps se disputaient le port Arduino et pouvaient
+  faire perdre le « dernier projet » des préférences (constaté en le reproduisant). Une seconde instance affiche maintenant un message et
+  se ferme sans rien toucher.
+- **Piège vécu (2026-09-26)** : `samples/Show de travail` est une copie fichier de `Show de référence` (`cp -r`) — son `projet.json` garde
+  donc `"name": "Show de référence"` tant qu'on ne le renomme pas à la main après une régénération. Le nom affiché dans le titre ne dit pas
+  quel dossier est réellement ouvert : se fier au champ « Dossier du projet » de **Aide → À propos**, pas au nom affiché.
 
 ## 2. Lire avant de coder (dans cet ordre)
 
@@ -45,30 +53,30 @@
 
 | Projet | Rôle | Points d'entrée |
 |---|---|---|
-| `Dmx.Core` | Trame, plages de canaux, horloges, préférences, projet, instantanés | `DmxFrame`, `IClock`, `Preferences` |
-| `Dmx.Messaging` | Commandes (CMD-020, 022, 024) et bus d'événements | `Command`, `ICommandSink`, `EventBus` |
-| `Dmx.Engine` | Moteur (tick, surcharges, test de sortie), boucle 40 Hz | `RenderEngine.Tick`, `TickLoop` |
-| `Dmx.Output` | Routeur, pilotes Nul / Enregistreur / Arduino, protocole Enttec, `.dmxrec` | `OutputRouter`, `OutputDriver`, `ArduinoOutputDriver` |
-| `Dmx.Persistence` | JSON versionné, migrations, préférences, projet | `VersionedJsonFile`, `ProjectStore`, `DataPaths` |
-| `Dmx.Fixtures` | Modèles d'appareils, règles, validation, bibliothèque, imports, éditions | `FixtureType`, `FixtureRules`, `FixtureValidator`, `FixtureLibrary`, `FixtureEdits`, `DmxConversion` |
-| `Dmx.Patch` | Installation (patch, univers, sélections), lieux, copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `ProjectFixtureLibrary`, `FixtureDecoder` |
-| `Dmx.Hosting` | Assemblage (D20), journal, session de projet | `DmxRuntime`, `ProjectSession`, `TechnicalLog` |
-| `Dmx.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
-| `Dmx.UI.Modules.*` | Un écran par projet : Console (+ faders d'appareil), Library, Outputs, Installation, Simulator | `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel` |
-| `Dmx.App` | Coquille Avalonia (navigation, menu Projet, barre d'état) | `App`, `MainWindowViewModel` |
-| `tools/Dmx.Tools.Headless` | `dmx-headless` : ports, lancer, endurance, gigue, relire, projet | `Commands` |
+| `Luxia.Core` | Trame, plages de canaux, horloges, préférences, projet, instantanés | `DmxFrame`, `IClock`, `Preferences` (namespace `Luxia.Core.Dmx` pour le protocole) |
+| `Luxia.Messaging` | Commandes (CMD-020, 022, 024) et bus d'événements | `Command`, `ICommandSink`, `EventBus` |
+| `Luxia.Engine` | Moteur (tick, surcharges, test de sortie), boucle 40 Hz | `RenderEngine.Tick`, `TickLoop` |
+| `Luxia.Output` | Routeur, pilotes Nul / Enregistreur / Arduino, protocole Enttec, `.dmxrec` | `OutputRouter`, `OutputDriver`, `ArduinoOutputDriver` |
+| `Luxia.Persistence` | JSON versionné, migrations, préférences, projet | `VersionedJsonFile`, `ProjectStore`, `DataPaths` |
+| `Luxia.Fixtures` | Modèles d'appareils, règles, validation, bibliothèque, imports, éditions | `FixtureType`, `FixtureRules`, `FixtureValidator`, `FixtureLibrary`, `FixtureEdits`, `DmxConversion` |
+| `Luxia.Patch` | Installation (patch, univers, sélections), lieux, copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `ProjectFixtureLibrary`, `FixtureDecoder` |
+| `Luxia.Hosting` | Assemblage (D20), journal, session de projet | `LuxiaRuntime`, `ProjectSession`, `TechnicalLog` |
+| `Luxia.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
+| `Luxia.UI.Modules.*` | Un écran par projet : Console (+ faders d'appareil), Library, Outputs, Installation, Simulator | `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel` |
+| `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
+| `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, lancer, endurance, gigue, relire, projet | `Commands` |
 | `firmware/arduino-dmx` | Firmware Leonardo 1.0 (Enttec) | `arduino-dmx.ino` |
 
-Tests : un projet par module + `Dmx.Integration.Tests` (rejeu du show de référence) + `Dmx.UI.Tests` (modèles de vue sans interface).
+Tests : un projet par module + `Luxia.Integration.Tests` (rejeu du show de référence) + `Luxia.UI.Tests` (modèles de vue sans interface).
 
 ## 4. Commandes utiles
 
 ```bash
-dotnet build Dmx.sln
-dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"
-dotnet format Dmx.sln --verify-no-changes
+dotnet build Luxia.sln
+dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
+dotnet format Luxia.sln --verify-no-changes
 python tools/matrice-exigences.py P0 P1 P2 P3
-dotnet run --project src/Dmx.App -- "samples/Show de référence"
+dotnet run --project src/Luxia.App -- "samples/Show de référence"
 ```
 
 - `LUXIA_DOSSIER_DONNEES=<dossier>` : toutes les données de l'application sous ce dossier (essais sans toucher aux vraies données).
@@ -77,7 +85,9 @@ dotnet run --project src/Dmx.App -- "samples/Show de référence"
 - **Essais manuels avec l'utilisateur (démos)** : ouvrir `samples/Show de travail` (copie de `samples/Show de référence`, ignorée par Git,
   régénérable avec `cp -r "samples/Show de référence" "samples/Show de travail"`), **jamais l'original**. Un instantané mémorisé pendant
   un essai écrit dans le projet ouvert : si c'est le show de référence, ça pollue l'échantillon livré et casse `ReferenceShowP1Tests`
-  (vécu le 2026-09-25, corrigé en `8d6284c`).
+  (vécu le 2026-09-25, corrigé en `8d6284c`). Après une régénération, penser à renommer `"name"` dans son `projet.json` en
+  « Show de travail » (sinon le titre de l'appli affiche encore « Show de référence », vécu le 2026-09-26 — se fier au champ
+  « Dossier du projet » de **Aide → À propos** en cas de doute, pas au nom affiché).
 
 ## 5. Démarrer une phase dans une nouvelle discussion
 
@@ -102,3 +112,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-25 | P2 | P0, P1, P2 validées par l'utilisateur avec le matériel réel ; fusion dans `main`, étiquette `v1.001`. |
 | 2026-09-26 | P3 | Installation + Simulateur développés d'une traite (nouveau projet `Dmx.Patch`, écrans Installation et Simulateur, mode appareils de la Console) ; reliquats P0-P2 traités (SORT-008, CONS-007/020 à 024/041/043/092, BIB-093/096/097/098/099/100) ; show de référence patché et placé dans un lieu ; 47 exigences P3 (34 Réalisé, 6 Partiel, 7 Non réalisé). Reste sur `p3/installation-simulateur`, en attente de la revue de l'utilisateur avant fusion et étiquette. |
 | 2026-09-26 | P3 | Tour de test complet en direct avec l'utilisateur (4 PAR + 1 lyre), pas à pas dans la discussion. Corrigés au fil de l'eau : crash `InvalidCastException` (Univers affiché), Identifier (canaux couleur, puis fige au changement d'écran), largeurs de champs (deux passes), lieu actif non mis en évidence, simulateur trop sombre (corps toujours visible) et roue de couleur sans couleur définie décodée en noir, propriétés calculées dupliquées dans le JSON (`JsonIgnore`), fenêtre non maximisée au démarrage, version absente de la barre de titre. Solution repassée en `.sln` classique (D25, VS 2022 17.8 de l'utilisateur trop ancien pour .NET 10 — Claude compile seul désormais). 297 tests verts. **Validée par l'utilisateur, fusionnée dans `main`, étiquette `v1.002`.** |
+| 2026-09-26 | Avant P4 | Renommage transverse « DMX » → « LuXia » (branche `chore/renommage-luxia`, fusionnée) : solution, 25 projets/namespaces, exécutable, outil, dossiers de données avec migration automatique, docs. GitHub câblé (`origin`). Icône de l'exécutable créée. Nettoyage : 0 avertissement de build. Ajouts pendant la vérification avec l'utilisateur : menu Aide → À propos (diagnostic copiable) et verrou mono-instance (`Program.cs`) après avoir constaté que deux `LuXia.exe` simultanés se disputaient le port Arduino et pouvaient vider le « dernier projet » des préférences. 300 tests verts. Tout validé par l'utilisateur avec le matériel réel, committé et poussé (`main` = `origin/main`). |
