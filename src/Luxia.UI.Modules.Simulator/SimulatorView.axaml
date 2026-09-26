@@ -13,7 +13,8 @@
       <TextBlock Text="Lieu :" Opacity="0.6" />
       <TextBlock Text="{Binding VenueName}" FontWeight="SemiBold" />
       <TextBlock Text="Source :" Opacity="0.6" Margin="16,0,0,0" />
-      <TextBlock Text="{Binding Source}" />
+      <TextBlock Text="{Binding Source}" IsVisible="{Binding !IsPreview}" />
+      <TextBlock Text="{Binding Source}" IsVisible="{Binding IsPreview}" Foreground="#F0883E" FontWeight="Bold" />
       <TextBlock Text="{Binding HoverText}" Opacity="0.8" Margin="16,0,0,0" />
     </StackPanel>
 

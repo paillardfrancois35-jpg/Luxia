@@ -96,6 +96,25 @@ public sealed class SimulatorViewModelTests : IAsyncLifetime
         return fixture;
     }
 
+    [Fact]
+    [Trait("Exigence", "GEN-063")]
+    [Trait("Exigence", "SIM-006")]
+    public void Blind_ShowsPreviewEngine_AndSaysSo()
+    {
+        var fixture = Patch(GenericFixtures.Rgb, "3 canaux", 1, "PAR 1");
+        Place(fixture, 1, 2, absent: false);
+        _host.Runtime.PreviewActive = true;
+        _host.Runtime.Preview.Send(new OverrideChannelsCommand(CommandOrigin.User, 1, [new ChannelValue(1, 255)]));
+        _host.Runtime.Preview.Tick();
+        _host.Tick();
+
+        _vm.Refresh();
+
+        _vm.Source.ShouldStartWith("APERÇU");
+        _vm.Fixtures.Single().Cells[0].Color.ShouldBe("#FF0000");
+        _host.Frame()[0].ShouldBe((byte)0);
+    }
+
     private void Place(PatchedFixture fixture, double x, double y, bool absent)
     {
         var venues = _host.Runtime.Project.Venues;

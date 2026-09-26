@@ -244,7 +244,20 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
         var impact = FixtureUpdateImpact.ForModeChange(type, row.ModeName, row.EditModeName);
         _logger.LogInformation("Changer de mode : « {Nom} » {Ancien}→{Nouveau} — impact : {Impact}", row.Name, row.ModeName, row.EditModeName, impact.Summary());
-        if (!impact.IsEmpty && !await _dialogs.ConfirmAsync("Changer de mode", $"{row.Name} : {impact.Summary()} Continuer ?").ConfigureAwait(true))
+
+        // SC-03 : les scènes gardent leurs valeurs (elles visent des attributs, pas des canaux) ; seules celles dont
+        // l'attribut n'existe pas dans le nouveau mode seront ignorées, et on les annonce.
+        var newMode = type.Modes.FirstOrDefault(m => m.Name == row.EditModeName);
+        var scenes = newMode is not null && _runtime.Show.Patch.Find(row.Id) is { } info
+            ? Luxia.Scenes.Rules.SceneUsage.ModeChangeImpact(_runtime.Project.Scenes, info, newMode)
+            : [];
+        var message = impact.IsEmpty ? string.Empty : impact.Summary();
+        if (scenes.Count > 0)
+        {
+            message += $"{(message.Length > 0 ? Environment.NewLine + Environment.NewLine : string.Empty)}Scènes concernées (valeurs ignorées dans le nouveau mode, le reste est conservé) :{Environment.NewLine}{string.Join(Environment.NewLine, scenes)}";
+        }
+
+        if (message.Length > 0 && !await _dialogs.ConfirmAsync("Changer de mode", $"{row.Name} : {message}{Environment.NewLine}{Environment.NewLine}Continuer ?").ConfigureAwait(true))
         {
             _logger.LogInformation("Changer de mode : annulé par l'utilisateur pour « {Nom} ».", row.Name);
             return;

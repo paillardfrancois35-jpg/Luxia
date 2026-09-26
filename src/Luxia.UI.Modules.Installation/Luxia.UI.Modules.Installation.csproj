@@ -11,6 +11,7 @@
     <ProjectReference Include="../Luxia.Hosting/Luxia.Hosting.csproj" />
     <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
     <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../Luxia.Scenes/Luxia.Scenes.csproj" />
   </ItemGroup>
 
   <ItemGroup>
