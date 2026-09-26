@@ -16,7 +16,7 @@ internal static class Commands
     public static int Help()
     {
         Console.WriteLine("""
-            luxia-headless – outil sans interface (phase P0)
+            luxia-headless – outil sans interface
 
               ports
                   Liste les ports série et signale les cartes Arduino.
@@ -38,6 +38,16 @@ internal static class Commands
 
               relire fichier.dmxrec [--canaux 1-16]
                   Résume un enregistrement de trames : durée, trames, instants d'allumage de chaque canal.
+
+              valider dossier
+                  GEN-131 : vérifie un projet (fichiers, références, règles) ; chaque problème dit fichier, objet, champ.
+                  Code de retour 1 s'il y a au moins une erreur.
+
+              jouer dossier --scene "nom" [--duree 10] [--pas 0.25] [--enregistrer fichier.dmxrec]
+                  GEN-132 : joue une scène en temps virtuel et résume qui s'allume, en quelle couleur, où, et quand.
+
+              scenario dossier fichier.txt [--duree 60] [--pas 0.25] [--enregistrer fichier.dmxrec]
+                  MOT-103 : déroule des commandes horodatées (format : docs/50-format-des-donnees.md, « Scénario »).
             """);
         return 0;
     }

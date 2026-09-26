@@ -1,7 +1,7 @@
 using System.Globalization;
 using Luxia.Tools.Headless;
 
-// Outil sans interface (doc 00 §7.2, GEN-131 à venir) : en P0, pilotage de la boucle et des sorties en ligne de commande.
+// Outil sans interface (doc 00 §7.2) : pilotage de la boucle et des sorties, validation et déroulé d'un projet (GEN-131, GEN-132).
 CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
 CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -15,5 +15,8 @@ return arguments.Command switch
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),
     "projet" => Commands.Project(arguments),
     "relire" => Commands.Replay(arguments),
+    "valider" => ProjectCommands.Validate(arguments),
+    "jouer" => ProjectCommands.Play(arguments),
+    "scenario" => ProjectCommands.Scenario(arguments),
     _ => Commands.Help(),
 };
