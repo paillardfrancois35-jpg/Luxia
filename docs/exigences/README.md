@@ -188,7 +188,7 @@
 | [GEN-058](GEN-058.md) | Chemins relatifs (projet déplaçable) | P2 | S | Non réalisé |
 | [GEN-060](GEN-060.md) | Blackout au démarrage | P0 | I | Réalisé |
 | [GEN-061](GEN-061.md) | Fondu au noir à la fermeture | P5 | I | Partiel |
-| [GEN-063](GEN-063.md) | Mode aveugle en Atelier | P4 | M | Réalisé |
+| [GEN-063](GEN-063.md) | Mode aveugle en Atelier | P4 | M | Validé |
 | [GEN-080](GEN-080.md) | Perte du PC : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-081](GEN-081.md) | Arrêt anormal de l'application : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-082](GEN-082.md) | Blackout accessible en permanence | P4 | I | Validé |
@@ -302,7 +302,7 @@
 | [SCN-032](SCN-032.md) | Seuls les attributs modifiés sont enregistrés | P4 | I | Validé |
 | [SCN-033](SCN-033.md) | Enregistrer : remplacer, fusionner, nouvelle étape | P4 | I | Validé |
 | [SCN-034](SCN-034.md) | Tester : seule ou dans son contexte | P4 | I | Validé |
-| [SCN-035](SCN-035.md) | Aveugle | P4 | I | Réalisé |
+| [SCN-035](SCN-035.md) | Aveugle | P4 | I | Validé |
 | [SCN-036](SCN-036.md) | Option « allumer en coloriant » | P4 | I | Validé |
 | [SCN-037](SCN-037.md) | Enregistrer depuis la sortie | P4 | M | Réalisé |
 | [SCN-038](SCN-038.md) | Copier / coller, miroir | P4 | M | Réalisé |
