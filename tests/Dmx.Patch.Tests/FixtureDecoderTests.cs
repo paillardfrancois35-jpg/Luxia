@@ -137,6 +137,49 @@ public sealed class FixtureDecoderTests
 
     [Fact]
     [Trait("Exigence", "SIM-003")]
+    public void Decode_ColorWheelAtOpenSlot_IsWhiteNotBlack()
+    {
+        // Une lyre gobo (Tomshine Mini, BIB-095) : gradateur + roue de couleur, pas de RVB. La position
+        // « Ouvert (pas de couleur) » de la roue n'a pas de couleur définie dans la fiche, mais laisse passer
+        // la lumière blanche de la source — ce n'est pas une absence de signal. Sans ce correctif, Identifier
+        // (gradateur seul) décodait cette lyre en noir : invisible au simulateur bien qu'elle éclaire réellement
+        // (retour utilisateur du 2026-09-26).
+        var type = new FixtureType
+        {
+            Manufacturer = "Test",
+            Model = "Lyre",
+            Channels =
+            [
+                new ChannelDefinition { Key = "dim", Name = "Gradateur", Attribute = AttributeKind.Intensity },
+                new ChannelDefinition
+                {
+                    Key = "wheel", Name = "Roue", Attribute = AttributeKind.ColorWheel,
+                    Capabilities =
+                    [
+                        new Capability { Min = 0, Max = 7, Kind = CapabilityKind.WheelSlot, Label = "Ouvert (pas de couleur)" },
+                        new Capability { Min = 8, Max = 15, Kind = CapabilityKind.WheelSlot, Label = "Rouge", Colors = ["#FF0000"] },
+                    ],
+                },
+            ],
+            Modes = [new FixtureMode { Name = "2CH", Channels = [new ModeChannel("dim"), new ModeChannel("wheel")] }],
+        };
+        var mode = type.Modes[0];
+        var fixture = Fixture(type, mode, address: 1);
+        var frame = new byte[512];
+        frame[0] = 255; // dim
+        frame[1] = 0; // roue en position ouverte
+
+        var decoded = FixtureDecoder.Decode(type, mode, fixture, frame);
+
+        var cell = decoded.Cells.Single();
+        cell.Intensity.ShouldBe(1.0);
+        cell.Color.R.ShouldBe(1.0, 0.01);
+        cell.Color.G.ShouldBe(1.0, 0.01);
+        cell.Color.B.ShouldBe(1.0, 0.01);
+    }
+
+    [Fact]
+    [Trait("Exigence", "SIM-003")]
     public void Decode_MultiCellFixture_DecodesEachCellSeparately()
     {
         var type = new FixtureType

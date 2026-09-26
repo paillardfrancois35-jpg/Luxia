@@ -194,12 +194,14 @@ public static class FixtureDecoder
                     hasColorSignal |= value > 0;
                     break;
                 case AttributeKind.ColorWheel or AttributeKind.ColorMacro:
-                    if (definition.CapabilityAt(rawByte)?.Colors is { Count: > 0 } colors)
-                    {
-                        color = DisplayColor.Add(color, DisplayColor.Parse(colors[0]));
-                        hasColorSignal = true;
-                    }
-
+                    // Une plage de roue sans couleur définie est une position « ouverte » (pas de gélatine devant
+                    // la lampe) : elle laisse passer la lumière blanche de la source, ce n'est pas une absence de
+                    // signal. Sans ça, une lyre identifiée (gradateur seul, roue en position ouverte) se décode en
+                    // noir et reste invisible au simulateur bien qu'elle éclaire réellement (retour utilisateur).
+                    color = DisplayColor.Add(color, definition.CapabilityAt(rawByte)?.Colors is { Count: > 0 } colors
+                        ? DisplayColor.Parse(colors[0])
+                        : White);
+                    hasColorSignal = true;
                     break;
             }
         }
