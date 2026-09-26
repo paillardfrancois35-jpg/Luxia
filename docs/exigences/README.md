@@ -290,10 +290,10 @@
 | [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
 | [SCN-004](SCN-004.md) | Modification groupée des durées | P4 | I | Réalisé |
 | [SCN-005](SCN-005.md) | Paramètres de lecture d'une scène | P4 | I | Réalisé |
-| [SCN-007](SCN-007.md) | Cibles : appareil, cellule, sélection | P4 | I | Réalisé |
+| [SCN-007](SCN-007.md) | Cibles : appareil, cellule, sélection | P4 | I | Validé |
 | [SCN-008](SCN-008.md) | Valeur directe, palette ou plage | P4 | I | Réalisé |
 | [SCN-009](SCN-009.md) | Drapeau « Visible en Live » | P4 | I | Réalisé |
-| [SCN-010](SCN-010.md) | Retard par membre (« fan ») | P4 | M | Réalisé |
+| [SCN-010](SCN-010.md) | Retard par membre (« fan ») | P4 | M | Validé |
 | [SCN-011](SCN-011.md) | Fondu propre à un attribut | P4 | M | Réalisé |
 | [SCN-012](SCN-012.md) | Catégories et filtre des scènes | P4 | M | Réalisé |
 | [SCN-013](SCN-013.md) | Rapport des utilisations d'une scène | P4 | M | Réalisé |

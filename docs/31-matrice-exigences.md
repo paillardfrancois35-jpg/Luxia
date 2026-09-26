@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 53 · Validé : 25
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 51 · Validé : 27
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -261,10 +261,10 @@
 | [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Validé |  |
 | [SCN-004](exigences/SCN-004.md) | I | Modification groupée des durées | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
 | [SCN-005](exigences/SCN-005.md) | I | Paramètres de lecture d'une scène | Réalisé |  |
-| [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Réalisé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
+| [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Validé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
 | [SCN-008](exigences/SCN-008.md) | I | Valeur directe, palette ou plage | Réalisé | ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze<br>ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
 | [SCN-009](exigences/SCN-009.md) | I | Drapeau « Visible en Live » | Réalisé |  |
-| [SCN-010](exigences/SCN-010.md) | M | Retard par membre (« fan ») | Réalisé | ReferenceShowP4Tests.Wave_StartsEachParHalfASecondAfterItsNeighbour<br>ScenePlaybackTests.PerValueDelay_SpreadsTheFade_AcrossMembers<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
+| [SCN-010](exigences/SCN-010.md) | M | Retard par membre (« fan ») | Validé | ReferenceShowP4Tests.Wave_StartsEachParHalfASecondAfterItsNeighbour<br>ScenePlaybackTests.PerValueDelay_SpreadsTheFade_AcrossMembers<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
 | [SCN-011](exigences/SCN-011.md) | M | Fondu propre à un attribut | Réalisé | ScenePlaybackTests.PerAttributeFade_ColorsSlow_PositionInstant<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection |
 | [SCN-012](exigences/SCN-012.md) | M | Catégories et filtre des scènes | Réalisé | ScenesViewModelTests.Filter_ByNameAndCategory |
 | [SCN-013](exigences/SCN-013.md) | M | Rapport des utilisations d'une scène | Réalisé | SceneUsageAndStoreTests.SceneUsage_ListsScenesThatChainToIt<br>ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
