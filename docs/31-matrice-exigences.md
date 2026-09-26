@@ -129,7 +129,7 @@
 
 ## P3 – 51 exigences, 31 couvertes par des tests automatiques
 
-> Non réalisé : 7 · Partiel : 5 · Réalisé : 38 · Validé : 1
+> Non réalisé : 7 · Partiel : 5 · Réalisé : 37 · Validé : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -153,7 +153,7 @@
 | [INST-013](exigences/INST-013.md) | I | Détection des chevauchements en temps réel | Réalisé | InstallationViewModelTests.OverlappingFixtures_AreFlagged<br>PatchRulesTests.DetectOverlaps_DifferentUniverses_NoOverlap<br>PatchRulesTests.DetectOverlaps_FindsOverlappingRange<br>ReferenceShowP3Tests.ReferenceShow_Installation_HasNoOverlap |
 | [INST-014](exigences/INST-014.md) | M | Doublon volontaire (jumeaux) | Réalisé | InstallationViewModelTests.Twins_SameAddress_AreNotFlaggedAsOverlap<br>PatchRulesTests.DetectOverlaps_SameGroupButDifferentMode_StillOverlaps<br>PatchRulesTests.DetectOverlaps_Twins_SameAddress_NoOverlap<br>RenderChainTests.Twins_ShareParameters_AndReceiveSameValues |
 | [INST-015](exigences/INST-015.md) | I | Déplacer un appareil | Réalisé | InstallationViewModelTests.RenameAndMove_UpdateThePatchedFixture |
-| [INST-016](exigences/INST-016.md) | I | Changer le mode d'un appareil patché | Réalisé | FixtureUpdateImpactTests.ForModeChange_FromRichToSimpleMode_ReportsLostChannels<br>FixtureUpdateImpactTests.ForModeChange_SameMode_IsEmpty<br>InstallationViewModelTests.ChangeMode_UsedByThreeScenes_ReportsImpact_AndKeepsScenes<br>InstallationViewModelTests.ChangeMode_WithImpact_AsksConfirmation<br>(+1) |
+| [INST-016](exigences/INST-016.md) | I | Changer le mode d'un appareil patché | Validé | FixtureUpdateImpactTests.ForModeChange_FromRichToSimpleMode_ReportsLostChannels<br>FixtureUpdateImpactTests.ForModeChange_SameMode_IsEmpty<br>InstallationViewModelTests.ChangeMode_UsedByThreeScenes_ReportsImpact_AndKeepsScenes<br>InstallationViewModelTests.ChangeMode_WithImpact_AsksConfirmation<br>(+1) |
 | [INST-017](exigences/INST-017.md) | I | Nom, couleur et numéro court | Réalisé | InstallationViewModelTests.RenameAndMove_UpdateThePatchedFixture |
 | [INST-018](exigences/INST-018.md) | I | Fiche d'installation | Réalisé |  |
 | [INST-019](exigences/INST-019.md) | I | Identifier un appareil / chenillard d'identification | Réalisé | InstallationViewModelTests.Identify_LightsIntensityChannel_AndChaseAdvancesToNextFixture<br>InstallationViewModelTests.NeedsBackgroundRefresh_TrueOnlyWhileIdentifying |

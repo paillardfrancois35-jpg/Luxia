@@ -230,7 +230,7 @@
 | [INST-013](INST-013.md) | Détection des chevauchements en temps réel | P3 | I | Réalisé |
 | [INST-014](INST-014.md) | Doublon volontaire (jumeaux) | P3 | M | Réalisé |
 | [INST-015](INST-015.md) | Déplacer un appareil | P3 | I | Réalisé |
-| [INST-016](INST-016.md) | Changer le mode d'un appareil patché | P3 | I | Réalisé |
+| [INST-016](INST-016.md) | Changer le mode d'un appareil patché | P3 | I | Validé |
 | [INST-017](INST-017.md) | Nom, couleur et numéro court | P3 | I | Réalisé |
 | [INST-018](INST-018.md) | Fiche d'installation | P3 | I | Réalisé |
 | [INST-019](INST-019.md) | Identifier un appareil / chenillard d'identification | P3 | I | Réalisé |
