@@ -142,17 +142,19 @@ produit un enregistrement rejouable. Un scénario de commandes horodatées (form
 
 ## Grille de retour
 
+Remplie avec l'utilisateur le 2026-09-26 (essai pas à pas, matériel réel : 4 PAR, lyre 1, barre 1). Détail dans les fiches d'exigences.
+
 | Exemple | Correct | À revoir | Idée / remarque |
 |---|---|---|---|
-| 1 – Blanc chaud, GM, blackout | ☐ | ☐ | |
-| 2 – Une palette, des appareils | ☐ | ☐ | |
-| 3 – Chenillard | ☐ | ☐ | |
-| 4 – Lyres 3 positions | ☐ | ☐ | |
-| 5 – Fondus, roue | ☐ | ☐ | |
-| 6 – Programmeur | ☐ | ☐ | |
-| 7 – Aveugle | ☐ | ☐ | |
-| 8 – Vague | ☐ | ☐ | |
-| 9 – Piège | ☐ | ☐ | |
-| 10 – Console | ☐ | ☐ | |
-| 11 – Sans interface | ☐ | ☐ | |
-| 12 – Changement de mode | ☐ | ☐ | |
+| 1 – Blanc chaud, GM, blackout | ☑ | ☐ | Blanc chaud trop bleu : réglé à 100 / 42 / 0 % |
+| 2 – Une palette, des appareils | ☑ | ☐ |  |
+| 3 – Chenillard | ☑ | ☐ | Vitesse non appliquée en direct, exception à l'enregistrement : corrigés (GEN-118) |
+| 4 – Lyres 3 positions | ☑ | ☐ | Lyre 1 calibrée ; bouton visible « Mettre à jour une palette » ajouté |
+| 5 – Fondus, roue | ☑ | ☐ |  |
+| 6 – Programmeur | ☑ | ☐ | Ctrl+Z / Ctrl+Y ajoutés ; toute exception journalisée (GEN-117) |
+| 7 – Aveugle | ☑ | ☐ | Case Aveugle déplacée dans l'en-tête du programmeur |
+| 8 – Vague | ☑ | ☐ |  |
+| 9 – Piège | ☑ | ☐ |  |
+| 10 – Console | ☑ | ☐ |  |
+| 11 – Sans interface | ☑ | ☐ |  |
+| 12 – Changement de mode | ☑ | ☐ |  |

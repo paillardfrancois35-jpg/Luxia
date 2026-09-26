@@ -135,6 +135,6 @@ intermédiaire), vague (décalage de 0,5 s entre PAR).
 
 | Élément | Statut | Retour |
 |---|---|---|
-| Rendu au simulateur puis sur le matériel (doc 41 §11) | 🟡 en cours (essai pas à pas du 2026-09-26 : exemples 1 à 4 conformes ; blanc chaud réglé à 100 / 42 / 0 %) | 4 PAR, lyre 1, barre 1 branchés |
-| Positions des lyres à calibrer | 🟡 Lyre 1 calibrée au salon (2026-09-26) : Piste centre pan 46,6 % / tilt 65,7 %, Plafond pan 19,6 % / tilt 11,3 % (la proposition de départ visait le mur opposé), Croisé pan 39,1 % ; Lyre 2 non branchée, valeurs proposées | Essai P4, exemple 4 |
+| Rendu au simulateur puis sur le matériel (doc 41 §11) | ✅ validé le 2026-09-26 : guide P4 déroulé pas à pas, exemples 1 à 12 conformes (blanc chaud réglé à 100 / 42 / 0 %) | 4 PAR, lyre 1, barre 1 branchés ; les deux paires de PAR ne rendent pas les mêmes couleurs (doc 99, correction par appareil) |
+| Positions des lyres à calibrer | 🟡 Lyre 1 calibrée au salon (2026-09-26) : Piste centre pan 46,6 % / tilt 65,7 %, Plafond pan 19,6 % / tilt 11,3 % (la proposition de départ visait le mur opposé), Croisé pan 39,1 % ; Lyre 2 non branchée, valeurs proposées (à calibrer quand elle sera raccordée) | Essai P4, exemple 4 |
 | Plage « sans strobe » des PAR et barres (Q28) | ⏳ en attente | |

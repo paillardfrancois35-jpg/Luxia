@@ -1,7 +1,7 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P4 développée, en attente de la revue de l'utilisateur.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P4 validée par l'utilisateur ; prochaine étape : **P5 – Couches, Palettes, Live, MIDI** (jalon 1).
 
 ## 1. Où en est-on
 
@@ -11,7 +11,8 @@
 | P1 – Console | Développée | `p1/console` (fusionnée dans `main`, `v1.001`) | [demos/P1-console.md](demos/P1-console.md) | ⏳ |
 | P2 – Bibliothèque | Développée | `p2/bibliotheque` (fusionnée dans `main`, `v1.001`) | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
 | P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
-| P4 – Moteur + Scènes | Développée | `p4/moteur-scenes` (non fusionnée, étiquette intermédiaire `v1.003.001`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ⏳ revue et essais au simulateur puis sur le matériel |
+| P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
+| P5 – Couches, Palettes, Live, MIDI | **À démarrer** | `p5/…` à créer depuis `main` | — | — |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -21,19 +22,38 @@
   (`valider`, `jouer`, `scenario`), 10 scènes « Phase P4 » dans le show de référence avec trames de référence. 408 tests verts.
   Bilan P4 : 84 exigences, 75 Réalisé, 8 Partiel (GEN-023 tempo fixe, GEN-040/042 sûreté P5, GEN-112/113, PAL-007, SCN-030, SCN-031),
   1 Non réalisé (MOT-054, M). **Décisions** D26 à D28 (doc 02 §19) ; **écart** : couches par défaut avancées en P4 (COU-006 partiel).
+- **P4 validée par l'utilisateur le 2026-09-26** : guide déroulé pas à pas dans la discussion, au matériel (4 PAR LPC008S, lyre 1 « 111 »,
+  barre 1 « 51 » en 24 canaux ; lyre 2 non raccordée). Corrigé ou ajouté au fil de l'essai, chacun avec sa fiche :
+  blanc chaud recalé (100 / 42 / 0 %) ; vitesse de scène appliquée en direct (`Playback.Bind`) ; enregistrement robuste aux verrous
+  passagers de fichier (GEN-118, antivirus) ; **toute exception journalisée** dans le journal global, y compris les erreurs de liaison
+  Avalonia, avec message dans la barre d'état (GEN-117) ; Ctrl+Z / Ctrl+Y dans l'écran Scènes ; bouton visible « ✎ Mettre à jour une
+  palette avec le programmeur » (les réglages partaient dans les étapes) et lyre 1 calibrée dans les palettes de position ; case
+  Aveugle dans l'en-tête du programmeur ; **numéro de compilation** affiché en développement (GEN-119 : `v1.00N.NNN`, compteur hors
+  dépôt dans `build/numero-de-compilation.txt`). Fusionnée dans `main`, étiquette `v1.003`.
+  Bilan final P4 : 94 exigences, **36 Validé**, 49 Réalisé (couvertes par les tests automatiques, non rejouées à la main), 8 Partiel
+  (GEN-023, GEN-040, GEN-042, GEN-112, GEN-113, PAL-007, SCN-030, SCN-031), 1 Non réalisé (MOT-054).
+- **Remarque de l'utilisateur à la validation de P4 (à garder en tête pour toute la suite)** : l'ergonomie est jugée « un beau bazar » —
+  tout se mélange, trop de place, trop de défilement ; formats d'affichage et formes à revoir. **Non bloquant** tant que le fonctionnel
+  tient : l'utilisateur compte sur l'IA pour **construire les shows** (GEN-130 à 134) et lui expliquer ce qu'il veut. Chantier
+  d'ergonomie conséquent noté en [doc 99](99-idees.md), à planifier plus tard (analyse approfondie de tous les écrans). En attendant :
+  ne pas ajouter de désordre (panneaux compacts, repliables si possible), et soigner tout ce qui aide l'IA à produire des shows
+  (formats documentés, `valider`, `jouer`, `scenario`, import de scènes).
 - **Fiches d'exigences** : [exigences/](exigences/README.md) — une fiche par exigence travaillée, avec statut et **historique complet** (questions, décisions et leur pourquoi, écarts, commits, tests, validations). **Lire la fiche avant de toucher à une exigence.**
 - **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches. Bilan P3 : 47 exigences, 34 Réalisé, 6 Partiel, 7 Non réalisé.
 - **Reliquats P0-P2 traités en P3** : SORT-008, CONS-007/020 à 024/041/043/092 (patch et mode appareils), BIB-093/096/097/098/099/100. **BIB-094** (plage « Fondu » du LPC008S) reste ouverte : une réserve honnête a été ajoutée au libellé, mais la correction exacte attend une vérification en direct sur l'appareil. **CONS-091** reste correctement en P4 (non traité maintenant, cohérent avec le doc 40).
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
-  - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
-  - CONS-091 (écart conservé au-delà des bornes en relatif, retour utilisateur du 25/09) → P4.
-  - CONS-021 (pastille couleur, pad Pan/Tilt XY combinés) → reste canal par canal ; à revoir avec le programmeur (P4-P5).
+  - CONS-008 / GEN-042 : blackout appliqué aux surcharges (fait en P4) ; **limites de sûreté → P5**.
+  - P4 partiels : GEN-023 (tempo fixe 120 BPM → P7), GEN-040 (sûreté dans la chaîne → P5), GEN-112 (journal des commandes affiché → Live, P5), GEN-113 (enregistrement des trames depuis l'appli), PAL-007 (grilles de palettes), SCN-030 (sélection au plan), SCN-031 (roue chromatique, pad Pan/Tilt), MOT-054 (couleurs par teinte → P6), COU-006 (couches par défaut, éditeur en P5).
+  - MOT-103 : `scenario` non rejoué à la main (tests automatiques seulement).
+  - Lyre 2 : positions des palettes proposées, à calibrer quand elle sera raccordée.
+  - CONS-021 (pastille couleur, pad Pan/Tilt XY combinés) → reste canal par canal ; à revoir avec le programmeur (P5).
   - INST-021 (options de montage : pas d'éditeur dans l'écran), INST-034 (sélection de cellules), INST-051 (glisser-déposer sur le plan) → partiels, voir leurs fiches.
   - SIM-007 (fenêtre détachable), SIM-008 (zones interdites/repères), SIM-010 (sélection reprise par le programmeur) → non réalisés, dépendent de P4/P5.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
   - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
-- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; Q27 : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux ; **Q28 (nouvelle, P4)** : plage « sans strobe » du LPC008S et de la LCB803 (décodées « strobe » à 0 par le simulateur).
+- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; Q27 : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux ; **Q28 (P4)** : plage « sans strobe » du LPC008S et de la LCB803 (décodées « strobe » à 0 par le simulateur et par `luxia-headless jouer`) — **à trancher tôt en P5**, qui traite justement la sûreté du strobe.
+- **Méthode d'essai avec l'utilisateur (rodée en P4, à reprendre)** : dérouler le guide **un exemple à la fois** dans la discussion, avec des consignes cliquables pas à pas (onglet, bouton, libellé exact) ; tracer chaque exemple dans les fiches (entrées « Utilisateur | Test » puis « Validation ») + matrice + commit/push avant de passer au suivant. **Avant toute compilation**, demander à l'utilisateur de fermer LuXia (verrou mono-instance, fichiers verrouillés) puis lui annoncer le numéro de version à vérifier dans la barre de titre. Les commandes de terminal se donnent en blocs `bash` séparés (bouton Run) avec chemins absolus.
 - **Renommage en « LuXia » effectué le 2026-09-26** (avant P4, décision utilisateur) : solution `LuXia.sln`, namespaces `Luxia.*`, exécutable
   `LuXia.exe`, outil `luxia-headless`, dossiers de données (`%AppData%\LuXia`, `Documents\LuXia`, migration automatique au premier lancement
   depuis les anciens dossiers `DMX`), docs. Le sous-espace de noms `Luxia.Core.Dmx` (protocole) et le format `.dmxrec` restent inchangés :
@@ -49,7 +69,7 @@
 
 ## 2. Lire avant de coder (dans cet ordre)
 
-1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D23), [glossaire](glossaire.md).
+1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
 2. [03 – Règles de développement](03-regles-de-developpement.md) (langue, style, structure, tests, Git).
 3. Ce document, puis la matrice [31](31-matrice-exigences.md) et les [fiches d'exigences](exigences/README.md) concernées.
 4. [40 – Feuille de route](40-feuille-de-route.md) §2 et §7 pour la phase visée, [41 – Show de référence](41-show-de-reference.md) §11.
@@ -84,7 +104,7 @@ Tests : un projet par module + `Luxia.Integration.Tests` (rejeu du show de réf�
 dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
-python tools/matrice-exigences.py P0 P1 P2 P3 P4
+python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- valider "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- jouer "samples/Show de référence" --scene "Chenillard 4 couleurs" --duree 3
@@ -132,3 +152,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-26 | P3 | Tour de test complet en direct avec l'utilisateur (4 PAR + 1 lyre), pas à pas dans la discussion. Corrigés au fil de l'eau : crash `InvalidCastException` (Univers affiché), Identifier (canaux couleur, puis fige au changement d'écran), largeurs de champs (deux passes), lieu actif non mis en évidence, simulateur trop sombre (corps toujours visible) et roue de couleur sans couleur définie décodée en noir, propriétés calculées dupliquées dans le JSON (`JsonIgnore`), fenêtre non maximisée au démarrage, version absente de la barre de titre. Solution repassée en `.sln` classique (D25, VS 2022 17.8 de l'utilisateur trop ancien pour .NET 10 — Claude compile seul désormais). 297 tests verts. **Validée par l'utilisateur, fusionnée dans `main`, étiquette `v1.002`.** |
 | 2026-09-26 | Avant P4 | Renommage transverse « DMX » → « LuXia » (branche `chore/renommage-luxia`, fusionnée) : solution, 25 projets/namespaces, exécutable, outil, dossiers de données avec migration automatique, docs. GitHub câblé (`origin`). Icône de l'exécutable créée. Nettoyage : 0 avertissement de build. Ajouts pendant la vérification avec l'utilisateur : menu Aide → À propos (diagnostic copiable) et verrou mono-instance (`Program.cs`) après avoir constaté que deux `LuXia.exe` simultanés se disputaient le port Arduino et pouvaient vider le « dernier projet » des préférences. 300 tests verts. Tout validé par l'utilisateur avec le matériel réel, committé et poussé (`main` = `origin/main`). |
 | 2026-09-26 | P4 | Moteur + Scènes développés sur `p4/moteur-scenes` : moteur sur modèle compilé (D26-D28), `Luxia.Scenes`, écran Scènes, aveugle et aperçu, Console en attributs, outils sans interface, contenu P4 du show de référence et trames de référence, fiches (90 créées), guide P4. 408 tests verts. Tests de temps réel rendus robustes à la charge. **En attente de la revue de l'utilisateur** avant fusion et `v1.003`. |
+| 2026-09-26 | P4 | Guide P4 déroulé pas à pas avec l'utilisateur sur le matériel (exemples 1 à 12, tous conformes). Corrigés/ajoutés au fil de l'eau, chacun avec sa fiche : blanc chaud, vitesse en direct, enregistrement robuste (GEN-118), exceptions journalisées (GEN-117), Ctrl+Z/Y, bouton de mise à jour de palette, case Aveugle, numéro de compilation (GEN-119). Remarque utilisateur : ergonomie d'ensemble à reprendre plus tard (doc 99), non bloquante. **Validée, fusionnée dans `main`, étiquette `v1.003`.** Prochaine étape : P5. |
