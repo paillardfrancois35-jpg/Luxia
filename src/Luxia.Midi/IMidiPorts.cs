@@ -18,10 +18,3 @@ public interface IMidiPorts
     /// <summary>Ouvre un port de sortie (LED).</summary>
     IMidiOutput OpenOutput(string name);
 }
-
-/// <summary>Port de sortie MIDI ouvert.</summary>
-public interface IMidiOutput : IDisposable
-{
-    /// <summary>Envoie un message court.</summary>
-    void Send(MidiMessage message);
-}

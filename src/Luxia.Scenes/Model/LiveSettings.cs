@@ -26,13 +26,3 @@ public sealed record LiveSettings
     /// <summary>Couches masquées en Live (aucune par défaut).</summary>
     public IReadOnlyList<Guid> HiddenLayerIds { get; init; } = [];
 }
-
-/// <summary>Effet d'un clic sur la scène qui joue déjà (LIVE-003).</summary>
-public enum ActiveSceneClick
-{
-    /// <summary>L'arrêter (avec son fondu de sortie).</summary>
-    Stop,
-
-    /// <summary>La relancer depuis sa première étape.</summary>
-    Restart,
-}

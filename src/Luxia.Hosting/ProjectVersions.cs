@@ -3,12 +3,6 @@ using System.Security.Cryptography;
 
 namespace Luxia.Hosting;
 
-/// <summary>Version enregistrée d'un projet (GEN-055).</summary>
-/// <param name="Name">Nom du dossier (« 20260927-221530 »).</param>
-/// <param name="SavedAt">Date de la version.</param>
-/// <param name="Reason">Motif (« automatique », « passage en Live », « avant restauration »).</param>
-public sealed record ProjectVersion(string Name, DateTime SavedAt, string Reason);
-
 /// <summary>
 /// Versions du projet (GEN-054, GEN-055) : copie des fichiers du projet dans <c>&lt;projet&gt;\Versions\AAAAMMJJ-HHMMSS</c>,
 /// seulement si quelque chose a changé depuis la dernière version ; les <see cref="Keep"/> plus récentes sont gardées.

@@ -2,22 +2,6 @@ using System.Globalization;
 
 namespace Luxia.Midi;
 
-/// <summary>Famille de contrôle physique.</summary>
-public enum MidiControlKind
-{
-    /// <summary>Pad de la grille (colonne, ligne ; ligne 1 = en haut).</summary>
-    Pad,
-
-    /// <summary>Bouton rond du bas (1 à 8).</summary>
-    Bottom,
-
-    /// <summary>Bouton rond de droite (1 à 8, de haut en bas).</summary>
-    Right,
-
-    /// <summary>Fader (1 à 9, 9 = master).</summary>
-    Fader,
-}
-
 /// <summary>Contrôle physique d'un contrôleur, indépendant du modèle (« pad 3 2 », « bas 1 », « droite 4 », « fader 9 »).</summary>
 /// <param name="Kind">Famille.</param>
 /// <param name="X">Colonne du pad, ou numéro du bouton / fader (à partir de 1).</param>
