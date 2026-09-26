@@ -78,8 +78,8 @@
   <DockPanel Margin="16">
     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
       <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
-        <Button Content="{Binding UndoText}" Command="{Binding UndoCommand}" ToolTip.Tip="Annuler la dernière modification des scènes (SCN-039)" />
-        <Button Content="{Binding RedoText}" Command="{Binding RedoCommand}" />
+        <Button Content="{Binding UndoText}" Command="{Binding UndoCommand}" HotKey="Ctrl+Z" ToolTip.Tip="Annuler la dernière modification des scènes (Ctrl+Z, SCN-039)" />
+        <Button Content="{Binding RedoText}" Command="{Binding RedoCommand}" HotKey="Ctrl+Y" ToolTip.Tip="Rétablir (Ctrl+Y)" />
       </StackPanel>
       <TextBlock Text="Scènes" FontSize="22" FontWeight="SemiBold" />
     </DockPanel>

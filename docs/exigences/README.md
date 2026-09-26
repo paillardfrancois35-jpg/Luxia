@@ -177,7 +177,7 @@
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
 | [GEN-033](GEN-033.md) | Horloges injectables | P4 | I | Réalisé |
 | [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Partiel |
-| [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Réalisé |
+| [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
 | [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Partiel |
 | [GEN-043](GEN-043.md) | Chaîne de rendu explicable | P4 | M | Réalisé |
 | [GEN-050](GEN-050.md) | Fichiers JSON lisibles | P0 | I | Réalisé |
@@ -191,7 +191,7 @@
 | [GEN-063](GEN-063.md) | Mode aveugle en Atelier | P4 | M | Réalisé |
 | [GEN-080](GEN-080.md) | Perte du PC : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-081](GEN-081.md) | Arrêt anormal de l'application : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
-| [GEN-082](GEN-082.md) | Blackout accessible en permanence | P4 | I | Réalisé |
+| [GEN-082](GEN-082.md) | Blackout accessible en permanence | P4 | I | Validé |
 | [GEN-090](GEN-090.md) | Latence action → trame < 50 ms | P1 | I | Réalisé |
 | [GEN-091](GEN-091.md) | Sortie déconnectée non bloquante, reconnexion < 3 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-093](GEN-093.md) | Panne d'un module secondaire isolée | P0 | I | Réalisé |
@@ -212,6 +212,8 @@
 | [GEN-114](GEN-114.md) | Menu « À propos » avec diagnostic copiable | P3 | M | Réalisé |
 | [GEN-115](GEN-115.md) | Une seule instance de l'application à la fois | P3 | I | Réalisé |
 | [GEN-116](GEN-116.md) | Icône de l'application | P3 | S | Réalisé |
+| [GEN-117](GEN-117.md) | Toute exception journalisée | P4 | I | Réalisé |
+| [GEN-118](GEN-118.md) | Enregistrement robuste aux refus passagers | P4 | I | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Réalisé |
@@ -245,27 +247,27 @@
 | [MOT-002](MOT-002.md) | Budget de 5 ms par tick | P4 | I | Réalisé |
 | [MOT-003](MOT-003.md) | Fil d'exécution dédié, sans opération bloquante | P4 | I | Réalisé |
 | [MOT-004](MOT-004.md) | Déterminisme : aléatoire à graine journalisée | P4 | I | Réalisé |
-| [MOT-010](MOT-010.md) | Étape = fondu d'entrée + maintien | P4 | I | Réalisé |
+| [MOT-010](MOT-010.md) | Étape = fondu d'entrée + maintien | P4 | I | Validé |
 | [MOT-011](MOT-011.md) | Interpolation des attributs continus selon la courbe | P4 | I | Réalisé |
 | [MOT-012](MOT-012.md) | Attributs discrets : bascule franche | P4 | I | Réalisé |
-| [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Réalisé |
+| [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Validé |
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Réalisé |
-| [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Réalisé |
+| [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
 | [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Réalisé |
 | [MOT-031](MOT-031.md) | Fusion entre couches et modes d'intensité | P4 | I | Réalisé |
 | [MOT-032](MOT-032.md) | Attribut non touché = valeur par défaut | P4 | I | Réalisé |
 | [MOT-033](MOT-033.md) | Master de couche | P4 | I | Réalisé |
 | [MOT-034](MOT-034.md) | Source de chaque valeur finale | P4 | M | Réalisé |
-| [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Réalisé |
+| [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Validé |
 | [MOT-041](MOT-041.md) | « Allumer en coloriant » | P4 | I | Réalisé |
 | [MOT-050](MOT-050.md) | Couleur logique vers RVB | P4 | I | Réalisé |
 | [MOT-051](MOT-051.md) | Couleur logique vers RVBW (extraction du blanc) | P4 | I | Réalisé |
-| [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Réalisé |
+| [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Validé |
 | [MOT-053](MOT-053.md) | UV et ambre en émetteurs indépendants | P4 | M | Réalisé |
 | [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Non réalisé |
-| [MOT-070](MOT-070.md) | Blackout | P4 | I | Réalisé |
-| [MOT-071](MOT-071.md) | Grand Master | P4 | I | Réalisé |
+| [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
+| [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
 | [MOT-074](MOT-074.md) | Surcharges conformes à la chaîne de rendu | P1 | I | Réalisé |
 | [MOT-075](MOT-075.md) | Identifier un appareil au-dessus de tout | P3 | I | Réalisé |
 | [MOT-090](MOT-090.md) | Conversion des attributs en octets selon le patch | P4 | I | Réalisé |
@@ -276,9 +278,9 @@
 | [MOT-101](MOT-101.md) | Événements de scène et de refus | P4 | I | Réalisé |
 | [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
-| [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Réalisé |
+| [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
-| [PAL-005](PAL-005.md) | Les scènes suivent les palettes | P4 | I | Réalisé |
+| [PAL-005](PAL-005.md) | Les scènes suivent les palettes | P4 | I | Validé |
 | [PAL-006](PAL-006.md) | Suppression d'une palette utilisée | P4 | I | Réalisé |
 | [PAL-007](PAL-007.md) | Grilles de palettes | P4 | M | Partiel |
 | [PAL-009](PAL-009.md) | Jeu de palettes couleur par défaut | P4 | M | Réalisé |

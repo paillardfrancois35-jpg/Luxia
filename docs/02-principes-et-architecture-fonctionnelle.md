@@ -467,12 +467,15 @@ Un **Projet** est un **dossier** de fichiers JSON (plutôt qu'un fichier unique)
 ## 16b. Diagnostic et robustesse
 
 > Ajouté le 2026-09-26 (écart constaté en testant le renommage LuXia avec l'utilisateur) : deux besoins concrets, absents du cahier des charges initial.
+> GEN-117 et GEN-118 ajoutés le 2026-09-26 pendant l'essai P4 avec l'utilisateur (exception sous le champ Vitesse de l'écran Scènes).
 
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
 |---|---|---|---|---|
 | GEN-114 | M | P3 | Menu **Aide → À propos** : boîte de dialogue en lecture seule, copiable, avec de quoi diagnostiquer un problème à distance (exécutable, répertoire de travail, PID, .NET/OS, dossiers de données, fichier de préférences, dernier projet en mémoire vs projet réellement ouvert, sortie configurée). | Le texte copié suffit à comprendre un problème signalé par l'utilisateur sans accès à son poste. |
 | GEN-115 | I | P3 | **Une seule instance** de l'application à la fois (verrou au démarrage) : deux processus se disputeraient le port série de l'Arduino et pourraient perdre le « dernier projet » des préférences. | Lancer une deuxième instance affiche un message et se ferme, sans toucher aux préférences ni au port série ; la première continue normalement. |
 | GEN-116 | S | P3 | L'exécutable et la fenêtre ont une **icône** propre à l'application (pas l'icône générique .NET). | Icône visible dans l'Explorateur, la barre des tâches et le titre de la fenêtre. |
+| GEN-117 | I | P4 | **Toute exception** est écrite dans le journal technique, d'où qu'elle vienne : interface, autres fils, tâches de fond, et valeur refusée par un champ de saisie (qu'Avalonia intercepte sans la journaliser) ; une erreur d'interface est aussi signalée dans la barre d'état. | Une exception levée en saisissant une valeur apparaît dans le journal technique avec sa pile d'appels. |
+| GEN-118 | I | P4 | Un **enregistrement de fichier** refusé un court instant par le poste (antivirus, outil de sécurité) est retenté automatiquement ; un échec persistant est signalé clairement, sans perte des données déjà enregistrées. | Fichier verrouillé 60 ms pendant un enregistrement → enregistrement réussi. |
 
 ---
 

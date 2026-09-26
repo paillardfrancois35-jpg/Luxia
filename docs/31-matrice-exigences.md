@@ -17,7 +17,7 @@
 | [GEN-031](exigences/GEN-031.md) | I | Gigue du tick < 5 ms | Réalisé, à valider sur matériel | TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
 | [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
 | [GEN-051](exigences/GEN-051.md) | I | Version de format et migrations | Réalisé | VersionedJsonFileTests.Load_OldVersion_MigratesAndKeepsBackup |
-| [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid |
+| [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid<br>(+1) |
 | [GEN-060](exigences/GEN-060.md) | I | Blackout au démarrage | Réalisé | RenderEngineTests.Tick_WithoutAnything_ProducesBlackoutFrame |
 | [GEN-080](exigences/GEN-080.md) | I | Perte du PC : noir en 2 s | Réalisé, à valider sur matériel |  |
 | [GEN-081](exigences/GEN-081.md) | I | Arrêt anormal de l'application : noir en 2 s | Réalisé, à valider sur matériel |  |
@@ -185,9 +185,9 @@
 | [SORT-063](exigences/SORT-063.md) | S | Lecteur d'enregistrements | Non réalisé |  |
 | [SORT-064](exigences/SORT-064.md) | S | Pilote Art-Net | Non réalisé |  |
 
-## P4 – 84 exigences, 70 couvertes par des tests automatiques
+## P4 – 86 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 75
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 66 · Validé : 11
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -202,14 +202,16 @@
 | [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
 | [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
 | [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Partiel | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
-| [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Réalisé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
+| [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
 | [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Partiel | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout |
 | [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
 | [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Réalisé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
-| [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Réalisé |  |
+| [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Validé |  |
 | [GEN-106](exigences/GEN-106.md) | M | Nom, couleur et icône des objets | Réalisé |  |
 | [GEN-112](exigences/GEN-112.md) | M | Journal des commandes consultable | Partiel | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves |
 | [GEN-113](exigences/GEN-113.md) | S | Enregistrement des trames d'une session | Partiel |  |
+| [GEN-117](exigences/GEN-117.md) | I | Toute exception journalisée | Réalisé |  |
+| [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
 | [GEN-130](exigences/GEN-130.md) | I | Format des fichiers documenté | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
 | [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Réalisé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ShowCompilerTests.MissingPalette_IsReported_WithFileObjectAndField |
 | [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Réalisé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording |
@@ -218,27 +220,27 @@
 | [MOT-002](exigences/MOT-002.md) | I | Budget de 5 ms par tick | Réalisé | EnginePerformanceTests.Tick_With100Fixtures20Layers40Playbacks_StaysUnderFiveMilliseconds_WithoutAllocating |
 | [MOT-003](exigences/MOT-003.md) | I | Fil d'exécution dédié, sans opération bloquante | Réalisé |  |
 | [MOT-004](exigences/MOT-004.md) | I | Déterminisme : aléatoire à graine journalisée | Réalisé | ScenePlaybackTests.LoopRandom_NeverRepeatsCurrentStep_AndIsReproducibleWithSeed |
-| [MOT-010](exigences/MOT-010.md) | I | Étape = fondu d'entrée + maintien | Réalisé | ScenePlaybackTests.Step_FadeOneSecond_HoldTwo_NextStepAtThreeSeconds |
+| [MOT-010](exigences/MOT-010.md) | I | Étape = fondu d'entrée + maintien | Validé | ScenePlaybackTests.Step_FadeOneSecond_HoldTwo_NextStepAtThreeSeconds |
 | [MOT-011](exigences/MOT-011.md) | I | Interpolation des attributs continus selon la courbe | Réalisé | ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps<br>ScenePlaybackTests.SCurve_IsSmoothAtBothEnds_AndCrossesHalfWayInTheMiddle<br>ScenePlaybackTests.StepChange_InterpolatesFromPreviousStepValue |
 | [MOT-012](exigences/MOT-012.md) | I | Attributs discrets : bascule franche | Réalisé | ReferenceShowP4Tests.ColorWheel_OnlyEverShowsSlotMedians<br>ScenePlaybackTests.DiscreteAttribute_SwitchesFrankly_AtChosenPoint |
-| [MOT-013](exigences/MOT-013.md) | I | Modes de boucle | Réalisé | ScenePlaybackTests.LoopCount_PlaysNPasses<br>ScenePlaybackTests.LoopInfinite_WrapsAround<br>ScenePlaybackTests.LoopOnce_ThenStops<br>ScenePlaybackTests.LoopPingPong_GoesBackAndForth<br>(+1) |
+| [MOT-013](exigences/MOT-013.md) | I | Modes de boucle | Validé | ScenePlaybackTests.LoopCount_PlaysNPasses<br>ScenePlaybackTests.LoopInfinite_WrapsAround<br>ScenePlaybackTests.LoopOnce_ThenStops<br>ScenePlaybackTests.LoopPingPong_GoesBackAndForth<br>(+1) |
 | [MOT-014](exigences/MOT-014.md) | I | Fin de scène : arrêt, maintien, enchaînement | Réalisé | ScenePlaybackTests.EndChain_LaunchesNextSceneInSameLayer<br>ScenePlaybackTests.EndHold_StaysOnLastStep<br>ScenePlaybackTests.EndStop_FadesOutWithSceneFadeOut |
-| [MOT-015](exigences/MOT-015.md) | I | Vitesse de lecture | Réalisé | ScenePlaybackTests.Speed_Doubled_MakesStepsTwiceShorter |
+| [MOT-015](exigences/MOT-015.md) | I | Vitesse de lecture | Validé | ScenePlaybackTests.Speed_Doubled_MakesStepsTwiceShorter<br>ScenesViewModelTests.Speed_IncreasedStepByStep_WhilePlaying_AppliesLive_WithoutError |
 | [MOT-019](exigences/MOT-019.md) | M | Pas à pas : étape suivante / précédente | Réalisé | ScenePlaybackTests.ManualNextAndPrevious_ChangeStep |
 | [MOT-030](exigences/MOT-030.md) | I | Fondu croisé dans une couche exclusive | Réalisé | LayerMergeTests.CrossFade_AttributeInBothScenes_InterpolatesDirectly<br>LayerMergeTests.CrossFade_AttributeOnlyInNewScene_FadesFromUnderlying |
 | [MOT-031](exigences/MOT-031.md) | I | Fusion entre couches et modes d'intensité | Réalisé | LayerMergeTests.Intensity_FourModes<br>LayerMergeTests.Intensity_Htp_HighestContributionWins<br>LayerMergeTests.NonIntensity_LtpByPriority_HighestLayerWins_EvenIfLaunchedFirst<br>LayerMergeTests.NonIntensity_SamePriority_MostRecentWins |
 | [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
 | [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
-| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Réalisé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
+| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
 | [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Réalisé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
 | [MOT-050](exigences/MOT-050.md) | I | Couleur logique vers RVB | Réalisé | ColorConversionTests.Rgb_Par_TakesColorDirectly |
 | [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
-| [MOT-052](exigences/MOT-052.md) | I | Couleur logique vers roue de couleur | Réalisé | ColorConversionTests.ColorWheel_NeverPicksHalfColors<br>ColorConversionTests.ColorWheel_Red_PicksRedSlot_AtItsMedian<br>ColorConversionTests.ColorWheel_WhiteLogical_PicksOpenPosition |
+| [MOT-052](exigences/MOT-052.md) | I | Couleur logique vers roue de couleur | Validé | ColorConversionTests.ColorWheel_NeverPicksHalfColors<br>ColorConversionTests.ColorWheel_Red_PicksRedSlot_AtItsMedian<br>ColorConversionTests.ColorWheel_WhiteLogical_PicksOpenPosition |
 | [MOT-053](exigences/MOT-053.md) | M | UV et ambre en émetteurs indépendants | Réalisé | ColorConversionTests.Uv_Fixture_IgnoresColor_UnlessUvIsSpecified |
 | [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Non réalisé |  |
-| [MOT-070](exigences/MOT-070.md) | I | Blackout | Réalisé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
-| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Réalisé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
+| [MOT-070](exigences/MOT-070.md) | I | Blackout | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
+| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
 | [MOT-090](exigences/MOT-090.md) | I | Conversion des attributs en octets selon le patch | Réalisé | RenderChainTests.Scene_Values_AreConvertedTo8And16Bits_WithInversion<br>ShowCompilerTests.Parameters_OfReferenceRig_HaveRolesAddressesAnd16Bits |
 | [MOT-091](exigences/MOT-091.md) | I | Appareils absents émis à 0 | Réalisé | RenderChainTests.AbsentFixture_IsEmittedAtZero<br>ShowCompilerTests.AbsentFixture_InActiveVenue_IsMarkedAbsent |
 | [MOT-092](exigences/MOT-092.md) | I | Jumeaux : mêmes valeurs | Réalisé | RenderChainTests.Twins_ShareParameters_AndReceiveSameValues<br>ShowCompilerTests.Twins_ShareParametersOfFirstFixture |
@@ -247,9 +249,9 @@
 | [MOT-101](exigences/MOT-101.md) | I | Événements de scène et de refus | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
 | [MOT-103](exigences/MOT-103.md) | M | Mode sans interface piloté par scénario | Réalisé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>HeadlessToolsTests.Scenario_Parse_ResolvesNames_AndReportsBadLines |
 | [PAL-001](exigences/PAL-001.md) | I | Créer une palette depuis le programmeur | Réalisé | ScenesViewModelTests.SaveAsPositionPalette_FromProgrammer |
-| [PAL-002](exigences/PAL-002.md) | I | Palettes couleur par intention | Réalisé | ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
+| [PAL-002](exigences/PAL-002.md) | I | Palettes couleur par intention | Validé | ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
 | [PAL-003](exigences/PAL-003.md) | I | Palettes automatiques | Réalisé |  |
-| [PAL-005](exigences/PAL-005.md) | I | Les scènes suivent les palettes | Réalisé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>LayerMergeTests.LoadShow_WhilePlaying_UpdatesRunningSceneValues |
+| [PAL-005](exigences/PAL-005.md) | I | Les scènes suivent les palettes | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>LayerMergeTests.LoadShow_WhilePlaying_UpdatesRunningSceneValues |
 | [PAL-006](exigences/PAL-006.md) | I | Suppression d'une palette utilisée | Réalisé | SceneUsageAndStoreTests.PaletteUsage_ListsSteps_AndFreezeReplacesReferenceByValue<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze |
 | [PAL-007](exigences/PAL-007.md) | M | Grilles de palettes | Partiel |  |
 | [PAL-009](exigences/PAL-009.md) | M | Jeu de palettes couleur par défaut | Réalisé | SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |

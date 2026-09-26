@@ -145,6 +145,15 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private Task ShowAboutAsync() => _dialogs.ShowInfoAsync("À propos de LuXia", BuildDiagnostics());
 
+    /// <summary>
+    /// Signale une erreur inattendue de l'interface dans la barre d'état (elle est déjà au journal technique, GEN-117).
+    /// </summary>
+    public void ReportError(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        ProjectMessage = $"Erreur inattendue : {exception.Message} — détails dans le journal technique (Aide → À propos : dossier des journaux).";
+    }
+
     /// <summary>Bascule du blackout (bouton, touche B).</summary>
     [RelayCommand]
     private void ToggleBlackout() => Blackout = !Blackout;
@@ -252,6 +261,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             string.Empty,
             $"Dossier Documents : {paths.DocumentsRoot}",
             $"Dossier AppData : {paths.AppDataRoot}",
+            $"Dossier des journaux : {paths.Logs}",
             $"Fichier de préférences : {paths.PreferencesFile} (existe : {(File.Exists(paths.PreferencesFile) ? "oui" : "non")})",
             $"Dernier projet en mémoire (préférences) : {prefs.LastProjectPath ?? "(aucun)"}",
             string.Empty,
