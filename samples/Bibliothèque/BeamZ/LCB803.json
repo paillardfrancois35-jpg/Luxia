@@ -4,7 +4,7 @@
   "manufacturer": "BeamZ",
   "model": "LCB803",
   "category": "ledBar",
-  "version": 1,
+  "version": 2,
   "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "Barre LED 80 × RGB 3-en-1 (60 W), 986 mm. Mode choisi par le menu ChNd, adresse par Addr. 12 / 24 / 48 canaux = 2 / 4 / 8 sections indépendantes (cellules). Show de référence : 24 canaux (4 sections) tient dans la réserve du plan d'adresses (51-74 et 81-104) ; 48 canaux ne tient pas.",
@@ -41,18 +41,25 @@
       "name": "Strobe",
       "attribute": "shutter",
       "cell": 0,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -108,18 +115,25 @@
       "name": "Strobe (section 1)",
       "attribute": "shutter",
       "cell": 1,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -175,18 +189,25 @@
       "name": "Strobe (section 2)",
       "attribute": "shutter",
       "cell": 2,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -242,18 +263,25 @@
       "name": "Strobe (section 3)",
       "attribute": "shutter",
       "cell": 3,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -309,18 +337,25 @@
       "name": "Strobe (section 4)",
       "attribute": "shutter",
       "cell": 4,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -376,18 +411,25 @@
       "name": "Strobe (section 5)",
       "attribute": "shutter",
       "cell": 5,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -443,18 +485,25 @@
       "name": "Strobe (section 6)",
       "attribute": "shutter",
       "cell": 6,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -510,18 +559,25 @@
       "name": "Strobe (section 7)",
       "attribute": "shutter",
       "cell": 7,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }
@@ -577,18 +633,25 @@
       "name": "Strobe (section 8)",
       "attribute": "shutter",
       "cell": 8,
-      "notes": "Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct).",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant.",
       "capabilities": [
         {
           "min": 0,
+          "max": 0,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
           "max": 255,
           "kind": "progressive",
-          "label": "Strobe rapide → lent",
+          "label": "Strobe lent → rapide",
           "strobe": "strobe",
           "parameter": {
             "nature": "vitesse",
-            "start": 100,
-            "end": 0,
+            "start": 0,
+            "end": 100,
             "unit": "%"
           }
         }

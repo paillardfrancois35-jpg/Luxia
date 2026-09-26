@@ -74,8 +74,9 @@ PCT = ("vitesse", 0, 100, "%")
 fixture("Betopper", "LPC008S", "par", [
     ch("dim", "CH1 Gradation générale", "intensity"),
     ch("r", "Rouge", "red"), ch("g", "Vert", "green"), ch("b", "Bleu", "blue"),
-    ch("strobe", "Strobe général", "shutter", [cap(0, 255, "Strobe lent → rapide", "progressive", "strobe", PCT)],
-       notes="La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct)."),
+    ch("strobe", "Strobe général", "shutter", [cap(0, 4, "Pas de strobe", "fixed", "open"),
+                                               cap(5, 255, "Strobe lent → rapide", "progressive", "strobe", PCT)],
+       notes="Utilisateur (Q28, 2026-09-26) : 0-4 = néant, 5-255 = stroboscope croissant."),
     ch("fn", "Sélecteur de fonction", "mode", [
         cap(0, 50, "Gradation DMX"), cap(51, 100, "Sortie couleur (8 couleurs, choix par CH7)", "program"),
         cap(101, 150, "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)", "program"), cap(151, 200, "Transition", "program"),
@@ -113,8 +114,9 @@ fixture("Betopper", "LPC010", "par", [
 fixture("Betopper", "LPC120", "par", [
     ch("dim", "CH1 Gradation totale", "intensity"),
     ch("r", "Rouge", "red"), ch("g", "Vert", "green"), ch("b", "Bleu", "blue"), ch("w", "Blanc", "white"),
-    ch("strobe", "Strobe", "shutter", [cap(0, 255, "Strobe lent → rapide", "progressive", "strobe", PCT)],
-       notes="Plages non détaillées par la notice (0 = sans strobe ? à vérifier)."),
+    ch("strobe", "Strobe", "shutter", [cap(0, 4, "Pas de strobe", "fixed", "open"),
+                                       cap(5, 255, "Strobe lent → rapide", "progressive", "strobe", PCT)],
+       notes="Plages supposées identiques au LPC008S (Q27 : mêmes commandes, de mémoire) : 0-4 = néant, 5-255 = strobe croissant — à confirmer au branchement."),
     ch("effect", "Effet", "mode", [
         cap(0, 10, "Gradation DMX"), cap(11, 50, "7 couleurs haut IRC", "program"), cap(51, 100, "16 couleurs", "program"),
         cap(101, 150, "Saut de 16 couleurs", "program"), cap(151, 200, "Dégradé multicolore", "program"),
@@ -260,8 +262,9 @@ def lcb_section(n, cell):
     lbl = "" if cell == 0 else " (section %d)" % n
     return [
         ch("dim" + s, "Gradateur" + lbl, "intensity" if cell == 0 else "cellIntensity", cell=cell),
-        ch("strobe" + s, "Strobe" + lbl, "shutter", [cap(0, 255, "Strobe rapide → lent", "progressive", "strobe", ("vitesse", 100, 0, "%"))], cell=cell,
-           notes="Notice : « Strobe (Fast to slow) » sans plage d'arrêt : 0 = sans strobe probablement (à vérifier en direct)."),
+        ch("strobe" + s, "Strobe" + lbl, "shutter", [cap(0, 0, "Pas de strobe", "fixed", "open"),
+                                                  cap(1, 255, "Strobe lent → rapide", "progressive", "strobe", PCT)], cell=cell,
+           notes="Utilisateur (Q28, 2026-09-26) : 0 = néant, 1-255 = stroboscope croissant."),
         ch("r" + s, "Rouge" + lbl, "red", cell=cell), ch("g" + s, "Vert" + lbl, "green", cell=cell), ch("b" + s, "Bleu" + lbl, "blue", cell=cell),
         ch("auto" + s, "Programme auto" + lbl, "program", [cap(0, 255, "Programme auto rapide → lent", "program", param=("vitesse", 100, 0, "%"))], cell=cell,
            notes="Notice : « Auto program (Fast to slow) » : 0 = programme arrêté probablement (à vérifier en direct)."),

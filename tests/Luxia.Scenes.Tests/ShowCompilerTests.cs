@@ -34,7 +34,8 @@ public sealed class ShowCompilerTests
         pan.Outputs.ShouldBe([new ChannelAddress(1, 111, 112)]);
         pan.Default.ShouldBe(128 / 255.0, 1e-9);
         model.Parameters[model.IndexOf(lyre, "color")].Discrete.ShouldBeTrue();
-        model.Parameters[model.IndexOf(par, "strobe")].Discrete.ShouldBeFalse();
+        // Q28 : le Strobe du LPC008S a une plage fixe « Pas de strobe » (0-4) : il devient discret, comme celui de l'UV.
+        model.Parameters[model.IndexOf(par, "strobe")].Discrete.ShouldBeTrue();
         model.Parameters[model.IndexOf(par, "fn")].Discrete.ShouldBeTrue();
     }
 

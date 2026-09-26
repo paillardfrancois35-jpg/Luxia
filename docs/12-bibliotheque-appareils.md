@@ -132,6 +132,7 @@ La couleur et la luminosité restent ainsi réglables séparément, même sur un
 | BIB-008 | M | P2 | Les plages de type **emplacement de roue** portent une couleur ; le simulateur et les palettes couleur « par intention » s'en servent. | Roue de lyre saisie → couleurs visibles. |
 | BIB-009 | M | P2 | Un modèle porte une **version** incrémentée à chaque modification enregistrée. | — |
 | BIB-010 | S | P2 | Un modèle peut être **dérivé** d'un autre (copier puis modifier), avec mention de l'origine. | Dupliquer LPC008S → LPC010. |
+| BIB-101 | I | P5 | Canal Strobe du **LPC008S**, du **LPC120** et de la **LCB803** : plage « Pas de strobe » distincte de la plage de strobe (Q28), pour que le simulateur, `jouer` et le limiteur de strobe (MOT-080) ne prennent pas un appareil qui éclaire fixe pour un strobe. | LPC008S : 0-4 néant, 5-255 strobe ; LCB803 : 0 néant, 1-255 strobe ; LPC120 comme le LPC008S (à confirmer). |
 
 ## 4. Exigences – éditeur
 
@@ -233,7 +234,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | BIB-082, 083 | Import par lots hors du fil de l'interface avec progression ; un modèle déjà présent (même fabricant + modèle, ou même identifiant) n'est **pas** écrasé (« = » au rapport). |
 | Unités (GEN-021) | Faders d'appareil : nom de plage, degrés (Pan/Tilt si l'amplitude est connue), % (intensités, émetteurs), sinon 0-255. |
 | Non réalisés | BIB-027 (S, ouvrir notice / photo : seul le chemin est saisi), BIB-084 (S, export OFL). |
-| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; strobe et programme « rapide → lent » sans plage d'arrêt documentée, à vérifier. WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25, confirmée par Open Fixture Library et vérification en direct de l'utilisateur (BIB-095) ; Tilt 0-230° (pas 180°) ; obturateur ouvert par défaut (0) ; canal Reset en dernière position (121 en 11CH). |
+| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; programme « rapide → lent » sans plage d'arrêt documentée, à vérifier ; strobe : 0 = néant, 1-255 = strobe croissant (Q28, BIB-101). WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25, confirmée par Open Fixture Library et vérification en direct de l'utilisateur (BIB-095) ; Tilt 0-230° (pas 180°) ; obturateur ouvert par défaut (0) ; canal Reset en dernière position (121 en 11CH). |
 
 ## Annexe A – Appareils du parc (état de la documentation)
 
