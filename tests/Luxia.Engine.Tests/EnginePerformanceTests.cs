@@ -6,6 +6,7 @@ using static Luxia.Engine.Tests.ShowBuilder;
 namespace Luxia.Engine.Tests;
 
 /// <summary>T-MOT-08 (partie automatisable) : budget de calcul d'un tick, pas d'allocation en régime établi, abonné lent.</summary>
+[Collection(RealTimeTests.Name)]
 public sealed class EnginePerformanceTests
 {
     [Fact]
@@ -63,8 +64,9 @@ public sealed class EnginePerformanceTests
             worst = worst > watch.Elapsed ? worst : watch.Elapsed;
         }
 
-        // Chaque tick publie un ÉtapeChangée que l'abonné met 50 ms à traiter : le tick n'attend pas.
-        worst.TotalMilliseconds.ShouldBeLessThan(5);
+        // Chaque tick publie un ÉtapeChangée que l'abonné met 50 ms à traiter : si le tick l'attendait, il durerait
+        // au moins 50 ms. Seuil large (25 ms) pour ne pas dépendre de la charge de la machine pendant les tests.
+        worst.TotalMilliseconds.ShouldBeLessThan(25);
     }
 
     private static (ShowModel Model, IReadOnlyList<EngineScene> Scenes) BigShow()
