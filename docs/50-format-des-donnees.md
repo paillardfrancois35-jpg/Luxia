@@ -174,6 +174,9 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
       "depthM": 8,
       "placements": [
         { "fixtureId": "5c9e2f10-...", "x": 1.5, "y": 0.5, "heightM": 2, "orientationDeg": 0, "mounting": "standing", "absent": false }
+      ],
+      "forbiddenZones": [
+        { "fixtureId": "9d0a...", "name": "Public", "panMin": 0.3, "panMax": 0.7, "tiltMin": 0.8, "tiltMax": 1 }
       ]
     }
   ],
@@ -185,6 +188,7 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
 |---|---|
 | `venues[].placements[].mounting` | `standing` (posé) ou `hanging` (suspendu) |
 | `venues[].placements[].absent` | Appareil non emporté ce soir (INST-052) : non émis, absent du simulateur et des sélections actives |
+| `venues[].forbiddenZones` | Zones interdites des lyres dans ce lieu (INST-053, P5) : rectangles de Pan et Tilt **logiques normalisés 0-1** (valeurs lues au programmeur, avant inversion de montage) ; plusieurs par lyre possibles ; le moteur ramène toute cible qui y tombe au bord le plus proche (MOT-082). Rectangle vide (min ≥ max) ignoré et signalé par `valider` |
 | `activeVenueId` | Lieu actif ; absent ou introuvable = le premier lieu de la liste |
 
 ## 8. Bibliothèque : modèle d'appareil (format 1)
@@ -369,6 +373,29 @@ Couches (doc 17 §1). Absent = modèle par défaut du doc 17 §1.3 (D28), identi
 | `exclusive` | Lancer une scène remplace celle qui joue, en fondu croisé de `crossFade` (MOT-030) |
 | `intensityMode` | `htp`, `priority`, `additive`, `multiplicative` (doc 15 §5.2) |
 | `master`, `masterOnAllAttributes` | Master de la couche (MOT-033) |
+
+## 12b. Projet : `sûreté.json` (format 1)
+
+Réglages des limites de sûreté (doc 02 §13, D29). Absent = valeurs par défaut ci-dessous. Les canaux concernés sont ceux
+qu'une étiquette de sûreté désigne dans la bibliothèque (`strobe`, `fumée`, BIB-007) ; un canal compte comme « en strobe »
+quand sa valeur tombe dans une plage `strobe` / `pulse` / `random`, et il est forcé à sa plage `open` (sinon `rest`, sinon 0).
+
+```json
+{
+  "formatVersion": 1,
+  "strobe": { "maxContinuousSeconds": 10, "pauseSeconds": 10, "forbidden": false, "maxSpeedPercent": 100 },
+  "smoke": { "maxEmissionSeconds": 10, "minRestSeconds": 30 }
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `strobe.maxContinuousSeconds` | Strobe continu maximal **par appareil** ; au-delà, pause forcée (MOT-080). Une coupure de moins de 1 s ne remet pas le compte à zéro |
+| `strobe.pauseSeconds` | Durée de la pause forcée |
+| `strobe.forbidden` | Strobe interdit partout |
+| `strobe.maxSpeedPercent` | Plafond de vitesse, en % de chaque plage de strobe progressive (100 = aucun) |
+| `smoke.maxEmissionSeconds` | Émission continue maximale de fumée (MOT-081), commande manuelle et surcharges comprises |
+| `smoke.minRestSeconds` | Repos minimal après **toute** émission |
 
 ## 13. Scénario de commandes `luxia-headless` (texte)
 
