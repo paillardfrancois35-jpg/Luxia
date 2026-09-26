@@ -105,3 +105,13 @@ Actifs quel que soit le focus en Live (GEN-071). Les touches à maintenir n'agis
 | T-LIVE-02 | Intégration | Reprise en main en auto : couche manuelle, rendu au Directeur. |
 | T-LIVE-03 | Manuel | Scénario « soirée manuelle » de 30 min au simulateur (check-list jalon 1). |
 | T-LIVE-04 | Manuel | Utilisation dans une pièce sombre : lisibilité, erreurs de manipulation. |
+
+## 8. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Écran | Module `Luxia.UI.Modules.Live`, premier écran de la navigation. Bandeau d'état en pastilles (sortie, contrôleurs MIDI, figé, fumée, lieu, sûreté, positions non calibrées) ; colonnes de couches (150 px) ; actions à droite ; palettes rapides et journal en bas. Blackout et Grand Master ne sont pas dupliqués : l'en-tête de la fenêtre les montre sur tous les écrans. |
+| Écarts assumés (Q32) | Rien n'est affiché pour ce qui n'existe pas encore (tempo, style, show, auto : P7 à P10). Disposition personnalisable (LIVE-006), mini-simulateur (LIVE-007), assistant (LIVE-011) et raccourcis personnalisables (LIVE-041) reportés au chantier d'ergonomie ; `live.json` règle les couches masquées et les boutons. |
+| Boutons à maintenir | Appui / relâche sur le pointeur (la perte du pointeur relâche aussi : jamais de flash coincé). |
+| Raccourcis (LIVE-040) | B, F, S, Z, G, Échap, 1-9 (couche encadrée), ← →, Page ↑↓ ; hors saisie de texte, répétition automatique ignorée, relâche toujours traitée. Espace, Ctrl+A et N avec leur phase. |
+| Journal (LIVE-009, GEN-112) | Événements du bus (scènes avec origine, sûreté, sortie, refus) ; case « Commandes » : journal des commandes du moteur. |

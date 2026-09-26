@@ -197,3 +197,13 @@ Le paramétrage des effets est défini au doc 16. Le moteur les exécute ainsi :
 | MOT-002 | Mesuré par test : 100 appareils, 20 couches, 40 lectures, bien sous 5 ms et sans allocation en régime établi. |
 | MOT-054 (M) | Non réalisé : interpolation RVB directe ; à reprendre avec les effets (P6). |
 | MOT-103 | Scénario texte (`luxia-headless scenario`, doc 50 §13) ; `luxia-headless jouer` pour une scène. |
+
+## 14. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Étape 4 – flashs (MOT-072) | Un flash est une lecture à part, fusionnée **après** toutes les couches, intensité en mode prioritaire, master de sa couche ; elle ne remplace pas la scène de sa couche : au relâchement, on retrouve exactement ce qui jouait. |
+| Étape 8 – figer (MOT-073) | **Écart d'ordre assumé** avec doc 02 §9 : les valeurs sont gelées après surcharges et Grand Master mais **avant** le blackout, pour que le blackout reste actif pendant le gel (exigé par MOT-073). Lectures poursuivies (défaut) ou suspendues. |
+| Étape 9 – sûreté (MOT-080 à 083, D29) | Zones interdites sur les paramètres Pan/Tilt (bord autorisé le plus proche ; une zone qui touche une butée s'étend au-delà) ; strobe et fumée sur les **octets finaux**, après surcharges brutes et test de sortie (GEN-042 : jamais contournables). Strobe compté par appareil, coupure de moins de 1 s tolérée, pause 10 s par défaut ; fumée : repos après toute émission. Événement une fois par épisode ; limites actives dans l'instantané (`ActiveLimits`). Option « intensité à 0 pendant la traversée d'une zone » non réalisée. |
+| Commandes P5 | `FlashScène` (CMD-014), `Figer` (CMD-003), `Fumée` (CMD-030, maintien ou rafale, refusée sans machine), `ArrêterCouche` avec `Everything` (COU-007). Scène de repos (COU-009) relancée dès qu'une couche est vide. |
+| Reprise (MOT-102) | Instantané toutes les 5 s par l'hôte (`reprise.json`), pas par le moteur : le moteur n'écrit jamais sur le disque (MOT-003). |

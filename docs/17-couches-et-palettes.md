@@ -115,3 +115,14 @@ la valeur spécifique prime sur la traduction automatique.
 | PAL-003 | Boutons générés depuis les plages marquées « palette automatique » ; aucune plage du parc n'est encore marquée. |
 | PAL-006 | Suppression d'une palette utilisée : liste des étapes concernées, puis figeage des valeurs (couleur logique ou niveau quand c'est possible, sinon valeurs par appareil) avant suppression. |
 | PAL-007 (partiel) | Grilles par type, déplacement ◀ ▶ (clic droit) ; les grilles du Live viennent en P5. |
+
+## 5. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Éditeur de couches (COU-001) | Fenêtre « Couches… » depuis l'écran Scènes (pas de nouveau panneau, Q32) ; l'ordre de la liste donne les priorités ; une couche qui contient des scènes ne se supprime pas. |
+| Propriétés ajoutées | `kind` (normale / Flash), `keepOnStopAll` (Ambiance protégée par défaut), `restSceneId`, `families` (familles attendues, avertissement COU-008 dans `valider`). Familles par défaut : Couleurs et Ambiance acceptent aussi l'intensité, Effets accepte faisceau, programmes, mouvement, intensité, couleur ; Flashs : tout. |
+| Couche Flash (COU-005) | Ses scènes jouent en flash (appui / relâche) en Live et sur l'APC mini ; les boutons FLASH / STROBE jouent une scène de cette couche (`live.json`). |
+| Positions par lieu (PAL-004, PAL-008, INST-054) | `venueId` sur les valeurs de palette ; sans lieu = « Générique » et valeur de repli, signalée pour les appareils non calibrés du lieu actif. La mise à jour depuis le programmeur ne touche que les appareils sélectionnés dans le lieu actif (avant P5 : toute la palette). |
+| Thèmes (PAL-010) | Reportés en P6 avec les effets d'alternance qui les utilisent. |
+| Plein feu (MOT-042) | Contenu d'un nouveau projet : scène « Plein feu » dans la couche Intensité (identifiant fixe). |
