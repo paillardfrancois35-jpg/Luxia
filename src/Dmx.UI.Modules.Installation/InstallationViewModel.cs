@@ -11,6 +11,7 @@ using Dmx.Patch;
 using Dmx.Patch.Model;
 using Dmx.Patch.Rules;
 using Dmx.UI.Controls;
+using Microsoft.Extensions.Logging;
 
 namespace Dmx.UI.Modules.Installation;
 
@@ -24,9 +25,11 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
     private readonly DmxRuntime _runtime;
     private readonly IDialogService _dialogs;
+    private readonly ILogger<InstallationViewModel> _logger;
     private IReadOnlyList<(int Channel, byte Value)> _identifyChannels = [];
     private long _identifyStart;
     private Guid? _identifyingFixtureId;
+    private bool? _identifyLastOn;
 
     [ObservableProperty]
     private bool _hasProject;
@@ -80,6 +83,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         ArgumentNullException.ThrowIfNull(dialogs);
         _runtime = runtime;
         _dialogs = dialogs;
+        _logger = runtime.Loggers.CreateLogger<InstallationViewModel>();
         _runtime.Project.Changed += (_, _) => LoadAll();
         LoadAll();
     }
@@ -89,9 +93,6 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Modèles de la bibliothèque partagée, pour le patch.</summary>
     public ObservableCollection<LibraryEntry> LibraryModels { get; } = [];
-
-    /// <summary>Modes du modèle choisi.</summary>
-    public ObservableCollection<string> AvailableModes { get; } = [];
 
     /// <summary>Appareils patchés (doc 13 §3).</summary>
     public ObservableCollection<PatchRowViewModel> PatchRows { get; } = [];
@@ -121,6 +122,12 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
         var elapsed = Stopwatch.GetElapsedTime(_identifyStart);
         var on = elapsed.Ticks / IdentifyPeriod.Ticks % 2 == 0;
+        if (_identifyLastOn != on)
+        {
+            _identifyLastOn = on;
+            _logger.LogInformation("Identifier : bascule à {Etat} ({N} canal/canaux)", on ? "ON" : "OFF", _identifyChannels.Count);
+        }
+
         _runtime.SetChannels(1, [.. _identifyChannels.Select(c => new ChannelValue(c.Channel, on ? c.Value : (byte)0))]);
     }
 
@@ -165,6 +172,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         var mode = SelectedModel.Fixture.Modes.FirstOrDefault(m => m.Name == SelectedMode);
         if (mode is null)
         {
+            _logger.LogWarning("Ajouter : mode « {Mode} » introuvable dans « {Modele} ».", SelectedMode, SelectedModel.Fixture.DisplayName);
             return;
         }
 
@@ -192,6 +200,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             : [.. installation.Universes, new PatchUniverse { Number = (int)NewUniverse }];
         SaveInstallation(installation with { Fixtures = [.. installation.Fixtures, .. added], Universes = universes });
         Message = $"{added.Count} appareil(s) ajouté(s).";
+        _logger.LogInformation("Ajouter : {N} appareil(s) « {Modele} » ({Mode}) à partir de l'adresse {Adresse}, univers {Univers}.", added.Count, SelectedModel.Fixture.DisplayName, mode.Name, (int)NewAddress, (int)NewUniverse);
     }
 
     /// <summary>Renomme un appareil (INST-017).</summary>
@@ -203,6 +212,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Renommer : « {Ancien} » → « {Nouveau} ».", row.Name, row.EditName.Trim());
         Replace(row.Fixture with { Name = row.EditName.Trim() });
     }
 
@@ -210,6 +220,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     internal void MoveFixture(PatchRowViewModel row)
     {
         ArgumentNullException.ThrowIfNull(row);
+        _logger.LogInformation("Déplacer : « {Nom} » univers {AncienUnivers}→{NouvelUnivers}, adresse {AncienneAdresse}→{NouvelleAdresse}.", row.Name, row.Universe, row.EditUniverse, row.Address, row.EditAddress);
         Replace(row.Fixture with { Universe = row.EditUniverse, Address = row.EditAddress });
     }
 
@@ -217,14 +228,22 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     internal async Task ChangeModeAsync(PatchRowViewModel row)
     {
         ArgumentNullException.ThrowIfNull(row);
-        if (row.Type is not { } type || row.EditModeName == row.ModeName)
+        if (row.Type is not { } type)
+        {
+            _logger.LogWarning("Changer de mode : « {Nom} » sans modèle résolu.", row.Name);
+            return;
+        }
+
+        if (row.EditModeName == row.ModeName)
         {
             return;
         }
 
         var impact = FixtureUpdateImpact.ForModeChange(type, row.ModeName, row.EditModeName);
+        _logger.LogInformation("Changer de mode : « {Nom} » {Ancien}→{Nouveau} — impact : {Impact}", row.Name, row.ModeName, row.EditModeName, impact.Summary());
         if (!impact.IsEmpty && !await _dialogs.ConfirmAsync("Changer de mode", $"{row.Name} : {impact.Summary()} Continuer ?").ConfigureAwait(true))
         {
+            _logger.LogInformation("Changer de mode : annulé par l'utilisateur pour « {Nom} ».", row.Name);
             return;
         }
 
@@ -233,7 +252,8 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
     /// <summary>
     /// Reprend la version courante du modèle depuis la bibliothèque partagée (GEN-053), après confirmation s'il y a
-    /// un impact sur le mode utilisé.
+    /// un impact sur le mode utilisé. Sans effet si la bibliothèque partagée n'a pas de version plus récente que
+    /// celle déjà copiée dans le projet (message « Aucune mise à jour disponible » : ce n'est pas une erreur).
     /// </summary>
     internal async Task UpdateFromLibraryAsync(PatchRowViewModel row)
     {
@@ -241,13 +261,18 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         var shared = _runtime.Library.Entries.FirstOrDefault(e => e.Fixture.Id == row.Fixture.FixtureTypeId)?.Fixture;
         if (shared is null || row.Type is null || shared.Version == row.Type.Version)
         {
+            _logger.LogInformation(
+                "Mettre à jour : « {Nom} » — rien à faire (bibliothèque partagée : version {VersionPartagee}, copie du projet : version {VersionProjet}).",
+                row.Name, shared?.Version, row.Type?.Version);
             Message = "Aucune mise à jour disponible pour ce modèle.";
             return;
         }
 
         var impact = FixtureUpdateImpact.ForLibraryUpdate(row.Type, shared, row.ModeName);
+        _logger.LogInformation("Mettre à jour : « {Nom} » v{Ancien}→v{Nouveau} — impact : {Impact}", row.Name, row.Type.Version, shared.Version, impact.Summary());
         if (!impact.IsEmpty && !await _dialogs.ConfirmAsync("Mettre à jour le modèle", $"{row.Name} : {impact.Summary()} Continuer ?").ConfigureAwait(true))
         {
+            _logger.LogInformation("Mettre à jour : annulé par l'utilisateur pour « {Nom} ».", row.Name);
             return;
         }
 
@@ -265,6 +290,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Supprimer : « {Nom} » (adresse {Adresse}) retiré du patch.", row.Name, row.Address);
         var installation = _runtime.Project.Installation;
         SaveInstallation(installation with { Fixtures = [.. installation.Fixtures.Where(f => f.Id != row.Id)] });
         Message = $"« {row.Name} » supprimé du patch.";
@@ -274,8 +300,10 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     internal void ToggleIdentifyFixture(PatchRowViewModel row)
     {
         ArgumentNullException.ThrowIfNull(row);
+        _logger.LogInformation("Identifier : clic sur « {Nom} » (adresse {Adresse}, mode {Mode})", row.Name, row.Address, row.ModeName);
+        var wasIdentifying = _identifyingFixtureId == row.Id;
         StopIdentify();
-        if (_identifyingFixtureId == row.Id)
+        if (wasIdentifying)
         {
             // Un second clic sur le même appareil : on vient de l'arrêter (StopIdentify ci-dessus), rien de plus.
             _identifyingFixtureId = null;
@@ -318,34 +346,44 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         if (_identifyChannels.Count > 0)
         {
             _runtime.ReleaseChannels(1, [.. _identifyChannels.Select(c => c.Channel)]);
+            _logger.LogInformation("Identifier : arrêt, {N} canal/canaux libéré(s) : {Canaux}", _identifyChannels.Count, string.Join(", ", _identifyChannels.Select(c => c.Channel)));
         }
 
         _identifyingFixtureId = null;
         _identifyChannels = [];
+        _identifyLastOn = null;
     }
 
     private void StartIdentify(PatchRowViewModel row)
     {
         if (row.Type is not { } type)
         {
+            _logger.LogWarning("Identifier : « {Nom} » sans modèle résolu dans la copie du projet (fixtureTypeId {Id}) : rien à identifier.", row.Name, row.Fixture.FixtureTypeId);
             return;
         }
 
         var mode = type.Modes.FirstOrDefault(m => m.Name == row.ModeName);
         if (mode is null)
         {
+            _logger.LogWarning("Identifier : mode « {Mode} » introuvable dans le modèle « {Modele} » pour « {Nom} ».", row.ModeName, type.DisplayName, row.Name);
             return;
         }
 
         _identifyChannels = IdentifyRules.IdentifyChannels(type, mode, row.Address);
         if (_identifyChannels.Count == 0)
         {
+            _logger.LogWarning(
+                "Identifier : aucun canal d'intensité ni de valeur d'identification trouvé pour « {Nom} » ({Modele}, mode {Mode}, adresse {Adresse}) : rien ne s'allume.",
+                row.Name, type.DisplayName, mode.Name, row.Address);
             return;
         }
 
         _identifyingFixtureId = row.Id;
         _identifyStart = Stopwatch.GetTimestamp();
         row.Identifying = true;
+        _logger.LogInformation(
+            "Identifier : « {Nom} » démarré, {N} canal/canaux : {Canaux}",
+            row.Name, _identifyChannels.Count, string.Join(", ", _identifyChannels.Select(c => $"{c.Channel}={c.Value}")));
     }
 
     /// <summary>Crée une sélection manuelle à partir des appareils cochés dans le patch (INST-030, INST-032).</summary>
@@ -373,6 +411,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
         NewSelectionName = string.Empty;
         Message = $"Sélection « {selection.Name} » créée ({selection.Items.Count} appareils).";
+        _logger.LogInformation("Sélection : « {Nom} » créée ({N} appareils).", selection.Name, selection.Items.Count);
     }
 
     /// <summary>Supprime la sélection affichée (GEN-103).</summary>
@@ -389,6 +428,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Sélection : « {Nom} » supprimée.", SelectedSelection.Name);
         var installation = _runtime.Project.Installation;
         SaveInstallation(installation with { Selections = [.. installation.Selections.Where(s => s.Id != SelectedSelection.Id)] });
     }
@@ -402,6 +442,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Sélection : « {Nom} » réordonnée ({Operation}).", SelectedSelection.Name, operation);
         var items = SelectedSelection.Selection.Items;
         var reordered = operation switch
         {
@@ -429,6 +470,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Lieu : « {Nom} » créé.", NewVenueName.Trim());
         SaveVenueSet(_runtime.Project.Venues.Venues.Append(new Venue { Name = NewVenueName.Trim() }).ToList(), _runtime.Project.Venues.ActiveVenueId);
         NewVenueName = string.Empty;
     }
@@ -443,6 +485,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         }
 
         var copy = SelectedVenue.ToVenue() with { Id = Guid.NewGuid(), Name = $"{SelectedVenue.Name} (copie)" };
+        _logger.LogInformation("Lieu : « {Nom} » dupliqué en « {Copie} ».", SelectedVenue.Name, copy.Name);
         SaveVenueSet(_runtime.Project.Venues.Venues.Append(copy).ToList(), _runtime.Project.Venues.ActiveVenueId);
     }
 
@@ -455,6 +498,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Lieu : « {Nom} » activé.", SelectedVenue.Name);
         SaveVenueSet(_runtime.Project.Venues.Venues, SelectedVenue.Id);
     }
 
@@ -473,6 +517,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        _logger.LogInformation("Lieu : « {Nom} » supprimé.", SelectedVenue.Name);
         var remaining = _runtime.Project.Venues.Venues.Where(v => v.Id != SelectedVenue.Id).ToList();
         var activeId = _runtime.Project.Venues.ActiveVenueId == SelectedVenue.Id ? remaining[0].Id : _runtime.Project.Venues.ActiveVenueId;
         SaveVenueSet(remaining, activeId);
@@ -491,6 +536,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         var venues = _runtime.Project.Venues.Venues.Select(v => v.Id == updated.Id ? updated : v).ToList();
         SaveVenueSet(venues, _runtime.Project.Venues.ActiveVenueId);
         Message = $"Lieu « {updated.Name} » enregistré.";
+        _logger.LogInformation("Lieu : « {Nom} » — {N} placement(s) enregistré(s).", updated.Name, updated.Placements.Count);
     }
 
     private void SaveVenueSet(IReadOnlyList<Venue> venues, Guid? activeId)
@@ -524,6 +570,19 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
 
     private void LoadAll()
     {
+        try
+        {
+            LoadAllCore();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Rechargement de l'écran Installation : échec inattendu.");
+            Message = "Erreur inattendue au rechargement de l'écran (voir le journal technique).";
+        }
+    }
+
+    private void LoadAllCore()
+    {
         HasProject = _runtime.Project.Folder is not null;
         LibraryModels.Clear();
         foreach (var entry in _runtime.Library.Entries)
@@ -532,10 +591,20 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         }
 
         var installation = _runtime.Project.Installation;
-        Universes.Clear();
-        foreach (var universe in installation.Universes.Select(u => u.Number).Order())
+
+        // Ne jamais vider puis remplir : le ComboBox lié à SelectedUniverse (int, non annulable) passe alors
+        // par une sélection nulle le temps de la reconstruction, et la liaison bidirectionnelle lève
+        // System.InvalidCastException en essayant de repousser ce null vers un int. On ne touche donc la
+        // collection que pour les univers réellement ajoutés ou retirés.
+        var wantedUniverses = installation.Universes.Select(u => u.Number).Order().ToList();
+        foreach (var obsolete in Universes.Where(u => !wantedUniverses.Contains(u)).ToList())
         {
-            Universes.Add(universe);
+            Universes.Remove(obsolete);
+        }
+
+        foreach (var missing in wantedUniverses.Where(u => !Universes.Contains(u)))
+        {
+            Universes.Add(missing);
         }
 
         if (!Universes.Contains(SelectedUniverse) && Universes.Count > 0)

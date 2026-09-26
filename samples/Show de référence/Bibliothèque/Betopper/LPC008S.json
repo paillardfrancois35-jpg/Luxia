@@ -4,7 +4,7 @@
   "manufacturer": "Betopper",
   "model": "LPC008S",
   "category": "par",
-  "version": 1,
+  "version": 3,
   "author": "DMX (depuis la notice)",
   "source": "manual",
   "notes": "PAR LED RGB 54 × 3 W. Menu d001 = mode 3 canaux, A001 = mode 7 canaux (le menu d'adresse choisit le mode).",
@@ -13,32 +13,56 @@
     "sourceType": "LED RGB 3-en-1",
     "power": 180
   },
+  "wheels": [],
   "channels": [
     {
       "key": "dim",
       "name": "CH1 Gradation générale",
-      "attribute": "intensity"
+      "attribute": "intensity",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
     },
     {
       "key": "r",
       "name": "Rouge",
-      "attribute": "red"
+      "attribute": "red",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
     },
     {
       "key": "g",
       "name": "Vert",
-      "attribute": "green"
+      "attribute": "green",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
     },
     {
       "key": "b",
       "name": "Bleu",
-      "attribute": "blue"
+      "attribute": "blue",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
     },
     {
       "key": "strobe",
       "name": "Strobe général",
       "attribute": "shutter",
-      "notes": "La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct).",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
       "capabilities": [
         {
           "min": 0,
@@ -51,50 +75,94 @@
             "start": 0,
             "end": 100,
             "unit": "%"
-          }
+          },
+          "colors": [],
+          "autoPalette": false,
+          "median": 128
         }
-      ]
+      ],
+      "notes": "La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct)."
     },
     {
       "key": "fn",
       "name": "Sélecteur de fonction",
       "attribute": "mode",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
       "capabilities": [
         {
           "min": 0,
+          "max": 28,
+          "kind": "fixed",
+          "label": "Gradation DMX",
+          "colors": [],
+          "autoPalette": false,
+          "median": 14
+        },
+        {
+          "min": 29,
+          "max": 39,
+          "kind": "fixed",
+          "label": "Nouvelle plage",
+          "colors": [],
+          "autoPalette": false,
+          "median": 34
+        },
+        {
+          "min": 40,
           "max": 50,
           "kind": "fixed",
-          "label": "Gradation DMX"
+          "label": "Nouvelle plage",
+          "colors": [],
+          "autoPalette": false,
+          "median": 45
         },
         {
           "min": 51,
           "max": 100,
           "kind": "program",
-          "label": "Sortie couleur (8 couleurs, choix par CH7)"
+          "label": "Sortie couleur (8 couleurs, choix par CH7)",
+          "colors": [],
+          "autoPalette": false,
+          "median": 76
         },
         {
           "min": 101,
           "max": 150,
           "kind": "program",
-          "label": "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)"
+          "label": "Fondu",
+          "colors": [],
+          "autoPalette": false,
+          "median": 126
         },
         {
           "min": 151,
           "max": 200,
           "kind": "program",
-          "label": "Transition"
+          "label": "Transition",
+          "colors": [],
+          "autoPalette": false,
+          "median": 176
         },
         {
           "min": 201,
           "max": 250,
           "kind": "program",
-          "label": "Pulsation"
+          "label": "Pulsation",
+          "colors": [],
+          "autoPalette": false,
+          "median": 226
         },
         {
           "min": 251,
           "max": 255,
           "kind": "program",
-          "label": "Audio (sensibilité par CH7)"
+          "label": "Audio (sensibilité par CH7)",
+          "colors": [],
+          "autoPalette": false,
+          "median": 253
         }
       ]
     },
@@ -102,6 +170,10 @@
       "key": "speed",
       "name": "Vitesse",
       "attribute": "programSpeed",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
       "capabilities": [
         {
           "min": 0,
@@ -113,7 +185,10 @@
             "start": 0,
             "end": 100,
             "unit": "%"
-          }
+          },
+          "colors": [],
+          "autoPalette": false,
+          "median": 128
         }
       ]
     }
@@ -125,15 +200,19 @@
       "deviceSetting": "d001",
       "channels": [
         {
-          "channel": "r"
+          "channel": "r",
+          "part": "coarse"
         },
         {
-          "channel": "g"
+          "channel": "g",
+          "part": "coarse"
         },
         {
-          "channel": "b"
+          "channel": "b",
+          "part": "coarse"
         }
-      ]
+      ],
+      "channelCount": 3
     },
     {
       "name": "7 canaux",
@@ -141,27 +220,36 @@
       "deviceSetting": "A001",
       "channels": [
         {
-          "channel": "dim"
+          "channel": "dim",
+          "part": "coarse"
         },
         {
-          "channel": "r"
+          "channel": "r",
+          "part": "coarse"
         },
         {
-          "channel": "g"
+          "channel": "g",
+          "part": "coarse"
         },
         {
-          "channel": "b"
+          "channel": "b",
+          "part": "coarse"
         },
         {
-          "channel": "strobe"
+          "channel": "strobe",
+          "part": "coarse"
         },
         {
-          "channel": "fn"
+          "channel": "fn",
+          "part": "coarse"
         },
         {
-          "channel": "speed"
+          "channel": "speed",
+          "part": "coarse"
         }
-      ]
+      ],
+      "channelCount": 7
     }
-  ]
+  ],
+  "displayName": "Betopper LPC008S"
 }

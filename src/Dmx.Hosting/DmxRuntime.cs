@@ -61,6 +61,12 @@ public sealed class DmxRuntime : IAsyncDisposable
     /// <summary>Bibliothèque d'appareils (<c>Documents\DMX\Bibliothèque</c>).</summary>
     public Fixtures.FixtureLibrary Library { get; }
 
+    /// <summary>
+    /// Fabrique de journaux (GEN-110) : permet à un modèle de vue de créer son propre journal, dans le même
+    /// fichier technique (<c>Documents\DMX\Journaux\technique-AAAAMMJJ.log</c>) que le reste de l'application.
+    /// </summary>
+    public ILoggerFactory Loggers => _loggers;
+
     /// <summary>Projet ouvert.</summary>
     public ProjectSession Project { get; }
 

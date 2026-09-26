@@ -24,7 +24,7 @@
               <TextBlock Classes="section" Text="Barre d'univers (INST-003)" />
               <WrapPanel Orientation="Horizontal">
                 <TextBlock Text="Univers affiché" VerticalAlignment="Center" Margin="0,0,6,0" />
-                <ComboBox ItemsSource="{Binding Universes}" SelectedItem="{Binding SelectedUniverse}" MinWidth="60" />
+                <ComboBox ItemsSource="{Binding Universes}" SelectedItem="{Binding SelectedUniverse}" MinWidth="110" />
               </WrapPanel>
               <c:UniverseBar Segments="{Binding UniverseBarSegments}" Height="28" />
             </StackPanel>
@@ -57,26 +57,26 @@
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Univers" />
-                  <NumericUpDown Value="{Binding NewUniverse}" Minimum="1" Maximum="99" Increment="1" FormatString="0" Width="90" />
+                  <NumericUpDown Value="{Binding NewUniverse}" Minimum="1" Maximum="99" Increment="1" FormatString="0" Width="130" />
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Adresse" />
                   <StackPanel Orientation="Horizontal" Spacing="4">
-                    <NumericUpDown Value="{Binding NewAddress}" Minimum="1" Maximum="512" Increment="1" FormatString="0" Width="100" />
+                    <NumericUpDown Value="{Binding NewAddress}" Minimum="1" Maximum="512" Increment="1" FormatString="0" Width="140" />
                     <Button Content="Libre" Command="{Binding SuggestAddressCommand}" ToolTip.Tip="Propose la première adresse libre (INST-012)" />
                   </StackPanel>
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Quantité" />
-                  <NumericUpDown Value="{Binding NewCount}" Minimum="1" Maximum="64" Increment="1" FormatString="0" Width="90" />
+                  <NumericUpDown Value="{Binding NewCount}" Minimum="1" Maximum="64" Increment="1" FormatString="0" Width="130" />
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Écart (canaux libres)" />
-                  <NumericUpDown Value="{Binding NewGap}" Minimum="0" Maximum="512" Increment="1" FormatString="0" Width="90" />
+                  <NumericUpDown Value="{Binding NewGap}" Minimum="0" Maximum="512" Increment="1" FormatString="0" Width="130" />
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Nom de base" />
-                  <TextBox Text="{Binding NewBaseName}" Width="140" Watermark="PAR" />
+                  <TextBox Text="{Binding NewBaseName}" Width="170" Watermark="PAR" />
                 </StackPanel>
                 <StackPanel Classes="field" VerticalAlignment="Bottom">
                   <CheckBox Content="Jumeaux (même adresse, INST-014)" IsChecked="{Binding NewAsTwins}" />
@@ -86,7 +86,7 @@
             </StackPanel>
           </Border>
 
-          <Grid Grid.Row="2" ColumnDefinitions="220,140,120,70,90,70,*" Opacity="0.6" Margin="4,0">
+          <Grid Grid.Row="2" ColumnDefinitions="220,150,140,110,130,60,*" Opacity="0.6" Margin="4,0">
             <TextBlock Grid.Column="0" Text="Nom" />
             <TextBlock Grid.Column="1" Text="Modèle" />
             <TextBlock Grid.Column="2" Text="Mode" />
@@ -97,21 +97,21 @@
           </Grid>
 
           <!-- Liste du patch (INST-015, INST-016, INST-017, INST-019, INST-020) -->
-          <ScrollViewer Grid.Row="3">
+          <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding PatchRows}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:PatchRowViewModel">
                   <Border Classes="panel" Margin="0,2" Padding="6">
-                    <Grid ColumnDefinitions="220,140,120,70,90,70,*">
+                    <Grid ColumnDefinitions="220,150,140,110,130,60,*">
                       <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
                         <Ellipse Width="10" Height="10" Fill="{Binding Color}" VerticalAlignment="Center" />
-                        <TextBox Text="{Binding EditName}" Width="120" />
+                        <TextBox Text="{Binding EditName}" Width="140" />
                         <TextBlock Text="⚠" Foreground="#F85149" VerticalAlignment="Center" ToolTip.Tip="Chevauchement d'adresse (INST-013)" IsVisible="{Binding HasOverlap}" />
                       </StackPanel>
-                      <TextBlock Grid.Column="1" Text="{Binding ModelName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                      <ComboBox Grid.Column="2" ItemsSource="{Binding Modes}" SelectedItem="{Binding EditModeName}" />
-                      <NumericUpDown Grid.Column="3" Value="{Binding EditUniverse}" Minimum="1" Maximum="99" FormatString="0" />
-                      <NumericUpDown Grid.Column="4" Value="{Binding EditAddress}" Minimum="1" Maximum="512" FormatString="0" />
+                      <TextBlock Grid.Column="1" Text="{Binding ModelName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ModelName}" />
+                      <ComboBox Grid.Column="2" ItemsSource="{Binding Modes}" SelectedItem="{Binding EditModeName}" Width="130" />
+                      <NumericUpDown Grid.Column="3" Value="{Binding EditUniverse}" Minimum="1" Maximum="99" FormatString="0" Width="100" />
+                      <NumericUpDown Grid.Column="4" Value="{Binding EditAddress}" Minimum="1" Maximum="512" FormatString="0" Width="120" />
                       <CheckBox Grid.Column="5" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                       <WrapPanel Grid.Column="6" Orientation="Horizontal">
                         <Button Content="Renommer" Tag="{Binding}" Click="OnRenameClicked" />
@@ -226,18 +226,18 @@
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Largeur (m)" />
-                  <NumericUpDown Value="{Binding WidthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="110" />
+                  <NumericUpDown Value="{Binding WidthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="140" />
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Profondeur (m)" />
-                  <NumericUpDown Value="{Binding DepthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="110" />
+                  <NumericUpDown Value="{Binding DepthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="140" />
                 </StackPanel>
                 <StackPanel Classes="field" VerticalAlignment="Bottom">
                   <Button Content="Enregistrer le lieu" Command="{Binding $parent[TabItem].((vm:InstallationViewModel)DataContext).SavePlacementsCommand}" Classes="accent" />
                 </StackPanel>
               </WrapPanel>
 
-              <Grid DockPanel.Dock="Top" ColumnDefinitions="180,70,70,80,90,90,60" Opacity="0.6" Margin="4,0">
+              <Grid DockPanel.Dock="Top" ColumnDefinitions="180,120,120,120,140,90,80" Opacity="0.6" Margin="4,0">
                 <TextBlock Grid.Column="0" Text="Appareil" />
                 <TextBlock Grid.Column="1" Text="X (m)" />
                 <TextBlock Grid.Column="2" Text="Y (m)" />
@@ -246,16 +246,16 @@
                 <TextBlock Grid.Column="5" Text="Suspendu" />
                 <TextBlock Grid.Column="6" Text="Absent" />
               </Grid>
-              <ScrollViewer>
+              <ScrollViewer HorizontalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding Placements}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:PlacementRowViewModel">
-                      <Grid ColumnDefinitions="180,70,70,80,90,90,60" Margin="0,2">
-                        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                        <NumericUpDown Grid.Column="1" Value="{Binding X}" Minimum="0" Maximum="100" FormatString="0.0" />
-                        <NumericUpDown Grid.Column="2" Value="{Binding Y}" Minimum="0" Maximum="100" FormatString="0.0" />
-                        <NumericUpDown Grid.Column="3" Value="{Binding HeightM}" Minimum="0" Maximum="20" FormatString="0.0" />
-                        <NumericUpDown Grid.Column="4" Value="{Binding OrientationDeg}" Minimum="-360" Maximum="360" FormatString="0" />
+                      <Grid ColumnDefinitions="180,120,120,120,140,90,80" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                        <NumericUpDown Grid.Column="1" Value="{Binding X}" Minimum="0" Maximum="100" FormatString="0.0" Width="110" />
+                        <NumericUpDown Grid.Column="2" Value="{Binding Y}" Minimum="0" Maximum="100" FormatString="0.0" Width="110" />
+                        <NumericUpDown Grid.Column="3" Value="{Binding HeightM}" Minimum="0" Maximum="20" FormatString="0.0" Width="110" />
+                        <NumericUpDown Grid.Column="4" Value="{Binding OrientationDeg}" Minimum="-360" Maximum="360" FormatString="0" Width="130" />
                         <CheckBox Grid.Column="5" IsChecked="{Binding Hanging}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <CheckBox Grid.Column="6" IsChecked="{Binding Absent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                       </Grid>

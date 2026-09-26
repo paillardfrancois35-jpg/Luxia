@@ -30,3 +30,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 13, §3). |
 | 2026-09-26 | Claude | Développement | `389fe64` feat(installation): écran Installation — patch, sélections, lieux (doc 13) |
+| 2026-09-26 | Claude | Correction | Retour ergonomique de l'utilisateur : champs de saisie (univers, adresse, quantité, écart, nom) du panneau « Ajouter un appareil » et colonnes éditables de la liste du patch bien trop étroits (« à peine le chiffre »). Largeurs revues (au moins 110-140px selon le champ). Voir doc 03 §11 (pièges déjà rencontrés). |

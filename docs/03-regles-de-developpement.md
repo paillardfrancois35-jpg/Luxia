@@ -1,7 +1,7 @@
 # 03 – Règles de développement
 
 > Document transverse : **comment** on écrit le code. Le **quoi** est dans les cahiers des charges (02, 10 à 23).
-> Validé par l'utilisateur le 2026-09-24 (Q21, Q22). Toute évolution de ces règles est notée au §11.
+> Validé par l'utilisateur le 2026-09-24 (Q21, Q22). Toute évolution de ces règles est notée au §12.
 
 ---
 
@@ -144,10 +144,19 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
 - Chaque phase se livre avec ses démonstrations (doc 40 §7, doc 41).
 
-## 11. Historique
+## 11. Pièges déjà rencontrés
+
+Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit. But : ne pas refaire deux fois la même faute d'inattention, en particulier sur l'ergonomie et sur les pièges Avalonia peu visibles à la relecture.
+
+- **Champs de saisie trop étroits.** Un `NumericUpDown`/`TextBox` sans largeur explicite (ou avec une largeur « au pif » de 60-100px) n'affiche souvent qu'un chiffre ou deux, surtout dans une `Grid` à colonnes fixes. Règle : toute valeur numérique ou texte court saisie par l'utilisateur a une largeur explicite d'au moins 110-140px (de quoi afficher confortablement 3-4 caractères plus les flèches d'un NumericUpDown), jamais laissée à la largeur par défaut du contrôle. Vérifier à l'œil (capture ou test manuel), pas seulement à la compilation. (Signalé le 2026-09-26 sur l'écran Installation : panneau « Ajouter un appareil », liste du patch, onglet Lieux — tous corrigés le même jour.)
+- **`ObservableCollection<T>.Clear()` puis re-remplissage, quand la collection est l'`ItemsSource` d'un contrôle dont `SelectedItem` est lié en bidirectionnel à une propriété de type valeur non annulable (`int`, `enum`...).** Le `Clear()` fait transiter la sélection par `null` le temps de la reconstruction ; la liaison tente alors de repousser ce `null` vers l'`int`, ce qui lève `System.InvalidCastException: Could not convert '(null)' (null) to System.Int32.`. Corriger en ne touchant la collection que pour la différence réelle (retirer les éléments obsolètes, ajouter les manquants), jamais par un `Clear()` suivi d'un re-remplissage complet. (Rencontré le 2026-09-26 sur `InstallationViewModel.LoadAll()`, ComboBox « Univers affiché ».)
+- **Un bouton bascule (« stop si déjà actif, sinon démarre ») qui appelle d'abord la méthode d'arrêt puis teste l'état.** Si la méthode d'arrêt remet l'état à sa valeur neutre (ex. `_identifyingFixtureId = null`), le test qui suit ne peut plus jamais être vrai : un second clic redémarre au lieu d'arrêter. Toujours capturer l'état AVANT d'appeler la méthode qui le modifie. (Rencontré le 2026-09-26 sur `InstallationViewModel.ToggleIdentifyFixture`.)
+
+## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-26 | Nouvelle §11 « Pièges déjà rencontrés » (largeurs de saisie, `ObservableCollection.Clear()` sur un `SelectedItem` non annulable, bascule stop/démarre) — demande explicite de l'utilisateur après un retour d'ergonomie sur l'écran Installation. |
 | 2026-09-26 | P3 : projet `Dmx.Patch` (Core, Persistence, Fixtures) pour l'installation, les sélections et les lieux (doc 13, doc 00 §7.2). |
 | 2026-09-24 | Version initiale (Q21, Q22). |
 | 2026-09-25 | Fiches d'exigences `docs/exigences/` (demande de l'utilisateur) : suivi par exigence façon Redmine, source du statut de la matrice 31. |
