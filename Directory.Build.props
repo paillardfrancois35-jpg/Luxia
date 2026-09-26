@@ -15,7 +15,7 @@
     <SatelliteResourceLanguages>fr</SatelliteResourceLanguages>
     <Company>DMX</Company>
     <Product>DMX</Product>
-    <Version>0.0.1</Version>
+    <Version>1.002</Version>
   </PropertyGroup>
 
   <!-- Projets de tests : documentation XML non exigée. -->

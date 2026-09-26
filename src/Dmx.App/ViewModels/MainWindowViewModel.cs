@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dmx.Hosting;
@@ -14,6 +15,10 @@ namespace Dmx.App.ViewModels;
 /// </summary>
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
+    /// <summary>Version affichée dans la barre de titre (`Directory.Build.props`, étiquette Git correspondante).</summary>
+    private static readonly string Version =
+        Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
+
     private readonly DmxRuntime _runtime;
     private readonly IDialogService _dialogs;
     private int _statusCountdown;
@@ -128,7 +133,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     private void UpdateProject()
     {
         ProjectName = _runtime.Project.Info?.Name ?? "Aucun projet";
-        Title = _runtime.Project.Info is { } info ? $"DMX – {info.Name}" : "DMX";
+        Title = _runtime.Project.Info is { } info ? $"DMX v{Version} – {info.Name}" : $"DMX v{Version}";
         ProjectMessage = _runtime.Project.Messages.Count > 0 ? string.Join(" ", _runtime.Project.Messages) : null;
     }
 
