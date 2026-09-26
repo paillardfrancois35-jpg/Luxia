@@ -130,4 +130,20 @@ public sealed class VersionedJsonFileTests : IDisposable
     }
 
     public void Dispose() => _temp.Dispose();
+
+    [Fact]
+    [Trait("Exigence", "GEN-056")]
+    public void Save_WhileFileBrieflyLocked_RetriesAndSucceeds()
+    {
+        var path = _temp.File("donnees.json");
+        VersionedJsonFile.Save(path, new Sample("avant", []), V2);
+
+        // Verrou exclusif relâché au bout de 60 ms, comme un antivirus qui ouvre le fichier juste écrit.
+        var locked = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+        using var release = new Timer(_ => locked.Dispose(), null, 60, Timeout.Infinite);
+
+        VersionedJsonFile.Save(path, new Sample("après", []), V2);
+
+        VersionedJsonFile.Load(path, V2).Value!.Name.ShouldBe("après");
+    }
 }

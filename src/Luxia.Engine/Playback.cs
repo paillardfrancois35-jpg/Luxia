@@ -157,6 +157,13 @@ internal sealed class Playback
             }
         }
 
+        // MOT-015 : la vitesse de la scène modifiée pendant qu'elle joue s'applique tout de suite ; sinon, la vitesse réglée
+        // en direct (CMD-016) est gardée.
+        if (previousModel is not null && Math.Abs(Scene.Speed - scene.Speed) > 1e-9)
+        {
+            Speed = Math.Clamp(scene.Speed, 0.1, 10);
+        }
+
         Scene = scene;
         Parameters = parameters;
         StartValue = startValue;

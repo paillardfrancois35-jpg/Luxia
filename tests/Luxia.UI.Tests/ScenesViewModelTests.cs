@@ -267,6 +267,25 @@ public sealed class ScenesViewModelTests : IAsyncLifetime
         _vm.Programmer.Values[^1].Spread!.Value.Value.ShouldBe(1.5);
     }
 
+    [Fact]
+    [Trait("Exigence", "MOT-015")]
+    public void Speed_IncreasedStepByStep_WhilePlaying_AppliesLive_WithoutError()
+    {
+        _vm.SelectedScene = _vm.Scenes.Single(s => s.Scene.Name == "Chenillard 4 couleurs");
+        _vm.LaunchCommand.Execute(_vm.SelectedScene);
+        _host.Tick();
+
+        for (var speed = 1.1m; speed <= 2.0m; speed += 0.1m)
+        {
+            _vm.Editor.Speed = speed;
+        }
+
+        _host.Tick();
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.Single().Speed.ShouldBe(2, 1e-9);
+        _vm.Editor.Speed.ShouldBe(2.0m);
+    }
+
     private void SelectShortcut(string label) =>
         _vm.Programmer.SelectCommand.Execute(_vm.Programmer.Shortcuts.Single(s => s.Label == label));
 

@@ -249,7 +249,17 @@ public sealed partial class ScenesViewModel : ViewModelBase, IRefreshable
 
     private void Save(SceneSet scenes)
     {
-        _runtime.Project.SaveScenes(scenes);
+        try
+        {
+            _runtime.Project.SaveScenes(scenes);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Rare (fichier bloqué malgré les nouvelles tentatives) : on le dit clairement au lieu d'une erreur sous le champ.
+            Message = $"Enregistrement des scènes impossible pour l'instant ({ex.Message}). Refaites la modification dans un instant.";
+            return;
+        }
+
         RebuildList();
         UndoText = _history.UndoDescription is { } undo ? $"Annuler : {undo}" : "Annuler";
         RedoText = _history.RedoDescription is { } redo ? $"Rétablir : {redo}" : "Rétablir";
