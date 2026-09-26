@@ -33,3 +33,5 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 13, §3). |
 | 2026-09-26 | Claude | Écart | Le volet « scènes impactées » du rapport n'est pas calculable avant P4 (les scènes n'existent pas) : le rapport se limite aux canaux perdus/gagnés pour l'instant. À compléter en P4. |
 | 2026-09-26 | Claude | Développement | `5ee2e57` feat(patch): nouveau projet Dmx.Patch, modèle de domaine de l'installation ; `389fe64` (écran) |
+| 2026-09-26 | Claude | Développement | `04f98b0` feat(simulateur,installation): aperçu en aveugle au simulateur, impact d'un changement de mode sur les scènes |
+| 2026-09-26 | Claude | Note | SC-03 (P3-P4) : le changement de mode liste en plus les valeurs de scènes qui seront ignorées dans le nouveau mode ; les scènes sont conservées (elles visent des attributs, pas des canaux). Test `ChangeMode_UsedByThreeScenes_ReportsImpact_AndKeepsScenes`. |

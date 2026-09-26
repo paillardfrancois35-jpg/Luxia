@@ -66,7 +66,11 @@ public static class SceneUsage
     /// Changement de mode d'un appareil (SC-03) : valeurs de scènes qui visent cet appareil et un attribut ou un canal
     /// absent du nouveau mode (elles seront ignorées ; tout le reste est conservé tel quel).
     /// </summary>
-    public static IReadOnlyList<string> ModeChangeImpact(SceneSet scenes, FixtureInfo fixture, FixtureMode newMode)
+    /// <param name="scenes">Scènes du projet.</param>
+    /// <param name="fixture">Appareil dont le mode change.</param>
+    /// <param name="newMode">Nouveau mode.</param>
+    /// <param name="patch">Patch résolu : s'il est fourni, les valeurs sur une sélection qui contient l'appareil comptent aussi.</param>
+    public static IReadOnlyList<string> ModeChangeImpact(SceneSet scenes, FixtureInfo fixture, FixtureMode newMode, PatchContext? patch = null)
     {
         ArgumentNullException.ThrowIfNull(scenes);
         ArgumentNullException.ThrowIfNull(fixture);
@@ -77,7 +81,7 @@ public static class SceneUsage
         {
             for (var s = 0; s < scene.Steps.Count; s++)
             {
-                foreach (var value in scene.Steps[s].Values.Where(v => v.Target.FixtureId == fixture.Fixture.Id))
+                foreach (var value in scene.Steps[s].Values.Where(v => Targets(v.Target, fixture, patch)))
                 {
                     var lost = value.Channel is { } key
                         ? after.Channels.All(c => c.Key != key)
@@ -93,6 +97,10 @@ public static class SceneUsage
 
         return result;
     }
+
+    private static bool Targets(ValueTarget target, FixtureInfo fixture, PatchContext? patch) =>
+        target.FixtureId == fixture.Fixture.Id
+        || (target.FixtureId is null && patch is not null && patch.Members(target, out _).Any(m => m.Fixture.Fixture.Id == fixture.Fixture.Id));
 
     private static List<SceneValue> Freeze(SceneValue value, Palette palette, PatchContext patch)
     {

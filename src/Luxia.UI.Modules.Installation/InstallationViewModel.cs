@@ -249,7 +249,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         // l'attribut n'existe pas dans le nouveau mode seront ignorées, et on les annonce.
         var newMode = type.Modes.FirstOrDefault(m => m.Name == row.EditModeName);
         var scenes = newMode is not null && _runtime.Show.Patch.Find(row.Id) is { } info
-            ? Luxia.Scenes.Rules.SceneUsage.ModeChangeImpact(_runtime.Project.Scenes, info, newMode)
+            ? Luxia.Scenes.Rules.SceneUsage.ModeChangeImpact(_runtime.Project.Scenes, info, newMode, _runtime.Show.Patch)
             : [];
         var message = impact.IsEmpty ? string.Empty : impact.Summary();
         if (scenes.Count > 0)

@@ -85,6 +85,20 @@ public sealed class SceneUsageAndStoreTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "INST-016")]
+    public void ModeChange_CountsValuesOnASelectionContainingTheFixture()
+    {
+        var par = _project.Fixture("PAR 1");
+        var auto = new ValueTarget { Auto = new AutoSelectionTarget(Patch.Rules.AutoSelectionKind.ByModel, Model: "Betopper LPC008S") };
+        var scenes = new SceneSet { Scenes = [new Scene { Name = "Strobe", Steps = [new SceneStep { Values = [new SceneValue { Target = auto, Attribute = AttributeKind.Shutter, Level = 0.5 }] }] }] };
+        var patch = _project.Patch;
+        var info = patch.Find(par.Id)!;
+
+        SceneUsage.ModeChangeImpact(scenes, info, info.Type.Modes.Single(m => m.Name == "3 canaux")).ShouldBeEmpty();
+        SceneUsage.ModeChangeImpact(scenes, info, info.Type.Modes.Single(m => m.Name == "3 canaux"), patch).ShouldHaveSingleItem();
+    }
+
+    [Fact]
     [Trait("Exigence", "GEN-050")]
     [Trait("Exigence", "SCN-001")]
     public void Stores_RoundTrip_AllValueForms()

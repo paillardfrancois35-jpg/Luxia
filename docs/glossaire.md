@@ -101,6 +101,10 @@
 | **Live** | Live / Show mode | Écran de jeu en soirée (par opposition à l'Atelier d'édition). |
 | **Atelier** | Edit mode / Programming | Ensemble des écrans d'édition. |
 | **Aveugle** | Blind | Édition sans envoi à la sortie. |
+| **Aperçu** | Preview | Moteur secondaire qui calcule ce que donnerait l'édition en aveugle ; montré au simulateur seulement. |
+| **Paramètre** | Parameter | Unité de calcul du moteur : un attribut d'un appareil patché (une définition de canal de son modèle), ou son intensité virtuelle (D26). |
+| **Lecture (de scène)** | Playback | Instance en cours d'une scène dans une couche : étape, temps, poids, état (doc 15 §2). |
+| **Scénario** | Script | Fichier de commandes horodatées joué sans interface (`luxia-headless scenario`, MOT-103). |
 
 ## 6. Musique et automatique
 
