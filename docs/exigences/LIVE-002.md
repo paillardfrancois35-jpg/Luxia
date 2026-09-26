@@ -1,0 +1,33 @@
+# LIVE-002 – Colonnes de couches
+
+| Champ | Valeur |
+|---|---|
+| **Statut** | Réalisé |
+| **Priorité** | I |
+| **Phase** | P5 |
+| **Source** | [doc 18 – 3. Exigences – structure](../18-live.md) |
+| **Remarque** | Une colonne par couche (ordre des priorités, couches masquées via live.json), scènes « visibles en Live » dans l'ordre de scènes.json, scène active encadrée de sa couleur avec progression et étape, stop et master de couche. |
+| **Liens** | COU-001, SCN-009 |
+
+## Description
+
+> **Colonnes de couches** : pour chaque couche, les scènes **visibles en Live**, dans l'ordre de la couche ; la scène active est mise en évidence avec sa progression (étape, barre) ; bouton stop et master de couche.
+
+**Critère d'acceptation** : Revue.
+
+## Réalisation
+
+- `src/Luxia.UI.Modules.Live/LiveItems.cs` (`LayerColumnViewModel`, `LiveSceneViewModel`)
+- `src/Luxia.UI.Modules.Live/LiveView.axaml`
+
+## Tests
+
+- `LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder`
+- `LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops`
+
+## Historique
+
+| Date | Par | Type | Entrée |
+|---|---|---|---|
+| 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
+| 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |

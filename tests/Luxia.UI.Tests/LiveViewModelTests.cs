@@ -175,4 +175,29 @@ public sealed class LiveViewModelTests : IAsyncLifetime
         _vm.LimitsText.ShouldContain("aucune limite");
         _vm.Commands.ShouldContain(c => c.Contains("LaunchScene") && c.Contains("utilisateur"));
     }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-060")]
+    public void Refresh_IsFarUnderTheFrameBudget()
+    {
+        foreach (var column in _vm.Columns.Take(6))
+        {
+            if (column.Scenes.Count > 0)
+            {
+                _vm.Press(column.Scenes[0]);
+            }
+        }
+
+        _host.Tick();
+        _vm.Refresh();
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        for (var i = 0; i < 100; i++)
+        {
+            _host.Tick();
+            _vm.Refresh();
+        }
+
+        // 20 images/s = 50 ms par image : le rafraîchissement du Live (moteur compris) en prend bien moins.
+        (watch.Elapsed.TotalMilliseconds / 100).ShouldBeLessThan(10);
+    }
 }
