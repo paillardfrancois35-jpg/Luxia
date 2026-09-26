@@ -16,6 +16,7 @@
     <ProjectReference Include="../../src/Luxia.Hosting/Luxia.Hosting.csproj" />
     <ProjectReference Include="../../src/Luxia.Fixtures/Luxia.Fixtures.csproj" />
     <ProjectReference Include="../../src/Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../../src/Luxia.Scenes/Luxia.Scenes.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Outputs/Luxia.UI.Modules.Outputs.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Library/Luxia.UI.Modules.Library.csproj" />

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+    <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../Luxia.Engine/Luxia.Engine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Scenes.Tests" />
+  </ItemGroup>
+
+</Project>

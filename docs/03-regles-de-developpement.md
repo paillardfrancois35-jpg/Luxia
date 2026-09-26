@@ -65,6 +65,7 @@ LuXia/
 | `Dmx.Persistence` | Core |
 | `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
 | `Dmx.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
+| `Luxia.Scenes` | Core, Messaging, Engine, Persistence, Fixtures, Patch (scènes, palettes, couches ; compilation vers le moteur, D26) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
 | `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
@@ -162,6 +163,7 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 | Date | Modification |
 |---|---|
+| 2026-09-26 | P4 : projet `Luxia.Scenes` (Core, Messaging, Engine, Persistence, Fixtures, Patch) pour les scènes, palettes et couches et leur compilation vers le moteur (D26) ; le moteur reste limité à Core et Messaging. |
 | 2026-09-26 | §11 « Pièges déjà rencontrés » (largeurs de saisie, `ObservableCollection.Clear()` sur un `SelectedItem` non annulable, bascule stop/démarre, intensité seule ne suffit pas sur un appareil RVB) — demande explicite de l'utilisateur après des retours de test en direct sur l'écran Installation. |
 | 2026-09-26 | Solution au format `.sln` classique, plus `.slnx` (D25) : l'utilisateur ne pouvait plus ouvrir/compiler le projet. |
 | 2026-09-26 | `IRefreshable.NeedsBackgroundRefresh` : un écran qui identifie un appareil continue d'être rafraîchi même non affiché (§11, retour utilisateur Simulateur). |
