@@ -76,8 +76,19 @@ public sealed partial class FixtureEditorViewModel : ViewModelBase
     [ObservableProperty]
     private bool _hasErrors;
 
+    /// <summary>Nombre d'erreurs (badge de l'onglet Validation, BIB-100).</summary>
+    [ObservableProperty]
+    private int _errorCount;
+
     [ObservableProperty]
     private string _validationSummary = string.Empty;
+
+    /// <summary>Onglet affiché ; bascule sur Validation (index 3) quand l'enregistrement est refusé (BIB-100).</summary>
+    [ObservableProperty]
+    private int _selectedTabIndex;
+
+    /// <summary>Index de l'onglet Validation dans le <c>TabControl</c> de l'éditeur.</summary>
+    public const int ValidationTabIndex = 3;
 
     [ObservableProperty]
     private string _title = string.Empty;
@@ -157,8 +168,8 @@ public sealed partial class FixtureEditorViewModel : ViewModelBase
     }
 
     /// <summary>Découverte : nouvelle borne dans les plages d'un canal (BIB-062).</summary>
-    public void SplitChannelAt(string channelKey, int value) =>
-        Apply("Nouvelle plage ici", f => FixtureEdits.SetCapabilities(f, channelKey, CapabilityTools.SplitAt(f.Channel(channelKey)?.Capabilities.OrderBy(c => c.Min).ToList() ?? [], value)));
+    public void SplitChannelAt(string channelKey, int value, string label = "Nouvelle plage") =>
+        Apply("Nouvelle plage ici", f => FixtureEdits.SetCapabilities(f, channelKey, CapabilityTools.SplitAt(f.Channel(channelKey)?.Capabilities.OrderBy(c => c.Min).ToList() ?? [], value, label)));
 
     /// <summary>Glisser-déposer d'une position (BIB-021).</summary>
     public void MoveSlot(int from, int to)
@@ -397,6 +408,7 @@ public sealed partial class FixtureEditorViewModel : ViewModelBase
         var errors = Issues.Count(i => i.Severity == IssueSeverity.Error);
         var warnings = Issues.Count - errors;
         HasErrors = errors > 0;
+        ErrorCount = errors;
         ValidationSummary = Issues.Count == 0
             ? "Aucun problème."
             : string.Create(CultureInfo.CurrentCulture, $"{errors} erreur(s), {warnings} avertissement(s)");

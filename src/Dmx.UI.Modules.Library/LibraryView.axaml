@@ -28,6 +28,8 @@
         <Button Content="+ Nouveau modèle" Command="{Binding NewCommand}" HorizontalAlignment="Stretch" />
         <Button Content="Importer des fichiers…" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Stretch" />
         <Button Content="Importer un dossier…" Command="{Binding ImportFolderCommand}" HorizontalAlignment="Stretch" />
+        <CheckBox Content="Écraser si déjà présent" IsChecked="{Binding OverwriteExisting}"
+                  ToolTip.Tip="Remplace un modèle déjà dans la bibliothèque (même identifiant, ou même fabricant et nom) au lieu de l'ignorer (BIB-098)" />
         <TextBlock Text="{Binding Progress}" IsVisible="{Binding IsBusy}" Foreground="#58A6FF" />
         <TextBlock Text="{Binding Folder}" FontSize="10" Opacity="0.5" TextWrapping="Wrap" />
       </StackPanel>
@@ -43,6 +45,12 @@
         </ScrollViewer>
       </Expander>
       <TreeView ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedNode}">
+        <TreeView.Styles>
+          <!-- BIB-093 : le groupe se déplie tout seul quand une recherche ou un filtre est actif. -->
+          <Style Selector="TreeViewItem" x:CompileBindings="False">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+          </Style>
+        </TreeView.Styles>
         <TreeView.DataTemplates>
           <TreeDataTemplate DataType="vm:ManufacturerNode" ItemsSource="{Binding Items}">
             <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
@@ -86,7 +94,7 @@
                 </StackPanel>
               </DockPanel>
 
-              <TabControl>
+              <TabControl SelectedIndex="{Binding SelectedTabIndex}">
                 <!-- Canaux et modes (BIB-021, BIB-022, BIB-023) -->
                 <TabItem Header="Canaux et modes">
                   <DockPanel>
@@ -344,8 +352,16 @@
                   </DockPanel>
                 </TabItem>
 
-                <!-- Validation (BIB-004) -->
-                <TabItem Header="Validation">
+                <!-- Validation (BIB-004, badge BIB-100) -->
+                <TabItem>
+                  <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <TextBlock Text="Validation" />
+                      <Border Background="#F85149" CornerRadius="8" Padding="6,0" IsVisible="{Binding HasErrors}">
+                        <TextBlock Text="{Binding ErrorCount}" FontSize="11" Foreground="White" />
+                      </Border>
+                    </StackPanel>
+                  </TabItem.Header>
                   <DockPanel>
                     <TextBlock DockPanel.Dock="Top" Text="{Binding ValidationSummary}" Margin="0,4,0,6" FontWeight="SemiBold" />
                     <ItemsControl ItemsSource="{Binding Issues}">

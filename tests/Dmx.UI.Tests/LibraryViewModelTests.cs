@@ -173,9 +173,10 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
 
         _library.LiveTest.StartDiscovery(channel);
         _library.LiveTest.DiscoveryStepCommand.Execute("60");
+        _host.Dialogs.TextAnswers.Enqueue("Allumé");
         _library.LiveTest.NewBoundaryHereCommand.Execute(null);
 
-        _library.Editor!.Current.Channels[0].Capabilities.Select(c => (c.Min, c.Max)).ShouldBe([(0, 59), (60, 255)]);
+        _library.Editor!.Current.Channels[0].Capabilities.Select(c => (c.Min, c.Max, c.Label)).ShouldBe([(0, 59, "Plage 1"), (60, 255, "Allumé")]);
     }
 
     [Fact]
@@ -194,5 +195,54 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
         await _library.ImportAsync(files);
         _library.ImportReport.ShouldAllBe(l => l.StartsWith('='));
         _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-098")]
+    public async Task Import_WithOverwrite_ReplacesExistingModel_KeepingItsId()
+    {
+        var folder = Path.Combine(AppContext.BaseDirectory, "samples", "Bibliothèque");
+        var files = FixtureImporter.FindFiles(folder);
+        await _library.ImportAsync(files);
+        var before = _host.Runtime.Library.Entries.First(e => !e.IsBuiltIn);
+
+        _library.OverwriteExisting = true;
+        await _library.ImportAsync(files);
+
+        _library.ImportReport.Count(l => l.Contains("remplacé", StringComparison.Ordinal)).ShouldBe(7);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+        var after = _host.Runtime.Library.Entries.First(e => e.Fixture.Id == before.Fixture.Id);
+        after.Fixture.Version.ShouldBe(before.Fixture.Version + 1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-093")]
+    public void Rebuild_WithActiveSearch_ExpandsMatchingGroups()
+    {
+        _library.Groups.Single().IsExpanded.ShouldBeFalse();
+
+        _library.Search = "fumée";
+
+        _library.Groups.Single().IsExpanded.ShouldBeTrue();
+
+        _library.Search = string.Empty;
+
+        _library.Groups.Single().IsExpanded.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "BIB-100")]
+    public void Save_Rejected_SwitchesToValidationTabAndShowsErrorCount()
+    {
+        _library.Open(GenericFixtures.Dimmer.Id);
+        _library.DuplicateCommand.Execute(null);
+        var editor = _library.Editor!;
+        editor.Apply("Vider le mode", f => f with { Modes = [f.Modes[0] with { Channels = [] }] });
+
+        _library.SaveCommand.Execute(null);
+
+        editor.HasErrors.ShouldBeTrue();
+        editor.ErrorCount.ShouldBeGreaterThan(0);
+        editor.SelectedTabIndex.ShouldBe(FixtureEditorViewModel.ValidationTabIndex);
     }
 }

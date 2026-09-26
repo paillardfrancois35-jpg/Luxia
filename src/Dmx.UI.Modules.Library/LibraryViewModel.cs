@@ -49,6 +49,10 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
     [ObservableProperty]
     private string _progress = string.Empty;
 
+    /// <summary>Écrase un modèle déjà présent (même identifiant, ou même fabricant et nom) au lieu de l'ignorer (BIB-098).</summary>
+    [ObservableProperty]
+    private bool _overwriteExisting;
+
     [ObservableProperty]
     private decimal _testAddress = 1;
 
@@ -63,7 +67,7 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
         _runtime = runtime;
         _dialogs = dialogs;
         LiveTest = new FixtureFadersViewModel(runtime);
-        LiveTest.NewBoundaryRequested += (_, e) => Editor?.SplitChannelAt(e.ChannelKey, e.Value);
+        LiveTest.NewBoundaryRequested += async (_, e) => await OnNewBoundaryRequestedAsync(e.ChannelKey, e.Value).ConfigureAwait(true);
         if (runtime.Library.Messages.Count > 0)
         {
             Message = string.Join(" ", runtime.Library.Messages);
@@ -159,6 +163,7 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
         if (errors.Count > 0)
         {
             Message = $"Enregistrement impossible : {errors.Count} erreur(s). Voir l'onglet « Validation ».";
+            editor.SelectedTabIndex = FixtureEditorViewModel.ValidationTabIndex;
             return;
         }
 
@@ -187,6 +192,32 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
         Editor = null;
         Rebuild();
         Message = $"{editor.Current.DisplayName} supprimé.";
+    }
+
+    /// <summary>
+    /// « Nouvelle plage ici » (BIB-062) : demande le nom de la nouvelle plage tout de suite, en rappelant le canal,
+    /// la valeur observée et la plage précédente qui vient d'être coupée (BIB-099), pendant que l'observation est fraîche.
+    /// </summary>
+    private async Task OnNewBoundaryRequestedAsync(string channelKey, int value)
+    {
+        if (Editor is not { IsReadOnly: false } editor)
+        {
+            return;
+        }
+
+        var channel = editor.Current.Channel(channelKey);
+        var previous = channel?.CapabilityAt(value);
+        var context = previous is { } p
+            ? $"Canal « {channel!.Name} », valeur {value}. Plage précédente coupée ici : {p.Min}-{p.Max} « {p.Label} »."
+            : $"Canal « {channel?.Name} », valeur {value}.";
+
+        var name = await _dialogs.AskTextAsync("Nouvelle plage ici", $"{context}\nNom de la nouvelle plage :", "Nouvelle plage").ConfigureAwait(true);
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return;
+        }
+
+        editor.SplitChannelAt(channelKey, value, name.Trim());
     }
 
     [RelayCommand]
@@ -234,16 +265,18 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
                 e.Fixture.Id == fixture.Id
                 || (string.Equals(e.Fixture.Manufacturer, fixture.Manufacturer, StringComparison.OrdinalIgnoreCase)
                     && string.Equals(e.Fixture.Model, fixture.Model, StringComparison.OrdinalIgnoreCase)));
-            if (existing is not null)
+            if (existing is not null && !OverwriteExisting)
             {
                 ImportReport.Add($"= {fixture.DisplayName} : déjà dans la bibliothèque, non importé.");
                 continue;
             }
 
             var errors = FixtureValidator.Validate(fixture).Count(i => i.Severity == IssueSeverity.Error);
-            _runtime.Library.Save(fixture);
+            var toSave = existing is { IsBuiltIn: false } ? fixture with { Id = existing.Fixture.Id } : fixture;
+            _runtime.Library.Save(toSave);
             imported++;
-            ImportReport.Add($"✓ {result.Summary}{(errors > 0 ? $" – {errors} erreur(s) de validation à corriger" : string.Empty)}");
+            var summary = existing is not null ? $"{fixture.DisplayName} remplacé" : result.Summary;
+            ImportReport.Add($"✓ {summary}{(errors > 0 ? $" – {errors} erreur(s) de validation à corriger" : string.Empty)}");
             foreach (var note in result.Notes)
             {
                 ImportReport.Add($"    · {note}");
@@ -333,10 +366,13 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
                 || e.Fixture.DisplayName.Contains(search, StringComparison.CurrentCultureIgnoreCase)
                 || (e.Fixture.Reference?.Contains(search, StringComparison.CurrentCultureIgnoreCase) ?? false)));
 
+        // BIB-093 : une recherche ou un filtre actif déplie automatiquement les groupes qui contiennent un résultat.
+        var filterActive = search.Length > 0 || manufacturer != All || CategoryFilter != All;
+
         Groups.Clear();
         foreach (var group in filtered.GroupBy(e => e.Fixture.Manufacturer, StringComparer.OrdinalIgnoreCase))
         {
-            var node = new ManufacturerNode(group.Key);
+            var node = new ManufacturerNode(group.Key) { IsExpanded = filterActive };
             foreach (var entry in group)
             {
                 node.Items.Add(new LibraryItemViewModel(entry));

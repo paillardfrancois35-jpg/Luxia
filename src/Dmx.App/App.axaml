@@ -3,6 +3,11 @@
              x:Class="Dmx.App.App"
              RequestedThemeVariant="Dark">
   <!-- GEN-101 : thème sombre par défaut. -->
+  <Application.Resources>
+    <!-- BIB-097 : barre de défilement plus épaisse même repliée, plus facile à attraper à la souris. -->
+    <x:Double x:Key="ScrollBarThumbThickness">8</x:Double>
+    <x:Double x:Key="ScrollBarSize">16</x:Double>
+  </Application.Resources>
   <Application.Styles>
     <FluentTheme />
     <Style Selector="Border.panel">

@@ -22,6 +22,10 @@ public sealed partial class FixtureChannelViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isDiscovering;
 
+    /// <summary>Valeur affichée dans la case de saisie directe (BIB-096).</summary>
+    [ObservableProperty]
+    private string _valueText = "0";
+
     /// <summary>Crée la tranche.</summary>
     public FixtureChannelViewModel(int position, int absoluteChannel, ChannelDefinition definition, ChannelPart part, PhysicalInfo? physical = null)
     {
@@ -66,7 +70,11 @@ public sealed partial class FixtureChannelViewModel : ViewModelBase
     /// <summary>Le canal a des plages.</summary>
     public bool HasRanges => Ranges.Count > 0;
 
-    partial void OnValueChanged(int value) => UpdateRange();
+    partial void OnValueChanged(int value)
+    {
+        UpdateRange();
+        ValueText = value.ToString(CultureInfo.CurrentCulture);
+    }
 
     private void UpdateRange()
     {
