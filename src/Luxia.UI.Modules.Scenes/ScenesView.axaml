@@ -1,0 +1,435 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Scenes"
+             x:Class="Luxia.UI.Modules.Scenes.ScenesView"
+             x:DataType="vm:ScenesViewModel">
+  <UserControl.Resources>
+    <ItemsPanelTemplate x:Key="Wrap">
+      <WrapPanel />
+    </ItemsPanelTemplate>
+
+    <DataTemplate x:Key="PaletteButton" x:DataType="vm:PaletteButtonViewModel">
+      <Button Classes="palette" Command="{Binding ApplyCommand}" BorderBrush="{Binding Color}" BorderThickness="0,0,0,4">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Border Width="12" Height="12" CornerRadius="6" Background="{Binding Color}" />
+          <TextBlock Text="{Binding Title}" FontSize="12" />
+        </StackPanel>
+        <Button.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Mettre à jour depuis le programmeur" Command="{Binding UpdateFromProgrammerCommand}" />
+            <MenuItem Header="Renommer…" Command="{Binding RenameCommand}" />
+            <MenuItem Header="Couleur du bouton…" Command="{Binding RecolorCommand}" />
+            <MenuItem Header="◀ Déplacer" Command="{Binding MoveLeftCommand}" />
+            <MenuItem Header="Déplacer ▶" Command="{Binding MoveRightCommand}" />
+            <Separator />
+            <MenuItem Header="Supprimer…" Command="{Binding DeleteCommand}" />
+          </ContextMenu>
+        </Button.ContextMenu>
+      </Button>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LevelTool" x:DataType="vm:LevelToolViewModel">
+      <Border BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="0,6,0,0" Margin="0,0,0,6">
+        <StackPanel Spacing="4">
+          <DockPanel>
+            <Button DockPanel.Dock="Right" Content="Retirer" Command="{Binding RemoveCommand}" Padding="6,2" FontSize="12" IsVisible="{Binding IsModified}"
+                    ToolTip.Tip="Retirer cet attribut du programmeur : il ne sera pas enregistré (SCN-032)" />
+            <TextBlock DockPanel.Dock="Right" Text="●" Classes="modified" IsVisible="{Binding IsModified}" Margin="0,0,6,0" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Width="150" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding ValueText}" Opacity="0.8" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+          </DockPanel>
+          <Slider Minimum="0" Maximum="100" Value="{Binding Percent}" />
+          <ItemsControl ItemsSource="{Binding Ranges}" IsVisible="{Binding HasRanges}" ItemsPanel="{StaticResource Wrap}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:RangeButtonViewModel">
+                <Button Command="{Binding PickCommand}" Margin="0,0,4,4" Padding="6,2" FontSize="11" BorderBrush="{Binding Color}" BorderThickness="0,0,0,3"
+                        ToolTip.Tip="{Binding Bounds}">
+                  <TextBlock Text="{Binding Label}" MaxWidth="160" TextTrimming="CharacterEllipsis" />
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <UserControl.Styles>
+    <Style Selector="Border.step">
+      <Setter Property="Background" Value="#0D1117" />
+      <Setter Property="BorderBrush" Value="#30363D" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding" Value="8,4" />
+      <Setter Property="Margin" Value="0,0,6,6" />
+      <Setter Property="MinWidth" Value="110" />
+    </Style>
+    <Style Selector="TextBlock.modified">
+      <Setter Property="Foreground" Value="#F0883E" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style Selector="Button.palette">
+      <Setter Property="MinWidth" Value="84" />
+      <Setter Property="Margin" Value="0,0,4,4" />
+      <Setter Property="Padding" Value="6,4" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel Margin="16">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+        <Button Content="{Binding UndoText}" Command="{Binding UndoCommand}" ToolTip.Tip="Annuler la dernière modification des scènes (SCN-039)" />
+        <Button Content="{Binding RedoText}" Command="{Binding RedoCommand}" />
+      </StackPanel>
+      <TextBlock Text="Scènes" FontSize="22" FontWeight="SemiBold" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Message}" Foreground="#58A6FF" Margin="0,0,0,8"
+               IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <Grid ColumnDefinitions="320,*,320" IsEnabled="{Binding HasProject}">
+
+      <!-- Liste des scènes (SCN-001, SCN-012) et lecture (CMD-010 à 012) -->
+      <Border Grid.Column="0" Classes="panel" Margin="0,0,8,0">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,8">
+            <TextBlock Classes="section" Text="Scènes du projet" />
+            <TextBox Text="{Binding Filter}" PlaceholderText="Rechercher une scène…" Width="290" HorizontalAlignment="Left" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding CategoryFilter}" Width="142" ToolTip.Tip="Catégorie" />
+              <ComboBox ItemsSource="{Binding LayerFilters}" SelectedItem="{Binding LayerFilter}" Width="142" ToolTip.Tip="Couche" />
+            </StackPanel>
+            <CheckBox Content="Visibles en Live seulement" IsChecked="{Binding OnlyVisible}" />
+          </StackPanel>
+          <StackPanel DockPanel.Dock="Bottom" Spacing="6" Margin="0,8,0,0">
+            <WrapPanel>
+              <Button Content="Nouvelle…" Command="{Binding NewSceneCommand}" Margin="0,0,6,6" />
+              <Button Content="Dupliquer" Command="{Binding DuplicateSceneCommand}" Margin="0,0,6,6" />
+              <Button Content="Supprimer…" Classes="danger" Command="{Binding DeleteSceneCommand}" Margin="0,0,6,6" />
+            </WrapPanel>
+            <Button Content="■ Tout arrêter" Command="{Binding StopAllCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+          </StackPanel>
+          <ListBox ItemsSource="{Binding Scenes}" SelectedItem="{Binding SelectedScene}" Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:SceneRowViewModel">
+                <DockPanel>
+                  <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <Button Content="▶" Tag="{Binding}" Click="OnLaunchClicked" ToolTip.Tip="Lancer (CMD-010)" />
+                    <Button Content="■" Tag="{Binding}" Click="OnStopClicked" ToolTip.Tip="Arrêter avec son fondu de sortie (CMD-011)" />
+                  </StackPanel>
+                  <Border Width="6" Background="{Binding Color}" CornerRadius="3" Margin="0,0,8,0" />
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding Details}" FontSize="11" Opacity="0.7" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding PlayState}" FontSize="11" Foreground="#3FB950" IsVisible="{Binding IsPlaying}" />
+                  </StackPanel>
+                </DockPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+
+      <!-- Éditeur de scène et programmeur (doc 16 §4) -->
+      <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="8" DataContext="{Binding Editor}" x:DataType="vm:SceneEditorViewModel">
+          <TextBlock Text="Choisissez ou créez une scène à gauche. Le programmeur (plus bas) fonctionne même sans scène : sélectionnez des appareils et réglez-les."
+                     Opacity="0.6" TextWrapping="Wrap" IsVisible="{Binding !HasScene}" />
+
+          <!-- Identité et lecture (SCN-001, SCN-005, SCN-009, GEN-106) -->
+          <Border Classes="panel" IsVisible="{Binding HasScene}">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="section" Text="Scène" />
+              <WrapPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Nom" />
+                  <TextBox Text="{Binding Name}" Width="240" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Couleur (#RRGGBB)" />
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" />
+                    <TextBox Text="{Binding Color}" Width="120" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Icône" />
+                  <TextBox Text="{Binding Icon}" Width="110" PlaceholderText="★" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Catégorie" />
+                  <TextBox Text="{Binding Category}" Width="170" PlaceholderText="Phase P4" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Couche" />
+                  <ComboBox ItemsSource="{Binding Layers}" SelectedItem="{Binding Layer}" Width="170" />
+                </StackPanel>
+                <StackPanel Classes="field" VerticalAlignment="Bottom">
+                  <CheckBox Content="👁 Visible en Live" IsChecked="{Binding VisibleInLive}" ToolTip.Tip="Une scène masquée reste utilisable par les shows et séquences (SCN-009)" />
+                </StackPanel>
+              </WrapPanel>
+              <WrapPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Boucle" />
+                  <ComboBox ItemsSource="{x:Static vm:SceneEditorViewModel.LoopOptions}" SelectedItem="{Binding Loop}" Width="150" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Passages (N fois)" />
+                  <NumericUpDown Value="{Binding LoopCount}" Minimum="1" Maximum="999" FormatString="0" Width="140" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Fin de scène" />
+                  <ComboBox ItemsSource="{x:Static vm:SceneEditorViewModel.EndOptions}" SelectedItem="{Binding End}" Width="210" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Enchaîner sur" />
+                  <ComboBox ItemsSource="{Binding ChainTargets}" SelectedItem="{Binding ChainScene}" Width="190" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Fondu d'entrée (vide = celui de l'étape 1)" />
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeIn}" x:DataType="vm:DurationField">
+                    <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
+                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Fondu de sortie (vide = immédiat)" />
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeOut}" x:DataType="vm:DurationField">
+                    <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
+                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Vitesse (×)" />
+                  <NumericUpDown Value="{Binding Speed}" Minimum="0.1" Maximum="10" Increment="0.1" FormatString="0.##" Width="140" />
+                </StackPanel>
+              </WrapPanel>
+              <WrapPanel>
+                <Button Content="▶ Tester" Command="{Binding TestCommand}" Margin="0,0,6,6" ToolTip.Tip="Jouer la scène, les autres couches restant actives (SCN-034)" />
+                <Button Content="▶ Seule" Command="{Binding TestSoloCommand}" Margin="0,0,6,6" ToolTip.Tip="Jouer la scène seule : les autres lectures sont masquées (SCN-034)" />
+                <Button Content="■ Arrêter" Command="{Binding StopTestCommand}" Margin="0,0,6,6" />
+                <Button Content="◀ Étape" Command="{Binding PreviousStepCommand}" Margin="0,0,6,6" ToolTip.Tip="Pas à pas (CMD-015)" />
+                <Button Content="Étape ▶" Command="{Binding NextStepCommand}" Margin="0,0,16,6" />
+                <CheckBox Content="Aveugle (aperçu au simulateur seulement)" IsChecked="{Binding Programmer.Blind}" Margin="0,0,16,6"
+                          ToolTip.Tip="Éditer et tester sans toucher à la sortie ; le simulateur montre l'aperçu (SCN-035, GEN-063)" />
+                <CheckBox Content="Allumer en coloriant" IsChecked="{Binding LightWhenColoring}" Margin="0,0,0,6"
+                          ToolTip.Tip="Une couleur enregistrée sans intensité ajoute l'intensité 100 % (MOT-041)" />
+              </WrapPanel>
+              <TextBlock Text="{Binding Hint}" Foreground="#D29922" TextWrapping="Wrap"
+                         IsVisible="{Binding Hint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            </StackPanel>
+          </Border>
+
+          <!-- Étapes (SCN-002 à SCN-004) -->
+          <Border Classes="panel" IsVisible="{Binding HasScene}">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="section" Text="Étapes" />
+              <ItemsControl ItemsSource="{Binding Steps}">
+                <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel />
+                  </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="vm:StepRowViewModel">
+                    <Border Classes="step" Cursor="Hand" Tag="{Binding}" PointerPressed="OnStepPressed"
+                            BorderBrush="{Binding IsCurrent, Converter={x:Static vm:ScenesView.CurrentBorder}}">
+                      <StackPanel Spacing="2">
+                        <DockPanel>
+                          <CheckBox DockPanel.Dock="Right" IsChecked="{Binding IsChecked}" ToolTip.Tip="Cocher pour la modification groupée des durées (SCN-004)" MinWidth="0" Padding="0" />
+                          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                        </DockPanel>
+                        <TextBlock Text="{Binding Timing}" FontSize="11" Opacity="0.8" />
+                        <TextBlock Text="{Binding ValueCount}" FontSize="11" Opacity="0.6" />
+                        <TextBlock Text="▶ en cours" FontSize="11" Foreground="#3FB950" IsVisible="{Binding IsPlaying}" />
+                      </StackPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <WrapPanel>
+                <Button Content="+ Ajouter" Command="{Binding AddStepCommand}" Margin="0,0,6,6" />
+                <Button Content="Insérer avant" Command="{Binding InsertStepCommand}" Margin="0,0,6,6" />
+                <Button Content="Dupliquer" Command="{Binding DuplicateStepCommand}" Margin="0,0,6,6" />
+                <Button Content="Supprimer" Classes="danger" Command="{Binding DeleteStepCommand}" Margin="0,0,6,6" />
+                <Button Content="◀ Déplacer" Command="{Binding MoveStepLeftCommand}" Margin="0,0,6,6" />
+                <Button Content="Déplacer ▶" Command="{Binding MoveStepRightCommand}" Margin="0,0,16,6" />
+                <Button Content="Durées de cette étape → étapes cochées (toutes si aucune)" Command="{Binding ApplyTimingToCheckedCommand}" Margin="0,0,6,6" />
+              </WrapPanel>
+              <WrapPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Nom de l'étape" />
+                  <TextBox Text="{Binding StepName}" Width="170" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Fondu d'entrée" />
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepFade}" x:DataType="vm:DurationField">
+                    <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
+                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Maintien" />
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepHold}" x:DataType="vm:DurationField">
+                    <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="3600" Increment="0.5" FormatString="0.###" Width="150" />
+                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Courbe" />
+                  <ComboBox ItemsSource="{x:Static vm:SceneEditorViewModel.CurveOptions}" SelectedItem="{Binding StepCurve}" Width="150" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Roues, gobos, programmes : bascule" />
+                  <ComboBox ItemsSource="{x:Static vm:SceneEditorViewModel.SwitchOptions}" SelectedItem="{Binding StepSwitch}" Width="150" />
+                </StackPanel>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+
+          <!-- Programmeur (SCN-030 à SCN-039) -->
+          <Border Classes="panel">
+            <StackPanel Spacing="8">
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="● modifié, pas encore enregistré dans une étape" Classes="modified" IsVisible="{Binding Programmer.IsModified}" VerticalAlignment="Center" />
+                <TextBlock Classes="section" Text="Programmeur" />
+              </DockPanel>
+              <TextBlock Text="{Binding Programmer.Content}" Opacity="0.8" />
+              <WrapPanel>
+                <Button Content="Charger l'étape" Command="{Binding LoadStepCommand}" Margin="0,0,6,6" IsEnabled="{Binding HasScene}"
+                        ToolTip.Tip="Mettre dans le programmeur les valeurs de l'étape courante" />
+                <Button Content="Remplacer l'étape" Command="{Binding ReplaceStepCommand}" Margin="0,0,6,6" IsEnabled="{Binding HasScene}"
+                        ToolTip.Tip="L'étape courante prend exactement le contenu du programmeur (SCN-033)" />
+                <Button Content="Fusionner dans l'étape" Command="{Binding MergeStepCommand}" Margin="0,0,6,6" IsEnabled="{Binding HasScene}"
+                        ToolTip.Tip="Les réglages du programmeur remplacent les mêmes attributs de l'étape, le reste est gardé (SCN-033)" />
+                <Button Content="Nouvelle étape" Command="{Binding RecordNewStepCommand}" Margin="0,0,16,6" IsEnabled="{Binding HasScene}" />
+                <Button Content="Vider" Command="{Binding Programmer.ClearCommand}" Margin="0,0,6,6" ToolTip.Tip="Vider le programmeur : ses surcharges sont libérées" />
+                <Button Content="Capturer la sortie" Command="{Binding Programmer.CaptureOutputCommand}" Margin="0,0,16,6"
+                        ToolTip.Tip="Reprendre ce qui est émis pour les appareils sélectionnés (tous si aucun) : scènes, console… (SCN-037, CONS-025)" />
+                <Button Content="Copier" Command="{Binding Programmer.CopyCommand}" Margin="0,0,6,6" ToolTip.Tip="Copier les réglages du premier appareil sélectionné (SCN-038)" />
+                <Button Content="Coller" Command="{Binding Programmer.PasteCommand}" Margin="0,0,6,6" />
+                <Button Content="Coller en miroir" Command="{Binding Programmer.PasteMirrorCommand}" Margin="0,0,6,6" ToolTip.Tip="Pan inversé, pour des lyres symétriques (SCN-038)" />
+              </WrapPanel>
+
+              <Grid ColumnDefinitions="260,*" DataContext="{Binding Programmer}" x:DataType="vm:ProgrammerViewModel">
+                <!-- Sélection d'appareils (SCN-030) -->
+                <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,12,0">
+                  <TextBlock Text="Sélections" FontWeight="SemiBold" />
+                  <ItemsControl ItemsSource="{Binding Shortcuts}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:SelectionShortcut">
+                        <Button Content="{Binding Label}" Tag="{Binding}" Click="OnShortcutClicked" Margin="0,0,4,4" Padding="6,2" FontSize="12"
+                                BorderBrush="{Binding Color}" BorderThickness="0,0,0,2" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Button Content="Aucun" Command="{Binding SelectNoneCommand}" Padding="6,2" FontSize="12" />
+                  <TextBlock Text="Appareils" FontWeight="SemiBold" />
+                  <ItemsControl ItemsSource="{Binding Fixtures}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ProgrammerFixtureViewModel">
+                        <DockPanel Margin="0,1">
+                          <TextBlock DockPanel.Dock="Right" Text="●" Classes="modified" IsVisible="{Binding HasValues}" ToolTip.Tip="Réglé dans le programmeur" VerticalAlignment="Center" />
+                          <Ellipse DockPanel.Dock="Left" Width="10" Height="10" Fill="{Binding Color}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                          <CheckBox IsChecked="{Binding IsSelected}" ToolTip.Tip="{Binding Model}">
+                            <TextBlock Text="{Binding Name}" />
+                          </CheckBox>
+                        </DockPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <!-- Outils d'attributs (SCN-031, SCN-032) -->
+                <StackPanel Grid.Column="1" Spacing="10">
+                  <TextBlock Text="{Binding SelectionSummary}" TextWrapping="Wrap" Opacity="0.8" />
+
+                  <ItemsControl ItemsSource="{Binding IntensityTools}" ItemTemplate="{StaticResource LevelTool}" />
+
+                  <Border IsVisible="{Binding HasColor}" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="0,6,0,0">
+                    <StackPanel Spacing="4" DataContext="{Binding Color}" x:DataType="vm:ColorToolViewModel">
+                      <DockPanel>
+                        <Button DockPanel.Dock="Right" Content="Retirer" Command="{Binding RemoveCommand}" Padding="6,2" FontSize="12" IsVisible="{Binding IsModified}" />
+                        <TextBlock DockPanel.Dock="Right" Text="●" Classes="modified" IsVisible="{Binding IsModified}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <Border Width="28" Height="20" CornerRadius="4" Background="{Binding Swatch}" Margin="0,0,8,0" />
+                        <TextBlock Text="Couleur (traduite pour chaque appareil : RVB, RVBW, roue)" FontWeight="SemiBold" VerticalAlignment="Center" />
+                      </DockPanel>
+                      <Grid ColumnDefinitions="70,*,56" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="Rouge" VerticalAlignment="Center" />
+                        <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Red}" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Red, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="1" Text="Vert" VerticalAlignment="Center" />
+                        <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Green}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Green, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="2" Text="Bleu" VerticalAlignment="Center" />
+                        <Slider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Blue}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Blue, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Row="3" Text="Blanc" VerticalAlignment="Center" IsVisible="{Binding HasWhite}" />
+                        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding White}" IsVisible="{Binding HasWhite}" />
+                        <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding White, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" IsVisible="{Binding HasWhite}" />
+                        <TextBlock Grid.Row="4" Text="Ambre" VerticalAlignment="Center" IsVisible="{Binding HasAmber}" />
+                        <Slider Grid.Row="4" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Amber}" IsVisible="{Binding HasAmber}" />
+                        <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Amber, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" IsVisible="{Binding HasAmber}" />
+                        <TextBlock Grid.Row="5" Text="UV" VerticalAlignment="Center" IsVisible="{Binding HasUv}" />
+                        <Slider Grid.Row="5" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Uv}" IsVisible="{Binding HasUv}" />
+                        <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Uv, StringFormat='{}{0:0} %'}" VerticalAlignment="Center" IsVisible="{Binding HasUv}" />
+                      </Grid>
+                    </StackPanel>
+                  </Border>
+
+                  <ItemsControl ItemsSource="{Binding PositionTools}" ItemTemplate="{StaticResource LevelTool}" />
+                  <ItemsControl ItemsSource="{Binding OtherTools}" ItemTemplate="{StaticResource LevelTool}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
+
+      <!-- Palettes (doc 17 §2) -->
+      <Border Grid.Column="2" Classes="panel" Margin="8,0,0,0">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Spacing="8" DataContext="{Binding Palettes}" x:DataType="vm:PalettesViewModel">
+            <TextBlock Classes="section" Text="Palettes" />
+            <TextBlock Text="Clic : appliquer à la sélection du programmeur. Clic droit : mettre à jour, renommer, déplacer, supprimer." TextWrapping="Wrap" FontSize="11" Opacity="0.7" />
+            <TextBlock Text="{Binding Message}" Foreground="#58A6FF" TextWrapping="Wrap"
+                       IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+            <TextBlock Text="Couleurs" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding Colors}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
+            <TextBlock Text="Intensité" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding Intensities}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
+            <TextBlock Text="Positions" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding Positions}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
+            <TextBlock Text="Faisceau" FontWeight="SemiBold" />
+            <ItemsControl ItemsSource="{Binding Beams}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
+
+            <TextBlock Text="Enregistrer la sélection comme palette (PAL-001)" FontWeight="SemiBold" Margin="0,6,0,0" />
+            <WrapPanel>
+              <Button Content="Couleur…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Color" Margin="0,0,4,4" />
+              <Button Content="Intensité…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Intensity" Margin="0,0,4,4" />
+              <Button Content="Position…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Position" Margin="0,0,4,4" />
+              <Button Content="Faisceau…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Beam" Margin="0,0,4,4" />
+            </WrapPanel>
+
+            <TextBlock Text="Palettes automatiques de la sélection (PAL-003)" FontWeight="SemiBold" Margin="0,6,0,0" />
+            <TextBlock Text="Aucune : elles viennent des plages marquées « palette automatique » dans la bibliothèque." FontSize="11" Opacity="0.6" TextWrapping="Wrap"
+                       IsVisible="{Binding !HasAutomatic}" />
+            <ItemsControl ItemsSource="{Binding Automatic}" ItemsPanel="{StaticResource Wrap}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:AutoPaletteButtonViewModel">
+                  <Button Classes="palette" Content="{Binding Title}" Command="{Binding ApplyCommand}" BorderBrush="{Binding Color}" BorderThickness="0,0,0,3" FontSize="12" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </DockPanel>
+
+</UserControl>

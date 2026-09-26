@@ -30,6 +30,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
     private readonly SleepInhibitor _sleepInhibitor;
     private bool _started;
     private bool _stopped;
+    private bool _previewActive;
 
     /// <summary>Assemble les modules (sans rien démarrer).</summary>
     public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null)
@@ -50,10 +51,13 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router = new OutputRouter(Bus, loggers.CreateLogger<OutputRouter>());
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
         Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>(), Bus);
-        Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
+
+        // GEN-063 : moteur d'aperçu pour l'édition en aveugle ; ses trames ne vont à aucune sortie, seulement au simulateur.
+        Preview = new RenderEngine(DiscardFrames.Instance, Clock, universes, loggers.CreateLogger<RenderEngine>());
+        Loop = new TickLoop(TickEngines, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
-        Show = new ShowService(Project, Engine, loggers.CreateLogger<ShowService>());
+        Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -91,6 +95,19 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Moteur de rendu (porte d'entrée des commandes).</summary>
     public RenderEngine Engine { get; }
+
+    /// <summary>
+    /// Moteur d'aperçu (GEN-063, SCN-035) : mêmes scènes et palettes, mais ses trames ne sont émises nulle part ;
+    /// le programmeur en aveugle y envoie ses commandes et le simulateur l'affiche tant que <see cref="PreviewActive"/>.
+    /// </summary>
+    public RenderEngine Preview { get; }
+
+    /// <summary>Aperçu en cours (édition en aveugle) : le moteur d'aperçu est cadencé et montré au simulateur.</summary>
+    public bool PreviewActive
+    {
+        get => Volatile.Read(ref _previewActive);
+        set => Volatile.Write(ref _previewActive, value);
+    }
 
     /// <summary>Routeur de sorties.</summary>
     public OutputRouter Router { get; }
@@ -329,6 +346,15 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router.Dispose();
         await Bus.DisposeAsync().ConfigureAwait(false);
         _logger.LogInformation("Arrêt de LuXia");
+    }
+
+    private void TickEngines()
+    {
+        Engine.Tick();
+        if (PreviewActive)
+        {
+            Preview.Tick();
+        }
     }
 
     private OutputDriver CreateDriver(OutputDriverKind kind)

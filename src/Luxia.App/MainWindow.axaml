@@ -6,6 +6,7 @@
         xmlns:library="using:Luxia.UI.Modules.Library"
         xmlns:installation="using:Luxia.UI.Modules.Installation"
         xmlns:simulator="using:Luxia.UI.Modules.Simulator"
+        xmlns:scenes="using:Luxia.UI.Modules.Scenes"
         x:Class="Luxia.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -20,11 +21,26 @@
       <MenuItem Header="_Projet">
         <MenuItem Header="_Nouveau…" Command="{Binding NewProjectCommand}" />
         <MenuItem Header="_Ouvrir…" Command="{Binding OpenProjectCommand}" />
+        <Separator />
+        <MenuItem Header="_Relire les scènes et palettes" Command="{Binding ReloadShowDataCommand}"
+                  ToolTip.Tip="Reprend le contenu modifié à côté de l'application (IA de conception, GEN-133), sans rouvrir le projet" />
+        <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
       </MenuItem>
       <MenuItem Header="_Aide">
         <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
       </MenuItem>
     </Menu>
+
+    <!-- Restitution toujours accessible : blackout (GEN-082, touche B) et Grand Master (CMD-002) -->
+    <Border DockPanel.Dock="Top" Background="#0D1117" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="12,6">
+      <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+        <TextBlock Text="Grand Master" VerticalAlignment="Center" Opacity="0.8" />
+        <Slider Minimum="0" Maximum="100" Value="{Binding GrandMaster}" Width="200" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding GrandMaster, StringFormat='{}{0:0} %'}" Width="48" VerticalAlignment="Center" />
+        <ToggleButton Classes="blackout" IsChecked="{Binding Blackout}" Content="BLACKOUT (B)" MinWidth="150"
+                      ToolTip.Tip="Coupe toutes les intensités au tick suivant ; couleurs et positions inchangées (GEN-041). Touche B." />
+      </StackPanel>
+    </Border>
 
     <!-- Barre d'état permanente (GEN-104) -->
     <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="12,4">
@@ -68,6 +84,9 @@
         </DataTemplate>
         <DataTemplate DataType="simulator:SimulatorViewModel">
           <simulator:SimulatorView />
+        </DataTemplate>
+        <DataTemplate DataType="scenes:ScenesViewModel">
+          <scenes:ScenesView />
         </DataTemplate>
         <DataTemplate DataType="outputs:OutputsViewModel">
           <outputs:OutputsView />

@@ -14,17 +14,17 @@ namespace Luxia.Hosting;
 public sealed class ShowService
 {
     private readonly ProjectSession _project;
-    private readonly RenderEngine _engine;
+    private readonly IReadOnlyList<RenderEngine> _engines;
     private readonly ILogger _logger;
     private Scene? _workingCopy;
 
-    /// <summary>Branche le service sur le projet et le moteur ; compile tout de suite le projet ouvert.</summary>
-    public ShowService(ProjectSession project, RenderEngine engine, ILogger<ShowService>? logger = null)
+    /// <summary>Branche le service sur le projet et les moteurs (sortie, aperçu) ; compile tout de suite le projet ouvert.</summary>
+    public ShowService(ProjectSession project, IReadOnlyList<RenderEngine> engines, ILogger<ShowService>? logger = null)
     {
         ArgumentNullException.ThrowIfNull(project);
-        ArgumentNullException.ThrowIfNull(engine);
+        ArgumentNullException.ThrowIfNull(engines);
         _project = project;
-        _engine = engine;
+        _engines = engines;
         _logger = logger ?? NullLogger<ShowService>.Instance;
         _project.Changed += (_, _) =>
         {
@@ -83,7 +83,10 @@ public sealed class ShowService
         var result = ShowCompiler.Compile(content);
         Patch = new PatchContext(content.Installation, content.Venues, content.TypeOf);
         Last = result;
-        _engine.LoadShow(result.Model);
+        foreach (var engine in _engines)
+        {
+            engine.LoadShow(result.Model);
+        }
         foreach (var issue in result.Issues)
         {
             _logger.LogWarning("Compilation du projet : {Probleme}", issue);
