@@ -26,4 +26,13 @@ public sealed record EngineLayer
 
     /// <summary>Fondu croisé par défaut entre deux scènes de la couche.</summary>
     public Duration CrossFade { get; init; } = Duration.FromSeconds(0.5);
+
+    /// <summary>Type : normale, ou Flash (scènes actives tant que la commande est maintenue, COU-005).</summary>
+    public LayerKind Kind { get; init; } = LayerKind.Normal;
+
+    /// <summary>Couche protégée de « Tout arrêter » (Ambiance par défaut, COU-007).</summary>
+    public bool KeepOnStopAll { get; init; }
+
+    /// <summary>Scène jouée quand aucune autre ne joue dans la couche (COU-009).</summary>
+    public Guid? RestSceneId { get; init; }
 }

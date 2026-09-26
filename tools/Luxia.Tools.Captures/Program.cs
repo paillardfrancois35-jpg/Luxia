@@ -55,12 +55,12 @@ void Tick(int count = 2)
     Dispatcher.UIThread.RunJobs();
 }
 
-void Capture(string name)
+void Capture(string name, Avalonia.Controls.Window? other = null)
 {
     Tick();
     AvaloniaHeadlessPlatform.ForceRenderTimerTick();
     Dispatcher.UIThread.RunJobs();
-    var frame = window.CaptureRenderedFrame();
+    var frame = (other ?? window).CaptureRenderedFrame();
     var path = Path.Combine(output, name + ".png");
 #pragma warning disable CS0618 // Surcharge simple suffisante pour un PNG de contrôle.
     frame?.Save(path);
@@ -94,6 +94,15 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
     }
 
     Capture("Scènes - lyre sélectionnée");
+
+    // Éditeur de couches (COU-001), fenêtre à part.
+    if (scenes.CreateLayersEditor() is { } editor)
+    {
+        var layers = new LayersWindow { DataContext = editor };
+        layers.Show();
+        Capture("Couches", layers);
+        layers.Close();
+    }
 }
 
 // Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.

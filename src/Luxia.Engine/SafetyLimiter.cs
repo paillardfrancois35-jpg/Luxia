@@ -20,9 +20,28 @@ internal sealed class SafetyLimiter
     private StrobeGroup[] _strobeGroups = [];
     private SmokeState[] _smoke = [];
     private bool[] _zoneReported = [];
+    private bool _smokeHeld;
+    private double _smokeBurst;
+    private byte _smokeLevel = 255;
 
     /// <summary>Limites en train d'agir (pour l'affichage en Live, GEN-086).</summary>
     public IReadOnlyList<ActiveLimit> Active => _active;
+
+    /// <summary>Fumée manuelle en cours (maintien ou rafale, CMD-030).</summary>
+    public bool ManualSmoke => _smokeHeld || _smokeBurst > 0;
+
+    /// <summary>Commande de fumée manuelle (CMD-030) : maintien tant que <paramref name="pressed"/>, ou rafale.</summary>
+    public void SetManualSmoke(bool pressed, double? burstSeconds, double level)
+    {
+        _smokeLevel = (byte)Math.Clamp(Math.Round(level * 255), 1, 255);
+        if (burstSeconds is { } burst)
+        {
+            _smokeBurst = Math.Max(_smokeBurst, burst);
+            return;
+        }
+
+        _smokeHeld = pressed;
+    }
 
     /// <summary>Charge un modèle ; l'état des compteurs est gardé pour les canaux qui existent encore.</summary>
     public void Load(SafetyModel model)
@@ -105,6 +124,20 @@ internal sealed class SafetyLimiter
     /// <param name="publish">Publication d'un événement.</param>
     public void ApplyToFrames(DmxFrame[] frames, double elapsed, TimeSpan now, Action<SafetyLimitReached> publish)
     {
+        // Fumée manuelle (CMD-030) : ajoutée avant le limiteur, qui s'applique donc aussi à elle (GEN-084).
+        if (ManualSmoke)
+        {
+            foreach (var smoke in _smoke)
+            {
+                if (Value(frames, smoke.Channel) is { } current && current < _smokeLevel)
+                {
+                    Write(frames, smoke.Channel, _smokeLevel);
+                }
+            }
+
+            _smokeBurst = Math.Max(0, _smokeBurst - elapsed);
+        }
+
         foreach (var group in _strobeGroups)
         {
             ApplyStrobe(group, frames, elapsed, now, publish);

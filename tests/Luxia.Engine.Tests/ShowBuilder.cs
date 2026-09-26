@@ -108,6 +108,13 @@ internal sealed class ShowBuilder
         return layer;
     }
 
+    /// <summary>Remplace une couche (même identifiant) par une version modifiée.</summary>
+    public EngineLayer Update(EngineLayer layer)
+    {
+        _layers[_layers.FindIndex(l => l.Id == layer.Id)] = layer;
+        return layer;
+    }
+
     public EngineScene Scene(string name, EngineLayer layer, params EngineStep[] steps) =>
         Scene(new EngineScene { Id = Guid.NewGuid(), Name = name, LayerId = layer.Id, Steps = steps });
 

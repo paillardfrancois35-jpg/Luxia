@@ -6,6 +6,7 @@ using Luxia.Persistence;
 using Luxia.Scenes;
 using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 
 namespace Luxia.Hosting.Tools;
 
@@ -45,9 +46,48 @@ public static class ProjectValidator
         var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
         issues.AddRange(ShowCompiler.Compile(content).Issues);
         issues.AddRange(CheckScenes(scenes, layers, palettes));
+        issues.AddRange(CheckLayers(scenes, layers, palettes));
         issues.AddRange(CheckPalettes(palettes));
         issues.AddRange(CheckSafety(safety));
         return issues;
+    }
+
+    private static IEnumerable<CompileIssue> CheckLayers(SceneSet scenes, LayerSet layers, PaletteSet palettes)
+    {
+        var file = LayerStore.FileName;
+        foreach (var duplicate in layers.Layers.GroupBy(l => l.Id).Where(g => g.Count() > 1))
+        {
+            yield return Error(file, $"couche « {duplicate.First().Name} »", "id", "identifiant utilisé par plusieurs couches (GEN-052)");
+        }
+
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        foreach (var layer in layers.Layers)
+        {
+            if (layer.RestSceneId is { } rest && !sceneIds.Contains(rest))
+            {
+                yield return Warning(file, $"couche « {layer.Name} »", "restSceneId", "scène de repos introuvable (COU-009)");
+            }
+        }
+
+        // COU-008 : scène qui touche des familles d'attributs hors de celles de sa couche (non bloquant).
+        var byId = layers.Layers.GroupBy(l => l.Id).ToDictionary(g => g.Key, g => g.First());
+        foreach (var scene in scenes.Scenes)
+        {
+            if (!byId.TryGetValue(scene.LayerId, out var layer))
+            {
+                continue;
+            }
+
+            var outside = LayerRules.OutOfFamily(scene, layer, palettes);
+            if (outside.Count > 0)
+            {
+                yield return Warning(
+                    SceneStore.FileName,
+                    $"scène « {scene.Name} »",
+                    "layerId",
+                    $"touche {string.Join(", ", outside.Select(LayerRules.Label))}, hors des familles de la couche « {layer.Name} » (COU-008)");
+            }
+        }
     }
 
     private static IEnumerable<CompileIssue> CheckSafety(SafetySettings safety)

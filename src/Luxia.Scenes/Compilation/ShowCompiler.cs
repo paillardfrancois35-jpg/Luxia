@@ -205,6 +205,9 @@ public static class ShowCompiler
         IntensityMode = layer.IntensityMode,
         MasterOnAllAttributes = layer.MasterOnAllAttributes,
         CrossFade = layer.CrossFade,
+        Kind = layer.Kind,
+        KeepOnStopAll = layer.KeepOnStopAll,
+        RestSceneId = layer.RestSceneId,
     };
 
     private static EngineScene CompileScene(

@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Luxia.Fixtures.Rules;
 using Luxia.Hosting.Tools;
 using Luxia.Output.Recording;
 
@@ -18,9 +19,13 @@ public sealed class ReferenceShowP4Tests
     [Fact]
     [Trait("Exigence", "GEN-131")]
     [Trait("Exigence", "GEN-130")]
+    [Trait("Exigence", "COU-008")]
     public void ReferenceShow_P4_IsValid_WithoutAnyProblem()
     {
-        ProjectValidator.Validate(Folder).ShouldBeEmpty();
+        // Seul avertissement admis : « Lyres sur 3 positions » (P4, couche Mouvements) allume et colore les lyres pour
+        // être visible seule ; il illustre l'avertissement « hors famille » de COU-008 (non bloquant).
+        ProjectValidator.Validate(Folder)
+            .ShouldAllBe(i => i.Severity == IssueSeverity.Warning && i.Message.Contains("COU-008") && i.Item.Contains("Lyres sur 3 positions"));
         var content = ProjectFiles.Load(Folder);
         content.Scenes.Scenes.Count(s => s.Category == "Phase P4").ShouldBe(10);
     }

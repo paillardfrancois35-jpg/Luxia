@@ -1,4 +1,5 @@
 using Luxia.Engine.Model;
+using Luxia.Fixtures.Model;
 
 namespace Luxia.Scenes.Model;
 
@@ -34,4 +35,19 @@ public sealed record Layer
 
     /// <summary>Fondu croisé par défaut (0,5 s).</summary>
     public Duration CrossFade { get; init; } = Duration.FromSeconds(0.5);
+
+    /// <summary>Type : normale, ou Flash (scènes actives tant que maintenues, COU-005).</summary>
+    public LayerKind Kind { get; init; } = LayerKind.Normal;
+
+    /// <summary>Épargnée par « Tout arrêter » (Ambiance par défaut, COU-007).</summary>
+    public bool KeepOnStopAll { get; init; }
+
+    /// <summary>Scène jouée quand aucune autre ne l'est dans la couche (COU-009) ; aucune par défaut.</summary>
+    public Guid? RestSceneId { get; init; }
+
+    /// <summary>
+    /// Familles d'attributs attendues dans la couche (COU-008) : une scène qui en touche d'autres est signalée
+    /// (avertissement). Vide = pas de vérification.
+    /// </summary>
+    public IReadOnlyList<AttributeFamily> Families { get; init; } = [];
 }

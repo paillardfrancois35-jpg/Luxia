@@ -105,6 +105,7 @@
               <Button Content="Nouvelle…" Command="{Binding NewSceneCommand}" Margin="0,0,6,6" />
               <Button Content="Dupliquer" Command="{Binding DuplicateSceneCommand}" Margin="0,0,6,6" />
               <Button Content="Supprimer…" Classes="danger" Command="{Binding DeleteSceneCommand}" Margin="0,0,6,6" />
+              <Button Content="Couches…" Click="OnLayersClicked" Margin="0,0,6,6" ToolTip.Tip="Créer, renommer, réordonner les couches (priorités), type, fondu, scène de repos" />
             </WrapPanel>
             <Button Content="■ Tout arrêter" Command="{Binding StopAllCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
           </StackPanel>

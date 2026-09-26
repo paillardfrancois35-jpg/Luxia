@@ -42,6 +42,9 @@ internal sealed class Playback
 
     public bool Solo { get; }
 
+    /// <summary>Flash (CMD-014) : fusionné au-dessus de toutes les couches, tant que la commande est maintenue (MOT-072).</summary>
+    public bool Flash { get; init; }
+
     public PlaybackState State { get; private set; } = PlaybackState.FadingIn;
 
     public int StepIndex { get; private set; }

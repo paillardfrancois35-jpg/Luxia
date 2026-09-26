@@ -36,6 +36,20 @@ public partial class ScenesView : UserControl
         ViewModel?.Editor.SelectStepCommand.Execute((sender as Control)?.Tag as StepRowViewModel);
     }
 
+    private async void OnLayersClicked(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel?.CreateLayersEditor() is not { } editor || TopLevel.GetTopLevel(this) is not Window owner)
+        {
+            return;
+        }
+
+        await new LayersWindow { DataContext = editor }.ShowDialog(owner).ConfigureAwait(true);
+        if (editor.Saved)
+        {
+            ViewModel.ReloadAll();
+        }
+    }
+
     private void OnShortcutClicked(object? sender, RoutedEventArgs e) =>
         ViewModel?.Programmer.SelectCommand.Execute((sender as Control)?.Tag as SelectionShortcut);
 }
