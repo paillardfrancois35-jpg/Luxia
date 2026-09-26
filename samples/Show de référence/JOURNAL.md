@@ -138,3 +138,39 @@ intermédiaire), vague (décalage de 0,5 s entre PAR).
 | Rendu au simulateur puis sur le matériel (doc 41 §11) | ✅ validé le 2026-09-26 : guide P4 déroulé pas à pas, exemples 1 à 12 conformes (blanc chaud réglé à 100 / 42 / 0 %) | 4 PAR, lyre 1, barre 1 branchés ; les deux paires de PAR ne rendent pas les mêmes couleurs (doc 99, correction par appareil) |
 | Positions des lyres à calibrer | 🟡 Lyre 1 calibrée au salon (2026-09-26) : Piste centre pan 46,6 % / tilt 65,7 %, Plafond pan 19,6 % / tilt 11,3 % (la proposition de départ visait le mur opposé), Croisé pan 39,1 % ; Lyre 2 non branchée, valeurs proposées (à calibrer quand elle sera raccordée) | Essai P4, exemple 4 |
 | Plage « sans strobe » des PAR et barres (Q28) | ⏳ en attente | |
+
+## P5 – Couches, Palettes, Live, MIDI (2026-09-27)
+
+### Ajouté
+
+| Élément | Fichier | Description |
+|---|---|---|
+| Plage « Pas de strobe » (Q28, BIB-101) | `Bibliothèque/Betopper/LPC008S.json`, `LPC120.json`, `Bibliothèque/BeamZ/LCB803.json` | LPC008S et LPC120 : 0-4 = pas de strobe ; LCB803 : 0 = pas de strobe |
+| 14 scènes, catégorie « Phase P5 » | `scènes.json` | Intensité : **Plein feu** (MOT-042), Intensité 50 % ; Couleurs : Rouge / Bleu / Ambre – **couleur seule** ; Mouvements : Lyres : piste centre / plafond, **Piège : lyre 1 vers le public** ; Effets : **Strobe PAR (plafonné à 10 s)** ; Ambiance : **Fumée longue (plafonnée à 10 s)**, Fumée courte (3 s) ; Flashs : **Flash blanc**, **Strobe flash**, **Blackout partiel (sauf UV)** |
+| Zone interdite d'exemple | `lieux.json` | Lieu Générique : « Public (exemple) » pour chaque lyre, Pan 30-70 %, Tilt 85-100 % (à adapter à la salle) ; propriété parasite `active` retirée |
+| Réglages du Live | `live.json` | Boutons FLASH = « Flash blanc », STROBE = « Strobe flash », rafale de fumée 3 s |
+| Réglages de sûreté | `sûreté.json` | Valeurs par défaut écrites en clair : strobe 10 s puis 10 s de pause, fumée 10 s puis 30 s de repos |
+| Couches | *(implicites)* | Modèle par défaut (doc 17 §1.3) : Ambiance protégée de « Tout arrêter », Flashs de type Flash, familles d'attributs par couche |
+
+Affectation de l'APC mini : celle par défaut (doc 18b §3), pas de `midi.json`.
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --scene "Strobe PAR (plafonné à 10 s)" --duree 22 --pas 1
+```
+
+Un scénario peut combiner les couches et les flashs (verbes `flash`, `figer`, `fumee`, `canal`, doc 50 §13).
+
+### Non-régression
+
+`ReferenceShowP5Tests` : chaque scène « Phase P5 » rejouée 6 s et comparée à `tests/assets/golden/P5-scenes.txt` ;
+contrôles ciblés : Intensité × Couleurs (couleur seule = PAR noirs, avec Plein feu = rouge), zone interdite (Tilt ramené
+de 95 à 85 %), strobe coupé à 10 s puis repris après 10 s, fumée coupée à 10 s, blackout partiel qui garde les UV.
+
+### Validation par l'utilisateur
+
+| Élément | Statut | Retour |
+|---|---|---|
+| Guide P5, au simulateur puis sur le matériel | ⏳ en attente | |

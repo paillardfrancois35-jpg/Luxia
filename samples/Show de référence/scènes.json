@@ -917,6 +917,653 @@
           ]
         }
       ]
+    },
+    {
+      "id": "7c1a0002-0000-4000-8000-000000000001",
+      "name": "Plein feu",
+      "color": "#E3B341",
+      "category": "Phase P5",
+      "notes": "Couche Intensité (MOT-042) : tous les appareils à 100 %, sans couleur. Combinez-la avec une scène « couleur seule » et une position : Intensité × Couleurs × Mouvements. Présente dans tout nouveau projet.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000001",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2a5966aa-eb9a-518e-bdb6-42118e287168",
+      "name": "Intensité 50 %",
+      "color": "#A67C00",
+      "category": "Phase P5",
+      "notes": "Même rôle que Plein feu, à 50 % (palette d'intensité). Lancer l'une coupe l'autre : la couche est exclusive (COU-003).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000001",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000103"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dfaf4fe6-0451-5e60-9a8a-effc3ae11981",
+      "name": "Rouge – couleur seule",
+      "color": "#FF0000",
+      "category": "Phase P5",
+      "notes": "Couleur sans intensité : seule, elle n'allume rien (sauf les appareils sans gradateur). Avec Plein feu : tout le parc en rouge.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a4a9c5de-e456-54cb-8c0a-93ce0140c588",
+      "name": "Bleu – couleur seule",
+      "color": "#0000FF",
+      "category": "Phase P5",
+      "notes": "Comme Rouge – couleur seule, en bleu.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7",
+      "name": "Ambre – couleur seule",
+      "color": "#FFB000",
+      "category": "Phase P5",
+      "notes": "Comme Rouge – couleur seule, en ambre.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000005"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1f473870-bb44-5b17-b61f-e9a73ddf743f",
+      "name": "Lyres : piste centre",
+      "color": "#58A6FF",
+      "category": "Phase P5",
+      "notes": "Position seule (palette « Piste centre », propre au lieu actif, PAL-004). Rien ne s'allume sans la couche Intensité.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "bf6cf187-9437-577d-82b7-79ef0ecd47c7"
+              },
+              "paletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd",
+      "name": "Lyres : plafond",
+      "color": "#8B949E",
+      "category": "Phase P5",
+      "notes": "Position seule : palette « Plafond ».",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "bf6cf187-9437-577d-82b7-79ef0ecd47c7"
+              },
+              "paletteId": "87250ab3-5078-5c50-bda5-df75534a23e4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ca67eea8-965e-5b01-b5b2-6fc4b22c459f",
+      "name": "Piège : lyre 1 vers le public",
+      "color": "#F85149",
+      "category": "Phase P5",
+      "notes": "DEMO-4, zone interdite (MOT-082) : la scène vise Pan 50 %, Tilt 95 % ; la zone d'exemple du lieu Générique (Tilt au-delà de 85 %) ramène la lyre à 85 %. Pastille « Sûreté » orange en Live.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0"
+              },
+              "attribute": "pan",
+              "level": 0.5
+            },
+            {
+              "target": {
+                "cell": 0,
+                "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0"
+              },
+              "attribute": "tilt",
+              "level": 0.95
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a789a9ab-05f5-5e25-bda6-fa081565d449",
+      "name": "Strobe PAR (plafonné à 10 s)",
+      "color": "#F0883E",
+      "category": "Phase P5",
+      "notes": "DEMO-4, limiteur de strobe (MOT-080) : strobe rapide des PAR demandé sans fin ; coupé au bout de 10 s, pause de 10 s, puis reprise. À combiner avec une couleur (le strobe lui-même allume les PAR à 100 %).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7d3f3ca-fc52-5293-a59d-e5372dc6eda2",
+      "name": "Fumée longue (plafonnée à 10 s)",
+      "color": "#6E7681",
+      "category": "Phase P5",
+      "notes": "DEMO-4, limiteur de fumée (MOT-081) : fumée demandée sans fin ; coupée à 10 s, puis 30 s de repos minimal. Machine non utilisable pour l'instant (Q29) : visible sur le canal 180 (moniteur de la Console) et au journal.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000006",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "fixtureId": "6177192f-1960-5dde-8a4a-92a23bfec442"
+              },
+              "attribute": "smoke",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fc59748f-4b9d-5e5b-afbb-184983e7dc3f",
+      "name": "Fumée courte (3 s)",
+      "color": "#8B949E",
+      "category": "Phase P5",
+      "notes": "Une rafale de 3 s, puis la scène s'arrête d'elle-même (un seul passage). Le repos de 30 s s'applique ensuite.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000006",
+      "loop": "once",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 3.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "fixtureId": "6177192f-1960-5dde-8a4a-92a23bfec442"
+              },
+              "attribute": "smoke",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "47bbdf76-6852-5165-a945-69afcf0b4ca7",
+      "name": "Flash blanc",
+      "color": "#FFFFFF",
+      "category": "Phase P5",
+      "notes": "Couche Flash : active tant qu'on la maintient (clic maintenu, touche F, bouton FLASH, pad de l'APC). Au-dessus de tout, puis retour instantané à ce qui jouait (MOT-072).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000099",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "264691b4-250b-5986-bdc0-d83b213bcf26",
+      "name": "Strobe flash",
+      "color": "#FFFFFF",
+      "category": "Phase P5",
+      "notes": "Strobe blanc des PAR et des barres tant que maintenu (touche S, bouton STROBE) ; toujours borné par le limiteur.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000099",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "ledBar"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "ledBar"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.9
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "ledBar"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fcdbf9c7-ee6c-59b1-9281-b6ce23fd12dc",
+      "name": "Blackout partiel (sauf UV)",
+      "color": "#30363D",
+      "category": "Phase P5",
+      "notes": "Tant que maintenu : tout au noir sauf les UV (intensité 0 en mode prioritaire au-dessus des couches).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000099",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "ledBar"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "movingHead"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "effect"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            }
+          ]
+        }
+      ]
     }
   ]
 }
