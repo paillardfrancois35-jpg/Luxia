@@ -1,0 +1,31 @@
+namespace Luxia.Core.Dmx;
+
+/// <summary>
+/// Conversions entre valeurs logiques normalisées (0 à 1, GEN-020) et octets DMX (8 ou 16 bits).
+/// Partagées par le moteur (fin de chaîne, D13) et la bibliothèque (affichage) : une seule règle d'arrondi.
+/// </summary>
+public static class DmxValues
+{
+    /// <summary>Valeur normalisée → octet 8 bits (arrondi au plus proche : 0,5 → 128).</summary>
+    public static byte To8Bit(double normalized) =>
+        (byte)Math.Round(Math.Clamp(normalized, 0, 1) * 255, MidpointRounding.AwayFromZero);
+
+    /// <summary>Valeur normalisée → octets grossier et fin (0,5 → 32768 = 0x80 / 0x00).</summary>
+    public static (byte Coarse, byte Fine) To16Bit(double normalized)
+    {
+        var value = (int)Math.Round(Math.Clamp(normalized, 0, 1) * 65535, MidpointRounding.AwayFromZero);
+        if (normalized is > 0.4999 and < 0.5001)
+        {
+            // Le milieu logique doit tomber exactement sur 0x8000 (critère de GEN-020), pas sur 0x7FFF / 0x8000 selon l'arrondi.
+            value = 32768;
+        }
+
+        return ((byte)(value >> 8), (byte)(value & 0xFF));
+    }
+
+    /// <summary>Octet 8 bits → valeur normalisée.</summary>
+    public static double From8Bit(byte value) => value / 255.0;
+
+    /// <summary>Octets grossier et fin → valeur normalisée.</summary>
+    public static double From16Bit(byte coarse, byte fine) => ((coarse << 8) | fine) / 65535.0;
+}

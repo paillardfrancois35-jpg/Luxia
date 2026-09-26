@@ -15,7 +15,10 @@ namespace Luxia.App.ViewModels;
 /// </summary>
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
-    /// <summary>Version affichée dans la barre de titre (`Directory.Build.props`, étiquette Git correspondante).</summary>
+    /// <summary>
+    /// Version affichée dans la barre de titre : « 1.003 » une fois validée, « 1.003.017 » en développement
+    /// (17e compilation depuis la dernière validation, GEN-119).
+    /// </summary>
     private static readonly string Version =
         Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
 
@@ -44,9 +47,19 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string? _projectMessage;
 
-    /// <summary>Indicateurs non encore disponibles (blackout : P4, mode automatique : P10).</summary>
+    /// <summary>Indicateurs du moteur (GEN-104) ; le mode automatique viendra en P10.</summary>
     [ObservableProperty]
-    private string _engineIndicators = "Blackout : —  ·  Mode : manuel";
+    private string _engineIndicators = "Blackout : non  ·  GM 100 %  ·  Mode : manuel";
+
+    /// <summary>Blackout (CMD-001, GEN-082) : bouton toujours visible, touche B.</summary>
+    [ObservableProperty]
+    private bool _blackout;
+
+    /// <summary>Grand Master en % (CMD-002).</summary>
+    [ObservableProperty]
+    private double _grandMaster = 100;
+
+    private bool _syncingFromEngine;
 
     /// <summary>Crée la coquille.</summary>
     public MainWindowViewModel(LuxiaRuntime runtime, IDialogService dialogs)
@@ -59,11 +72,13 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
             new NavigationItem("Installation", "▦", new Luxia.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),
+            new NavigationItem("Scènes", "✦", new Luxia.UI.Modules.Scenes.ScenesViewModel(runtime, dialogs)),
             new NavigationItem("Simulateur", "◎", new Luxia.UI.Modules.Simulator.SimulatorViewModel(runtime)),
             new NavigationItem("Sorties", "⇄", new OutputsViewModel(runtime)),
         ];
         _selectedPage = Pages[0];
         runtime.Project.Changed += (_, _) => UpdateProject();
+        runtime.Show.Compiled += (_, _) => UpdateProject();
         UpdateProject();
         RefreshStatus();
     }
@@ -133,6 +148,102 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private Task ShowAboutAsync() => _dialogs.ShowInfoAsync("À propos de LuXia", BuildDiagnostics());
 
+    /// <summary>
+    /// Signale une erreur inattendue de l'interface dans la barre d'état (elle est déjà au journal technique, GEN-117).
+    /// </summary>
+    public void ReportError(Exception exception)
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        ProjectMessage = $"Erreur inattendue : {exception.Message} — détails dans le journal technique (Aide → À propos : dossier des journaux).";
+    }
+
+    /// <summary>Bascule du blackout (bouton, touche B).</summary>
+    [RelayCommand]
+    private void ToggleBlackout() => Blackout = !Blackout;
+
+    partial void OnBlackoutChanged(bool value)
+    {
+        if (!_syncingFromEngine)
+        {
+            _runtime.SetBlackout(value);
+        }
+    }
+
+    partial void OnGrandMasterChanged(double value)
+    {
+        if (!_syncingFromEngine)
+        {
+            _runtime.SetGrandMaster(Math.Clamp(value, 0, 100) / 100);
+        }
+    }
+
+    /// <summary>
+    /// Relit scènes, palettes et couches sans rouvrir le projet (GEN-133) : pour reprendre du contenu écrit à côté
+    /// de l'application, par exemple par une IA de conception.
+    /// </summary>
+    [RelayCommand]
+    private async Task ReloadShowDataAsync()
+    {
+        if (_runtime.Project.Folder is null)
+        {
+            ProjectMessage = "Aucun projet ouvert.";
+            return;
+        }
+
+        var messages = _runtime.Project.ReloadShowData();
+        var scenes = _runtime.Project.Scenes.Scenes.Count;
+        var palettes = _runtime.Project.Palettes.Palettes.Count;
+        var text = string.Create(CultureInfo.CurrentCulture, $"{scenes} scène(s) et {palettes} palette(s) relues.");
+        await _dialogs.ShowInfoAsync("Scènes et palettes relues", string.Join(Environment.NewLine, messages.Prepend(text))).ConfigureAwait(true);
+    }
+
+    /// <summary>
+    /// Importe un lot de scènes (fichier au format de <c>scènes.json</c>, par exemple écrit par une IA de conception) :
+    /// ajout seulement, rien n'est écrasé, catégorie « Proposé par IA » par défaut (GEN-133).
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportScenesAsync()
+    {
+        if (_runtime.Project.Folder is null)
+        {
+            ProjectMessage = "Aucun projet ouvert.";
+            return;
+        }
+
+        var files = await _dialogs.PickFilesAsync("Scènes à importer", false, "json").ConfigureAwait(true);
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        var loaded = Persistence.Json.VersionedJsonFile.Load(files[0], Scenes.SceneStore.DocumentType);
+        if (!loaded.Succeeded)
+        {
+            await _dialogs.ShowInfoAsync("Import impossible", loaded.Message ?? "Fichier illisible.").ConfigureAwait(true);
+            return;
+        }
+
+        var result = Scenes.Rules.SceneImport.Merge(_runtime.Project.Scenes, loaded.Value!);
+        if (result.Imported > 0)
+        {
+            _runtime.Project.SaveScenes(result.Scenes);
+        }
+
+        var summary = string.Create(CultureInfo.CurrentCulture, $"{result.Imported} scène(s) importée(s).");
+        await _dialogs.ShowInfoAsync("Import de scènes", string.Join(Environment.NewLine, result.Report.Prepend(summary))).ConfigureAwait(true);
+    }
+
+    /// <summary>Problèmes trouvés en compilant le projet (références introuvables, valeurs ignorées).</summary>
+    [RelayCommand]
+    private Task ShowProjectProblemsAsync()
+    {
+        var issues = _runtime.Show.Last?.Issues ?? [];
+        var text = issues.Count == 0
+            ? "Aucun problème : toutes les scènes sont jouables telles quelles."
+            : string.Join(Environment.NewLine, issues.Select(i => i.ToString()));
+        return _dialogs.ShowInfoAsync("Problèmes du projet", text);
+    }
+
     /// <summary>Texte de diagnostic copiable (exécutable, dossiers, préférences, projet) : à donner en cas d'analyse.</summary>
     private string BuildDiagnostics()
     {
@@ -153,6 +264,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             string.Empty,
             $"Dossier Documents : {paths.DocumentsRoot}",
             $"Dossier AppData : {paths.AppDataRoot}",
+            $"Dossier des journaux : {paths.Logs}",
             $"Fichier de préférences : {paths.PreferencesFile} (existe : {(File.Exists(paths.PreferencesFile) ? "oui" : "non")})",
             $"Dernier projet en mémoire (préférences) : {prefs.LastProjectPath ?? "(aucun)"}",
             string.Empty,
@@ -168,11 +280,37 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
         ProjectName = _runtime.Project.Info?.Name ?? "Aucun projet";
         Title = _runtime.Project.Info is { } info ? $"LuXia v{Version} – {info.Name}" : $"LuXia v{Version}";
-        ProjectMessage = _runtime.Project.Messages.Count > 0 ? string.Join(" ", _runtime.Project.Messages) : null;
+        var messages = _runtime.Project.Messages.ToList();
+        if (_runtime.Show.Last is { Issues.Count: > 0 } compiled)
+        {
+            messages.Add(string.Create(CultureInfo.CurrentCulture, $"{compiled.Issues.Count} problème(s) dans le projet (menu Projet → Problèmes du projet)."));
+        }
+
+        ProjectMessage = messages.Count > 0 ? string.Join(" ", messages) : null;
     }
 
     private void RefreshStatus()
     {
+        // L'état affiché vient du moteur (une autre origine, MIDI ou outil, a pu le changer) : relu sans renvoyer de commande.
+        var snapshot = _runtime.Engine.Snapshot;
+        _syncingFromEngine = true;
+        try
+        {
+            Blackout = snapshot.Blackout;
+            if (Math.Abs((GrandMaster / 100) - snapshot.GrandMaster) > 0.005)
+            {
+                GrandMaster = Math.Round(snapshot.GrandMaster * 100);
+            }
+        }
+        finally
+        {
+            _syncingFromEngine = false;
+        }
+
+        EngineIndicators = string.Create(
+            CultureInfo.CurrentCulture,
+            $"Blackout : {(snapshot.Blackout ? "ACTIF" : "non")}  ·  GM {Math.Round(snapshot.GrandMaster * 100)} %  ·  {snapshot.Playbacks.Count} scène(s) en cours  ·  Mode : manuel");
+
         var routes = _runtime.Router.Routes;
         var main = routes.FirstOrDefault(r => r.Driver.Id != Output.Drivers.RecorderOutputDriver.DriverId);
         if (main.Driver is null)

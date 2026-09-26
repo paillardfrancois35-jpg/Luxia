@@ -310,6 +310,42 @@ public sealed class InstallationViewModelTests : IAsyncLifetime
         saved.Absent.ShouldBeTrue();
     }
 
+    [Fact]
+    [Trait("Exigence", "SC-03")]
+    [Trait("Exigence", "INST-016")]
+    public async Task ChangeMode_UsedByThreeScenes_ReportsImpact_AndKeepsScenes()
+    {
+        Patch(GenericFixtures.Rgb, "4 canaux", 1, "PAR");
+        var fixture = _host.Runtime.Project.Installation.Fixtures.Single();
+        var scenes = Enumerable.Range(1, 3).Select(i => new Luxia.Scenes.Model.Scene
+        {
+            Name = $"Scène {i}",
+            Steps =
+            [
+                new Luxia.Scenes.Model.SceneStep
+                {
+                    Values =
+                    [
+                        new Luxia.Scenes.Model.SceneValue { Target = Luxia.Scenes.Model.ValueTarget.Fixture(fixture.Id), Channel = "dim", Level = 1 },
+                        new Luxia.Scenes.Model.SceneValue { Target = Luxia.Scenes.Model.ValueTarget.Fixture(fixture.Id), Attribute = Luxia.Fixtures.Model.AttributeKind.Red, Level = 1 },
+                    ],
+                },
+            ],
+        }).ToList();
+        _host.Runtime.Project.SaveScenes(new Luxia.Scenes.Model.SceneSet { Scenes = scenes });
+        var row = _vm.PatchRows.Single();
+        row.EditModeName = "3 canaux";
+
+        await _vm.ChangeModeAsync(row);
+
+        var message = _host.Dialogs.Confirmations.Single();
+        message.ShouldContain("Scène « Scène 1 », étape 1 : « dim » n'existe pas dans le mode « 3 canaux »");
+        message.ShouldContain("Scène 3");
+        _host.Runtime.Project.Installation.Fixtures.Single().ModeName.ShouldBe("3 canaux");
+        _host.Runtime.Project.Scenes.Scenes.Count.ShouldBe(3);
+        _host.Runtime.Project.Scenes.Scenes[0].Steps[0].Values.Count.ShouldBe(2);
+    }
+
     private void Patch(Luxia.Fixtures.Model.FixtureType type, string modeName, int address, string baseName)
     {
         _vm.SelectedModel = _vm.LibraryModels.Single(e => e.Fixture.Id == type.Id);

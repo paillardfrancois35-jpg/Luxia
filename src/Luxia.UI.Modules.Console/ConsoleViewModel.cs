@@ -22,6 +22,9 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     public const double StripWidth = 42;
 
     private readonly LuxiaRuntime _runtime;
+
+    /// <summary>Valeurs virtuelles des faders sélectionnés en déplacement relatif (CONS-091), par canal.</summary>
+    private readonly Dictionary<int, int> _virtualValues = [];
     private readonly IDialogService _dialogs;
     private readonly byte[] _frame = new byte[DmxConstants.ChannelCount];
     private readonly short[] _overrides = new short[DmxConstants.ChannelCount];
@@ -161,9 +164,10 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
 
         if (IsDeviceMode)
         {
+            var snapshot = _runtime.Engine.Snapshot;
             foreach (var faders in DeviceFixtures)
             {
-                faders.Refresh();
+                faders.Refresh(snapshot);
             }
         }
 
@@ -179,6 +183,7 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     {
         ArgumentNullException.ThrowIfNull(channel);
         var c = channel.Channel;
+        var before = _selection.ToHashSet();
         if (control)
         {
             if (!_selection.Remove(c))
@@ -200,6 +205,14 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         }
 
         _lastClicked = c;
+
+        // CONS-091 : les écarts virtuels valent pour la sélection en cours, à travers plusieurs glissés ; un changement
+        // de sélection les oublie.
+        if (!before.SetEquals(_selection))
+        {
+            _virtualValues.Clear();
+        }
+
         UpdateSelectionFlags();
     }
 
@@ -210,12 +223,26 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         ArgumentNullException.ThrowIfNull(request);
         var targets = _selection.Contains(channel.Channel) && _selection.Count > 1 ? [.. _selection] : new[] { channel.Channel };
         var values = new List<ChannelValue>(targets.Length);
+        if (!IsRelative || targets.Length == 1)
+        {
+            _virtualValues.Clear();
+            values.AddRange(targets.Select(t => new ChannelValue(t, (byte)request.NewValue)));
+            Send(values);
+            return;
+        }
+
+        // CONS-091 : en relatif, chaque fader de la sélection garde une valeur virtuelle qui peut dépasser 0-255 ;
+        // l'écart d'origine entre les faders survit ainsi à un dépassement de borne. On émet la valeur bornée.
         foreach (var target in targets)
         {
-            var value = target == channel.Channel || !IsRelative
-                ? request.NewValue
-                : Math.Clamp(Current(target) + request.Delta, 0, 255);
-            values.Add(new ChannelValue(target, (byte)value));
+            if (!_virtualValues.TryGetValue(target, out var virtualValue))
+            {
+                virtualValue = target == channel.Channel ? request.NewValue - request.Delta : Current(target);
+            }
+
+            virtualValue += request.Delta;
+            _virtualValues[target] = virtualValue;
+            values.Add(new ChannelValue(target, (byte)Math.Clamp(virtualValue, 0, 255)));
         }
 
         Send(values);
@@ -251,7 +278,32 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
             ? $" – {info.Fixture.Name} {info.Channel.Name} – {DmxConversion.Describe(info.Channel, value, info.Type.Physical)}"
             : string.Empty;
 
-        HoverText = string.Create(CultureInfo.CurrentCulture, $"Canal {channel}{patch} – valeur {value} ({Math.Round(value * 100 / 255.0)} %){overridden}");
+        HoverText = string.Create(CultureInfo.CurrentCulture, $"Canal {channel}{patch} – valeur {value} ({Math.Round(value * 100 / 255.0)} %){overridden}{SourceOf(channel)}");
+    }
+
+    /// <summary>CONS-042, GEN-043 : d'où vient la valeur du canal (défaut, couche et scène, surcharge, blackout).</summary>
+    private string SourceOf(int channel)
+    {
+        var snapshot = _runtime.Engine.Snapshot;
+        var parameters = snapshot.Show.Parameters;
+        for (var p = 0; p < parameters.Count && p < snapshot.Sources.Length; p++)
+        {
+            if (!parameters[p].Outputs.Any(o => o.Universe == SelectedUniverse && (o.Coarse == channel || o.Fine == channel)))
+            {
+                continue;
+            }
+
+            var source = snapshot.Sources[p];
+            return source.Kind switch
+            {
+                Engine.SourceKind.Scene => $" – source : couche « {snapshot.Show.Layer(source.LayerId)?.Name} » / scène « {snapshot.Show.Scene(source.SceneId)?.Name} »",
+                Engine.SourceKind.Override => " – source : surcharge d'attribut (console ou programmeur)",
+                Engine.SourceKind.Blackout => " – source : blackout",
+                _ => " – source : valeur par défaut",
+            };
+        }
+
+        return string.Empty;
     }
 
     /// <summary>Clic sur le moniteur : affiche la page du canal.</summary>
@@ -309,7 +361,7 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
             }
 
             var faders = new FixtureFadersViewModel(_runtime);
-            faders.Attach(type, mode, patched.Address, patched.Universe, patched.Name);
+            faders.Attach(type, mode, patched.Address, patched.Universe, patched.Name, patched.Id);
             DeviceFixtures.Add(faders);
         }
     }
@@ -342,6 +394,7 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ReleaseSelection()
     {
+        _virtualValues.Clear();
         if (_selection.Count > 0)
         {
             _runtime.ReleaseChannels(SelectedUniverse, [.. _selection]);
@@ -355,7 +408,11 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ReleaseAll()
     {
+        _virtualValues.Clear();
         _runtime.ReleaseChannels(null, null);
+
+        // Mode appareils : les surcharges d'attributs (CONS-022) se libèrent aussi.
+        _runtime.Engine.Send(new Messaging.Commands.ReleaseAttributesCommand(Messaging.Commands.CommandOrigin.User));
         Message = "Tous les faders sont libérés.";
     }
 
@@ -368,6 +425,7 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ClearSelection()
     {
+        _virtualValues.Clear();
         _selection.Clear();
         UpdateSelectionFlags();
     }

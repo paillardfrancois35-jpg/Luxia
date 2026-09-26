@@ -179,3 +179,21 @@ Le paramétrage des effets est défini au doc 16. Le moteur les exécute ainsi :
 | T-MOT-07 | Non-régression | **Trames de référence** (« golden files ») : 20 scénarios de projet rejoués en temps virtuel, comparés octet par octet. |
 | T-MOT-08 | Performance | Budget de 5 ms par tick, gigue < 5 ms sur 1 h. |
 | T-MOT-09 | Déterminisme | Même graine + mêmes entrées → mêmes trames. |
+
+## 13. Notes de réalisation (P4)
+
+| Sujet | Réalisation |
+|---|---|
+| Architecture (D26) | Le moteur calcule sur un modèle compilé (`ShowModel`) : un **paramètre** par attribut d'appareil patché (une définition de canal), les couches, les scènes aux valeurs déjà résolues. La compilation (`Luxia.Scenes`) est faite hors du fil du moteur ; un nouveau modèle est chargé entre deux ticks et les lectures en cours continuent avec leur nouvelle version (PAL-005). |
+| Transitions (§4, §5.1) | Une seule mécanique : chaque paramètre d'une lecture a une contribution (valeur, poids) qui va de son état courant vers celui de l'étape visée. Absent de l'étape = poids vers 0 (retour au sous-jacent) ; sans poids avant = valeur prise d'emblée, poids qui monte (fondu depuis le sous-jacent). Le **fondu croisé** d'une couche exclusive est une **reprise** : la nouvelle lecture prend, attribut par attribut, valeur et poids de l'ancienne (MOT-030). |
+| Instant de lancement | Une scène lancée pendant un tick part de cet instant : elle n'avance pas du temps écoulé depuis le tick précédent (idem pas à pas et fondu de sortie demandés par commande). |
+| Fusion (§5.2) | Lectures triées par priorité de couche puis ordre d'activation. Intensité HTP : la première contribution remplace la valeur par défaut (pas de max avec elle). Discret : la valeur l'emporte si son poids effectif ≥ 0,5 ; revient au sous-jacent dès le début du fondu de sortie. |
+| Intensité virtuelle (D27) | Paramètre sans canal, **0 par défaut** comme un vrai gradateur ; les canaux qui suivent l'intensité prennent le gradateur de leur cellule, sinon le maître, sinon l'intensité virtuelle (MOT-040). |
+| Blackout et surcharges brutes (GEN-042) | Pendant un blackout, la surcharge brute d'un canal d'intensité ou qui suit l'intensité est ignorée ; les autres canaux gardent leur surcharge. Sûreté : P5. |
+| Temps (GEN-023) | Durées en secondes, temps ou mesures ; tempo **fixe à 120 BPM** (`RenderEngine.Bpm`) jusqu'à l'horloge musicale (P7, MOT-016). Tolérance de 1 µs sur les comparaisons de temps (somme de pas de 25 ms inexacte en virgule flottante). |
+| Solo (SCN-034) | Option de `LancerScène` : tant qu'une lecture « solo » joue, les autres sont masquées (pas arrêtées). |
+| Aperçu (GEN-063) | Second moteur, cadencé avec le premier quand l'édition est en aveugle ; ses trames ne vont qu'au simulateur. |
+| État observable (MOT-100) | Copié à la fin de chaque tick sous verrou ; `Snapshot` construit une copie pour l'interface. Journal des 500 dernières commandes (réception, application, origine, refus ; glissés regroupés). |
+| MOT-002 | Mesuré par test : 100 appareils, 20 couches, 40 lectures, bien sous 5 ms et sans allocation en régime établi. |
+| MOT-054 (M) | Non réalisé : interpolation RVB directe ; à reprendre avec les effets (P6). |
+| MOT-103 | Scénario texte (`luxia-headless scenario`, doc 50 §13) ; `luxia-headless jouer` pour une scène. |

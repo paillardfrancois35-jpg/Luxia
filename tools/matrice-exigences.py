@@ -29,7 +29,7 @@ for name in sorted(os.listdir(TICKETS)):
     tickets[name[:-3]] = info
 
 # 2. Exigences du cahier des charges pour les phases demandées.
-req_line = re.compile(r"^\|\s*((?:GEN|SORT|CONS|BIB|INST|SIM)-\d{3})\s*\|\s*([IMS])\s*\|\s*(P\d+)\s*\|")
+req_line = re.compile(r"^\|\s*((?:GEN|SORT|CONS|BIB|INST|SIM|MOT|SCN|EFF|COU|PAL|LIVE|MIDI|AUD|SHOW|MUS|AUTO|TL)-\d{3})\s*\|\s*([IMS])\s*\|\s*(P\d+)\s*\|")
 requirements = {}
 for name in sorted(os.listdir(os.path.join(ROOT, "docs"))):
     if name.endswith(".md"):

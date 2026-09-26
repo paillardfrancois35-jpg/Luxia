@@ -69,6 +69,39 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "CONS-091")]
+    public void MultiSelection_Relative_KeepsGapsBeyondBounds_AcrossSeveralDrags()
+    {
+        // Critère de CONS-091 : sélection à (55, 105, 155), on monte jusqu'à ce que le 3e touche 255, on continue, puis
+        // on redescend : le 3e reste à 255 tant que l'écart n'est pas rattrapé, et l'on revient exactement à (55, 105, 155).
+        SetAndTick((1, 55), (2, 105), (3, 155));
+        _console.OnFaderPressed(_console.Channels[0], control: false, shift: false);
+        _console.OnFaderPressed(_console.Channels[2], control: false, shift: true);
+
+        Drag(100);
+        Frame123().ShouldBe([155, 205, 255]);
+        Drag(30);
+        Frame123().ShouldBe([185, 235, 255]);
+
+        // Nouveau glissé (souris relâchée puis reprise sur un fader de la sélection) : l'écart est gardé.
+        _console.OnFaderPressed(_console.Channels[0], control: false, shift: false);
+        Drag(-20);
+        Frame123().ShouldBe([165, 215, 255]);
+        Drag(-110);
+        Frame123().ShouldBe([55, 105, 155]);
+
+        void Drag(int delta)
+        {
+            var current = _console.Channels[0].Value;
+            _console.OnFaderRequest(_console.Channels[0], new FaderValueRequest(current + delta, delta));
+            _host.Tick();
+            _console.Refresh();
+        }
+
+        byte[] Frame123() => _host.Frame()[0..3];
+    }
+
+    [Fact]
     [Trait("Exigence", "CONS-006")]
     public void MultiSelection_Absolute_SetsSameValue()
     {
@@ -240,7 +273,8 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
     [Fact]
     [Trait("Exigence", "CONS-020")]
     [Trait("Exigence", "CONS-021")]
-    public void DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel()
+    [Trait("Exigence", "CONS-022")]
+    public void DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute()
     {
         PatchRgbAt(8, "PAR 1");
 
@@ -248,13 +282,24 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
 
         _console.DeviceFixtures.Count.ShouldBe(1);
         var faders = _console.DeviceFixtures[0];
-        faders.Channels.Count.ShouldBe(3);
+
+        // RVB 3 canaux : un fader d'intensité virtuelle (BIB-006, D27) devant R, V, B.
+        faders.Channels.Count.ShouldBe(4);
+        faders.Channels[0].Header.ShouldStartWith("virtuel");
         faders.Summary.ShouldContain("PAR");
 
-        faders.SetValue(faders.Channels[0], 200);
+        faders.SetValue(faders.Channels[1], 200);
         _host.Tick();
 
+        // Rouge allumé tout de suite : l'intensité virtuelle, non prise, passe à 100 % (« allumer en coloriant »).
         _host.Frame()[7].ShouldBe((byte)200); // canal 8 = index 7 (rouge)
+        faders.Refresh();
+        faders.Channels[0].IsOverridden.ShouldBeTrue();
+
+        // CONS-022 : surcharge d'attribut soumise au Grand Master.
+        _host.Runtime.SetGrandMaster(0.5);
+        _host.Tick();
+        _host.Frame()[7].ShouldBe((byte)100);
     }
 
     [Fact]
@@ -263,7 +308,7 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
     {
         PatchRgbAt(8, "PAR 1");
         _console.IsDeviceMode = true;
-        _console.DeviceFixtures[0].SetValue(_console.DeviceFixtures[0].Channels[0], 200);
+        _console.DeviceFixtures[0].SetValue(_console.DeviceFixtures[0].Channels[1], 200);
         _host.Tick();
 
         _console.IsDeviceMode = false;

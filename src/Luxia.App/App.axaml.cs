@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -27,12 +28,43 @@ public partial class App : Application
         {
             _loggers = TechnicalLog.Create(DataPaths.Current.Logs);
             var logger = _loggers.CreateLogger<App>();
+            MainWindowViewModel? shell = null;
+
+            // GEN-117 : toute exception finit dans le journal technique, d'où qu'elle vienne.
+            // 1. Interface : journalisée, signalée dans la barre d'état ; le moteur et la sortie continuent (GEN-093).
             Dispatcher.UIThread.UnhandledException += (_, e) =>
             {
-                // GEN-093 : une erreur d'interface est journalisée ; le moteur et la sortie continuent.
                 logger.LogError(e.Exception, "Erreur non gérée dans l'interface");
+                shell?.ReportError(e.Exception);
                 e.Handled = true;
             };
+
+            // 2. Autres fils et tâches non surveillées.
+            AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+                logger.LogCritical(e.ExceptionObject as Exception, "Erreur non gérée (fil {Fil}), arrêt : {Arret}", Environment.CurrentManagedThreadId, e.IsTerminating);
+            TaskScheduler.UnobservedTaskException += (_, e) =>
+            {
+                logger.LogError(e.Exception, "Erreur d'une tâche de fond non surveillée");
+                e.SetObserved();
+            };
+
+            // 3. Une exception levée en écrivant une valeur saisie dans un champ est interceptée par Avalonia, qui l'affiche
+            //    en rouge sous le champ sans jamais la journaliser (vérifié le 2026-09-26, Avalonia 12) : on écoute ces
+            //    erreurs pour toute l'application. Les journaux internes d'Avalonia (liaisons cassées) vont aussi au journal.
+            Exception? lastBindingError = null;
+            DataValidationErrors.ErrorsProperty.Changed.Subscribe(new Services.Observer<AvaloniaPropertyChangedEventArgs<IEnumerable<object>?>>(e =>
+            {
+                foreach (var error in e.NewValue.GetValueOrDefault() ?? [])
+                {
+                    if (error is Exception exception && !ReferenceEquals(exception, lastBindingError))
+                    {
+                        lastBindingError = exception;
+                        logger.LogError(exception, "Valeur refusée par un champ ({Controle}, écran {Ecran})", e.Sender.GetType().Name, (e.Sender as Control)?.DataContext?.GetType().Name);
+                        shell?.ReportError(exception);
+                    }
+                }
+            }));
+            Avalonia.Logging.Logger.Sink = new Services.AvaloniaLogSink(_loggers.CreateLogger("Avalonia"));
 
             _runtime = new LuxiaRuntime(DataPaths.Current, _loggers);
 
@@ -45,7 +77,8 @@ public partial class App : Application
             _runtime.Start();
 
             var window = new MainWindow();
-            window.DataContext = new MainWindowViewModel(_runtime, new Services.DialogService(() => window));
+            shell = new MainWindowViewModel(_runtime, new Services.DialogService(() => window));
+            window.DataContext = shell;
             desktop.MainWindow = window;
             desktop.Exit += (_, _) => Shutdown();
         }

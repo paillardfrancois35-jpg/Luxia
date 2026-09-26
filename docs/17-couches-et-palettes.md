@@ -103,3 +103,15 @@ la valeur spécifique prime sur la traduction automatique.
 | T-PAL-01 | Unitaire | Traduction d'une palette couleur sur RGB, RGBW, roue ; valeur spécifique prioritaire. |
 | T-PAL-02 | Unitaire | Palette de position par lieu ; repli sur « Générique ». |
 | T-PAL-03 | Unitaire | Modification de palette → scènes mises à jour ; suppression avec figeage. |
+
+## 4. Notes de réalisation (P4)
+
+| Sujet | Réalisation |
+|---|---|
+| Couches (D28, écart) | Le modèle par défaut du §1.3 existe dès P4 dans les données (identifiants fixes, `couches.json`) pour que la fusion serve ; **COU-006 est donc avancé en partie** (données seulement) ; l'éditeur (COU-001) reste en P5. Le type « Flash » (COU-005) n'est pas encore traité : la couche Flashs est une couche normale en mode d'intensité prioritaire. |
+| Palettes par défaut (PAL-009) | 13 couleurs + 4 intensités (doc 41 §5), identifiants fixes. |
+| Traduction (PAL-002, MOT-050 à 053) | RVB direct ; RVBW selon `whiteMode` du modèle (défaut : blanc = min(R,V,B), retiré) ; roue : emplacement le plus proche en CIE Lab, demi-couleurs exclues, « ouvert » = blanc ; UV et ambre seulement si la couleur les précise. Valeurs par modèle ou par appareil prioritaires. |
+| Palettes de position | En P4 par appareil, pour tout le projet ; par lieu avec repli sur « Générique » en P5 (PAL-004, PAL-008). |
+| PAL-003 | Boutons générés depuis les plages marquées « palette automatique » ; aucune plage du parc n'est encore marquée. |
+| PAL-006 | Suppression d'une palette utilisée : liste des étapes concernées, puis figeage des valeurs (couleur logique ou niveau quand c'est possible, sinon valeurs par appareil) avant suppression. |
+| PAL-007 (partiel) | Grilles par type, déplacement ◀ ▶ (clic droit) ; les grilles du Live viennent en P5. |

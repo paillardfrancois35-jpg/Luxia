@@ -33,5 +33,5 @@ internal static class Program
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .LogToTrace();
+            .LogToTrace(); // Remplacé par le journal technique dès que l'application démarre (App, GEN-117).
 }

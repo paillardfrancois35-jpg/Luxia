@@ -17,7 +17,8 @@ public sealed class DependencyRulesTests
         ["Luxia.Persistence"] = ["Luxia.Core"],
         ["Luxia.Fixtures"] = ["Luxia.Core", "Luxia.Persistence"],
         ["Luxia.Patch"] = ["Luxia.Core", "Luxia.Persistence", "Luxia.Fixtures"],
-        ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch"],
+        ["Luxia.Scenes"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch"],
+        ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch", "Luxia.Scenes"],
     };
 
     public static TheoryData<string> Projects => [.. Allowed.Keys];
@@ -43,6 +44,7 @@ public sealed class DependencyRulesTests
     [InlineData("Luxia.UI.Modules.Library")]
     [InlineData("Luxia.UI.Modules.Installation")]
     [InlineData("Luxia.UI.Modules.Simulator")]
+    [InlineData("Luxia.UI.Modules.Scenes")]
     [Trait("Exigence", "GEN-003")]
     public void UserInterfaceModules_DoNotReferenceApplication(string project)
     {

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <None Include="../../samples/**/*" LinkBase="samples" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../assets/golden/**/*" LinkBase="golden" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

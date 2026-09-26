@@ -131,8 +131,35 @@ public static class VersionedJsonFile
         }
 
         var temp = path + ".tmp";
-        File.WriteAllText(temp, document.ToJsonString(LuxiaJson.Options) + "\n", Utf8NoBom);
-        File.Move(temp, path, overwrite: true);
+        var text = document.ToJsonString(LuxiaJson.Options) + "\n";
+        WithRetry(() =>
+        {
+            File.WriteAllText(temp, text, Utf8NoBom);
+            File.Move(temp, path, overwrite: true);
+        });
+    }
+
+    /// <summary>
+    /// Réessaie une écriture refusée un court instant. Sur le poste de l'utilisateur, environ 2 % des remplacements de
+    /// fichier rapprochés échouent (« accès refusé ») : un antivirus ou un outil de sécurité ouvre brièvement chaque fichier
+    /// écrit. Mesuré le 2026-09-26 (9 échecs sur 500) après une exception sous le champ Vitesse de l'écran Scènes.
+    /// Jamais appelé depuis le fil du moteur (doc 03 §4.1) : l'attente est acceptable.
+    /// </summary>
+    private static void WithRetry(Action write)
+    {
+        const int Attempts = 10;
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                write();
+                return;
+            }
+            catch (Exception ex) when (attempt < Attempts && ex is IOException or UnauthorizedAccessException)
+            {
+                Thread.Sleep(25 * attempt);
+            }
+        }
     }
 
     private static LoadResult<T> SetAside<T>(string path, DocumentType<T> type, string reason, TimeProvider? time)

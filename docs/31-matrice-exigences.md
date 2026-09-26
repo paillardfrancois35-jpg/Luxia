@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -15,9 +15,9 @@
 | [GEN-003](exigences/GEN-003.md) | I | Atelier et Live indépendants | Réalisé | DependencyRulesTests.UserInterfaceModules_DoNotReferenceApplication |
 | [GEN-030](exigences/GEN-030.md) | I | Tick à 40 Hz (25-44 Hz) | Réalisé, à valider sur matériel | TickLoopTests.RateHz_IsClampedTo25To44<br>TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
 | [GEN-031](exigences/GEN-031.md) | I | Gigue du tick < 5 ms | Réalisé, à valider sur matériel | TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
-| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
+| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
 | [GEN-051](exigences/GEN-051.md) | I | Version de format et migrations | Réalisé | VersionedJsonFileTests.Load_OldVersion_MigratesAndKeepsBackup |
-| [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid |
+| [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid<br>(+1) |
 | [GEN-060](exigences/GEN-060.md) | I | Blackout au démarrage | Réalisé | RenderEngineTests.Tick_WithoutAnything_ProducesBlackoutFrame |
 | [GEN-080](exigences/GEN-080.md) | I | Perte du PC : noir en 2 s | Réalisé, à valider sur matériel |  |
 | [GEN-081](exigences/GEN-081.md) | I | Arrêt anormal de l'application : noir en 2 s | Réalisé, à valider sur matériel |  |
@@ -56,9 +56,9 @@
 | [SORT-060](exigences/SORT-060.md) | I | Enregistreur de trames | Réalisé | ConsoleLatencyTests.Override_AppearsInRecordedFrame_OnNextTick<br>RecordingTests.IdenticalFrames_AreStoredCompactly<br>RecordingTests.RecorderDriver_AttachedHot_WritesFramesToFile<br>RecordingTests.WriteThenRead_RoundTripsFramesAndTimestamps<br>(+2) |
 | [SORT-061](exigences/SORT-061.md) | I | Enregistreur activable à chaud | Réalisé | RecordingTests.RecorderDriver_AttachedHot_WritesFramesToFile |
 
-## P1 – 22 exigences, 13 couvertes par des tests automatiques
+## P1 – 23 exigences, 14 couvertes par des tests automatiques
 
-> Non réalisé : 2 · Partiel : 2 · Reporté (P4-P5) : 1 · Réalisé : 17
+> Non réalisé : 2 · Partiel : 3 · Réalisé : 18
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -69,7 +69,7 @@
 | [CONS-005](exigences/CONS-005.md) | I | Le fader affiche la valeur émise | Réalisé | ConsoleViewModelTests.FaderRequest_OverridesChannel_AndFaderShowsEmittedValue |
 | [CONS-006](exigences/CONS-006.md) | I | Sélection multiple de faders | Réalisé | ConsoleViewModelTests.ClickWithoutModifier_OutsideSelection_SelectsOnlyThatFader<br>ConsoleViewModelTests.MultiSelection_Absolute_SetsSameValue<br>ConsoleViewModelTests.MultiSelection_Relative_MovesAllByTheSameDelta |
 | [CONS-007](exigences/CONS-007.md) | M | Appareil, attribut et plage sur le fader | Réalisé | ConsoleViewModelTests.Fader_PatchedChannelWithCapabilities_ShowsRangeNameInsteadOfPercent<br>ConsoleViewModelTests.MonitorHover_PatchedChannel_ShowsFixtureAndAttribute<br>PatchLookupTests.FindChannel_DifferentUniverse_ReturnsNull<br>PatchLookupTests.FindChannel_OutsideRange_ReturnsNull<br>(+1) |
-| [CONS-008](exigences/CONS-008.md) | M | Surcharges soumises au blackout et à la sûreté | Reporté (P4-P5) |  |
+| [CONS-008](exigences/CONS-008.md) | M | Surcharges soumises au blackout et à la sûreté | Partiel | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout |
 | [CONS-009](exigences/CONS-009.md) | M | Choix de l'univers | Réalisé |  |
 | [CONS-010](exigences/CONS-010.md) | S | Instantanés de console | Réalisé | ConsoleViewModelTests.Snapshot_SaveReleaseRecall_RestoresOverrides<br>ReferenceShowP1Tests.ReferenceShow_LoadsWithSnapshots<br>ReferenceShowP1Tests.Snapshot_RecalledByEngine_ProducesExactlyItsChannels |
 | [CONS-040](exigences/CONS-040.md) | I | Moniteur de sortie 512 cases | Réalisé |  |
@@ -84,6 +84,7 @@
 | [GEN-107](exigences/GEN-107.md) | M | Glisser-déposer | Partiel |  |
 | [GEN-108](exigences/GEN-108.md) | S | Taille de police réglable | Non réalisé |  |
 | [GEN-109](exigences/GEN-109.md) | I | Opérations longues sans figer l'interface | Réalisé | LibraryViewModelTests.Import_SavesNewModels_SkipsExisting_AndReports |
+| [MOT-074](exigences/MOT-074.md) | I | Surcharges conformes à la chaîne de rendu | Réalisé |  |
 
 ## P2 – 34 exigences, 30 couvertes par des tests automatiques
 
@@ -96,7 +97,7 @@
 | [BIB-003](exigences/BIB-003.md) | I | Attribut 16 bits = un seul attribut sur deux canaux | Réalisé | FixtureEditsTests.SetResolution_16Bit_AddsFineAfterCoarse_AndBackTo8BitRemovesIt<br>FixtureValidatorTests.CoarseWithoutFine_IsAWarning<br>OflImporterTests.Spot_FineChannelsAreOneAttribute_AndWheelsCarryColors<br>ParkLibraryTests.Lyre_11Channels_Has16BitPanTilt_9ChannelsCoarseOnly<br>(+2) |
 | [BIB-004](exigences/BIB-004.md) | I | Validation d'un modèle | Réalisé | FixtureValidatorTests.FineOf8BitChannel_IsAnError<br>FixtureValidatorTests.GapBetweenRanges_IsAWarning<br>FixtureValidatorTests.ModeWithoutChannel_IsAnError<br>FixtureValidatorTests.OrphanFineChannel_IsAnError<br>(+5) |
 | [BIB-005](exigences/BIB-005.md) | I | Nombre de canaux et réglage sur l'appareil par mode | Réalisé | FixtureRulesTests.SettingSheet_ShowsChannelCountAndDeviceSetting<br>ParkLibraryTests.Lpc008s_ModesAndIntensityRules |
-| [BIB-006](exigences/BIB-006.md) | I | Intensité virtuelle et « Suit l'intensité » | Réalisé | FixtureDecoderTests.Decode_NoDimmerChannel_UsesVirtualIntensity<br>FixtureRulesTests.FollowsIntensity_Override_WinsOverDeduction<br>FixtureRulesTests.SevenChannelMode_WithDimmer_NothingFollowsIntensity<br>FixtureRulesTests.ThreeChannelMode_HasVirtualIntensity_AndColorsFollowIntensity<br>(+2) |
+| [BIB-006](exigences/BIB-006.md) | I | Intensité virtuelle et « Suit l'intensité » | Réalisé | FixtureDecoderTests.Decode_NoDimmerChannel_UsesVirtualIntensity<br>FixtureRulesTests.FollowsIntensity_Override_WinsOverDeduction<br>FixtureRulesTests.SevenChannelMode_WithDimmer_NothingFollowsIntensity<br>FixtureRulesTests.ThreeChannelMode_HasVirtualIntensity_AndColorsFollowIntensity<br>(+4) |
 | [BIB-007](exigences/BIB-007.md) | I | Étiquettes de sûreté déduites et modifiables | Réalisé | FixtureRulesTests.ProgramChannel_WithStrobeRange_IsTaggedStrobe<br>FixtureRulesTests.SafetyTags_AreDeducedFromAttribute<br>OflImporterTests.Fog_IsSmokeTagged<br>QlcImporterTests.ClassicPar_GroupsAndStrobeInProgram |
 | [BIB-008](exigences/BIB-008.md) | M | Couleur des emplacements de roue | Réalisé | OflImporterTests.Spot_FineChannelsAreOneAttribute_AndWheelsCarryColors |
 | [BIB-009](exigences/BIB-009.md) | M | Version du modèle incrémentée | Réalisé | FixtureLibraryTests.Save_IncrementsVersion_AndRenameMovesFile<br>LibraryViewModelTests.Save_BlockedByErrors_ThenSavedWithVersion |
@@ -126,15 +127,15 @@
 | [GEN-102](exigences/GEN-102.md) | I | Annuler / rétablir (50 niveaux minimum) | Réalisé | LibraryViewModelTests.Editor_UndoRedo<br>LibraryViewModelTests.History_Keeps100Levels |
 | [GEN-105](exigences/GEN-105.md) | M | Recherche dans les longues listes | Réalisé |  |
 
-## P3 – 50 exigences, 29 couvertes par des tests automatiques
+## P3 – 51 exigences, 31 couvertes par des tests automatiques
 
-> Non réalisé : 7 · Partiel : 6 · Réalisé : 37
+> Non réalisé : 7 · Partiel : 5 · Réalisé : 37 · Validé : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [CONS-020](exigences/CONS-020.md) | I | Faders regroupés par appareil patché | Réalisé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel<br>ConsoleViewModelTests.DeviceMode_Leaving_KeepsOverridesAsRealConsoleValues |
-| [CONS-021](exigences/CONS-021.md) | I | Outil adapté par type d'attribut | Partiel | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel |
-| [CONS-022](exigences/CONS-022.md) | I | Surcharge d'attribut soumise à la chaîne de rendu | Partiel |  |
+| [CONS-020](exigences/CONS-020.md) | I | Faders regroupés par appareil patché | Réalisé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute<br>ConsoleViewModelTests.DeviceMode_Leaving_KeepsOverridesAsRealConsoleValues |
+| [CONS-021](exigences/CONS-021.md) | I | Outil adapté par type d'attribut | Partiel | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute |
+| [CONS-022](exigences/CONS-022.md) | I | Surcharge d'attribut soumise à la chaîne de rendu | Validé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute<br>RenderChainTests.AttributeOverride_WinsOverScenes_AndStaysUnderGrandMaster |
 | [CONS-023](exigences/CONS-023.md) | M | Clic sur une plage et balayage | Réalisé |  |
 | [CONS-024](exigences/CONS-024.md) | M | Bouton Identifier par appareil | Réalisé | ConsoleViewModelTests.Identify_LightsIntensityAndColorEmitters_AndReleasesOnStop<br>ConsoleViewModelTests.NeedsBackgroundRefresh_TrueOnlyWhileADeviceIsIdentifying |
 | [GEN-004](exigences/GEN-004.md) | M | Composant d'édition réutilisable dans un autre écran | Réalisé |  |
@@ -150,14 +151,14 @@
 | [INST-011](exigences/INST-011.md) | I | Ajout multiple d'appareils identiques | Réalisé | InstallationViewModelTests.AddFixture_Multiple_CreatesConsecutiveAddressesAndCopiesModelIntoProject<br>PatchRulesTests.PlanMultiple_FourParsSevenChannels_GivesReferenceShowAddresses<br>PatchRulesTests.PlanMultiple_WithGap_LeavesReserve |
 | [INST-012](exigences/INST-012.md) | I | Première adresse libre proposée | Réalisé | InstallationViewModelTests.SuggestAddress_ProposesFirstFreeAddress<br>PatchRulesTests.FindFreeAddress_NoRoomLeft_ReturnsNull<br>PatchRulesTests.FindFreeAddress_SkipsOccupiedRanges |
 | [INST-013](exigences/INST-013.md) | I | Détection des chevauchements en temps réel | Réalisé | InstallationViewModelTests.OverlappingFixtures_AreFlagged<br>PatchRulesTests.DetectOverlaps_DifferentUniverses_NoOverlap<br>PatchRulesTests.DetectOverlaps_FindsOverlappingRange<br>ReferenceShowP3Tests.ReferenceShow_Installation_HasNoOverlap |
-| [INST-014](exigences/INST-014.md) | M | Doublon volontaire (jumeaux) | Réalisé | InstallationViewModelTests.Twins_SameAddress_AreNotFlaggedAsOverlap<br>PatchRulesTests.DetectOverlaps_SameGroupButDifferentMode_StillOverlaps<br>PatchRulesTests.DetectOverlaps_Twins_SameAddress_NoOverlap |
+| [INST-014](exigences/INST-014.md) | M | Doublon volontaire (jumeaux) | Réalisé | InstallationViewModelTests.Twins_SameAddress_AreNotFlaggedAsOverlap<br>PatchRulesTests.DetectOverlaps_SameGroupButDifferentMode_StillOverlaps<br>PatchRulesTests.DetectOverlaps_Twins_SameAddress_NoOverlap<br>RenderChainTests.Twins_ShareParameters_AndReceiveSameValues |
 | [INST-015](exigences/INST-015.md) | I | Déplacer un appareil | Réalisé | InstallationViewModelTests.RenameAndMove_UpdateThePatchedFixture |
-| [INST-016](exigences/INST-016.md) | I | Changer le mode d'un appareil patché | Réalisé | FixtureUpdateImpactTests.ForModeChange_FromRichToSimpleMode_ReportsLostChannels<br>FixtureUpdateImpactTests.ForModeChange_SameMode_IsEmpty<br>InstallationViewModelTests.ChangeMode_WithImpact_AsksConfirmation |
+| [INST-016](exigences/INST-016.md) | I | Changer le mode d'un appareil patché | Validé | FixtureUpdateImpactTests.ForModeChange_FromRichToSimpleMode_ReportsLostChannels<br>FixtureUpdateImpactTests.ForModeChange_SameMode_IsEmpty<br>InstallationViewModelTests.ChangeMode_UsedByThreeScenes_ReportsImpact_AndKeepsScenes<br>InstallationViewModelTests.ChangeMode_WithImpact_AsksConfirmation<br>(+1) |
 | [INST-017](exigences/INST-017.md) | I | Nom, couleur et numéro court | Réalisé | InstallationViewModelTests.RenameAndMove_UpdateThePatchedFixture |
 | [INST-018](exigences/INST-018.md) | I | Fiche d'installation | Réalisé |  |
 | [INST-019](exigences/INST-019.md) | I | Identifier un appareil / chenillard d'identification | Réalisé | InstallationViewModelTests.Identify_LightsIntensityChannel_AndChaseAdvancesToNextFixture<br>InstallationViewModelTests.NeedsBackgroundRefresh_TrueOnlyWhileIdentifying |
 | [INST-020](exigences/INST-020.md) | M | Supprimer un appareil | Réalisé | InstallationViewModelTests.DeleteFixture_AsksConfirmation |
-| [INST-021](exigences/INST-021.md) | M | Options de montage par appareil | Partiel | FixtureDecoderTests.Decode_InvertedPan_ReversesDirection |
+| [INST-021](exigences/INST-021.md) | M | Options de montage par appareil | Partiel | FixtureDecoderTests.Decode_InvertedPan_ReversesDirection<br>ShowCompilerTests.SwapPanTilt_SendsPanValueToTiltChannel |
 | [INST-030](exigences/INST-030.md) | I | Sélection manuelle ordonnée | Réalisé | InstallationViewModelTests.CreateSelection_FromCheckedFixtures_ThenReverse |
 | [INST-031](exigences/INST-031.md) | I | Sélections automatiques | Réalisé | AutoSelectionsTests.Build_AllFixtures_IsOrderedByAddress<br>AutoSelectionsTests.Build_GroupsByCategoryAndByModel<br>AutoSelectionsTests.Build_NewFixtureAdded_AppearsWithoutAnyStoredState<br>InstallationViewModelTests.AutoSelections_IncludeAllAndByCategory |
 | [INST-032](exigences/INST-032.md) | I | Sélections manuelles créées et réordonnées | Partiel |  |
@@ -165,13 +166,14 @@
 | [INST-034](exigences/INST-034.md) | M | Sélection de cellules | Non réalisé |  |
 | [INST-050](exigences/INST-050.md) | I | Créer, dupliquer, activer un lieu | Réalisé | InstallationViewModelTests.CreateVenue_ThenActivate_ChangesActiveVenue<br>InstallationViewModelTests.Venues_HaveAGenericVenueByDefault<br>ReferenceShowP3Tests.ReferenceShow_Venue_PlacesEveryFixture_NoneAbsent<br>StoresTests.VenueStore_Missing_ReturnsDefaultGenericVenue<br>(+1) |
 | [INST-051](exigences/INST-051.md) | I | Éditeur de plan | Partiel | InstallationViewModelTests.SavePlacements_PersistsPositionAndAbsence |
-| [INST-052](exigences/INST-052.md) | I | Appareil absent | Réalisé | InstallationViewModelTests.SavePlacements_PersistsPositionAndAbsence<br>SimulatorViewModelTests.Refresh_AbsentFixture_IsHidden |
+| [INST-052](exigences/INST-052.md) | I | Appareil absent | Réalisé | InstallationViewModelTests.SavePlacements_PersistsPositionAndAbsence<br>RenderChainTests.AbsentFixture_IsEmittedAtZero<br>SimulatorViewModelTests.Refresh_AbsentFixture_IsHidden |
+| [MOT-075](exigences/MOT-075.md) | I | Identifier un appareil au-dessus de tout | Réalisé |  |
 | [SIM-001](exigences/SIM-001.md) | I | Affichage du plan du lieu actif | Réalisé | SimulatorViewModelTests.Refresh_OnlyShowsPlacedAndPresentFixtures |
 | [SIM-002](exigences/SIM-002.md) | I | Rendu 30 images/s sans ralentir le moteur | Réalisé |  |
 | [SIM-003](exigences/SIM-003.md) | I | Décodage des trames via le patch | Réalisé | FixtureDecoderTests.Decode_AllChannelsAtZero_IsDarkAndOff<br>FixtureDecoderTests.Decode_ColorWheelAtOpenSlot_IsWhiteNotBlack<br>FixtureDecoderTests.Decode_ColorWheelCapability_UsesSlotColor<br>FixtureDecoderTests.Decode_MultiCellFixture_DecodesEachCellSeparately<br>(+3) |
 | [SIM-004](exigences/SIM-004.md) | I | Faisceau des lyres | Réalisé | FixtureDecoderTests.Decode_InvertedPan_ReversesDirection<br>FixtureDecoderTests.Decode_PanTilt_ComputesAngleFromAmplitude |
 | [SIM-005](exigences/SIM-005.md) | I | Survol / clic sur un appareil | Réalisé | SimulatorViewModelTests.OnFixtureHovered_DescribesFixture |
-| [SIM-006](exigences/SIM-006.md) | I | Choix de la source affiché en permanence | Partiel |  |
+| [SIM-006](exigences/SIM-006.md) | I | Choix de la source affiché en permanence | Partiel | SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
 | [SIM-007](exigences/SIM-007.md) | M | Fenêtre détachable et plein écran | Non réalisé |  |
 | [SIM-008](exigences/SIM-008.md) | M | Zones interdites et repères du lieu | Non réalisé |  |
 | [SIM-009](exigences/SIM-009.md) | M | Appareils identifiés et en erreur mis en évidence | Réalisé | SimulatorViewModelTests.Refresh_FixtureTypeMissingFromProjectLibrary_IsFlaggedAsError |
@@ -182,3 +184,97 @@
 | [SORT-062](exigences/SORT-062.md) | I | Pilote Simulateur | Réalisé |  |
 | [SORT-063](exigences/SORT-063.md) | S | Lecteur d'enregistrements | Non réalisé |  |
 | [SORT-064](exigences/SORT-064.md) | S | Pilote Art-Net | Non réalisé |  |
+
+## P4 – 87 exigences, 70 couvertes par des tests automatiques
+
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 45 · Validé : 33
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [CONS-025](exigences/CONS-025.md) | M | Capturer les surcharges dans une scène | Réalisé |  |
+| [CONS-042](exigences/CONS-042.md) | M | Origine de la valeur au survol du moniteur | Validé |  |
+| [GEN-010](exigences/GEN-010.md) | I | Commandes horodatées, avec origine, au tick suivant | Réalisé | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves<br>RenderEngineTests.Send_BetweenTwoTicks_TakesEffectOnNextTick |
+| [GEN-011](exigences/GEN-011.md) | I | Ordre d'arrivée des commandes | Réalisé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>RenderEngineTests.Commands_InSameTick_AreAppliedInArrivalOrder |
+| [GEN-012](exigences/GEN-012.md) | M | Commande refusée : événement avec le motif | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
+| [GEN-013](exigences/GEN-013.md) | I | Publication non bloquante des événements | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
+| [GEN-022](exigences/GEN-022.md) | I | Couleurs logiques converties selon les émetteurs | Réalisé | ColorConversionTests.LedBar_24Channels_ColorOnWholeFixture_ReachesEverySection<br>ColorConversionTests.Rgb_Par_TakesColorDirectly |
+| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Partiel | ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
+| [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
+| [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
+| [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Partiel | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
+| [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
+| [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Partiel | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout |
+| [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Validé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
+| [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Validé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
+| [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Validé |  |
+| [GEN-106](exigences/GEN-106.md) | M | Nom, couleur et icône des objets | Réalisé |  |
+| [GEN-112](exigences/GEN-112.md) | M | Journal des commandes consultable | Partiel | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves |
+| [GEN-113](exigences/GEN-113.md) | S | Enregistrement des trames d'une session | Partiel |  |
+| [GEN-117](exigences/GEN-117.md) | I | Toute exception journalisée | Réalisé |  |
+| [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
+| [GEN-119](exigences/GEN-119.md) | M | Numéro de compilation affiché en développement | Réalisé |  |
+| [GEN-130](exigences/GEN-130.md) | I | Format des fichiers documenté | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
+| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ShowCompilerTests.MissingPalette_IsReported_WithFileObjectAndField |
+| [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording |
+| [GEN-133](exigences/GEN-133.md) | I | Contenu généré rangé à part, jamais écrasant | Réalisé | SceneImportTests.Merge_AddsNewScenes_NeverOverwrites_AndCategorizes |
+| [MOT-001](exigences/MOT-001.md) | I | Ordre de la boucle de rendu | Réalisé |  |
+| [MOT-002](exigences/MOT-002.md) | I | Budget de 5 ms par tick | Réalisé | EnginePerformanceTests.Tick_With100Fixtures20Layers40Playbacks_StaysUnderFiveMilliseconds_WithoutAllocating |
+| [MOT-003](exigences/MOT-003.md) | I | Fil d'exécution dédié, sans opération bloquante | Réalisé |  |
+| [MOT-004](exigences/MOT-004.md) | I | Déterminisme : aléatoire à graine journalisée | Réalisé | ScenePlaybackTests.LoopRandom_NeverRepeatsCurrentStep_AndIsReproducibleWithSeed |
+| [MOT-010](exigences/MOT-010.md) | I | Étape = fondu d'entrée + maintien | Validé | ScenePlaybackTests.Step_FadeOneSecond_HoldTwo_NextStepAtThreeSeconds |
+| [MOT-011](exigences/MOT-011.md) | I | Interpolation des attributs continus selon la courbe | Validé | ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps<br>ScenePlaybackTests.SCurve_IsSmoothAtBothEnds_AndCrossesHalfWayInTheMiddle<br>ScenePlaybackTests.StepChange_InterpolatesFromPreviousStepValue |
+| [MOT-012](exigences/MOT-012.md) | I | Attributs discrets : bascule franche | Validé | ReferenceShowP4Tests.ColorWheel_OnlyEverShowsSlotMedians<br>ScenePlaybackTests.DiscreteAttribute_SwitchesFrankly_AtChosenPoint |
+| [MOT-013](exigences/MOT-013.md) | I | Modes de boucle | Validé | ScenePlaybackTests.LoopCount_PlaysNPasses<br>ScenePlaybackTests.LoopInfinite_WrapsAround<br>ScenePlaybackTests.LoopOnce_ThenStops<br>ScenePlaybackTests.LoopPingPong_GoesBackAndForth<br>(+1) |
+| [MOT-014](exigences/MOT-014.md) | I | Fin de scène : arrêt, maintien, enchaînement | Validé | ScenePlaybackTests.EndChain_LaunchesNextSceneInSameLayer<br>ScenePlaybackTests.EndHold_StaysOnLastStep<br>ScenePlaybackTests.EndStop_FadesOutWithSceneFadeOut |
+| [MOT-015](exigences/MOT-015.md) | I | Vitesse de lecture | Validé | ScenePlaybackTests.Speed_Doubled_MakesStepsTwiceShorter<br>ScenesViewModelTests.Speed_IncreasedStepByStep_WhilePlaying_AppliesLive_WithoutError |
+| [MOT-019](exigences/MOT-019.md) | M | Pas à pas : étape suivante / précédente | Réalisé | ScenePlaybackTests.ManualNextAndPrevious_ChangeStep |
+| [MOT-030](exigences/MOT-030.md) | I | Fondu croisé dans une couche exclusive | Validé | LayerMergeTests.CrossFade_AttributeInBothScenes_InterpolatesDirectly<br>LayerMergeTests.CrossFade_AttributeOnlyInNewScene_FadesFromUnderlying |
+| [MOT-031](exigences/MOT-031.md) | I | Fusion entre couches et modes d'intensité | Réalisé | LayerMergeTests.Intensity_FourModes<br>LayerMergeTests.Intensity_Htp_HighestContributionWins<br>LayerMergeTests.NonIntensity_LtpByPriority_HighestLayerWins_EvenIfLaunchedFirst<br>LayerMergeTests.NonIntensity_SamePriority_MostRecentWins |
+| [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Validé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
+| [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
+| [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
+| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
+| [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [MOT-050](exigences/MOT-050.md) | I | Couleur logique vers RVB | Réalisé | ColorConversionTests.Rgb_Par_TakesColorDirectly |
+| [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
+| [MOT-052](exigences/MOT-052.md) | I | Couleur logique vers roue de couleur | Validé | ColorConversionTests.ColorWheel_NeverPicksHalfColors<br>ColorConversionTests.ColorWheel_Red_PicksRedSlot_AtItsMedian<br>ColorConversionTests.ColorWheel_WhiteLogical_PicksOpenPosition |
+| [MOT-053](exigences/MOT-053.md) | M | UV et ambre en émetteurs indépendants | Réalisé | ColorConversionTests.Uv_Fixture_IgnoresColor_UnlessUvIsSpecified |
+| [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Non réalisé |  |
+| [MOT-070](exigences/MOT-070.md) | I | Blackout | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
+| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
+| [MOT-090](exigences/MOT-090.md) | I | Conversion des attributs en octets selon le patch | Réalisé | RenderChainTests.Scene_Values_AreConvertedTo8And16Bits_WithInversion<br>ShowCompilerTests.Parameters_OfReferenceRig_HaveRolesAddressesAnd16Bits |
+| [MOT-091](exigences/MOT-091.md) | I | Appareils absents émis à 0 | Réalisé | RenderChainTests.AbsentFixture_IsEmittedAtZero<br>ShowCompilerTests.AbsentFixture_InActiveVenue_IsMarkedAbsent |
+| [MOT-092](exigences/MOT-092.md) | I | Jumeaux : mêmes valeurs | Réalisé | RenderChainTests.Twins_ShareParameters_AndReceiveSameValues<br>ShowCompilerTests.Twins_ShareParametersOfFirstFixture |
+| [MOT-093](exigences/MOT-093.md) | I | Une trame par univers à chaque tick | Réalisé | RenderChainTests.EveryTick_SubmitsAFrame_EvenWhenNothingChanges |
+| [MOT-100](exigences/MOT-100.md) | I | Publication de l'état observable | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
+| [MOT-101](exigences/MOT-101.md) | I | Événements de scène et de refus | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
+| [MOT-103](exigences/MOT-103.md) | M | Mode sans interface piloté par scénario | Réalisé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>HeadlessToolsTests.Scenario_Parse_ResolvesNames_AndReportsBadLines |
+| [PAL-001](exigences/PAL-001.md) | I | Créer une palette depuis le programmeur | Réalisé | ScenesViewModelTests.SaveAsPositionPalette_FromProgrammer |
+| [PAL-002](exigences/PAL-002.md) | I | Palettes couleur par intention | Validé | ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
+| [PAL-003](exigences/PAL-003.md) | I | Palettes automatiques | Réalisé |  |
+| [PAL-005](exigences/PAL-005.md) | I | Les scènes suivent les palettes | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>LayerMergeTests.LoadShow_WhilePlaying_UpdatesRunningSceneValues<br>ScenesViewModelTests.UpdateArmed_NextPaletteClick_UpdatesItFromProgrammer |
+| [PAL-006](exigences/PAL-006.md) | I | Suppression d'une palette utilisée | Réalisé | SceneUsageAndStoreTests.PaletteUsage_ListsSteps_AndFreezeReplacesReferenceByValue<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze |
+| [PAL-007](exigences/PAL-007.md) | M | Grilles de palettes | Partiel |  |
+| [PAL-009](exigences/PAL-009.md) | M | Jeu de palettes couleur par défaut | Réalisé | SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
+| [SCN-001](exigences/SCN-001.md) | I | Créer, dupliquer, renommer, supprimer une scène | Validé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-002](exigences/SCN-002.md) | I | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | Validé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
+| [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Validé |  |
+| [SCN-004](exigences/SCN-004.md) | I | Modification groupée des durées | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
+| [SCN-005](exigences/SCN-005.md) | I | Paramètres de lecture d'une scène | Réalisé |  |
+| [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Validé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
+| [SCN-008](exigences/SCN-008.md) | I | Valeur directe, palette ou plage | Réalisé | ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze<br>ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
+| [SCN-009](exigences/SCN-009.md) | I | Drapeau « Visible en Live » | Réalisé |  |
+| [SCN-010](exigences/SCN-010.md) | M | Retard par membre (« fan ») | Validé | ReferenceShowP4Tests.Wave_StartsEachParHalfASecondAfterItsNeighbour<br>ScenePlaybackTests.PerValueDelay_SpreadsTheFade_AcrossMembers<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
+| [SCN-011](exigences/SCN-011.md) | M | Fondu propre à un attribut | Réalisé | ScenePlaybackTests.PerAttributeFade_ColorsSlow_PositionInstant<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection |
+| [SCN-012](exigences/SCN-012.md) | M | Catégories et filtre des scènes | Réalisé | ScenesViewModelTests.Filter_ByNameAndCategory |
+| [SCN-013](exigences/SCN-013.md) | M | Rapport des utilisations d'une scène | Réalisé | SceneUsageAndStoreTests.SceneUsage_ListsScenesThatChainToIt<br>ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
+| [SCN-030](exigences/SCN-030.md) | I | Sélection d'appareils dans le programmeur | Partiel | ScenesViewModelTests.Programmer_SelectionShortcut_ThenColor_OverridesAttributesLive |
+| [SCN-031](exigences/SCN-031.md) | I | Outils d'attributs adaptés à la sélection | Partiel | ScenesViewModelTests.Programmer_SelectionShortcut_ThenColor_OverridesAttributesLive |
+| [SCN-032](exigences/SCN-032.md) | I | Seuls les attributs modifiés sont enregistrés | Validé | ScenesViewModelTests.OnlyTouchedAttributes_AreRecorded_AndRemoveTakesOneOut |
+| [SCN-033](exigences/SCN-033.md) | I | Enregistrer : remplacer, fusionner, nouvelle étape | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-034](exigences/SCN-034.md) | I | Tester : seule ou dans son contexte | Validé | LayerMergeTests.Solo_MasksOtherPlaybacks_UntilStopped |
+| [SCN-035](exigences/SCN-035.md) | I | Aveugle | Validé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly |
+| [SCN-036](exigences/SCN-036.md) | I | Option « allumer en coloriant » | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-037](exigences/SCN-037.md) | M | Enregistrer depuis la sortie | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
+| [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
+| [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |

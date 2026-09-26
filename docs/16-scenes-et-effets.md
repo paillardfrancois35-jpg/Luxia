@@ -138,3 +138,20 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | T-EFF-01 | Unitaire | Chaque forme : valeurs attendues à des instants donnés, pour chaque mode de phase. |
 | T-EFF-02 | Unitaire | Effets calés sur tempo : départ de cycle sur le temps. |
 | T-SCN-04 | Manuel | Créer au simulateur 10 scènes types (couleurs, mouvements, strobe, UV) + 5 effets, vérification visuelle puis sur matériel. |
+
+## 8. Notes de réalisation (P4)
+
+| Sujet | Réalisation |
+|---|---|
+| Écran | Nouvel écran **Scènes** : liste filtrée (texte, catégorie, couche, visibles en Live) avec lecture ▶ ■ ; éditeur (identité, lecture, étapes) ; programmeur ; palettes. Chaque modification est enregistrée tout de suite ; annuler / rétablir sur l'ensemble des scènes (100 niveaux). |
+| Valeurs (D27) | Une valeur vise des attributs, jamais des canaux ; une valeur sur une cellule l'emporte sur l'appareil, qui l'emporte sur une sélection ; une sélection automatique (« Tous les PAR »…) est recalculée à chaque compilation (SCN-007). |
+| Programmeur | Hors aveugle, ses réglages sont des **surcharges d'attributs** (étape 5) : ils passent **au-dessus** des scènes testées (un message le rappelle). En aveugle, ils vont au moteur d'aperçu. Un réglage choisi par un bouton de sélection vise la sélection ; coché à la main, il vise chaque appareil. |
+| Enregistrer (SCN-033) | Le programmeur est un brouillon : « Charger l'étape », « Remplacer », « Fusionner », « Nouvelle étape ». Choisir une étape la charge si le programmeur n'a rien de nouveau. |
+| « Allumer en coloriant » (MOT-041) | À l'enregistrement : une cible qui reçoit une couleur sans aucune valeur d'intensité reçoit l'intensité 100 % ; une intensité réglée à 0 est respectée. |
+| SCN-010 / SCN-011 | Fondu propre et retard réparti réglables dans le programmeur (pour les prochains réglages ou appliqués aux réglages faits). |
+| SCN-002 | Réordonner par boutons ◀ ▶ ; pas de glisser-déposer. |
+| SCN-030 (partiel) | Liste d'appareils et raccourcis de sélection ; le clic / lasso au plan (SIM-010) et la sélection de cellules (INST-034) restent à faire. |
+| SCN-031 (partiel) | Faders R/V/B (+ blanc, ambre, UV selon la sélection) et Pan/Tilt, boutons de plages et de palettes ; pas encore de roue chromatique ni de pad XY. |
+| SCN-013 | Enchaînements ; couches, séquences et shows s'y ajouteront. |
+| SCN-037, CONS-025 | « Capturer la sortie » : ce qui est émis pour les appareils choisis (tous si aucun), hors valeurs par défaut, entre dans le programmeur. |
+| IA de conception (GEN-133) | Projet → Importer des scènes… (ajout seul, catégorie « Proposé par IA ») ; Projet → Relire les scènes et palettes. |

@@ -61,7 +61,12 @@ internal sealed class ChannelOverrides
     }
 
     /// <summary>Étape 11 : les canaux surchargés remplacent la valeur calculée.</summary>
-    public void ApplyTo(DmxFrame frame)
+    /// <param name="frame">Trame de l'univers.</param>
+    /// <param name="suppressed">
+    /// Canaux dont la surcharge est ignorée (vide = aucun) : pendant un blackout, les canaux d'intensité et ceux qui
+    /// suivent l'intensité restent à 0 même surchargés (GEN-042, CONS-008).
+    /// </param>
+    public void ApplyTo(DmxFrame frame, ReadOnlySpan<bool> suppressed = default)
     {
         if (Volatile.Read(ref _count) == 0)
         {
@@ -69,11 +74,12 @@ internal sealed class ChannelOverrides
         }
 
         var values = frame.Values;
+        var suppress = suppressed.Length == DmxConstants.ChannelCount;
         lock (_lock)
         {
             for (var i = 0; i < DmxConstants.ChannelCount; i++)
             {
-                if (_active[i])
+                if (_active[i] && !(suppress && suppressed[i]))
                 {
                     values[i] = _values[i];
                 }

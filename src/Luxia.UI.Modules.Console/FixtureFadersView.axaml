@@ -8,6 +8,8 @@
     <!-- Résumé et identification (CONS-024, CMD-023) -->
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,4">
       <TextBlock Text="{Binding Summary}" FontWeight="SemiBold" VerticalAlignment="Center" />
+      <Button Content="Libérer" Command="{Binding ReleaseCommand}" Margin="0,0,6,0"
+              ToolTip.Tip="Rendre la main aux scènes pour cet appareil (libère ses surcharges)" />
       <ToggleButton Content="Identifier" IsChecked="{Binding Identifying, Mode=OneWay}" Command="{Binding ToggleIdentifyCommand}"
                     ToolTip.Tip="Fait clignoter l'appareil (intensité) sans changer sa couleur ni sa position" />
     </StackPanel>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Rendu hors écran des écrans de l'application en PNG (Avalonia.Headless), pour vérifier une mise en page
+    sans ouvrir LuXia (verrou mono-instance, GEN-115) ni avoir d'écran : piège des champs trop étroits (doc 03 §11).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="Avalonia.Headless" />
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <ProjectReference Include="../../src/Luxia.App/Luxia.App.csproj" />
+    <ProjectReference Include="../../src/Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Scenes/Luxia.UI.Modules.Scenes.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
+  </ItemGroup>
+
+</Project>

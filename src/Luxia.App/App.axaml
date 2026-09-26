@@ -29,5 +29,15 @@
     <Style Selector="Button.danger">
       <Setter Property="Foreground" Value="#F85149" />
     </Style>
+    <!-- GEN-082 : blackout bien visible ; rouge franc quand il est actif. -->
+    <Style Selector="ToggleButton.blackout">
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Foreground" Value="#F85149" />
+      <Setter Property="BorderBrush" Value="#F85149" />
+    </Style>
+    <Style Selector="ToggleButton.blackout:checked /template/ ContentPresenter">
+      <Setter Property="Background" Value="#DA3633" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
   </Application.Styles>
 </Application>

@@ -30,6 +30,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
     private readonly SleepInhibitor _sleepInhibitor;
     private bool _started;
     private bool _stopped;
+    private bool _previewActive;
 
     /// <summary>Assemble les modules (sans rien démarrer).</summary>
     public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null)
@@ -49,10 +50,14 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Bus = new EventBus(loggers.CreateLogger<EventBus>());
         Router = new OutputRouter(Bus, loggers.CreateLogger<OutputRouter>());
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
-        Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>());
-        Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
+        Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>(), Bus);
+
+        // GEN-063 : moteur d'aperçu pour l'édition en aveugle ; ses trames ne vont à aucune sortie, seulement au simulateur.
+        Preview = new RenderEngine(DiscardFrames.Instance, Clock, universes, loggers.CreateLogger<RenderEngine>());
+        Loop = new TickLoop(TickEngines, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
+        Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -69,6 +74,9 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Projet ouvert.</summary>
     public ProjectSession Project { get; }
+
+    /// <summary>Compilation du projet vers le moteur (D26), tenue à jour à chaque modification.</summary>
+    public ShowService Show { get; }
 
     /// <summary>Emplacements des données.</summary>
     public DataPaths Paths { get; }
@@ -87,6 +95,19 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Moteur de rendu (porte d'entrée des commandes).</summary>
     public RenderEngine Engine { get; }
+
+    /// <summary>
+    /// Moteur d'aperçu (GEN-063, SCN-035) : mêmes scènes et palettes, mais ses trames ne sont émises nulle part ;
+    /// le programmeur en aveugle y envoie ses commandes et le simulateur l'affiche tant que <see cref="PreviewActive"/>.
+    /// </summary>
+    public RenderEngine Preview { get; }
+
+    /// <summary>Aperçu en cours (édition en aveugle) : le moteur d'aperçu est cadencé et montré au simulateur.</summary>
+    public bool PreviewActive
+    {
+        get => Volatile.Read(ref _previewActive);
+        set => Volatile.Write(ref _previewActive, value);
+    }
 
     /// <summary>Routeur de sorties.</summary>
     public OutputRouter Router { get; }
@@ -255,6 +276,22 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         _logger.LogInformation("Instantané rappelé : {Nom}", snapshot.Name);
     }
 
+    /// <summary>Blackout (CMD-001, GEN-082).</summary>
+    public void SetBlackout(bool active, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new BlackoutCommand(origin, active));
+
+    /// <summary>Grand Master 0-1 (CMD-002).</summary>
+    public void SetGrandMaster(double level, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new SetGrandMasterCommand(origin, level));
+
+    /// <summary>Lance une scène (CMD-010).</summary>
+    public void LaunchScene(Guid sceneId, bool solo = false, CommandOrigin origin = CommandOrigin.User) =>
+        Engine.Send(new LaunchSceneCommand(origin, sceneId, Solo: solo));
+
+    /// <summary>Arrête une scène avec son fondu de sortie (CMD-011).</summary>
+    public void StopScene(Guid sceneId, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new StopSceneCommand(origin, sceneId));
+
+    /// <summary>Arrête toutes les scènes (CMD-012 sur toutes les couches).</summary>
+    public void StopAllScenes(CommandOrigin origin = CommandOrigin.User) => Engine.Send(new StopLayerCommand(origin));
+
     /// <summary>Démarre l'enregistrement des trames de l'univers 1 (SORT-061).</summary>
     /// <param name="path">Fichier ; par défaut <c>Documents\LuXia\Enregistrements\trames-horodatage.dmxrec</c>.</param>
     /// <returns>Chemin du fichier.</returns>
@@ -309,6 +346,15 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router.Dispose();
         await Bus.DisposeAsync().ConfigureAwait(false);
         _logger.LogInformation("Arrêt de LuXia");
+    }
+
+    private void TickEngines()
+    {
+        Engine.Tick();
+        if (PreviewActive)
+        {
+            Preview.Tick();
+        }
     }
 
     private OutputDriver CreateDriver(OutputDriverKind kind)

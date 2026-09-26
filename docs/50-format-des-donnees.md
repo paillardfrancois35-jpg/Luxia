@@ -1,7 +1,7 @@
 # 50 – Format des données
 
 > Documentation des fichiers lus et écrits par l'application (GEN-050, GEN-051, GEN-130), tenue à jour **au fil du développement**.
-> Destinée à l'utilisateur comme à une IA de conception (doc 02 §17b). Schémas JSON vérifiables : à venir avec GEN-131 (P4).
+> Destinée à l'utilisateur comme à une IA de conception (doc 02 §17b). Schémas JSON : dossier [`schemas/`](schemas/) ; vérification complète d'un projet : `luxia-headless valider` (GEN-131).
 
 ## 1. Règles communes
 
@@ -221,7 +221,7 @@ Un fichier par modèle : `Bibliothèque\<fabricant>\<modèle>.json` (doc 12 §8)
 
 | Élément | Propriétés | Valeurs |
 |---|---|---|
-| Modèle | `manufacturer`, `model`, `reference`, `category`, `version`, `author`, `source`, `derivedFrom`, `notes`, `manual`, `photo`, `physical`, `wheels`, `channels`, `modes` | `category` : `par`, `ledBar`, `movingHead`, `effect`, `strobe`, `uv`, `smoke`, `laser`, `dimmer`, `other` ; `source` : `manual`, `ofl`, `qlcPlus`, `generic` |
+| Modèle | `manufacturer`, `model`, `reference`, `category`, `version`, `author`, `source`, `derivedFrom`, `notes`, `manual`, `photo`, `physical`, `wheels`, `channels`, `modes`, `whiteMode` | `whiteMode` (facultatif, MOT-051) : `extract` (défaut : blanc = min(R,V,B) retiré des couleurs), `off`, `boost` (blanc ajouté sans rien retirer) ; `category` : `par`, `ledBar`, `movingHead`, `effect`, `strobe`, `uv`, `smoke`, `laser`, `dimmer`, `other` ; `source` : `manual`, `ofl`, `qlcPlus`, `generic` |
 | `physical` | `sourceType`, `beamAngle`, `panRange`, `tiltRange` (degrés), `power` (W), `warmupSeconds` | |
 | Canal | `key` (unique), `name`, `attribute`, `cell` (0 = appareil), `resolution` (`bit8` / `bit16`), `default`, `rest`, `identify`, `inverted`, `followsIntensity` (absent = déduit), `safety` (absent = déduit ; `strobe`, `smoke`, `movement`, combinables « strobe, movement »), `wheel` (clé de roue), `capabilities`, `notes` | `attribute` : `intensity`, `cellIntensity`, `red`, `green`, `blue`, `white`, `warmWhite`, `amber`, `uv`, `cyan`, `magenta`, `yellow`, `lime`, `colorWheel`, `colorMacro`, `colorTemperature`, `pan`, `tilt`, `panContinuous`, `tiltContinuous`, `panTiltSpeed`, `shutter`, `gobo`, `goboRotation`, `prism`, `prismRotation`, `focus`, `zoom`, `iris`, `frost`, `rotation`, `rotationSpeed`, `program`, `programSpeed`, `soundSensitivity`, `mode`, `smoke`, `fan`, `reset`, `maintenance`, `lampControl`, `generic`, `noFunction` |
 | Plage | `min`, `max` (inclus, 0-255), `kind`, `label`, `strobe`, `parameter` { `nature`, `start`, `end`, `unit` }, `colors` (« #RRGGBB », 1 ou 2), `wheelSlot`, `autoPalette` | `kind` : `fixed`, `progressive`, `wheelSlot`, `rotation`, `program`, `noFunction`, `closed`, `open` ; `strobe` : `closed`, `open`, `strobe`, `pulse`, `random` |
@@ -248,7 +248,154 @@ Une **longueur 0** signifie « trame identique à la précédente » : un univer
 Une fin de fichier tronquée (arrêt brutal) est tolérée à la lecture : seules les trames complètes sont relues.
 Lecture : `dmx-headless relire fichier.dmxrec`.
 
-## 10. Historique
+## 10. Projet : `scènes.json` (format 1)
+
+Scènes du projet (doc 16, SCN-001 à 039). Une scène ne contient **que les attributs qu'elle touche**. Les valeurs visent
+des **attributs** d'appareils, jamais des canaux : la traduction en octets est faite par l'application (D26, D27).
+Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "scenes": [
+    {
+      "id": "8f0c…",
+      "name": "Blanc chaud sur les 4 PAR",
+      "color": "#FFC773",
+      "icon": "☀",
+      "category": "Phase P4",
+      "notes": "Ce que la scène montre.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "chainSceneId": null,
+      "fadeIn": null,
+      "fadeOut": { "value": 2, "unit": "seconds" },
+      "speed": 1,
+      "steps": [
+        {
+          "name": "Entrée",
+          "fade": { "value": 1, "unit": "seconds" },
+          "hold": { "value": 2, "unit": "beats" },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            { "target": { "auto": { "kind": "byModel", "model": "Betopper LPC008S" } }, "paletteId": "9a1e0001-0000-4000-8000-000000000002" },
+            { "target": { "fixtureId": "743c…", "cell": 0 }, "attribute": "intensity", "level": 1 },
+            { "target": { "selectionId": "e1a4…" }, "color": { "r": 1, "g": 0.5, "b": 0, "uv": 0.2 }, "spread": { "value": 1.5, "unit": "seconds" } },
+            { "target": { "fixtureId": "c58c…" }, "channel": "gobo", "range": { "min": 32, "max": 39 } }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+| Propriété | Valeurs | Rôle |
+|---|---|---|
+| `layerId` | identifiant d'une couche (§12) | Couche d'appartenance ; inconnue = première couche (avertissement) |
+| `loop` | `once`, `count`, `infinite`, `pingPong`, `random` | Boucle (MOT-013) ; `loopCount` pour `count` |
+| `end` | `stop`, `hold`, `chain` | Fin d'une scène jouée une ou N fois (MOT-014) ; `chainSceneId` pour `chain` |
+| `fadeIn` / `fadeOut` | durée ou `null` | Fondu d'entrée (défaut : celui de la 1ʳᵉ étape) ; de sortie (défaut : arrêt immédiat) |
+| `speed` | 0,1 à 10 | Vitesse (MOT-015) |
+| durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023) ; en P4, 120 BPM fixe |
+| `steps[].curve` | `linear`, `sCurve`, `instant` | Courbe du fondu (MOT-011) |
+| `steps[].switch` | `start`, `middle`, `end` | Moment où bascule un attribut discret (roue, gobo, programme) (MOT-012) |
+| `values[].target` | **une seule** forme : `fixtureId` (+ `cell`, 0 = appareil entier) ; `selectionId` (sélection manuelle, dans son ordre) ; `auto` = `{ "kind": "allFixtures" }`, `{ "kind": "byCategory", "category": "par" }` ou `{ "kind": "byModel", "model": "Fabricant Modèle" }` | Cible (SCN-007) ; une sélection automatique suit le patch |
+| `values[]` : forme | **une seule** : `attribute` (ou `channel`) + `level` (0-1) ; `attribute` (ou `channel`) + `range` (`min`, `max`, `position` 0-1 facultative, sinon la médiane) ; `color` (`r`, `g`, `b` 0-1 ; `white`, `amber`, `uv` facultatifs) ; `paletteId` | Valeur (SCN-008) |
+| `values[].attribute` | nom d'attribut du doc 12 §2.3 en camelCase (`intensity`, `red`, `pan`, `tilt`, `gobo`, `shutter`…) | Tous les canaux de cet attribut dans la cible ; `intensity` sur un appareil sans gradateur = intensité virtuelle |
+| `values[].channel` | clé d'une définition de canal du modèle | Canal précis (appareil à plusieurs canaux du même attribut) |
+| `values[].fade` / `delay` / `spread` | durées | Fondu propre (SCN-011), retard, retard réparti sur les membres dans l'ordre de la sélection (SCN-010) |
+
+Règles de résolution (D27) : dans une étape, une valeur sur une **cellule** l'emporte sur l'appareil, qui l'emporte sur
+une **sélection** ; à précision égale, la dernière de la liste. Une couleur est traduite par appareil (RVB, RVBW selon
+`whiteMode` du modèle, emplacement de roue le plus proche, UV/ambre seulement s'ils sont précisés). **Une couleur seule
+n'allume pas un appareil dont l'intensité vaut 0** : ajouter `intensity` (le programmeur le fait tout seul, MOT-041).
+
+**Contenu écrit par une IA de conception (GEN-133)** : ranger les scènes dans la catégorie `"Proposé par IA"`, créer de
+**nouveaux** identifiants (ne jamais réutiliser celui d'une scène existante), puis vérifier avec
+`luxia-headless valider <projet>` et `luxia-headless jouer <projet> --scene "<nom>"`. Dans l'application : menu
+**Projet → Relire les scènes et palettes**, sans redémarrer.
+
+## 11. Projet : `palettes.json` (format 1)
+
+Palettes (doc 17 §2). Absent = jeu par défaut (13 couleurs, 4 intensités, identifiants fixes `9a1e0001-…`).
+Schéma JSON : [`schemas/palettes.schema.json`](schemas/palettes.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "palettes": [
+    { "id": "9a1e0001-0000-4000-8000-000000000005", "name": "Ambre", "kind": "color", "light": { "r": 1, "g": 0.5, "b": 0 },
+      "values": [ { "fixtureTypeId": "76a6…", "attribute": "white", "level": 0.2 } ] },
+    { "id": "9a1e0001-0000-4000-8000-000000000101", "name": "Plein", "kind": "intensity", "color": "#E3B341", "level": 1 },
+    { "id": "3d5e…", "name": "Piste centre", "kind": "position",
+      "values": [ { "fixtureId": "c58c…", "attribute": "pan", "level": 0.5 }, { "fixtureId": "c58c…", "attribute": "tilt", "level": 0.7 } ] },
+    { "id": "71aa…", "name": "Gobo étoile", "kind": "beam", "values": [ { "fixtureTypeId": "a96c…", "channel": "gobo", "level": 0.141 } ] }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `kind` | `color` (`light` : couleur logique), `intensity` (`level`), `position` (Pan/Tilt par appareil), `beam` (gobo, prisme… par modèle ou appareil) |
+| `values[]` | Valeurs par appareil (`fixtureId`) ou par modèle (`fixtureTypeId`) : pour une couleur, elles **priment** sur la traduction automatique pour ce modèle (PAL-002) |
+| `color`, `icon` | Bouton (GEN-106) ; une palette couleur sans `color` affiche sa propre couleur |
+
+L'ordre du tableau est l'ordre des grilles (PAL-007). Une palette se référence par son `id` : la renommer ne casse rien.
+
+## 12. Projet : `couches.json` (format 1)
+
+Couches (doc 17 §1). Absent = modèle par défaut du doc 17 §1.3 (D28), identifiants fixes `7c1a0001-…-00000000000N`
+(Intensité 1, Couleurs 2, Mouvements 3, Faisceau 4, Effets 5, Ambiance 6, Flashs 99). Éditeur : P5.
+
+```json
+{
+  "formatVersion": 1,
+  "layers": [
+    { "id": "7c1a0001-0000-4000-8000-000000000002", "name": "Couleurs", "color": "#DB61A2", "icon": "◐", "priority": 2,
+      "exclusive": true, "master": 1, "intensityMode": "htp", "masterOnAllAttributes": false,
+      "crossFade": { "value": 0.5, "unit": "seconds" } }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `priority` | Ordre de fusion LTP : la plus haute l'emporte (MOT-031) |
+| `exclusive` | Lancer une scène remplace celle qui joue, en fondu croisé de `crossFade` (MOT-030) |
+| `intensityMode` | `htp`, `priority`, `additive`, `multiplicative` (doc 15 §5.2) |
+| `master`, `masterOnAllAttributes` | Master de la couche (MOT-033) |
+
+## 13. Scénario de commandes `luxia-headless` (texte)
+
+Pour piloter le moteur sans interface (MOT-103) : `luxia-headless scenario <projet> fichier.txt [--duree 60] [--enregistrer f.dmxrec]`.
+Une commande par ligne, `temps commande arguments` (temps en secondes, virgule ou point) ; `#` = commentaire ; nom de
+scène ou de couche entre guillemets s'il contient des espaces (ou identifiant).
+
+```text
+# démonstration
+0     lancer "Blanc chaud sur les 4 PAR"
+2     lancer "Lyres sur 3 positions" solo
+5     blackout oui
+5,5   blackout non
+6     grand-master 50
+7     master-couche "Couleurs" 30
+8     vitesse "Chenillard 4 couleurs" 2
+9     etape-suivante "Chenillard 4 couleurs"
+10    arreter "Blanc chaud sur les 4 PAR"
+11    tout-arreter
+12    fin
+```
+
+Le résultat est un **résumé lisible** (qui s'allume, en quelle couleur, à quel niveau, où pointent les lyres, à quel
+moment) et, avec `--enregistrer`, un fichier `.dmxrec` (§9). `luxia-headless jouer <projet> --scene "nom"` joue une
+seule scène (GEN-132).
+
+## 14. Historique
 
 | Date | Modification |
 |---|---|
@@ -256,3 +403,4 @@ Lecture : `dmx-headless relire fichier.dmxrec`.
 | 2026-09-24 | P1 : `console.json` (instantanés). |
 | 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |
 | 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |
+| 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |

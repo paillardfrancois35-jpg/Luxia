@@ -59,6 +59,9 @@ public sealed record FixtureType
     /// <summary>Modes (au moins un, BIB-002).</summary>
     public IReadOnlyList<FixtureMode> Modes { get; init; } = [];
 
+    /// <summary>Usage du blanc pour rendre une couleur logique (MOT-051) ; <c>null</c> = <see cref="Model.WhiteMode.Extract"/>.</summary>
+    public WhiteMode? WhiteMode { get; init; }
+
     /// <summary>Nom affiché « Fabricant Modèle », recalculé : jamais enregistré.</summary>
     [JsonIgnore]
     public string DisplayName => $"{Manufacturer} {Model}";

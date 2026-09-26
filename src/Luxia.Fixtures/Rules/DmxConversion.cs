@@ -1,4 +1,5 @@
 using System.Globalization;
+using Luxia.Core.Dmx;
 using Luxia.Fixtures.Model;
 
 namespace Luxia.Fixtures.Rules;
@@ -10,27 +11,16 @@ namespace Luxia.Fixtures.Rules;
 public static class DmxConversion
 {
     /// <summary>Valeur normalisée → octet 8 bits (arrondi au plus proche : 0,5 → 128).</summary>
-    public static byte To8Bit(double normalized) =>
-        (byte)Math.Round(Math.Clamp(normalized, 0, 1) * 255, MidpointRounding.AwayFromZero);
+    public static byte To8Bit(double normalized) => DmxValues.To8Bit(normalized);
 
     /// <summary>Valeur normalisée → octets grossier et fin (0,5 → 32768 = 0x80 / 0x00).</summary>
-    public static (byte Coarse, byte Fine) To16Bit(double normalized)
-    {
-        var value = (int)Math.Round(Math.Clamp(normalized, 0, 1) * 65535, MidpointRounding.AwayFromZero);
-        if (normalized is > 0.4999 and < 0.5001)
-        {
-            // Le milieu logique doit tomber exactement sur 0x8000 (critère de GEN-020), pas sur 0x7FFF / 0x8000 selon l'arrondi.
-            value = 32768;
-        }
-
-        return ((byte)(value >> 8), (byte)(value & 0xFF));
-    }
+    public static (byte Coarse, byte Fine) To16Bit(double normalized) => DmxValues.To16Bit(normalized);
 
     /// <summary>Octet 8 bits → valeur normalisée.</summary>
-    public static double From8Bit(byte value) => value / 255.0;
+    public static double From8Bit(byte value) => DmxValues.From8Bit(value);
 
     /// <summary>Octets grossier et fin → valeur normalisée.</summary>
-    public static double From16Bit(byte coarse, byte fine) => ((coarse << 8) | fine) / 65535.0;
+    public static double From16Bit(byte coarse, byte fine) => DmxValues.From16Bit(coarse, fine);
 
     /// <summary>
     /// Texte d'une valeur DMX dans l'unité la plus parlante (GEN-021) : nom de plage si le canal a des plages,

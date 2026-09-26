@@ -53,7 +53,9 @@ public sealed partial class FixtureChannelViewModel : ViewModelBase
     public ChannelPart Part { get; }
 
     /// <summary>En-tête « 3 · canal 113 ».</summary>
-    public string Header => string.Create(CultureInfo.CurrentCulture, $"{Position} · canal {AbsoluteChannel}");
+    public string Header => AbsoluteChannel == 0
+        ? "virtuel · sans canal"
+        : string.Create(CultureInfo.CurrentCulture, $"{Position} · canal {AbsoluteChannel}");
 
     /// <summary>Nom du canal.</summary>
     public string Title => Part == ChannelPart.Fine ? $"{Definition.Name} (fin)" : Definition.Name;

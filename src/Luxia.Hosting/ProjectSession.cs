@@ -3,13 +3,17 @@ using Luxia.Core.Snapshots;
 using Luxia.Patch;
 using Luxia.Patch.Model;
 using Luxia.Persistence;
+using Luxia.Scenes;
+using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Luxia.Hosting;
 
 /// <summary>
-/// Projet ouvert : dossier, fiche, parties chargées (instantanés de console, installation, lieux — doc 13).
+/// Projet ouvert : dossier, fiche, parties chargées (instantanés de console, installation, lieux — doc 13 ;
+/// scènes, palettes, couches — doc 16, 17).
 /// Le dernier projet ouvert est mémorisé dans les préférences et rouvert au démarrage.
 /// </summary>
 public sealed class ProjectSession
@@ -40,6 +44,15 @@ public sealed class ProjectSession
     /// <summary>Lieux du projet (doc 13 §5).</summary>
     public VenueSet Venues { get; private set; } = new();
 
+    /// <summary>Scènes (doc 16).</summary>
+    public SceneSet Scenes { get; private set; } = new();
+
+    /// <summary>Palettes (doc 17 §2) ; jeu par défaut si le projet n'en a pas encore (PAL-009).</summary>
+    public PaletteSet Palettes { get; private set; } = DefaultPalettes.Create();
+
+    /// <summary>Couches (doc 17 §1) ; modèle par défaut si le projet n'en a pas encore (D28).</summary>
+    public LayerSet Layers { get; private set; } = LayerSet.Default();
+
     /// <summary>Copie des modèles d'appareils utilisés par le projet (GEN-053) ; <c>null</c> hors projet ouvert.</summary>
     public ProjectFixtureLibrary? FixtureLibrary { get; private set; }
 
@@ -48,6 +61,12 @@ public sealed class ProjectSession
 
     /// <summary>Levé après ouverture, création ou fermeture d'un projet.</summary>
     public event EventHandler? Changed;
+
+    /// <summary>
+    /// Levé après toute modification enregistrée de ce que joue le moteur (installation, lieux, scènes, palettes,
+    /// couches, copie des modèles) : le modèle du moteur doit être recompilé (D26).
+    /// </summary>
+    public event EventHandler? ShowDataChanged;
 
     /// <summary>Rouvre le dernier projet s'il existe encore.</summary>
     public void OpenLast()
@@ -99,11 +118,16 @@ public sealed class ProjectSession
             messages.Add(venuesMessage);
         }
 
+        var (scenes, palettes, layers) = LoadShowParts(folder, messages);
+
         Folder = folder;
         Info = report.Info;
         Console = console;
         Installation = installation;
         Venues = venues;
+        Scenes = scenes;
+        Palettes = palettes;
+        Layers = layers;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -137,6 +161,7 @@ public sealed class ProjectSession
         InstallationStore.Save(folder, installation);
         Installation = installation;
         Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
     }
 
     /// <summary>Remplace les lieux et les enregistre (doc 13 §5).</summary>
@@ -147,5 +172,67 @@ public sealed class ProjectSession
         VenueStore.Save(folder, venues);
         Venues = venues;
         Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Remplace les scènes et les enregistre (doc 16).</summary>
+    public void SaveScenes(SceneSet scenes)
+    {
+        ArgumentNullException.ThrowIfNull(scenes);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        SceneStore.Save(folder, scenes);
+        Scenes = scenes;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Remplace les palettes et les enregistre (doc 17 §2).</summary>
+    public void SavePalettes(PaletteSet palettes)
+    {
+        ArgumentNullException.ThrowIfNull(palettes);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        PaletteStore.Save(folder, palettes);
+        Palettes = palettes;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Remplace les couches et les enregistre (doc 17 §1).</summary>
+    public void SaveLayers(LayerSet layers)
+    {
+        ArgumentNullException.ThrowIfNull(layers);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        LayerStore.Save(folder, layers);
+        Layers = layers;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>
+    /// Relit les scènes, palettes et couches depuis le disque, sans rouvrir le projet (GEN-133) : pour reprendre du
+    /// contenu écrit par une IA de conception ou à la main pendant que l'application tourne.
+    /// </summary>
+    /// <returns>Messages de lecture (fichiers mis de côté, migrations).</returns>
+    public IReadOnlyList<string> ReloadShowData()
+    {
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        var messages = new List<string>();
+        (Scenes, Palettes, Layers) = LoadShowParts(folder, messages);
+        FixtureLibrary = new ProjectFixtureLibrary(folder);
+        _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
+        NotifyShowDataChanged();
+        return messages;
+    }
+
+    /// <summary>Signale une modification de ce que joue le moteur (ex. copie d'un modèle mise à jour, GEN-053).</summary>
+    public void NotifyShowDataChanged() => ShowDataChanged?.Invoke(this, EventArgs.Empty);
+
+    private static (SceneSet, PaletteSet, LayerSet) LoadShowParts(string folder, List<string> messages)
+    {
+        var (scenes, scenesMessage) = SceneStore.Load(folder);
+        var (palettes, palettesMessage) = PaletteStore.Load(folder);
+        var (layers, layersMessage) = LayerStore.Load(folder);
+        messages.AddRange(new[] { scenesMessage, palettesMessage, layersMessage }.OfType<string>());
+        return (scenes, palettes, layers);
     }
 }

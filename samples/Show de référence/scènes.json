@@ -1,0 +1,922 @@
+{
+  "formatVersion": 1,
+  "scenes": [
+    {
+      "id": "18cee9ad-d094-5b32-ac50-f8c6ce243d83",
+      "name": "Blanc chaud sur les 4 PAR",
+      "color": "#FFC773",
+      "category": "Phase P4",
+      "notes": "Lien au dimmer : baissez le Grand Master, le blanc chaud baisse sans changer de teinte (MOT-040). Blackout : noir, couleur gardée (GEN-041).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000002"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "48729862-9dd1-5b71-8ae5-fc4858b853f2",
+      "name": "Bleu sur tout le parc",
+      "color": "#1F6FEB",
+      "category": "Phase P4",
+      "notes": "Une seule palette « Bleu » traduite par appareil : RVB, RVBW, roue des lyres (bleu), UV ignorés (GEN-022, PAL-002).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4d670289-af47-5117-950c-0679fa2829c2",
+      "name": "Chenillard 4 couleurs",
+      "color": "#DB61A2",
+      "category": "Phase P4",
+      "notes": "Quatre étapes instantanées de 0,5 s : les couleurs tournent d'un PAR à l'autre (MOT-010, MOT-013 infini).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 0.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 0.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 0.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 0.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "464a4cf5-7bcb-58ef-affa-4f196b4f1aeb",
+      "name": "Lyres sur 3 positions",
+      "color": "#58A6FF",
+      "category": "Phase P4",
+      "notes": "Positions par palettes (à calibrer sur place ; par lieu en P5). Fondu de 1,5 s entre positions (MOT-011).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ],
+          "name": "Piste centre"
+        },
+        {
+          "fade": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "87250ab3-5078-5c50-bda5-df75534a23e4"
+            }
+          ],
+          "name": "Plafond"
+        },
+        {
+          "fade": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.5,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "58b53734-7e42-5fb5-92e1-5e74479cdba2"
+            }
+          ],
+          "name": "Croisé"
+        }
+      ]
+    },
+    {
+      "id": "86a31f8f-1e68-522a-9c81-ab5830e8c901",
+      "name": "Fondu lent (4 s)",
+      "color": "#BC4CE0",
+      "category": "Phase P4",
+      "notes": "Entrée et sortie en 4 s : comparez avec « Instantané ».",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 4,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000011"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ],
+      "fadeOut": {
+        "value": 4,
+        "unit": "seconds"
+      }
+    },
+    {
+      "id": "ed6f4dc4-e9ef-5818-a947-43932cc73ae7",
+      "name": "Instantané",
+      "color": "#39C5CF",
+      "category": "Phase P4",
+      "notes": "Même principe que « Fondu lent », sans fondu : la couleur arrive au tick suivant.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000008"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "09353983-ac88-5bff-b368-74104869f4b1",
+      "name": "Roue de couleur qui bascule franchement",
+      "color": "#F0883E",
+      "category": "Phase P4",
+      "notes": "Fondu de 2 s, mais la roue de couleur est discrète : elle bascule au début du fondu, sans passer par les emplacements voisins (MOT-012).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ],
+          "name": "Rouge"
+        },
+        {
+          "fade": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ],
+          "name": "Vert"
+        },
+        {
+          "fade": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ],
+          "name": "Bleu"
+        },
+        {
+          "fade": {
+            "value": 2,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Tomshine Mini lyre gobo"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ],
+          "name": "Jaune"
+        }
+      ]
+    },
+    {
+      "id": "fc6291f9-bf23-588c-b88c-f642a12e7117",
+      "name": "Vague gauche → droite",
+      "color": "#E3B341",
+      "category": "Phase P4",
+      "notes": "Retard par membre (« fan », SCN-010) : chaque PAR démarre son fondu 0,5 s après son voisin, dans l'ordre de la sélection « PAR gauche → droite ».",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 3,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001",
+              "spread": {
+                "value": 1.5,
+                "unit": "seconds"
+              }
+            },
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "attribute": "intensity",
+              "level": 1,
+              "spread": {
+                "value": 1.5,
+                "unit": "seconds"
+              }
+            }
+          ],
+          "name": "Blanc en vague"
+        },
+        {
+          "fade": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 3,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000005",
+              "spread": {
+                "value": 1.5,
+                "unit": "seconds"
+              }
+            },
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "attribute": "intensity",
+              "level": 1
+            }
+          ],
+          "name": "Ambre en vague"
+        }
+      ]
+    },
+    {
+      "id": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5",
+      "name": "UV plein",
+      "color": "#8957E5",
+      "category": "Phase P4",
+      "notes": "La palette « UV » précise l'usage de l'émetteur UV (MOT-053).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000006",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "uv"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000013"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "uv"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "63126d93-d906-5aef-b6e3-9efac22b567f",
+      "name": "Piège : couleur sans intensité",
+      "color": "#F85149",
+      "category": "Phase P4",
+      "notes": "PIÈGE (DEMO-4) : cette scène ne donne qu'une couleur ; les PAR 7 canaux ont un gradateur à 0 : ils restent éteints (D15, D27). Le programmeur, lui, ajoute l'intensité 100 % à l'enregistrement (« allumer en coloriant », MOT-041).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

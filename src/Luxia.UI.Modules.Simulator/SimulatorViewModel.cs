@@ -44,8 +44,16 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
         LoadVenue();
     }
 
-    /// <summary>Source affichée (SIM-006). Seule « Sortie » est disponible avant le mode aveugle (P4) et le lecteur (P3, S).</summary>
-    public static string Source => "Sortie (trames réellement émises)";
+    /// <summary>
+    /// Source affichée en permanence (SIM-006) : la sortie, ou l'aperçu pendant l'édition en aveugle (GEN-063, SCN-035).
+    /// Le lecteur d'enregistrements (SORT-063, S) n'est pas réalisé.
+    /// </summary>
+    public string Source => _runtime.PreviewActive
+        ? "APERÇU (édition en aveugle : rien n'est émis)"
+        : "Sortie (trames réellement émises)";
+
+    /// <summary>L'aperçu est affiché (bandeau d'avertissement).</summary>
+    public bool IsPreview => _runtime.PreviewActive;
 
     /// <summary>Levé après chaque rafraîchissement (la vue met alors le simulateur à jour).</summary>
     public event EventHandler? Refreshed;
@@ -56,6 +64,8 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
     /// <inheritdoc />
     public void Refresh()
     {
+        OnPropertyChanged(nameof(Source));
+        OnPropertyChanged(nameof(IsPreview));
         if (!HasProject)
         {
             return;
@@ -139,9 +149,11 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
             _frames[universe] = frame;
         }
 
-        if (universe >= 1 && universe <= _runtime.Engine.UniverseCount)
+        // GEN-063 : en aveugle, le simulateur montre le moteur d'aperçu (mêmes scènes, programmeur non émis).
+        var engine = _runtime.PreviewActive ? _runtime.Preview : _runtime.Engine;
+        if (universe >= 1 && universe <= engine.UniverseCount)
         {
-            _runtime.Engine.CopyLastFrame(universe, frame);
+            engine.CopyLastFrame(universe, frame);
         }
 
         return frame;

@@ -3,7 +3,10 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Luxia.Core.Dmx;
+using Luxia.Engine;
+using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
+using Luxia.Fixtures.Rules;
 using Luxia.Hosting;
 using Luxia.Messaging.Commands;
 using Luxia.Patch.Rules;
@@ -15,7 +18,9 @@ namespace Luxia.UI.Modules.Console;
 /// Composant « faders d'un appareil » (CONS-060) : un appareil (modèle + mode) placé à une adresse, ses canaux
 /// avec l'outil adapté (fader, boutons de plages, barre 0-255). Sert au test en direct de la bibliothèque
 /// (BIB-060 à 063) et servira à la console en mode appareils (P3).
-/// En P2, les valeurs sont envoyées en surcharges brutes (CMD-020) sur les canaux réels.
+/// Pour le test en direct (appareil non patché), les valeurs sont des surcharges brutes (CMD-020) sur les canaux réels ;
+/// pour un appareil patché (Console en mode appareils), ce sont des surcharges d'<b>attributs</b> (CMD-021, étape 5 de la
+/// chaîne) : elles passent par le Grand Master et le blackout (CONS-022).
 /// </summary>
 public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
 {
@@ -28,6 +33,8 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
     private double _discoveryPosition;
     private IReadOnlyList<(int Channel, byte Value)> _identifyChannels = [];
     private long _identifyStart;
+    private Guid? _fixtureId;
+    private bool _hasVirtualIntensity;
 
     [ObservableProperty]
     private bool _isActive;
@@ -97,8 +104,30 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
     /// <param name="address">Adresse patchée.</param>
     /// <param name="universe">Univers patché.</param>
     /// <param name="displayName">Nom donné par l'utilisateur au patch (INST-017), affiché au lieu du nom du modèle.</param>
-    public string? Attach(FixtureType fixture, FixtureMode mode, int address, int universe, string displayName) =>
-        Setup(fixture, mode, address, universe, displayName);
+    /// <param name="fixtureId">Appareil patché : ses réglages deviennent des surcharges d'attributs (CONS-022).</param>
+    public string? Attach(FixtureType fixture, FixtureMode mode, int address, int universe, string displayName, Guid? fixtureId = null)
+    {
+        var error = Setup(fixture, mode, address, universe, displayName);
+        if (error is not null || fixtureId is not { } id)
+        {
+            return error;
+        }
+
+        _fixtureId = id;
+
+        // BIB-006 : un appareil sans gradateur a une intensité virtuelle (0 par défaut, D27) ; on lui donne un fader.
+        _hasVirtualIntensity = FixtureRules.HasVirtualIntensity(fixture, mode);
+        if (_hasVirtualIntensity)
+        {
+            var virtualDimmer = new ChannelDefinition { Key = RigParameter.VirtualIntensityKey, Name = "Intensité (virtuelle)", Attribute = AttributeKind.Intensity };
+            Channels.Insert(0, new FixtureChannelViewModel(0, 0, virtualDimmer, ChannelPart.Coarse, fixture.Physical));
+        }
+
+        return null;
+    }
+
+    /// <summary>Appareil patché affiché (null pour le test en direct de la bibliothèque).</summary>
+    public Guid? FixtureId => _fixtureId;
 
     /// <summary>Retire l'appareil de l'affichage (Console, changement de mode ou d'univers) sans toucher aux surcharges.</summary>
     public void Detach()
@@ -106,6 +135,8 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
         StopDiscovery();
         StopIdentifyInternal();
         Channels.Clear();
+        _fixtureId = null;
+        _hasVirtualIntensity = false;
         IsActive = false;
         Summary = string.Empty;
     }
@@ -204,7 +235,57 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
         var clamped = Math.Clamp(value, 0, 255);
         channel.Value = clamped;
         channel.IsOverridden = true;
-        _runtime.SetChannels(Universe, [new ChannelValue(channel.AbsoluteChannel, (byte)clamped)]);
+        if (_fixtureId is not { } fixtureId)
+        {
+            _runtime.SetChannels(Universe, [new ChannelValue(channel.AbsoluteChannel, (byte)clamped)]);
+            return;
+        }
+
+        // CONS-022 : surcharge de l'attribut (étape 5), soumise au Grand Master et au blackout.
+        var values = new List<AttributeValue> { new(fixtureId, channel.Definition.Key, Normalized(channel, clamped)) };
+
+        // « Allumer en coloriant » version console (MOT-041) : sur un appareil sans gradateur, régler une couleur alors que
+        // l'intensité virtuelle n'est pas prise l'allume à 100 %, comme le faisait la console avant P4.
+        var dimmer = Channels.FirstOrDefault(c => c.Definition.Key == RigParameter.VirtualIntensityKey);
+        if (_hasVirtualIntensity && dimmer is { IsOverridden: false } && AttributeCatalog.Get(channel.Definition.Attribute).IsEmitter && clamped > 0)
+        {
+            values.Add(new AttributeValue(fixtureId, RigParameter.VirtualIntensityKey, 1));
+            dimmer.Value = 255;
+            dimmer.IsOverridden = true;
+        }
+
+        _runtime.Engine.Send(new OverrideAttributesCommand(CommandOrigin.User, values));
+    }
+
+    /// <summary>Libère les surcharges d'attributs de l'appareil (bouton « Libérer » de l'appareil).</summary>
+    [RelayCommand]
+    private void Release()
+    {
+        if (_fixtureId is { } fixtureId)
+        {
+            _runtime.Engine.Send(new ReleaseAttributesCommand(CommandOrigin.User, fixtureId));
+        }
+        else if (Channels.Count > 0)
+        {
+            _runtime.ReleaseChannels(Universe, [.. Channels.Select(c => c.AbsoluteChannel)]);
+        }
+    }
+
+    /// <summary>
+    /// Valeur normalisée d'un canal : un octet d'un attribut 16 bits se combine avec l'autre octet tel qu'il est émis.
+    /// </summary>
+    private double Normalized(FixtureChannelViewModel channel, int value)
+    {
+        if (channel.Definition.Resolution != ChannelResolution.Bit16)
+        {
+            return DmxValues.From8Bit((byte)value);
+        }
+
+        var other = Channels.FirstOrDefault(c => c.Definition.Key == channel.Definition.Key && c.Part != channel.Part);
+        var otherValue = other is null ? (byte)0 : (byte)other.Value;
+        return channel.Part == ChannelPart.Fine
+            ? DmxValues.From16Bit(otherValue, (byte)value)
+            : DmxValues.From16Bit((byte)value, otherValue);
     }
 
     /// <summary>Clic sur une plage : sa valeur médiane est émise (BIB-061).</summary>
@@ -280,7 +361,13 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
     }
 
     /// <inheritdoc />
-    public void Refresh()
+    public void Refresh() => Refresh(_fixtureId is null ? null : _runtime.Engine.Snapshot);
+
+    /// <summary>
+    /// Rafraîchit à partir d'un état du moteur déjà lu (la Console le lit une fois pour tous ses appareils) : un canal est
+    /// « pris » s'il a une surcharge brute ou, pour un appareil patché, une surcharge de son attribut.
+    /// </summary>
+    public void Refresh(EngineSnapshot? snapshot)
     {
         if (!IsActive)
         {
@@ -293,12 +380,22 @@ public sealed partial class FixtureFadersViewModel : ViewModelBase, IRefreshable
         _runtime.Engine.CopyOverrides(Universe, _overrides);
         foreach (var channel in Channels)
         {
+            var index = _fixtureId is { } id && snapshot is not null ? snapshot.Show.IndexOf(id, channel.Definition.Key) : -1;
+            var attributeTaken = index >= 0 && index < snapshot!.Overrides.Length && !double.IsNaN(snapshot.Overrides[index]);
+            if (channel.AbsoluteChannel == 0)
+            {
+                // Intensité virtuelle : pas de canal DMX, valeur lue dans l'état du moteur.
+                channel.Value = index >= 0 && index < snapshot!.Values.Length ? DmxValues.To8Bit(snapshot.Values[index]) : 0;
+                channel.IsOverridden = attributeTaken;
+                continue;
+            }
+
             if (channel != DiscoveryChannel)
             {
                 channel.Value = _frame[channel.AbsoluteChannel - 1];
             }
 
-            channel.IsOverridden = _overrides[channel.AbsoluteChannel - 1] >= 0;
+            channel.IsOverridden = _overrides[channel.AbsoluteChannel - 1] >= 0 || attributeTaken;
         }
     }
 

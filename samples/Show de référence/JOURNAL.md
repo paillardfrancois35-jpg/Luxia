@@ -103,3 +103,38 @@ chaque modèle utilisé est présent dans la copie du projet, chaque appareil es
 | Modèle réel des gros PAR (LPC010 ou LPC120) et son mode (Q27) | ⏳ en attente | |
 | Disposition du lieu « Générique » conforme à l'installation réelle (doc 41 §13) | ⏳ en attente | |
 | Adresses réglées sur les appareils, identification OK (doc 41 §11) | ⏳ en attente | |
+
+## P4 – Moteur + Scènes (2026-09-26)
+
+### Ajouté
+
+| Élément | Fichier | Description |
+|---|---|---|
+| Couches par défaut (doc 17 §1.3, D28) | *(implicites)* | Intensité, Couleurs, Mouvements, Faisceau, Effets, Ambiance, Flashs ; `couches.json` est écrit au premier enregistrement depuis l'application |
+| Palettes | `palettes.json` | 13 couleurs et 4 intensités par défaut (PAL-009) ; positions des lyres « Piste centre », « Plafond », « Croisé », « Repos » (**valeurs à calibrer sur place**, par lieu en P5) ; faisceau « Gobo étoile » |
+| Sélections | `installation.json` | « PAR gauche → droite » (PAR 1 → 4), « Lyres » |
+| 10 scènes, catégorie « Phase P4 » | `scènes.json` | Blanc chaud sur les 4 PAR ; Bleu sur tout le parc ; Chenillard 4 couleurs ; Lyres sur 3 positions ; Fondu lent (4 s) ; Instantané ; Roue de couleur qui bascule franchement ; Vague gauche → droite ; UV plein ; **Piège : couleur sans intensité** (DEMO-4) |
+
+Chaque scène a une note (champ `notes`) qui dit ce qu'elle montre. Détail et marche à suivre : guide `docs/demos/P4-moteur-scenes.md`.
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --scene "Chenillard 4 couleurs" --duree 4 --pas 0.5
+```
+
+### Non-régression
+
+`ReferenceShowP4Tests` : le projet se valide sans aucun problème ; chaque scène « Phase P4 » est jouée 6 s en temps
+virtuel et ses trames sont comparées octet par octet à la référence `tests/assets/golden/P4-scenes.txt` (T-MOT-07) ;
+contrôles ciblés : blanc chaud (gradateur + couleur), piège (PAR noirs), roue de couleur (jamais de valeur
+intermédiaire), vague (décalage de 0,5 s entre PAR).
+
+### Validation par l'utilisateur
+
+| Élément | Statut | Retour |
+|---|---|---|
+| Rendu au simulateur puis sur le matériel (doc 41 §11) | ✅ validé le 2026-09-26 : guide P4 déroulé pas à pas, exemples 1 à 12 conformes (blanc chaud réglé à 100 / 42 / 0 %) | 4 PAR, lyre 1, barre 1 branchés ; les deux paires de PAR ne rendent pas les mêmes couleurs (doc 99, correction par appareil) |
+| Positions des lyres à calibrer | 🟡 Lyre 1 calibrée au salon (2026-09-26) : Piste centre pan 46,6 % / tilt 65,7 %, Plafond pan 19,6 % / tilt 11,3 % (la proposition de départ visait le mur opposé), Croisé pan 39,1 % ; Lyre 2 non branchée, valeurs proposées (à calibrer quand elle sera raccordée) | Essai P4, exemple 4 |
+| Plage « sans strobe » des PAR et barres (Q28) | ⏳ en attente | |
