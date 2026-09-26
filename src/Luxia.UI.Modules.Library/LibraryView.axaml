@@ -1,0 +1,400 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Library"
+             xmlns:console="using:Luxia.UI.Modules.Console"
+             xmlns:c="using:Luxia.UI.Controls"
+             xmlns:fx="using:Luxia.Fixtures.Model"
+             xmlns:rules="using:Luxia.Fixtures.Rules"
+             x:Class="Luxia.UI.Modules.Library.LibraryView"
+             x:DataType="vm:LibraryViewModel">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.label">
+      <Setter Property="Opacity" Value="0.7" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Margin" Value="0,4,0,2" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="300,*" Margin="16">
+    <!-- Liste des modèles (BIB-020) -->
+    <DockPanel Grid.Column="0" Margin="0,0,12,0">
+      <TextBlock DockPanel.Dock="Top" Text="Bibliothèque" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,8" />
+      <TextBox DockPanel.Dock="Top" Text="{Binding Search}" PlaceholderText="Rechercher…" Margin="0,0,0,4" />
+      <Grid DockPanel.Dock="Top" ColumnDefinitions="*,*" Margin="0,0,0,6">
+        <ComboBox Grid.Column="0" ItemsSource="{Binding Manufacturers}" SelectedItem="{Binding ManufacturerFilter}" HorizontalAlignment="Stretch" Margin="0,0,2,0" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding CategoryNames}" SelectedItem="{Binding CategoryFilter}" HorizontalAlignment="Stretch" Margin="2,0,0,0" />
+      </Grid>
+      <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="0,6,0,0">
+        <Button Content="+ Nouveau modèle" Command="{Binding NewCommand}" HorizontalAlignment="Stretch" />
+        <Button Content="Importer des fichiers…" Command="{Binding ImportFilesCommand}" HorizontalAlignment="Stretch" />
+        <Button Content="Importer un dossier…" Command="{Binding ImportFolderCommand}" HorizontalAlignment="Stretch" />
+        <CheckBox Content="Écraser si déjà présent" IsChecked="{Binding OverwriteExisting}"
+                  ToolTip.Tip="Remplace un modèle déjà dans la bibliothèque (même identifiant, ou même fabricant et nom) au lieu de l'ignorer (BIB-098)" />
+        <TextBlock Text="{Binding Progress}" IsVisible="{Binding IsBusy}" Foreground="#58A6FF" />
+        <TextBlock Text="{Binding Folder}" FontSize="10" Opacity="0.5" TextWrapping="Wrap" />
+      </StackPanel>
+      <Expander DockPanel.Dock="Bottom" Header="Rapport d'import" IsVisible="{Binding ImportReport.Count}" Margin="0,6,0,0">
+        <ScrollViewer MaxHeight="220">
+          <ItemsControl ItemsSource="{Binding ImportReport}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}" FontSize="11" TextWrapping="Wrap" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Expander>
+      <TreeView ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedNode}">
+        <TreeView.Styles>
+          <!-- BIB-093 : le groupe se déplie tout seul quand une recherche ou un filtre est actif. -->
+          <Style Selector="TreeViewItem" x:CompileBindings="False">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+          </Style>
+        </TreeView.Styles>
+        <TreeView.DataTemplates>
+          <TreeDataTemplate DataType="vm:ManufacturerNode" ItemsSource="{Binding Items}">
+            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+          </TreeDataTemplate>
+          <DataTemplate DataType="vm:LibraryItemViewModel">
+            <StackPanel>
+              <TextBlock Text="{Binding Name}" />
+              <TextBlock Text="{Binding Detail}" FontSize="10" Opacity="0.6" />
+            </StackPanel>
+          </DataTemplate>
+        </TreeView.DataTemplates>
+      </TreeView>
+    </DockPanel>
+
+    <!-- Éditeur -->
+    <DockPanel Grid.Column="1">
+      <TextBlock DockPanel.Dock="Top" Text="{Binding Message}" Foreground="#58A6FF" TextWrapping="Wrap" Margin="0,0,0,6"
+                 IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      <TextBlock Text="Choisissez un modèle dans la liste, ou créez-en un." Opacity="0.6" IsVisible="{Binding Editor, Converter={x:Static ObjectConverters.IsNull}}" />
+
+      <ContentControl Content="{Binding Editor}">
+        <ContentControl.DataTemplates>
+          <DataTemplate DataType="vm:FixtureEditorViewModel">
+            <DockPanel>
+              <!-- Barre d'outils -->
+              <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4">
+                  <Button Content="↶ Annuler" Command="{Binding UndoCommand}" HotKey="Ctrl+Z" ToolTip.Tip="Ctrl+Z" />
+                  <Button Content="↷ Rétablir" Command="{Binding RedoCommand}" HotKey="Ctrl+Y" ToolTip.Tip="Ctrl+Y" />
+                  <Button Content="Dupliquer" Command="{Binding $parent[UserControl].((vm:LibraryViewModel)DataContext).DuplicateCommand}" />
+                  <Button Content="Enregistrer" Classes="accent" Command="{Binding $parent[UserControl].((vm:LibraryViewModel)DataContext).SaveCommand}"
+                          IsEnabled="{Binding IsEditable}" HotKey="Ctrl+S" ToolTip.Tip="Ctrl+S" />
+                  <Button Content="Supprimer…" Command="{Binding $parent[UserControl].((vm:LibraryViewModel)DataContext).DeleteCommand}" IsEnabled="{Binding IsEditable}" />
+                </StackPanel>
+                <StackPanel>
+                  <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" />
+                  <StackPanel Orientation="Horizontal" Spacing="12">
+                    <TextBlock Text="{Binding Info}" Opacity="0.6" FontSize="12" />
+                    <TextBlock Text="{Binding ValidationSummary}" FontSize="12" Foreground="#D29922" />
+                  </StackPanel>
+                </StackPanel>
+              </DockPanel>
+
+              <TabControl SelectedIndex="{Binding SelectedTabIndex}">
+                <!-- Canaux et modes (BIB-021, BIB-022, BIB-023) -->
+                <TabItem Header="Canaux et modes">
+                  <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,4,0,6">
+                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4" IsEnabled="{Binding IsEditable}">
+                        <Button Content="+ Mode" Command="{Binding AddModeCommand}" />
+                        <Button Content="Supprimer le mode" Command="{Binding RemoveModeCommand}" />
+                      </StackPanel>
+                      <ListBox ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}">
+                        <ListBox.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                          </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                          <DataTemplate x:DataType="vm:ModeItemViewModel">
+                            <TextBlock Text="{Binding Header}" />
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+                    </DockPanel>
+
+                    <!-- Mode sélectionné -->
+                    <WrapPanel DockPanel.Dock="Top" DataContext="{Binding SelectedMode}" x:DataType="vm:ModeItemViewModel" Margin="0,0,0,6"
+                               IsVisible="{Binding $parent[DockPanel].((vm:FixtureEditorViewModel)DataContext).SelectedMode, Converter={x:Static ObjectConverters.IsNotNull}}">
+                      <StackPanel Margin="0,0,12,0">
+                        <TextBlock Classes="label" Text="Nom du mode" />
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="160" />
+                      </StackPanel>
+                      <StackPanel Margin="0,0,12,0">
+                        <TextBlock Classes="label" Text="Nom court" />
+                        <TextBox Text="{Binding ShortName, UpdateSourceTrigger=LostFocus}" Width="90" />
+                      </StackPanel>
+                      <StackPanel Margin="0,0,12,0">
+                        <TextBlock Classes="label" Text="Réglage sur l'appareil" />
+                        <TextBox Text="{Binding DeviceSetting, UpdateSourceTrigger=LostFocus}" Width="150" PlaceholderText="ex. A001" />
+                      </StackPanel>
+                      <TextBlock Text="{Binding Sheet}" VerticalAlignment="Bottom" Margin="0,0,0,6" Opacity="0.8" TextWrapping="Wrap" MaxWidth="600" />
+                    </WrapPanel>
+
+                    <Grid ColumnDefinitions="270,*">
+                      <!-- Positions du mode -->
+                      <DockPanel Grid.Column="0" Margin="0,0,10,0" ClipToBounds="True">
+                        <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="0,6,0,0" IsEnabled="{Binding IsEditable}">
+                          <StackPanel Orientation="Horizontal" Spacing="4">
+                            <Button Content="▲" Command="{Binding MoveSlotUpCommand}" ToolTip.Tip="Monter (ou glisser-déposer dans la liste)" />
+                            <Button Content="▼" Command="{Binding MoveSlotDownCommand}" ToolTip.Tip="Descendre" />
+                            <Button Content="Retirer du mode" Command="{Binding RemoveSlotCommand}" />
+                          </StackPanel>
+                          <Grid ColumnDefinitions="*,Auto">
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding ChannelKeys}" SelectedItem="{Binding ChannelToAdd}" HorizontalAlignment="Stretch" PlaceholderText="Canal existant…" Margin="0,0,4,0" />
+                            <Button Grid.Column="1" Content="Ajouter" Command="{Binding AddExistingChannelCommand}" />
+                          </Grid>
+                          <Button Content="+ Nouveau canal" Command="{Binding NewChannelCommand}" HorizontalAlignment="Stretch" />
+                          <Button Content="Supprimer les canaux inutilisés" Command="{Binding RemoveUnusedChannelsCommand}" HorizontalAlignment="Stretch" />
+                        </StackPanel>
+                        <ListBox x:Name="SlotList" ItemsSource="{Binding Slots}" SelectedItem="{Binding SelectedSlot}">
+                          <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:SlotViewModel">
+                              <Grid ColumnDefinitions="32,*">
+                                <TextBlock Grid.Column="0" Text="{Binding PositionText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                <StackPanel Grid.Column="1">
+                                  <TextBlock Text="{Binding Title}" />
+                                  <TextBlock Text="{Binding Detail}" FontSize="10" Opacity="0.6" />
+                                </StackPanel>
+                              </Grid>
+                            </DataTemplate>
+                          </ListBox.ItemTemplate>
+                        </ListBox>
+                      </DockPanel>
+
+                      <!-- Détail du canal -->
+                      <ScrollViewer Grid.Column="1">
+                        <ContentControl Content="{Binding SelectedChannel}" IsEnabled="{Binding IsEditable}">
+                          <ContentControl.DataTemplates>
+                            <DataTemplate DataType="vm:ChannelDetailViewModel">
+                              <StackPanel Spacing="6">
+                                <WrapPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Nom (constructeur)" />
+                                    <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="220" />
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Attribut" />
+                                    <ComboBox ItemsSource="{Binding Attributes}" SelectedItem="{Binding Attribute}" Width="220">
+                                      <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="fx:AttributeInfo">
+                                          <TextBlock Text="{Binding Label}" />
+                                        </DataTemplate>
+                                      </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Cellule (0 = appareil)" />
+                                    <NumericUpDown Value="{Binding Cell}" Minimum="0" Maximum="256" FormatString="0" Width="130" />
+                                  </StackPanel>
+                                  <CheckBox Content="16 bits (grossier + fin)" IsChecked="{Binding Is16Bit}" VerticalAlignment="Bottom" Margin="0,0,12,4" />
+                                  <CheckBox Content="Inversé" IsChecked="{Binding Inverted}" VerticalAlignment="Bottom" Margin="0,0,0,4" />
+                                </WrapPanel>
+                                <WrapPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Défaut" />
+                                    <NumericUpDown Value="{Binding Default}" Minimum="0" Maximum="255" FormatString="0" Width="120" />
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Repos" />
+                                    <TextBox Text="{Binding Rest, UpdateSourceTrigger=LostFocus}" Width="70" />
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Identification" />
+                                    <TextBox Text="{Binding Identify, UpdateSourceTrigger=LostFocus}" Width="90" />
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Suit l'intensité" />
+                                    <ComboBox ItemsSource="{Binding FollowsChoices}" SelectedItem="{Binding FollowsIntensity}" Width="140" />
+                                    <TextBlock Text="{Binding FollowsIntensityHint}" FontSize="10" Opacity="0.6" />
+                                  </StackPanel>
+                                  <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Classes="label" Text="Roue" />
+                                    <ComboBox ItemsSource="{Binding Wheels}" SelectedItem="{Binding Wheel}" Width="150" />
+                                  </StackPanel>
+                                </WrapPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                  <TextBlock Classes="label" Text="Sûreté :" VerticalAlignment="Center" />
+                                  <CheckBox Content="automatique" IsChecked="{Binding SafetyAuto}" />
+                                  <CheckBox Content="strobe" IsChecked="{Binding SafetyStrobe}" IsEnabled="{Binding !SafetyAuto}" />
+                                  <CheckBox Content="fumée" IsChecked="{Binding SafetySmoke}" IsEnabled="{Binding !SafetyAuto}" />
+                                  <CheckBox Content="mouvement" IsChecked="{Binding SafetyMovement}" IsEnabled="{Binding !SafetyAuto}" />
+                                </StackPanel>
+                                <TextBox Text="{Binding Notes, UpdateSourceTrigger=LostFocus}" PlaceholderText="Remarques (à vérifier, particularités…)" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="40" />
+
+                                <!-- Plages -->
+                                <TextBlock Classes="section" Text="Plages" Margin="0,6,0,0" />
+                                <c:RangeBar Height="26" Segments="{Binding Segments}" SelectedIndex="{Binding SelectedRangeIndex}" BoundaryMoved="OnBoundaryMoved"
+                                            ToolTip.Tip="Glisser une frontière entre deux plages pour la déplacer" />
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                  <Button Content="+ Plage (combler le trou suivant)" Command="{Binding AddRangeCommand}" />
+                                  <Button Content="Découper en" Command="{Binding SplitRangesCommand}" />
+                                  <NumericUpDown Value="{Binding SplitCount}" Minimum="1" Maximum="64" FormatString="0" Width="110" />
+                                  <TextBlock Text="plages égales" VerticalAlignment="Center" />
+                                  <Button Content="Effacer les plages" Command="{Binding ClearRangesCommand}" Margin="12,0,0,0" />
+                                </StackPanel>
+                                <Grid ColumnDefinitions="46,46,*,118,92,92,28" Opacity="0.6">
+                                  <TextBlock Grid.Column="0" Text="Min" />
+                                  <TextBlock Grid.Column="1" Text="Max" />
+                                  <TextBlock Grid.Column="2" Text="Libellé" />
+                                  <TextBlock Grid.Column="3" Text="Type" />
+                                  <TextBlock Grid.Column="4" Text="Strobe" />
+                                  <TextBlock Grid.Column="5" Text="Couleurs" />
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Ranges}">
+                                  <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CapabilityRowViewModel">
+                                      <Grid ColumnDefinitions="46,46,*,118,92,92,28" Margin="0,1">
+                                        <TextBox Grid.Column="0" Text="{Binding Min, UpdateSourceTrigger=LostFocus}" Padding="4,2" MinWidth="0" />
+                                        <TextBox Grid.Column="1" Text="{Binding Max, UpdateSourceTrigger=LostFocus}" Padding="4,2" MinWidth="0" />
+                                        <TextBox Grid.Column="2" Text="{Binding Label, UpdateSourceTrigger=LostFocus}" Padding="4,2" ToolTip.Tip="{Binding ParameterText}" />
+                                        <ComboBox Grid.Column="3" ItemsSource="{x:Static vm:Choices.CapabilityKinds}" SelectedItem="{Binding Kind}" HorizontalAlignment="Stretch" />
+                                        <ComboBox Grid.Column="4" ItemsSource="{x:Static vm:Choices.StrobeEffects}" SelectedItem="{Binding Strobe}" HorizontalAlignment="Stretch" />
+                                        <TextBox Grid.Column="5" Text="{Binding Colors, UpdateSourceTrigger=LostFocus}" Padding="4,2" PlaceholderText="#FF0000" />
+                                        <Button Grid.Column="6" Content="✕" Command="{Binding RemoveCommand}" Padding="4,2" ToolTip.Tip="Supprimer la plage" />
+                                      </Grid>
+                                    </DataTemplate>
+                                  </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                              </StackPanel>
+                            </DataTemplate>
+                          </ContentControl.DataTemplates>
+                        </ContentControl>
+                      </ScrollViewer>
+                    </Grid>
+                  </DockPanel>
+                </TabItem>
+
+                <!-- Identité et physique (BIB-001, BIB-027) -->
+                <TabItem Header="Identité">
+                  <ScrollViewer>
+                    <StackPanel Spacing="4" MaxWidth="700" HorizontalAlignment="Left" IsEnabled="{Binding IsEditable}">
+                      <TextBlock Classes="label" Text="Fabricant" />
+                      <TextBox Text="{Binding Manufacturer, UpdateSourceTrigger=LostFocus}" />
+                      <TextBlock Classes="label" Text="Modèle" />
+                      <TextBox Text="{Binding Model, UpdateSourceTrigger=LostFocus}" />
+                      <TextBlock Classes="label" Text="Référence" />
+                      <TextBox Text="{Binding Reference, UpdateSourceTrigger=LostFocus}" />
+                      <TextBlock Classes="label" Text="Catégorie" />
+                      <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Width="240" />
+                      <TextBlock Classes="label" Text="Auteur" />
+                      <TextBox Text="{Binding Author, UpdateSourceTrigger=LostFocus}" />
+                      <TextBlock Classes="label" Text="Type de source" />
+                      <TextBox Text="{Binding SourceType, UpdateSourceTrigger=LostFocus}" PlaceholderText="LED RGBW, LED UV…" />
+                      <WrapPanel>
+                        <StackPanel Margin="0,0,12,0">
+                          <TextBlock Classes="label" Text="Faisceau (°)" />
+                          <TextBox Text="{Binding BeamAngle, UpdateSourceTrigger=LostFocus}" Width="100" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,0">
+                          <TextBlock Classes="label" Text="Amplitude Pan (°)" />
+                          <TextBox Text="{Binding PanRange, UpdateSourceTrigger=LostFocus}" Width="100" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,0">
+                          <TextBlock Classes="label" Text="Amplitude Tilt (°)" />
+                          <TextBox Text="{Binding TiltRange, UpdateSourceTrigger=LostFocus}" Width="100" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,0">
+                          <TextBlock Classes="label" Text="Puissance (W)" />
+                          <TextBox Text="{Binding Power, UpdateSourceTrigger=LostFocus}" Width="100" />
+                        </StackPanel>
+                      </WrapPanel>
+                      <TextBlock Classes="label" Text="Notice (chemin du PDF)" />
+                      <TextBox Text="{Binding Manual, UpdateSourceTrigger=LostFocus}" />
+                      <TextBlock Classes="label" Text="Remarques" />
+                      <TextBox Text="{Binding Notes, UpdateSourceTrigger=LostFocus}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" />
+                    </StackPanel>
+                  </ScrollViewer>
+                </TabItem>
+
+                <!-- Roues (BIB-025) -->
+                <TabItem Header="Roues">
+                  <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="4" Margin="0,4,0,6" IsEnabled="{Binding IsEditable}">
+                      <Button Content="+ Roue de couleur" Command="{Binding AddColorWheelCommand}" />
+                      <Button Content="+ Roue de gobos" Command="{Binding AddGoboWheelCommand}" />
+                    </StackPanel>
+                    <ScrollViewer>
+                      <ItemsControl ItemsSource="{Binding Wheels}" IsEnabled="{Binding IsEditable}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:WheelViewModel">
+                            <Border Classes="panel" Margin="0,0,0,8">
+                              <StackPanel Spacing="4">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                  <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="220" />
+                                  <ComboBox ItemsSource="{Binding Kinds}" SelectedItem="{Binding Kind}" Width="130" />
+                                  <Button Content="+ Emplacement" Command="{Binding AddSlotCommand}" />
+                                  <Button Content="Supprimer la roue" Command="{Binding RemoveCommand}" />
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding Slots}">
+                                  <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:WheelSlotRowViewModel">
+                                      <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,1">
+                                        <Border Width="18" Height="18" CornerRadius="9" Background="{Binding Swatch}" BorderBrush="#30363D" BorderThickness="1" />
+                                        <TextBox Text="{Binding Name, UpdateSourceTrigger=LostFocus}" Width="180" />
+                                        <TextBox Text="{Binding Colors, UpdateSourceTrigger=LostFocus}" Width="170" PlaceholderText="#FF0000 (#00FF00)" />
+                                        <TextBox Text="{Binding Image, UpdateSourceTrigger=LostFocus}" Width="200" PlaceholderText="image du gobo (facultatif)" />
+                                        <Button Content="✕" Command="{Binding RemoveCommand}" />
+                                      </StackPanel>
+                                    </DataTemplate>
+                                  </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                              </StackPanel>
+                            </Border>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </ScrollViewer>
+                  </DockPanel>
+                </TabItem>
+
+                <!-- Validation (BIB-004, badge BIB-100) -->
+                <TabItem>
+                  <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <TextBlock Text="Validation" />
+                      <Border Background="#F85149" CornerRadius="8" Padding="6,0" IsVisible="{Binding HasErrors}">
+                        <TextBlock Text="{Binding ErrorCount}" FontSize="11" Foreground="White" />
+                      </Border>
+                    </StackPanel>
+                  </TabItem.Header>
+                  <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding ValidationSummary}" Margin="0,4,0,6" FontWeight="SemiBold" />
+                    <ItemsControl ItemsSource="{Binding Issues}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="rules:ValidationIssue">
+                          <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" />
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </DockPanel>
+                </TabItem>
+
+                <!-- Test en direct (BIB-060 à 063) -->
+                <TabItem Header="Tester en direct">
+                  <DockPanel DataContext="{Binding $parent[UserControl].DataContext}" x:DataType="vm:LibraryViewModel">
+                    <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,4,0,8">
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="Mode : celui sélectionné dans « Canaux et modes » · Adresse" VerticalAlignment="Center" />
+                        <NumericUpDown Value="{Binding TestAddress}" Minimum="1" Maximum="512" FormatString="0" Width="120" />
+                        <Button Content="Démarrer le test" Classes="accent" Command="{Binding StartLiveTestCommand}" />
+                        <Button Content="Arrêter (libère les canaux)" Command="{Binding StopLiveTestCommand}" />
+                      </StackPanel>
+                      <TextBlock Text="{Binding TestSheet}" FontWeight="SemiBold" />
+                      <TextBlock Text="Clic sur une plage : valeur médiane. Clic sur une frontière de la barre : valeur exacte de la borne. « Découvrir… » balaie lentement un canal inconnu." Opacity="0.6" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <console:FixtureFadersView DataContext="{Binding LiveTest}" />
+                  </DockPanel>
+                </TabItem>
+              </TabControl>
+            </DockPanel>
+          </DataTemplate>
+        </ContentControl.DataTemplates>
+      </ContentControl>
+    </DockPanel>
+  </Grid>
+</UserControl>

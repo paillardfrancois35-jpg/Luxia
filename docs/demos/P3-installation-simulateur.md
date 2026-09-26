@@ -8,9 +8,9 @@
 
 | Élément | Où |
 |---|---|
-| Écran **Installation** : univers et patch, sélections, lieux, fiche d'installation | `DMX.exe` → Installation |
-| Écran **Simulateur** : plan 2D du lieu actif, appareils en couleur/mouvement | `DMX.exe` → Simulateur |
-| Console en **mode Appareils** (faders groupés par appareil, identifier) | `DMX.exe` → Console → bascule « Mode » |
+| Écran **Installation** : univers et patch, sélections, lieux, fiche d'installation | `LuXia.exe` → Installation |
+| Écran **Simulateur** : plan 2D du lieu actif, appareils en couleur/mouvement | `LuXia.exe` → Simulateur |
+| Console en **mode Appareils** (faders groupés par appareil, identifier) | `LuXia.exe` → Console → bascule « Mode » |
 | Moniteur de sortie : appareils délimités, cadre immédiat au survol | Console → moniteur, en bas |
 | Test de sortie : **canaux maintenus** (SORT-008) | Sorties → « Canaux maintenus » |
 | Parc entièrement patché et placé dans un lieu | `samples/Show de référence/installation.json`, `lieux.json` |

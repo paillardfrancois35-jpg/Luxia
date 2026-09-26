@@ -1,4 +1,4 @@
-# DMX
+# LuXia
 
 Application Windows (C# / .NET 10 / Avalonia) de pilotage d'éclairage DMX, alternative légère à Daslight 4,
 avec, à terme, un mode automatique musical. Sortie DMX par Arduino Leonardo + shield (firmware compatible Enttec).
@@ -12,13 +12,13 @@ avec, à terme, un mode automatique musical. Sortie DMX par Arduino Leonardo + s
 ## Construire et tester
 
 ```bash
-dotnet build Dmx.sln
-dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"
+dotnet build LuXia.sln
+dotnet test --solution LuXia.sln -- --filter-not-trait "Categorie=Materiel"
 ```
 
 ## Lancer
 
 ```bash
-dotnet run --project src/Dmx.App
-dotnet run --project tools/Dmx.Tools.Headless -- aide
+dotnet run --project src/Luxia.App
+dotnet run --project tools/Luxia.Tools.Headless -- aide
 ```

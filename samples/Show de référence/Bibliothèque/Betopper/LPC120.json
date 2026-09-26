@@ -5,7 +5,7 @@
   "model": "LPC120",
   "category": "par",
   "version": 1,
-  "author": "DMX (depuis la notice)",
+  "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "PAR LED RGBW 60 × 2 W (120 W). d001 = 4 canaux, A001 = 8 canaux. Tableau lu dans la notice (rendu image, P2).",
   "manual": "docs/Equipements/PAR/BETOPPER/LPC120/LPC120_-Betopper_60x2W_RGBW_4-in-1_DJ_Wedding_Par_Lights-manual.pdf",

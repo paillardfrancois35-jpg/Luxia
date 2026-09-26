@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+    <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Patch.Tests" />
+  </ItemGroup>
+
+</Project>

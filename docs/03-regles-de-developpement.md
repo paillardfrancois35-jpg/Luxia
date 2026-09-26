@@ -37,13 +37,13 @@ Lorsqu'un terme du glossaire n'a pas d'équivalent anglais établi, on en choisi
 ## 3. Structure de la solution
 
 ```
-DMX/
-├── Dmx.sln                   Solution
+LuXia/
+├── LuXia.sln                  Solution
 ├── Directory.Build.props     Réglages communs (framework, nullable, avertissements…)
 ├── Directory.Packages.props  Versions centralisées des paquets
 ├── .editorconfig
 ├── src/                      Bibliothèques et application (doc 00 §7.2)
-├── tools/                    Outils ligne de commande (Dmx.Tools.Headless…)
+├── tools/                    Outils ligne de commande (Luxia.Tools.Headless…)
 ├── tests/                    Un projet de tests par projet testé : <Projet>.Tests ; tests/assets/
 ├── firmware/arduino-dmx/     Firmware Leonardo
 ├── samples/                  Show de référence, samples par mécanique (doc 41)

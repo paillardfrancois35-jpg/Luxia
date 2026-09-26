@@ -27,10 +27,10 @@
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
   - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
 - **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; **Q27 (nouvelle)** : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux.
-- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.sln`,
-  namespaces `Dmx.*`, `DMX.exe`, `%AppData%\DMX`, `Documents\DMX`, docs). **Pas encore fait** : renommage transverse volontairement reporté
-  « au moment opportun » (voir doc 99) — ne pas l'oublier à l'approche d'une livraison ou d'un jalon important. Demander confirmation avant
-  de s'y lancer (ampleur du renommage à évaluer avec l'utilisateur : juste l'UI/les docs, ou aussi le code et les dossiers de données).
+- **Renommage en « LuXia » effectué le 2026-09-26** (avant P4, décision utilisateur) : solution `LuXia.sln`, namespaces `Luxia.*`, exécutable
+  `LuXia.exe`, outil `luxia-headless`, dossiers de données (`%AppData%\LuXia`, `Documents\LuXia`, migration automatique au premier lancement
+  depuis les anciens dossiers `DMX`), docs. Le sous-espace de noms `Luxia.Core.Dmx` (protocole) et le format `.dmxrec` restent inchangés :
+  « DMX » y désigne le protocole DMX-512, pas l'application.
 
 ## 2. Lire avant de coder (dans cet ordre)
 
@@ -71,7 +71,7 @@ python tools/matrice-exigences.py P0 P1 P2 P3
 dotnet run --project src/Dmx.App -- "samples/Show de référence"
 ```
 
-- `DMX_DOSSIER_DONNEES=<dossier>` : toutes les données de l'application sous ce dossier (essais sans toucher aux vraies données).
+- `LUXIA_DOSSIER_DONNEES=<dossier>` : toutes les données de l'application sous ce dossier (essais sans toucher aux vraies données).
 - arduino-cli : `%LOCALAPPDATA%\Programs\arduino-cli\arduino-cli.exe` ; **tout téléversement se fait avec l'accord de l'utilisateur**.
 - PyMuPDF est disponible pour rendre en images les notices PDF sans texte.
 - **Essais manuels avec l'utilisateur (démos)** : ouvrir `samples/Show de travail` (copie de `samples/Show de référence`, ignorée par Git,
@@ -90,7 +90,7 @@ dotnet run --project src/Dmx.App -- "samples/Show de référence"
 
 Modèle de message pour ouvrir une discussion :
 
-> Nous reprenons le projet DMX. Lis `docs/32-passation.md` puis les documents qu'il indique. Objectif : phase PN – <nom>.
+> Nous reprenons le projet LuXia. Lis `docs/32-passation.md` puis les documents qu'il indique. Objectif : phase PN – <nom>.
 > Respecte les règles de `docs/03` ; toute divergence est signalée et reportée ; questions dans `docs/01`, idées dans `docs/99`.
 
 ## 6. Historique de la passation

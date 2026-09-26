@@ -5,7 +5,7 @@
   "model": "Mini lyre gobo",
   "category": "movingHead",
   "version": 1,
-  "author": "DMX (depuis la notice)",
+  "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "Mini lyre à gobos, LED blanche. Faisceau 11°, Pan 540°, Tilt 230°. En 11 canaux, Pan et Tilt sont en 16 bits. Définition en 11 canaux confirmée par Open Fixture Library et vérification en direct (BIB-095). Le mode 9 canaux est dérivé du mode 11 canaux (mêmes canaux, sans les octets fins de Pan/Tilt) et n'a pas de source indépendante.",
   "reference": "https://open-fixture-library.org/tomshine/80w-mini-gobo-moving-head",

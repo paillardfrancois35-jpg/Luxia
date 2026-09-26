@@ -8,7 +8,7 @@
 
 | Élément | Où |
 |---|---|
-| Coquille de l'application : navigation (Console, Sorties), menu **Projet** (Nouveau, Ouvrir), barre d'état permanente | `DMX.exe` |
+| Coquille de l'application : navigation (Console, Sorties), menu **Projet** (Nouveau, Ouvrir), barre d'état permanente | `LuXia.exe` |
 | Console en mode canaux : pages de faders, prise / libération, sélection multiple, saisie directe, moniteur de sortie | écran **Console** |
 | Instantanés de console, rangés dans le projet (`console.json`) | panneau de droite de la Console |
 | 6 instantanés du show de référence (catégorie « Phase P1 ») | `samples/Show de référence/console.json` |
@@ -16,7 +16,7 @@
 **Lancer avec le show de référence :**
 
 ```bash
-dotnet run --project src/Dmx.App -- "samples/Show de référence"
+dotnet run --project src/Luxia.App -- "samples/Show de référence"
 ```
 
 (ou menu **Projet → Ouvrir…** puis le dossier `samples/Show de référence` ; il est ensuite rouvert automatiquement.)

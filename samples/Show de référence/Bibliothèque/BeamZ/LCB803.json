@@ -5,7 +5,7 @@
   "model": "LCB803",
   "category": "ledBar",
   "version": 1,
-  "author": "DMX (depuis la notice)",
+  "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "Barre LED 80 × RGB 3-en-1 (60 W), 986 mm. Mode choisi par le menu ChNd, adresse par Addr. 12 / 24 / 48 canaux = 2 / 4 / 8 sections indépendantes (cellules). Show de référence : 24 canaux (4 sections) tient dans la réserve du plan d'adresses (51-74 et 81-104) ; 48 canaux ne tient pas.",
   "reference": "150.561",
