@@ -13,7 +13,8 @@ public static class DefaultPalettes
     public static IReadOnlyList<Palette> Colors { get; } =
     [
         Color(1, "Blanc", new LogicalColor { R = 1, G = 1, B = 1 }),
-        Color(2, "Blanc chaud", new LogicalColor { R = 1, G = 0.78, B = 0.45 }),
+        // Réglé à l'œil par l'utilisateur sur les PAR LPC008S du parc (essai P4 du 2026-09-26) : 45 % de bleu donnait un blanc neutre.
+        Color(2, "Blanc chaud", new LogicalColor { R = 1, G = 0.42, B = 0 }),
         Color(3, "Rouge", new LogicalColor { R = 1 }),
         Color(4, "Orange", new LogicalColor { R = 1, G = 0.4 }),
         Color(5, "Ambre", new LogicalColor { R = 1, G = 0.5 }),

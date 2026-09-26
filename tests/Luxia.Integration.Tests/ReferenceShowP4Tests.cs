@@ -35,8 +35,8 @@ public sealed class ReferenceShowP4Tests
         {
             last[address - 1].ShouldBe((byte)255);
             last[address].ShouldBe((byte)255);
-            last[address + 1].ShouldBe((byte)199);
-            last[address + 2].ShouldBe((byte)115);
+            last[address + 1].ShouldBe((byte)107);
+            last[address + 2].ShouldBe((byte)0);
         }
     }
 

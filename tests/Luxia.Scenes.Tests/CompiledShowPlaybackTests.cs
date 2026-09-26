@@ -49,8 +49,8 @@ public sealed class CompiledShowPlaybackTests
         {
             _sink.Frame[address - 1].ShouldBe((byte)255);
             _sink.Frame[address].ShouldBe((byte)255);
-            _sink.Frame[address + 1].ShouldBe((byte)199);
-            _sink.Frame[address + 2].ShouldBe((byte)115);
+            _sink.Frame[address + 1].ShouldBe((byte)107);
+            _sink.Frame[address + 2].ShouldBe((byte)0);
         }
 
         // PAL-005 : la palette change pendant que la scène joue → la sortie suit, sans relancer la scène.
