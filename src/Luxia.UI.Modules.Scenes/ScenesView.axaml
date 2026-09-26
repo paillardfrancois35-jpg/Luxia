@@ -209,8 +209,6 @@
                 <Button Content="■ Arrêter" Command="{Binding StopTestCommand}" Margin="0,0,6,6" />
                 <Button Content="◀ Étape" Command="{Binding PreviousStepCommand}" Margin="0,0,6,6" ToolTip.Tip="Pas à pas (CMD-015)" />
                 <Button Content="Étape ▶" Command="{Binding NextStepCommand}" Margin="0,0,16,6" />
-                <CheckBox Content="Aveugle (aperçu au simulateur seulement)" IsChecked="{Binding Programmer.Blind}" Margin="0,0,16,6"
-                          ToolTip.Tip="Éditer et tester sans toucher à la sortie ; le simulateur montre l'aperçu (SCN-035, GEN-063)" />
                 <CheckBox Content="Allumer en coloriant" IsChecked="{Binding LightWhenColoring}" Margin="0,0,0,6"
                           ToolTip.Tip="Une couleur enregistrée sans intensité ajoute l'intensité 100 % (MOT-041)" />
               </WrapPanel>
@@ -291,7 +289,10 @@
             <StackPanel Spacing="8">
               <DockPanel>
                 <TextBlock DockPanel.Dock="Right" Text="● modifié, pas encore enregistré dans une étape" Classes="modified" IsVisible="{Binding Programmer.IsModified}" VerticalAlignment="Center" />
-                <TextBlock Classes="section" Text="Programmeur" />
+                <TextBlock DockPanel.Dock="Left" Classes="section" Text="Programmeur" VerticalAlignment="Center" />
+                <!-- L'aveugle concerne le programmeur : visible même sans scène choisie (retour de l'essai P4, exemple 7). -->
+                <CheckBox DockPanel.Dock="Left" Content="Aveugle (aperçu au simulateur seulement)" IsChecked="{Binding Programmer.Blind}" Margin="16,0,0,0" VerticalAlignment="Center"
+                          ToolTip.Tip="Éditer et tester sans toucher à la sortie ; le simulateur montre l'aperçu (SCN-035, GEN-063)" />
               </DockPanel>
               <TextBlock Text="{Binding Programmer.Content}" Opacity="0.8" />
               <WrapPanel>

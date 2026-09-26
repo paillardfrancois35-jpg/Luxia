@@ -11,7 +11,7 @@
 | **Moteur complet** : fondus, boucles, fins de scène, couches (HTP / LTP, 4 modes d'intensité), masters, Grand Master, blackout, « suit l'intensité », conversions de couleur | Dans toute l'application |
 | Bouton **BLACKOUT** toujours visible (touche **B**) et **Grand Master** | En haut de la fenêtre |
 | Écran **Scènes** : liste, lecture, éditeur, étapes, **programmeur**, **palettes** | `LuXia.exe` → Scènes |
-| **Aveugle** : éditer sans toucher à la sortie, aperçu au simulateur | Scènes → case « Aveugle » ; Simulateur (« APERÇU ») |
+| **Aveugle** : éditer sans toucher à la sortie, aperçu au simulateur | Scènes → en-tête du Programmeur, case « Aveugle » ; Simulateur (« APERÇU ») |
 | Console en mode Appareils : surcharges d'**attributs** (soumises au GM et au blackout) ; écart conservé en relatif | Console |
 | Import de scènes (IA de conception), relecture des fichiers, problèmes du projet | Menu **Projet** |
 | Outil sans interface : `valider`, `jouer`, `scenario` | `luxia-headless` |
@@ -78,7 +78,7 @@ Puis renommez `"name"` en « Show de travail » dans `samples/Show de travail/pr
 
 ## Exemple 7 – Aveugle et aperçu (SCN-035, GEN-063)
 
-1. Cochez **Aveugle**. Réglez une couleur dans le programmeur : **rien ne change** sur les appareils.
+1. Dans l'en-tête du panneau **Programmeur**, cochez **Aveugle** (aucune scène n'a besoin d'être choisie). Réglez une couleur dans le programmeur : **rien ne change** sur les appareils.
 2. Écran **Simulateur** : la source indique **APERÇU** en orange et montre votre réglage.
 3. Décochez : les réglages passent à la sortie.
 
