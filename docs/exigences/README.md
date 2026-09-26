@@ -131,7 +131,7 @@
 | [CMD-015](CMD-015.md) | Commandes ÉtapeSuivante / ÉtapePrécédente | P4 | — | Réalisé |
 | [CMD-016](CMD-016.md) | Commande RéglerVitesseScène | P5 | — | Réalisé |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
-| [CMD-021](CMD-021.md) | Commande SurchargerAttribut | P4 | — | Réalisé |
+| [CMD-021](CMD-021.md) | Commande SurchargerAttribut | P4 | — | Validé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
@@ -147,17 +147,17 @@
 | [CONS-010](CONS-010.md) | Instantanés de console | P1 | S | Réalisé |
 | [CONS-020](CONS-020.md) | Faders regroupés par appareil patché | P3 | I | Réalisé |
 | [CONS-021](CONS-021.md) | Outil adapté par type d'attribut | P3 | I | Partiel |
-| [CONS-022](CONS-022.md) | Surcharge d'attribut soumise à la chaîne de rendu | P3 | I | Réalisé |
+| [CONS-022](CONS-022.md) | Surcharge d'attribut soumise à la chaîne de rendu | P3 | I | Validé |
 | [CONS-023](CONS-023.md) | Clic sur une plage et balayage | P3 | M | Réalisé |
 | [CONS-024](CONS-024.md) | Bouton Identifier par appareil | P3 | M | Réalisé |
 | [CONS-025](CONS-025.md) | Capturer les surcharges dans une scène | P4 | M | Réalisé |
 | [CONS-040](CONS-040.md) | Moniteur de sortie 512 cases | P1 | I | Réalisé |
 | [CONS-041](CONS-041.md) | Infos au survol du moniteur | P1 | I | Réalisé |
-| [CONS-042](CONS-042.md) | Origine de la valeur au survol du moniteur | P4 | M | Réalisé |
+| [CONS-042](CONS-042.md) | Origine de la valeur au survol du moniteur | P4 | M | Validé |
 | [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Réalisé |
 | [CONS-044](CONS-044.md) | Moniteur dans une fenêtre séparée | P1 | S | Non réalisé |
 | [CONS-060](CONS-060.md) | Composant « faders d'un appareil » réutilisable | P2 | I | Réalisé |
-| [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | Réalisé |
+| [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | Validé |
 | [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
 | [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Partiel |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
@@ -179,7 +179,7 @@
 | [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Partiel |
 | [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
 | [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Partiel |
-| [GEN-043](GEN-043.md) | Chaîne de rendu explicable | P4 | M | Réalisé |
+| [GEN-043](GEN-043.md) | Chaîne de rendu explicable | P4 | M | Validé |
 | [GEN-050](GEN-050.md) | Fichiers JSON lisibles | P0 | I | Réalisé |
 | [GEN-051](GEN-051.md) | Version de format et migrations | P0 | I | Réalisé |
 | [GEN-052](GEN-052.md) | Identifiants stables | P2 | I | Réalisé |

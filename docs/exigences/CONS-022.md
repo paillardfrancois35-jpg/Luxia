@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P3 |
 | **Source** | [doc 11 – 4. Exigences – mode appareils (P3)](../11-console.md) |
@@ -33,3 +33,5 @@
 | 2026-09-26 | Claude | Décision | Reprise de la décision du 2026-09-26 (P3) maintenant que la chaîne existe : un réglage en mode appareils devient une surcharge d'**attribut** (étape 5). Un appareil sans gradateur (RVB 3 canaux) reçoit un fader « Intensité (virtuelle) » (D27 : 0 par défaut) ; régler une couleur alors que cette intensité n'est pas prise l'allume à 100 %, pour garder le comportement de P3. |
 | 2026-09-26 | Claude | Développement | `7049044` feat(console): surcharges d'attributs en mode appareils, écart conservé en relatif, origine au survol |
 | 2026-09-26 | Claude | Test | Critère vérifié : Grand Master 50 % → rouge surchargé 200 émis à 100 (`DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute`). |
+| 2026-09-26 | Utilisateur | Test | Essai P4, exemple 10 (Console, version 1.003.002) : mode Appareils, gradateur et rouge du PAR 1 surchargés ; Grand Master à 50 % → PAR à moitié ; « Libérer » l'éteint. |
+| 2026-09-26 | Utilisateur | Validation | Validé sur le matériel. |

@@ -129,13 +129,13 @@
 
 ## P3 – 51 exigences, 31 couvertes par des tests automatiques
 
-> Non réalisé : 7 · Partiel : 5 · Réalisé : 39
+> Non réalisé : 7 · Partiel : 5 · Réalisé : 38 · Validé : 1
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [CONS-020](exigences/CONS-020.md) | I | Faders regroupés par appareil patché | Réalisé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute<br>ConsoleViewModelTests.DeviceMode_Leaving_KeepsOverridesAsRealConsoleValues |
 | [CONS-021](exigences/CONS-021.md) | I | Outil adapté par type d'attribut | Partiel | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute |
-| [CONS-022](exigences/CONS-022.md) | I | Surcharge d'attribut soumise à la chaîne de rendu | Réalisé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute<br>RenderChainTests.AttributeOverride_WinsOverScenes_AndStaysUnderGrandMaster |
+| [CONS-022](exigences/CONS-022.md) | I | Surcharge d'attribut soumise à la chaîne de rendu | Validé | ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute<br>RenderChainTests.AttributeOverride_WinsOverScenes_AndStaysUnderGrandMaster |
 | [CONS-023](exigences/CONS-023.md) | M | Clic sur une plage et balayage | Réalisé |  |
 | [CONS-024](exigences/CONS-024.md) | M | Bouton Identifier par appareil | Réalisé | ConsoleViewModelTests.Identify_LightsIntensityAndColorEmitters_AndReleasesOnStop<br>ConsoleViewModelTests.NeedsBackgroundRefresh_TrueOnlyWhileADeviceIsIdentifying |
 | [GEN-004](exigences/GEN-004.md) | M | Composant d'édition réutilisable dans un autre écran | Réalisé |  |
@@ -187,12 +187,12 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 49 · Validé : 29
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 47 · Validé : 31
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [CONS-025](exigences/CONS-025.md) | M | Capturer les surcharges dans une scène | Réalisé |  |
-| [CONS-042](exigences/CONS-042.md) | M | Origine de la valeur au survol du moniteur | Réalisé |  |
+| [CONS-042](exigences/CONS-042.md) | M | Origine de la valeur au survol du moniteur | Validé |  |
 | [GEN-010](exigences/GEN-010.md) | I | Commandes horodatées, avec origine, au tick suivant | Réalisé | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves<br>RenderEngineTests.Send_BetweenTwoTicks_TakesEffectOnNextTick |
 | [GEN-011](exigences/GEN-011.md) | I | Ordre d'arrivée des commandes | Réalisé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>RenderEngineTests.Commands_InSameTick_AreAppliedInArrivalOrder |
 | [GEN-012](exigences/GEN-012.md) | M | Commande refusée : événement avec le motif | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
@@ -204,7 +204,7 @@
 | [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Partiel | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
 | [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Partiel | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout |
-| [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
+| [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Validé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
 | [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Validé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
 | [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Validé |  |
 | [GEN-106](exigences/GEN-106.md) | M | Nom, couleur et icône des objets | Réalisé |  |

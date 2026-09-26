@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | M |
 | **Phase** | P4 |
 | **Source** | [doc 11 – 5. Moniteur de sortie](../11-console.md) |
@@ -30,3 +30,5 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 11, 5. Moniteur de sortie). |
 | 2026-09-26 | Claude | Développement | `7049044` feat(console): surcharges d'attributs en mode appareils, écart conservé en relatif, origine au survol |
 | 2026-09-26 | Claude | Test | Vérifié par revue ; démonstration dans le guide P4. |
+| 2026-09-26 | Utilisateur | Test | Essai P4, exemple 10 (Console, version 1.003.002) : survol du moniteur pendant le chenillard → « source : couche « Couleurs » / scène « Chenillard 4 couleurs » ». |
+| 2026-09-26 | Utilisateur | Validation | Validé sur le matériel. |

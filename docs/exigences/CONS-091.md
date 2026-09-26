@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P4 |
 | **Source** | Test utilisateur du guide P1 (exemple 3), 2026-09-25 |
@@ -45,3 +45,5 @@ si le geste inverse exact est refait.
 | 2026-09-25 | Claude | Création | Exigence CONS-091 rédigée à partir du retour utilisateur ; reportée en P4 (retouches sur la Console après P3). |
 | 2026-09-26 | Claude | Développement | `7049044` feat(console): surcharges d'attributs en mode appareils, écart conservé en relatif, origine au survol |
 | 2026-09-26 | Claude | Test | Critère d'acceptation rejoué à l'identique : `MultiSelection_Relative_KeepsGapsBeyondBounds_AcrossSeveralDrags`. |
+| 2026-09-26 | Utilisateur | Test | Essai P4, exemple 10 (Console, version 1.003.002) : critère d'acceptation rejoué sur 55 / 105 / 155 : écart conservé au-delà de 255, retour exact au point de départ. |
+| 2026-09-26 | Utilisateur | Validation | Validé sur le matériel. |
