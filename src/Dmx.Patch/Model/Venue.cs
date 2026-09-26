@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Dmx.Patch.Model;
 
 /// <summary>
@@ -40,6 +42,7 @@ public sealed record VenueSet
     /// <summary>Lieu actif ; <c>null</c> = le premier de la liste.</summary>
     public Guid? ActiveVenueId { get; init; }
 
-    /// <summary>Lieu actif effectif.</summary>
+    /// <summary>Lieu actif effectif, recalculé depuis <see cref="ActiveVenueId"/> : jamais enregistré (dupliquerait le lieu dans le fichier).</summary>
+    [JsonIgnore]
     public Venue Active => (ActiveVenueId is { } id ? Venues.FirstOrDefault(v => v.Id == id) : null) ?? Venues[0];
 }

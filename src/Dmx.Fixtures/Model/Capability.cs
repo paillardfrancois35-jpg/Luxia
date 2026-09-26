@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Dmx.Fixtures.Model;
 
 /// <summary>
@@ -32,7 +34,8 @@ public sealed record Capability
     /// <summary>Génère un bouton de palette automatique (doc 17).</summary>
     public bool AutoPalette { get; init; }
 
-    /// <summary>Valeur médiane de la plage (émise par un clic sur la plage, BIB-061 ; CONS-023).</summary>
+    /// <summary>Valeur médiane de la plage (émise par un clic sur la plage, BIB-061 ; CONS-023), recalculée depuis Min/Max : jamais enregistrée.</summary>
+    [JsonIgnore]
     public int Median => (Min + Max + 1) / 2;
 
     /// <summary>La valeur appartient à la plage.</summary>

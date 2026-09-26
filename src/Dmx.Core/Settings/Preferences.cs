@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Dmx.Core.Dmx;
 
 namespace Dmx.Core.Settings;
@@ -105,6 +106,7 @@ public sealed record TestOutputPreferences
     /// <summary>Durée d'allumage de chaque canal, en millisecondes.</summary>
     public int StepMilliseconds { get; init; } = 1000;
 
-    /// <summary>Valeur DMX correspondant au pourcentage (arrondi, 50 % = 128).</summary>
+    /// <summary>Valeur DMX correspondant au pourcentage (arrondi, 50 % = 128), recalculée : jamais enregistrée.</summary>
+    [JsonIgnore]
     public byte ValueByte => (byte)Math.Round(Math.Clamp(ValuePercent, 0, 100) * 255 / 100.0, MidpointRounding.AwayFromZero);
 }
