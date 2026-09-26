@@ -21,3 +21,4 @@
 | 2026-09-25 | Import de la bibliothèque : case à cocher « Écraser si déjà existant » pour remplacer un modèle déjà présent | Bibliothèque (BIB-082) | Retenu : BIB-098 (P3) |
 | 2026-09-25 | Mode découverte : fenêtre modale pour nommer une plage immédiatement au clic sur « Nouvelle plage ici » | Bibliothèque (BIB-062) | Retenu : BIB-099 (P2) |
 | 2026-09-25 | Signaler visiblement une erreur de validation (badge) et amener sur l'onglet Validation au refus d'enregistrement | Bibliothèque (BIB-004) | Retenu : BIB-100 (P2) |
+| 2026-09-26 | Mode « Appareils » de la Console : tous les appareils patchés s'empilent en un seul panneau défilant, sans indice visuel qu'il faut faire défiler pour en trouver un plus loin dans la liste (retour utilisateur : « ce n'était pas très visible », a mis du temps à trouver le PAR 2). Idée à creuser : liste/sélecteur d'appareils à côté, ou repère visuel de défilement. | Console (CONS-020) | En attente |
