@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/palettes.schema.json",
+  "title": "LuXia – palettes.json (format 1)",
+  "description": "Palettes d'un projet (doc 17 §2, doc 50 §11).",
+  "type": "object",
+  "required": ["formatVersion", "palettes"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "palettes": { "type": "array", "items": { "$ref": "#/$defs/palette" } }
+  },
+  "$defs": {
+    "guid": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" },
+    "level": { "type": "number", "minimum": 0, "maximum": 1 },
+    "paletteValue": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "fixtureId": { "$ref": "#/$defs/guid" },
+        "fixtureTypeId": { "$ref": "#/$defs/guid" },
+        "attribute": { "type": "string" },
+        "channel": { "type": "string" },
+        "level": { "$ref": "#/$defs/level" }
+      },
+      "anyOf": [{ "required": ["fixtureId"] }, { "required": ["fixtureTypeId"] }]
+    },
+    "palette": {
+      "type": "object",
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/guid" },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["color", "position", "beam", "intensity"] },
+        "color": { "type": ["string", "null"], "pattern": "^#[0-9a-fA-F]{6}$" },
+        "icon": { "type": ["string", "null"] },
+        "light": {
+          "type": "object",
+          "required": ["r", "g", "b"],
+          "properties": {
+            "r": { "$ref": "#/$defs/level" },
+            "g": { "$ref": "#/$defs/level" },
+            "b": { "$ref": "#/$defs/level" },
+            "white": { "$ref": "#/$defs/level" },
+            "amber": { "$ref": "#/$defs/level" },
+            "uv": { "$ref": "#/$defs/level" }
+          }
+        },
+        "level": { "$ref": "#/$defs/level" },
+        "values": { "type": "array", "items": { "$ref": "#/$defs/paletteValue" } }
+      }
+    }
+  }
+}

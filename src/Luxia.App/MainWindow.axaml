@@ -24,6 +24,8 @@
         <Separator />
         <MenuItem Header="_Relire les scènes et palettes" Command="{Binding ReloadShowDataCommand}"
                   ToolTip.Tip="Reprend le contenu modifié à côté de l'application (IA de conception, GEN-133), sans rouvrir le projet" />
+        <MenuItem Header="_Importer des scènes…" Command="{Binding ImportScenesCommand}"
+                  ToolTip.Tip="Ajoute les scènes d'un fichier (IA de conception) sans rien écraser (GEN-133)" />
         <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
       </MenuItem>
       <MenuItem Header="_Aide">

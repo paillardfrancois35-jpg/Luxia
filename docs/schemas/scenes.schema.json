@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/scenes.schema.json",
+  "title": "LuXia – scènes.json (format 1)",
+  "description": "Scènes d'un projet (doc 16, doc 50 §10). La vérification complète (références, règles) : luxia-headless valider.",
+  "type": "object",
+  "required": ["formatVersion", "scenes"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "scenes": { "type": "array", "items": { "$ref": "#/$defs/scene" } }
+  },
+  "$defs": {
+    "guid": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" },
+    "hexColor": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+    "level": { "type": "number", "minimum": 0, "maximum": 1 },
+    "duration": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "enum": ["seconds", "beats", "bars"] }
+      },
+      "additionalProperties": false
+    },
+    "attribute": {
+      "enum": [
+        "intensity", "cellIntensity", "red", "green", "blue", "white", "warmWhite", "amber", "uv", "cyan", "magenta", "yellow", "lime",
+        "colorWheel", "colorMacro", "colorTemperature", "pan", "tilt", "panContinuous", "tiltContinuous", "panTiltSpeed", "shutter",
+        "gobo", "goboRotation", "prism", "prismRotation", "focus", "zoom", "iris", "frost", "rotation", "rotationSpeed", "program",
+        "programSpeed", "soundSensitivity", "mode", "smoke", "fan", "reset", "maintenance", "lampControl", "generic", "noFunction"
+      ]
+    },
+    "logicalColor": {
+      "type": "object",
+      "required": ["r", "g", "b"],
+      "properties": {
+        "r": { "$ref": "#/$defs/level" },
+        "g": { "$ref": "#/$defs/level" },
+        "b": { "$ref": "#/$defs/level" },
+        "white": { "$ref": "#/$defs/level" },
+        "amber": { "$ref": "#/$defs/level" },
+        "uv": { "$ref": "#/$defs/level" }
+      },
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "fixtureId": { "$ref": "#/$defs/guid" },
+        "cell": { "type": "integer", "minimum": 0 },
+        "selectionId": { "$ref": "#/$defs/guid" },
+        "auto": {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": { "enum": ["allFixtures", "byCategory", "byModel"] },
+            "category": { "enum": ["par", "ledBar", "movingHead", "effect", "strobe", "uv", "smoke", "laser", "dimmer", "other"] },
+            "model": { "type": "string" }
+          }
+        }
+      },
+      "oneOf": [
+        { "required": ["fixtureId"] },
+        { "required": ["selectionId"] },
+        { "required": ["auto"] }
+      ]
+    },
+    "value": {
+      "type": "object",
+      "required": ["target"],
+      "properties": {
+        "target": { "$ref": "#/$defs/target" },
+        "attribute": { "$ref": "#/$defs/attribute" },
+        "channel": { "type": "string" },
+        "level": { "$ref": "#/$defs/level" },
+        "range": {
+          "type": "object",
+          "required": ["min", "max"],
+          "properties": {
+            "min": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "max": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "position": { "$ref": "#/$defs/level" }
+          }
+        },
+        "color": { "$ref": "#/$defs/logicalColor" },
+        "paletteId": { "$ref": "#/$defs/guid" },
+        "fade": { "$ref": "#/$defs/duration" },
+        "delay": { "$ref": "#/$defs/duration" },
+        "spread": { "$ref": "#/$defs/duration" }
+      },
+      "oneOf": [
+        { "required": ["level"], "anyOf": [{ "required": ["attribute"] }, { "required": ["channel"] }] },
+        { "required": ["range"], "anyOf": [{ "required": ["attribute"] }, { "required": ["channel"] }] },
+        { "required": ["color"] },
+        { "required": ["paletteId"] }
+      ]
+    },
+    "step": {
+      "type": "object",
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "fade": { "$ref": "#/$defs/duration" },
+        "hold": { "$ref": "#/$defs/duration" },
+        "curve": { "enum": ["linear", "sCurve", "instant"] },
+        "switch": { "enum": ["start", "middle", "end"] },
+        "values": { "type": "array", "items": { "$ref": "#/$defs/value" } }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "required": ["id", "name", "steps"],
+      "properties": {
+        "id": { "$ref": "#/$defs/guid" },
+        "name": { "type": "string", "minLength": 1 },
+        "color": { "$ref": "#/$defs/hexColor" },
+        "icon": { "type": ["string", "null"] },
+        "category": { "type": ["string", "null"], "description": "« Proposé par IA » pour du contenu généré (GEN-133)" },
+        "notes": { "type": ["string", "null"] },
+        "visibleInLive": { "type": "boolean" },
+        "layerId": { "$ref": "#/$defs/guid" },
+        "loop": { "enum": ["once", "count", "infinite", "pingPong", "random"] },
+        "loopCount": { "type": "integer", "minimum": 1 },
+        "end": { "enum": ["stop", "hold", "chain"] },
+        "chainSceneId": { "oneOf": [{ "$ref": "#/$defs/guid" }, { "type": "null" }] },
+        "fadeIn": { "oneOf": [{ "$ref": "#/$defs/duration" }, { "type": "null" }] },
+        "fadeOut": { "oneOf": [{ "$ref": "#/$defs/duration" }, { "type": "null" }] },
+        "speed": { "type": "number", "minimum": 0.1, "maximum": 10 },
+        "steps": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/step" } }
+      }
+    }
+  }
+}

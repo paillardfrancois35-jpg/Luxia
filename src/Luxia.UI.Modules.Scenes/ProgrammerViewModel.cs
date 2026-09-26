@@ -50,6 +50,14 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
     [ObservableProperty]
     private string _content = "Programmeur vide";
 
+    /// <summary>Fondu propre des prochains réglages, en secondes (SCN-011) ; vide = fondu de l'étape.</summary>
+    [ObservableProperty]
+    private decimal? _valueFade;
+
+    /// <summary>Retard réparti sur la sélection, en secondes (« fan », SCN-010) ; vide = aucun.</summary>
+    [ObservableProperty]
+    private decimal? _valueSpread;
+
     /// <summary>Crée le programmeur.</summary>
     public ProgrammerViewModel(LuxiaRuntime runtime)
     {
@@ -208,11 +216,7 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
     /// <summary>Règle un attribut sur la sélection (fader d'un outil).</summary>
     internal void SetLevel(LevelToolViewModel tool, double level)
     {
-        foreach (var target in Targets())
-        {
-            Set(new SceneValue { Target = target, Attribute = tool.Attribute, Level = level });
-        }
-
+        SetForTargets(target => new SceneValue { Target = target, Attribute = tool.Attribute, Level = level });
         Push();
     }
 
@@ -248,11 +252,7 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
     /// <summary>Règle la couleur logique de la sélection.</summary>
     internal void SetColor(LogicalColor color)
     {
-        foreach (var target in Targets())
-        {
-            Set(new SceneValue { Target = target, Color = color });
-        }
-
+        SetForTargets(target => new SceneValue { Target = target, Color = color });
         Push();
     }
 
@@ -260,11 +260,7 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
     public void ApplyPalette(Palette palette)
     {
         ArgumentNullException.ThrowIfNull(palette);
-        foreach (var target in Targets())
-        {
-            Set(new SceneValue { Target = target, PaletteId = palette.Id });
-        }
-
+        SetForTargets(target => new SceneValue { Target = target, PaletteId = palette.Id });
         Push();
     }
 
@@ -277,6 +273,20 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
             Set(value);
         }
 
+        Push();
+    }
+
+    /// <summary>
+    /// Applique le fondu propre et le retard réparti actuels aux réglages déjà faits sur la sélection (SCN-010, SCN-011).
+    /// </summary>
+    [RelayCommand]
+    private void ApplyTiming()
+    {
+        var keys = TargetKeys();
+        var mine = _values.Where(v => keys.Contains(ProgrammerRules.TargetKey(v.Target))).ToList();
+        var fixtures = SelectedFixtures.Select(f => ProgrammerRules.TargetKey(ValueTarget.Fixture(f.Fixture.Id))).ToList();
+        _values = [.. _values.Select(v => mine.Contains(v) ? WithTiming(v, fixtures.IndexOf(ProgrammerRules.TargetKey(v.Target)), fixtures.Count) : v)];
+        IsModified = true;
         Push();
     }
 
@@ -415,6 +425,38 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
     {
         _values = ProgrammerRules.Set(_values, value, PaletteLookup(_runtime.Project.Palettes));
         IsModified = true;
+    }
+
+    /// <summary>Crée une valeur par cible, avec le fondu propre et le retard réparti demandés.</summary>
+    private void SetForTargets(Func<ValueTarget, SceneValue> make)
+    {
+        var targets = Targets();
+        for (var i = 0; i < targets.Count; i++)
+        {
+            Set(WithTiming(make(targets[i]), i, targets.Count));
+        }
+    }
+
+    /// <summary>
+    /// Fondu propre (SCN-011) et « fan » (SCN-010) : sur une sélection enregistrée, la répartition est faite par le
+    /// moteur dans l'ordre de la sélection ; sur des appareils cochés un à un, chacun reçoit sa part de retard, dans
+    /// l'ordre de la liste.
+    /// </summary>
+    private SceneValue WithTiming(SceneValue value, int index, int count)
+    {
+        var fade = ValueFade is { } f ? Engine.Model.Duration.FromSeconds((double)Math.Max(0, f)) : (Engine.Model.Duration?)null;
+        if (ValueSpread is not { } spread || spread <= 0)
+        {
+            return value with { Fade = fade ?? value.Fade };
+        }
+
+        if (value.Target.FixtureId is null)
+        {
+            return value with { Fade = fade ?? value.Fade, Spread = Engine.Model.Duration.FromSeconds((double)spread) };
+        }
+
+        var share = count > 1 && index >= 0 ? (double)spread * index / (count - 1) : 0;
+        return value with { Fade = fade ?? value.Fade, Delay = Engine.Model.Duration.FromSeconds(share) };
     }
 
     /// <summary>Cibles des réglages : la sélection choisie, sinon chaque appareil coché.</summary>

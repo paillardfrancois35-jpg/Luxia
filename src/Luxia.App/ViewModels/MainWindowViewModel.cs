@@ -185,6 +185,42 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         await _dialogs.ShowInfoAsync("Scènes et palettes relues", string.Join(Environment.NewLine, messages.Prepend(text))).ConfigureAwait(true);
     }
 
+    /// <summary>
+    /// Importe un lot de scènes (fichier au format de <c>scènes.json</c>, par exemple écrit par une IA de conception) :
+    /// ajout seulement, rien n'est écrasé, catégorie « Proposé par IA » par défaut (GEN-133).
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportScenesAsync()
+    {
+        if (_runtime.Project.Folder is null)
+        {
+            ProjectMessage = "Aucun projet ouvert.";
+            return;
+        }
+
+        var files = await _dialogs.PickFilesAsync("Scènes à importer", false, "json").ConfigureAwait(true);
+        if (files.Count == 0)
+        {
+            return;
+        }
+
+        var loaded = Persistence.Json.VersionedJsonFile.Load(files[0], Scenes.SceneStore.DocumentType);
+        if (!loaded.Succeeded)
+        {
+            await _dialogs.ShowInfoAsync("Import impossible", loaded.Message ?? "Fichier illisible.").ConfigureAwait(true);
+            return;
+        }
+
+        var result = Scenes.Rules.SceneImport.Merge(_runtime.Project.Scenes, loaded.Value!);
+        if (result.Imported > 0)
+        {
+            _runtime.Project.SaveScenes(result.Scenes);
+        }
+
+        var summary = string.Create(CultureInfo.CurrentCulture, $"{result.Imported} scène(s) importée(s).");
+        await _dialogs.ShowInfoAsync("Import de scènes", string.Join(Environment.NewLine, result.Report.Prepend(summary))).ConfigureAwait(true);
+    }
+
     /// <summary>Problèmes trouvés en compilant le projet (références introuvables, valeurs ignorées).</summary>
     [RelayCommand]
     private Task ShowProjectProblemsAsync()

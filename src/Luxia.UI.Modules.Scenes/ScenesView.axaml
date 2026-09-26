@@ -347,6 +347,19 @@
                 <!-- Outils d'attributs (SCN-031, SCN-032) -->
                 <StackPanel Grid.Column="1" Spacing="10">
                   <TextBlock Text="{Binding SelectionSummary}" TextWrapping="Wrap" Opacity="0.8" />
+                  <WrapPanel>
+                    <StackPanel Classes="field">
+                      <TextBlock Text="Fondu propre (s, vide = celui de l'étape)" />
+                      <NumericUpDown Value="{Binding ValueFade}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150"
+                                     ToolTip.Tip="Les prochains réglages auront leur propre fondu (SCN-011)" />
+                    </StackPanel>
+                    <StackPanel Classes="field">
+                      <TextBlock Text="Retard réparti sur la sélection (s)" />
+                      <NumericUpDown Value="{Binding ValueSpread}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150"
+                                     ToolTip.Tip="« Fan » : le premier démarre tout de suite, le dernier après ce délai, dans l'ordre de la sélection (SCN-010)" />
+                    </StackPanel>
+                    <Button Content="Appliquer aux réglages faits" Command="{Binding ApplyTimingCommand}" VerticalAlignment="Bottom" Margin="0,0,0,8" />
+                  </WrapPanel>
 
                   <ItemsControl ItemsSource="{Binding IntensityTools}" ItemTemplate="{StaticResource LevelTool}" />
 

@@ -244,6 +244,29 @@ public sealed class ScenesViewModelTests : IAsyncLifetime
         _vm.Programmer.Values.Single(v => v.Target.FixtureId == lyre2).Level!.Value.ShouldBe(0.8, 1e-9);
     }
 
+    [Fact]
+    [Trait("Exigence", "SCN-010")]
+    [Trait("Exigence", "SCN-011")]
+    public void Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection()
+    {
+        _vm.Programmer.SelectNoneCommand.Execute(null);
+        foreach (var name in new[] { "PAR 1", "PAR 2", "PAR 3", "PAR 4" })
+        {
+            _vm.Programmer.Fixtures.Single(f => f.Name == name).IsSelected = true;
+        }
+
+        _vm.Programmer.ValueFade = 2;
+        _vm.Programmer.ValueSpread = 1.5m;
+        _vm.Programmer.Color.Red = 100;
+
+        _vm.Programmer.Values.Select(v => v.Delay!.Value.Value).ShouldBe([0, 0.5, 1, 1.5]);
+        _vm.Programmer.Values.ShouldAllBe(v => v.Fade!.Value.Value == 2);
+
+        SelectShortcut("Tous les Betopper LPC008S");
+        _vm.Programmer.Color.Blue = 100;
+        _vm.Programmer.Values[^1].Spread!.Value.Value.ShouldBe(1.5);
+    }
+
     private void SelectShortcut(string label) =>
         _vm.Programmer.SelectCommand.Execute(_vm.Programmer.Shortcuts.Single(s => s.Label == label));
 
