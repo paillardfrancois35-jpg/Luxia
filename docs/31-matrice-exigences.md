@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 51 · Validé : 27
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 49 · Validé : 29
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -228,9 +228,9 @@
 | [MOT-014](exigences/MOT-014.md) | I | Fin de scène : arrêt, maintien, enchaînement | Validé | ScenePlaybackTests.EndChain_LaunchesNextSceneInSameLayer<br>ScenePlaybackTests.EndHold_StaysOnLastStep<br>ScenePlaybackTests.EndStop_FadesOutWithSceneFadeOut |
 | [MOT-015](exigences/MOT-015.md) | I | Vitesse de lecture | Validé | ScenePlaybackTests.Speed_Doubled_MakesStepsTwiceShorter<br>ScenesViewModelTests.Speed_IncreasedStepByStep_WhilePlaying_AppliesLive_WithoutError |
 | [MOT-019](exigences/MOT-019.md) | M | Pas à pas : étape suivante / précédente | Réalisé | ScenePlaybackTests.ManualNextAndPrevious_ChangeStep |
-| [MOT-030](exigences/MOT-030.md) | I | Fondu croisé dans une couche exclusive | Réalisé | LayerMergeTests.CrossFade_AttributeInBothScenes_InterpolatesDirectly<br>LayerMergeTests.CrossFade_AttributeOnlyInNewScene_FadesFromUnderlying |
+| [MOT-030](exigences/MOT-030.md) | I | Fondu croisé dans une couche exclusive | Validé | LayerMergeTests.CrossFade_AttributeInBothScenes_InterpolatesDirectly<br>LayerMergeTests.CrossFade_AttributeOnlyInNewScene_FadesFromUnderlying |
 | [MOT-031](exigences/MOT-031.md) | I | Fusion entre couches et modes d'intensité | Réalisé | LayerMergeTests.Intensity_FourModes<br>LayerMergeTests.Intensity_Htp_HighestContributionWins<br>LayerMergeTests.NonIntensity_LtpByPriority_HighestLayerWins_EvenIfLaunchedFirst<br>LayerMergeTests.NonIntensity_SamePriority_MostRecentWins |
-| [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
+| [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Validé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
 | [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
 | [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |

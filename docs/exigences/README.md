@@ -255,9 +255,9 @@
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
-| [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Réalisé |
+| [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Validé |
 | [MOT-031](MOT-031.md) | Fusion entre couches et modes d'intensité | P4 | I | Réalisé |
-| [MOT-032](MOT-032.md) | Attribut non touché = valeur par défaut | P4 | I | Réalisé |
+| [MOT-032](MOT-032.md) | Attribut non touché = valeur par défaut | P4 | I | Validé |
 | [MOT-033](MOT-033.md) | Master de couche | P4 | I | Réalisé |
 | [MOT-034](MOT-034.md) | Source de chaque valeur finale | P4 | M | Réalisé |
 | [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Validé |
