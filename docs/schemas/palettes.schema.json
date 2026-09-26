@@ -18,6 +18,7 @@
       "properties": {
         "fixtureId": { "$ref": "#/$defs/guid" },
         "fixtureTypeId": { "$ref": "#/$defs/guid" },
+        "venueId": { "$ref": "#/$defs/guid", "description": "lieu d'une position (PAL-004) ; absent = lieu Générique, valeur de repli" },
         "attribute": { "type": "string" },
         "channel": { "type": "string" },
         "level": { "$ref": "#/$defs/level" }

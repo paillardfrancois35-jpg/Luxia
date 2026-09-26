@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/midi.schema.json",
+  "title": "LuXia – midi.json (format 1)",
+  "description": "Affectations modifiées des contrôleurs MIDI (doc 18b, doc 50 §12d).",
+  "type": "object",
+  "required": [
+    "formatVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 1
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "control",
+          "action"
+        ],
+        "properties": {
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "morceau du nom du modèle (« MK1 », « mk2 ») ; absent = tous"
+          },
+          "control": {
+            "type": "string",
+            "pattern": "^(pad [1-8] [1-8]|bas [1-8]|droite [1-8]|fader [1-9])$"
+          },
+          "action": {
+            "enum": [
+              "none",
+              "launchScene",
+              "flashScene",
+              "stopLayer",
+              "layerMaster",
+              "grandMaster",
+              "blackout",
+              "flash",
+              "strobe",
+              "smoke",
+              "smokeBurst",
+              "freeze",
+              "stopAll"
+            ]
+          },
+          "sceneId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "layerId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

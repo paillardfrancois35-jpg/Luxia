@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/surete.schema.json",
+  "title": "LuXia – sûreté.json (format 1)",
+  "description": "Limites de sûreté du projet (doc 02 §13, doc 50 §12b, D29).",
+  "type": "object",
+  "required": [
+    "formatVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 1
+    },
+    "strobe": {
+      "type": "object",
+      "properties": {
+        "maxContinuousSeconds": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 600
+        },
+        "pauseSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "forbidden": {
+          "type": "boolean"
+        },
+        "maxSpeedPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "smoke": {
+      "type": "object",
+      "properties": {
+        "maxEmissionSeconds": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 600
+        },
+        "minRestSeconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

@@ -22,6 +22,14 @@
           "master": { "type": "number", "minimum": 0, "maximum": 1 },
           "intensityMode": { "enum": ["htp", "priority", "additive", "multiplicative"] },
           "masterOnAllAttributes": { "type": "boolean" },
+          "kind": { "enum": ["normal", "flash"], "description": "flash : scènes actives tant que maintenues (COU-005)" },
+          "keepOnStopAll": { "type": "boolean", "description": "épargnée par « Tout arrêter » (COU-007)" },
+          "restSceneId": { "type": ["string", "null"], "description": "scène jouée quand la couche n'a plus de scène (COU-009)" },
+          "families": {
+            "type": "array",
+            "description": "familles d'attributs attendues ; une scène qui en touche d'autres est signalée (COU-008) ; vide = pas de vérification",
+            "items": { "enum": ["intensity", "color", "position", "beam", "effectMotion", "programs", "atmosphere", "control", "other"] }
+          },
           "crossFade": {
             "type": "object",
             "required": ["value"],
