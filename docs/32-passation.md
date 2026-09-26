@@ -27,7 +27,7 @@
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
   - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
 - **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; **Q27 (nouvelle)** : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux.
-- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.slnx`,
+- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.sln`,
   namespaces `Dmx.*`, `DMX.exe`, `%AppData%\DMX`, `Documents\DMX`, docs). **Pas encore fait** : renommage transverse volontairement reporté
   « au moment opportun » (voir doc 99) — ne pas l'oublier à l'approche d'une livraison ou d'un jalon important. Demander confirmation avant
   de s'y lancer (ampleur du renommage à évaluer avec l'utilisateur : juste l'UI/les docs, ou aussi le code et les dossiers de données).
@@ -64,9 +64,9 @@ Tests : un projet par module + `Dmx.Integration.Tests` (rejeu du show de référ
 ## 4. Commandes utiles
 
 ```bash
-dotnet build Dmx.slnx
-dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"
-dotnet format Dmx.slnx --verify-no-changes
+dotnet build Dmx.sln
+dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"
+dotnet format Dmx.sln --verify-no-changes
 python tools/matrice-exigences.py P0 P1 P2 P3
 dotnet run --project src/Dmx.App -- "samples/Show de référence"
 ```

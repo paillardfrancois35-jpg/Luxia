@@ -12,8 +12,8 @@ avec, à terme, un mode automatique musical. Sortie DMX par Arduino Leonardo + s
 ## Construire et tester
 
 ```bash
-dotnet build Dmx.slnx
-dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"
+dotnet build Dmx.sln
+dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"
 ```
 
 ## Lancer

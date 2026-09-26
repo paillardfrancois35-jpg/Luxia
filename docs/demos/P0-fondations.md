@@ -20,7 +20,7 @@
 ## Préparer
 
 ```bash
-dotnet build Dmx.slnx
+dotnet build Dmx.sln
 ```
 
 L'application se lance avec `src/Dmx.App/bin/Debug/net10.0/DMX.exe` (ou `dotnet run --project src/Dmx.App`).
