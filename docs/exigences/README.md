@@ -261,7 +261,7 @@
 | [MOT-033](MOT-033.md) | Master de couche | P4 | I | Réalisé |
 | [MOT-034](MOT-034.md) | Source de chaque valeur finale | P4 | M | Réalisé |
 | [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Validé |
-| [MOT-041](MOT-041.md) | « Allumer en coloriant » | P4 | I | Réalisé |
+| [MOT-041](MOT-041.md) | « Allumer en coloriant » | P4 | I | Validé |
 | [MOT-050](MOT-050.md) | Couleur logique vers RVB | P4 | I | Réalisé |
 | [MOT-051](MOT-051.md) | Couleur logique vers RVBW (extraction du blanc) | P4 | I | Réalisé |
 | [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Validé |
@@ -285,9 +285,9 @@
 | [PAL-006](PAL-006.md) | Suppression d'une palette utilisée | P4 | I | Réalisé |
 | [PAL-007](PAL-007.md) | Grilles de palettes | P4 | M | Partiel |
 | [PAL-009](PAL-009.md) | Jeu de palettes couleur par défaut | P4 | M | Réalisé |
-| [SCN-001](SCN-001.md) | Créer, dupliquer, renommer, supprimer une scène | P4 | I | Réalisé |
-| [SCN-002](SCN-002.md) | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | P4 | I | Réalisé |
-| [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Réalisé |
+| [SCN-001](SCN-001.md) | Créer, dupliquer, renommer, supprimer une scène | P4 | I | Validé |
+| [SCN-002](SCN-002.md) | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | P4 | I | Validé |
+| [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
 | [SCN-004](SCN-004.md) | Modification groupée des durées | P4 | I | Réalisé |
 | [SCN-005](SCN-005.md) | Paramètres de lecture d'une scène | P4 | I | Réalisé |
 | [SCN-007](SCN-007.md) | Cibles : appareil, cellule, sélection | P4 | I | Réalisé |
@@ -299,14 +299,14 @@
 | [SCN-013](SCN-013.md) | Rapport des utilisations d'une scène | P4 | M | Réalisé |
 | [SCN-030](SCN-030.md) | Sélection d'appareils dans le programmeur | P4 | I | Partiel |
 | [SCN-031](SCN-031.md) | Outils d'attributs adaptés à la sélection | P4 | I | Partiel |
-| [SCN-032](SCN-032.md) | Seuls les attributs modifiés sont enregistrés | P4 | I | Réalisé |
-| [SCN-033](SCN-033.md) | Enregistrer : remplacer, fusionner, nouvelle étape | P4 | I | Réalisé |
-| [SCN-034](SCN-034.md) | Tester : seule ou dans son contexte | P4 | I | Réalisé |
+| [SCN-032](SCN-032.md) | Seuls les attributs modifiés sont enregistrés | P4 | I | Validé |
+| [SCN-033](SCN-033.md) | Enregistrer : remplacer, fusionner, nouvelle étape | P4 | I | Validé |
+| [SCN-034](SCN-034.md) | Tester : seule ou dans son contexte | P4 | I | Validé |
 | [SCN-035](SCN-035.md) | Aveugle | P4 | I | Réalisé |
-| [SCN-036](SCN-036.md) | Option « allumer en coloriant » | P4 | I | Réalisé |
+| [SCN-036](SCN-036.md) | Option « allumer en coloriant » | P4 | I | Validé |
 | [SCN-037](SCN-037.md) | Enregistrer depuis la sortie | P4 | M | Réalisé |
 | [SCN-038](SCN-038.md) | Copier / coller, miroir | P4 | M | Réalisé |
-| [SCN-039](SCN-039.md) | Annuler / rétablir dans l'éditeur de scènes | P4 | I | Réalisé |
+| [SCN-039](SCN-039.md) | Annuler / rétablir dans l'éditeur de scènes | P4 | I | Validé |
 | [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
 | [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
 | [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |

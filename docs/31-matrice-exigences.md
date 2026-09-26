@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 64 · Validé : 14
+> Non réalisé : 1 · Partiel : 8 · Réalisé : 55 · Validé : 23
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -234,7 +234,7 @@
 | [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
 | [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
 | [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
-| [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Réalisé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
 | [MOT-050](exigences/MOT-050.md) | I | Couleur logique vers RVB | Réalisé | ColorConversionTests.Rgb_Par_TakesColorDirectly |
 | [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
 | [MOT-052](exigences/MOT-052.md) | I | Couleur logique vers roue de couleur | Validé | ColorConversionTests.ColorWheel_NeverPicksHalfColors<br>ColorConversionTests.ColorWheel_Red_PicksRedSlot_AtItsMedian<br>ColorConversionTests.ColorWheel_WhiteLogical_PicksOpenPosition |
@@ -256,9 +256,9 @@
 | [PAL-006](exigences/PAL-006.md) | I | Suppression d'une palette utilisée | Réalisé | SceneUsageAndStoreTests.PaletteUsage_ListsSteps_AndFreezeReplacesReferenceByValue<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze |
 | [PAL-007](exigences/PAL-007.md) | M | Grilles de palettes | Partiel |  |
 | [PAL-009](exigences/PAL-009.md) | M | Jeu de palettes couleur par défaut | Réalisé | SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
-| [SCN-001](exigences/SCN-001.md) | I | Créer, dupliquer, renommer, supprimer une scène | Réalisé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
-| [SCN-002](exigences/SCN-002.md) | I | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
-| [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Réalisé |  |
+| [SCN-001](exigences/SCN-001.md) | I | Créer, dupliquer, renommer, supprimer une scène | Validé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-002](exigences/SCN-002.md) | I | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | Validé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
+| [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Validé |  |
 | [SCN-004](exigences/SCN-004.md) | I | Modification groupée des durées | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
 | [SCN-005](exigences/SCN-005.md) | I | Paramètres de lecture d'une scène | Réalisé |  |
 | [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Réalisé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
@@ -270,11 +270,11 @@
 | [SCN-013](exigences/SCN-013.md) | M | Rapport des utilisations d'une scène | Réalisé | SceneUsageAndStoreTests.SceneUsage_ListsScenesThatChainToIt<br>ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
 | [SCN-030](exigences/SCN-030.md) | I | Sélection d'appareils dans le programmeur | Partiel | ScenesViewModelTests.Programmer_SelectionShortcut_ThenColor_OverridesAttributesLive |
 | [SCN-031](exigences/SCN-031.md) | I | Outils d'attributs adaptés à la sélection | Partiel | ScenesViewModelTests.Programmer_SelectionShortcut_ThenColor_OverridesAttributesLive |
-| [SCN-032](exigences/SCN-032.md) | I | Seuls les attributs modifiés sont enregistrés | Réalisé | ScenesViewModelTests.OnlyTouchedAttributes_AreRecorded_AndRemoveTakesOneOut |
-| [SCN-033](exigences/SCN-033.md) | I | Enregistrer : remplacer, fusionner, nouvelle étape | Réalisé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
-| [SCN-034](exigences/SCN-034.md) | I | Tester : seule ou dans son contexte | Réalisé | LayerMergeTests.Solo_MasksOtherPlaybacks_UntilStopped |
+| [SCN-032](exigences/SCN-032.md) | I | Seuls les attributs modifiés sont enregistrés | Validé | ScenesViewModelTests.OnlyTouchedAttributes_AreRecorded_AndRemoveTakesOneOut |
+| [SCN-033](exigences/SCN-033.md) | I | Enregistrer : remplacer, fusionner, nouvelle étape | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-034](exigences/SCN-034.md) | I | Tester : seule ou dans son contexte | Validé | LayerMergeTests.Solo_MasksOtherPlaybacks_UntilStopped |
 | [SCN-035](exigences/SCN-035.md) | I | Aveugle | Réalisé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly |
-| [SCN-036](exigences/SCN-036.md) | I | Option « allumer en coloriant » | Réalisé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-036](exigences/SCN-036.md) | I | Option « allumer en coloriant » | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
 | [SCN-037](exigences/SCN-037.md) | M | Enregistrer depuis la sortie | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
-| [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Réalisé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
+| [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
