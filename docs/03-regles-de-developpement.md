@@ -116,7 +116,8 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 
 | Élément | Règle |
 |---|---|
-| Dépôt | **Local uniquement** (pas de distant) |
+| Dépôt | Distant GitHub `origin` = `https://github.com/paillardfrancois35-jpg/Luxia.git` (câblé le 2026-09-26) |
+| Distant | Poussé sur `origin` au fil de l'eau : chaque commit sur la branche de phase, et `main` + étiquettes après chaque fusion/validation |
 | Responsabilité | **Les opérations Git sont à la charge de l'IA de développement** (décision de l'utilisateur, 2026-09-25) : commits au fil des étapes ; fusion dans `main` et étiquette de version **à chaque validation d'un passage important par l'utilisateur**. |
 | Branches | `main` ne reçoit que du validé ; une branche par phase (`p0/fondations`, `p1/console`…) avec un commit par étape vérifiable ; fusion dans `main` (`--no-ff`) après validation |
 | Commits | En français, format `type(module): résumé` ; types : `feat`, `fix`, `test`, `docs`, `refactor`, `build`, `chore`, `firmware` ; le corps cite les exigences (`Exigences : SORT-001, SORT-003`) |
