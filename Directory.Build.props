@@ -13,8 +13,8 @@
     <Deterministic>true</Deterministic>
     <NeutralLanguage>fr-FR</NeutralLanguage>
     <SatelliteResourceLanguages>fr</SatelliteResourceLanguages>
-    <Company>DMX</Company>
-    <Product>DMX</Product>
+    <Company>LuXia</Company>
+    <Product>LuXia</Product>
     <Version>1.002</Version>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>

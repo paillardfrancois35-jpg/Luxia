@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Appel natif généré (LibraryImport) pour l'anti-veille. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Messaging/Luxia.Messaging.csproj" />
+    <ProjectReference Include="../Luxia.Engine/Luxia.Engine.csproj" />
+    <ProjectReference Include="../Luxia.Output/Luxia.Output.csproj" />
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+    <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+  </ItemGroup>
+
+</Project>

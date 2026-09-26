@@ -8,14 +8,14 @@
 
 | Élément | Où |
 |---|---|
-| Application (écran « Sorties ») | `src/Dmx.App` → `DMX.exe` |
+| Application (écran « Sorties ») | `src/Luxia.App` → `LuXia.exe` |
 | Outil sans interface | `tools/Dmx.Tools.Headless` → `dmx-headless` |
 | Firmware 1.0 (protocole Enttec) | `firmware/arduino-dmx` |
 | Show de référence : fiche projet + enregistrement du chenillard 1-180 | `samples/Show de référence/` |
-| Journal technique | `Documents\DMX\Journaux\technique-AAAAMMJJ.log` |
-| Préférences du poste (sorties, test) | `%AppData%\DMX\preferences.json` |
+| Journal technique | `Documents\LuXia\Journaux\technique-AAAAMMJJ.log` |
+| Préférences du poste (sorties, test) | `%AppData%\LuXia\preferences.json` |
 
-> Sur ce PC, « Documents » est redirigé vers OneDrive : `C:\Users\<vous>\OneDrive - …\Documents\DMX\`.
+> Sur ce PC, « Documents » est redirigé vers OneDrive : `C:\Users\<vous>\OneDrive - …\Documents\LuXia\`.
 
 ## Préparer
 
@@ -23,7 +23,7 @@
 dotnet build Dmx.sln
 ```
 
-L'application se lance avec `src/Dmx.App/bin/Debug/net10.0/DMX.exe` (ou `dotnet run --project src/Dmx.App`).
+L'application se lance avec `src/Luxia.App/bin/Debug/net10.0/LuXia.exe` (ou `dotnet run --project src/Luxia.App`).
 L'outil : `dotnet tools/Dmx.Tools.Headless/bin/Debug/net10.0/dmx-headless.dll` (appelé `dmx-headless` ci-dessous).
 
 **Téléverser le firmware** (une seule fois, remplace le POC) — *je ne l'ai pas fait : à faire par vous ou avec votre accord* :
@@ -40,7 +40,7 @@ arduino-cli upload --fqbn arduino:avr:leonardo -p COMx firmware/arduino-dmx
 
 ## Exemple 1 – Démarrer sans matériel
 
-**Lancer** : Arduino **débranché**, démarrer `DMX.exe`.
+**Lancer** : Arduino **débranché**, démarrer `LuXia.exe`.
 
 **Observer** :
 - l'écran « Sorties » s'ouvre ; ligne « Arduino (univers 1) » : **Déconnecté – aucune carte Arduino détectée** ;
@@ -87,7 +87,7 @@ pour ne déclencher ni la fumée, ni les canaux Reset de l'effet multi-têtes (W
 **Lancer** : chenillard en cours sur le PAR (mode 3 canaux, canal 1 rouge allumé : mettez « Durée par canal » à 20000 ms pour avoir le temps).
 
 **Observer** :
-- **tuer** l'application (Gestionnaire des tâches → Fin de tâche sur « DMX ») : le PAR s'**éteint en 2 s au plus** ; la LED de la carte devient **fixe** ;
+- **tuer** l'application (Gestionnaire des tâches → Fin de tâche sur « LuXia ») : le PAR s'**éteint en 2 s au plus** ; la LED de la carte devient **fixe** ;
 - relancer l'application : reconnexion, blackout (rien ne s'allume tant que vous n'avez rien lancé — GEN-060) ;
 - **fermer normalement** l'application pendant le chenillard : le PAR s'éteint **immédiatement** (trame de blackout envoyée avant fermeture), sans attendre les 2 s.
 
@@ -95,7 +95,7 @@ pour ne déclencher ni la fumée, ni les canaux Reset de l'effet multi-têtes (W
 
 ## Exemple 5 – Enregistrer et relire des trames
 
-**Lancer** : « Enregistrer les trames » pendant quelques secondes de chenillard, puis arrêter. Le fichier est dans `Documents\DMX\Enregistrements\`.
+**Lancer** : « Enregistrer les trames » pendant quelques secondes de chenillard, puis arrêter. Le fichier est dans `Documents\LuXia\Enregistrements\`.
 
 **Relire** :
 
@@ -121,7 +121,7 @@ dmx-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1
 
 - Changer la plage et les exclusions du test (ex. `1-7` exclus `1`) et observer.
 - Changer la fréquence du moteur (25 à 44 Hz) dans « Enregistreur et cadence ».
-- Ouvrir `%AppData%\DMX\preferences.json` dans un éditeur : il est lisible et modifiable à la main (GEN-050).
+- Ouvrir `%AppData%\LuXia\preferences.json` dans un éditeur : il est lisible et modifiable à la main (GEN-050).
   Mettez une erreur de syntaxe volontaire : au démarrage suivant, le fichier est mis de côté (`.illisible-…`), un message orange l'indique, les valeurs par défaut sont utilisées (GEN-056).
 
 ## Grille de retour

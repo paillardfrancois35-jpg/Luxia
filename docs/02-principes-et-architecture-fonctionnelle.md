@@ -334,11 +334,11 @@ Cette chaîne est **la** référence pour résoudre tout conflit de valeurs. Le 
 
 | Ensemble | Contenu | Portée | Emplacement par défaut |
 |---|---|---|---|
-| **Bibliothèque** | Modèles d'appareils (un fichier par modèle) | Partagée par tous les projets | `Documents\DMX\Bibliothèque\` |
-| **Projet** | Installation, lieux, palettes, scènes, effets, couches, séquences, shows, écran Live, affectations MIDI, réglages du Directeur | Un spectacle / une configuration de soirée | `Documents\DMX\Projets\<nom>\` |
-| **Base musicale** | Artistes → styles, titres → styles, alias, corrections, taxonomie | Partagée | `Documents\DMX\Musique\` |
-| **Journaux** | Journal technique, journal de soirée (titres joués, styles, décisions) | Par session | `Documents\DMX\Journaux\` |
-| **Préférences** | Dernier projet, sorties, réglages d'affichage, audio | Poste | `%AppData%\DMX\` |
+| **Bibliothèque** | Modèles d'appareils (un fichier par modèle) | Partagée par tous les projets | `Documents\LuXia\Bibliothèque\` |
+| **Projet** | Installation, lieux, palettes, scènes, effets, couches, séquences, shows, écran Live, affectations MIDI, réglages du Directeur | Un spectacle / une configuration de soirée | `Documents\LuXia\Projets\<nom>\` |
+| **Base musicale** | Artistes → styles, titres → styles, alias, corrections, taxonomie | Partagée | `Documents\LuXia\Musique\` |
+| **Journaux** | Journal technique, journal de soirée (titres joués, styles, décisions) | Par session | `Documents\LuXia\Journaux\` |
+| **Préférences** | Dernier projet, sorties, réglages d'affichage, audio | Poste | `%AppData%\LuXia\` |
 
 Un **Projet** est un **dossier** de fichiers JSON (plutôt qu'un fichier unique) afin que les différences soient lisibles avec Git et qu'un fichier corrompu n'emporte pas tout.
 

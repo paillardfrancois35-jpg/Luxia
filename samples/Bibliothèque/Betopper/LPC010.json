@@ -5,7 +5,7 @@
   "model": "LPC010",
   "category": "par",
   "version": 1,
-  "author": "DMX (depuis la notice)",
+  "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "PAR LED RGBW 54 × 4 W (120 W). Menu d001 = 4 canaux, A001 = 8 canaux. Tableau lu dans la notice (rendu image, P2).",
   "manual": "docs/Equipements/PAR/BETOPPER/LPC010/Betopper_54x4w_RGBW_4-in-1_High_CRI_Par_Light_LPC010_LPC010-H_User_Manual.pdf",

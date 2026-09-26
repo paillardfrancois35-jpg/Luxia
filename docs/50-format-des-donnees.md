@@ -23,11 +23,11 @@
 
 | Données | Emplacement |
 |---|---|
-| Préférences du poste | `%AppData%\DMX\preferences.json` |
-| Projets | `Documents\DMX\Projets\<nom>\` (un dossier par projet) |
-| Bibliothèque d'appareils | `Documents\DMX\Bibliothèque\<fabricant>\<modèle>.json` (P2) |
-| Journaux | `Documents\DMX\Journaux\technique-AAAAMMJJ.log` |
-| Enregistrements de trames | `Documents\DMX\Enregistrements\*.dmxrec` |
+| Préférences du poste | `%AppData%\LuXia\preferences.json` |
+| Projets | `Documents\LuXia\Projets\<nom>\` (un dossier par projet) |
+| Bibliothèque d'appareils | `Documents\LuXia\Bibliothèque\<fabricant>\<modèle>.json` (P2) |
+| Journaux | `Documents\LuXia\Journaux\technique-AAAAMMJJ.log` |
+| Enregistrements de trames | `Documents\LuXia\Enregistrements\*.dmxrec` |
 
 ## 3. `preferences.json` (format 1)
 

@@ -1,4 +1,4 @@
-# Projet DMX – Analyse du besoin, découpage et feuille de route
+# Projet LuXia – Analyse du besoin, découpage et feuille de route
 
 > Document 00 – préalable au cahier des charges.
 > Objet : analyser le souhait de projet, identifier forces / faiblesses, trier les idées,
@@ -203,7 +203,7 @@ réutilisable qui parle au moteur via une interface commune.
 ### 7.2 Découpage en projets (proposition)
 
 ```
-DMX.sln
+LuXia.sln
 │
 ├── src/
 │   ├── Dmx.Core               Modèle de domaine pur : Canal, Univers, Trame, Attribut, types de base. Aucune dépendance.

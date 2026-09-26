@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Messaging/Luxia.Messaging.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="System.IO.Ports" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Output.Tests" />
+  </ItemGroup>
+
+</Project>

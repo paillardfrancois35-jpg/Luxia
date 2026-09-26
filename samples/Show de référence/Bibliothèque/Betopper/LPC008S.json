@@ -5,7 +5,7 @@
   "model": "LPC008S",
   "category": "par",
   "version": 3,
-  "author": "DMX (depuis la notice)",
+  "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "PAR LED RGB 54 × 3 W. Menu d001 = mode 3 canaux, A001 = mode 7 canaux (le menu d'adresse choisit le mode).",
   "manual": "docs/Equipements/PAR/BETOPPER/LPC008S/LPC007-LPC008_LPC08-H_BETOPPER_DJ_PAR_Light_User_Manual.pdf",

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>LuXia</AssemblyName>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\luxia.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\luxia.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <ProjectReference Include="../Luxia.Core/Luxia.Core.csproj" />
+    <ProjectReference Include="../Luxia.Messaging/Luxia.Messaging.csproj" />
+    <ProjectReference Include="../Luxia.Engine/Luxia.Engine.csproj" />
+    <ProjectReference Include="../Luxia.Output/Luxia.Output.csproj" />
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+    <ProjectReference Include="../Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Outputs/Luxia.UI.Modules.Outputs.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Library/Luxia.UI.Modules.Library.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Installation/Luxia.UI.Modules.Installation.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
+  </ItemGroup>
+
+</Project>

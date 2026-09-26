@@ -8,7 +8,7 @@
 
 | Élément | Où |
 |---|---|
-| Écran **Bibliothèque** : liste par fabricant, recherche, filtres, éditeur, validation, annuler / rétablir, test en direct, découverte, import | `DMX.exe` → Bibliothèque |
+| Écran **Bibliothèque** : liste par fabricant, recherche, filtres, éditeur, validation, annuler / rétablir, test en direct, découverte, import | `LuXia.exe` → Bibliothèque |
 | Définitions des appareils du parc | `samples/Bibliothèque/` (6 modèles) |
 | Génériques livrés (gradateur, RGB, RGBW, fumée, strobe, canal) | intégrés à l'application (lecture seule) |
 | Import Open Fixture Library (`.json`) et QLC+ (`.qxf`), fichier ou dossier | boutons « Importer… » |
@@ -17,7 +17,7 @@
 
 1. Lancer l'application : **Bibliothèque** dans la navigation.
 2. **Importer un dossier…** → choisir `samples/Bibliothèque`.
-3. Le rapport d'import indique « ✓ » pour 7 modèles ; ils sont copiés dans `Documents\DMX\Bibliothèque\<fabricant>\<modèle>.json`.
+3. Le rapport d'import indique « ✓ » pour 7 modèles ; ils sont copiés dans `Documents\LuXia\Bibliothèque\<fabricant>\<modèle>.json`.
    Relancer l'import : « = déjà dans la bibliothèque, non importé » (rien n'est écrasé).
 
 | Modèle | Modes | Particularités |

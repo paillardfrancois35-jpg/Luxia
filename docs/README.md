@@ -1,4 +1,4 @@
-# Documentation du projet DMX
+# Documentation du projet LuXia
 
 Application C# (Avalonia, Windows) de pilotage d'éclairage, alternative légère à Daslight 4, avec mode automatique musical.
 

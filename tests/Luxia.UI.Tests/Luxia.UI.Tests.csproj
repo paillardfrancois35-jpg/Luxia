@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Shouldly" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Outputs/Luxia.UI.Modules.Outputs.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Library/Luxia.UI.Modules.Library.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Installation/Luxia.UI.Modules.Installation.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
+    <ProjectReference Include="../../src/Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <ProjectReference Include="../../src/Luxia.Patch/Luxia.Patch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../samples/Bibliothèque/**/*.json" LinkBase="samples/Bibliothèque" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+
+</Project>
