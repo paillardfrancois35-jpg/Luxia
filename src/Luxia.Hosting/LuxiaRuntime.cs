@@ -49,10 +49,11 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Bus = new EventBus(loggers.CreateLogger<EventBus>());
         Router = new OutputRouter(Bus, loggers.CreateLogger<OutputRouter>());
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
-        Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>());
+        Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>(), Bus);
         Loop = new TickLoop(Engine.Tick, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
+        Show = new ShowService(Project, Engine, loggers.CreateLogger<ShowService>());
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -69,6 +70,9 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Projet ouvert.</summary>
     public ProjectSession Project { get; }
+
+    /// <summary>Compilation du projet vers le moteur (D26), tenue à jour à chaque modification.</summary>
+    public ShowService Show { get; }
 
     /// <summary>Emplacements des données.</summary>
     public DataPaths Paths { get; }
@@ -254,6 +258,22 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Engine.Send(new OverrideChannelsCommand(origin, snapshot.Universe, [.. snapshot.Channels.Select(c => new ChannelValue(c.Channel, c.Value))]));
         _logger.LogInformation("Instantané rappelé : {Nom}", snapshot.Name);
     }
+
+    /// <summary>Blackout (CMD-001, GEN-082).</summary>
+    public void SetBlackout(bool active, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new BlackoutCommand(origin, active));
+
+    /// <summary>Grand Master 0-1 (CMD-002).</summary>
+    public void SetGrandMaster(double level, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new SetGrandMasterCommand(origin, level));
+
+    /// <summary>Lance une scène (CMD-010).</summary>
+    public void LaunchScene(Guid sceneId, bool solo = false, CommandOrigin origin = CommandOrigin.User) =>
+        Engine.Send(new LaunchSceneCommand(origin, sceneId, Solo: solo));
+
+    /// <summary>Arrête une scène avec son fondu de sortie (CMD-011).</summary>
+    public void StopScene(Guid sceneId, CommandOrigin origin = CommandOrigin.User) => Engine.Send(new StopSceneCommand(origin, sceneId));
+
+    /// <summary>Arrête toutes les scènes (CMD-012 sur toutes les couches).</summary>
+    public void StopAllScenes(CommandOrigin origin = CommandOrigin.User) => Engine.Send(new StopLayerCommand(origin));
 
     /// <summary>Démarre l'enregistrement des trames de l'univers 1 (SORT-061).</summary>
     /// <param name="path">Fichier ; par défaut <c>Documents\LuXia\Enregistrements\trames-horodatage.dmxrec</c>.</param>

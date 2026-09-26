@@ -13,6 +13,7 @@
     <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
     <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
     <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../Luxia.Scenes/Luxia.Scenes.csproj" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.File" />
