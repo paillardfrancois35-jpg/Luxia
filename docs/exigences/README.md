@@ -248,7 +248,7 @@
 | [MOT-003](MOT-003.md) | Fil d'exécution dédié, sans opération bloquante | P4 | I | Réalisé |
 | [MOT-004](MOT-004.md) | Déterminisme : aléatoire à graine journalisée | P4 | I | Réalisé |
 | [MOT-010](MOT-010.md) | Étape = fondu d'entrée + maintien | P4 | I | Validé |
-| [MOT-011](MOT-011.md) | Interpolation des attributs continus selon la courbe | P4 | I | Réalisé |
+| [MOT-011](MOT-011.md) | Interpolation des attributs continus selon la courbe | P4 | I | Validé |
 | [MOT-012](MOT-012.md) | Attributs discrets : bascule franche | P4 | I | Réalisé |
 | [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Validé |
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Réalisé |

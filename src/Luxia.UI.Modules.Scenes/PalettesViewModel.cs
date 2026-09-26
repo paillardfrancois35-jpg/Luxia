@@ -29,6 +29,13 @@ public sealed partial class PalettesViewModel : ViewModelBase
     [ObservableProperty]
     private bool _hasAutomatic;
 
+    /// <summary>
+    /// Mode « mise à jour » armé : le prochain clic sur une palette la met à jour avec le programmeur (PAL-005) au lieu de
+    /// l'appliquer. Ajouté après l'essai P4 : le seul clic droit n'était pas trouvé, les réglages partaient dans les étapes.
+    /// </summary>
+    [ObservableProperty]
+    private bool _updateArmed;
+
     /// <summary>Crée le panneau.</summary>
     public PalettesViewModel(LuxiaRuntime runtime, IDialogService dialogs, ProgrammerViewModel programmer)
     {
@@ -79,9 +86,16 @@ public sealed partial class PalettesViewModel : ViewModelBase
         RefreshAutoPalettes();
     }
 
-    /// <summary>Applique une palette à la sélection du programmeur.</summary>
+    /// <summary>Applique une palette à la sélection du programmeur, ou la met à jour si le mode « mise à jour » est armé.</summary>
     internal void Apply(PaletteButtonViewModel button)
     {
+        if (UpdateArmed)
+        {
+            UpdateArmed = false;
+            _ = UpdateFromProgrammerAsync(button);
+            return;
+        }
+
         if (_programmer.SelectedFixtures.Count == 0)
         {
             Message = "Sélectionnez d'abord des appareils dans le programmeur.";
@@ -222,6 +236,9 @@ public sealed partial class PalettesViewModel : ViewModelBase
         Save([.. _runtime.Project.Palettes.Palettes.Where(p => p.Id != button.Palette.Id)]);
         Message = $"Palette « {button.Palette.Name} » supprimée, valeurs figées dans {usages.Count} étape(s).";
     }
+
+    partial void OnUpdateArmedChanged(bool value) =>
+        Message = value ? "Cliquez la palette à mettre à jour avec les réglages actuels du programmeur (appareils sélectionnés)." : null;
 
     private void RefreshAutoPalettes()
     {

@@ -286,6 +286,26 @@ public sealed class ScenesViewModelTests : IAsyncLifetime
         _vm.Editor.Speed.ShouldBe(2.0m);
     }
 
+    [Fact]
+    [Trait("Exigence", "PAL-005")]
+    public async Task UpdateArmed_NextPaletteClick_UpdatesItFromProgrammer()
+    {
+        SelectFixture("Lyre 1");
+        _vm.Programmer.PositionTools.Single(t => t.Attribute == AttributeKind.Tilt).Percent = 12;
+        _host.Tick();
+        var ceiling = _vm.Palettes.Positions.Single(p => p.Palette.Name == "Plafond");
+
+        _vm.Palettes.UpdateArmed = true;
+        ceiling.ApplyCommand.Execute(null);
+        await Task.Yield();
+
+        _vm.Palettes.UpdateArmed.ShouldBeFalse();
+        var lyre1 = _host.Runtime.Show.Patch.Fixtures.Single(f => f.Fixture.Name == "Lyre 1").Fixture.Id;
+        _host.Runtime.Project.Palettes.Palettes.Single(p => p.Name == "Plafond").Values
+            .Single(v => v.FixtureId == lyre1 && v.Attribute == AttributeKind.Tilt).Level.ShouldBe(0.12, 0.01);
+        _vm.Programmer.Values.ShouldNotContain(v => v.PaletteId == ceiling.Palette.Id);
+    }
+
     private void SelectShortcut(string label) =>
         _vm.Programmer.SelectCommand.Execute(_vm.Programmer.Shortcuts.Single(s => s.Label == label));
 

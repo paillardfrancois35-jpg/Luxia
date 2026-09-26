@@ -169,12 +169,12 @@
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
           "attribute": "pan",
-          "level": 0.5
+          "level": 0.4663
         },
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
           "attribute": "tilt",
-          "level": 0.7
+          "level": 0.6567
         },
         {
           "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
@@ -197,12 +197,12 @@
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
           "attribute": "pan",
-          "level": 0.5
+          "level": 0.1956
         },
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
           "attribute": "tilt",
-          "level": 0.2
+          "level": 0.1127
         },
         {
           "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
@@ -225,7 +225,7 @@
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
           "attribute": "pan",
-          "level": 0.42
+          "level": 0.3912
         },
         {
           "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
