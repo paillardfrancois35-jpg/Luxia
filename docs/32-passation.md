@@ -1,7 +1,7 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, fin de P3.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P3 validée et fusionnée.
 
 ## 1. Où en est-on
 
@@ -10,10 +10,10 @@
 | P0 – Fondations | Développée | `p0/fondations` (fusionnée dans `main`, `v1.001`) | [demos/P0-fondations.md](demos/P0-fondations.md) | ⏳ essais matériel prévus |
 | P1 – Console | Développée | `p1/console` (fusionnée dans `main`, `v1.001`) | [demos/P1-console.md](demos/P1-console.md) | ⏳ |
 | P2 – Bibliothèque | Développée | `p2/bibliotheque` (fusionnée dans `main`, `v1.001`) | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
-| P3 – Installation + Simulateur | Développée | `p3/installation-simulateur` | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ⏳ |
+| P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
-- **P3 développée le 2026-09-26**, pas encore fusionnée dans `main` ni validée : reste sur sa branche en attendant la revue de l'utilisateur.
+- **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
 - **Fiches d'exigences** : [exigences/](exigences/README.md) — une fiche par exigence travaillée, avec statut et **historique complet** (questions, décisions et leur pourquoi, écarts, commits, tests, validations). **Lire la fiche avant de toucher à une exigence.**
 - **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches. Bilan P3 : 47 exigences, 34 Réalisé, 6 Partiel, 7 Non réalisé.
 - **Reliquats P0-P2 traités en P3** : SORT-008, CONS-007/020 à 024/041/043/092 (patch et mode appareils), BIB-093/096/097/098/099/100. **BIB-094** (plage « Fondu » du LPC008S) reste ouverte : une réserve honnête a été ajoutée au libellé, mais la correction exacte attend une vérification en direct sur l'appareil. **CONS-091** reste correctement en P4 (non traité maintenant, cohérent avec le doc 40).
@@ -101,3 +101,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-25 | P2 | Fiches d'exigences créées pour les 110 exigences travaillées (historique reconstitué depuis les discussions et Git). |
 | 2026-09-25 | P2 | P0, P1, P2 validées par l'utilisateur avec le matériel réel ; fusion dans `main`, étiquette `v1.001`. |
 | 2026-09-26 | P3 | Installation + Simulateur développés d'une traite (nouveau projet `Dmx.Patch`, écrans Installation et Simulateur, mode appareils de la Console) ; reliquats P0-P2 traités (SORT-008, CONS-007/020 à 024/041/043/092, BIB-093/096/097/098/099/100) ; show de référence patché et placé dans un lieu ; 47 exigences P3 (34 Réalisé, 6 Partiel, 7 Non réalisé). Reste sur `p3/installation-simulateur`, en attente de la revue de l'utilisateur avant fusion et étiquette. |
+| 2026-09-26 | P3 | Tour de test complet en direct avec l'utilisateur (4 PAR + 1 lyre), pas à pas dans la discussion. Corrigés au fil de l'eau : crash `InvalidCastException` (Univers affiché), Identifier (canaux couleur, puis fige au changement d'écran), largeurs de champs (deux passes), lieu actif non mis en évidence, simulateur trop sombre (corps toujours visible) et roue de couleur sans couleur définie décodée en noir, propriétés calculées dupliquées dans le JSON (`JsonIgnore`), fenêtre non maximisée au démarrage, version absente de la barre de titre. Solution repassée en `.sln` classique (D25, VS 2022 17.8 de l'utilisateur trop ancien pour .NET 10 — Claude compile seul désormais). 297 tests verts. **Validée par l'utilisateur, fusionnée dans `main`, étiquette `v1.002`.** |
