@@ -173,6 +173,22 @@ public sealed class InstallationViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "INST-019")]
+    public void NeedsBackgroundRefresh_TrueOnlyWhileIdentifying()
+    {
+        // La coquille rafraîchit cet écran même quand un autre est affiché tant qu'Identifier tourne
+        // (sinon l'appareil se fige au dernier état si l'utilisateur regarde le Simulateur, SIM-009).
+        Patch(GenericFixtures.Rgbw, "5 canaux", 1, "Gros PAR 1");
+        _vm.NeedsBackgroundRefresh.ShouldBeFalse();
+
+        _vm.ToggleIdentifyFixture(_vm.PatchRows[0]);
+        _vm.NeedsBackgroundRefresh.ShouldBeTrue();
+
+        _vm.ToggleIdentifyFixture(_vm.PatchRows[0]);
+        _vm.NeedsBackgroundRefresh.ShouldBeFalse();
+    }
+
+    [Fact]
     [Trait("Exigence", "CMD-023")]
     [Trait("Exigence", "INST-019")]
     public void Identify_LightsIntensityChannel_AndChaseAdvancesToNextFixture()

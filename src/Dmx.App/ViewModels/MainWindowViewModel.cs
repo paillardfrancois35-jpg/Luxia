@@ -66,10 +66,23 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     /// <summary>Écrans de l'Atelier.</summary>
     public IReadOnlyList<NavigationItem> Pages { get; }
 
-    /// <summary>Rafraîchissement de l'écran affiché (20 fois par seconde) et de la barre d'état (4 fois par seconde).</summary>
+    /// <summary>
+    /// Rafraîchissement de l'écran affiché (20 fois par seconde) et de la barre d'état (4 fois par seconde).
+    /// Un écran non affiché qui pilote une surcharge de canaux réels (Identifier) est rafraîchi quand même :
+    /// voir <see cref="IRefreshable.NeedsBackgroundRefresh"/>.
+    /// </summary>
     public void Refresh()
     {
-        (SelectedPage.Page as IRefreshable)?.Refresh();
+        var selected = SelectedPage.Page as IRefreshable;
+        selected?.Refresh();
+        foreach (var page in Pages)
+        {
+            if (page.Page is IRefreshable refreshable && !ReferenceEquals(refreshable, selected) && refreshable.NeedsBackgroundRefresh)
+            {
+                refreshable.Refresh();
+            }
+        }
+
         if (--_statusCountdown <= 0)
         {
             _statusCountdown = 5;

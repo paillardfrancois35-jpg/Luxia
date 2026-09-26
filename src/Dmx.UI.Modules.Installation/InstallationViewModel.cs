@@ -113,6 +113,9 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     public ObservableCollection<string> InstallationSheet { get; } = [];
 
     /// <inheritdoc />
+    public bool NeedsBackgroundRefresh => _identifyingFixtureId is not null;
+
+    /// <inheritdoc />
     public void Refresh()
     {
         if (_identifyingFixtureId is null)

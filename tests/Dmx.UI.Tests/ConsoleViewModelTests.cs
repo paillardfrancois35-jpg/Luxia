@@ -303,6 +303,24 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
         _host.Frame()[20].ShouldBe((byte)0);
     }
 
+    [Fact]
+    [Trait("Exigence", "CONS-024")]
+    public void NeedsBackgroundRefresh_TrueOnlyWhileADeviceIsIdentifying()
+    {
+        // La coquille rafraîchit la Console même si un autre écran est affiché tant qu'un appareil est
+        // identifié, sinon il se fige au dernier état si l'utilisateur regarde le Simulateur (SIM-009).
+        PatchAt(GenericFixtures.Rgbw, "5 canaux", 20, "Gros PAR 1");
+        _console.IsDeviceMode = true;
+        var faders = _console.DeviceFixtures[0];
+        _console.NeedsBackgroundRefresh.ShouldBeFalse();
+
+        faders.ToggleIdentifyCommand.Execute(null);
+        _console.NeedsBackgroundRefresh.ShouldBeTrue();
+
+        faders.ToggleIdentifyCommand.Execute(null);
+        _console.NeedsBackgroundRefresh.ShouldBeFalse();
+    }
+
     private void PatchRgbAt(int address, string name) => PatchAt(GenericFixtures.Rgb, "3 canaux", address, name);
 
     private void PatchAt(Dmx.Fixtures.Model.FixtureType type, string modeName, int address, string name)

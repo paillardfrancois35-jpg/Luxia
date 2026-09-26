@@ -134,6 +134,9 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     }
 
     /// <inheritdoc />
+    public bool NeedsBackgroundRefresh => IsDeviceMode && DeviceFixtures.Any(f => f.Identifying);
+
+    /// <inheritdoc />
     public void Refresh()
     {
         _runtime.Engine.CopyLastFrame(SelectedUniverse, _frame);
