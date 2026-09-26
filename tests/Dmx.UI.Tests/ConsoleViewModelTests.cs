@@ -276,9 +276,10 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
     [Fact]
     [Trait("Exigence", "CMD-023")]
     [Trait("Exigence", "CONS-024")]
-    public void Identify_LightsIntensityChannel_WithoutTouchingColor_AndReleasesOnStop()
+    public void Identify_LightsIntensityAndColorEmitters_AndReleasesOnStop()
     {
-        // GenericFixtures.Rgbw « 5 canaux » : dim, r, g, b, w — dim est le seul canal d'intensité.
+        // GenericFixtures.Rgbw « 5 canaux » : dim, r, g, b, w — un gradateur seul à 255 ne rend rien visible
+        // si RVB sont à 0 (retour utilisateur du 2026-09-26) : les émetteurs de couleur sont aussi poussés.
         PatchAt(GenericFixtures.Rgbw, "5 canaux", 20, "Gros PAR 1");
         _console.IsDeviceMode = true;
         var faders = _console.DeviceFixtures[0];
@@ -289,13 +290,17 @@ public sealed class ConsoleViewModelTests : IAsyncLifetime
 
         faders.Identifying.ShouldBeTrue();
         _host.Frame()[19].ShouldBe((byte)255); // canal 20 = dim
-        _host.Frame()[20].ShouldBe((byte)0); // rouge jamais touché
+        _host.Frame()[20].ShouldBe((byte)255); // canal 21 = rouge
+        _host.Frame()[21].ShouldBe((byte)255); // canal 22 = vert
+        _host.Frame()[22].ShouldBe((byte)255); // canal 23 = bleu
+        _host.Frame()[23].ShouldBe((byte)255); // canal 24 = blanc
 
         faders.ToggleIdentifyCommand.Execute(null);
         _host.Tick();
 
         faders.Identifying.ShouldBeFalse();
         _host.Frame()[19].ShouldBe((byte)0); // libéré : retombe à la valeur par défaut du canal (0)
+        _host.Frame()[20].ShouldBe((byte)0);
     }
 
     private void PatchRgbAt(int address, string name) => PatchAt(GenericFixtures.Rgb, "3 canaux", address, name);

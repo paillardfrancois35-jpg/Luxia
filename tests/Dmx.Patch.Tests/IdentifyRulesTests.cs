@@ -8,15 +8,17 @@ public sealed class IdentifyRulesTests
 {
     [Fact]
     [Trait("Exigence", "CMD-023")]
-    public void IdentifyChannels_OnlyLightsTheIntensityChannel_NotColor()
+    public void IdentifyChannels_LightsIntensityAndColorEmitters_NotPosition()
     {
-        // CONS-024 : l'appareil clignote (intensité), sans changer de couleur ni de position.
+        // Un gradateur seul à 255 ne rend rien visible si RVB sont à 0 : il faut aussi pousser les émetteurs
+        // de couleur (retour utilisateur du 2026-09-26, PAR réel qui ne s'allumait pas). Toujours pas de
+        // changement de position (CONS-024).
         var fixture = GenericFixtures.Rgbw;
         var mode = fixture.Modes.Single(m => m.Name == "5 canaux");
 
         var channels = IdentifyRules.IdentifyChannels(fixture, mode, address: 10);
 
-        channels.ShouldBe([(10, (byte)255)]);
+        channels.ShouldBe([(10, (byte)255), (11, (byte)255), (12, (byte)255), (13, (byte)255), (14, (byte)255)]);
     }
 
     [Fact]
@@ -37,7 +39,7 @@ public sealed class IdentifyRulesTests
 
         var channels = IdentifyRules.IdentifyChannels(fixture, fixture.Modes[0], address: 1);
 
-        // Le canal Pan n'a ni valeur d'identification ni famille intensité : il ne bouge pas.
+        // Le canal Pan n'a ni valeur d'identification, ni famille intensité, ni émetteur de couleur : il ne bouge pas.
         channels.ShouldBe([(1, (byte)200)]);
     }
 
