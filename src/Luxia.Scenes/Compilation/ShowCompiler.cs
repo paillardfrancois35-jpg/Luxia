@@ -52,7 +52,8 @@ public static class ShowCompiler
             scenes.Add(CompileScene(scene, provisional, resolver, layerIds, layers, issues));
         }
 
-        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases), issues);
+        var safety = SafetyCompiler.Build(patch, provisional, content.Safety ?? new SafetySettings(), content.Venues.Active, issues);
+        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety), issues);
     }
 
     /// <summary>Paramètres des appareils patchés (jumeaux regroupés sur l'appareil de référence).</summary>

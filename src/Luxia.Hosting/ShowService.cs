@@ -73,7 +73,8 @@ public sealed class ShowService
             id => library?.Find(id),
             _project.Layers,
             scenes,
-            _project.Palettes);
+            _project.Palettes,
+            _project.Safety);
     }
 
     /// <summary>Compile le projet et charge le résultat dans le moteur.</summary>

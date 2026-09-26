@@ -21,7 +21,8 @@ namespace Luxia.Engine;
 /// (<see cref="ShowModel"/>, D26) : il ne connaît ni la bibliothèque, ni le patch, ni les palettes.
 /// Chaîne de rendu (doc 02 §9) : 1 valeurs par défaut · 2-3 couches et masters · 5 surcharges d'attributs ·
 /// 6 intensité virtuelle et Grand Master · 7 blackout · 10 conversion en octets · 11 surcharges brutes de la console
-/// (soumises au blackout, GEN-042) · puis test de sortie (D21). Les étapes 4 (flashs), 8 (figer) et 9 (sûreté) viendront en P5.
+/// (soumises au blackout, GEN-042) · puis test de sortie (D21) · 9 sûreté : zones interdites sur les paramètres, strobe et fumée
+/// sur les octets finaux, pour qu'aucune surcharge ni aucun test ne les contourne (GEN-042, MOT-080 à 083).
 /// </remarks>
 public sealed class RenderEngine : ICommandSink
 {
@@ -36,6 +37,8 @@ public sealed class RenderEngine : ICommandSink
     private readonly DmxFrame[] _published;
     private readonly Lock _publishedLock = new();
     private readonly TestPattern _testPattern = new();
+    private readonly SafetyLimiter _safety = new();
+    private readonly Action<SafetyLimitReached> _publishSafety;
     private readonly ChannelOverrides[] _channelOverrides;
     private readonly Random _random;
     private readonly List<Playback> _playbacks = new(64);
@@ -77,6 +80,7 @@ public sealed class RenderEngine : ICommandSink
     private PlaybackInfo[] _publishedPlaybacks = new PlaybackInfo[64];
     private int _publishedPlaybackCount;
     private double[] _publishedLayerMasters = [];
+    private ActiveLimit[] _publishedLimits = [];
 
     /// <summary>Crée un moteur.</summary>
     /// <param name="sink">Destination des trames.</param>
@@ -99,6 +103,7 @@ public sealed class RenderEngine : ICommandSink
         _channelOverrides = [.. Enumerable.Range(0, universeCount).Select(_ => new ChannelOverrides())];
         _outputSlots = [.. Enumerable.Range(0, universeCount).Select(_ => Array.Empty<(int, ChannelAddress)>())];
         _blackoutMasks = [.. Enumerable.Range(0, universeCount).Select(_ => new bool[DmxConstants.ChannelCount])];
+        _publishSafety = PublishSafety;
 
         // MOT-004 : tout tirage aléatoire passe par ce générateur ; la graine est journalisée pour rejouer une session.
         Seed = seed ?? Environment.TickCount;
@@ -177,6 +182,10 @@ public sealed class RenderEngine : ICommandSink
         MergeLayers();
         ApplyMasters();
 
+        // Étape 9 (paramètres) : zones interdites Pan/Tilt (MOT-082).
+        _safety.BeginTick();
+        _safety.ApplyZones(_output, _result, now, _publishSafety);
+
         for (var u = 0; u < _frames.Length; u++)
         {
             var frame = _frames[u];
@@ -186,18 +195,23 @@ public sealed class RenderEngine : ICommandSink
             WriteParameters(u, frame);
 
             // Étape 11 : surcharges brutes de la console (CONS-003), soumises au blackout (GEN-042, CONS-008).
-            // TODO(P5, GEN-083) : limites de sûreté (strobe, fumée) appliquées aussi aux surcharges brutes.
             _channelOverrides[u].ApplyTo(frame, _blackout ? _blackoutMasks[u] : default);
 
             // Test de sortie : remplace toute la restitution de l'univers testé (D21).
             _testPattern.Render(u + 1, frame, now);
+        }
 
+        // Étape 9 (octets) : strobe et fumée, jamais contournables (GEN-042, MOT-080, MOT-081).
+        _safety.ApplyToFrames(_frames, elapsed, now, _publishSafety);
+
+        for (var u = 0; u < _frames.Length; u++)
+        {
             lock (_publishedLock)
             {
-                frame.CopyTo(_published[u]);
+                _frames[u].CopyTo(_published[u]);
             }
 
-            _sink.Submit(u + 1, frame, now);
+            _sink.Submit(u + 1, _frames[u], now);
         }
 
         Publish();
@@ -810,6 +824,7 @@ public sealed class RenderEngine : ICommandSink
         }
 
         _show = show;
+        _safety.Load(show.Safety);
         _overrides = overrides;
         _layerMasters = masters;
         _defaults = [.. show.Parameters.Select(p => Math.Clamp(p.Default, 0, 1))];
@@ -943,6 +958,7 @@ public sealed class RenderEngine : ICommandSink
             }
 
             _publishedPlaybackCount = _playbacks.Count;
+            _publishedLimits = _safety.Active.Count == 0 ? [] : [.. _safety.Active];
         }
     }
 
@@ -959,7 +975,15 @@ public sealed class RenderEngine : ICommandSink
             LayerMasters = (double[])_publishedLayerMasters.Clone(),
             Blackout = _publishedBlackout,
             GrandMaster = _publishedGrandMaster,
+            ActiveLimits = _publishedLimits,
         };
+    }
+
+    private void PublishSafety(SafetyLimitReached limit)
+    {
+        // MOT-083 : une seule fois par épisode (le limiteur s'en charge), journalisé et publié.
+        _logger.LogWarning("Sûreté ({Limite}) : {Appareil} — {Detail}", limit.Kind, limit.Label, limit.Detail);
+        _bus?.Publish(limit);
     }
 
     private void Log(CommandLogEntry entry)

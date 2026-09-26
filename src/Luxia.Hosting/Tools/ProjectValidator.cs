@@ -33,18 +33,45 @@ public static class ProjectValidator
         var (scenes, scenesMessage) = SceneStore.Load(folder);
         var (palettes, palettesMessage) = PaletteStore.Load(folder);
         var (layers, layersMessage) = LayerStore.Load(folder);
+        var (safety, safetyMessage) = SafetyStore.Load(folder);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
         AddLoadMessage(issues, PaletteStore.FileName, palettesMessage);
         AddLoadMessage(issues, LayerStore.FileName, layersMessage);
+        AddLoadMessage(issues, SafetyStore.FileName, safetyMessage);
 
         var library = new ProjectFixtureLibrary(folder);
-        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes);
+        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
         issues.AddRange(ShowCompiler.Compile(content).Issues);
         issues.AddRange(CheckScenes(scenes, layers, palettes));
         issues.AddRange(CheckPalettes(palettes));
+        issues.AddRange(CheckSafety(safety));
         return issues;
+    }
+
+    private static IEnumerable<CompileIssue> CheckSafety(SafetySettings safety)
+    {
+        var file = SafetyStore.FileName;
+        if (safety.Strobe.MaxContinuousSeconds is < 0.5 or > 600)
+        {
+            yield return Warning(file, "strobe", "maxContinuousSeconds", "durée de strobe hors de 0,5-600 s : ramenée dans ces bornes");
+        }
+
+        if (safety.Strobe.MaxSpeedPercent is < 0 or > 100)
+        {
+            yield return Warning(file, "strobe", "maxSpeedPercent", "vitesse maximale hors de 0-100 %");
+        }
+
+        if (safety.Smoke.MaxEmissionSeconds is < 0.5 or > 600)
+        {
+            yield return Warning(file, "fumée", "maxEmissionSeconds", "durée d'émission hors de 0,5-600 s : ramenée dans ces bornes");
+        }
+
+        if (safety.Smoke.MinRestSeconds < 0)
+        {
+            yield return Warning(file, "fumée", "minRestSeconds", "repos minimal négatif : compté comme 0");
+        }
     }
 
     private static void AddLoadMessage(List<CompileIssue> issues, string file, string? message)

@@ -31,4 +31,7 @@ public sealed record EngineSnapshot
 
     /// <summary>Grand Master (0 à 1).</summary>
     public double GrandMaster { get; init; } = 1;
+
+    /// <summary>Limites de sûreté en train d'agir (GEN-086, LIVE-008).</summary>
+    public IReadOnlyList<ActiveLimit> ActiveLimits { get; init; } = [];
 }
