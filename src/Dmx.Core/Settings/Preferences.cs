@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Dmx.Core.Dmx;
 
 namespace Dmx.Core.Settings;
@@ -93,12 +94,19 @@ public sealed record TestOutputPreferences
     /// <summary>Canaux exclus (180 = fumée du show de référence).</summary>
     public string ExcludedChannels { get; init; } = "180";
 
+    /// <summary>
+    /// Canaux maintenus à la valeur de test pendant tout le chenillard (SORT-008, Q23) : les maîtres des appareils
+    /// à gradateur maître (sinon leurs autres canaux — couleur, roue… — restent invisibles pendant leur propre passage).
+    /// </summary>
+    public string HeldChannels { get; init; } = string.Empty;
+
     /// <summary>Valeur de test en pourcentage (50 % par défaut).</summary>
     public int ValuePercent { get; init; } = 50;
 
     /// <summary>Durée d'allumage de chaque canal, en millisecondes.</summary>
     public int StepMilliseconds { get; init; } = 1000;
 
-    /// <summary>Valeur DMX correspondant au pourcentage (arrondi, 50 % = 128).</summary>
+    /// <summary>Valeur DMX correspondant au pourcentage (arrondi, 50 % = 128), recalculée : jamais enregistrée.</summary>
+    [JsonIgnore]
     public byte ValueByte => (byte)Math.Round(Math.Clamp(ValuePercent, 0, 100) * 255 / 100.0, MidpointRounding.AwayFromZero);
 }

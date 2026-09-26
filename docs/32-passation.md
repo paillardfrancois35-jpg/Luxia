@@ -1,33 +1,33 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-25, fin de P2.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P3 validée et fusionnée.
 
 ## 1. Où en est-on
 
 | Phase | État | Branche | Guide | Validation utilisateur |
 |---|---|---|---|---|
-| P0 – Fondations | Développée | `p0/fondations` | [demos/P0-fondations.md](demos/P0-fondations.md) | ⏳ essais matériel prévus |
-| P1 – Console | Développée | `p1/console` | [demos/P1-console.md](demos/P1-console.md) | ⏳ |
-| P2 – Bibliothèque | Développée | `p2/bibliotheque` | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
-| P3 – Installation + Simulateur | À faire | — | — | — |
+| P0 – Fondations | Développée | `p0/fondations` (fusionnée dans `main`, `v1.001`) | [demos/P0-fondations.md](demos/P0-fondations.md) | ⏳ essais matériel prévus |
+| P1 – Console | Développée | `p1/console` (fusionnée dans `main`, `v1.001`) | [demos/P1-console.md](demos/P1-console.md) | ⏳ |
+| P2 – Bibliothèque | Développée | `p2/bibliotheque` (fusionnée dans `main`, `v1.001`) | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
+| P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
 
+- **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
+- **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
 - **Fiches d'exigences** : [exigences/](exigences/README.md) — une fiche par exigence travaillée, avec statut et **historique complet** (questions, décisions et leur pourquoi, écarts, commits, tests, validations). **Lire la fiche avant de toucher à une exigence.**
-- **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches.
+- **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches. Bilan P3 : 47 exigences, 34 Réalisé, 6 Partiel, 7 Non réalisé.
+- **Reliquats P0-P2 traités en P3** : SORT-008, CONS-007/020 à 024/041/043/092 (patch et mode appareils), BIB-093/096/097/098/099/100. **BIB-094** (plage « Fondu » du LPC008S) reste ouverte : une réserve honnête a été ajoutée au libellé, mais la correction exacte attend une vérification en direct sur l'appareil. **CONS-091** reste correctement en P4 (non traité maintenant, cohérent avec le doc 40).
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
-  - CONS-007 et la délimitation des appareils dans le moniteur (CONS-043) → P3 (patch).
-  - SORT-008 (canaux maintenus pendant le test de sortie, Q23) → P3.
-  - CONS-091 (écart conservé au-delà des bornes en relatif, retour utilisateur du 25/09) → P4.
-  - CONS-092 (survol immédiat du moniteur, retour utilisateur du 25/09) → P3, avec CONS-043.
-  - BIB-098 (case « écraser si déjà existant » à l'import) → P3, avec GEN-053.
-  - BIB-099 (modale de nommage en mode découverte) → P2, avant validation finale de la P2.
-  - BIB-100 (signaler l'erreur de validation + focus automatique sur l'onglet) → P2, avant validation finale de la P2.
   - CONS-008 (surcharges soumises au blackout et à la sûreté) → P4 / P5 ; `TODO(P4, GEN-042)` dans `RenderEngine`.
+  - CONS-091 (écart conservé au-delà des bornes en relatif, retour utilisateur du 25/09) → P4.
+  - CONS-021 (pastille couleur, pad Pan/Tilt XY combinés) → reste canal par canal ; à revoir avec le programmeur (P4-P5).
+  - INST-021 (options de montage : pas d'éditeur dans l'écran), INST-034 (sélection de cellules), INST-051 (glisser-déposer sur le plan) → partiels, voir leurs fiches.
+  - SIM-007 (fenêtre détachable), SIM-008 (zones interdites/repères), SIM-010 (sélection reprise par le programmeur) → non réalisés, dépendent de P4/P5.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
-  - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084.
-  - Mesure de gigue de **15 min** (D23) : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **prévue le 2026-09-26 au matin** avec l'utilisateur.
-- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA : points restants à vérifier en direct par l'utilisateur).
-- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.slnx`,
+  - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
+  - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
+- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; **Q27 (nouvelle)** : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux.
+- **⚠️ Nom de l'application** : l'utilisateur a choisi **« LuXia »** (25/09), à la place de « DMX » utilisé partout aujourd'hui (dépôt, `Dmx.sln`,
   namespaces `Dmx.*`, `DMX.exe`, `%AppData%\DMX`, `Documents\DMX`, docs). **Pas encore fait** : renommage transverse volontairement reporté
   « au moment opportun » (voir doc 99) — ne pas l'oublier à l'approche d'une livraison ou d'un jalon important. Demander confirmation avant
   de s'y lancer (ampleur du renommage à évaluer avec l'utilisateur : juste l'UI/les docs, ou aussi le code et les dossiers de données).
@@ -51,9 +51,10 @@
 | `Dmx.Output` | Routeur, pilotes Nul / Enregistreur / Arduino, protocole Enttec, `.dmxrec` | `OutputRouter`, `OutputDriver`, `ArduinoOutputDriver` |
 | `Dmx.Persistence` | JSON versionné, migrations, préférences, projet | `VersionedJsonFile`, `ProjectStore`, `DataPaths` |
 | `Dmx.Fixtures` | Modèles d'appareils, règles, validation, bibliothèque, imports, éditions | `FixtureType`, `FixtureRules`, `FixtureValidator`, `FixtureLibrary`, `FixtureEdits`, `DmxConversion` |
+| `Dmx.Patch` | Installation (patch, univers, sélections), lieux, copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `ProjectFixtureLibrary`, `FixtureDecoder` |
 | `Dmx.Hosting` | Assemblage (D20), journal, session de projet | `DmxRuntime`, `ProjectSession`, `TechnicalLog` |
-| `Dmx.UI.Controls` | Fader, moniteur, barre de plages, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `RangeBar`, `UndoHistory` |
-| `Dmx.UI.Modules.*` | Un écran par projet : Console (+ faders d'appareil), Library, Outputs | `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel` |
+| `Dmx.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
+| `Dmx.UI.Modules.*` | Un écran par projet : Console (+ faders d'appareil), Library, Outputs, Installation, Simulator | `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel` |
 | `Dmx.App` | Coquille Avalonia (navigation, menu Projet, barre d'état) | `App`, `MainWindowViewModel` |
 | `tools/Dmx.Tools.Headless` | `dmx-headless` : ports, lancer, endurance, gigue, relire, projet | `Commands` |
 | `firmware/arduino-dmx` | Firmware Leonardo 1.0 (Enttec) | `arduino-dmx.ino` |
@@ -63,10 +64,10 @@ Tests : un projet par module + `Dmx.Integration.Tests` (rejeu du show de référ
 ## 4. Commandes utiles
 
 ```bash
-dotnet build Dmx.slnx
-dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"
-dotnet format Dmx.slnx --verify-no-changes
-python tools/matrice-exigences.py P0 P1 P2
+dotnet build Dmx.sln
+dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"
+dotnet format Dmx.sln --verify-no-changes
+python tools/matrice-exigences.py P0 P1 P2 P3
 dotnet run --project src/Dmx.App -- "samples/Show de référence"
 ```
 
@@ -98,3 +99,6 @@ Modèle de message pour ouvrir une discussion :
 |---|---|---|
 | 2026-09-25 | P2 | P0-P2 développées d'une traite, validation matérielle en attente. |
 | 2026-09-25 | P2 | Fiches d'exigences créées pour les 110 exigences travaillées (historique reconstitué depuis les discussions et Git). |
+| 2026-09-25 | P2 | P0, P1, P2 validées par l'utilisateur avec le matériel réel ; fusion dans `main`, étiquette `v1.001`. |
+| 2026-09-26 | P3 | Installation + Simulateur développés d'une traite (nouveau projet `Dmx.Patch`, écrans Installation et Simulateur, mode appareils de la Console) ; reliquats P0-P2 traités (SORT-008, CONS-007/020 à 024/041/043/092, BIB-093/096/097/098/099/100) ; show de référence patché et placé dans un lieu ; 47 exigences P3 (34 Réalisé, 6 Partiel, 7 Non réalisé). Reste sur `p3/installation-simulateur`, en attente de la revue de l'utilisateur avant fusion et étiquette. |
+| 2026-09-26 | P3 | Tour de test complet en direct avec l'utilisateur (4 PAR + 1 lyre), pas à pas dans la discussion. Corrigés au fil de l'eau : crash `InvalidCastException` (Univers affiché), Identifier (canaux couleur, puis fige au changement d'écran), largeurs de champs (deux passes), lieu actif non mis en évidence, simulateur trop sombre (corps toujours visible) et roue de couleur sans couleur définie décodée en noir, propriétés calculées dupliquées dans le JSON (`JsonIgnore`), fenêtre non maximisée au démarrage, version absente de la barre de titre. Solution repassée en `.sln` classique (D25, VS 2022 17.8 de l'utilisateur trop ancien pour .NET 10 — Claude compile seul désormais). 297 tests verts. **Validée par l'utilisateur, fusionnée dans `main`, étiquette `v1.002`.** |

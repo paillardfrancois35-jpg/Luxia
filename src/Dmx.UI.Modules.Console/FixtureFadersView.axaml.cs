@@ -1,4 +1,6 @@
+using System.Globalization;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using Dmx.UI.Controls;
@@ -42,6 +44,38 @@ public partial class FixtureFadersView : UserControl
         if (sender is Control { Tag: FixtureChannelViewModel channel })
         {
             ViewModel?.StartDiscovery(channel);
+        }
+    }
+
+    /// <summary>Saisie directe d'une valeur (BIB-096, comme la Console).</summary>
+    private void OnValueBoxKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter || sender is not TextBox { Tag: FixtureChannelViewModel channel } box)
+        {
+            return;
+        }
+
+        Commit(box, channel);
+        e.Handled = true;
+    }
+
+    private void OnValueBoxLostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (sender is TextBox { Tag: FixtureChannelViewModel channel } box)
+        {
+            Commit(box, channel);
+        }
+    }
+
+    private void Commit(TextBox box, FixtureChannelViewModel channel)
+    {
+        if (int.TryParse(box.Text, NumberStyles.Integer, CultureInfo.CurrentCulture, out var value) && value is >= 0 and <= 255)
+        {
+            ViewModel?.SetValue(channel, value);
+        }
+        else
+        {
+            box.Text = channel.Value.ToString(CultureInfo.CurrentCulture);
         }
     }
 

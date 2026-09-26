@@ -3,6 +3,11 @@
              x:Class="Dmx.App.App"
              RequestedThemeVariant="Dark">
   <!-- GEN-101 : thème sombre par défaut. -->
+  <Application.Resources>
+    <!-- BIB-097 : barre de défilement plus épaisse même repliée, plus facile à attraper à la souris. -->
+    <x:Double x:Key="ScrollBarThumbThickness">8</x:Double>
+    <x:Double x:Key="ScrollBarSize">16</x:Double>
+  </Application.Resources>
   <Application.Styles>
     <FluentTheme />
     <Style Selector="Border.panel">
@@ -19,6 +24,10 @@
     <Style Selector="StackPanel.field">
       <Setter Property="Spacing" Value="4" />
       <Setter Property="Margin" Value="0,0,16,8" />
+    </Style>
+    <!-- Action destructrice (suppression) : la confirmation (GEN-103) reste la protection principale, ceci n'est qu'un repère visuel. -->
+    <Style Selector="Button.danger">
+      <Setter Property="Foreground" Value="#F85149" />
     </Style>
   </Application.Styles>
 </Application>

@@ -114,16 +114,17 @@
 | [BIB-082](BIB-082.md) | Rapport d'import | P2 | I | Réalisé |
 | [BIB-083](BIB-083.md) | Import par lots sans figer l'interface | P2 | M | Réalisé |
 | [BIB-084](BIB-084.md) | Export OFL | P2 | S | Non réalisé |
-| [BIB-093](BIB-093.md) | Groupe fabricant non déplié après une recherche | P2 | S | À faire |
-| [BIB-094](BIB-094.md) | LPC008S, plage « Fondu » du sélecteur de fonction à revoir | P2 | S | À faire |
+| [BIB-093](BIB-093.md) | Groupe fabricant non déplié après une recherche | P2 | S | Réalisé |
+| [BIB-094](BIB-094.md) | LPC008S, plage « Fondu » du sélecteur de fonction à revoir | P2 | S | Partiel |
 | [BIB-095](BIB-095.md) | Tomshine Mini lyre gobo, définition refaite d'après la vraie notice | P2 | M | Validé |
-| [BIB-096](BIB-096.md) | Test en direct : saisie d'une valeur au clavier | P2 | S | À faire |
-| [BIB-097](BIB-097.md) | Barre de défilement horizontale trop fine | P2 | S | À faire |
-| [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | À faire |
-| [BIB-099](BIB-099.md) | Mode découverte : ergonomie de « Nouvelle plage ici » | P2 | M | À faire |
-| [BIB-100](BIB-100.md) | Signaler visiblement une erreur de validation et amener sur l'onglet concerné | P2 | M | À faire |
+| [BIB-096](BIB-096.md) | Test en direct : saisie d'une valeur au clavier | P2 | S | Réalisé |
+| [BIB-097](BIB-097.md) | Barre de défilement horizontale trop fine | P2 | S | Réalisé |
+| [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | Réalisé |
+| [BIB-099](BIB-099.md) | Mode découverte : ergonomie de « Nouvelle plage ici » | P2 | M | Partiel |
+| [BIB-100](BIB-100.md) | Signaler visiblement une erreur de validation et amener sur l'onglet concerné | P2 | M | Réalisé |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
+| [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
@@ -131,20 +132,26 @@
 | [CONS-004](CONS-004.md) | Commandes de libération et de page | P1 | I | Réalisé |
 | [CONS-005](CONS-005.md) | Le fader affiche la valeur émise | P1 | I | Réalisé |
 | [CONS-006](CONS-006.md) | Sélection multiple de faders | P1 | I | Réalisé |
-| [CONS-007](CONS-007.md) | Appareil, attribut et plage sur le fader | P1 | M | Reporté (P3) |
+| [CONS-007](CONS-007.md) | Appareil, attribut et plage sur le fader | P1 | M | Réalisé |
 | [CONS-008](CONS-008.md) | Surcharges soumises au blackout et à la sûreté | P1 | M | Reporté (P4-P5) |
 | [CONS-009](CONS-009.md) | Choix de l'univers | P1 | M | Réalisé |
 | [CONS-010](CONS-010.md) | Instantanés de console | P1 | S | Réalisé |
+| [CONS-020](CONS-020.md) | Faders regroupés par appareil patché | P3 | I | Réalisé |
+| [CONS-021](CONS-021.md) | Outil adapté par type d'attribut | P3 | I | Partiel |
+| [CONS-022](CONS-022.md) | Surcharge d'attribut soumise à la chaîne de rendu | P3 | I | Partiel |
+| [CONS-023](CONS-023.md) | Clic sur une plage et balayage | P3 | M | Réalisé |
+| [CONS-024](CONS-024.md) | Bouton Identifier par appareil | P3 | M | Réalisé |
 | [CONS-040](CONS-040.md) | Moniteur de sortie 512 cases | P1 | I | Réalisé |
 | [CONS-041](CONS-041.md) | Infos au survol du moniteur | P1 | I | Réalisé |
-| [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Partiel |
+| [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Réalisé |
 | [CONS-044](CONS-044.md) | Moniteur dans une fenêtre séparée | P1 | S | Non réalisé |
 | [CONS-060](CONS-060.md) | Composant « faders d'un appareil » réutilisable | P2 | I | Réalisé |
 | [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | À faire |
-| [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | À faire |
+| [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
+| [GEN-004](GEN-004.md) | Composant d'édition réutilisable dans un autre écran | P3 | M | Réalisé |
 | [GEN-010](GEN-010.md) | Commandes horodatées, avec origine, au tick suivant | P4 | I | Partiel |
 | [GEN-011](GEN-011.md) | Ordre d'arrivée des commandes | P4 | I | Réalisé |
 | [GEN-013](GEN-013.md) | Publication non bloquante des événements | P4 | I | Partiel |
@@ -157,6 +164,7 @@
 | [GEN-050](GEN-050.md) | Fichiers JSON lisibles | P0 | I | Réalisé |
 | [GEN-051](GEN-051.md) | Version de format et migrations | P0 | I | Réalisé |
 | [GEN-052](GEN-052.md) | Identifiants stables | P2 | I | Réalisé |
+| [GEN-053](GEN-053.md) | Copie des modèles d'appareils dans le projet | P3 | I | Réalisé |
 | [GEN-056](GEN-056.md) | Fichier illisible sans plantage | P0 | I | Réalisé |
 | [GEN-058](GEN-058.md) | Chemins relatifs (projet déplaçable) | P2 | S | Non réalisé |
 | [GEN-060](GEN-060.md) | Blackout au démarrage | P0 | I | Réalisé |
@@ -178,7 +186,43 @@
 | [GEN-109](GEN-109.md) | Opérations longues sans figer l'interface | P1 | I | Réalisé |
 | [GEN-110](GEN-110.md) | Journal technique | P0 | I | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
+| [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Partiel |
+| [INST-001](INST-001.md) | Un ou plusieurs univers, numérotés et nommables | P3 | I | Réalisé |
+| [INST-002](INST-002.md) | Lien univers → pilotes dans les préférences | P3 | I | Réalisé |
+| [INST-003](INST-003.md) | Vue barre d'univers | P3 | I | Réalisé |
+| [INST-010](INST-010.md) | Ajouter un appareil au patch | P3 | I | Réalisé |
+| [INST-011](INST-011.md) | Ajout multiple d'appareils identiques | P3 | I | Réalisé |
+| [INST-012](INST-012.md) | Première adresse libre proposée | P3 | I | Réalisé |
+| [INST-013](INST-013.md) | Détection des chevauchements en temps réel | P3 | I | Réalisé |
+| [INST-014](INST-014.md) | Doublon volontaire (jumeaux) | P3 | M | Réalisé |
+| [INST-015](INST-015.md) | Déplacer un appareil | P3 | I | Réalisé |
+| [INST-016](INST-016.md) | Changer le mode d'un appareil patché | P3 | I | Réalisé |
+| [INST-017](INST-017.md) | Nom, couleur et numéro court | P3 | I | Réalisé |
+| [INST-018](INST-018.md) | Fiche d'installation | P3 | I | Réalisé |
+| [INST-019](INST-019.md) | Identifier un appareil / chenillard d'identification | P3 | I | Réalisé |
+| [INST-020](INST-020.md) | Supprimer un appareil | P3 | M | Réalisé |
+| [INST-021](INST-021.md) | Options de montage par appareil | P3 | M | Partiel |
+| [INST-030](INST-030.md) | Sélection manuelle ordonnée | P3 | I | Réalisé |
+| [INST-031](INST-031.md) | Sélections automatiques | P3 | I | Réalisé |
+| [INST-032](INST-032.md) | Sélections manuelles créées et réordonnées | P3 | I | Partiel |
+| [INST-033](INST-033.md) | Opérations d'ordre sur une sélection | P3 | M | Réalisé |
+| [INST-034](INST-034.md) | Sélection de cellules | P3 | M | Non réalisé |
+| [INST-050](INST-050.md) | Créer, dupliquer, activer un lieu | P3 | I | Réalisé |
+| [INST-051](INST-051.md) | Éditeur de plan | P3 | I | Partiel |
+| [INST-052](INST-052.md) | Appareil absent | P3 | I | Réalisé |
+| [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
+| [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
+| [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |
+| [SIM-004](SIM-004.md) | Faisceau des lyres | P3 | I | Réalisé |
+| [SIM-005](SIM-005.md) | Survol / clic sur un appareil | P3 | I | Réalisé |
+| [SIM-006](SIM-006.md) | Choix de la source affiché en permanence | P3 | I | Partiel |
+| [SIM-007](SIM-007.md) | Fenêtre détachable et plein écran | P3 | M | Non réalisé |
+| [SIM-008](SIM-008.md) | Zones interdites et repères du lieu | P3 | M | Non réalisé |
+| [SIM-009](SIM-009.md) | Appareils identifiés et en erreur mis en évidence | P3 | M | Réalisé |
+| [SIM-010](SIM-010.md) | Sélection au clic / au lasso | P3 | M | Non réalisé |
+| [SIM-012](SIM-012.md) | Protection photosensible (strobe) | P3 | I | Réalisé |
+| [SIM-013](SIM-013.md) | Vue de face | P3 | S | Non réalisé |
 | [SORT-001](SORT-001.md) | Univers vers plusieurs pilotes | P0 | I | Réalisé |
 | [SORT-002](SORT-002.md) | Pilotes indépendants | P0 | I | Réalisé |
 | [SORT-003](SORT-003.md) | Seule la trame la plus récente | P0 | I | Réalisé |
@@ -186,7 +230,7 @@
 | [SORT-005](SORT-005.md) | Moteur actif sans aucune sortie | P0 | I | Réalisé |
 | [SORT-006](SORT-006.md) | Configuration des sorties dans les préférences du poste | P0 | I | Réalisé |
 | [SORT-007](SORT-007.md) | Écran « Sorties » et test de sortie | P0 | M | Réalisé |
-| [SORT-008](SORT-008.md) | Canaux maintenus pendant le test de sortie | P3 | M | À faire |
+| [SORT-008](SORT-008.md) | Canaux maintenus pendant le test de sortie | P3 | M | Réalisé |
 | [SORT-010](SORT-010.md) | Détection automatique de l'Arduino | P0 | I | Réalisé, à valider sur matériel |
 | [SORT-011](SORT-011.md) | Dernier port essayé en premier | P0 | I | Réalisé |
 | [SORT-012](SORT-012.md) | Jamais 1200 bauds, DTR actif | P0 | I | Réalisé |
@@ -209,4 +253,7 @@
 | [SORT-049](SORT-049.md) | Trame DMX ajustée au nombre de canaux reçus | P0 | S | Réalisé, à valider sur matériel |
 | [SORT-060](SORT-060.md) | Enregistreur de trames | P0 | I | Réalisé |
 | [SORT-061](SORT-061.md) | Enregistreur activable à chaud | P0 | I | Réalisé |
+| [SORT-062](SORT-062.md) | Pilote Simulateur | P3 | I | Réalisé |
+| [SORT-063](SORT-063.md) | Lecteur d'enregistrements | P3 | S | Non réalisé |
+| [SORT-064](SORT-064.md) | Pilote Art-Net | P3 | S | Non réalisé |
 <!-- INDEX:FIN -->

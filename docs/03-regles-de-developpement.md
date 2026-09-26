@@ -1,7 +1,7 @@
 # 03 – Règles de développement
 
 > Document transverse : **comment** on écrit le code. Le **quoi** est dans les cahiers des charges (02, 10 à 23).
-> Validé par l'utilisateur le 2026-09-24 (Q21, Q22). Toute évolution de ces règles est notée au §11.
+> Validé par l'utilisateur le 2026-09-24 (Q21, Q22). Toute évolution de ces règles est notée au §12.
 
 ---
 
@@ -10,6 +10,7 @@
 | Élément | Choix |
 |---|---|
 | Framework | **.NET 10** (LTS), `net10.0` ; `net10.0-windows` uniquement pour ce qui dépend de Windows (application, API Windows) |
+| Solution | **`Dmx.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `Dmx.sln`. |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
 | Assemblage | Projet `Dmx.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
@@ -37,7 +38,7 @@ Lorsqu'un terme du glossaire n'a pas d'équivalent anglais établi, on en choisi
 
 ```
 DMX/
-├── Dmx.slnx                  Solution
+├── Dmx.sln                   Solution
 ├── Directory.Build.props     Réglages communs (framework, nullable, avertissements…)
 ├── Directory.Packages.props  Versions centralisées des paquets
 ├── .editorconfig
@@ -63,6 +64,7 @@ DMX/
 | `Dmx.Output` | Core, Messaging |
 | `Dmx.Persistence` | Core |
 | `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
+| `Dmx.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
 | `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
 | `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
 | `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
@@ -103,7 +105,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Nommage | `Methode_Condition_ResultatAttendu` (anglais) ; `DisplayName` en français si utile |
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
 | Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
-| Commandes | `dotnet test --solution Dmx.slnx -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
+| Commandes | `dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
 | Intégration | `tests/Dmx.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
@@ -143,10 +145,26 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
 - Chaque phase se livre avec ses démonstrations (doc 40 §7, doc 41).
 
-## 11. Historique
+## 11. Pièges déjà rencontrés
+
+Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit. But : ne pas refaire deux fois la même faute d'inattention, en particulier sur l'ergonomie et sur les pièges Avalonia peu visibles à la relecture.
+
+- **Champs de saisie trop étroits.** Un `NumericUpDown`/`TextBox` sans largeur explicite (ou avec une largeur « au pif » de 60-100px) n'affiche souvent qu'un chiffre ou deux, surtout dans une `Grid` à colonnes fixes. Un `NumericUpDown` a besoin de plus de marge qu'un simple `TextBox` : ses boutons +/- prennent de la place, et **110px reste trop juste** en pratique (confirmé deux fois par l'utilisateur le 2026-09-26, y compris après un premier correctif à 110px). Règle : largeur explicite d'au moins **140px** pour un `NumericUpDown`, 110-140px pour un `TextBox` court, jamais la largeur par défaut du contrôle. Vérifier à l'œil (capture ou test manuel), pas seulement à la compilation — et revérifier après correctif, ce n'est pas toujours bon du premier coup. (Signalé le 2026-09-26 sur l'écran Installation : panneau « Ajouter un appareil », liste du patch, onglet Lieux.)
+- **`ObservableCollection<T>.Clear()` puis re-remplissage, quand la collection est l'`ItemsSource` d'un contrôle dont `SelectedItem` est lié en bidirectionnel à une propriété de type valeur non annulable (`int`, `enum`...).** Le `Clear()` fait transiter la sélection par `null` le temps de la reconstruction ; la liaison tente alors de repousser ce `null` vers l'`int`, ce qui lève `System.InvalidCastException: Could not convert '(null)' (null) to System.Int32.`. Corriger en ne touchant la collection que pour la différence réelle (retirer les éléments obsolètes, ajouter les manquants), jamais par un `Clear()` suivi d'un re-remplissage complet. (Rencontré le 2026-09-26 sur `InstallationViewModel.LoadAll()`, ComboBox « Univers affiché ».)
+- **Un bouton bascule (« stop si déjà actif, sinon démarre ») qui appelle d'abord la méthode d'arrêt puis teste l'état.** Si la méthode d'arrêt remet l'état à sa valeur neutre (ex. `_identifyingFixtureId = null`), le test qui suit ne peut plus jamais être vrai : un second clic redémarre au lieu d'arrêter. Toujours capturer l'état AVANT d'appeler la méthode qui le modifie. (Rencontré le 2026-09-26 sur `InstallationViewModel.ToggleIdentifyFixture`.)
+- **Pousser un seul canal d'intensité à 255 ne rend pas forcément un appareil visible.** Sur un appareil RVB (ou RVBW…), le gradateur général (`Intensity`) n'est qu'un multiplicateur : si le rouge/vert/bleu sont à 0, l'appareil reste éteint même gradateur au maximum — contrairement à un projecteur à lampe classique où l'intensité seule suffit. Toute fonctionnalité qui doit rendre un appareil visible (Identifier, CMD-023) doit aussi pousser les canaux émetteurs de couleur (`AttributeInfo.IsEmitter`), pas seulement la famille `Intensity`. (Rencontré le 2026-09-26 sur `IdentifyRules.IdentifyChannels`, retour utilisateur avec un PAR réel qui ne s'allumait pas.)
+- **Un comportement minuté piloté par le rafraîchissement d'un écran (`IRefreshable.Refresh()`) s'arrête dès que cet écran n'est plus affiché.** La coquille (`MainWindowViewModel`) ne rafraîchit que l'écran actuellement sélectionné, pour ne pas gaspiller de calcul sur les écrans invisibles — ce qui est correct pour de l'affichage pur, mais fige toute surcharge réelle de canaux (Identifier, CMD-023) au dernier état si l'utilisateur change d'écran pendant qu'elle tourne (ex. pour vérifier au Simulateur, SIM-009). Un écran qui pilote une telle surcharge doit se signaler comme ayant besoin d'un rafraîchissement de fond (`IRefreshable.NeedsBackgroundRefresh`), sans quoi la coquille l'ignore dès qu'il quitte l'écran. (Rencontré le 2026-09-26, retour utilisateur : Identifier restait figé en passant sur le Simulateur.)
+- **Une propriété calculée en lecture seule (`=> ...`, pas `init`) sur un `record` enregistré en JSON est sérialisée comme les autres, sans qu'on le veuille.** Le sérialiseur (réflexion, `DmxJson.Options`) inclut par défaut toute propriété publique lisible ; une propriété calculée (`FixtureType.DisplayName`, `FixtureMode.ChannelCount`, `Capability.Median`, `VenueSet.Active`, `TestOutputPreferences.ValueByte`…) se retrouve donc dupliquée dans le fichier à chaque enregistrement, sans jamais être relue (pas de `init`) — juste du bruit qui gonfle le fichier et nuit à la lisibilité (D12 : JSON lisible à la main). Mettre `[JsonIgnore]` sur toute propriété calculée d'un `record` persisté, dès sa création — pas seulement quand on le remarque dans un fichier. Sans danger pour les fichiers déjà enregistrés avec le champ en trop : il est simplement ignoré à la relecture, et disparaît de lui-même au prochain enregistrement. (Rencontré le 2026-09-26 en examinant une différence de `lieux.json` après un test utilisateur ; recherche élargie aux autres records persistés du même genre.)
+- **Une plage de roue de couleur / macro sans couleur définie (`Capability.Colors` vide) n'est pas une absence de signal.** Une position « ouverte » (pas de gélatine devant la lampe) laisse passer la lumière blanche de la source : `FixtureDecoder` la traitait comme « pas de couleur » → noir, alors qu'elle doit être blanche. Distinguer « pas de couleur définie sur cette plage » (blanc, lumière non filtrée) de « appareil RVB dont les canaux sont à 0 » (réellement noir, ces deux cas ont une cause physique différente). (Rencontré le 2026-09-26 sur `FixtureDecoder.DecodeCell`, retour utilisateur : une lyre identifiée s'allumait réellement mais restait invisible au simulateur.)
+
+## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-26 | §11 « Pièges déjà rencontrés » (largeurs de saisie, `ObservableCollection.Clear()` sur un `SelectedItem` non annulable, bascule stop/démarre, intensité seule ne suffit pas sur un appareil RVB) — demande explicite de l'utilisateur après des retours de test en direct sur l'écran Installation. |
+| 2026-09-26 | Solution au format `.sln` classique, plus `.slnx` (D25) : l'utilisateur ne pouvait plus ouvrir/compiler le projet. |
+| 2026-09-26 | `IRefreshable.NeedsBackgroundRefresh` : un écran qui identifie un appareil continue d'être rafraîchi même non affiché (§11, retour utilisateur Simulateur). |
+| 2026-09-26 | P3 : projet `Dmx.Patch` (Core, Persistence, Fixtures) pour l'installation, les sélections et les lieux (doc 13, doc 00 §7.2). |
 | 2026-09-24 | Version initiale (Q21, Q22). |
 | 2026-09-25 | Fiches d'exigences `docs/exigences/` (demande de l'utilisateur) : suivi par exigence façon Redmine, source du statut de la matrice 31. |
 | 2026-09-25 | P1-P2 : projets d'interface par écran (D22), CA1822 en suggestion pour les projets d'interface (liaisons), CA1309 désactivée (tris affichés en français), matrice `tools/matrice-exigences.py`. |

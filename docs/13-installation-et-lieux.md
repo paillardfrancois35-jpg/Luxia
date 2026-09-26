@@ -107,3 +107,19 @@ Parcours guidé, accessible depuis l'accueil et le Live, pour être prêt en **m
 | T-INST-04 | Intégration | Appareil absent → canaux à 0, scènes jouées sans erreur. |
 | T-INST-05 | Intégration | Inversion Pan/Tilt : même palette → mouvements symétriques attendus. |
 | T-INST-06 | Manuel | Assistant d'installation chronométré sur le parc réel (< 15 min). |
+
+## 8. Notes de réalisation (P3)
+
+> Écarts et précisions constatés au développement (doc 40 §6). Détail complet dans les fiches d'exigences.
+
+| Sujet | Réalisation |
+|---|---|
+| Projet `Dmx.Patch` | Installation, sélections et lieux dans un nouveau projet domaine (Core, Persistence, Fixtures), doc 00 §7.2. |
+| Sélections automatiques | Jamais enregistrées : recalculées à la volée à partir du patch courant (D24), toujours cohérentes. |
+| GEN-053 | Copie des modèles dans `<projet>/Bibliothèque/`, même format et même code que la bibliothèque partagée (`Dmx.Fixtures.FixtureLibrary`) ; les génériques de l'application n'y sont jamais copiés. |
+| INST-016 / GEN-053 | Rapport d'impact (canaux perdus / gagnés) commun au changement de mode et à la mise à jour depuis la bibliothèque ; le volet « scènes impactées » attend P4. |
+| INST-021 | Modèle et décodeur (options de montage) prêts et utilisés par le simulateur ; pas encore d'éditeur dans l'écran (INST-021). |
+| INST-034 | Sélection de cellules individuelles (segments de barre) reportée après P6 (effets par cellule) ; les barres se pilotent en entier dès P3. |
+| INST-051 | Positionnement par champs numériques (X, Y en mètres), pas de glisser-déposer sur un plan visuel. |
+| Identification (CMD-023) | Réalisée par des surcharges de canaux minutées côté interface (comme la découverte BIB-062), pas par une commande moteur dédiée : voir la fiche CMD-023 pour la discussion complète. |
+| Écran | `Dmx.UI.Modules.Installation` : onglets Univers et patch, Sélections, Lieux, Fiche d'installation. |

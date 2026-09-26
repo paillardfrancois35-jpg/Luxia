@@ -17,6 +17,7 @@ internal sealed class TestPattern
 {
     private TestOutputCommand? _command;
     private int[] _channels = [];
+    private int[] _heldChannels = [];
     private TimeSpan _start;
     private volatile int _currentChannel;
 
@@ -39,6 +40,8 @@ internal sealed class TestPattern
         }
 
         _channels = [.. Enumerable.Range(command.Range.First, command.Range.Count).Except(command.ExcludedChannels)];
+        // SORT-008 : les canaux maintenus restent à la valeur de test tout le chenillard, exclusions toujours respectées.
+        _heldChannels = [.. command.HeldChannelsOrEmpty.Except(command.ExcludedChannels).Where(c => c is >= 1 and <= DmxConstants.ChannelCount)];
         _start = now;
         _command = _channels.Length == 0 ? null : command;
     }
@@ -71,6 +74,11 @@ internal sealed class TestPattern
 
         // D19 : le test remplace la restitution de l'univers ; seul le canal courant est allumé.
         frame.Clear();
+        foreach (var held in _heldChannels)
+        {
+            frame[held] = command.Value;
+        }
+
         frame[channel] = command.Value;
     }
 

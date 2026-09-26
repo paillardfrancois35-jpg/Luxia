@@ -4,8 +4,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dmx.Core.Dmx;
 using Dmx.Core.Snapshots;
+using Dmx.Fixtures.Rules;
 using Dmx.Hosting;
 using Dmx.Messaging.Commands;
+using Dmx.Patch.Rules;
 using Dmx.UI.Controls;
 
 namespace Dmx.UI.Modules.Console;
@@ -59,6 +61,9 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     [ObservableProperty]
     private bool _hasProject;
 
+    [ObservableProperty]
+    private bool _isDeviceMode;
+
     /// <summary>Crée la console.</summary>
     public ConsoleViewModel(DmxRuntime runtime, IDialogService dialogs)
     {
@@ -67,7 +72,15 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         _runtime = runtime;
         _dialogs = dialogs;
         Universes = [.. Enumerable.Range(1, runtime.Engine.UniverseCount)];
-        _runtime.Project.Changed += (_, _) => LoadSnapshots();
+        _runtime.Project.Changed += (_, _) =>
+        {
+            LoadSnapshots();
+            BuildPage();
+            if (IsDeviceMode)
+            {
+                BuildDeviceFixtures();
+            }
+        };
         LoadSnapshots();
         BuildPage();
     }
@@ -78,8 +91,11 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     /// <summary>Univers disponibles (CONS-009).</summary>
     public IReadOnlyList<int> Universes { get; }
 
-    /// <summary>Faders de la page courante.</summary>
+    /// <summary>Faders de la page courante (mode canaux, CONS-001).</summary>
     public ObservableCollection<ChannelViewModel> Channels { get; } = [];
+
+    /// <summary>Un groupe de faders par appareil patché de l'univers affiché (mode appareils, CONS-020).</summary>
+    public ObservableCollection<FixtureFadersViewModel> DeviceFixtures { get; } = [];
 
     /// <summary>Instantanés du projet.</summary>
     public ObservableCollection<SnapshotViewModel> Snapshots { get; } = [];
@@ -89,6 +105,10 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Surcharges de l'univers affiché (-1 = libre).</summary>
     public ReadOnlySpan<short> Overrides => _overrides;
+
+    /// <summary>Plages de canaux par appareil patché de l'univers affiché (CONS-043), toujours à jour.</summary>
+    public IReadOnlyList<(int First, int Last)> FixtureBoundaries =>
+        PatchLookup.FixtureRanges(_runtime.Project.Installation.Fixtures, TypeOf, SelectedUniverse);
 
     /// <summary>Premier canal de la page.</summary>
     public int FirstChannel => (PageIndex * PageSize) + 1;
@@ -114,6 +134,9 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     }
 
     /// <inheritdoc />
+    public bool NeedsBackgroundRefresh => IsDeviceMode && DeviceFixtures.Any(f => f.Identifying);
+
+    /// <inheritdoc />
     public void Refresh()
     {
         _runtime.Engine.CopyLastFrame(SelectedUniverse, _frame);
@@ -121,6 +144,27 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         foreach (var channel in Channels)
         {
             channel.Update(_frame[channel.Channel - 1], _overrides[channel.Channel - 1] >= 0);
+
+            // CONS-007 : appareil, attribut et nom de plage courante, toujours à jour.
+            if (PatchInfo(channel.Channel) is { } info)
+            {
+                channel.Caption = $"{info.Fixture.Name} {info.Channel.Name}";
+                var described = DmxConversion.Describe(info.Channel, channel.Value, info.Type.Physical);
+                var dash = described.IndexOf('–', StringComparison.Ordinal);
+                channel.PercentText = dash >= 0 ? described[(dash + 1)..].Trim() : described;
+            }
+            else
+            {
+                channel.Caption = string.Empty;
+            }
+        }
+
+        if (IsDeviceMode)
+        {
+            foreach (var faders in DeviceFixtures)
+            {
+                faders.Refresh();
+            }
         }
 
         var overridden = _runtime.Engine.OverrideCount(SelectedUniverse);
@@ -203,9 +247,11 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
 
         var value = _frame[channel - 1];
         var overridden = _overrides[channel - 1] >= 0 ? " – pris à la console" : string.Empty;
+        var patch = PatchInfo(channel) is { } info
+            ? $" – {info.Fixture.Name} {info.Channel.Name} – {DmxConversion.Describe(info.Channel, value, info.Type.Physical)}"
+            : string.Empty;
 
-        // CONS-041 : appareil et attribut dès que le patch existera (P3).
-        HoverText = string.Create(CultureInfo.CurrentCulture, $"Canal {channel} – valeur {value} ({Math.Round(value * 100 / 255.0)} %){overridden}");
+        HoverText = string.Create(CultureInfo.CurrentCulture, $"Canal {channel}{patch} – valeur {value} ({Math.Round(value * 100 / 255.0)} %){overridden}");
     }
 
     /// <summary>Clic sur le moniteur : affiche la page du canal.</summary>
@@ -224,6 +270,58 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
     {
         _selection.Clear();
         BuildPage();
+        if (IsDeviceMode)
+        {
+            BuildDeviceFixtures();
+        }
+    }
+
+    partial void OnIsDeviceModeChanged(bool value)
+    {
+        if (value)
+        {
+            BuildDeviceFixtures();
+        }
+        else
+        {
+            ClearDeviceFixtures();
+        }
+    }
+
+    /// <summary>Un groupe de faders par appareil patché de l'univers affiché (CONS-020) : réutilise le composant CONS-060.</summary>
+    private void BuildDeviceFixtures()
+    {
+        ClearDeviceFixtures();
+        var fixtures = _runtime.Project.Installation.Fixtures
+            .Where(f => f.Universe == SelectedUniverse)
+            .OrderBy(f => f.Address);
+        foreach (var patched in fixtures)
+        {
+            if (TypeOf(patched) is not { } type)
+            {
+                continue;
+            }
+
+            var mode = type.Modes.FirstOrDefault(m => m.Name == patched.ModeName);
+            if (mode is null)
+            {
+                continue;
+            }
+
+            var faders = new FixtureFadersViewModel(_runtime);
+            faders.Attach(type, mode, patched.Address, patched.Universe, patched.Name);
+            DeviceFixtures.Add(faders);
+        }
+    }
+
+    private void ClearDeviceFixtures()
+    {
+        foreach (var faders in DeviceFixtures)
+        {
+            faders.Detach();
+        }
+
+        DeviceFixtures.Clear();
     }
 
     [RelayCommand]
@@ -399,6 +497,12 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         UpdateSelectionFlags();
         Refresh();
     }
+
+    private PatchChannelInfo? PatchInfo(int channel) =>
+        PatchLookup.FindChannel(_runtime.Project.Installation.Fixtures, TypeOf, SelectedUniverse, channel);
+
+    private Fixtures.Model.FixtureType? TypeOf(Dmx.Patch.Model.PatchedFixture fixture) =>
+        _runtime.Project.FixtureLibrary?.Find(fixture.FixtureTypeId);
 
     private void UpdateSelectionFlags()
     {

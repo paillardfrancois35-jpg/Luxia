@@ -16,7 +16,8 @@ public sealed class DependencyRulesTests
         ["Dmx.Output"] = ["Dmx.Core", "Dmx.Messaging"],
         ["Dmx.Persistence"] = ["Dmx.Core"],
         ["Dmx.Fixtures"] = ["Dmx.Core", "Dmx.Persistence"],
-        ["Dmx.Hosting"] = ["Dmx.Core", "Dmx.Messaging", "Dmx.Engine", "Dmx.Output", "Dmx.Persistence", "Dmx.Fixtures"],
+        ["Dmx.Patch"] = ["Dmx.Core", "Dmx.Persistence", "Dmx.Fixtures"],
+        ["Dmx.Hosting"] = ["Dmx.Core", "Dmx.Messaging", "Dmx.Engine", "Dmx.Output", "Dmx.Persistence", "Dmx.Fixtures", "Dmx.Patch"],
     };
 
     public static TheoryData<string> Projects => [.. Allowed.Keys];
@@ -39,6 +40,9 @@ public sealed class DependencyRulesTests
     [InlineData("Dmx.UI.Controls")]
     [InlineData("Dmx.UI.Modules.Console")]
     [InlineData("Dmx.UI.Modules.Outputs")]
+    [InlineData("Dmx.UI.Modules.Library")]
+    [InlineData("Dmx.UI.Modules.Installation")]
+    [InlineData("Dmx.UI.Modules.Simulator")]
     [Trait("Exigence", "GEN-003")]
     public void UserInterfaceModules_DoNotReferenceApplication(string project)
     {

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Dmx.Hosting;
@@ -14,6 +15,10 @@ namespace Dmx.App.ViewModels;
 /// </summary>
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
+    /// <summary>Version affichée dans la barre de titre (`Directory.Build.props`, étiquette Git correspondante).</summary>
+    private static readonly string Version =
+        Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
+
     private readonly DmxRuntime _runtime;
     private readonly IDialogService _dialogs;
     private int _statusCountdown;
@@ -53,6 +58,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         [
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Dmx.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
+            new NavigationItem("Installation", "▦", new Dmx.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),
+            new NavigationItem("Simulateur", "◎", new Dmx.UI.Modules.Simulator.SimulatorViewModel(runtime)),
             new NavigationItem("Sorties", "⇄", new OutputsViewModel(runtime)),
         ];
         _selectedPage = Pages[0];
@@ -64,10 +71,23 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     /// <summary>Écrans de l'Atelier.</summary>
     public IReadOnlyList<NavigationItem> Pages { get; }
 
-    /// <summary>Rafraîchissement de l'écran affiché (20 fois par seconde) et de la barre d'état (4 fois par seconde).</summary>
+    /// <summary>
+    /// Rafraîchissement de l'écran affiché (20 fois par seconde) et de la barre d'état (4 fois par seconde).
+    /// Un écran non affiché qui pilote une surcharge de canaux réels (Identifier) est rafraîchi quand même :
+    /// voir <see cref="IRefreshable.NeedsBackgroundRefresh"/>.
+    /// </summary>
     public void Refresh()
     {
-        (SelectedPage.Page as IRefreshable)?.Refresh();
+        var selected = SelectedPage.Page as IRefreshable;
+        selected?.Refresh();
+        foreach (var page in Pages)
+        {
+            if (page.Page is IRefreshable refreshable && !ReferenceEquals(refreshable, selected) && refreshable.NeedsBackgroundRefresh)
+            {
+                refreshable.Refresh();
+            }
+        }
+
         if (--_statusCountdown <= 0)
         {
             _statusCountdown = 5;
@@ -113,7 +133,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     private void UpdateProject()
     {
         ProjectName = _runtime.Project.Info?.Name ?? "Aucun projet";
-        Title = _runtime.Project.Info is { } info ? $"DMX – {info.Name}" : "DMX";
+        Title = _runtime.Project.Info is { } info ? $"DMX v{Version} – {info.Name}" : $"DMX v{Version}";
         ProjectMessage = _runtime.Project.Messages.Count > 0 ? string.Join(" ", _runtime.Project.Messages) : null;
     }
 

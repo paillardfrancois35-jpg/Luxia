@@ -1,0 +1,141 @@
+{
+  "formatVersion": 1,
+  "id": "be138280-6687-5576-a26f-f07414422ba7",
+  "manufacturer": "BeamZ",
+  "model": "BUV463",
+  "category": "uv",
+  "version": 1,
+  "author": "DMX (depuis la notice)",
+  "source": "manual",
+  "notes": "Projecteur UV 24 × 3 W (85 W), 4 rangées de LED pilotables (cellules 1 à 4).",
+  "manual": "docs/Equipements/UV/BeamZ/BUV463/BeamZ-BUV463.pdf",
+  "physical": {
+    "sourceType": "LED UV",
+    "power": 85
+  },
+  "channels": [
+    {
+      "key": "dim",
+      "name": "Maître",
+      "attribute": "intensity"
+    },
+    {
+      "key": "uv1",
+      "name": "LED UV rangée 1",
+      "attribute": "uv",
+      "cell": 1
+    },
+    {
+      "key": "uv2",
+      "name": "LED UV rangée 2",
+      "attribute": "uv",
+      "cell": 2
+    },
+    {
+      "key": "uv3",
+      "name": "LED UV rangée 3",
+      "attribute": "uv",
+      "cell": 3
+    },
+    {
+      "key": "uv4",
+      "name": "LED UV rangée 4",
+      "attribute": "uv",
+      "cell": 4
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe / vitesse",
+      "attribute": "shutter",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 0,
+          "kind": "open",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 1,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide (vitesse des programmes en auto)",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "auto",
+      "name": "Programmes",
+      "attribute": "program",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 50,
+          "kind": "noFunction",
+          "label": "Sans fonction"
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "Programme auto 1"
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Programme auto 2"
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Programme auto 3"
+        },
+        {
+          "min": 201,
+          "max": 255,
+          "kind": "program",
+          "label": "Contrôle par le son"
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "7 canaux",
+      "shortName": "7CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "uv1"
+        },
+        {
+          "channel": "uv2"
+        },
+        {
+          "channel": "uv3"
+        },
+        {
+          "channel": "uv4"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "auto"
+        }
+      ]
+    }
+  ]
+}

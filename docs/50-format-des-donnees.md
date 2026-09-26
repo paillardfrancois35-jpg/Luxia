@@ -52,6 +52,7 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
   "testOutput": {
     "range": "1-16",
     "excludedChannels": "180",
+    "heldChannels": "1, 8, 15, 22",
     "valuePercent": 50,
     "stepMilliseconds": 1000
   }
@@ -69,6 +70,7 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
 | `outputs.arduino.probeAllPorts` | booléen | Sonder aussi les ports série qui ne sont pas des cartes Arduino |
 | `testOutput.range` | `"1-16"` | Plage du chenillard de test |
 | `testOutput.excludedChannels` | `"180"`, `"1, 5-8"` | Canaux jamais allumés par le test |
+| `testOutput.heldChannels` | `""`, `"1, 8, 15, 22"` | Canaux maintenus à la valeur de test pendant tout le chenillard (SORT-008) |
 | `testOutput.valuePercent` | 0 à 100 | Valeur de test (50 % = 128) |
 
 ## 4. Projet : `projet.json` (format 1)
@@ -120,7 +122,72 @@ Instantanés de console (CONS-010) : faders pris, rappelables d'un clic.
 | `universe` | Univers (1 = premier) |
 | `channels` | Canaux (1-512) et valeurs (0-255) imposés au rappel ; les autres faders de l'univers sont libérés |
 
-## 6. Bibliothèque : modèle d'appareil (format 1)
+## 6. Projet : `installation.json` (format 1)
+
+Univers, patch, sélections manuelles (doc 13, INST-001 à 034). Les sélections **automatiques** (Tous, par modèle, par
+catégorie) ne sont pas enregistrées : recalculées à la volée (D24).
+
+```json
+{
+  "formatVersion": 1,
+  "universes": [ { "number": 1, "name": "Salle" } ],
+  "fixtures": [
+    {
+      "id": "5c9e2f10-...",
+      "fixtureTypeId": "0b6d...",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 1,
+      "name": "PAR 1",
+      "number": 1,
+      "color": "#58A6FF",
+      "twinGroupId": null,
+      "options": { "invertPan": false, "invertTilt": false, "swapPanTilt": false, "panOffsetDegrees": 0 }
+    }
+  ],
+  "selections": [
+    { "id": "e1a4...", "name": "PAR gauche", "color": "#58A6FF", "items": [ { "fixtureId": "5c9e2f10-...", "cell": 0 } ] }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `fixtures[].fixtureTypeId` | Identifiant du modèle dans la **copie du projet** (§8, GEN-053), jamais la bibliothèque partagée directement |
+| `fixtures[].modeName` | Nom du mode utilisé (`modes[].name` du modèle) |
+| `fixtures[].twinGroupId` | Jumeaux (INST-014) : deux appareils du même groupe peuvent partager une adresse |
+| `fixtures[].options` | Montage (INST-021) : inversions, échange Pan/Tilt, décalage et bornes propres à l'appareil |
+| `selections[].items[].cell` | 0 = appareil entier, sinon numéro de cellule (doc 12 §2.6, INST-034) |
+
+## 7. Projet : `lieux.json` (format 1)
+
+Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu actif.
+
+```json
+{
+  "formatVersion": 1,
+  "venues": [
+    {
+      "id": "a1b2...",
+      "name": "Générique",
+      "widthM": 12,
+      "depthM": 8,
+      "placements": [
+        { "fixtureId": "5c9e2f10-...", "x": 1.5, "y": 0.5, "heightM": 2, "orientationDeg": 0, "mounting": "standing", "absent": false }
+      ]
+    }
+  ],
+  "activeVenueId": "a1b2..."
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `venues[].placements[].mounting` | `standing` (posé) ou `hanging` (suspendu) |
+| `venues[].placements[].absent` | Appareil non emporté ce soir (INST-052) : non émis, absent du simulateur et des sélections actives |
+| `activeVenueId` | Lieu actif ; absent ou introuvable = le premier lieu de la liste |
+
+## 8. Bibliothèque : modèle d'appareil (format 1)
 
 Un fichier par modèle : `Bibliothèque\<fabricant>\<modèle>.json` (doc 12 §8). Exemple réduit (PAR 3 / 7 canaux) :
 
@@ -163,7 +230,12 @@ Un fichier par modèle : `Bibliothèque\<fabricant>\<modèle>.json` (doc 12 §8)
 
 Règles de validation : doc 12 §3 (BIB-004) et §10.
 
-## 7. Enregistrement de trames `.dmxrec` (format binaire 1)
+**Copie du projet (GEN-053)** : même format, un fichier par modèle sous `<projet>/Bibliothèque/<fabricant>/<modèle>.json`.
+Alimentée au patch (§6) ; une modification de la bibliothèque partagée ne s'y répercute que sur action explicite
+(« Mettre à jour »), avec le rapport d'impact (canaux perdus / gagnés, doc 13 §3 INST-016). Les modèles génériques de
+l'application n'y sont jamais copiés (D24).
+
+## 9. Enregistrement de trames `.dmxrec` (format binaire 1)
 
 Fichier binaire compact (SORT-060), petit-boutiste.
 
@@ -176,10 +248,11 @@ Une **longueur 0** signifie « trame identique à la précédente » : un univer
 Une fin de fichier tronquée (arrêt brutal) est tolérée à la lecture : seules les trames complètes sont relues.
 Lecture : `dmx-headless relire fichier.dmxrec`.
 
-## 8. Historique
+## 10. Historique
 
 | Date | Modification |
 |---|---|
 | 2026-09-24 | P0 : règles communes, `preferences.json`, `projet.json`, `.dmxrec`. |
 | 2026-09-24 | P1 : `console.json` (instantanés). |
 | 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |
+| 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Dmx.Fixtures.Model;
 
 /// <summary>
@@ -57,7 +59,8 @@ public sealed record FixtureType
     /// <summary>Modes (au moins un, BIB-002).</summary>
     public IReadOnlyList<FixtureMode> Modes { get; init; } = [];
 
-    /// <summary>Nom affiché « Fabricant Modèle ».</summary>
+    /// <summary>Nom affiché « Fabricant Modèle », recalculé : jamais enregistré.</summary>
+    [JsonIgnore]
     public string DisplayName => $"{Manufacturer} {Model}";
 
     /// <summary>Définition de canal par sa clé.</summary>

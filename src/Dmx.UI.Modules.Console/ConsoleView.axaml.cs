@@ -67,6 +67,7 @@ public partial class ConsoleView : UserControl
         }
 
         Monitor.Highlight = (_viewModel.FirstChannel, _viewModel.LastChannel);
+        Monitor.FixtureBoundaries = _viewModel.FixtureBoundaries;
         Monitor.Revision++;
     }
 }

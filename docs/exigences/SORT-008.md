@@ -2,11 +2,11 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | À faire |
+| **Statut** | Réalisé |
 | **Priorité** | M |
 | **Phase** | P3 |
 | **Source** | [doc 10 – 3. Exigences – routage et supervision (côté PC)](../10-sortie-dmx-et-firmware.md) |
-| **Remarque** | Extension de CMD-024 (liste de canaux maintenus) et de l'écran Sorties ; préférences `testOutput`. |
+| **Remarque** | — |
 | **Liens** | CMD-024, D19, D21, Q23, SORT-007 |
 
 ## Description
@@ -17,11 +17,16 @@
 
 ## Réalisation
 
-- —
+- `src/Dmx.Messaging/Commands/TestOutputCommand.cs` : `HeldChannels`.
+- `src/Dmx.Engine/TestPattern.cs` : maintien à la valeur de test, exclusions toujours respectées.
+- `src/Dmx.Core/Settings/Preferences.cs` : `TestOutputPreferences.HeldChannels`.
+- `src/Dmx.Hosting/DmxRuntime.cs` : validation et transmission.
+- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`, `OutputsViewModel.cs` : champ « Canaux maintenus ».
 
 ## Tests
 
-- Aucun test automatique : à écrire en P3.
+- `RenderEngineTests.TestPattern_HeldChannels_StayLitForTheWholeChase`
+- `RenderEngineTests.TestPattern_HeldChannels_RespectExcludedChannels`
 
 ## Historique
 
@@ -32,3 +37,4 @@
 | 2026-09-25 | Utilisateur | Réponse | Oui, en P3. |
 | 2026-09-25 | Conception | Création | Exigence SORT-008 ajoutée au doc 10 §3 (M, P3) ; P3 du doc 40 complétée. |
 | 2026-09-25 | Claude | Décision | Un canal à la fois exclu **et** maintenu reste exclu (la sûreté prime : fumée, Reset). |
+| 2026-09-26 | Claude | Développement | `264de27` feat(sortie): SORT-008, canaux maintenus pendant le test de sortie |

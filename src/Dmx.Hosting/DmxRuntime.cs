@@ -61,6 +61,12 @@ public sealed class DmxRuntime : IAsyncDisposable
     /// <summary>Bibliothèque d'appareils (<c>Documents\DMX\Bibliothèque</c>).</summary>
     public Fixtures.FixtureLibrary Library { get; }
 
+    /// <summary>
+    /// Fabrique de journaux (GEN-110) : permet à un modèle de vue de créer son propre journal, dans le même
+    /// fichier technique (<c>Documents\DMX\Journaux\technique-AAAAMMJJ.log</c>) que le reste de l'application.
+    /// </summary>
+    public ILoggerFactory Loggers => _loggers;
+
     /// <summary>Projet ouvert.</summary>
     public ProjectSession Project { get; }
 
@@ -200,6 +206,11 @@ public sealed class DmxRuntime : IAsyncDisposable
             return $"Canaux exclus invalides : « {settings.ExcludedChannels} » (ex. 180 ou 1, 5-8).";
         }
 
+        if (!ChannelList.TryParse(settings.HeldChannels, out var held))
+        {
+            return $"Canaux maintenus invalides : « {settings.HeldChannels} » (ex. 1, 8, 15, 22).";
+        }
+
         if (settings.StepMilliseconds is < 50 or > 60_000)
         {
             return "La durée par canal doit être comprise entre 50 ms et 60 s.";
@@ -219,7 +230,8 @@ public sealed class DmxRuntime : IAsyncDisposable
             settings.ValueByte,
             TimeSpan.FromMilliseconds(settings.StepMilliseconds),
             loop,
-            mode));
+            mode,
+            held));
         return null;
     }
 

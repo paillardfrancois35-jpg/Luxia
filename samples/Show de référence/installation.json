@@ -1,0 +1,236 @@
+{
+  "formatVersion": 1,
+  "universes": [
+    {
+      "number": 1,
+      "name": "Salle"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+      "fixtureTypeId": "69c4332f-88e8-5432-abae-d2b716eb1e02",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 1,
+      "name": "PAR 1",
+      "number": 1,
+      "color": "#F85149",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+      "fixtureTypeId": "69c4332f-88e8-5432-abae-d2b716eb1e02",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 8,
+      "name": "PAR 2",
+      "number": 2,
+      "color": "#F85149",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+      "fixtureTypeId": "69c4332f-88e8-5432-abae-d2b716eb1e02",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 15,
+      "name": "PAR 3",
+      "number": 3,
+      "color": "#F85149",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+      "fixtureTypeId": "69c4332f-88e8-5432-abae-d2b716eb1e02",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 22,
+      "name": "PAR 4",
+      "number": 4,
+      "color": "#F85149",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "a02f87cc-8f92-5b90-9af4-deefe83e68de",
+      "fixtureTypeId": "76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8",
+      "modeName": "8 canaux",
+      "universe": 1,
+      "address": 31,
+      "name": "Gros PAR 1",
+      "number": 5,
+      "color": "#DB61A2",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "41125b7f-3348-5ec2-a9ab-18aaaf177f66",
+      "fixtureTypeId": "76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8",
+      "modeName": "8 canaux",
+      "universe": 1,
+      "address": 41,
+      "name": "Gros PAR 2",
+      "number": 6,
+      "color": "#DB61A2",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "6c3d353d-218e-5902-b165-b31626a27f7d",
+      "fixtureTypeId": "2a20f1ad-225b-5dc7-abf2-0bc6e3133373",
+      "modeName": "24 canaux",
+      "universe": 1,
+      "address": 51,
+      "name": "Barre 1",
+      "number": 7,
+      "color": "#3FB950",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "f2e729d1-585b-5f85-8919-79efa6eba341",
+      "fixtureTypeId": "2a20f1ad-225b-5dc7-abf2-0bc6e3133373",
+      "modeName": "24 canaux",
+      "universe": 1,
+      "address": 81,
+      "name": "Barre 2",
+      "number": 8,
+      "color": "#3FB950",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+      "fixtureTypeId": "a96ce0f1-9631-5579-a950-410b6887284c",
+      "modeName": "11 canaux",
+      "universe": 1,
+      "address": 111,
+      "name": "Lyre 1",
+      "number": 9,
+      "color": "#58A6FF",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+      "fixtureTypeId": "a96ce0f1-9631-5579-a950-410b6887284c",
+      "modeName": "11 canaux",
+      "universe": 1,
+      "address": 126,
+      "name": "Lyre 2",
+      "number": 10,
+      "color": "#58A6FF",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
+      "fixtureTypeId": "df9703ac-9b8e-5299-b255-52d18923f4ab",
+      "modeName": "20 canaux",
+      "universe": 1,
+      "address": 141,
+      "name": "Effet multi-têtes",
+      "number": 11,
+      "color": "#D29922",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "f688d1e8-37e2-5a4f-b4b1-60c1d764f10c",
+      "fixtureTypeId": "be138280-6687-5576-a26f-f07414422ba7",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 161,
+      "name": "UV 1",
+      "number": 12,
+      "color": "#8957E5",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "05a33efe-38be-57cd-853c-5695750bf6f0",
+      "fixtureTypeId": "be138280-6687-5576-a26f-f07414422ba7",
+      "modeName": "7 canaux",
+      "universe": 1,
+      "address": 168,
+      "name": "UV 2",
+      "number": 13,
+      "color": "#8957E5",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    },
+    {
+      "id": "6177192f-1960-5dde-8a4a-92a23bfec442",
+      "fixtureTypeId": "a3f3b2c4-0004-4d6b-9c1e-000000000004",
+      "modeName": "1 canal",
+      "universe": 1,
+      "address": 180,
+      "name": "Fumée",
+      "number": 14,
+      "color": "#8B949E",
+      "options": {
+        "invertPan": false,
+        "invertTilt": false,
+        "swapPanTilt": false,
+        "panOffsetDegrees": 0
+      }
+    }
+  ],
+  "selections": []
+}

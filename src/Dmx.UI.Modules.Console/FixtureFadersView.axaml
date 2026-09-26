@@ -5,6 +5,13 @@
              x:Class="Dmx.UI.Modules.Console.FixtureFadersView"
              x:DataType="vm:FixtureFadersViewModel">
   <DockPanel>
+    <!-- Résumé et identification (CONS-024, CMD-023) -->
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,4">
+      <TextBlock Text="{Binding Summary}" FontWeight="SemiBold" VerticalAlignment="Center" />
+      <ToggleButton Content="Identifier" IsChecked="{Binding Identifying, Mode=OneWay}" Command="{Binding ToggleIdentifyCommand}"
+                    ToolTip.Tip="Fait clignoter l'appareil (intensité) sans changer sa couleur ni sa position" />
+    </StackPanel>
+
     <!-- Découverte (BIB-062) -->
     <Border DockPanel.Dock="Top" Classes="panel" Margin="0,0,0,6" IsVisible="{Binding DiscoveryChannel, Converter={x:Static ObjectConverters.IsNotNull}}">
       <WrapPanel Orientation="Horizontal">
@@ -37,6 +44,9 @@
                 <c:Fader Height="150" Width="40" HorizontalAlignment="Center" Tag="{Binding}"
                          Value="{Binding Value}" IsOverridden="{Binding IsOverridden}" IsSelected="{Binding IsDiscovering}"
                          ValueRequested="OnFaderValueRequested" />
+                <TextBox Text="{Binding ValueText}" FontSize="11" Padding="2" MinWidth="0" Tag="{Binding}"
+                         HorizontalContentAlignment="Center" KeyDown="OnValueBoxKeyDown" LostFocus="OnValueBoxLostFocus"
+                         ToolTip.Tip="Saisie directe : valeur 0-255 puis Entrée (BIB-096)" />
                 <c:RangeBar Height="16" Segments="{Binding Segments}" CurrentValue="{Binding Value}" IsEditable="False" Tag="{Binding}"
                             SegmentClicked="OnRangeBarClicked" BoundaryClicked="OnRangeBarBoundaryClicked"
                             ToolTip.Tip="Clic : valeur sous la souris ; clic sur une frontière : valeur exacte de la borne" />

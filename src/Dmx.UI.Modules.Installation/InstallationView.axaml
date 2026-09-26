@@ -1,0 +1,290 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Dmx.UI.Modules.Installation"
+             xmlns:c="using:Dmx.UI.Controls"
+             xmlns:fixtures="using:Dmx.Fixtures"
+             xmlns:fx="using:Dmx.Fixtures.Model"
+             x:Class="Dmx.UI.Modules.Installation.InstallationView"
+             x:DataType="vm:InstallationViewModel">
+  <DockPanel Margin="16">
+    <TextBlock DockPanel.Dock="Top" Text="Installation" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,8" />
+    <TextBlock DockPanel.Dock="Top" Text="Ouvrez ou créez un projet (menu Projet) pour patcher des appareils." Opacity="0.6"
+               IsVisible="{Binding !HasProject}" Margin="0,0,0,8" />
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Message}" Foreground="#58A6FF" Margin="0,0,0,8"
+               IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+    <TabControl>
+
+      <!-- Univers et patch (INST-001 à 021) -->
+      <TabItem Header="Univers et patch">
+        <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="0,8,0,0">
+
+          <Border Grid.Row="0" Classes="panel" Margin="0,0,0,8">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="section" Text="Barre d'univers (INST-003)" />
+              <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="Univers affiché" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <ComboBox ItemsSource="{Binding Universes}" SelectedItem="{Binding SelectedUniverse}" MinWidth="110" />
+              </WrapPanel>
+              <c:UniverseBar Segments="{Binding UniverseBarSegments}" Height="28" />
+            </StackPanel>
+          </Border>
+
+          <!-- Ajouter un appareil (INST-010, INST-011, INST-012) -->
+          <Border Grid.Row="1" Classes="panel" Margin="0,0,0,8">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="section" Text="Ajouter un appareil" />
+              <WrapPanel Orientation="Horizontal">
+                <StackPanel Classes="field">
+                  <TextBlock Text="Modèle" />
+                  <ComboBox ItemsSource="{Binding LibraryModels}" SelectedItem="{Binding SelectedModel}" MinWidth="220">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="fixtures:LibraryEntry">
+                        <TextBlock Text="{Binding Fixture.DisplayName}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Mode" />
+                  <ComboBox ItemsSource="{Binding SelectedModel.Fixture.Modes}" SelectedValue="{Binding SelectedMode}" SelectedValueBinding="{Binding Name}" MinWidth="140">
+                    <ComboBox.ItemTemplate>
+                      <DataTemplate x:DataType="fx:FixtureMode">
+                        <TextBlock Text="{Binding Name}" />
+                      </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                  </ComboBox>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Univers" />
+                  <NumericUpDown Value="{Binding NewUniverse}" Minimum="1" Maximum="99" Increment="1" FormatString="0" Width="130" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Adresse" />
+                  <StackPanel Orientation="Horizontal" Spacing="4">
+                    <NumericUpDown Value="{Binding NewAddress}" Minimum="1" Maximum="512" Increment="1" FormatString="0" Width="140" />
+                    <Button Content="Libre" Command="{Binding SuggestAddressCommand}" ToolTip.Tip="Propose la première adresse libre (INST-012)" />
+                  </StackPanel>
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Quantité" />
+                  <NumericUpDown Value="{Binding NewCount}" Minimum="1" Maximum="64" Increment="1" FormatString="0" Width="130" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Écart (canaux libres)" />
+                  <NumericUpDown Value="{Binding NewGap}" Minimum="0" Maximum="512" Increment="1" FormatString="0" Width="130" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Nom de base" />
+                  <TextBox Text="{Binding NewBaseName}" Width="170" Watermark="PAR" />
+                </StackPanel>
+                <StackPanel Classes="field" VerticalAlignment="Bottom">
+                  <CheckBox Content="Jumeaux (même adresse, INST-014)" IsChecked="{Binding NewAsTwins}" />
+                </StackPanel>
+              </WrapPanel>
+              <Button Content="Ajouter" Command="{Binding AddFixtureCommand}" Classes="accent" HorizontalAlignment="Left" />
+            </StackPanel>
+          </Border>
+
+          <Grid Grid.Row="2" ColumnDefinitions="220,150,140,140,140,60,*" Opacity="0.6" Margin="4,0">
+            <TextBlock Grid.Column="0" Text="Nom" />
+            <TextBlock Grid.Column="1" Text="Modèle" />
+            <TextBlock Grid.Column="2" Text="Mode" />
+            <TextBlock Grid.Column="3" Text="Univers" />
+            <TextBlock Grid.Column="4" Text="Adresse" />
+            <TextBlock Grid.Column="5" Text="Sél." />
+            <TextBlock Grid.Column="6" Text="Actions" />
+          </Grid>
+
+          <!-- Liste du patch (INST-015, INST-016, INST-017, INST-019, INST-020) -->
+          <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding PatchRows}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:PatchRowViewModel">
+                  <Border Classes="panel" Margin="0,2" Padding="6">
+                    <Grid ColumnDefinitions="220,150,140,140,140,60,*">
+                      <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+                        <Ellipse Width="10" Height="10" Fill="{Binding Color}" VerticalAlignment="Center" />
+                        <TextBox Text="{Binding EditName}" Width="140" />
+                        <TextBlock Text="⚠" Foreground="#F85149" VerticalAlignment="Center" ToolTip.Tip="Chevauchement d'adresse (INST-013)" IsVisible="{Binding HasOverlap}" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding ModelName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ModelName}" />
+                      <ComboBox Grid.Column="2" ItemsSource="{Binding Modes}" SelectedItem="{Binding EditModeName}" Width="130" />
+                      <NumericUpDown Grid.Column="3" Value="{Binding EditUniverse}" Minimum="1" Maximum="99" FormatString="0" Width="140" />
+                      <NumericUpDown Grid.Column="4" Value="{Binding EditAddress}" Minimum="1" Maximum="512" FormatString="0" Width="140" />
+                      <CheckBox Grid.Column="5" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                      <WrapPanel Grid.Column="6" Orientation="Horizontal">
+                        <Button Content="Renommer" Tag="{Binding}" Click="OnRenameClicked" />
+                        <Button Content="Déplacer" Tag="{Binding}" Click="OnMoveClicked" />
+                        <Button Content="Changer de mode" Tag="{Binding}" Click="OnChangeModeClicked" />
+                        <Button Content="Mettre à jour" Tag="{Binding}" Click="OnUpdateFromLibraryClicked"
+                                ToolTip.Tip="Reprendre la version courante du modèle depuis la bibliothèque partagée (GEN-053)" />
+                        <ToggleButton Content="Identifier" IsChecked="{Binding Identifying, Mode=OneWay}" Tag="{Binding}" Click="OnIdentifyClicked" />
+                        <Button Content="Supprimer" Tag="{Binding}" Click="OnDeleteClicked" Classes="danger" />
+                      </WrapPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+        </Grid>
+      </TabItem>
+
+      <!-- Sélections (INST-030 à 034) -->
+      <TabItem Header="Sélections">
+        <Grid RowDefinitions="Auto,*,Auto,*" Margin="0,8,0,0">
+          <Border Grid.Row="0" Classes="panel" Margin="0,0,0,8">
+            <StackPanel Spacing="6">
+              <TextBlock Classes="section" Text="Nouvelle sélection manuelle" />
+              <TextBlock Text="Cochez des appareils dans l'onglet « Univers et patch » (colonne Sél.), puis nommez la sélection." Opacity="0.6" TextWrapping="Wrap" />
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBox Text="{Binding NewSelectionName}" Width="200" Watermark="Nom de la sélection" />
+                <Button Content="Créer" Command="{Binding CreateSelectionCommand}" Classes="accent" />
+              </StackPanel>
+            </StackPanel>
+          </Border>
+
+          <Border Grid.Row="1" Classes="panel">
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Top" Classes="section" Text="Sélections manuelles" Margin="0,0,0,6" />
+              <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="4" Margin="0,6,0,0">
+                <Button Content="Inverser" Command="{Binding ReorderSelectionCommand}" CommandParameter="reverse" />
+                <Button Content="Pairs" Command="{Binding ReorderSelectionCommand}" CommandParameter="even" />
+                <Button Content="Impairs" Command="{Binding ReorderSelectionCommand}" CommandParameter="odd" />
+                <Button Content="1re moitié" Command="{Binding ReorderSelectionCommand}" CommandParameter="first-half" />
+                <Button Content="2e moitié" Command="{Binding ReorderSelectionCommand}" CommandParameter="second-half" />
+                <Button Content="Gauche→droite" Command="{Binding ReorderSelectionCommand}" CommandParameter="left-right"
+                        ToolTip.Tip="Selon la position au plan du lieu actif" />
+                <Button Content="Avant→arrière" Command="{Binding ReorderSelectionCommand}" CommandParameter="front-back" />
+                <Button Content="Centre→extérieur" Command="{Binding ReorderSelectionCommand}" CommandParameter="center-out" />
+                <Button Content="Supprimer…" Command="{Binding DeleteSelectionCommand}" Classes="danger" />
+              </StackPanel>
+              <ListBox ItemsSource="{Binding Selections}" SelectedItem="{Binding SelectedSelection}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:SelectionRowViewModel">
+                    <StackPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Ellipse Width="10" Height="10" Fill="{Binding Color}" />
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Count}" Opacity="0.6" />
+                      </StackPanel>
+                      <TextBlock Text="{Binding Members}" FontSize="11" Opacity="0.6" TextWrapping="Wrap" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </DockPanel>
+          </Border>
+
+          <TextBlock Grid.Row="2" Classes="section" Text="Sélections automatiques (INST-031, toujours à jour)" Margin="0,8,0,6" />
+          <Border Grid.Row="3" Classes="panel">
+            <ItemsControl ItemsSource="{Binding AutoSelections}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:AutoSelectionRowViewModel">
+                  <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,2">
+                    <TextBlock Text="{Binding Title}" />
+                    <TextBlock Text="{Binding Count}" Opacity="0.6" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <!-- Lieux (doc 13 §5) -->
+      <TabItem Header="Lieux">
+        <Grid ColumnDefinitions="220,*" Margin="0,8,0,0">
+          <Border Grid.Column="0" Classes="panel" Margin="0,0,8,0">
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Top" Classes="section" Text="Lieux" Margin="0,0,0,6" />
+              <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="0,6,0,0">
+                <TextBox Text="{Binding NewVenueName}" Watermark="Nouveau lieu" />
+                <Button Content="Créer" Command="{Binding CreateVenueCommand}" HorizontalAlignment="Stretch" />
+                <Button Content="Dupliquer" Command="{Binding DuplicateVenueCommand}" HorizontalAlignment="Stretch" />
+                <Button Content="Activer" Command="{Binding ActivateVenueCommand}" HorizontalAlignment="Stretch" Classes="accent" />
+                <Button Content="Supprimer…" Command="{Binding DeleteVenueCommand}" HorizontalAlignment="Stretch" Classes="danger" />
+              </StackPanel>
+              <ListBox ItemsSource="{Binding Venues}" SelectedItem="{Binding SelectedVenue}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:VenueRowViewModel">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <Ellipse Width="8" Height="8" Fill="#3FB950" VerticalAlignment="Center" IsVisible="{Binding IsActive}" ToolTip.Tip="Lieu actif" />
+                      <TextBlock Text="{Binding Name}" />
+                      <TextBlock Text="(actif)" Opacity="0.6" IsVisible="{Binding IsActive}" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </DockPanel>
+          </Border>
+
+          <Border Grid.Column="1" Classes="panel" IsVisible="{Binding SelectedVenue, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <DockPanel DataContext="{Binding SelectedVenue}">
+              <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+                <StackPanel Classes="field">
+                  <TextBlock Text="Nom" />
+                  <TextBox Text="{Binding Name}" Width="180" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Largeur (m)" />
+                  <NumericUpDown Value="{Binding WidthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="140" />
+                </StackPanel>
+                <StackPanel Classes="field">
+                  <TextBlock Text="Profondeur (m)" />
+                  <NumericUpDown Value="{Binding DepthM}" Minimum="1" Maximum="100" FormatString="0.0" Width="140" />
+                </StackPanel>
+                <StackPanel Classes="field" VerticalAlignment="Bottom">
+                  <Button Content="Enregistrer le lieu" Command="{Binding $parent[TabItem].((vm:InstallationViewModel)DataContext).SavePlacementsCommand}" Classes="accent" />
+                </StackPanel>
+              </WrapPanel>
+
+              <Grid DockPanel.Dock="Top" ColumnDefinitions="180,150,150,150,150,90,80" Opacity="0.6" Margin="4,0">
+                <TextBlock Grid.Column="0" Text="Appareil" />
+                <TextBlock Grid.Column="1" Text="X (m)" />
+                <TextBlock Grid.Column="2" Text="Y (m)" />
+                <TextBlock Grid.Column="3" Text="Hauteur" />
+                <TextBlock Grid.Column="4" Text="Orientation°" />
+                <TextBlock Grid.Column="5" Text="Suspendu" />
+                <TextBlock Grid.Column="6" Text="Absent" />
+              </Grid>
+              <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Placements}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:PlacementRowViewModel">
+                      <Grid ColumnDefinitions="180,150,150,150,150,90,80" Margin="0,2">
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
+                        <NumericUpDown Grid.Column="1" Value="{Binding X}" Minimum="0" Maximum="100" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="2" Value="{Binding Y}" Minimum="0" Maximum="100" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="3" Value="{Binding HeightM}" Minimum="0" Maximum="20" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="4" Value="{Binding OrientationDeg}" Minimum="-360" Maximum="360" FormatString="0" Width="140" />
+                        <CheckBox Grid.Column="5" IsChecked="{Binding Hanging}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <CheckBox Grid.Column="6" IsChecked="{Binding Absent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </DockPanel>
+          </Border>
+        </Grid>
+      </TabItem>
+
+      <!-- Fiche d'installation (INST-018) -->
+      <TabItem Header="Fiche d'installation">
+        <ScrollViewer Margin="0,8,0,0">
+          <ItemsControl ItemsSource="{Binding InstallationSheet}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="x:String">
+                <TextBlock Text="{Binding}" Margin="0,3" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </TabItem>
+
+    </TabControl>
+  </DockPanel>
+</UserControl>
