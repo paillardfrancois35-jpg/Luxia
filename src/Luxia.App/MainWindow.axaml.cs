@@ -19,7 +19,15 @@ public partial class MainWindow : Window
 
         // L'interface lit l'état du moteur à son propre rythme (doc 02 §6.1), jamais l'inverse.
         _refresh.Tick += (_, _) => (DataContext as MainWindowViewModel)?.Refresh();
-        Opened += (_, _) => _refresh.Start();
+        Opened += async (_, _) =>
+        {
+            _refresh.Start();
+            if (DataContext is MainWindowViewModel vm)
+            {
+                vm.ReportReady();
+                await vm.OfferResumeAsync().ConfigureAwait(true);
+            }
+        };
         Closed += (_, _) => _refresh.Stop();
 
         // GEN-082 : touche B = blackout, depuis n'importe quel écran, sauf pendant une saisie de texte.

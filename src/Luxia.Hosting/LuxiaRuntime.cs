@@ -34,6 +34,15 @@ public sealed class LuxiaRuntime : IAsyncDisposable
     private bool _stopped;
     private bool _previewActive;
     private MidiLayout _midiLayout = MidiLayout.Empty;
+    private Timer? _background;
+    private int _backgroundTicks;
+    private string? _lastResume;
+    private TimeSpan _lastCpu;
+    private DateTime _lastCpuAt;
+    private double _cpuPercent;
+
+    /// <summary>Instantané de reprise (MOT-102) : dans les préférences du poste, pas dans le projet.</summary>
+    private static readonly Persistence.Json.DocumentType<ResumeState> ResumeType = new("reprise", ResumeState.CurrentFormatVersion, []);
 
     /// <summary>Assemble les modules (sans rien démarrer).</summary>
     /// <param name="paths">Emplacements des données.</param>
@@ -73,6 +82,9 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Midi = midiPorts is null
             ? null
             : new MidiService(midiPorts, Engine, () => Engine.Snapshot, () => _midiLayout, loggers.CreateLogger<MidiService>());
+
+        // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
+        PendingResume = ReadPendingResume();
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -104,6 +116,18 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Message éventuel issu du chargement des préférences (migration, fichier mis de côté).</summary>
     public string? PreferencesLoadMessage { get; }
+
+    /// <summary>
+    /// Reprise proposée au démarrage (GEN-095) : l'application s'est arrêtée brutalement alors que des scènes jouaient dans
+    /// le projet qui vient d'être rouvert ; <c>null</c> sinon.
+    /// </summary>
+    public ResumeState? PendingResume { get; private set; }
+
+    /// <summary>Utilisation moyenne du processeur par l'application, en % de la machine (GEN-094), mesurée toutes les 5 s.</summary>
+    public double CpuPercent => Volatile.Read(ref _cpuPercent);
+
+    /// <summary>Fichier de l'instantané de reprise.</summary>
+    public string ResumeFile => Path.Combine(Paths.AppDataRoot, "reprise.json");
 
     /// <summary>Contrôleurs MIDI (APC mini, doc 18b) ; <c>null</c> sans ports MIDI.</summary>
     public MidiService? Midi { get; }
@@ -168,6 +192,12 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
             Loop.Start();
             Midi?.Start();
+
+            // Toutes les 5 s : instantané de reprise (MOT-102) et mesure du processeur (GEN-094) ; toutes les 2 min :
+            // version du projet si quelque chose a changé (GEN-054, GEN-055).
+            _lastCpu = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+            _lastCpuAt = DateTime.UtcNow;
+            _background = new Timer(_ => Background(), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
 
             // GEN-096 : une mise en veille couperait la lumière (plus de trames → chien de garde → noir).
             _sleepInhibitor.Start();
@@ -353,6 +383,15 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             _stopped = true;
         }
 
+        _background?.Dispose();
+
+        // GEN-061 : fondu au noir avant d'arrêter l'émission (le blackout final suit).
+        if (_started)
+        {
+            await FadeToBlackAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+        }
+
+        WriteResume(clean: true);
         Midi?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
@@ -366,6 +405,177 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router.Dispose();
         await Bus.DisposeAsync().ConfigureAwait(false);
         _logger.LogInformation("Arrêt de LuXia");
+    }
+
+    /// <summary>
+    /// Enregistre une version du projet si quelque chose a changé (GEN-054, GEN-055), sans bloquer l'appelant.
+    /// </summary>
+    /// <param name="reason">Motif (« passage en Live »…).</param>
+    public void SaveProjectVersion(string reason)
+    {
+        if (Project.Folder is not { } folder)
+        {
+            return;
+        }
+
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                if (ProjectVersions.Save(folder, reason, DateTime.Now) is { } name)
+                {
+                    _logger.LogInformation("Version du projet enregistrée : {Version} ({Motif})", name, reason);
+                }
+            }
+            catch (IOException exception)
+            {
+                _logger.LogWarning(exception, "Version du projet non enregistrée ({Motif})", reason);
+            }
+            catch (UnauthorizedAccessException exception)
+            {
+                _logger.LogWarning(exception, "Version du projet non enregistrée ({Motif})", reason);
+            }
+        });
+    }
+
+    /// <summary>Reprend les scènes, masters et modes de l'instantané (GEN-095).</summary>
+    public void Resume(ResumeState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        PendingResume = null;
+        foreach (var (layer, level) in state.LayerMasters)
+        {
+            Engine.Send(new SetLayerMasterCommand(CommandOrigin.Tool, layer, level));
+        }
+
+        foreach (var scene in state.Scenes)
+        {
+            Engine.Send(new LaunchSceneCommand(CommandOrigin.Tool, scene));
+        }
+
+        Engine.Send(new SetGrandMasterCommand(CommandOrigin.Tool, state.GrandMaster));
+        Engine.Send(new BlackoutCommand(CommandOrigin.Tool, state.Blackout));
+        if (state.Frozen)
+        {
+            Engine.Send(new FreezeCommand(CommandOrigin.Tool, true));
+        }
+
+        _logger.LogInformation("Reprise après arrêt brutal : {Scenes} scène(s) relancée(s)", state.Scenes.Count);
+    }
+
+    /// <summary>Renonce à la reprise proposée.</summary>
+    public void DismissResume() => PendingResume = null;
+
+    /// <summary>Fondu du Grand Master jusqu'à 0 (GEN-061), la boucle du moteur tournant encore.</summary>
+    private async Task FadeToBlackAsync(TimeSpan duration)
+    {
+        var start = Engine.Snapshot.GrandMaster;
+        if (start <= 0 || Engine.Snapshot.Blackout)
+        {
+            return;
+        }
+
+        const int Steps = 20;
+        for (var i = 1; i <= Steps; i++)
+        {
+            Engine.Send(new SetGrandMasterCommand(CommandOrigin.Tool, start * (1 - ((double)i / Steps))));
+            await Task.Delay(duration / Steps).ConfigureAwait(false);
+        }
+    }
+
+    private void Background()
+    {
+        try
+        {
+            SaveResumePoint();
+            MeasureCpu();
+            if (++_backgroundTicks % 24 == 0)
+            {
+                SaveProjectVersion("automatique");
+            }
+        }
+        catch (IOException exception)
+        {
+            _logger.LogWarning(exception, "Tâche de fond (reprise, versions) : écriture impossible");
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            _logger.LogWarning(exception, "Tâche de fond (reprise, versions) : écriture impossible");
+        }
+    }
+
+    private void MeasureCpu()
+    {
+        var now = DateTime.UtcNow;
+        var cpu = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+        var wall = (now - _lastCpuAt).TotalMilliseconds * Environment.ProcessorCount;
+        if (wall > 0)
+        {
+            Volatile.Write(ref _cpuPercent, Math.Round(100 * (cpu - _lastCpu).TotalMilliseconds / wall, 1));
+        }
+
+        _lastCpu = cpu;
+        _lastCpuAt = now;
+        if (_backgroundTicks % 12 == 0)
+        {
+            _logger.LogInformation("Processeur : {Cpu} % en moyenne sur 5 s (GEN-094)", CpuPercent);
+        }
+    }
+
+    /// <summary>Écrit l'instantané de reprise tout de suite (appelé toutes les 5 s, MOT-102).</summary>
+    public void SaveResumePoint() => WriteResume(clean: false);
+
+    private void WriteResume(bool clean)
+    {
+        var snapshot = Engine.Snapshot;
+        var state = new ResumeState
+        {
+            ProjectFolder = Project.Folder,
+            SavedAt = DateTime.Now,
+            CleanExit = clean,
+            Scenes = [.. snapshot.Playbacks
+                .Where(p => !p.Flash && p.State is not (PlaybackState.FadingOut or PlaybackState.Done))
+                .Select(p => p.SceneId)
+                .Distinct()],
+            LayerMasters = snapshot.Show.Layers.Select((l, i) => (l.Id, i)).Where(x => x.i < snapshot.LayerMasters.Length)
+                .ToDictionary(x => x.Id, x => snapshot.LayerMasters[x.i]),
+            GrandMaster = snapshot.GrandMaster,
+            Blackout = snapshot.Blackout,
+            Frozen = snapshot.Frozen,
+        };
+
+        // Écrit seulement si quelque chose a changé (hors horodatage) : pas d'écriture inutile toutes les 5 s.
+        var key = string.Join(
+            '|',
+            state.ProjectFolder,
+            state.CleanExit,
+            string.Join(',', state.Scenes),
+            string.Join(',', state.LayerMasters.OrderBy(m => m.Key).Select(m => string.Create(CultureInfo.InvariantCulture, $"{m.Key}={m.Value:0.###}"))),
+            state.GrandMaster.ToString("0.###", CultureInfo.InvariantCulture),
+            state.Blackout,
+            state.Frozen);
+        if (key == _lastResume)
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(Paths.AppDataRoot);
+        Persistence.Json.VersionedJsonFile.Save(ResumeFile, state, ResumeType);
+        _lastResume = key;
+    }
+
+    private ResumeState? ReadPendingResume()
+    {
+        var loaded = Persistence.Json.VersionedJsonFile.Load(ResumeFile, ResumeType);
+        if (!loaded.Succeeded || loaded.Value is not { } state)
+        {
+            return null;
+        }
+
+        var sameProject = state.ProjectFolder is { } folder && Project.Folder is { } open
+            && string.Equals(Path.GetFullPath(folder), Path.GetFullPath(open), StringComparison.OrdinalIgnoreCase);
+        var recent = DateTime.Now - state.SavedAt < TimeSpan.FromHours(12);
+        return !state.CleanExit && sameProject && recent && state.Scenes.Count > 0 ? state : null;
     }
 
     /// <summary>Disposition des contrôleurs MIDI d'après le projet : colonnes du Live, boutons, affectations (MIDI-002, MIDI-007).</summary>

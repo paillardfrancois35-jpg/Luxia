@@ -28,6 +28,7 @@
         <MenuItem Header="_Importer des scènes…" Command="{Binding ImportScenesCommand}"
                   ToolTip.Tip="Ajoute les scènes d'un fichier (IA de conception) sans rien écraser (GEN-133)" />
         <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
+        <MenuItem Header="_Versions du projet…" Command="{Binding ShowVersionsCommand}" />
       </MenuItem>
       <MenuItem Header="_Aide">
         <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
