@@ -214,7 +214,7 @@
 | [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
 | [GEN-119](exigences/GEN-119.md) | M | Numéro de compilation affiché en développement | Réalisé |  |
 | [GEN-130](exigences/GEN-130.md) | I | Format des fichiers documenté | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
-| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ShowCompilerTests.MissingPalette_IsReported_WithFileObjectAndField |
+| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ReferenceShowP5Tests.ReferenceShow_P5_ContentIsThere<br>(+1) |
 | [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording |
 | [GEN-133](exigences/GEN-133.md) | I | Contenu généré rangé à part, jamais écrasant | Réalisé | SceneImportTests.Merge_AddsNewScenes_NeverOverwrites_AndCategorizes |
 | [MOT-001](exigences/MOT-001.md) | I | Ordre de la boucle de rendu | Réalisé |  |
@@ -279,9 +279,9 @@
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
 
-## P5 – 69 exigences, 46 couvertes par des tests automatiques
+## P5 – 69 exigences, 47 couvertes par des tests automatiques
 
-> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 9 · Réalisé : 36 · Réalisé, à valider sur matériel : 13 · Sans fiche : 4
+> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 38 · Réalisé, à valider sur matériel : 13
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -289,9 +289,9 @@
 | [CONS-061](exigences/CONS-061.md) | S | Une page de console peut être affectée aux faders d'un APC mini | Reporté (chantier ergonomie) |  |
 | [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Réalisé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
-| [COU-003](exigences/COU-003.md) | I | Exclusivité | Réalisé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins |
+| [COU-003](exigences/COU-003.md) | I | Exclusivité | Réalisé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
-| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Partiel | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld |
+| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Réalisé | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
 | [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
@@ -315,9 +315,9 @@
 | [GEN-095](exigences/GEN-095.md) | M | Reprise après plantage | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes<br>ReliabilityTests.CleanStop_OffersNothing |
 | [INST-053](exigences/INST-053.md) | I | Zones interdites par lyre, définies en visant à la main | Réalisé | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>ZonesEditorViewModelTests.AddWithoutLyre_ExplainsWhatToDo<br>ZonesEditorViewModelTests.AimTwoCorners_Save_ThenTheEngineKeepsTheLyreOut |
 | [INST-054](exigences/INST-054.md) | I | Les palettes de position sont stockées par lieu | Réalisé | VenuePaletteTests.CopyVenue_CopiesTheEffectivePositions |
-| [INST-070](exigences/INST-070.md) | M | (fiche manquante) | Sans fiche |  |
-| [INST-071](exigences/INST-071.md) | M | (fiche manquante) | Sans fiche |  |
-| [INST-072](exigences/INST-072.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-070](exigences/INST-070.md) | M | L'assistant enchaîne les étapes ci-dessus, chacune pouvant être passée | Reporté (chantier ergonomie) |  |
+| [INST-071](exigences/INST-071.md) | M | Test appareil par appareil avec résultat | Reporté (chantier ergonomie) |  |
+| [INST-072](exigences/INST-072.md) | M | Calibration des positions | Partiel |  |
 | [LIVE-001](exigences/LIVE-001.md) | I | Bandeau d'état permanent | Partiel | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
 | [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfPlayingScene_StopsIt |
@@ -343,12 +343,12 @@
 | [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
 | [MIDI-009](exigences/MIDI-009.md) | S | Disposition alternative « palettes » | Reporté (chantier ergonomie) |  |
 | [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Réalisé, à valider sur matériel | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
-| [MOT-042](exigences/MOT-042.md) | I | (fiche manquante) | Sans fiche |  |
-| [MOT-072](exigences/MOT-072.md) | I | Flash | Réalisé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly |
+| [MOT-042](exigences/MOT-042.md) | I | Le modèle de couches par défaut | Réalisé | DefaultContentTests.NewProject_HasFullOnScene_InIntensityLayer_LightingEveryFixture<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
+| [MOT-072](exigences/MOT-072.md) | I | Flash | Réalisé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
-| [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Réalisé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>(+2) |
-| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
-| [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge<br>(+1) |
+| [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Réalisé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
+| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
+| [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | ReferenceShowP5Tests.Trap_LyreTowardsThePublic_StopsAtTheZoneEdge<br>SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>(+2) |
 | [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |
 | [PAL-004](exigences/PAL-004.md) | I | Palettes de position par lieu | Réalisé | VenuePaletteTests.GenericVenue_HasNoKey<br>VenuePaletteTests.Merge_ReplacesOnlyTheCapturedFixtures_InTheActiveVenue_AndAddsAFallback<br>VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |

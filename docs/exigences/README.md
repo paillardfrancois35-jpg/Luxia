@@ -168,7 +168,7 @@
 | [COU-002](COU-002.md) | Une scène appartient à une couche | P5 | I | Réalisé |
 | [COU-003](COU-003.md) | Exclusivité | P5 | I | Réalisé |
 | [COU-004](COU-004.md) | Couche non exclusive | P5 | I | Réalisé |
-| [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Partiel |
+| [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Réalisé |
 | [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Réalisé |
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Réalisé |
@@ -275,6 +275,9 @@
 | [INST-052](INST-052.md) | Appareil absent | P3 | I | Réalisé |
 | [INST-053](INST-053.md) | Zones interdites par lyre, définies en visant à la main | P5 | I | Réalisé |
 | [INST-054](INST-054.md) | Les palettes de position sont stockées par lieu | P5 | I | Réalisé |
+| [INST-070](INST-070.md) | L'assistant enchaîne les étapes ci-dessus, chacune pouvant être passée | P5 | M | Reporté (chantier ergonomie) |
+| [INST-071](INST-071.md) | Test appareil par appareil avec résultat | P5 | M | Reporté (chantier ergonomie) |
+| [INST-072](INST-072.md) | Calibration des positions | P5 | M | Partiel |
 | [LIVE-001](LIVE-001.md) | Bandeau d'état permanent | P5 | I | Partiel |
 | [LIVE-002](LIVE-002.md) | Colonnes de couches | P5 | I | Réalisé |
 | [LIVE-003](LIVE-003.md) | Un clic sur une scène la lance | P5 | I | Réalisé |
@@ -318,6 +321,7 @@
 | [MOT-034](MOT-034.md) | Source de chaque valeur finale | P4 | M | Réalisé |
 | [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Validé |
 | [MOT-041](MOT-041.md) | « Allumer en coloriant » | P4 | I | Validé |
+| [MOT-042](MOT-042.md) | Le modèle de couches par défaut | P5 | I | Réalisé |
 | [MOT-050](MOT-050.md) | Couleur logique vers RVB | P4 | I | Réalisé |
 | [MOT-051](MOT-051.md) | Couleur logique vers RVBW (extraction du blanc) | P4 | I | Réalisé |
 | [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Validé |

@@ -4,7 +4,7 @@ using Luxia.UI.Modules.Live;
 
 namespace Luxia.UI.Tests;
 
-/// <summary>Écran Live (doc 18) sur une copie du show de référence, avec un flash blanc et un strobe ajoutés.</summary>
+/// <summary>Écran Live (doc 18) sur une copie du show de référence (flash blanc et strobe de la couche Flashs, P5).</summary>
 public sealed class LiveViewModelTests : IAsyncLifetime
 {
     private readonly TestHost _host = new();
@@ -22,11 +22,9 @@ public sealed class LiveViewModelTests : IAsyncLifetime
         }
 
         _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
-        var all = new SceneValue { Target = new ValueTarget { Auto = new AutoSelectionTarget(Patch.Rules.AutoSelectionKind.AllFixtures) }, Attribute = AttributeKind.Intensity, Level = 1 };
-        _flash = new Scene { Name = "Flash blanc", LayerId = LayerSet.FlashLayerId, Steps = [new SceneStep { Values = [all] }] };
-        var strobe = new Scene { Name = "Strobe flash", LayerId = LayerSet.FlashLayerId, Steps = [new SceneStep { Values = [all] }] };
-        var scenes = _host.Runtime.Project.Scenes;
-        _host.Runtime.Project.SaveScenes(scenes with { Scenes = [.. scenes.Scenes, _flash, strobe] });
+
+        // Flash blanc et Strobe flash : scènes de la couche Flashs du show de référence (P5).
+        _flash = _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == "Flash blanc");
         _vm = new LiveViewModel(_host.Runtime);
         _host.Tick();
         return ValueTask.CompletedTask;

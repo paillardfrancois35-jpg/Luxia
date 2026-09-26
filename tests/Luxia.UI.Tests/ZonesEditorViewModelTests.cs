@@ -37,6 +37,13 @@ public sealed class ZonesEditorViewModelTests : IAsyncLifetime
         var tilt = _vm.Programmer.PositionTools.Single(t => t.Attribute == AttributeKind.Tilt);
         var editor = _vm.CreateZonesEditor()!;
 
+        // Le show de référence a des zones d'exemple (P5) : on repart de zéro pour ce test.
+        while (editor.Zones.Count > 0)
+        {
+            editor.Selected = editor.Zones[0];
+            editor.DeleteCommand.Execute(null);
+        }
+
         pan.Percent = 40;
         tilt.Percent = 80;
         _host.Tick();
@@ -70,10 +77,11 @@ public sealed class ZonesEditorViewModelTests : IAsyncLifetime
     public void AddWithoutLyre_ExplainsWhatToDo()
     {
         var editor = _vm.CreateZonesEditor()!;
+        var before = editor.Zones.Count;
 
         editor.AddFromProgrammerCommand.Execute(null);
 
-        editor.Zones.ShouldBeEmpty();
+        editor.Zones.Count.ShouldBe(before);
         editor.Message.ShouldNotBeNull().ShouldContain("Sélectionnez une lyre");
     }
 }
