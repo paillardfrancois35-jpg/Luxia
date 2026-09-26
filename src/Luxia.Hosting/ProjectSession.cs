@@ -53,6 +53,9 @@ public sealed class ProjectSession
     /// <summary>Couches (doc 17 §1) ; modèle par défaut si le projet n'en a pas encore (D28).</summary>
     public LayerSet Layers { get; private set; } = LayerSet.Default();
 
+    /// <summary>Réglages de l'écran Live (<c>live.json</c>, doc 18) ; déduits des couches si absents.</summary>
+    public LiveSettings Live { get; private set; } = new();
+
     /// <summary>Réglages des limites de sûreté (doc 02 §13, <c>sûreté.json</c>) ; valeurs par défaut si absents.</summary>
     public SafetySettings Safety { get; private set; } = new();
 
@@ -122,6 +125,11 @@ public sealed class ProjectSession
         }
 
         var (scenes, palettes, layers, safety) = LoadShowParts(folder, messages);
+        var (live, liveMessage) = LiveStore.Load(folder);
+        if (liveMessage is not null)
+        {
+            messages.Add(liveMessage);
+        }
 
         Folder = folder;
         Info = report.Info;
@@ -132,6 +140,7 @@ public sealed class ProjectSession
         Palettes = palettes;
         Layers = layers;
         Safety = safety;
+        Live = live;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -212,6 +221,17 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>Remplace les réglages du Live et les enregistre (doc 18).</summary>
+    public void SaveLive(LiveSettings live)
+    {
+        ArgumentNullException.ThrowIfNull(live);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        LiveStore.Save(folder, live);
+        Live = live;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Remplace les réglages de sûreté et les enregistre (GEN-083, GEN-084).</summary>
     public void SaveSafety(SafetySettings safety)
     {
@@ -233,6 +253,12 @@ public sealed class ProjectSession
         var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
         var messages = new List<string>();
         (Scenes, Palettes, Layers, Safety) = LoadShowParts(folder, messages);
+        var (live, liveMessage) = LiveStore.Load(folder);
+        Live = live;
+        if (liveMessage is not null)
+        {
+            messages.Add(liveMessage);
+        }
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

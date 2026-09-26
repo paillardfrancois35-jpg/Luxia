@@ -1,0 +1,178 @@
+using Luxia.Fixtures.Model;
+using Luxia.Scenes.Model;
+using Luxia.UI.Modules.Live;
+
+namespace Luxia.UI.Tests;
+
+/// <summary>Écran Live (doc 18) sur une copie du show de référence, avec un flash blanc et un strobe ajoutés.</summary>
+public sealed class LiveViewModelTests : IAsyncLifetime
+{
+    private readonly TestHost _host = new();
+    private LiveViewModel _vm = null!;
+    private Scene _flash = null!;
+
+    public ValueTask InitializeAsync()
+    {
+        var source = Path.Combine(AppContext.BaseDirectory, "samples", "Show de référence");
+        foreach (var file in Directory.EnumerateFiles(source, "*.json", SearchOption.AllDirectories))
+        {
+            var target = Path.Combine(_host.ProjectFolder, Path.GetRelativePath(source, file));
+            Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+            File.Copy(file, target);
+        }
+
+        _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
+        var all = new SceneValue { Target = new ValueTarget { Auto = new AutoSelectionTarget(Patch.Rules.AutoSelectionKind.AllFixtures) }, Attribute = AttributeKind.Intensity, Level = 1 };
+        _flash = new Scene { Name = "Flash blanc", LayerId = LayerSet.FlashLayerId, Steps = [new SceneStep { Values = [all] }] };
+        var strobe = new Scene { Name = "Strobe flash", LayerId = LayerSet.FlashLayerId, Steps = [new SceneStep { Values = [all] }] };
+        var scenes = _host.Runtime.Project.Scenes;
+        _host.Runtime.Project.SaveScenes(scenes with { Scenes = [.. scenes.Scenes, _flash, strobe] });
+        _vm = new LiveViewModel(_host.Runtime);
+        _host.Tick();
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask DisposeAsync() => _host.DisposeAsync();
+
+    [Fact]
+    [Trait("Exigence", "LIVE-002")]
+    public void Columns_AreTheLayers_WithTheirLiveScenes_InOrder()
+    {
+        _vm.Columns.Select(c => c.Layer.Name).ShouldBe(["Intensité", "Couleurs", "Mouvements", "Faisceau", "Effets", "Ambiance", "Flashs"]);
+        var colors = _vm.Columns.Single(c => c.Layer.Name == "Couleurs");
+        colors.Scenes.Select(s => s.Name).ShouldBe(_host.Runtime.Project.Scenes.Scenes
+            .Where(s => s.LayerId == LayerSet.ColorsLayerId && s.VisibleInLive).Select(s => s.Name));
+        colors.Scenes[0].Key.ShouldBe("1");
+        _vm.Columns.Single(c => c.Layer.Name == "Flashs").IsFlash.ShouldBeTrue();
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-003")]
+    [Trait("Exigence", "LIVE-002")]
+    public void ClickScene_Launches_ClickAgain_Stops()
+    {
+        var scene = _vm.Columns.Single(c => c.Layer.Name == "Couleurs").Scenes[0];
+
+        _vm.Press(scene);
+        _host.Tick();
+        _vm.Refresh();
+        scene.IsActive.ShouldBeTrue();
+        _host.Runtime.Engine.CommandLog().ShouldContain(e => e.Command.Origin == Messaging.Commands.CommandOrigin.User);
+
+        _vm.Press(scene);
+        _host.Tick();
+        _host.Tick();
+        _vm.Refresh();
+        scene.IsActive.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-003")]
+    [Trait("Exigence", "COU-005")]
+    public void FlashLayerScene_PlaysOnlyWhileHeld()
+    {
+        var flash = _vm.Columns.Single(c => c.Layer.Name == "Flashs").Scenes.Single(s => s.Name == "Flash blanc");
+
+        _vm.Press(flash);
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.ShouldContain(p => p.SceneId == _flash.Id && p.Flash);
+
+        _vm.Release(flash);
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.ShouldNotContain(p => p.SceneId == _flash.Id);
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-004")]
+    [Trait("Exigence", "LIVE-040")]
+    [Trait("Exigence", "GEN-071")]
+    public void Keys_FlashHeldWithAutoRepeat_ThenReleased()
+    {
+        _vm.HasFlash.ShouldBeTrue();
+        _vm.HasStrobe.ShouldBeTrue();
+
+        _vm.OnKey(LiveKey.Flash, down: true).ShouldBeTrue();
+        _vm.OnKey(LiveKey.Flash, down: true);
+        _vm.OnKey(LiveKey.Flash, down: true);
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.Count(p => p.Flash).ShouldBe(1, "la répétition automatique de la touche ne relance pas le flash");
+
+        _vm.OnKey(LiveKey.Flash, down: false);
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.ShouldNotContain(p => p.Flash);
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-040")]
+    public void Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster()
+    {
+        _vm.OnKey(LiveKey.NextLayer, down: true);
+        _vm.OnKey(LiveKey.NextLayer, down: false);
+        _vm.Columns.Single(c => c.IsSelected).Layer.Name.ShouldBe("Couleurs");
+
+        _vm.OnKey(LiveKey.Scene2, down: true);
+        _vm.OnKey(LiveKey.Scene2, down: false);
+        _vm.OnKey(LiveKey.Freeze, down: true);
+        _vm.OnKey(LiveKey.MasterDown, down: true);
+        _host.Tick();
+
+        var second = _vm.Columns.Single(c => c.IsSelected).Scenes[1].Scene.Id;
+        var snapshot = _host.Runtime.Engine.Snapshot;
+        snapshot.Playbacks.ShouldContain(p => p.SceneId == second);
+        snapshot.Frozen.ShouldBeTrue();
+        snapshot.GrandMaster.ShouldBe(0.9, 1e-9);
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-005")]
+    public void QuickPalette_OverridesTheSelection_ThenReleaseGivesBack()
+    {
+        _vm.SelectQuickCommand.Execute(_vm.QuickSelections.Single(s => s.Label == "Tous les lyres"));
+        _vm.ApplyPaletteCommand.Execute(_vm.Positions.Single(p => p.Name == "Plafond"));
+        _host.Tick();
+        var lyre = _host.Runtime.Project.Installation.Fixtures.Single(f => f.Name == "Lyre 1").Id;
+        var snapshot = _host.Runtime.Engine.Snapshot;
+        var tilt = snapshot.Show.IndexOf(lyre, "tilt");
+        double.IsNaN(snapshot.Overrides[tilt]).ShouldBeFalse("la lyre est forcée sur la palette");
+        _vm.HasQuickOverrides.ShouldBeTrue();
+
+        _vm.OnKey(LiveKey.Release, down: true);
+        _host.Tick();
+        double.IsNaN(_host.Runtime.Engine.Snapshot.Overrides[tilt]).ShouldBeTrue("« Libérer » rend la main aux couches");
+        _vm.HasQuickOverrides.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-009")]
+    public async Task Journal_ShowsSceneStarts()
+    {
+        _vm.Press(_vm.Columns.Single(c => c.Layer.Name == "Couleurs").Scenes[0]);
+        _host.Tick();
+
+        // Les événements arrivent sur le fil du bus : on laisse le temps de les recevoir.
+        for (var i = 0; i < 50 && _vm.Journal.Count == 0; i++)
+        {
+            await Task.Delay(20);
+            _vm.Refresh();
+        }
+
+        _vm.Journal.ShouldContain(line => line.Contains('▶') && line.Contains("utilisateur"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-001")]
+    [Trait("Exigence", "LIVE-010")]
+    [Trait("Exigence", "GEN-112")]
+    public void StatusBand_AndCommandJournal()
+    {
+        _vm.ShowCommands = true;
+        _vm.Press(_vm.Columns.Single(c => c.Layer.Name == "Couleurs").Scenes[0]);
+        _host.Tick();
+        _vm.Refresh();
+
+        _vm.OutputText.ShouldNotBeNullOrEmpty();
+        _vm.VenueText.ShouldContain("Générique");
+        _vm.LimitsText.ShouldContain("aucune limite");
+        _vm.Commands.ShouldContain(c => c.Contains("LaunchScene") && c.Contains("utilisateur"));
+    }
+}

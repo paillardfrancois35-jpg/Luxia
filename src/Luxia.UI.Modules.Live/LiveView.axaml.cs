@@ -1,0 +1,94 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Data.Converters;
+using Avalonia.Input;
+using Avalonia.Media;
+
+namespace Luxia.UI.Modules.Live;
+
+/// <summary>Écran Live : appui / relâche des boutons à maintenir (flash, strobe, fumée, scènes des couches Flash).</summary>
+public partial class LiveView : UserControl
+{
+    /// <summary>Fond d'une scène qui joue.</summary>
+    public static readonly IValueConverter ActiveBackground =
+        new FuncValueConverter<bool, IBrush>(active => new SolidColorBrush(Color.Parse(active ? "#30363D" : "#161B22")));
+
+    /// <summary>Bordure épaisse (couleur de la scène) quand elle joue.</summary>
+    public static readonly IValueConverter ActiveThickness =
+        new FuncValueConverter<bool, Thickness>(active => active ? new Thickness(3) : new Thickness(1, 1, 1, 3));
+
+    /// <summary>Cadre de la couche choisie au clavier.</summary>
+    public static readonly IValueConverter SelectedBorder =
+        new FuncValueConverter<bool, IBrush>(selected => new SolidColorBrush(Color.Parse(selected ? "#58A6FF" : "#30363D")));
+
+    /// <summary>Fond d'alerte (sortie déconnectée).</summary>
+    public static readonly IValueConverter AlertBackground =
+        new FuncValueConverter<bool, IBrush>(alert => new SolidColorBrush(Color.Parse(alert ? "#DA3633" : "#1A7F37")));
+
+    /// <summary>Fond d'avertissement (limite de sûreté active).</summary>
+    public static readonly IValueConverter WarningBackground =
+        new FuncValueConverter<bool, IBrush>(warning => new SolidColorBrush(Color.Parse(warning ? "#9E6A03" : "#161B22")));
+
+    /// <summary>Crée la vue.</summary>
+    public LiveView() => InitializeComponent();
+
+    private LiveViewModel? ViewModel => DataContext as LiveViewModel;
+
+    private static LiveSceneViewModel? SceneOf(object? sender) => (sender as Control)?.Tag as LiveSceneViewModel;
+
+    private void OnScenePressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (SceneOf(sender) is { } scene && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            e.Pointer.Capture(sender as IInputElement);
+            ViewModel?.Press(scene);
+            e.Handled = true;
+        }
+    }
+
+    private void OnSceneReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (SceneOf(sender) is { } scene)
+        {
+            ViewModel?.Release(scene);
+            e.Pointer.Capture(null);
+        }
+    }
+
+    private void OnSceneCaptureLost(object? sender, PointerCaptureLostEventArgs e)
+    {
+        // Sécurité : un flash ne doit jamais rester « coincé » si le pointeur est perdu.
+        if (SceneOf(sender) is { } scene)
+        {
+            ViewModel?.Release(scene);
+        }
+    }
+
+    private void OnFlashPressed(object? sender, PointerPressedEventArgs e) => Hold(sender, e, vm => vm.Flash(true));
+
+    private void OnFlashReleased(object? sender, PointerReleasedEventArgs e) => ViewModel?.Flash(false);
+
+    private void OnFlashLost(object? sender, PointerCaptureLostEventArgs e) => ViewModel?.Flash(false);
+
+    private void OnStrobePressed(object? sender, PointerPressedEventArgs e) => Hold(sender, e, vm => vm.Strobe(true));
+
+    private void OnStrobeReleased(object? sender, PointerReleasedEventArgs e) => ViewModel?.Strobe(false);
+
+    private void OnStrobeLost(object? sender, PointerCaptureLostEventArgs e) => ViewModel?.Strobe(false);
+
+    private void OnSmokePressed(object? sender, PointerPressedEventArgs e) => Hold(sender, e, vm => vm.Smoke(true));
+
+    private void OnSmokeReleased(object? sender, PointerReleasedEventArgs e) => ViewModel?.Smoke(false);
+
+    private void OnSmokeLost(object? sender, PointerCaptureLostEventArgs e) => ViewModel?.Smoke(false);
+
+    private void Hold(object? sender, PointerPressedEventArgs e, Action<LiveViewModel> action)
+    {
+        if (ViewModel is { } vm && (sender as Control)?.IsEnabled != false)
+        {
+            e.Pointer.Capture(sender as IInputElement);
+            action(vm);
+            e.Handled = true;
+        }
+    }
+}

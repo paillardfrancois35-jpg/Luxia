@@ -69,6 +69,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         _dialogs = dialogs;
         Pages =
         [
+            new NavigationItem("Live", "▶", new Luxia.UI.Modules.Live.LiveViewModel(runtime)),
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
             new NavigationItem("Installation", "▦", new Luxia.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),

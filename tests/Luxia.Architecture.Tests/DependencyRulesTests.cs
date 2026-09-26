@@ -45,6 +45,7 @@ public sealed class DependencyRulesTests
     [InlineData("Luxia.UI.Modules.Installation")]
     [InlineData("Luxia.UI.Modules.Simulator")]
     [InlineData("Luxia.UI.Modules.Scenes")]
+    [InlineData("Luxia.UI.Modules.Live")]
     [Trait("Exigence", "GEN-003")]
     public void UserInterfaceModules_DoNotReferenceApplication(string project)
     {

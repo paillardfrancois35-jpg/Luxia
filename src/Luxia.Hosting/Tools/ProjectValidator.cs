@@ -35,12 +35,14 @@ public static class ProjectValidator
         var (palettes, palettesMessage) = PaletteStore.Load(folder);
         var (layers, layersMessage) = LayerStore.Load(folder);
         var (safety, safetyMessage) = SafetyStore.Load(folder);
+        var (live, liveMessage) = LiveStore.Load(folder);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
         AddLoadMessage(issues, PaletteStore.FileName, palettesMessage);
         AddLoadMessage(issues, LayerStore.FileName, layersMessage);
         AddLoadMessage(issues, SafetyStore.FileName, safetyMessage);
+        AddLoadMessage(issues, LiveStore.FileName, liveMessage);
 
         var library = new ProjectFixtureLibrary(folder);
         var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
@@ -49,6 +51,7 @@ public static class ProjectValidator
         issues.AddRange(CheckLayers(scenes, layers, palettes));
         issues.AddRange(CheckPalettes(palettes));
         issues.AddRange(CheckSafety(safety));
+        issues.AddRange(CheckLive(live, scenes, layers));
         return issues;
     }
 
@@ -87,6 +90,32 @@ public static class ProjectValidator
                     "layerId",
                     $"touche {string.Join(", ", outside.Select(LayerRules.Label))}, hors des familles de la couche « {layer.Name} » (COU-008)");
             }
+        }
+    }
+
+    private static IEnumerable<CompileIssue> CheckLive(LiveSettings live, SceneSet scenes, LayerSet layers)
+    {
+        var file = LiveStore.FileName;
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        if (live.FlashSceneId is { } flash && !sceneIds.Contains(flash))
+        {
+            yield return Warning(file, "Live", "flashSceneId", "scène du bouton FLASH introuvable");
+        }
+
+        if (live.StrobeSceneId is { } strobe && !sceneIds.Contains(strobe))
+        {
+            yield return Warning(file, "Live", "strobeSceneId", "scène du bouton STROBE introuvable");
+        }
+
+        var layerIds = layers.Layers.Select(l => l.Id).ToHashSet();
+        foreach (var hidden in live.HiddenLayerIds.Where(id => !layerIds.Contains(id)))
+        {
+            yield return Warning(file, "Live", "hiddenLayerIds", $"couche masquée introuvable ({hidden})");
+        }
+
+        if (live.SmokeBurstSeconds is <= 0 or > 60)
+        {
+            yield return Warning(file, "Live", "smokeBurstSeconds", "rafale de fumée hors de 0-60 s");
         }
     }
 
