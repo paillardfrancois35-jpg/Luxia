@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 8 · Réalisé : 45 · Validé : 33
+> Non réalisé : 1 · Partiel : 5 · Réalisé : 48 · Validé : 33
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -201,14 +201,14 @@
 | [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Partiel | ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
 | [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
 | [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
-| [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Partiel | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
+| [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
-| [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Partiel | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout |
+| [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Réalisé | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
 | [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Validé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
 | [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Validé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
 | [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Validé |  |
 | [GEN-106](exigences/GEN-106.md) | M | Nom, couleur et icône des objets | Réalisé |  |
-| [GEN-112](exigences/GEN-112.md) | M | Journal des commandes consultable | Partiel | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves |
+| [GEN-112](exigences/GEN-112.md) | M | Journal des commandes consultable | Réalisé | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves<br>LiveViewModelTests.StatusBand_AndCommandJournal |
 | [GEN-113](exigences/GEN-113.md) | S | Enregistrement des trames d'une session | Partiel |  |
 | [GEN-117](exigences/GEN-117.md) | I | Toute exception journalisée | Réalisé |  |
 | [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
@@ -278,3 +278,79 @@
 | [SCN-037](exigences/SCN-037.md) | M | Enregistrer depuis la sortie | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
+
+## P5 – 69 exigences, 46 couvertes par des tests automatiques
+
+> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 9 · Réalisé : 36 · Réalisé, à valider sur matériel : 13 · Sans fiche : 4
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [BIB-101](exigences/BIB-101.md) | I | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | Réalisé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_ValueInNoStrobeRange_IsNeverCounted |
+| [CONS-061](exigences/CONS-061.md) | S | Une page de console peut être affectée aux faders d'un APC mini | Reporté (chantier ergonomie) |  |
+| [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Réalisé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
+| [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
+| [COU-003](exigences/COU-003.md) | I | Exclusivité | Réalisé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins |
+| [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
+| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Partiel | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld |
+| [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
+| [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
+| [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
+| [COU-009](exigences/COU-009.md) | S | Scène de repos par couche | Réalisé | LayersEditorViewModelTests.RestScene_ChoicesAreTheLayerScenes<br>LiveCommandTests.RestScene_PlaysWhenTheLayerIsEmpty |
+| [GEN-054](exigences/GEN-054.md) | I | Sauvegarde automatique du projet ouvert | Réalisé | ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
+| [GEN-055](exigences/GEN-055.md) | M | Conservation des N dernières versions du projet | Réalisé | ReliabilityTests.Restore_BringsBackTheFiles_AndKeepsTheCurrentStateAsAVersion<br>ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
+| [GEN-057](exigences/GEN-057.md) | M | Export / import d'un projet complet sous forme d'archive unique | Reporté (chantier ergonomie) |  |
+| [GEN-061](exigences/GEN-061.md) | I | Fondu au noir à la fermeture | Réalisé, à valider sur matériel |  |
+| [GEN-062](exigences/GEN-062.md) | I | Le passage Atelier ↔ Live ne doit jamais interrompre la restitution en cours | Réalisé |  |
+| [GEN-064](exigences/GEN-064.md) | I | Démarrage jusqu'à « prêt en Live » en moins de 10 s | Réalisé, à valider sur matériel |  |
+| [GEN-070](exigences/GEN-070.md) | I | Toute entrée | Réalisé |  |
+| [GEN-071](exigences/GEN-071.md) | I | Raccourcis clavier globaux en Live, actifs quel que soit le focus | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
+| [GEN-072](exigences/GEN-072.md) | M | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [GEN-073](exigences/GEN-073.md) | M | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
+| [GEN-074](exigences/GEN-074.md) | S | Les affectations MIDI sont modifiables par « apprentissage » | Reporté (chantier ergonomie) |  |
+| [GEN-083](exigences/GEN-083.md) | I | Strobe | Réalisé | SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
+| [GEN-084](exigences/GEN-084.md) | I | Fumée | Réalisé, à valider sur matériel | LiveCommandTests.Smoke_HoldAndBurst_GoThroughTheLimiter<br>SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
+| [GEN-085](exigences/GEN-085.md) | I | Zones interdites Pan/Tilt par lieu et par lyre | Réalisé | SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
+| [GEN-086](exigences/GEN-086.md) | M | Un signal visuel permanent en Live indique toute limite de sûreté active ou tout verrou | Réalisé |  |
+| [GEN-094](exigences/GEN-094.md) | M | Utilisation CPU moyenne < 15 % en Live | Réalisé, à valider sur matériel |  |
+| [GEN-095](exigences/GEN-095.md) | M | Reprise après plantage | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes<br>ReliabilityTests.CleanStop_OffersNothing |
+| [INST-053](exigences/INST-053.md) | I | Zones interdites par lyre, définies en visant à la main | Réalisé | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>ZonesEditorViewModelTests.AddWithoutLyre_ExplainsWhatToDo<br>ZonesEditorViewModelTests.AimTwoCorners_Save_ThenTheEngineKeepsTheLyreOut |
+| [INST-054](exigences/INST-054.md) | I | Les palettes de position sont stockées par lieu | Réalisé | VenuePaletteTests.CopyVenue_CopiesTheEffectivePositions |
+| [INST-070](exigences/INST-070.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-071](exigences/INST-071.md) | M | (fiche manquante) | Sans fiche |  |
+| [INST-072](exigences/INST-072.md) | M | (fiche manquante) | Sans fiche |  |
+| [LIVE-001](exigences/LIVE-001.md) | I | Bandeau d'état permanent | Partiel | LiveViewModelTests.StatusBand_AndCommandJournal |
+| [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
+| [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfPlayingScene_StopsIt |
+| [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
+| [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Réalisé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
+| [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Reporté (chantier ergonomie) |  |
+| [LIVE-007](exigences/LIVE-007.md) | M | Mini-simulateur optionnel dans l'écran Live | Reporté (chantier ergonomie) |  |
+| [LIVE-008](exigences/LIVE-008.md) | I | Indication visible de toute limite de sûreté active et de tout verrou | Réalisé |  |
+| [LIVE-009](exigences/LIVE-009.md) | M | Journal défilant des derniers événements | Réalisé | LiveViewModelTests.Journal_ShowsSceneStarts |
+| [LIVE-010](exigences/LIVE-010.md) | I | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | Réalisé, à valider sur matériel | LiveViewModelTests.StatusBand_AndCommandJournal |
+| [LIVE-011](exigences/LIVE-011.md) | M | Accès à l'assistant d'installation | Reporté (chantier ergonomie) |  |
+| [LIVE-040](exigences/LIVE-040.md) | I | Raccourcis du tableau ci-dessus | Partiel | LiveViewModelTests.Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster<br>LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
+| [LIVE-041](exigences/LIVE-041.md) | S | Raccourcis personnalisables | Reporté (chantier ergonomie) |  |
+| [LIVE-060](exigences/LIVE-060.md) | I | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | Réalisé | LiveViewModelTests.Refresh_IsFarUnderTheFrameBudget |
+| [LIVE-061](exigences/LIVE-061.md) | I | Latence clic → sortie < 50 ms | Réalisé, à valider sur matériel |  |
+| [MIDI-001](exigences/MIDI-001.md) | I | Détection automatique des APC mini MK1 et MK2 | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Réalisé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
+| [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Réalisé, à valider sur matériel | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
+| [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Réalisé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
+| [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
+| [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
+| [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
+| [MIDI-009](exigences/MIDI-009.md) | S | Disposition alternative « palettes » | Reporté (chantier ergonomie) |  |
+| [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Réalisé, à valider sur matériel | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
+| [MOT-042](exigences/MOT-042.md) | I | (fiche manquante) | Sans fiche |  |
+| [MOT-072](exigences/MOT-072.md) | I | Flash | Réalisé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly |
+| [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
+| [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Réalisé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>(+2) |
+| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
+| [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge<br>(+1) |
+| [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
+| [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |
+| [PAL-004](exigences/PAL-004.md) | I | Palettes de position par lieu | Réalisé | VenuePaletteTests.GenericVenue_HasNoKey<br>VenuePaletteTests.Merge_ReplacesOnlyTheCapturedFixtures_InTheActiveVenue_AndAddsAFallback<br>VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
+| [PAL-008](exigences/PAL-008.md) | M | Palettes de position manquantes dans un lieu | Réalisé | VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
+| [PAL-010](exigences/PAL-010.md) | S | Palettes de combinaisons de couleurs | Reporté (P6) |  |

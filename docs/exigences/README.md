@@ -122,12 +122,15 @@
 | [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | Réalisé |
 | [BIB-099](BIB-099.md) | Mode découverte : ergonomie de « Nouvelle plage ici » | P2 | M | Partiel |
 | [BIB-100](BIB-100.md) | Signaler visiblement une erreur de validation et amener sur l'onglet concerné | P2 | M | Réalisé |
+| [BIB-101](BIB-101.md) | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | P5 | I | Réalisé |
 | [CMD-001](CMD-001.md) | Commande Blackout | P4 | — | Réalisé |
 | [CMD-002](CMD-002.md) | Commande RéglerGrandMaster | P4 | — | Réalisé |
+| [CMD-003](CMD-003.md) | Commande Figer | P5 | I | Réalisé |
 | [CMD-010](CMD-010.md) | Commande LancerScène | P4 | — | Réalisé |
 | [CMD-011](CMD-011.md) | Commande ArrêterScène | P4 | — | Validé |
 | [CMD-012](CMD-012.md) | Commande ArrêterCouche | P5 | — | Réalisé |
 | [CMD-013](CMD-013.md) | Commande RéglerMasterCouche | P5 | — | Réalisé |
+| [CMD-014](CMD-014.md) | Commande FlashScène | P5 | I | Réalisé |
 | [CMD-015](CMD-015.md) | Commandes ÉtapeSuivante / ÉtapePrécédente | P4 | — | Réalisé |
 | [CMD-016](CMD-016.md) | Commande RéglerVitesseScène | P5 | — | Réalisé |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
@@ -135,6 +138,7 @@
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
+| [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Réalisé, à valider sur matériel |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -157,9 +161,18 @@
 | [CONS-043](CONS-043.md) | Délimitation des appareils et surcharges dans le moniteur | P1 | M | Réalisé |
 | [CONS-044](CONS-044.md) | Moniteur dans une fenêtre séparée | P1 | S | Non réalisé |
 | [CONS-060](CONS-060.md) | Composant « faders d'un appareil » réutilisable | P2 | I | Réalisé |
+| [CONS-061](CONS-061.md) | Une page de console peut être affectée aux faders d'un APC mini | P5 | S | Reporté (chantier ergonomie) |
 | [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | Validé |
 | [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
-| [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Partiel |
+| [COU-001](COU-001.md) | Créer, renommer, réordonner | P5 | I | Réalisé |
+| [COU-002](COU-002.md) | Une scène appartient à une couche | P5 | I | Réalisé |
+| [COU-003](COU-003.md) | Exclusivité | P5 | I | Réalisé |
+| [COU-004](COU-004.md) | Couche non exclusive | P5 | I | Réalisé |
+| [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Partiel |
+| [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Réalisé |
+| [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
+| [COU-008](COU-008.md) | Avertissement | P5 | M | Réalisé |
+| [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -176,25 +189,41 @@
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
 | [GEN-033](GEN-033.md) | Horloges injectables | P4 | I | Réalisé |
-| [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Partiel |
+| [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Réalisé |
 | [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
-| [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Partiel |
+| [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Réalisé |
 | [GEN-043](GEN-043.md) | Chaîne de rendu explicable | P4 | M | Validé |
 | [GEN-050](GEN-050.md) | Fichiers JSON lisibles | P0 | I | Réalisé |
 | [GEN-051](GEN-051.md) | Version de format et migrations | P0 | I | Réalisé |
 | [GEN-052](GEN-052.md) | Identifiants stables | P2 | I | Réalisé |
 | [GEN-053](GEN-053.md) | Copie des modèles d'appareils dans le projet | P3 | I | Réalisé |
+| [GEN-054](GEN-054.md) | Sauvegarde automatique du projet ouvert | P5 | I | Réalisé |
+| [GEN-055](GEN-055.md) | Conservation des N dernières versions du projet | P5 | M | Réalisé |
 | [GEN-056](GEN-056.md) | Fichier illisible sans plantage | P0 | I | Réalisé |
+| [GEN-057](GEN-057.md) | Export / import d'un projet complet sous forme d'archive unique | P5 | M | Reporté (chantier ergonomie) |
 | [GEN-058](GEN-058.md) | Chemins relatifs (projet déplaçable) | P2 | S | Non réalisé |
 | [GEN-060](GEN-060.md) | Blackout au démarrage | P0 | I | Réalisé |
-| [GEN-061](GEN-061.md) | Fondu au noir à la fermeture | P5 | I | Partiel |
+| [GEN-061](GEN-061.md) | Fondu au noir à la fermeture | P5 | I | Réalisé, à valider sur matériel |
+| [GEN-062](GEN-062.md) | Le passage Atelier ↔ Live ne doit jamais interrompre la restitution en cours | P5 | I | Réalisé |
 | [GEN-063](GEN-063.md) | Mode aveugle en Atelier | P4 | M | Validé |
+| [GEN-064](GEN-064.md) | Démarrage jusqu'à « prêt en Live » en moins de 10 s | P5 | I | Réalisé, à valider sur matériel |
+| [GEN-070](GEN-070.md) | Toute entrée | P5 | I | Réalisé |
+| [GEN-071](GEN-071.md) | Raccourcis clavier globaux en Live, actifs quel que soit le focus | P5 | I | Partiel |
+| [GEN-072](GEN-072.md) | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | P5 | M | Réalisé, à valider sur matériel |
+| [GEN-073](GEN-073.md) | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | P5 | M | Réalisé, à valider sur matériel |
+| [GEN-074](GEN-074.md) | Les affectations MIDI sont modifiables par « apprentissage » | P5 | S | Reporté (chantier ergonomie) |
 | [GEN-080](GEN-080.md) | Perte du PC : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-081](GEN-081.md) | Arrêt anormal de l'application : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-082](GEN-082.md) | Blackout accessible en permanence | P4 | I | Validé |
+| [GEN-083](GEN-083.md) | Strobe | P5 | I | Réalisé |
+| [GEN-084](GEN-084.md) | Fumée | P5 | I | Réalisé, à valider sur matériel |
+| [GEN-085](GEN-085.md) | Zones interdites Pan/Tilt par lieu et par lyre | P5 | I | Réalisé |
+| [GEN-086](GEN-086.md) | Un signal visuel permanent en Live indique toute limite de sûreté active ou tout verrou | P5 | M | Réalisé |
 | [GEN-090](GEN-090.md) | Latence action → trame < 50 ms | P1 | I | Réalisé |
 | [GEN-091](GEN-091.md) | Sortie déconnectée non bloquante, reconnexion < 3 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-093](GEN-093.md) | Panne d'un module secondaire isolée | P0 | I | Réalisé |
+| [GEN-094](GEN-094.md) | Utilisation CPU moyenne < 15 % en Live | P5 | M | Réalisé, à valider sur matériel |
+| [GEN-095](GEN-095.md) | Reprise après plantage | P5 | M | Réalisé |
 | [GEN-096](GEN-096.md) | Pas de mise en veille du PC pendant l'émission | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-100](GEN-100.md) | Interface en français | P1 | I | Réalisé |
 | [GEN-101](GEN-101.md) | Thème sombre | P1 | I | Réalisé |
@@ -207,7 +236,7 @@
 | [GEN-108](GEN-108.md) | Taille de police réglable | P1 | S | Non réalisé |
 | [GEN-109](GEN-109.md) | Opérations longues sans figer l'interface | P1 | I | Réalisé |
 | [GEN-110](GEN-110.md) | Journal technique | P0 | I | Réalisé |
-| [GEN-112](GEN-112.md) | Journal des commandes consultable | P4 | M | Partiel |
+| [GEN-112](GEN-112.md) | Journal des commandes consultable | P4 | M | Réalisé |
 | [GEN-113](GEN-113.md) | Enregistrement des trames d'une session | P4 | S | Partiel |
 | [GEN-114](GEN-114.md) | Menu « À propos » avec diagnostic copiable | P3 | M | Réalisé |
 | [GEN-115](GEN-115.md) | Une seule instance de l'application à la fois | P3 | I | Réalisé |
@@ -244,6 +273,33 @@
 | [INST-050](INST-050.md) | Créer, dupliquer, activer un lieu | P3 | I | Réalisé |
 | [INST-051](INST-051.md) | Éditeur de plan | P3 | I | Partiel |
 | [INST-052](INST-052.md) | Appareil absent | P3 | I | Réalisé |
+| [INST-053](INST-053.md) | Zones interdites par lyre, définies en visant à la main | P5 | I | Réalisé |
+| [INST-054](INST-054.md) | Les palettes de position sont stockées par lieu | P5 | I | Réalisé |
+| [LIVE-001](LIVE-001.md) | Bandeau d'état permanent | P5 | I | Partiel |
+| [LIVE-002](LIVE-002.md) | Colonnes de couches | P5 | I | Réalisé |
+| [LIVE-003](LIVE-003.md) | Un clic sur une scène la lance | P5 | I | Réalisé |
+| [LIVE-004](LIVE-004.md) | Actions permanentes toujours visibles | P5 | I | Partiel |
+| [LIVE-005](LIVE-005.md) | Palettes rapides | P5 | I | Réalisé |
+| [LIVE-006](LIVE-006.md) | Disposition personnalisable | P5 | M | Reporté (chantier ergonomie) |
+| [LIVE-007](LIVE-007.md) | Mini-simulateur optionnel dans l'écran Live | P5 | M | Reporté (chantier ergonomie) |
+| [LIVE-008](LIVE-008.md) | Indication visible de toute limite de sûreté active et de tout verrou | P5 | I | Réalisé |
+| [LIVE-009](LIVE-009.md) | Journal défilant des derniers événements | P5 | M | Réalisé |
+| [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Réalisé, à valider sur matériel |
+| [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
+| [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Partiel |
+| [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
+| [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
+| [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-002](MIDI-002.md) | Affectation par défaut du §3 | P5 | I | Réalisé |
+| [MIDI-003](MIDI-003.md) | Retour lumineux du §4, mis à jour à chaque changement d'état | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-004](MIDI-004.md) | Reprise douce des faders | P5 | I | Réalisé |
+| [MIDI-005](MIDI-005.md) | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | P5 | I | Réalisé |
+| [MIDI-006](MIDI-006.md) | Débranchement / rebranchement à chaud | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-007](MIDI-007.md) | Affectations modifiables et enregistrées dans le projet | P5 | M | Réalisé |
+| [MIDI-008](MIDI-008.md) | Apprentissage | P5 | S | Reporté (chantier ergonomie) |
+| [MIDI-009](MIDI-009.md) | Disposition alternative « palettes » | P5 | S | Reporté (chantier ergonomie) |
+| [MIDI-010](MIDI-010.md) | Sur MK2, la couleur des pads reprend la couleur des scènes | P5 | M | Réalisé, à valider sur matériel |
 | [MOT-001](MOT-001.md) | Ordre de la boucle de rendu | P4 | I | Réalisé |
 | [MOT-002](MOT-002.md) | Budget de 5 ms par tick | P4 | I | Réalisé |
 | [MOT-003](MOT-003.md) | Fil d'exécution dédié, sans opération bloquante | P4 | I | Réalisé |
@@ -269,22 +325,32 @@
 | [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Non réalisé |
 | [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
 | [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
+| [MOT-072](MOT-072.md) | Flash | P5 | I | Réalisé |
+| [MOT-073](MOT-073.md) | Figer | P5 | I | Réalisé |
 | [MOT-074](MOT-074.md) | Surcharges conformes à la chaîne de rendu | P1 | I | Réalisé |
 | [MOT-075](MOT-075.md) | Identifier un appareil au-dessus de tout | P3 | I | Réalisé |
+| [MOT-080](MOT-080.md) | Limiteur de strobe | P5 | I | Réalisé |
+| [MOT-081](MOT-081.md) | Limiteur de fumée | P5 | I | Réalisé, à valider sur matériel |
+| [MOT-082](MOT-082.md) | Zones interdites | P5 | I | Partiel |
+| [MOT-083](MOT-083.md) | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | P5 | I | Réalisé |
 | [MOT-090](MOT-090.md) | Conversion des attributs en octets selon le patch | P4 | I | Réalisé |
 | [MOT-091](MOT-091.md) | Appareils absents émis à 0 | P4 | I | Réalisé |
 | [MOT-092](MOT-092.md) | Jumeaux : mêmes valeurs | P4 | I | Réalisé |
 | [MOT-093](MOT-093.md) | Une trame par univers à chaque tick | P4 | I | Réalisé |
 | [MOT-100](MOT-100.md) | Publication de l'état observable | P4 | I | Réalisé |
 | [MOT-101](MOT-101.md) | Événements de scène et de refus | P4 | I | Réalisé |
+| [MOT-102](MOT-102.md) | Instantané de reprise | P5 | M | Réalisé |
 | [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
+| [PAL-004](PAL-004.md) | Palettes de position par lieu | P5 | I | Réalisé |
 | [PAL-005](PAL-005.md) | Les scènes suivent les palettes | P4 | I | Validé |
 | [PAL-006](PAL-006.md) | Suppression d'une palette utilisée | P4 | I | Réalisé |
 | [PAL-007](PAL-007.md) | Grilles de palettes | P4 | M | Partiel |
+| [PAL-008](PAL-008.md) | Palettes de position manquantes dans un lieu | P5 | M | Réalisé |
 | [PAL-009](PAL-009.md) | Jeu de palettes couleur par défaut | P4 | M | Réalisé |
+| [PAL-010](PAL-010.md) | Palettes de combinaisons de couleurs | P5 | S | Reporté (P6) |
 | [SCN-001](SCN-001.md) | Créer, dupliquer, renommer, supprimer une scène | P4 | I | Validé |
 | [SCN-002](SCN-002.md) | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | P4 | I | Validé |
 | [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
