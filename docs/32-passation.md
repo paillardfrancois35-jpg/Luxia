@@ -135,6 +135,9 @@ dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence"
 4. Développer par étapes vérifiables, un commit par étape (doc 03 §7), tests verts et sans avertissement.
 5. Livrer : guide `docs/demos/PN-*.md`, ajouts au show de référence + `JOURNAL.md`, notes de réalisation dans le doc du module,
    fiches d'exigences à jour (statut + historique), matrice et index régénérés (`python tools/matrice-exigences.py …`), **ce document mis à jour**.
+6. **Avant la validation définitive de la version** : demander à l'utilisateur s'il souhaite une **phase d'analyse ergonomique**
+   menée dans la même discussion (connaissance complète de ce qui a été ajouté) ; le chantier d'ergonomie se poursuit ensuite dans
+   une nouvelle discussion (Q32, doc 99).
 
 Modèle de message pour ouvrir une discussion :
 
