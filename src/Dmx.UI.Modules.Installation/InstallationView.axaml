@@ -86,7 +86,7 @@
             </StackPanel>
           </Border>
 
-          <Grid Grid.Row="2" ColumnDefinitions="220,150,140,110,130,60,*" Opacity="0.6" Margin="4,0">
+          <Grid Grid.Row="2" ColumnDefinitions="220,150,140,140,140,60,*" Opacity="0.6" Margin="4,0">
             <TextBlock Grid.Column="0" Text="Nom" />
             <TextBlock Grid.Column="1" Text="Modèle" />
             <TextBlock Grid.Column="2" Text="Mode" />
@@ -102,7 +102,7 @@
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="vm:PatchRowViewModel">
                   <Border Classes="panel" Margin="0,2" Padding="6">
-                    <Grid ColumnDefinitions="220,150,140,110,130,60,*">
+                    <Grid ColumnDefinitions="220,150,140,140,140,60,*">
                       <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
                         <Ellipse Width="10" Height="10" Fill="{Binding Color}" VerticalAlignment="Center" />
                         <TextBox Text="{Binding EditName}" Width="140" />
@@ -110,8 +110,8 @@
                       </StackPanel>
                       <TextBlock Grid.Column="1" Text="{Binding ModelName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding ModelName}" />
                       <ComboBox Grid.Column="2" ItemsSource="{Binding Modes}" SelectedItem="{Binding EditModeName}" Width="130" />
-                      <NumericUpDown Grid.Column="3" Value="{Binding EditUniverse}" Minimum="1" Maximum="99" FormatString="0" Width="100" />
-                      <NumericUpDown Grid.Column="4" Value="{Binding EditAddress}" Minimum="1" Maximum="512" FormatString="0" Width="120" />
+                      <NumericUpDown Grid.Column="3" Value="{Binding EditUniverse}" Minimum="1" Maximum="99" FormatString="0" Width="140" />
+                      <NumericUpDown Grid.Column="4" Value="{Binding EditAddress}" Minimum="1" Maximum="512" FormatString="0" Width="140" />
                       <CheckBox Grid.Column="5" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                       <WrapPanel Grid.Column="6" Orientation="Horizontal">
                         <Button Content="Renommer" Tag="{Binding}" Click="OnRenameClicked" />
@@ -237,7 +237,7 @@
                 </StackPanel>
               </WrapPanel>
 
-              <Grid DockPanel.Dock="Top" ColumnDefinitions="180,120,120,120,140,90,80" Opacity="0.6" Margin="4,0">
+              <Grid DockPanel.Dock="Top" ColumnDefinitions="180,150,150,150,150,90,80" Opacity="0.6" Margin="4,0">
                 <TextBlock Grid.Column="0" Text="Appareil" />
                 <TextBlock Grid.Column="1" Text="X (m)" />
                 <TextBlock Grid.Column="2" Text="Y (m)" />
@@ -250,12 +250,12 @@
                 <ItemsControl ItemsSource="{Binding Placements}">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="vm:PlacementRowViewModel">
-                      <Grid ColumnDefinitions="180,120,120,120,140,90,80" Margin="0,2">
+                      <Grid ColumnDefinitions="180,150,150,150,150,90,80" Margin="0,2">
                         <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Name}" />
-                        <NumericUpDown Grid.Column="1" Value="{Binding X}" Minimum="0" Maximum="100" FormatString="0.0" Width="110" />
-                        <NumericUpDown Grid.Column="2" Value="{Binding Y}" Minimum="0" Maximum="100" FormatString="0.0" Width="110" />
-                        <NumericUpDown Grid.Column="3" Value="{Binding HeightM}" Minimum="0" Maximum="20" FormatString="0.0" Width="110" />
-                        <NumericUpDown Grid.Column="4" Value="{Binding OrientationDeg}" Minimum="-360" Maximum="360" FormatString="0" Width="130" />
+                        <NumericUpDown Grid.Column="1" Value="{Binding X}" Minimum="0" Maximum="100" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="2" Value="{Binding Y}" Minimum="0" Maximum="100" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="3" Value="{Binding HeightM}" Minimum="0" Maximum="20" FormatString="0.0" Width="140" />
+                        <NumericUpDown Grid.Column="4" Value="{Binding OrientationDeg}" Minimum="-360" Maximum="360" FormatString="0" Width="140" />
                         <CheckBox Grid.Column="5" IsChecked="{Binding Hanging}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <CheckBox Grid.Column="6" IsChecked="{Binding Absent}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                       </Grid>
