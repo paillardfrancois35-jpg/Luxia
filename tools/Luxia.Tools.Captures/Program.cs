@@ -96,8 +96,8 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
     Capture("Scènes - lyre sélectionnée");
 }
 
-window.Close();
-await runtime.DisposeAsync();
+// Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.
+Environment.Exit(0);
 return 0;
 
 /// <summary>Aucun port série : la sortie reste nulle.</summary>

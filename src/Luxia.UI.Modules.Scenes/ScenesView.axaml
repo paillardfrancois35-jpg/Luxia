@@ -35,7 +35,7 @@
             <Button DockPanel.Dock="Right" Content="Retirer" Command="{Binding RemoveCommand}" Padding="6,2" FontSize="12" IsVisible="{Binding IsModified}"
                     ToolTip.Tip="Retirer cet attribut du programmeur : il ne sera pas enregistré (SCN-032)" />
             <TextBlock DockPanel.Dock="Right" Text="●" Classes="modified" IsVisible="{Binding IsModified}" Margin="0,0,6,0" VerticalAlignment="Center" />
-            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Width="150" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Width="230" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Title}" />
             <TextBlock Text="{Binding ValueText}" Opacity="0.8" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
           </DockPanel>
           <Slider Minimum="0" Maximum="100" Value="{Binding Percent}" />
@@ -408,7 +408,7 @@
             <TextBlock Text="Faisceau" FontWeight="SemiBold" />
             <ItemsControl ItemsSource="{Binding Beams}" ItemTemplate="{StaticResource PaletteButton}" ItemsPanel="{StaticResource Wrap}" />
 
-            <TextBlock Text="Enregistrer la sélection comme palette (PAL-001)" FontWeight="SemiBold" Margin="0,6,0,0" />
+            <TextBlock Text="Enregistrer la sélection comme palette" FontWeight="SemiBold" Margin="0,6,0,0" TextWrapping="Wrap" />
             <WrapPanel>
               <Button Content="Couleur…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Color" Margin="0,0,4,4" />
               <Button Content="Intensité…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Intensity" Margin="0,0,4,4" />
@@ -416,7 +416,7 @@
               <Button Content="Faisceau…" Command="{Binding SaveFromProgrammerCommand}" CommandParameter="Beam" Margin="0,0,4,4" />
             </WrapPanel>
 
-            <TextBlock Text="Palettes automatiques de la sélection (PAL-003)" FontWeight="SemiBold" Margin="0,6,0,0" />
+            <TextBlock Text="Palettes automatiques de la sélection" FontWeight="SemiBold" Margin="0,6,0,0" TextWrapping="Wrap" />
             <TextBlock Text="Aucune : elles viennent des plages marquées « palette automatique » dans la bibliothèque." FontSize="11" Opacity="0.6" TextWrapping="Wrap"
                        IsVisible="{Binding !HasAutomatic}" />
             <ItemsControl ItemsSource="{Binding Automatic}" ItemsPanel="{StaticResource Wrap}">
