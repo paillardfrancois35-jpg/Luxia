@@ -8,12 +8,13 @@ namespace Dmx.UI.Modules.Installation;
 public sealed partial class VenueRowViewModel : ObservableObject
 {
     /// <summary>Crée la ligne : une position par appareil patché (placée si déjà présente dans le lieu).</summary>
-    public VenueRowViewModel(Venue venue, IReadOnlyList<PatchedFixture> fixtures)
+    public VenueRowViewModel(Venue venue, IReadOnlyList<PatchedFixture> fixtures, bool isActive)
     {
         Venue = venue;
         _name = venue.Name;
         _widthM = venue.WidthM;
         _depthM = venue.DepthM;
+        IsActive = isActive;
         Placements = [.. fixtures.OrderBy(f => f.Universe).ThenBy(f => f.Address)
             .Select(f => new PlacementRowViewModel(f, venue.PlacementOf(f.Id)))];
     }
@@ -23,6 +24,9 @@ public sealed partial class VenueRowViewModel : ObservableObject
 
     /// <summary>Identifiant stable.</summary>
     public Guid Id => Venue.Id;
+
+    /// <summary>Vrai si ce lieu est le lieu actif du projet (mis en évidence dans la liste, doc 13 §5).</summary>
+    public bool IsActive { get; }
 
     [ObservableProperty]
     private string _name;

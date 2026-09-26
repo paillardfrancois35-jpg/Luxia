@@ -120,14 +120,26 @@ public sealed class SimulatorCanvas : Control
                 foreach (var cell in fixture.Cells)
                 {
                     var p = center + new Point(direction.X * cell.OffsetM * scale, direction.Y * cell.OffsetM * scale);
-                    context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.12, cell.Intensity)), RoomPen, p, 5, 5);
+
+                    // Corps toujours visible (SIM-001 : l'appareil se voit au plan même éteint), halo de couleur par-dessus si allumé.
+                    context.DrawEllipse(BodyBrush, RoomPen, p, 5, 5);
+                    if (cell.Intensity > 0)
+                    {
+                        context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.4, cell.Intensity)), null, p, 5, 5);
+                    }
                 }
             }
             else
             {
                 var cell = fixture.Cells.Count > 0 ? fixture.Cells[0] : new SimulatorCellVisual(0, "#58A6FF", 0);
-                var radius = 8 + (cell.Intensity * 10);
-                context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.12, cell.Intensity)), RoomPen, center, radius, radius);
+
+                // Corps toujours visible (SIM-001 : l'appareil se voit au plan même éteint), halo de couleur par-dessus si allumé.
+                context.DrawEllipse(BodyBrush, RoomPen, center, 8, 8);
+                if (cell.Intensity > 0)
+                {
+                    var radius = 8 + (cell.Intensity * 10);
+                    context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.4, cell.Intensity)), null, center, radius, radius);
+                }
             }
 
             if (fixture.Strobing)

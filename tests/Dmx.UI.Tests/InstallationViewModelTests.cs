@@ -285,6 +285,10 @@ public sealed class InstallationViewModelTests : IAsyncLifetime
         _vm.ActivateVenueCommand.Execute(null);
 
         _host.Runtime.Project.Venues.Active.Name.ShouldBe("Salon");
+
+        // Mis en évidence dans la liste (retour utilisateur : le changement de lieu actif n'était pas visible).
+        _vm.Venues.Single(v => v.Name == "Salon").IsActive.ShouldBeTrue();
+        _vm.Venues.Single(v => v.Name == VenueSet.DefaultVenueName).IsActive.ShouldBeFalse();
     }
 
     [Fact]

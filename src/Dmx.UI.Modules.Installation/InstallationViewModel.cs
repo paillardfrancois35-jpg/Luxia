@@ -662,7 +662,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         var fixtures = _runtime.Project.Installation.Fixtures;
         foreach (var venue in venueSet.Venues)
         {
-            Venues.Add(new VenueRowViewModel(venue, fixtures));
+            Venues.Add(new VenueRowViewModel(venue, fixtures, venue.Id == venueSet.Active.Id));
         }
 
         SelectedVenue = Venues.FirstOrDefault(v => v.Id == venueSet.Active.Id) ?? Venues.FirstOrDefault();

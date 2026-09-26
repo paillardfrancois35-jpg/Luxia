@@ -210,7 +210,11 @@
               <ListBox ItemsSource="{Binding Venues}" SelectedItem="{Binding SelectedVenue}">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="vm:VenueRowViewModel">
-                    <TextBlock Text="{Binding Name}" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                      <Ellipse Width="8" Height="8" Fill="#3FB950" VerticalAlignment="Center" IsVisible="{Binding IsActive}" ToolTip.Tip="Lieu actif" />
+                      <TextBlock Text="{Binding Name}" />
+                      <TextBlock Text="(actif)" Opacity="0.6" IsVisible="{Binding IsActive}" />
+                    </StackPanel>
                   </DataTemplate>
                 </ListBox.ItemTemplate>
               </ListBox>
