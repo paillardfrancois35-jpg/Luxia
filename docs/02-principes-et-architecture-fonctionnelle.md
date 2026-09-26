@@ -464,6 +464,18 @@ Un **Projet** est un **dossier** de fichiers JSON (plutôt qu'un fichier unique)
 
 ---
 
+## 16b. Diagnostic et robustesse
+
+> Ajouté le 2026-09-26 (écart constaté en testant le renommage LuXia avec l'utilisateur) : deux besoins concrets, absents du cahier des charges initial.
+
+| ID | Pri. | Phase | Exigence | Critère d'acceptation |
+|---|---|---|---|---|
+| GEN-114 | M | P3 | Menu **Aide → À propos** : boîte de dialogue en lecture seule, copiable, avec de quoi diagnostiquer un problème à distance (exécutable, répertoire de travail, PID, .NET/OS, dossiers de données, fichier de préférences, dernier projet en mémoire vs projet réellement ouvert, sortie configurée). | Le texte copié suffit à comprendre un problème signalé par l'utilisateur sans accès à son poste. |
+| GEN-115 | I | P3 | **Une seule instance** de l'application à la fois (verrou au démarrage) : deux processus se disputeraient le port série de l'Arduino et pourraient perdre le « dernier projet » des préférences. | Lancer une deuxième instance affiche un message et se ferme, sans toucher aux préférences ni au port série ; la première continue normalement. |
+| GEN-116 | S | P3 | L'exécutable et la fenêtre ont une **icône** propre à l'application (pas l'icône générique .NET). | Icône visible dans l'Explorateur, la barre des tâches et le titre de la fenêtre. |
+
+---
+
 ## 17. Fonctionnement hors-ligne
 
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
@@ -483,7 +495,7 @@ Cela se fait **à la maison**, jamais en soirée (P7).
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
 |---|---|---|---|---|
 | GEN-130 | I | P4 | Le **format des fichiers** du projet est documenté au fil du développement (`docs/50-format-des-donnees.md`) : chaque type d'objet, ses champs, ses valeurs possibles, avec un exemple ; accompagné d'un **schéma JSON** vérifiable. | Une IA produit une scène valide à partir de la seule documentation. |
-| GEN-131 | I | P4 | Outil en ligne de commande (`Dmx.Tools.Headless`) : **valider** un projet (références, schéma, règles des modules) et produire un rapport lisible, sans ouvrir l'application. | Projet avec une palette inexistante → erreur explicite (fichier, objet, champ). |
+| GEN-131 | I | P4 | Outil en ligne de commande (`Luxia.Tools.Headless`) : **valider** un projet (références, schéma, règles des modules) et produire un rapport lisible, sans ouvrir l'application. | Projet avec une palette inexistante → erreur explicite (fichier, objet, champ). |
 | GEN-132 | M | P4 | Le même outil **joue** une scène, une séquence ou un show en temps virtuel (BPM et événements musicaux simulés) et produit un **résumé lisible** (qui s'allume, quelles couleurs, quels mouvements, à quel moment) + un enregistrement de trames rejouable au simulateur. | L'IA peut vérifier elle-même le déroulé d'un show qu'elle a écrit. |
 | GEN-133 | I | P4 | Le contenu généré est rangé dans une **catégorie dédiée** (« Proposé par IA ») et n'écrase jamais un objet existant sans accord ; l'application le recharge sans redémarrer (ou sur demande). | Import d'un lot de scènes générées → visibles, rien d'écrasé. |
 | GEN-134 | M | P8 | Un **guide de conception** (`docs/51-guide-conception-shows.md`) décrit, pour une IA comme pour l'utilisateur, les bonnes pratiques : organisation en couches, usage des palettes, réactivité musicale, variété, sûreté, métadonnées pour le Directeur. | — |

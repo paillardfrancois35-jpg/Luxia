@@ -185,6 +185,9 @@
 | [GEN-108](GEN-108.md) | Taille de police réglable | P1 | S | Non réalisé |
 | [GEN-109](GEN-109.md) | Opérations longues sans figer l'interface | P1 | I | Réalisé |
 | [GEN-110](GEN-110.md) | Journal technique | P0 | I | Réalisé |
+| [GEN-114](GEN-114.md) | Menu « À propos » avec diagnostic copiable | P3 | M | Réalisé |
+| [GEN-115](GEN-115.md) | Une seule instance de l'application à la fois | P3 | I | Réalisé |
+| [GEN-116](GEN-116.md) | Icône de l'application | P3 | S | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Partiel |

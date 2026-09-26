@@ -126,9 +126,9 @@
 | [GEN-102](exigences/GEN-102.md) | I | Annuler / rétablir (50 niveaux minimum) | Réalisé | LibraryViewModelTests.Editor_UndoRedo<br>LibraryViewModelTests.History_Keeps100Levels |
 | [GEN-105](exigences/GEN-105.md) | M | Recherche dans les longues listes | Réalisé |  |
 
-## P3 – 47 exigences, 29 couvertes par des tests automatiques
+## P3 – 50 exigences, 29 couvertes par des tests automatiques
 
-> Non réalisé : 7 · Partiel : 6 · Réalisé : 34
+> Non réalisé : 7 · Partiel : 6 · Réalisé : 37
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -139,6 +139,9 @@
 | [CONS-024](exigences/CONS-024.md) | M | Bouton Identifier par appareil | Réalisé | ConsoleViewModelTests.Identify_LightsIntensityAndColorEmitters_AndReleasesOnStop<br>ConsoleViewModelTests.NeedsBackgroundRefresh_TrueOnlyWhileADeviceIsIdentifying |
 | [GEN-004](exigences/GEN-004.md) | M | Composant d'édition réutilisable dans un autre écran | Réalisé |  |
 | [GEN-053](exigences/GEN-053.md) | I | Copie des modèles d'appareils dans le projet | Réalisé | FixtureUpdateImpactTests.ForLibraryUpdate_ModeRemovedInNewDefinition_IsFlagged<br>InstallationViewModelTests.AddFixture_Multiple_CreatesConsecutiveAddressesAndCopiesModelIntoProject<br>InstallationViewModelTests.UpdateFromLibrary_WithImpact_AsksConfirmation<br>ReferenceShowP3Tests.ReferenceShow_ProjectFixtureLibrary_HasEveryUsedModel<br>(+3) |
+| [GEN-114](exigences/GEN-114.md) | M | Menu « À propos » avec diagnostic copiable | Réalisé |  |
+| [GEN-115](exigences/GEN-115.md) | I | Une seule instance de l'application à la fois | Réalisé |  |
+| [GEN-116](exigences/GEN-116.md) | S | Icône de l'application | Réalisé |  |
 | [GEN-122](exigences/GEN-122.md) | M | Sorties réseau locales autorisées (Art-Net) | Réalisé |  |
 | [INST-001](exigences/INST-001.md) | I | Un ou plusieurs univers, numérotés et nommables | Réalisé | StoresTests.InstallationStore_Missing_ReturnsDefaultWithOneUniverse |
 | [INST-002](exigences/INST-002.md) | I | Lien univers → pilotes dans les préférences | Réalisé |  |

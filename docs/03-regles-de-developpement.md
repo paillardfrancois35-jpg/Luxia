@@ -140,7 +140,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 
 ## 10. Conduite
 
-- **Fiches d'exigences** (`docs/exigences/<ID>.md`, règles F1 à F7 de leur README) : une fiche par exigence travaillée ; toute question, réponse, décision, écart, développement, test ou validation qui la concerne y est ajouté (historique ajout seul). Revenir sur une décision = nouvelle entrée qui cite l'ancienne et explique ce qui a changé. La fiche fait foi pour le statut.
+- **Fiches d'exigences** (`docs/exigences/<ID>.md`, règles F1 à F7 de leur README) : une fiche par exigence travaillée ; toute question, réponse, décision, écart, développement, test ou validation qui la concerne y est ajouté (historique ajout seul). Revenir sur une décision = nouvelle entrée qui cite l'ancienne et explique ce qui a changé. La fiche fait foi pour le statut. **Ceci vaut aussi pour une fonctionnalité ou un correctif de comportement demandé à la volée en session (pas prévu au cahier des charges) dès qu'il devient du code livré** : lui donner un ID (nouvelle ligne au cahier des charges, doc concerné), pas seulement un commit Git (oubli vécu le 2026-09-26 : icône, menu À propos et verrou mono-instance faits sans fiche avant d'y revenir — régularisés en GEN-114 à 116). Une décision transverse qui ne change aucun comportement observable de l'application (le nom du projet lui-même, l'organisation Git) reste une **idée** (`docs/99`), pas une exigence.
 - Divergence avec le cahier des charges : signalée, puis reportée dans le document concerné **et** dans la fiche de l'exigence.
 - Nouvelle idée : `docs/99-idees.md`. Question : `docs/01-questions-ouvertes.md`, reposée jusqu'à réponse.
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
