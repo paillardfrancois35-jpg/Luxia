@@ -15,7 +15,10 @@ namespace Luxia.App.ViewModels;
 /// </summary>
 public sealed partial class MainWindowViewModel : ViewModelBase
 {
-    /// <summary>Version affichée dans la barre de titre (`Directory.Build.props`, étiquette Git correspondante).</summary>
+    /// <summary>
+    /// Version affichée dans la barre de titre : « 1.003 » une fois validée, « 1.003.017 » en développement
+    /// (17e compilation depuis la dernière validation, GEN-119).
+    /// </summary>
     private static readonly string Version =
         Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
 

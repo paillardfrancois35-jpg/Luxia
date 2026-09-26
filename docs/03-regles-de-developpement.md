@@ -164,6 +164,8 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 - **Un enregistrement de fichier peut être refusé un court instant par le poste lui-même.** Sur le PC de l'utilisateur (outils de sécurité d'entreprise), environ 2 % des remplacements de fichier rapprochés échouent avec « accès refusé » (mesuré : 9 sur 500). Une écriture faite à chaque cran d'un champ numérique finit donc par tomber dessus, et Avalonia affiche l'exception sous le champ sans la journaliser. Règle : toute écriture de données passe par `VersionedJsonFile.Save`, qui réessaie (10 fois, attente croissante) ; un écran qui enregistre en continu attrape l'échec résiduel et l'affiche en message. (Rencontré le 2026-09-26, essai P4 avec l'utilisateur : champ Vitesse de l'écran Scènes.)
 
+- **Compiler pendant que LuXia tourne n'a rien livré.** L'application ouverte verrouille ses DLL : la compilation échoue à la copie et l'utilisateur continue de tester l'ancienne version sans le savoir. Règle : demander de fermer LuXia **avant** de compiler, vérifier « 0 Erreur(s) » et annoncer le numéro de compilation obtenu (GEN-119) ; l'utilisateur le retrouve dans la barre de titre. (Rencontré le 2026-09-26, essai P4.)
+
 ## 12. Historique
 
 | Date | Modification |

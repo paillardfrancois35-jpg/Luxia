@@ -8,6 +8,27 @@
     <ApplicationIcon>Assets\luxia.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <!--
+    GEN-119 : numéro de compilation en développement. Le compteur vit hors du dépôt (build/, ignoré par Git) :
+    chaque compilation de l'application l'augmente de 1 et l'inscrit dans la version affichée (barre de titre, À propos).
+  -->
+  <Target Name="LuxiaBuildNumber" BeforeTargets="GetAssemblyAttributes" Condition="'$(LuxiaDevVersion)' != ''">
+    <PropertyGroup>
+      <LuxiaBuildNumberFile>$(MSBuildThisFileDirectory)../../build/numero-de-compilation.txt</LuxiaBuildNumberFile>
+    </PropertyGroup>
+    <ReadLinesFromFile File="$(LuxiaBuildNumberFile)" Condition="Exists('$(LuxiaBuildNumberFile)')">
+      <Output TaskParameter="Lines" PropertyName="LuxiaLastBuildNumber" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <LuxiaLastBuildNumber Condition="'$(LuxiaLastBuildNumber)' == ''">0</LuxiaLastBuildNumber>
+      <LuxiaBuildNumber>$([MSBuild]::Add($(LuxiaLastBuildNumber), 1))</LuxiaBuildNumber>
+      <InformationalVersion>$(LuxiaDevVersion).$(LuxiaBuildNumber.PadLeft(3, '0'))</InformationalVersion>
+    </PropertyGroup>
+    <MakeDir Directories="$([System.IO.Path]::GetDirectoryName($(LuxiaBuildNumberFile)))" />
+    <WriteLinesToFile File="$(LuxiaBuildNumberFile)" Lines="$(LuxiaBuildNumber)" Overwrite="true" />
+    <Message Importance="high" Text="LuXia : version $(InformationalVersion)" />
+  </Target>
+
   <ItemGroup>
     <AvaloniaResource Include="Assets\luxia.ico" />
   </ItemGroup>

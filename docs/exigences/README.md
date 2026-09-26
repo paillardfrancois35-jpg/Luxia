@@ -125,7 +125,7 @@
 | [CMD-001](CMD-001.md) | Commande Blackout | P4 | — | Réalisé |
 | [CMD-002](CMD-002.md) | Commande RéglerGrandMaster | P4 | — | Réalisé |
 | [CMD-010](CMD-010.md) | Commande LancerScène | P4 | — | Réalisé |
-| [CMD-011](CMD-011.md) | Commande ArrêterScène | P4 | — | Réalisé |
+| [CMD-011](CMD-011.md) | Commande ArrêterScène | P4 | — | Validé |
 | [CMD-012](CMD-012.md) | Commande ArrêterCouche | P5 | — | Réalisé |
 | [CMD-013](CMD-013.md) | Commande RéglerMasterCouche | P5 | — | Réalisé |
 | [CMD-015](CMD-015.md) | Commandes ÉtapeSuivante / ÉtapePrécédente | P4 | — | Réalisé |
@@ -214,6 +214,7 @@
 | [GEN-116](GEN-116.md) | Icône de l'application | P3 | S | Réalisé |
 | [GEN-117](GEN-117.md) | Toute exception journalisée | P4 | I | Réalisé |
 | [GEN-118](GEN-118.md) | Enregistrement robuste aux refus passagers | P4 | I | Réalisé |
+| [GEN-119](GEN-119.md) | Numéro de compilation affiché en développement | P4 | M | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Réalisé |
@@ -249,9 +250,9 @@
 | [MOT-004](MOT-004.md) | Déterminisme : aléatoire à graine journalisée | P4 | I | Réalisé |
 | [MOT-010](MOT-010.md) | Étape = fondu d'entrée + maintien | P4 | I | Validé |
 | [MOT-011](MOT-011.md) | Interpolation des attributs continus selon la courbe | P4 | I | Validé |
-| [MOT-012](MOT-012.md) | Attributs discrets : bascule franche | P4 | I | Réalisé |
+| [MOT-012](MOT-012.md) | Attributs discrets : bascule franche | P4 | I | Validé |
 | [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Validé |
-| [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Réalisé |
+| [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
 | [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Réalisé |

@@ -7,6 +7,9 @@ obj/
 TestResults/
 *.binlog
 
+# Compteur des compilations de développement (GEN-119), propre au poste qui compile
+build/
+
 # IDE
 .idea/
 .vscode/
