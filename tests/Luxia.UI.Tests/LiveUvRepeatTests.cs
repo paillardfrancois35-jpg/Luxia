@@ -99,6 +99,32 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
         _vm.LimitsText.ShouldContain("(encore 29 s)"); // 28,x s arrondis au-dessus
     }
 
+    [Fact]
+    [Trait("Exigence", "MOT-081")]
+    [Trait("Exigence", "CMD-030")]
+    public void SmokeBurst_AfterTheRest_Emits3sWithoutAnyLimit()
+    {
+        // Essai P5 : maintien de FUMÉE 6 s, relâche, 30 s de repos, puis Rafale.
+        _vm.Smoke(true);
+        Run(6 * 40);
+        _vm.Smoke(false);
+        Run(31 * 40);
+        _host.Frame()[179].ShouldBe((byte)0);
+
+        _vm.SmokeBurstCommand.Execute(null);
+        var trace = new List<(int Tick, byte Value, bool Limited)>();
+        for (var i = 0; i < 6 * 40; i++)
+        {
+            _host.Tick();
+            _vm.Refresh();
+            trace.Add((i, _host.Frame()[179], _vm.HasLimits));
+        }
+
+        var emitted = trace.Count(t => t.Value == 255);
+        emitted.ShouldBeInRange(119, 121, string.Join(" ", trace.Where(t => t.Tick % 20 == 0)));
+        trace.ShouldNotContain(t => t.Limited, "aucune limite pendant ni après une rafale qui respecte le repos");
+    }
+
     private async Task Settle()
     {
         for (var i = 0; i < 8; i++)
