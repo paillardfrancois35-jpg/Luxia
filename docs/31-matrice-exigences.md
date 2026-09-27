@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 70 couvertes par des tests automatiques
 
-> Non réalisé : 1 · Partiel : 5 · Réalisé : 48 · Validé : 33
+> Non réalisé : 1 · Partiel : 5 · Réalisé : 47 · Validé : 34
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -248,7 +248,7 @@
 | [MOT-093](exigences/MOT-093.md) | I | Une trame par univers à chaque tick | Réalisé | RenderChainTests.EveryTick_SubmitsAFrame_EvenWhenNothingChanges |
 | [MOT-100](exigences/MOT-100.md) | I | Publication de l'état observable | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
 | [MOT-101](exigences/MOT-101.md) | I | Événements de scène et de refus | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
-| [MOT-103](exigences/MOT-103.md) | M | Mode sans interface piloté par scénario | Réalisé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>HeadlessToolsTests.Scenario_Parse_ResolvesNames_AndReportsBadLines |
+| [MOT-103](exigences/MOT-103.md) | M | Mode sans interface piloté par scénario | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>HeadlessToolsTests.Scenario_Parse_ResolvesNames_AndReportsBadLines |
 | [PAL-001](exigences/PAL-001.md) | I | Créer une palette depuis le programmeur | Réalisé | ScenesViewModelTests.SaveAsPositionPalette_FromProgrammer |
 | [PAL-002](exigences/PAL-002.md) | I | Palettes couleur par intention | Validé | ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
 | [PAL-003](exigences/PAL-003.md) | I | Palettes automatiques | Réalisé |  |

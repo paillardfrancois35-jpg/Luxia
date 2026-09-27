@@ -127,7 +127,7 @@ dotnet run --project D:/Develop/Claude/CSharp/DMX/tools/Luxia.Tools.Headless -- 
 dotnet run --project D:/Develop/Claude/CSharp/DMX/tools/Luxia.Tools.Headless -- jouer "D:/Develop/Claude/CSharp/DMX/samples/Show de travail" --scene "Strobe PAR (plafonné à 10 s)" --duree 22 --pas 1
 ```
 
-Le résumé montre la coupure à 10 s (« ⚠ sûreté ») et la reprise. Les scénarios acceptent `flash`, `figer`, `fumee`, `canal`
+Le résumé montre la coupure à 10 s (« ⚠ sûreté ») ; la reprise à 20 s se lit dans l'enregistrement (`--enregistrer f.dmxrec`), le résumé ne signalant que le début de chaque limite. Les scénarios acceptent `flash`, `figer`, `fumee`, `canal`
 (doc 50 §13).
 
 ---

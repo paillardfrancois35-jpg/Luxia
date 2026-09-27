@@ -346,7 +346,7 @@
 | [MOT-100](MOT-100.md) | Publication de l'état observable | P4 | I | Réalisé |
 | [MOT-101](MOT-101.md) | Événements de scène et de refus | P4 | I | Réalisé |
 | [MOT-102](MOT-102.md) | Instantané de reprise | P5 | M | Réalisé |
-| [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Réalisé |
+| [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Validé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
