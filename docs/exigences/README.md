@@ -424,4 +424,5 @@
 | [SORT-063](SORT-063.md) | Lecteur d'enregistrements | P3 | S | Non réalisé |
 | [SORT-064](SORT-064.md) | Pilote Art-Net | P3 | S | Non réalisé |
 | [SORT-065](SORT-065.md) | Enregistrement des trames visible, chemin copiable | P5 | M | Réalisé |
+| [SORT-066](SORT-066.md) | Journal de l'enregistrement : actions, commandes et canaux entrelacés | P5 | M | Réalisé |
 <!-- INDEX:FIN -->

@@ -247,6 +247,9 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         ProjectMessage = $"Version du {chosen.SavedAt:dd/MM/yyyy HH:mm:ss} rétablie.";
     }
 
+    /// <summary>Trace une action de l'utilisateur sur l'onglet courant (SORT-066).</summary>
+    public void TraceUi(string action) => _runtime.TraceUi(SelectedPage.Title, action);
+
     partial void OnSelectedPageChanged(NavigationItem value)
     {
         // GEN-054 : passage Atelier → Live = moment de garder une version du projet (sans bloquer l'écran).

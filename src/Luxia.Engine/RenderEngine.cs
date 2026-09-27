@@ -243,6 +243,12 @@ public sealed class RenderEngine : ICommandSink
     /// <summary>Copie les surcharges d'un univers : -1 = canal libre, sinon valeur imposée.</summary>
     public void CopyOverrides(int universe, Span<short> destination) => _channelOverrides[CheckUniverse(universe) - 1].CopyTo(destination);
 
+    /// <summary>
+    /// Commande traitée (acceptée ou refusée), levé sur le fil du moteur : le gestionnaire doit être immédiat
+    /// (journal de l'enregistrement, SORT-066).
+    /// </summary>
+    public event Action<CommandLogEntry>? CommandApplied;
+
     /// <summary>Dernières commandes reçues, de la plus ancienne à la plus récente (GEN-112).</summary>
     public IReadOnlyList<CommandLogEntry> CommandLog()
     {
@@ -269,7 +275,9 @@ public sealed class RenderEngine : ICommandSink
     private void Apply(Command command, TimeSpan receivedAt, TimeSpan now)
     {
         var rejection = ApplyCore(command, now);
-        Log(new CommandLogEntry(receivedAt, now, command, rejection));
+        var entry = new CommandLogEntry(receivedAt, now, command, rejection);
+        Log(entry);
+        CommandApplied?.Invoke(entry);
         if (rejection is not null)
         {
             // GEN-012 : une commande refusée produit un événement avec le motif.

@@ -176,6 +176,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     public void Press(LiveSceneViewModel scene)
     {
         ArgumentNullException.ThrowIfNull(scene);
+        _runtime.TraceUi("Live", $"appui « {scene.Name} »{(scene.IsActive ? " (affichée active)" : string.Empty)}");
         if (scene.Column.IsFlash)
         {
             Send(new FlashSceneCommand(CommandOrigin.User, scene.Scene.Id, Pressed: true));
@@ -193,6 +194,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     public void Release(LiveSceneViewModel scene)
     {
         ArgumentNullException.ThrowIfNull(scene);
+        _runtime.TraceUi("Live", $"relâche « {scene.Name} »");
         if (scene.Column.IsFlash)
         {
             Send(new FlashSceneCommand(CommandOrigin.User, scene.Scene.Id, Pressed: false));
@@ -202,6 +204,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     /// <summary>FLASH général maintenu (LIVE-004, touche F).</summary>
     public void Flash(bool pressed)
     {
+        _runtime.TraceUi("Live", pressed ? "FLASH appuyé" : "FLASH relâché");
         if (_flashScene is { } id)
         {
             Send(new FlashSceneCommand(CommandOrigin.User, id, pressed));
@@ -211,6 +214,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     /// <summary>STROBE général maintenu (LIVE-004, touche S) : toujours borné par le limiteur (MOT-080).</summary>
     public void Strobe(bool pressed)
     {
+        _runtime.TraceUi("Live", pressed ? "STROBE appuyé" : "STROBE relâché");
         if (_strobeScene is { } id)
         {
             Send(new FlashSceneCommand(CommandOrigin.User, id, pressed));

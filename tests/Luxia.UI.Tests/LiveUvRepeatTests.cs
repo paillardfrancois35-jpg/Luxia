@@ -56,6 +56,45 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
         states.Select(s => s.Row1).ShouldBe([255, 0, 255, 0, 255, 0, 255, 0, 255, 0], string.Join(" ", states));
     }
 
+    [Fact]
+    [Trait("Exigence", "SORT-066")]
+    public async Task Recording_JournalInterleavesClicksCommandsAndChannelChanges()
+    {
+        var uv = _vm.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == "UV plein");
+        var path = Path.Combine(_host.ProjectFolder, "trames-essai.dmxrec");
+        _host.Runtime.StartRecording(path);
+        await Settle();
+
+        _vm.Press(uv);
+        _vm.Release(uv);
+        await Settle();
+        _vm.Press(uv);
+        _vm.Release(uv);
+        await Settle();
+        _host.Runtime.StopRecording();
+        await Task.Delay(300, TestContext.Current.CancellationToken);
+
+        var lines = File.ReadAllLines(Path.ChangeExtension(path, ".journal.txt"));
+        var interesting = lines.Where(l => l.Contains("IHM") || l.Contains("MOTEUR") || l.Contains(" DMX ")).Select(l => l[25..]).ToList();
+        var launch = interesting.FindIndex(l => l.StartsWith("IHM", StringComparison.Ordinal) && l.Contains("appui « UV plein »"));
+        launch.ShouldBeGreaterThanOrEqualTo(0, string.Join(Environment.NewLine, lines));
+        var command = interesting.FindIndex(launch, l => l.StartsWith("MOTEUR", StringComparison.Ordinal) && l.Contains("« UV plein »"));
+        command.ShouldBeGreaterThan(launch, string.Join(Environment.NewLine, lines));
+        var on = interesting.FindIndex(command, l => l.StartsWith("DMX", StringComparison.Ordinal) && l.Contains("162:0→255"));
+        on.ShouldBeGreaterThan(command, string.Join(Environment.NewLine, lines));
+        interesting.FindIndex(on, l => l.StartsWith("DMX", StringComparison.Ordinal) && l.Contains("162:255→0")).ShouldBeGreaterThan(on, string.Join(Environment.NewLine, lines));
+    }
+
+    private async Task Settle()
+    {
+        for (var i = 0; i < 8; i++)
+        {
+            _host.Tick();
+            _vm.Refresh();
+            await Task.Delay(30, TestContext.Current.CancellationToken);
+        }
+    }
+
     private void Run(int ticks)
     {
         for (var i = 0; i < ticks; i++)

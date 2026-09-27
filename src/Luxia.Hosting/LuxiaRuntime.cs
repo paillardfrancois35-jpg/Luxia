@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Luxia.Core.Dmx;
 using Luxia.Core.Settings;
 using Luxia.Core.Time;
@@ -21,14 +22,16 @@ namespace Luxia.Hosting;
 /// Assemblage des modules de P0 : préférences, bus, moteur, routeur, pilotes, boucle cadencée.
 /// Utilisé tel quel par l'application et par l'outil sans interface.
 /// </summary>
-public sealed class LuxiaRuntime : IAsyncDisposable
+public sealed partial class LuxiaRuntime : IAsyncDisposable
 {
     private readonly ILoggerFactory _loggers;
     private readonly ILogger _logger;
     private readonly ISerialPortProvider _serialPorts;
     private readonly Lock _lock = new();
     private ArduinoOutputDriver? _arduino;
-    private RecorderOutputDriver? _recorder;
+    private volatile RecorderOutputDriver? _recorder;
+    private Dictionary<Guid, string> _names = [];
+    private readonly ILogger _uiLogger;
     private readonly SleepInhibitor _sleepInhibitor;
     private bool _started;
     private bool _stopped;
@@ -68,6 +71,10 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router = new OutputRouter(Bus, loggers.CreateLogger<OutputRouter>());
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
         Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>(), Bus);
+
+        // SORT-066 : commandes traitées, versées au journal de l'enregistrement des trames.
+        Engine.CommandApplied += OnCommandApplied;
+        _uiLogger = loggers.CreateLogger("IHM");
 
         // GEN-063 : moteur d'aperçu pour l'édition en aveugle ; ses trames ne vont à aucune sortie, seulement au simulateur.
         Preview = new RenderEngine(DiscardFrames.Instance, Clock, universes, loggers.CreateLogger<RenderEngine>());
@@ -352,6 +359,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             var folder = Preferences.Current.Outputs.RecordingsFolder ?? Paths.Recordings;
             path ??= Path.Combine(folder, $"trames-{DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture)}{RecordingFormat.Extension}");
             _recorder = new RecorderOutputDriver(path, 1, Loop.RateHz, _loggers.CreateLogger<RecorderOutputDriver>());
+            _names = BuildNames();
             Router.Attach(1, _recorder);
             return path;
         }
@@ -630,6 +638,59 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             Preferences.Update(p => p with { Outputs = p.Outputs with { Arduino = p.Outputs.Arduino with { LastPort = port } } });
         }
     }
+
+    /// <summary>
+    /// Trace une action de l'utilisateur (SORT-066) : « IHM – onglet – action » dans le journal technique et, pendant un
+    /// enregistrement des trames, dans son journal, entre les lignes DMX.
+    /// </summary>
+    /// <param name="tab">Onglet (écran) d'où vient l'action.</param>
+    /// <param name="action">Action réalisée.</param>
+    public void TraceUi(string tab, string action)
+    {
+        _uiLogger.LogInformation("IHM – {Onglet} – {Action}", tab, action);
+        _recorder?.Note("IHM", $"{tab} – {action}");
+    }
+
+    private void OnCommandApplied(CommandLogEntry entry)
+    {
+        // Fil du moteur : rien à faire hors enregistrement.
+        if (_recorder is not { } recorder)
+        {
+            return;
+        }
+
+        var text = Guids().Replace(entry.Command.ToString() ?? string.Empty, m => Guid.TryParse(m.Value, out var id) && _names.TryGetValue(id, out var name) ? $"« {name} »" : m.Value);
+        recorder.Note("MOTEUR", entry.Rejection is null ? text : $"{text} REFUSÉE : {entry.Rejection}");
+    }
+
+    private Dictionary<Guid, string> BuildNames()
+    {
+        var names = new Dictionary<Guid, string>();
+        foreach (var scene in Project.Scenes.Scenes)
+        {
+            names.TryAdd(scene.Id, scene.Name);
+        }
+
+        foreach (var layer in Project.Layers.Layers)
+        {
+            names.TryAdd(layer.Id, "couche " + layer.Name);
+        }
+
+        foreach (var fixture in Project.Installation.Fixtures)
+        {
+            names.TryAdd(fixture.Id, fixture.Name);
+        }
+
+        foreach (var palette in Project.Palettes.Palettes)
+        {
+            names.TryAdd(palette.Id, "palette " + palette.Name);
+        }
+
+        return names;
+    }
+
+    [GeneratedRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")]
+    private static partial Regex Guids();
 
     private string? StopRecordingCore()
     {

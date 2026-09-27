@@ -1,8 +1,10 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using Luxia.App.Services;
 using Luxia.App.ViewModels;
 
 namespace Luxia.App;
@@ -34,6 +36,29 @@ public partial class MainWindow : Window
         // GEN-071, LIVE-040 : en Live, les autres raccourcis (dont les touches à maintenir) quel que soit le focus.
         AddHandler(KeyDownEvent, OnKeyDownTunnel, RoutingStrategies.Tunnel);
         AddHandler(KeyUpEvent, OnKeyUpTunnel, RoutingStrategies.Tunnel);
+
+        // SORT-066 : chaque clic de bouton et chaque choix dans une liste est tracé « IHM – onglet – action », sans code
+        // propre à chaque écran (journal technique et journal de l'enregistrement des trames).
+        AddHandler(Button.ClickEvent, OnAnyClick, RoutingStrategies.Bubble, handledEventsToo: true);
+        AddHandler(SelectingItemsControl.SelectionChangedEvent, OnAnySelection, RoutingStrategies.Bubble, handledEventsToo: true);
+    }
+
+    private void OnAnyClick(object? sender, RoutedEventArgs e)
+    {
+        if (e.Source is Button button && DataContext is MainWindowViewModel vm)
+        {
+            var state = button is ToggleButton toggle ? (toggle.IsChecked == true ? " → coché" : " → décoché") : string.Empty;
+            vm.TraceUi($"clic « {UiLabel.Of(button)} »{state}");
+        }
+    }
+
+    private void OnAnySelection(object? sender, SelectionChangedEventArgs e)
+    {
+        if (e.Source is SelectingItemsControl list && e.AddedItems.Count > 0 && DataContext is MainWindowViewModel vm)
+        {
+            var kind = list is ComboBox ? "choix" : "sélection";
+            vm.TraceUi($"{kind} « {UiLabel.Describe(e.AddedItems[0])} »");
+        }
     }
 
     private bool IsTyping()
