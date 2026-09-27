@@ -176,7 +176,8 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
         { "fixtureId": "5c9e2f10-...", "x": 1.5, "y": 0.5, "heightM": 2, "orientationDeg": 0, "mounting": "standing", "absent": false }
       ],
       "forbiddenZones": [
-        { "fixtureId": "9d0a...", "name": "Public", "panMin": 0.3, "panMax": 0.7, "tiltMin": 0.8, "tiltMax": 1 }
+        { "fixtureId": "9d0a...", "name": "Public", "panMin": 0.3, "panMax": 0.7, "tiltMin": 0.8, "tiltMax": 1 },
+        { "fixtureId": "9d0a...", "name": "Limites", "panMin": 0.1, "panMax": 0.9, "tiltMin": 0.2, "tiltMax": 0.95, "allowed": true }
       ]
     }
   ],
@@ -188,7 +189,7 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
 |---|---|
 | `venues[].placements[].mounting` | `standing` (posé) ou `hanging` (suspendu) |
 | `venues[].placements[].absent` | Appareil non emporté ce soir (INST-052) : non émis, absent du simulateur et des sélections actives |
-| `venues[].forbiddenZones` | Zones interdites des lyres dans ce lieu (INST-053, P5) : rectangles de Pan et Tilt **logiques normalisés 0-1** (valeurs lues au programmeur, avant inversion de montage) ; plusieurs par lyre possibles ; le moteur ramène toute cible qui y tombe au bord le plus proche (MOT-082). Rectangle vide (min ≥ max) ignoré et signalé par `valider` |
+| `venues[].forbiddenZones` | Zones interdites des lyres dans ce lieu (INST-053, P5) : rectangles de Pan et Tilt **logiques normalisés 0-1** (valeurs lues au programmeur, avant inversion de montage) ; plusieurs par lyre possibles ; le moteur ramène toute cible qui y tombe au bord le plus proche (MOT-082). Rectangle vide (min ≥ max) ignoré et signalé par `valider`. **`"allowed": true`** (facultatif, 2026-09-28, F7, ERG-017) : zone **permise** au lieu d'interdite, les limites de la lyre (la cible ne sort jamais du rectangle) ; plusieurs zones permises d'une lyre : leur intersection ; absent = zone interdite (fichiers d'avant inchangés, pas de migration) |
 | `activeVenueId` | Lieu actif ; absent ou introuvable = le premier lieu de la liste |
 
 ## 8. Bibliothèque : modèle d'appareil (format 1)
@@ -502,4 +503,5 @@ seule scène (GEN-132).
 | 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |
 | 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |
 | 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |
+| 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |

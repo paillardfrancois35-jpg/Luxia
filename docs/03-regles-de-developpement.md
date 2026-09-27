@@ -170,10 +170,20 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 - **Un écran (ou un contrôleur) qui décide d'après l'état relu du moteur a toujours un temps de retard.** L'interface relit l'instantané du moteur 20 fois par seconde, un contrôleur MIDI envoie des dizaines de messages par seconde : entre une commande et son traitement, l'état relu est **l'ancien**. Trois défauts de l'essai P5 en venaient : une bascule lancer / arrêter qui relançait la scène au lieu de l'arrêter (LIVE-003), un niveau affiché qui « sautait » 20 → 10 → 20 (LIVE-040), un fader MIDI lâché en descente rapide (MIDI-004). Règles : (1) une décision qui dépend de l'état (bascule, « si déjà actif ») est prise **par le moteur**, au traitement de la commande (ex. `LaunchSceneCommand.StopIfPlaying`) ; (2) une valeur réglée à l'écran est **gardée jusqu'à sa confirmation** par le moteur (`EngineEcho`, Luxia.UI.Controls) ; (3) un contrôleur compare l'état relu à **ses derniers envois**, pas au seul dernier (`SoftTakeover`). Un test doit reproduire la course (rafraîchissement **avant** le tick), sinon il passe à tort : en temps virtuel, le moteur a toujours un temps d'avance. (Rencontré le 2026-09-27, essai P5.)
 - **La notice d'un appareil peut être fausse ou incomplète.** Le BeamZ BUV463 réel a un **8e canal** (« lissage du gradateur », ≈ 15 s à 255) absent de sa notice (7 canaux) : patché en 7 canaux, il lisait le gradateur de l'appareil suivant comme ce canal, d'où un « allumage lent » qui a coûté une journée, pendant qu'on soupçonnait LuXia, le firmware puis la ligne. Règles : quand un appareil réagit de façon inexplicable alors que la trame est juste, (1) vérifier ce que reçoit la ligne (journal `.journal.txt` d'un enregistrement, écoute avec le DVC4 Daslight : `docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`), (2) regarder les **canaux voisins** au-delà du dernier canal documenté, (3) comparer avec un appareil témoin à la même adresse. (Rencontré le 2026-09-27, essai P5.)
 
+- **Surcharges et conversion implicite tableau → span (C# 14).** Une méthode privée `F(ReadOnlySpan<T>)` à côté d'une
+  méthode `F(IReadOnlyList<T>)` : un appel `F(tableau)` choisit désormais la version span (conversion « de première
+  classe »), sans erreur ni avertissement. Dans `SafetyLimiter`, cela sautait l'extension des zones touchant une butée,
+  et une lyre pouvait se coller au bord interdit. Règle : ne pas surcharger par `ReadOnlySpan` une méthode qui prend une
+  collection ; donner un autre nom à la variante interne. (Rencontré le 2026-09-28, zone permise, trouvé par un test.)
+- **Espace de noms qui masque un type d'Avalonia.** Dans `Luxia.UI.Modules.Control.Views`, le nom `Control` désigne
+  l'espace de noms `Luxia.UI.Modules.Control`, plus le type `Avalonia.Controls.Control` (erreur CS0118). Écrire
+  `Avalonia.Controls.Control` dans ce module. (Rencontré le 2026-09-28.)
+
 ## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-28 | §11 : surcharge par span choisie pour un tableau (C# 14) ; espace de noms `…Control` qui masque `Avalonia.Controls.Control`. |
 | 2026-09-27 | Reliquats du renommage DMX → LuXia : `Dmx.sln` → `LuXia.sln` (§1, §6) ; `.editorconfig` visait encore `src/Dmx.UI.**` (réglage CA1822 des écrans sans effet) ; `dmx-headless` dans le `JOURNAL.md` du show de référence. Les entrées d'historique et décisions antérieures gardent les anciens noms (doc 02 §19). |
 | 2026-09-27 | §11 : course écran / moteur (décision par le moteur, `EngineEcho`, historique des envois MIDI) ; notice d'appareil incomplète (8e canal du BUV463). Noms `Dmx.*` restants corrigés en `Luxia.*` dans les tables de ce document. |
 | 2026-09-26 | §11 : écriture de fichier refusée un instant par le poste (nouvelles tentatives dans `VersionedJsonFile.Save`). |

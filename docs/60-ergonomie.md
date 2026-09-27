@@ -258,6 +258,18 @@ CONS-061) gardent leur identifiant et leur fiche.
 | ERG-005 | M | ERG | **Galerie des composants** : chaque composant commun dans chacun de ses états, manipulable ; source des **captures de référence** (`LuXia-Prototype --captures <dossier>`, sans écran). | Captures produites et relues. |
 | ERG-006 | I | ERG | **Mesures du prototype** : images par seconde, demandes par seconde des composants, mémoire, nombre de fenêtres, affichées dans un panneau ; bilan (fluidité d'un glisser, deux écrans) consigné au §10. | Relevé fait avec l'utilisateur. |
 | ERG-008 | I | ERG | **8e couche par défaut « Libre »** (★, priorité 7, sans famille attendue, avant Flashs) : les 8 faders de couche de l'APC ont chacun une couche (C2). | Test des couches par défaut. |
+| ERG-009 | I | ERG | **Identité visuelle** (dossier de l'utilisateur, `docs/identite`) : icône de l'exécutable et de la fenêtre, logo dans la fenêtre de démarrage, dans « À propos » et en tête de la navigation, logo du README. | Captures relues. |
+| ERG-010 | I | ERG | **Mode LIVE** de l'écran Contrôle : un réglage fait sur les appareils sélectionnés est une surcharge temporaire, gardée quand une scène sur les mêmes canaux est lancée (F2), retirée par « Libérer la sélection » ou « Libérer tout » (Échap) ; ÉDITION et AVEUGLE refusés, avec la raison, tant qu'aucune scène n'est choisie ; retour en LIVE à l'ouverture d'un projet (C9). | Tests. |
+| ERG-011 | I | ERG | **Mode ÉDITION** : le réglage s'écrit tout de suite dans l'étape choisie de la scène éditée ; l'étape est montrée sur la sortie (C7) ; un geste = une entrée d'annulation, écrite 0,5 s après le dernier mouvement ; « allumer en coloriant » (MOT-041) ; « Retirer de l'étape ». | Tests. |
+| ERG-012 | I | ERG | **Mode AVEUGLE** : écrit comme ÉDITION, la sortie ne change pas ; l'étape va au moteur d'aperçu, que le plan montre (GEN-063). | Tests. |
+| ERG-013 | I | ERG | **Zones du lieu dans l'écran Contrôle** (onglet Position) : dessinées, déplacées, ajustées, retirées sur la grille ; propres au lieu, valables pour toutes les scènes ; bandeau « ZONES » (C4) ; annulables. | Tests. |
+| ERG-014 | I | ERG | **Plan des appareils = la sélection** (E5, SIM-010) : clic, Ctrl + clic, rectangle, sélections rapides (tous, par catégorie, enregistrées), ½ ⅓ ¼, inverser, aucun ; couleurs réellement émises (aperçu en AVEUGLE). | Tests. |
+| ERG-015 | M | ERG | **Bande d'étapes** : cases proportionnelles aux durées (fondu dégradé, maintien plein), étape choisie entourée à la couleur du mode, étape jouée marquée ▶, choix au clic ou aux flèches. | Tests du découpage. |
+| ERG-016 | I | ERG | **Propriétés de la scène éditée** : nom, couleur, couche, vitesse, enchaînement, fin, fondus, visible en Live, notes ; étapes (ajouter, dupliquer, déplacer, supprimer, nom, fondu, maintien) ; contenu de l'étape lisible ; tout enregistré à la saisie et annulable. | Tests. |
+| ERG-017 | I | ERG | **Zone permise** (F7) : `"allowed": true` sur une zone de `lieux.json` ; le moteur ramène la cible dans la zone permise en évitant les zones interdites (l'extérieur devient des bandes interdites, calculées au chargement) ; plusieurs zones permises : leur intersection. | Tests moteur, compilation, fichier. |
+| ERG-018 | I | ERG | **Colonnes de l'écran Contrôle** : toutes les couches par priorité (sauf masquées), toutes leurs scènes (masquées du Live estompées) ; bouton à deux zones (jouer / ✎) ; ◀ ▶ ■ et master par couche ; « + scène » ; clic droit : Éditer, Renommer, Dupliquer, Couleur, Couche, Montrer / masquer dans le Live, Supprimer (annulable). | Tests. |
+| ERG-019 | I | ERG | **Réglages des appareils** : onglets Intensité, Couleur (sélecteur, émetteurs, palettes, « + » = nouvelle palette), Position (grille, palettes, zones), Faisceau et autres (curseurs, plages nommées) ; onglet disponible selon la sélection ; pastilles 🟡 / 🟢 / ◯ ; valeur demandée gardée à l'écran avant la réponse du moteur. | Tests. |
+| ERG-020 | I | ERG | **Démonstration** : `tools/generer-demo-controle.py` fabrique `samples/Démo Contrôle` (couche Libre garnie, étapes nommées, zones permises des lyres) et le guide `docs/demos/ERG-controle.md` déroule l'essai. | Essai de l'utilisateur. |
 | ERG-007 | I | ERG | **Maquettes de la disposition Contrôle** (§7.3) : images rendues par Avalonia avec les vrais composants et des données fictives (modes LIVE / ÉDITION / AVEUGLE, scène en édition, zones), validées par l'utilisateur **avant** tout développement des écrans. | Validation de l'utilisateur. |
 
 ## 10. Prototype technique (§7.2) : réalisation et bilan
@@ -304,6 +316,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-09-28 | Nuit de développement par délégation : écran Contrôle dans LuXia, zone permise, identité visuelle, démo ; ERG-009 à ERG-020. |
 | 2026-09-27 | §11 choix de Claude par délégation (C1-C11), Q35 close ; ERG-008 (8e couche « Libre »). |
 | 2026-09-27 | §9 exigences ERG-001 à ERG-007 ; §10 prototype technique (réalisation, écart Dock sur la restauration d'un panneau fermé). |
 | 2026-09-27 | Analyse **validée** : E1-E8 et F1-F10 acceptés tels que proposés. |

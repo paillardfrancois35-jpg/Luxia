@@ -60,7 +60,7 @@ Inkscape en tire les PNG et les SVG autonomes. Pour modifier une couleur ou une 
 À noter pour une retouche : ne pas utiliser de mode de fusion (`mix-blend-mode`) sur les faisceaux, Inkscape le calcule
 sur un calque rectangulaire qui laisse un carré visible autour du croisement.
 
-## 5. Intégration dans LuXia (à faire dans le dépôt, par la discussion de développement)
+## 5. Intégration dans LuXia (faite le 2026-09-28, exigence ERG-009 ; le point 5 « captures » : docs/maquettes/captures)
 
 1. **Icône de l'application** : remplacer `src/Luxia.App/Assets/luxia.ico` par `sortie/luxia.ico` (même nom : l'exécutable
    et la fenêtre l'utilisent déjà ; l'ancienne icône « lampe + 3 points RVB » disparaît).
