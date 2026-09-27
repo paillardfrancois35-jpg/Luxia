@@ -41,10 +41,11 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
             Text = message,
             IsReadOnly = true,
             AcceptsReturn = true,
-            TextWrapping = Avalonia.Media.TextWrapping.NoWrap,
+            // Lignes longues renvoyées à la ligne dans une fenêtre assez large (retour d'essai P5 : ligne « de 15 km »).
+            TextWrapping = Avalonia.Media.TextWrapping.Wrap,
             FontFamily = new Avalonia.Media.FontFamily("Consolas"),
-            Width = 500,
-            Height = 320,
+            Width = 760,
+            Height = 420,
         };
         var copy = new Button { Content = "Copier", MinWidth = 80 };
         var close = new Button { Content = "Fermer", IsDefault = true, IsCancel = true, MinWidth = 80 };
@@ -57,7 +58,9 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
             }
         };
         close.Click += (_, _) => dialog.Close();
-        dialog.Content = Layout(new ScrollViewer { Content = box }, copy, close);
+        var layout = Layout(new ScrollViewer { Content = box }, copy, close);
+        layout.MaxWidth = 800;
+        dialog.Content = layout;
         await dialog.ShowDialog(window).ConfigureAwait(true);
     }
 

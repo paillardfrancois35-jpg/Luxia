@@ -341,8 +341,14 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         var issues = _runtime.ProjectProblems();
         var text = issues.Count == 0
             ? "Aucun problème : toutes les scènes sont jouables telles quelles."
-            : string.Join(Environment.NewLine, issues.Select(i => i.ToString()));
+            : string.Join(Environment.NewLine + Environment.NewLine, issues.Select(Describe));
         return _dialogs.ShowInfoAsync("Problèmes du projet", text);
+
+        // Lisible d'abord (quoi, pourquoi), l'emplacement technique ensuite, pour qui corrige le fichier.
+        static string Describe(Luxia.Scenes.Compilation.CompileIssue issue) =>
+            $"{(issue.Severity == Luxia.Fixtures.Rules.IssueSeverity.Error ? "✖ Erreur" : "⚠ Avertissement")} – {(issue.Item.Length == 0 ? issue.File : char.ToUpper(issue.Item[0], CultureInfo.CurrentCulture) + issue.Item[1..])}{Environment.NewLine}"
+            + $"   {issue.Message}{Environment.NewLine}"
+            + $"   (fichier {issue.File}, champ {issue.Field})";
     }
 
     /// <summary>Texte de diagnostic copiable (exécutable, dossiers, préférences, projet) : à donner en cas d'analyse.</summary>
