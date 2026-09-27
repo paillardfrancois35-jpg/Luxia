@@ -17,6 +17,7 @@
     <ProjectReference Include="../../src/Luxia.UI.Modules.Live/Luxia.UI.Modules.Live.csproj" />
     <ProjectReference Include="../../src/Luxia.Fixtures/Luxia.Fixtures.csproj" />
     <ProjectReference Include="../../src/Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
   </ItemGroup>
 
   <ItemGroup>

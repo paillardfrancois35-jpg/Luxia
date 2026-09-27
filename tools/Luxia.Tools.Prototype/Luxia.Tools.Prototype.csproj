@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Prototype technique du chantier ergonomique (doc 60 §7.2) : ancrage de panneaux (Dock), grille Pan/Tilt,
+    sélecteur de couleur, galerie des composants, enregistrement de la disposition. Application séparée de LuXia :
+    aucune donnée du projet ni sortie DMX, rien de ce qui est validé n'est touché.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>LuXia-Prototype</AssemblyName>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationManifest>../../src/Luxia.App/app.manifest</ApplicationManifest>
+    <ApplicationIcon>../../src/Luxia.App/Assets/luxia.ico</ApplicationIcon>
+    <!-- GEN-119 : même numéro de compilation que LuXia, affiché dans la barre de titre (Directory.Build.targets). -->
+    <LuxiaShowsBuildNumber>true</LuxiaShowsBuildNumber>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="Avalonia.Headless" />
+    <PackageReference Include="Avalonia.Skia" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Avalonia.Themes.Fluent" />
+    <PackageReference Include="Dock.Model.Mvvm" />
+    <PackageReference Include="Dock.Serializer.SystemTextJson" />
+    <ProjectReference Include="../../src/Luxia.Persistence/Luxia.Persistence.csproj" />
+    <InternalsVisibleTo Include="Luxia.Tools.Prototype.Tests" />
+    <ProjectReference Include="../../src/Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
+  </ItemGroup>
+
+</Project>

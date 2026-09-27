@@ -243,10 +243,42 @@ restant une disposition dépouillée de la même chose.
 | F9 | Écran distant (tablette, téléphone, comme Daslight Remote) | Plus tard, pas dans ce chantier |
 | F10 | Place réservée dès maintenant au **panneau du pilote automatique** (titre, style, show choisi, raison, boutons d'intervention = looks) dans la disposition « Spectacle » | Oui, vide jusqu'à P10 |
 
-## 9. Historique
+## 9. Exigences du chantier
+
+Famille **ERG**, phase « ERG » (chantier ergonomique, entre P5 et P6). Complétée au fil du chantier ; une fiche par exigence
+(`docs/exigences/ERG-*.md`). Les exigences reportées de P5 (LIVE-006/007/011/041, MIDI-008/009, GEN-057/074, INST-070/071,
+CONS-061) gardent leur identifiant et leur fiche.
+
+| ID | Prio | Phase | Exigence | Critère d'acceptation |
+|---|---|---|---|---|
+| ERG-001 | I | ERG | **Ancrage de panneaux** (bibliothèque *Dock*, Avalonia 12) : chaque panneau se colle à gauche / droite / haut / bas, s'empile en onglets, se **détache dans une fenêtre** (deuxième écran), se replie sur un bord ou se ferme ; un panneau fermé ou absent se réaffiche par le menu **Panneaux**, à sa place d'origine. Deux dispositions prêtes : **Contrôle** et **Spectacle** (§6). | Prototype (§7.2) : manipulations faites par l'utilisateur ; test automatique du réaffichage. |
+| ERG-002 | I | ERG | **Enregistrement de la disposition** : sans bouton, dès qu'elle change (vérification toutes les 2 s) et à la fermeture ; reprise au démarrage, fenêtres détachées et panneaux fermés compris ; une par disposition prête ; « Rétablir la disposition » revient à celle livrée ; un fichier illisible est mis de côté et la disposition livrée reprend, avec un message, sans jamais bloquer le démarrage. | Tests automatiques (écriture / relecture / fichier illisible) ; essai utilisateur (fermer, rouvrir). |
+| ERG-003 | I | ERG | **Grille Pan / Tilt** (composant commun, §5) : un point par appareil, en degrés ; un clic amène la sélection sous le curseur (plusieurs appareils : leur centre, écarts conservés, sans écraser un appareil contre le bord) ; Maj + glisser = réglage fin ; molette = Tilt fin (Maj : Pan, Ctrl : ×10) ; flèches ; **zones interdites** (rouges) et **zone permise** (limites, extérieur assombri, F7) dessinées, déplacées et redimensionnées par **8 poignées**, Suppr pour retirer. | Tests des calculs ; galerie ; essai utilisateur. |
+| ERG-004 | I | ERG | **Sélecteur de couleur** (composant commun, §5) : carré teinte × saturation, barre d'intensité, valeurs lisibles (°, %), **favoris** (clic = reprendre, clic droit = retirer, « + » = ajouter). | Tests des conversions et du découpage ; galerie ; essai utilisateur. |
+| ERG-005 | M | ERG | **Galerie des composants** : chaque composant commun dans chacun de ses états, manipulable ; source des **captures de référence** (`LuXia-Prototype --captures <dossier>`, sans écran). | Captures produites et relues. |
+| ERG-006 | I | ERG | **Mesures du prototype** : images par seconde, demandes par seconde des composants, mémoire, nombre de fenêtres, affichées dans un panneau ; bilan (fluidité d'un glisser, deux écrans) consigné au §10. | Relevé fait avec l'utilisateur. |
+| ERG-007 | I | ERG | **Maquettes de la disposition Contrôle** (§7.3) : images rendues par Avalonia avec les vrais composants et des données fictives (modes LIVE / ÉDITION / AVEUGLE, scène en édition, zones), validées par l'utilisateur **avant** tout développement des écrans. | Validation de l'utilisateur. |
+
+## 10. Prototype technique (§7.2) : réalisation et bilan
+
+- **Où** : `tools/Luxia.Tools.Prototype` (exécutable `LuXia-Prototype.exe`), application **séparée de LuXia** (décision de
+  l'utilisateur, 2026-09-27) : ni projet, ni sortie DMX ; son propre verrou d'instance. Les **composants** sont, eux, dans
+  `Luxia.UI.Controls` (`PanTiltGrid`, `ColorPicker`, `LightColor`…), prêts pour les écrans.
+- **Dock 12.1.0.6** (licence MIT) compatible Avalonia 12.1.3. Tous les panneaux sont de simples `Tool` identifiés par leur
+  `Id`, le contenu est donné par un gabarit (`PanelTemplate`) : la disposition enregistrée ne contient que des types de la
+  bibliothèque, un panneau inconnu ne casse pas la relecture, et les vues, sans état, peuvent être recréées par Dock.
+- **Écart constaté** : Dock n'enregistre pas le groupe d'origine d'un panneau fermé ; après relecture, « restaurer » le
+  perdait (trouvé par un test). Réponse : le panneau revient dans le groupe qui l'accueille dans la disposition livrée
+  (`PrototypeDockFactory.ShowPanel`).
+- **Fichiers** : `%AppData%\LuXia\prototype\disposition-controle.json` et `disposition-spectacle.json`, enveloppe
+  versionnée LuXia (`formatVersion` 1) autour du texte de Dock (≈ 40 Ko, verbeux mais lisible).
+- **Mesures** (ERG-006) : à relever avec l'utilisateur sur son poste (panneau Mesures).
+
+## 11. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | §9 exigences ERG-001 à ERG-007 ; §10 prototype technique (réalisation, écart Dock sur la restauration d'un panneau fermé). |
 | 2026-09-27 | Analyse **validée** : E1-E8 et F1-F10 acceptés tels que proposés. |
 | 2026-09-27 | Version 1.1 : finalité (mode automatique, IA), déclencheurs multi-actions et « looks » (§4.8), décisions fines F1-F10 (§8.1). |
 | 2026-09-27 | Version 1 : lecture Daslight 4 / 5, inventaire des 8 écrans de LuXia v1.004, charte, composants, modules, décisions E1-E8. |
