@@ -43,3 +43,5 @@
 | 2026-09-27 | Claude | Développement | Colonnes réparties sur la largeur visible, 110 px minimum ; au-delà, défilement horizontal au lieu de couper. |
 | 2026-09-27 | Utilisateur | Note | Écran de l'utilisateur : 1920 × 1080, mise à l'échelle 100 %. |
 | 2026-09-27 | Claude | Test | Captures en 1920 × 1040 : les 7 colonnes visibles, « Blackout partiel (sauf UV) » en 4e position de la colonne Flashs ; en 1100 × 700 : défilement horizontal, plus rien de coupé. |
+| 2026-09-27 | Utilisateur | Test | Remarque : arrêter « UV plein » fait mettre « des plombes » à l'UV pour s'éteindre. |
+| 2026-09-27 | Claude | Test | Vérifié sans matériel : la scène n'a aucun fondu de sortie ; l'enregistrement des trames montre les canaux UV 162 à 165 passer de 255 à 0 **d'une trame à l'autre** à l'arrêt (gradateur 161 maintenu par Plein feu). Lenteur a priori propre à l'appareil (BeamZ BUV463) : diagnostic en cours avec l'utilisateur (essai par la Console). |

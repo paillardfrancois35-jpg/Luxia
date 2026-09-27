@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Partiel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 3. Exigences – structure](../18-live.md) |
@@ -33,3 +33,4 @@
 | 2026-09-27 | Utilisateur | Test | Essai P5, exemple 2 : FLASH (bouton et F) et STROBE (bouton et S) à maintenir — ok. Remarque : la lyre, qui sait faire du strobe, n'a pas strobé (restée bleue) : la scène « Strobe flash » du show de référence ne vise que PAR et barres (contenu, question posée). |
 | 2026-09-27 | Utilisateur | Décision | Garder « Strobe flash » (PAR et barres, bouton STROBE) et ajouter une autre scène « All Strobes » qui fait stroboscoper tous les appareils capables de strobe, pour valider la distinction. Blackout partiel : rien d'autre à épargner que les UV. |
 | 2026-09-27 | Claude | Développement | Scène « All Strobes » (couche Flashs) ajoutée au show de référence et au show de travail : intensité 100 %, blanc, strobe dans la plage de chaque modèle (PAR, gros PAR, barres, UV, effet à 204 ; lyre à 110, dans 8-131). Trames de référence P5 complétées (une ligne de plus, les autres inchangées). |
+| 2026-09-27 | Utilisateur | Validation | Exemple 2 complet (FLASH, STROBE, touches F et S, couche Flashs) : ok. Tap / Auto viendront avec P7 / P10. |

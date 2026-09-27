@@ -168,7 +168,7 @@
 | [COU-002](COU-002.md) | Une scène appartient à une couche | P5 | I | Réalisé |
 | [COU-003](COU-003.md) | Exclusivité | P5 | I | Validé |
 | [COU-004](COU-004.md) | Couche non exclusive | P5 | I | Réalisé |
-| [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Réalisé |
+| [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Validé |
 | [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Réalisé |
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Réalisé |
@@ -281,7 +281,7 @@
 | [LIVE-001](LIVE-001.md) | Bandeau d'état permanent | P5 | I | Partiel |
 | [LIVE-002](LIVE-002.md) | Colonnes de couches | P5 | I | Réalisé |
 | [LIVE-003](LIVE-003.md) | Un clic sur une scène la lance | P5 | I | Réalisé |
-| [LIVE-004](LIVE-004.md) | Actions permanentes toujours visibles | P5 | I | Partiel |
+| [LIVE-004](LIVE-004.md) | Actions permanentes toujours visibles | P5 | I | Validé |
 | [LIVE-005](LIVE-005.md) | Palettes rapides | P5 | I | Réalisé |
 | [LIVE-006](LIVE-006.md) | Disposition personnalisable | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-007](LIVE-007.md) | Mini-simulateur optionnel dans l'écran Live | P5 | M | Reporté (chantier ergonomie) |

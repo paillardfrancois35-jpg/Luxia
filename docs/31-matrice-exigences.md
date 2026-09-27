@@ -281,7 +281,7 @@
 
 ## P5 – 70 exigences, 48 couvertes par des tests automatiques
 
-> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 35 · Réalisé, à valider sur matériel : 14 · Validé : 3
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 34 · Réalisé, à valider sur matériel : 14 · Validé : 5
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -291,7 +291,7 @@
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
 | [COU-003](exigences/COU-003.md) | I | Exclusivité | Validé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
-| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Réalisé | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
+| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Validé | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
 | [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
@@ -321,7 +321,7 @@
 | [LIVE-001](exigences/LIVE-001.md) | I | Bandeau d'état permanent | Partiel | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
 | [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfPlayingScene_StopsIt |
-| [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
+| [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Validé | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
 | [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Réalisé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
 | [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Reporté (chantier ergonomie) |  |
 | [LIVE-007](exigences/LIVE-007.md) | M | Mini-simulateur optionnel dans l'écran Live | Reporté (chantier ergonomie) |  |
