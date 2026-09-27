@@ -431,8 +431,8 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             Columns[0].IsSelected = true;
         }
 
-        // Les colonnes se partagent la largeur, sans descendre sous 120 px (défilement horizontal au-delà).
-        ColumnsMinWidth = Columns.Count * 120;
+        // Les colonnes se partagent la largeur, sans descendre sous 110 px (défilement horizontal au-delà).
+        ColumnsMinWidth = Columns.Count * 110;
 
         // Scènes des boutons FLASH et STROBE : réglées dans live.json, sinon déduites de la couche Flash.
         (_flashScene, _strobeScene) = LiveRules.PermanentScenes(live, project.Layers, project.Scenes);

@@ -1493,6 +1493,109 @@
       ]
     },
     {
+      "id": "d96b4298-8eef-511f-9488-18de8a562fcf",
+      "name": "All Strobes",
+      "color": "#FFFFFF",
+      "category": "Phase P5",
+      "notes": "Couche Flash : strobe blanc de TOUS les appareils qui ont un strobe (PAR, gros PAR, barres, lyres, UV, effet), tant que maintenu. Distinct de « Strobe flash » (PAR et barres seulement, bouton STROBE). Valeur de strobe choisie dans la plage de chaque modèle (lyre : 110, dans 8-131). Toujours borné par le limiteur de strobe.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000099",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "allFixtures"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.8
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "ledBar"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.8
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "uv"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.8
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "effect"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.8
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "movingHead"
+                }
+              },
+              "attribute": "shutter",
+              "level": 0.4314
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "fcdbf9c7-ee6c-59b1-9281-b6ce23fd12dc",
       "name": "Blackout partiel (sauf UV)",
       "color": "#30363D",

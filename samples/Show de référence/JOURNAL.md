@@ -146,7 +146,7 @@ intermédiaire), vague (décalage de 0,5 s entre PAR).
 | Élément | Fichier | Description |
 |---|---|---|
 | Plage « Pas de strobe » (Q28, BIB-101) | `Bibliothèque/Betopper/LPC008S.json`, `LPC120.json`, `Bibliothèque/BeamZ/LCB803.json` | LPC008S et LPC120 : 0-4 = pas de strobe ; LCB803 : 0 = pas de strobe |
-| 14 scènes, catégorie « Phase P5 » | `scènes.json` | Intensité : **Plein feu** (MOT-042), Intensité 50 % ; Couleurs : Rouge / Bleu / Ambre – **couleur seule** ; Mouvements : Lyres : piste centre / plafond, **Piège : lyre 1 vers le public** ; Effets : **Strobe PAR (plafonné à 10 s)** ; Ambiance : **Fumée longue (plafonnée à 10 s)**, Fumée courte (3 s) ; Flashs : **Flash blanc**, **Strobe flash**, **Blackout partiel (sauf UV)** |
+| 15 scènes, catégorie « Phase P5 » | `scènes.json` | Intensité : **Plein feu** (MOT-042), Intensité 50 % ; Couleurs : Rouge / Bleu / Ambre – **couleur seule** ; Mouvements : Lyres : piste centre / plafond, **Piège : lyre 1 vers le public** ; Effets : **Strobe PAR (plafonné à 10 s)** ; Ambiance : **Fumée longue (plafonnée à 10 s)**, Fumée courte (3 s) ; Flashs : **Flash blanc**, **Strobe flash** (PAR et barres), **All Strobes** (tous les appareils à strobe, ajoutée à la demande de l'utilisateur pendant l'essai), **Blackout partiel (sauf UV)** |
 | Zone interdite d'exemple | `lieux.json` | Lieu Générique : « Public (exemple) » pour chaque lyre, Pan 30-70 %, Tilt 85-100 % (à adapter à la salle) ; propriété parasite `active` retirée |
 | Réglages du Live | `live.json` | Boutons FLASH = « Flash blanc », STROBE = « Strobe flash », rafale de fumée 3 s |
 | Réglages de sûreté | `sûreté.json` | Valeurs par défaut écrites en clair : strobe 10 s puis 10 s de pause, fumée 10 s puis 30 s de repos |
@@ -173,4 +173,4 @@ de 95 à 85 %), strobe coupé à 10 s puis repris après 10 s, fumée coupée à
 
 | Élément | Statut | Retour |
 |---|---|---|
-| Guide P5, au simulateur puis sur le matériel | ⏳ en attente | |
+| Guide P5, au simulateur puis sur le matériel | 🟡 en cours (2026-09-27) : exemples 1 et 2 | UV 1 raccordé à l'adresse 161 pendant l'essai |

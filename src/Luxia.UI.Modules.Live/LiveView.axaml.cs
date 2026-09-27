@@ -26,7 +26,38 @@ public partial class LiveView : UserControl
         new FuncValueConverter<bool, IBrush>(warning => new SolidColorBrush(Color.Parse(warning ? "#9E6A03" : "#161B22")));
 
     /// <summary>Crée la vue.</summary>
-    public LiveView() => InitializeComponent();
+    public LiveView()
+    {
+        InitializeComponent();
+
+        // Colonnes réparties sur la largeur visible, sans descendre sous leur largeur minimale : au-delà, la zone défile
+        // horizontalement (écran étroit, mise à l'échelle de Windows) au lieu de couper des colonnes.
+        ColumnsScroll.SizeChanged += (_, _) => FitColumns();
+        DataContextChanged += (_, _) =>
+        {
+            if (ViewModel is { } vm)
+            {
+                vm.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == nameof(LiveViewModel.ColumnsMinWidth))
+                    {
+                        FitColumns();
+                    }
+                };
+            }
+
+            FitColumns();
+        };
+    }
+
+    private void FitColumns()
+    {
+        var available = ColumnsScroll.Bounds.Width;
+        if (available > 0)
+        {
+            ColumnsList.Width = Math.Max(available, ViewModel?.ColumnsMinWidth ?? 0);
+        }
+    }
 
     private LiveViewModel? ViewModel => DataContext as LiveViewModel;
 

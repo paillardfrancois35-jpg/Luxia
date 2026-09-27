@@ -17,7 +17,7 @@
 | **Fiabilité** : versions du projet, reprise après arrêt brutal, fondu au noir à la fermeture, processeur mesuré | Menu Projet → Versions ; barre d'état « CPU » |
 | Plage « Pas de strobe » du LPC008S, LPC120, LCB803 (Q28) | Bibliothèque |
 | Fichiers pour construire un show sans l'interface : `live.json`, `midi.json`, `sûreté.json`, zones, positions par lieu | Doc 50 ; `luxia-headless valider` |
-| 14 scènes « Phase P5 » sur le parc réel | `samples/Show de référence` |
+| 15 scènes « Phase P5 » sur le parc réel | `samples/Show de référence` |
 
 ## Préparer : régénérer le show de travail
 
@@ -49,7 +49,7 @@ Renommez `"name"` en « Show de travail » dans `samples/Show de travail/projet.
 
 1. Laissez Plein feu + une couleur. **Maintenez** le bouton **FLASH** (ou la touche **F**) : tout en blanc ; relâchez : retour instantané à la couleur.
 2. Colonne **Flashs** : maintenez **Blackout partiel (sauf UV)** : tout au noir sauf les UV ; relâchez.
-3. **STROBE** (touche **S**) : strobe blanc des PAR et barres tant que maintenu.
+3. **STROBE** (touche **S**) : strobe blanc des PAR et barres tant que maintenu. Colonne Flashs, **All Strobes** maintenu : tous les appareils qui ont un strobe (lyres et UV compris).
 
 ## Exemple 3 – Éditeur de couches et avertissement « hors famille » (COU-001, COU-008, COU-009)
 

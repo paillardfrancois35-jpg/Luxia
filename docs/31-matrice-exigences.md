@@ -281,7 +281,7 @@
 
 ## P5 – 70 exigences, 48 couvertes par des tests automatiques
 
-> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 36 · Réalisé, à valider sur matériel : 14 · Validé : 2
+> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 35 · Réalisé, à valider sur matériel : 14 · Validé : 3
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -345,7 +345,7 @@
 | [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Réalisé, à valider sur matériel | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
 | [MIDI-011](exigences/MIDI-011.md) | I | Blackout du contrôleur tant que maintenu (comme Daslight) | Réalisé, à valider sur matériel | MidiControllerTests.BlackoutNote_IsMomentary_EvenIfBlackoutWasAlreadyOnFromTheScreen<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly |
 | [MOT-042](exigences/MOT-042.md) | I | Le modèle de couches par défaut | Validé | DefaultContentTests.NewProject_HasFullOnScene_InIntensityLayer_LightingEveryFixture<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
-| [MOT-072](exigences/MOT-072.md) | I | Flash | Réalisé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
+| [MOT-072](exigences/MOT-072.md) | I | Flash | Validé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
 | [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Réalisé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
 | [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |

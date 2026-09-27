@@ -19,7 +19,7 @@ public sealed class ReferenceShowP5Tests
     public void ReferenceShow_P5_ContentIsThere()
     {
         var content = ProjectFiles.Load(Folder);
-        content.Scenes.Scenes.Count(s => s.Category == "Phase P5").ShouldBe(14);
+        content.Scenes.Scenes.Count(s => s.Category == "Phase P5").ShouldBe(15);
         content.Venues.Active.ForbiddenZones.Count.ShouldBe(2);
         content.Safety.ShouldNotBeNull().Strobe.MaxContinuousSeconds.ShouldBe(10);
     }

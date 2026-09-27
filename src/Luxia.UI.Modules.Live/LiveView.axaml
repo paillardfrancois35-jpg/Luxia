@@ -73,11 +73,11 @@
 
     <!-- Couches (LIVE-002) et actions permanentes (LIVE-004) -->
     <Grid Grid.Row="1" ColumnDefinitions="*,190">
-      <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
-        <ItemsControl ItemsSource="{Binding Columns}">
+      <ScrollViewer x:Name="ColumnsScroll" Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <ItemsControl x:Name="ColumnsList" ItemsSource="{Binding Columns}" HorizontalAlignment="Left">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <UniformGrid Rows="1" MinWidth="{Binding $parent[UserControl].((vm:LiveViewModel)DataContext).ColumnsMinWidth}" />
+              <UniformGrid Rows="1" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
