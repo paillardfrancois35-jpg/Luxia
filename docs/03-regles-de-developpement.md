@@ -10,7 +10,7 @@
 | Élément | Choix |
 |---|---|
 | Framework | **.NET 10** (LTS), `net10.0` ; `net10.0-windows` uniquement pour ce qui dépend de Windows (application, API Windows) |
-| Solution | **`Dmx.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `Dmx.sln`. |
+| Solution | **`LuXia.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `LuXia.sln`. |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
 | Assemblage | Projet `Luxia.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
@@ -107,7 +107,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Nommage | `Methode_Condition_ResultatAttendu` (anglais) ; `DisplayName` en français si utile |
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
 | Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
-| Commandes | `dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
+| Commandes | `dotnet test --solution LuXia.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
 | Intégration | `tests/Luxia.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
@@ -174,6 +174,7 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | Reliquats du renommage DMX → LuXia : `Dmx.sln` → `LuXia.sln` (§1, §6) ; `.editorconfig` visait encore `src/Dmx.UI.**` (réglage CA1822 des écrans sans effet) ; `dmx-headless` dans le `JOURNAL.md` du show de référence. Les entrées d'historique et décisions antérieures gardent les anciens noms (doc 02 §19). |
 | 2026-09-27 | §11 : course écran / moteur (décision par le moteur, `EngineEcho`, historique des envois MIDI) ; notice d'appareil incomplète (8e canal du BUV463). Noms `Dmx.*` restants corrigés en `Luxia.*` dans les tables de ce document. |
 | 2026-09-26 | §11 : écriture de fichier refusée un instant par le poste (nouvelles tentatives dans `VersionedJsonFile.Save`). |
 | 2026-09-26 | §11 : tests de temps réel sensibles à la charge (trois essais, collection non parallélisée) ; copie `with` d'un `record` à propriété calculée à la construction. |
