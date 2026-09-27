@@ -1,8 +1,8 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 développée**, en attente des essais
-> de l'utilisateur (guide [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md), version **1.004**).
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** et fusionnée dans `main`
+> (étiquette **`v1.004`**). Prochain chantier : **analyse ergonomique** (branche dédiée), puis P6.
 
 ## 1. Où en est-on
 
@@ -13,7 +13,7 @@
 | P2 – Bibliothèque | Développée | `p2/bibliotheque` (fusionnée dans `main`, `v1.001`) | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
 | P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
-| P5 – Couches, Palettes, Live, MIDI | **Développée**, essais utilisateur à faire | `p5/couches-palettes-live` (poussée) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ⏳ — puis proposer l'analyse ergonomique (§5.6) avant de valider |
+| P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -88,6 +88,20 @@
   donc `"name": "Show de référence"` tant qu'on ne le renomme pas à la main après une régénération. Le nom affiché dans le titre ne dit pas
   quel dossier est réellement ouvert : se fier au champ « Dossier du projet » de **Aide → À propos**, pas au nom affiché.
 
+- **P5 validée par l'utilisateur le 2026-09-27** : guide déroulé pas à pas au matériel (exemples 1 à 13 ; l'exemple 13, sans interface,
+  déroulé par Claude à la demande de l'utilisateur ; étape 3 de l'exemple 6 — définir une zone interdite — reportée à la refonte
+  ergonomique). Bilan : 79 exigences P5, **37 Validé**, 26 Réalisé (couverts par les tests), 4 Partiel, 11 reportées au chantier
+  ergonomie, 1 en P6. Faits marquants, chacun avec sa fiche :
+  - **course écran / moteur** corrigée trois fois (bascule lancer/arrêter tranchée par le moteur `StopIfPlaying` ; `EngineEcho` pour
+    les masters ; reprise douce MIDI qui retient les dernières valeurs envoyées) — à garder en tête pour tout nouvel écran ;
+  - **UV BeamZ BUV463 : 8e canal « lissage » non documenté** (cause de l'« allumage lent »), UV 2 déplacé en 169 ; gros PAR = générique
+    **WT05** 7 canaux (pas des LPC120) ; écoute de la ligne possible avec le DVC4 Daslight (`docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`) ;
+  - **journal de l'enregistrement** `.journal.txt` (SORT-066 : clics IHM, commandes moteur, canaux DMX, touches) ;
+  - repos de fumée proportionnel (GEN-084 précisé), décomptes de sûreté, fenêtre de démarrage (GEN-065), ↑ ↓ = master de couche,
+    Problèmes du projet = règles de `valider` ; test instable stabilisé (règle docs/03 §11). 505 tests verts.
+  - **Prochain chantier : analyse ergonomique** (demande de l'utilisateur) : charte d'interaction et catalogue de composants communs,
+    contrôles 2D sur mesure (plan Pan/Tilt, roue de couleurs, effets), modules détachables / réagençables (ancrage type Dock),
+    place réservée à la 3D (prototype isolé), captures Daslight 4/5 comme sources de principes. Idées déjà notées dans le doc 99.
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -179,3 +193,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-26 | P4 | Moteur + Scènes développés sur `p4/moteur-scenes` : moteur sur modèle compilé (D26-D28), `Luxia.Scenes`, écran Scènes, aveugle et aperçu, Console en attributs, outils sans interface, contenu P4 du show de référence et trames de référence, fiches (90 créées), guide P4. 408 tests verts. Tests de temps réel rendus robustes à la charge. **En attente de la revue de l'utilisateur** avant fusion et `v1.003`. |
 | 2026-09-26 | P4 | Guide P4 déroulé pas à pas avec l'utilisateur sur le matériel (exemples 1 à 12, tous conformes). Corrigés/ajoutés au fil de l'eau, chacun avec sa fiche : blanc chaud, vitesse en direct, enregistrement robuste (GEN-118), exceptions journalisées (GEN-117), Ctrl+Z/Y, bouton de mise à jour de palette, case Aveugle, numéro de compilation (GEN-119). Remarque utilisateur : ergonomie d'ensemble à reprendre plus tard (doc 99), non bloquante. **Validée, fusionnée dans `main`, étiquette `v1.003`.** Prochaine étape : P5. |
 | 2026-09-27 | P5 | Couches, Palettes, Live, MIDI développés sur `p5/couches-palettes-live` (questions Q28 à Q32 tranchées au démarrage, développement en autonomie, essais de l'utilisateur à la fin) : sûreté (D29), couches complètes, positions par lieu, zones interdites, écran Live, APC mini (`Luxia.Midi`, D30), fiabilité (D31), contenu et trames de référence P5, guide P5. 75 exigences P5 (43 Réalisé, 14 à valider sur matériel, 6 Partiel, 12 reportées). **En attente des essais de l'utilisateur**, puis proposition de l'analyse ergonomique avant `v1.004`. |
+| 2026-09-27 | P5 | Guide P5 déroulé pas à pas avec l'utilisateur au matériel (exemples 1 à 13). Corrigés au fil de l'eau, chacun avec sa fiche : trois courses écran / moteur, cellule des sélections automatiques, Problèmes du projet, fumée, clavier, MIDI rapide, fenêtre de démarrage ; parc réel corrigé (BUV463 8 canaux, WT05). 505 tests verts. **Validée, fusionnée dans `main`, étiquette `v1.004`.** Prochaine étape : analyse ergonomique. |
