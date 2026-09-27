@@ -166,7 +166,7 @@
 | [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
 | [COU-001](COU-001.md) | Créer, renommer, réordonner | P5 | I | Réalisé |
 | [COU-002](COU-002.md) | Une scène appartient à une couche | P5 | I | Réalisé |
-| [COU-003](COU-003.md) | Exclusivité | P5 | I | Réalisé |
+| [COU-003](COU-003.md) | Exclusivité | P5 | I | Validé |
 | [COU-004](COU-004.md) | Couche non exclusive | P5 | I | Réalisé |
 | [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Réalisé |
 | [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Réalisé |
@@ -322,7 +322,7 @@
 | [MOT-034](MOT-034.md) | Source de chaque valeur finale | P4 | M | Réalisé |
 | [MOT-040](MOT-040.md) | « Suit l'intensité » en fin de chaîne | P4 | I | Validé |
 | [MOT-041](MOT-041.md) | « Allumer en coloriant » | P4 | I | Validé |
-| [MOT-042](MOT-042.md) | Le modèle de couches par défaut | P5 | I | Réalisé |
+| [MOT-042](MOT-042.md) | Le modèle de couches par défaut | P5 | I | Validé |
 | [MOT-050](MOT-050.md) | Couleur logique vers RVB | P4 | I | Réalisé |
 | [MOT-051](MOT-051.md) | Couleur logique vers RVBW (extraction du blanc) | P4 | I | Réalisé |
 | [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Validé |

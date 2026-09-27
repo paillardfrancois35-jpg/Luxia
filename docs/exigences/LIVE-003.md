@@ -31,3 +31,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Utilisateur | Test | Essai P5, exemple 1 : clic sur une scène = lancement — conforme ; arrêt par un 2e clic et flash maintenu restent à essayer. |
