@@ -281,7 +281,7 @@
 
 ## P5 – 72 exigences, 49 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 36 · Réalisé, à valider sur matériel : 14 · Validé : 5
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 35 · Réalisé, à valider sur matériel : 14 · Validé : 6
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -320,7 +320,7 @@
 | [INST-072](exigences/INST-072.md) | M | Calibration des positions | Partiel |  |
 | [LIVE-001](exigences/LIVE-001.md) | I | Bandeau d'état permanent | Partiel | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
-| [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Réalisé | LiveCommandTests.LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick<br>LiveUvRepeatTests.FullOn_ThenTenClicksOnUv_EachClickTogglesTheUv<br>LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>(+2) |
+| [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Validé | LiveCommandTests.LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick<br>LiveUvRepeatTests.FullOn_ThenTenClicksOnUv_EachClickTogglesTheUv<br>LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>(+2) |
 | [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Validé | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
 | [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Réalisé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
 | [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Reporté (chantier ergonomie) |  |

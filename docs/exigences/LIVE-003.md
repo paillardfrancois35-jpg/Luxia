@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 3. Exigences – structure](../18-live.md) |
@@ -45,3 +45,4 @@
 | 2026-09-27 | Claude | Test | Canal 168 = gradateur maître de « UV 2 » (adresse 168) dans le Show de travail, à 255 dès que « Plein feu » ou « UV plein » joue. Notice BUV463 V1.1 relue : 7 canaux seulement, aucun 8e canal documenté. Hypothèse : l'UV 1 raccordé a en réalité un 8e canal (version matérielle différente de la notice ; par exemple vitesse / lissage du gradateur) qui déborde sur l'adresse de l'UV 2. Protocole de caractérisation proposé à la Console ; contournement immédiat : UV 2 marqué absent (émis à 0). |
 | 2026-09-27 | Utilisateur | Test | Caractérisation à la Console : le **8e canal du BUV463 est un lissage du gradateur** — 1 : allumages et extinctions lissés très rapidement ; 255 : lissage d'environ 15 s. Dans Daslight, ce canal n'avait jamais été patché (un seul UV patché pour les deux appareils à la même adresse), d'où l'absence du souci. |
 | 2026-09-27 | Claude | Développement | Cause racine corrigée dans les données : BUV463 en **8 canaux** (canal « Lissage du gradateur », par défaut 0), UV 2 déplacé de 168 à **169** ; « UV plein » revient sur ses 4 rangées. Les corrections logicielles de la journée sont gardées car elles corrigent de vrais défauts indépendants de l'UV : bascule lancer/arrêter tranchée par le moteur (5 lancements d'affilée relevés au journal), cellule des sélections automatiques (SCN-007), journal de l'enregistrement (SORT-066). |
+| 2026-09-27 | Utilisateur | Test | v1.004.048, UV 2 réadressé en 169 : « Plein feu » puis lancer/arrêter rapides de « UV plein » : allumage et extinction immédiats sur les 4 rampes. Validé. |
