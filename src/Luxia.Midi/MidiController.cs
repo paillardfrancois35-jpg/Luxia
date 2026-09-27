@@ -13,7 +13,7 @@ namespace Luxia.Midi;
 /// <remarks>
 /// Affectation par défaut (doc 18b §3) : colonnes = couches du Live, lignes = scènes (ligne 1 en haut) ; boutons du bas =
 /// arrêter la couche ; Shift + bas 1 / 2 = page de scènes précédente / suivante, Shift + bas 3 / 4 = couches précédentes
-/// / suivantes ; boutons de droite = Blackout, Flash, Strobe, Fumée, (Tap, P7), Figer, (Auto, P10), Tout arrêter ;
+/// / suivantes ; boutons de droite = Blackout (tant que maintenu, MIDI-011), Flash, Strobe, Fumée, (Tap, P7), Figer, (Auto, P10), Tout arrêter ;
 /// faders 1-8 = masters des couches affichées, fader 9 = Grand Master.
 /// </remarks>
 public sealed class MidiController
@@ -124,7 +124,7 @@ public sealed class MidiController
             var (action, id) = ActionOf(new MidiControl(MidiControlKind.Right, i + 1), layout);
             var on = action switch
             {
-                MidiAction.Blackout => snapshot.Blackout,
+                MidiAction.Blackout or MidiAction.BlackoutToggle => snapshot.Blackout,
                 MidiAction.Freeze => snapshot.Frozen,
                 MidiAction.Smoke => snapshot.Smoking || _held.Contains((action, id)),
                 MidiAction.Flash or MidiAction.Strobe or MidiAction.FlashScene => _held.Contains((action, id)),
@@ -184,7 +184,10 @@ public sealed class MidiController
                 return [new FlashSceneCommand(Midi, flash, pressed)];
             case MidiAction.StopLayer when pressed && id is { } layer:
                 return [new StopLayerCommand(Midi, layer)];
-            case MidiAction.Blackout when pressed:
+            case MidiAction.Blackout:
+                // MIDI-011 : la note commande directement l'état (appui = noir, relâche = retour), pour clignoter à la main.
+                return [new BlackoutCommand(Midi, pressed)];
+            case MidiAction.BlackoutToggle when pressed:
                 return [new BlackoutCommand(Midi, !snapshot.Blackout)];
             case MidiAction.Flash when layout.FlashSceneId is { } flashScene:
                 return [new FlashSceneCommand(Midi, flashScene, pressed)];

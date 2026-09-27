@@ -96,7 +96,7 @@ Sans souris : **←/→** pour encadrer une colonne, **1-9** pour lancer ses sc�
 1. Branchez l'APC mini **MK2** (USB) pendant que LuXia tourne : pastille « 🎛 APC mini MK2 » en haut du Live (2 s max).
 2. **Grille** : colonnes = couches, lignes = scènes (ligne 1 en haut). Les pads prennent la **couleur des scènes** (faible = disponible, fort = active, pulsation = fondu d'entrée). Lancez / arrêtez depuis les pads, puis à la souris : les pads suivent.
 3. **Boutons du bas** : arrêter la couche (allumé quand elle joue). **Shift + bas 1 / 2** : pages de scènes ; **3 / 4** : pages de couches.
-4. **Boutons de droite** (haut → bas) : Blackout, Flash, Strobe, Fumée, (Tap, P7), Figer, (Auto, P10), Tout arrêter.
+4. **Boutons de droite** (haut → bas) : Blackout (**tant que maintenu**, MIDI-011 : relâché, le noir s'annule même s'il avait été mis à l'écran), Flash, Strobe, Fumée, (Tap, P7), Figer, (Auto, P10), Tout arrêter.
 5. **Faders 1-8** = masters des colonnes, **9** = Grand Master : un fader ne prend la main qu'en **croisant** la valeur affichée (pas de saut).
 6. Débranchez puis rebranchez : l'APC est reconnu à nouveau et ses LED reviennent.
 7. **Si un pad ou une LED ne répond pas comme prévu** : les numéros MIDI viennent des protocoles publiés par AKAI (les notices du dépôt ne les ont pas). LuXia fermé, lancez :

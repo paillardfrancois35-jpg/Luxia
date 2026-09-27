@@ -65,6 +65,7 @@ du moteur. Rend le Live beaucoup plus confortable qu'à la souris.
 | MIDI-008 | S | P5 | **Apprentissage** : cliquer une cible à l'écran puis toucher le contrôle physique (GEN-074). | — |
 | MIDI-009 | S | P5 | Disposition alternative « palettes » : grille = palettes couleur / position pour une sélection. | — |
 | MIDI-010 | M | P5 | Sur MK2, la couleur des pads reprend la **couleur des scènes** (GEN-106), approchée dans la palette de couleurs du contrôleur. | — |
+| MIDI-011 | I | P5 | Le bouton **Blackout** du contrôleur agit **tant qu'il est maintenu** (comme Daslight) : appui = blackout, relâche = blackout annulé, **même s'il avait été activé à l'écran ou au clavier** (la note MIDI reprend le dessus). Le bouton de l'écran et la touche B restent des bascules. Une bascule reste possible au contrôleur par affectation (`blackoutToggle`, MIDI-007). | Écran : blackout ; note appuyée : blackout ; note relâchée : blackout annulé. |
 
 ## 6. Tests
 

@@ -64,13 +64,37 @@ public sealed class MidiControllerTests
         var controller = new MidiController(Mk1, "port");
 
         Single<StopLayerCommand>(controller.Handle(Press(Mk1.BottomButtons[1]), Layout(), Snapshot())).LayerId.ShouldBe(Moves);
-        Single<BlackoutCommand>(controller.Handle(Press(Mk1.RightButtons[0]), Layout(), Snapshot(blackout: true))).Active.ShouldBeFalse();
+        Single<BlackoutCommand>(controller.Handle(Press(Mk1.RightButtons[0]), Layout(), Snapshot())).Active.ShouldBeTrue();
         Single<FlashSceneCommand>(controller.Handle(Press(Mk1.RightButtons[1]), Layout(), Snapshot())).SceneId.ShouldBe(WhiteFlash);
         Single<FlashSceneCommand>(controller.Handle(Press(Mk1.RightButtons[2]), Layout(), Snapshot())).SceneId.ShouldBe(Strobe);
         Single<SmokeCommand>(controller.Handle(Press(Mk1.RightButtons[3]), Layout(), Snapshot())).Pressed.ShouldBeTrue();
         Single<FreezeCommand>(controller.Handle(Press(Mk1.RightButtons[5]), Layout(), Snapshot())).Active.ShouldBeTrue();
         Single<StopLayerCommand>(controller.Handle(Press(Mk1.RightButtons[7]), Layout(), Snapshot())).LayerId.ShouldBeNull();
         controller.Handle(Press(Mk1.RightButtons[4]), Layout(), Snapshot()).ShouldBeEmpty("Tap : phase P7");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MIDI-011")]
+    public void BlackoutNote_IsMomentary_EvenIfBlackoutWasAlreadyOnFromTheScreen()
+    {
+        var controller = new MidiController(Mk2, "port");
+        var alreadyOn = Snapshot(blackout: true);
+
+        // Écran : blackout déjà actif. Note appuyée : il le reste. Note relâchée : blackout annulé.
+        Single<BlackoutCommand>(controller.Handle(Press(Mk2.RightButtons[0]), Layout(), alreadyOn)).Active.ShouldBeTrue();
+        Single<BlackoutCommand>(controller.Handle(Release(Mk2.RightButtons[0]), Layout(), alreadyOn)).Active.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MIDI-011")]
+    [Trait("Exigence", "MIDI-007")]
+    public void BlackoutToggle_ByBinding_TogglesOnPressOnly()
+    {
+        var bindings = new[] { new MidiBinding { Control = "droite 1", Action = MidiAction.BlackoutToggle } };
+        var controller = new MidiController(Mk2, "port");
+
+        Single<BlackoutCommand>(controller.Handle(Press(Mk2.RightButtons[0]), Layout(bindings), Snapshot(blackout: true))).Active.ShouldBeFalse();
+        controller.Handle(Release(Mk2.RightButtons[0]), Layout(bindings), Snapshot()).ShouldBeEmpty();
     }
 
     [Fact]

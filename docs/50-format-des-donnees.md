@@ -443,7 +443,7 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 | Propriété | Rôle |
 |---|---|
 | `control` | `pad <colonne 1-8> <ligne 1-8>` (ligne 1 en haut), `bas <1-8>`, `droite <1-8>` (de haut en bas), `fader <1-9>` (9 = master) |
-| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout`, `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `none` |
+| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `none` |
 
 Profils des modèles (notes, LED) : fichiers de données du module (`src/Luxia.Midi/Profiles/*.json`).
 

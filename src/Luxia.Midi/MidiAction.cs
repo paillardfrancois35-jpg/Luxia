@@ -21,8 +21,14 @@ public enum MidiAction
     /// <summary>Grand Master (fader).</summary>
     GrandMaster,
 
-    /// <summary>Blackout (bascule).</summary>
+    /// <summary>
+    /// Blackout tant que le contrôle est maintenu (MIDI-011, comme Daslight) : appui = blackout, relâche = blackout annulé,
+    /// même s'il avait été activé ailleurs.
+    /// </summary>
     Blackout,
+
+    /// <summary>Blackout en bascule (un appui l'active, le suivant l'annule), comme le bouton de l'écran.</summary>
+    BlackoutToggle,
 
     /// <summary>FLASH général (maintien).</summary>
     Flash,

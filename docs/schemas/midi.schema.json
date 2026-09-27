@@ -40,6 +40,7 @@
               "layerMaster",
               "grandMaster",
               "blackout",
+              "blackoutToggle",
               "flash",
               "strobe",
               "smoke",
