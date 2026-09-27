@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé, à valider sur matériel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 3. Exigences – structure](../18-live.md) |
@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Utilisateur | Test | Arduino débranché pendant que LuXia tourne : alerte visible, puis retour à la normale au rebranchement. Validé. |

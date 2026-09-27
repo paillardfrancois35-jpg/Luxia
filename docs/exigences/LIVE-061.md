@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé, à valider sur matériel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 6. Performances](../18-live.md) |
@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 6. Performances). |
 | 2026-09-26 | Claude | Note | Pas d'étape intermédiaire entre le clic et le moteur (commande directe, pas d'attente du rafraîchissement de l'écran). |
+| 2026-09-27 | Utilisateur | Test | Pas de mesure possible à l'œil ; ressenti « très réactif » tout au long de l'essai P5. Mesures : journal de l'enregistrement (commande moteur et changement DMX dans la même milliseconde, clic → sortie ≈ 30 ms dans le test automatique). Validé. |

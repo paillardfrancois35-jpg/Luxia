@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Luxia.Messaging.Commands;
 using Luxia.UI.Modules.Live;
 
@@ -63,6 +64,14 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
         var uv = _vm.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == "UV plein");
         var path = Path.Combine(_host.ProjectFolder, "trames-essai.dmxrec");
         _host.Runtime.StartRecording(path);
+
+        // Connexion de l'enregistreur sur son propre fil : attendue (délai large) plutôt que supposée (docs/03 §11).
+        var connected = Stopwatch.StartNew();
+        while (_host.Runtime.Recorder?.Status.State != Luxia.Messaging.Events.OutputConnectionState.Connected && connected.Elapsed < TimeSpan.FromSeconds(10))
+        {
+            await Task.Delay(20, TestContext.Current.CancellationToken);
+        }
+
         await Settle();
 
         _vm.Press(uv);

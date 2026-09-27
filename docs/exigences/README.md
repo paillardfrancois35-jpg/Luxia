@@ -288,12 +288,12 @@
 | [LIVE-007](LIVE-007.md) | Mini-simulateur optionnel dans l'écran Live | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-008](LIVE-008.md) | Indication visible de toute limite de sûreté active et de tout verrou | P5 | I | Réalisé |
 | [LIVE-009](LIVE-009.md) | Journal défilant des derniers événements | P5 | M | Réalisé |
-| [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Réalisé, à valider sur matériel |
+| [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Validé |
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
-| [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Réalisé, à valider sur matériel |
+| [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Validé |
 | [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Réalisé, MK2 validé, MK1 à valider |
 | [MIDI-002](MIDI-002.md) | Affectation par défaut du §3 | P5 | I | Validé |
 | [MIDI-003](MIDI-003.md) | Retour lumineux du §4, mis à jour à chaque changement d'état | P5 | I | Validé |

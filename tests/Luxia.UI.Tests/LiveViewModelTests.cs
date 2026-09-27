@@ -230,11 +230,18 @@ public sealed class LiveViewModelTests : IAsyncLifetime
 
         _host.Tick();
         _vm.Refresh();
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-        for (var i = 0; i < 100; i++)
+        // Seuil strict, série recommencée jusqu'à trois fois (docs/03 §11 : un pic de charge de la suite n'est pas un défaut).
+        var watch = new System.Diagnostics.Stopwatch();
+        for (var attempt = 0; attempt < 3 && (attempt == 0 || watch.Elapsed.TotalMilliseconds / 100 >= 10); attempt++)
         {
-            _host.Tick();
-            _vm.Refresh();
+            watch.Restart();
+            for (var i = 0; i < 100; i++)
+            {
+                _host.Tick();
+                _vm.Refresh();
+            }
+
+            watch.Stop();
         }
 
         // 20 images/s = 50 ms par image : le rafraîchissement du Live (moteur compris) en prend bien moins.
