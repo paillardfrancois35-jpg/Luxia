@@ -68,6 +68,18 @@ public sealed partial class LooksPanelViewModel : ViewModelBase
         _journal.Log($"✦ look « {look.Name} »");
     }
 
+    /// <summary>Touches F1 à F12 (écran Contrôle) : joue le look de ce rang (0 = le premier). Renvoie vrai s'il existe.</summary>
+    public bool PlayAt(int index)
+    {
+        if (index < 0 || index >= Looks.Count)
+        {
+            return false;
+        }
+
+        Play(Looks[index]);
+        return true;
+    }
+
     /// <summary>Crée un look qui refait ce qui joue maintenant.</summary>
     [RelayCommand]
     private async Task CaptureAsync()
@@ -165,9 +177,10 @@ public sealed partial class LooksPanelViewModel : ViewModelBase
     {
         var project = _runtime.Project;
         Looks.Clear();
-        foreach (var look in project.Looks.Looks)
+        foreach (var (look, index) in project.Looks.Looks.Select((l, i) => (l, i)))
         {
-            Looks.Add(new LookButtonViewModel(look, [.. look.Actions.Select(a => LookRules.Describe(a, project.Scenes, project.Layers))]));
+            var key = index < 12 ? $"F{index + 1}" : string.Empty;
+            Looks.Add(new LookButtonViewModel(look, [.. look.Actions.Select(a => LookRules.Describe(a, project.Scenes, project.Layers))], key));
         }
 
         OnPropertyChanged(nameof(IsEmpty));

@@ -59,6 +59,47 @@ public static class DockTree
         return (null, PanelPlace.Absent);
     }
 
+    /// <summary>Tous les éléments de la disposition : groupes et panneaux, fenêtres détachées et panneaux fermés compris.</summary>
+    public static IEnumerable<IDockable> All(IRootDock root)
+    {
+        ArgumentNullException.ThrowIfNull(root);
+        foreach (var dockable in Walk(root))
+        {
+            yield return dockable;
+        }
+
+        foreach (var hidden in root.HiddenDockables ?? [])
+        {
+            yield return hidden;
+        }
+
+        foreach (var window in root.Windows ?? [])
+        {
+            if (window.Layout is { } layout)
+            {
+                foreach (var dockable in All(layout))
+                {
+                    yield return dockable;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<IDockable> Walk(IDockable dockable)
+    {
+        yield return dockable;
+        if (dockable is IDock dock)
+        {
+            foreach (var child in dock.VisibleDockables ?? [])
+            {
+                foreach (var inner in Walk(child))
+                {
+                    yield return inner;
+                }
+            }
+        }
+    }
+
     /// <summary>Premier groupe d'onglets de panneaux (pour y remettre un panneau absent).</summary>
     public static IToolDock? FirstToolDock(IDock dock)
     {

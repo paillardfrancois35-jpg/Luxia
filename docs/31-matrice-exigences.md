@@ -359,9 +359,9 @@
 | [SORT-065](exigences/SORT-065.md) | M | Enregistrement des trames visible, chemin copiable | Réalisé |  |
 | [SORT-066](exigences/SORT-066.md) | M | Journal de l'enregistrement : actions, commandes et canaux entrelacés | Réalisé | LiveUvRepeatTests.Recording_JournalInterleavesClicksCommandsAndChannelChanges |
 
-## ERG – 20 exigences, 15 couvertes par des tests automatiques
+## ERG – 24 exigences, 19 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 19
+> En cours : 1 · Réalisé : 23
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -385,3 +385,7 @@
 | [ERG-018](exigences/ERG-018.md) | I | Colonnes de l'écran Contrôle | Réalisé | ControlPanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>ControlPanelsTests.ContextMenu_RenameDuplicateColorLayerHideDelete<br>ControlPanelsTests.EditBand_ChoosesThenReleasesTheScene_AndOutlinesIt<br>ControlPanelsTests.FlashLayer_PlaysOnlyWhileHeld<br>(+4) |
 | [ERG-019](exigences/ERG-019.md) | I | Réglages des appareils | Réalisé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>ControlPanelsTests.Settings_ColorInLive_OverridesOutput_AndKeepsTheRequestedColorShown<br>ControlPanelsTests.Settings_HeaderSaysWhereSettingsGo<br>ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>(+3) |
 | [ERG-020](exigences/ERG-020.md) | I | Démonstration | Réalisé |  |
+| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Réalisé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused |
+| [ERG-022](exigences/ERG-022.md) | M | Taille de l'interface | Réalisé | PreferencesAndProjectTests.UiScale_DefaultsTo100Percent_AndRoundTrips |
+| [ERG-023](exigences/ERG-023.md) | I | Looks | Réalisé | ControlPanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>ControlPanelsTests.Looks_FunctionKeys_PlayByRank<br>ControlPanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>LookRulesTests.Commands_FollowTheActionsInOrder_IncompleteOnesAreSkipped<br>(+2) |
+| [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Réalisé | ControlLayoutTests.ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately<br>ControlPanelsTests.LayoutPreset_SwitchesBetweenControlAndShow |

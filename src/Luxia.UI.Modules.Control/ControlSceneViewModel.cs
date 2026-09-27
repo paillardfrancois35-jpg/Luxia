@@ -64,7 +64,7 @@ public sealed partial class ControlSceneViewModel : ViewModelBase
     public string EditBandFill => IsEditTarget ? EditColor : "#161B22";
 
     /// <summary>Épaisseur du contour de la scène éditée.</summary>
-    public double OutlineThickness => IsEditTarget ? 2 : 0;
+    public Avalonia.Thickness OutlineThickness => new(IsEditTarget ? 2 : 0);
 
     /// <summary>
     /// Affiche tout de suite l'état attendu après un clic, sans le laisser écraser par un état du moteur antérieur à la

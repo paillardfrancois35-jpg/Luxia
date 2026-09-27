@@ -26,7 +26,10 @@
                     ContextRequested="OnLookContext">
               <StackPanel>
                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                <TextBlock Text="{Binding Lines.Count, StringFormat='{}{0} action(s)'}" FontSize="11" Foreground="#8B949E" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                  <TextBlock Text="{Binding Key}" FontSize="11" FontWeight="Bold" Foreground="#E3B341" />
+                  <TextBlock Text="{Binding Lines.Count, StringFormat='{}{0} action(s)'}" FontSize="11" Foreground="#8B949E" />
+                </StackPanel>
               </StackPanel>
             </Button>
           </DataTemplate>

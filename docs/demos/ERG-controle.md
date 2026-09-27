@@ -85,12 +85,22 @@ panneau a un **?** qui explique à quoi il sert.
 | 2 | Fermer un panneau (✕), puis **Panneaux ▾** | « (fermé) » ; le choisir le remet à sa place. |
 | 3 | Quitter LuXia, relancer | Même disposition (enregistrée sur ce poste). **Rétablir la disposition** revient à celle livrée. |
 
-## 7. Ce qui reste comme avant
+## 7. Looks, disposition Spectacle, verrou, taille
+
+| # | Faire | Attendu |
+|---|---|---|
+| 1 | Panneau **Looks** (onglet sous Propriétés) : la démo en a trois, **F1** « Temps mort », **F2** « Retour de piste », **F3** « Ambiance UV » | Clic (ou touche F1…) : tout s'arrête et le look rejoue ses scènes et ses masters ; le Journal note « ✦ look ». Survol : la liste des actions. |
+| 2 | Lancer deux ou trois scènes, régler un master, **+ Capturer ce qui joue**, nommer | Nouveau look qui refait cet état ; clic droit : Mettre à jour, Renommer, Couleur, Supprimer. |
+| 3 | En haut : **Spectacle** | Colonnes en grand, panneau **Pilote automatique** (place réservée pour P10) avec les looks en gros boutons, Journal. **Contrôle** : on retrouve sa disposition. |
+| 4 | **🔒 Verrou soirée** | Retour en LIVE ; ÉDITION, AVEUGLE, ✎, « + scène », propriétés, zones, Ctrl + Z : refusés avec la raison ; jouer, retoucher en direct et les looks marchent. Re-clic : déverrouillé. |
+| 5 | Menu **Affichage → Taille de l'interface : 125 %** (ou 150 %) | Tout grossit ; gardé au prochain lancement. |
+
+## 8. Ce qui reste comme avant
 
 Les écrans **Live** et **Scènes** sont toujours là (choix C5) : on pourra comparer. Ils seront retirés quand le
 Contrôle aura fait ses preuves.
 
-## 8. Captures de référence
+## 9. Captures de référence
 
 `dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence" <dossier> 1920 1080` écrit aussi
 « Contrôle - LIVE surcharge », « Contrôle - ÉDITION », « Contrôle - AVEUGLE lyres », « Contrôle - zones » (copies dans

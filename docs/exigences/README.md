@@ -193,6 +193,10 @@
 | [ERG-018](ERG-018.md) | Colonnes de l'écran Contrôle | ERG | I | Réalisé |
 | [ERG-019](ERG-019.md) | Réglages des appareils | ERG | I | Réalisé |
 | [ERG-020](ERG-020.md) | Démonstration | ERG | I | Réalisé |
+| [ERG-021](ERG-021.md) | Verrou soirée | ERG | I | Réalisé |
+| [ERG-022](ERG-022.md) | Taille de l'interface | ERG | M | Réalisé |
+| [ERG-023](ERG-023.md) | Looks | ERG | I | Réalisé |
+| [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

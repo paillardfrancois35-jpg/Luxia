@@ -104,6 +104,13 @@ public partial class ControlView : UserControl
                 return;
             }
 
+            // ERG-023 : F1 à F12 jouent les looks 1 à 12.
+            if (e.Key is >= Key.F1 and <= Key.F12 && e.KeyModifiers == KeyModifiers.None && vm.Looks.PlayAt(e.Key - Key.F1))
+            {
+                e.Handled = true;
+                return;
+            }
+
             if (e.Key == Key.Escape && vm.HasModeAction)
             {
                 vm.ModeActionCommand.Execute(null);
@@ -172,6 +179,19 @@ public partial class ControlView : UserControl
     // l'a rangé (fenêtres détachées et panneaux fermés compris).
     private void AssignContexts(IRootDock root)
     {
+        // Dock lie ses boutons à ces objets de « capacités » : nuls, chaque liaison écrivait un avertissement au journal
+        // technique (vu au premier lancement réel) ; vides, ils ne changent rien au comportement.
+        foreach (var dockable in DockTree.All(root))
+        {
+            dockable.DockCapabilityOverrides ??= new DockCapabilityOverrides();
+            if (dockable is IDock dock)
+            {
+                dock.DockCapabilityPolicy ??= new DockCapabilityPolicy();
+            }
+        }
+
+        root.RootDockCapabilityPolicy ??= new DockCapabilityPolicy();
+
         if (ViewModel is not { } vm)
         {
             return;

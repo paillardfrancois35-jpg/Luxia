@@ -548,6 +548,22 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-023")]
+    public async Task Looks_FunctionKeys_PlayByRank()
+    {
+        _host.Dialogs.TextAnswers.Enqueue("Premier");
+        await _vm.Looks.CaptureCommand.ExecuteAsync(null);
+        _host.Dialogs.TextAnswers.Enqueue("Second");
+        await _vm.Looks.CaptureCommand.ExecuteAsync(null);
+
+        _vm.Looks.Looks.Select(l => l.Key).ShouldBe(["F1", "F2"]);
+        _vm.Looks.PlayAt(1).ShouldBeTrue();
+        _vm.Looks.PlayAt(5).ShouldBeFalse("pas de 6e look");
+        _vm.Refresh();
+        _vm.Journal.Lines.ShouldContain(l => l.Contains("look « Second »"));
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-024")]
     public void LayoutPreset_SwitchesBetweenControlAndShow()
     {

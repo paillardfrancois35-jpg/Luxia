@@ -27,8 +27,13 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="vm:LookButtonViewModel">
             <Button HorizontalAlignment="Stretch" MinHeight="44" Margin="0,0,0,6" FontSize="15" FontWeight="SemiBold"
-                    BorderBrush="{Binding Color}" BorderThickness="6,0,0,0" Content="{Binding Name}" ToolTip.Tip="{Binding Tip}"
-                    Command="{Binding $parent[UserControl].((vm:LooksPanelViewModel)DataContext).PlayCommand}" CommandParameter="{Binding}" />
+                    BorderBrush="{Binding Color}" BorderThickness="6,0,0,0" ToolTip.Tip="{Binding Tip}"
+                    Command="{Binding $parent[UserControl].((vm:LooksPanelViewModel)DataContext).PlayCommand}" CommandParameter="{Binding}">
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Key}" FontSize="12" Foreground="#E3B341" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Name}" />
+              </DockPanel>
+            </Button>
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
