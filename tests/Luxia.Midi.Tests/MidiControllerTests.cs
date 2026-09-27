@@ -130,6 +130,24 @@ public sealed class MidiControllerTests
 
     [Fact]
     [Trait("Exigence", "MIDI-004")]
+    public void Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind()
+    {
+        // Essai P5 : Grand Master descendu vite de 100 à 0 → bloqué vers 93 %. Le moteur n'a traité que les premiers messages.
+        var controller = new MidiController(Mk2, "port");
+        controller.Handle(Fader(Mk2, 9, 1), Layout(), Snapshot(grandMaster: 1)).ShouldHaveSingleItem();
+
+        var levels = new List<double>();
+        foreach (var value in new[] { 0.97, 0.93, 0.85, 0.7, 0.5, 0.3, 0.1, 0 })
+        {
+            var lagging = Snapshot(grandMaster: levels.Count < 2 ? 1 : levels[^2]); // deux messages de retard
+            levels.Add(Single<SetGrandMasterCommand>(controller.Handle(Fader(Mk2, 9, value), Layout(), lagging)).Level);
+        }
+
+        levels[^1].ShouldBe(0, 0.01);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MIDI-004")]
     public void Fader_LosesControl_WhenTheValueIsChangedElsewhere()
     {
         var controller = new MidiController(Mk2, "port");

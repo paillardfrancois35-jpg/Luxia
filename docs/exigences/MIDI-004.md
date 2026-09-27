@@ -30,3 +30,5 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Exigences). |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
+| 2026-09-27 | Utilisateur | Test | Faders : au démarrage, faders physiques à 0 et masters à 100 % (attendu : reprise douce). Défaut : un fader descendu vite prend la main puis la perd (bloqué vers 93 %) ; il faut revenir vers 93 % et redescendre lentement. Même chose pour tous les faders. |
+| 2026-09-27 | Claude | Développement | Course écran / moteur, côté MIDI : la valeur relue du moteur a du retard sur les messages du fader ; comparée au seul dernier envoi, elle faisait croire à un changement ailleurs et le fader était lâché. `SoftTakeover` retient les 128 dernières valeurs envoyées : « changée ailleurs » seulement si la valeur du moteur ne correspond à aucune. Test `Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind` (échoue sans la correction). |
