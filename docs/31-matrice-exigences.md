@@ -279,9 +279,9 @@
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
 
-## P5 – 69 exigences, 47 couvertes par des tests automatiques
+## P5 – 70 exigences, 48 couvertes par des tests automatiques
 
-> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 38 · Réalisé, à valider sur matériel : 13
+> Partiel : 6 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 38 · Réalisé, à valider sur matériel : 14
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -339,10 +339,11 @@
 | [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Réalisé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
 | [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
 | [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
-| [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
+| [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
 | [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
 | [MIDI-009](exigences/MIDI-009.md) | S | Disposition alternative « palettes » | Reporté (chantier ergonomie) |  |
 | [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Réalisé, à valider sur matériel | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
+| [MIDI-011](exigences/MIDI-011.md) | I | Blackout du contrôleur tant que maintenu (comme Daslight) | Réalisé, à valider sur matériel | MidiControllerTests.BlackoutNote_IsMomentary_EvenIfBlackoutWasAlreadyOnFromTheScreen<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly |
 | [MOT-042](exigences/MOT-042.md) | I | Le modèle de couches par défaut | Réalisé | DefaultContentTests.NewProject_HasFullOnScene_InIntensityLayer_LightingEveryFixture<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [MOT-072](exigences/MOT-072.md) | I | Flash | Réalisé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |

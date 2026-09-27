@@ -303,6 +303,7 @@
 | [MIDI-008](MIDI-008.md) | Apprentissage | P5 | S | Reporté (chantier ergonomie) |
 | [MIDI-009](MIDI-009.md) | Disposition alternative « palettes » | P5 | S | Reporté (chantier ergonomie) |
 | [MIDI-010](MIDI-010.md) | Sur MK2, la couleur des pads reprend la couleur des scènes | P5 | M | Réalisé, à valider sur matériel |
+| [MIDI-011](MIDI-011.md) | Blackout du contrôleur tant que maintenu (comme Daslight) | P5 | I | Réalisé, à valider sur matériel |
 | [MOT-001](MOT-001.md) | Ordre de la boucle de rendu | P4 | I | Réalisé |
 | [MOT-002](MOT-002.md) | Budget de 5 ms par tick | P4 | I | Réalisé |
 | [MOT-003](MOT-003.md) | Fil d'exécution dédié, sans opération bloquante | P4 | I | Réalisé |
