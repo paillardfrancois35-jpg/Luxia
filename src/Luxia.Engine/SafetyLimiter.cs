@@ -294,9 +294,9 @@ internal sealed class SafetyLimiter
         }
         else if (smoke.EmittingSeconds > 0)
         {
-            // Fin d'une émission : le repos minimal commence (GEN-084).
+            // Fin d'une émission : repos proportionnel à ce qui a été émis, plafonné au repos minimal (GEN-084, essai P5).
+            smoke.RestRemaining = Math.Min(limits.MinRestSeconds, smoke.EmittingSeconds * limits.RestFactor);
             smoke.EmittingSeconds = 0;
-            smoke.RestRemaining = limits.MinRestSeconds;
         }
 
         if (reason is null)

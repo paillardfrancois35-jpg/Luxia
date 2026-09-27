@@ -82,6 +82,7 @@ public static class SafetyCompiler
             {
                 MaxEmissionSeconds = Math.Max(0.5, settings.Smoke.MaxEmissionSeconds),
                 MinRestSeconds = Math.Max(0, settings.Smoke.MinRestSeconds),
+                RestFactor = Math.Max(0, settings.Smoke.RestFactor),
             },
             StrobeChannels = strobe,
             SmokeChannels = smoke,

@@ -335,7 +335,7 @@
 | [MOT-074](MOT-074.md) | Surcharges conformes à la chaîne de rendu | P1 | I | Réalisé |
 | [MOT-075](MOT-075.md) | Identifier un appareil au-dessus de tout | P3 | I | Réalisé |
 | [MOT-080](MOT-080.md) | Limiteur de strobe | P5 | I | Validé |
-| [MOT-081](MOT-081.md) | Limiteur de fumée | P5 | I | Réalisé, à valider sur matériel |
+| [MOT-081](MOT-081.md) | Limiteur de fumée | P5 | I | Validé |
 | [MOT-082](MOT-082.md) | Zones interdites | P5 | I | Partiel |
 | [MOT-083](MOT-083.md) | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | P5 | I | Réalisé |
 | [MOT-090](MOT-090.md) | Conversion des attributs en octets selon le patch | P4 | I | Réalisé |

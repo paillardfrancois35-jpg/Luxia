@@ -179,6 +179,11 @@ public static class ProjectValidator
         {
             yield return Warning(file, "fumée", "minRestSeconds", "repos minimal négatif : compté comme 0");
         }
+
+        if (safety.Smoke.RestFactor < 0)
+        {
+            yield return Warning(file, "fumée", "restFactor", "facteur de repos négatif : compté comme 0");
+        }
     }
 
     private static void AddLoadMessage(List<CompileIssue> issues, string file, string? message)

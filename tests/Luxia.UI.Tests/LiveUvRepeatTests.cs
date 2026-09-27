@@ -104,15 +104,15 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
     [Trait("Exigence", "CMD-030")]
     public void SmokeBurst_AfterTheRest_Emits3sWithoutAnyLimit()
     {
-        // Essai P5 : maintien de FUMÉE 6 s, relâche, 30 s de repos, puis Rafale.
+        // Essai P5 : maintien de FUMÉE 6 s, relâche, 18 s de repos (3 × 6 s), puis Rafale.
         _vm.Smoke(true);
         Run(6 * 40);
         _vm.Smoke(false);
         Run(10 * 40);
         _vm.SmokeResting.ShouldBeTrue("décompte visible même si rien ne demande de fumée");
-        _vm.SmokeBurstText.ShouldBe("Rafale (21 s)"); // 20,x s restantes, arrondies au-dessus
-        _vm.SmokeButtonText.ShouldBe("FUMÉE (Z) (21 s)");
-        Run(21 * 40);
+        _vm.SmokeBurstText.ShouldBe("Rafale (9 s)"); // 6 s émises → 18 s de repos ; 8,x s restantes, arrondies au-dessus
+        _vm.SmokeButtonText.ShouldBe("FUMÉE (Z) (9 s)");
+        Run(10 * 40);
         _host.Frame()[179].ShouldBe((byte)0);
 
         _vm.SmokeResting.ShouldBeFalse();

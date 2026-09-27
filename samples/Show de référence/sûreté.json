@@ -8,6 +8,7 @@
   },
   "smoke": {
     "maxEmissionSeconds": 10,
-    "minRestSeconds": 30
+    "minRestSeconds": 30,
+    "restFactor": 3
   }
 }

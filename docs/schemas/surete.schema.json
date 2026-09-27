@@ -44,6 +44,10 @@
         "minRestSeconds": {
           "type": "number",
           "minimum": 0
+        },
+        "restFactor": {
+          "type": "number",
+          "minimum": 0
         }
       }
     }

@@ -120,8 +120,9 @@ public sealed class SafetyTests
     [Fact]
     [Trait("Exigence", "MOT-081")]
     [Trait("Exigence", "GEN-084")]
-    public void Smoke_ShortPuff_StartsTheMinimalRest()
+    public void Smoke_ShortPuff_RestsThreeTimesItsDuration()
     {
+        // Essai P5 : 30 s de repos après une bouffée de 2 s était excessif → repos = 3 × durée émise (≤ 30 s).
         var harness = Smoke(new SmokeLimits());
 
         harness.Send(Raw(180, 255));
@@ -130,8 +131,13 @@ public sealed class SafetyTests
         harness.Run(5);
         harness.Send(Raw(180, 255));
         harness.Tick();
+        harness[180].ShouldBe((byte)0, "5 s après une bouffée de 2 s : encore 1 s de repos (6 s)");
 
-        harness[180].ShouldBe((byte)0, "une nouvelle émission 5 s après la précédente attend la fin des 30 s de repos");
+        harness.Send(Raw(180, 0));
+        harness.Run(1.2);
+        harness.Send(Raw(180, 255));
+        harness.Tick();
+        harness[180].ShouldBe((byte)255, "repos de 6 s terminé");
     }
 
     [Fact]

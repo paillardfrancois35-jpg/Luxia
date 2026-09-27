@@ -281,7 +281,7 @@
 
 ## P5 – 72 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 30 · Réalisé, à valider sur matériel : 14 · Validé : 11
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 30 · Réalisé, à valider sur matériel : 13 · Validé : 12
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -308,7 +308,7 @@
 | [GEN-073](exigences/GEN-073.md) | M | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [GEN-074](exigences/GEN-074.md) | S | Les affectations MIDI sont modifiables par « apprentissage » | Reporté (chantier ergonomie) |  |
 | [GEN-083](exigences/GEN-083.md) | I | Strobe | Réalisé | SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
-| [GEN-084](exigences/GEN-084.md) | I | Fumée | Réalisé, à valider sur matériel | LiveCommandTests.Smoke_HoldAndBurst_GoThroughTheLimiter<br>SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
+| [GEN-084](exigences/GEN-084.md) | I | Fumée | Réalisé, à valider sur matériel | LiveCommandTests.Smoke_HoldAndBurst_GoThroughTheLimiter<br>SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_RestsThreeTimesItsDuration |
 | [GEN-085](exigences/GEN-085.md) | I | Zones interdites Pan/Tilt par lieu et par lyre | Réalisé | SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [GEN-086](exigences/GEN-086.md) | M | Un signal visuel permanent en Live indique toute limite de sûreté active ou tout verrou | Réalisé |  |
 | [GEN-094](exigences/GEN-094.md) | M | Utilisation CPU moyenne < 15 % en Live | Réalisé, à valider sur matériel |  |
@@ -348,7 +348,7 @@
 | [MOT-072](exigences/MOT-072.md) | I | Flash | Validé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
 | [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Validé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
-| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | LiveUvRepeatTests.SmokeBurst_AfterTheRest_Emits3sWithoutAnyLimit<br>LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds<br>ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>(+2) |
+| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Validé | LiveUvRepeatTests.SmokeBurst_AfterTheRest_Emits3sWithoutAnyLimit<br>LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds<br>ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>(+2) |
 | [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | ReferenceShowP5Tests.Trap_LyreTowardsThePublic_StopsAtTheZoneEdge<br>SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>(+2) |
 | [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |

@@ -392,7 +392,7 @@ quand sa valeur tombe dans une plage `strobe` / `pulse` / `random`, et il est fo
 {
   "formatVersion": 1,
   "strobe": { "maxContinuousSeconds": 10, "pauseSeconds": 10, "forbidden": false, "maxSpeedPercent": 100 },
-  "smoke": { "maxEmissionSeconds": 10, "minRestSeconds": 30 }
+  "smoke": { "maxEmissionSeconds": 10, "minRestSeconds": 30, "restFactor": 3 }
 }
 ```
 
@@ -403,7 +403,8 @@ quand sa valeur tombe dans une plage `strobe` / `pulse` / `random`, et il est fo
 | `strobe.forbidden` | Strobe interdit partout |
 | `strobe.maxSpeedPercent` | Plafond de vitesse, en % de chaque plage de strobe progressive (100 = aucun) |
 | `smoke.maxEmissionSeconds` | Émission continue maximale de fumée (MOT-081), commande manuelle et surcharges comprises |
-| `smoke.minRestSeconds` | Repos minimal après **toute** émission |
+| `smoke.minRestSeconds` | Repos après une émission **coupée** par la limite, et plafond de tout repos |
+| `smoke.restFactor` | Repos après une émission **plus courte** que la limite = durée émise × ce facteur, plafonné à `minRestSeconds` (défaut 3 : une bouffée de 2 s → 6 s de repos ; la machine ne fume jamais plus d'un quart du temps). 0 = pas de repos après une émission courte |
 
 ## 12c. Projet : `live.json` (format 1)
 
