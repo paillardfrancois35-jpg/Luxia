@@ -279,9 +279,9 @@
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
 
-## P5 – 72 exigences, 50 couvertes par des tests automatiques
+## P5 – 73 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 22 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 6 · Validé : 27
+> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 21 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 4 · Validé : 31
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -296,12 +296,13 @@
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
 | [COU-008](exigences/COU-008.md) | M | Avertissement | Validé | ProjectProblemsTests.ProjectProblems_ShowTheOutOfFamilyWarning<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
 | [COU-009](exigences/COU-009.md) | S | Scène de repos par couche | Validé | LayersEditorViewModelTests.RestScene_ChoicesAreTheLayerScenes<br>LiveCommandTests.RestScene_PlaysWhenTheLayerIsEmpty |
-| [GEN-054](exigences/GEN-054.md) | I | Sauvegarde automatique du projet ouvert | Réalisé | ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
-| [GEN-055](exigences/GEN-055.md) | M | Conservation des N dernières versions du projet | Réalisé | ReliabilityTests.Restore_BringsBackTheFiles_AndKeepsTheCurrentStateAsAVersion<br>ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
+| [GEN-054](exigences/GEN-054.md) | I | Sauvegarde automatique du projet ouvert | Validé | ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
+| [GEN-055](exigences/GEN-055.md) | M | Conservation des N dernières versions du projet | Validé | ReliabilityTests.Restore_BringsBackTheFiles_AndKeepsTheCurrentStateAsAVersion<br>ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
 | [GEN-057](exigences/GEN-057.md) | M | Export / import d'un projet complet sous forme d'archive unique | Reporté (chantier ergonomie) |  |
 | [GEN-061](exigences/GEN-061.md) | I | Fondu au noir à la fermeture | Validé |  |
 | [GEN-062](exigences/GEN-062.md) | I | Le passage Atelier ↔ Live ne doit jamais interrompre la restitution en cours | Réalisé |  |
-| [GEN-064](exigences/GEN-064.md) | I | Démarrage jusqu'à « prêt en Live » en moins de 10 s | Réalisé, à valider sur matériel |  |
+| [GEN-064](exigences/GEN-064.md) | I | Démarrage jusqu'à « prêt en Live » en moins de 10 s | Validé |  |
+| [GEN-065](exigences/GEN-065.md) | M | Fenêtre de démarrage avec étapes et pourcentage | Réalisé |  |
 | [GEN-070](exigences/GEN-070.md) | I | Toute entrée | Réalisé |  |
 | [GEN-071](exigences/GEN-071.md) | I | Raccourcis clavier globaux en Live, actifs quel que soit le focus | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
 | [GEN-072](exigences/GEN-072.md) | M | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
@@ -311,7 +312,7 @@
 | [GEN-084](exigences/GEN-084.md) | I | Fumée | Validé | LiveCommandTests.Smoke_HoldAndBurst_GoThroughTheLimiter<br>SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_RestsThreeTimesItsDuration |
 | [GEN-085](exigences/GEN-085.md) | I | Zones interdites Pan/Tilt par lieu et par lyre | Réalisé | SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [GEN-086](exigences/GEN-086.md) | M | Un signal visuel permanent en Live indique toute limite de sûreté active ou tout verrou | Réalisé |  |
-| [GEN-094](exigences/GEN-094.md) | M | Utilisation CPU moyenne < 15 % en Live | Réalisé, à valider sur matériel |  |
+| [GEN-094](exigences/GEN-094.md) | M | Utilisation CPU moyenne < 15 % en Live | Validé |  |
 | [GEN-095](exigences/GEN-095.md) | M | Reprise après plantage | Validé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes<br>ReliabilityTests.CleanStop_OffersNothing |
 | [INST-053](exigences/INST-053.md) | I | Zones interdites par lyre, définies en visant à la main | Réalisé | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>ZonesEditorViewModelTests.AddWithoutLyre_ExplainsWhatToDo<br>ZonesEditorViewModelTests.AimTwoCorners_Save_ThenTheEngineKeepsTheLyreOut |
 | [INST-054](exigences/INST-054.md) | I | Les palettes de position sont stockées par lieu | Validé | VenuePaletteTests.CopyVenue_CopiesTheEffectivePositions |

@@ -382,6 +382,7 @@ Un **Projet** est un **dossier** de fichiers JSON (plutôt qu'un fichier unique)
 | GEN-062 | I | P5 | Le passage Atelier ↔ Live ne doit **jamais** interrompre la restitution en cours. | Passer en Live pendant qu'une scène tourne → aucune coupure. |
 | GEN-063 | M | P4 | Mode **aveugle** en Atelier : l'édition ne modifie pas la sortie ; l'aperçu reste visible au simulateur. | Éditer une scène en aveugle → trame inchangée, simulateur « aperçu » à jour. |
 | GEN-064 | I | P5 | Démarrage jusqu'à « prêt en Live » en moins de 10 s (projet de taille courante, PC standard). | Mesure. |
+| GEN-065 | M | P5 | **Fenêtre de démarrage** : dès le lancement, une petite fenêtre indique l'étape en cours (préférences et projet, moteur DMX et sorties, écrans) avec un pourcentage, puis disparaît à l'ouverture de la fenêtre principale. | Demande utilisateur (essai P5). |
 
 ---
 
