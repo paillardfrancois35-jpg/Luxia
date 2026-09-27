@@ -122,6 +122,37 @@ public sealed class ShowCompilerTests
 
     [Fact]
     [Trait("Exigence", "SCN-007")]
+    public void AutoSelection_WithCell_TargetsThatCellOfEachMember()
+    {
+        // Essai P5 : « UV plein » sans la rangée 4 → rangées 1 à 3 de tous les UV, la 4e jamais pilotée.
+        var scene = new Scene
+        {
+            Name = "UV sans rangée 4",
+            LayerId = LayerSet.IntensityLayerId,
+            Steps =
+            [
+                new SceneStep
+                {
+                    Values = [.. Enumerable.Range(1, 3).Select(cell => new SceneValue
+                    {
+                        Target = new ValueTarget { Auto = new AutoSelectionTarget(AutoSelectionKind.ByCategory, FixtureCategory.Uv), Cell = cell },
+                        Attribute = AttributeKind.Uv,
+                        Level = 1,
+                    })],
+                },
+            ],
+        };
+        var model = ShowCompiler.Compile(_project.Content(new SceneSet { Scenes = [scene] })).Model;
+        var uv = _project.Fixture("UV 1").Id;
+        var values = model.Scenes[0].Steps[0].Values;
+
+        values.ShouldContain(v => v.Parameter == model.IndexOf(uv, "uv1"));
+        values.ShouldContain(v => v.Parameter == model.IndexOf(uv, "uv3"));
+        values.ShouldNotContain(v => v.Parameter == model.IndexOf(uv, "uv4"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "SCN-007")]
     [Trait("Exigence", "SCN-010")]
     public void ManualSelection_KeepsItsOrder_ForTheFan()
     {

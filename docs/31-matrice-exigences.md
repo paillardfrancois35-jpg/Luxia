@@ -261,7 +261,7 @@
 | [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Validé |  |
 | [SCN-004](exigences/SCN-004.md) | I | Modification groupée des durées | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
 | [SCN-005](exigences/SCN-005.md) | I | Paramètres de lecture d'une scène | Réalisé |  |
-| [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Validé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
+| [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Validé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.AutoSelection_WithCell_TargetsThatCellOfEachMember<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
 | [SCN-008](exigences/SCN-008.md) | I | Valeur directe, palette ou plage | Réalisé | ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze<br>ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
 | [SCN-009](exigences/SCN-009.md) | I | Drapeau « Visible en Live » | Réalisé |  |
 | [SCN-010](exigences/SCN-010.md) | M | Retard par membre (« fan ») | Validé | ReferenceShowP4Tests.Wave_StartsEachParHalfASecondAfterItsNeighbour<br>ScenePlaybackTests.PerValueDelay_SpreadsTheFade_AcrossMembers<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
