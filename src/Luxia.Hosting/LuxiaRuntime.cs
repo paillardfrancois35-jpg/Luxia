@@ -640,6 +640,14 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     }
 
     /// <summary>
+    /// Problèmes du projet ouvert (menu Projet → Problèmes du projet) : ceux de la compilation, plus les règles vérifiées
+    /// par <c>luxia-headless valider</c> (COU-008 hors famille, COU-009 scène de repos, Live, MIDI…), sur les fichiers
+    /// enregistrés (chaque modification l'est tout de suite). Mêmes messages à l'écran et sans interface.
+    /// </summary>
+    public IReadOnlyList<Scenes.Compilation.CompileIssue> ProjectProblems() =>
+        Project.Folder is { } folder ? Tools.ProjectValidator.Validate(folder) : Show.Last?.Issues ?? [];
+
+    /// <summary>
     /// Trace une action de l'utilisateur (SORT-066) : « IHM – onglet – action » dans le journal technique et, pendant un
     /// enregistrement des trames, dans son journal, entre les lignes DMX.
     /// </summary>

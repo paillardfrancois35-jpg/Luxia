@@ -331,11 +331,14 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         await _dialogs.ShowInfoAsync("Import de scènes", string.Join(Environment.NewLine, result.Report.Prepend(summary))).ConfigureAwait(true);
     }
 
-    /// <summary>Problèmes trouvés en compilant le projet (références introuvables, valeurs ignorées).</summary>
+    /// <summary>
+    /// Problèmes du projet : compilation (références introuvables, valeurs ignorées) et règles d'organisation
+    /// (COU-008 hors famille…), les mêmes que <c>luxia-headless valider</c>.
+    /// </summary>
     [RelayCommand]
     private Task ShowProjectProblemsAsync()
     {
-        var issues = _runtime.Show.Last?.Issues ?? [];
+        var issues = _runtime.ProjectProblems();
         var text = issues.Count == 0
             ? "Aucun problème : toutes les scènes sont jouables telles quelles."
             : string.Join(Environment.NewLine, issues.Select(i => i.ToString()));

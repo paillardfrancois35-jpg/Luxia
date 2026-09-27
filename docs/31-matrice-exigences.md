@@ -294,7 +294,7 @@
 | [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Validé | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
-| [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
+| [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ProjectProblemsTests.ProjectProblems_ShowTheOutOfFamilyWarning<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
 | [COU-009](exigences/COU-009.md) | S | Scène de repos par couche | Réalisé | LayersEditorViewModelTests.RestScene_ChoicesAreTheLayerScenes<br>LiveCommandTests.RestScene_PlaysWhenTheLayerIsEmpty |
 | [GEN-054](exigences/GEN-054.md) | I | Sauvegarde automatique du projet ouvert | Réalisé | ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
 | [GEN-055](exigences/GEN-055.md) | M | Conservation des N dernières versions du projet | Réalisé | ReliabilityTests.Restore_BringsBackTheFiles_AndKeepsTheCurrentStateAsAVersion<br>ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
