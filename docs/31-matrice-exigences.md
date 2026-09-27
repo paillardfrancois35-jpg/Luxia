@@ -281,7 +281,7 @@
 
 ## P5 – 72 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 26 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 7 · Validé : 22
+> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 23 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 7 · Validé : 25
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -314,7 +314,7 @@
 | [GEN-094](exigences/GEN-094.md) | M | Utilisation CPU moyenne < 15 % en Live | Réalisé, à valider sur matériel |  |
 | [GEN-095](exigences/GEN-095.md) | M | Reprise après plantage | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes<br>ReliabilityTests.CleanStop_OffersNothing |
 | [INST-053](exigences/INST-053.md) | I | Zones interdites par lyre, définies en visant à la main | Réalisé | SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>ZonesEditorViewModelTests.AddWithoutLyre_ExplainsWhatToDo<br>ZonesEditorViewModelTests.AimTwoCorners_Save_ThenTheEngineKeepsTheLyreOut |
-| [INST-054](exigences/INST-054.md) | I | Les palettes de position sont stockées par lieu | Réalisé | VenuePaletteTests.CopyVenue_CopiesTheEffectivePositions |
+| [INST-054](exigences/INST-054.md) | I | Les palettes de position sont stockées par lieu | Validé | VenuePaletteTests.CopyVenue_CopiesTheEffectivePositions |
 | [INST-070](exigences/INST-070.md) | M | L'assistant enchaîne les étapes ci-dessus, chacune pouvant être passée | Reporté (chantier ergonomie) |  |
 | [INST-071](exigences/INST-071.md) | M | Test appareil par appareil avec résultat | Reporté (chantier ergonomie) |  |
 | [INST-072](exigences/INST-072.md) | M | Calibration des positions | Partiel |  |
@@ -352,8 +352,8 @@
 | [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | ReferenceShowP5Tests.Trap_LyreTowardsThePublic_StopsAtTheZoneEdge<br>SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>(+2) |
 | [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |
-| [PAL-004](exigences/PAL-004.md) | I | Palettes de position par lieu | Réalisé | VenuePaletteTests.GenericVenue_HasNoKey<br>VenuePaletteTests.Merge_ReplacesOnlyTheCapturedFixtures_InTheActiveVenue_AndAddsAFallback<br>VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
-| [PAL-008](exigences/PAL-008.md) | M | Palettes de position manquantes dans un lieu | Réalisé | VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
+| [PAL-004](exigences/PAL-004.md) | I | Palettes de position par lieu | Validé | VenuePaletteTests.GenericVenue_HasNoKey<br>VenuePaletteTests.Merge_ReplacesOnlyTheCapturedFixtures_InTheActiveVenue_AndAddsAFallback<br>VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
+| [PAL-008](exigences/PAL-008.md) | M | Palettes de position manquantes dans un lieu | Validé | VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
 | [PAL-010](exigences/PAL-010.md) | S | Palettes de combinaisons de couleurs | Reporté (P6) |  |
 | [SORT-065](exigences/SORT-065.md) | M | Enregistrement des trames visible, chemin copiable | Réalisé |  |
 | [SORT-066](exigences/SORT-066.md) | M | Journal de l'enregistrement : actions, commandes et canaux entrelacés | Réalisé | LiveUvRepeatTests.Recording_JournalInterleavesClicksCommandsAndChannelChanges |

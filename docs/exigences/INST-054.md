@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 13 – 5.2 Exigences](../13-installation-et-lieux.md) |
@@ -30,3 +30,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 13, 5.2 Exigences). |
 | 2026-09-26 | Claude | Développement | `4070786` feat(palettes): positions par lieu avec repli sur Générique, zones interdites saisies en visant |
+| 2026-09-27 | Utilisateur | Test | Exemple 11 : lieu « Garage » dupliqué du Générique et activé ; « Piste centre » recalée pour la lyre 1 au Garage (clic droit → Mettre à jour depuis le programmeur) ; retour au Générique = ancienne position, retour au Garage = nouveau point ; avertissement des positions non calées dans Problèmes du projet. Validé. |

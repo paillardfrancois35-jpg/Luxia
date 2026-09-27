@@ -274,7 +274,7 @@
 | [INST-051](INST-051.md) | Éditeur de plan | P3 | I | Partiel |
 | [INST-052](INST-052.md) | Appareil absent | P3 | I | Réalisé |
 | [INST-053](INST-053.md) | Zones interdites par lyre, définies en visant à la main | P5 | I | Réalisé |
-| [INST-054](INST-054.md) | Les palettes de position sont stockées par lieu | P5 | I | Réalisé |
+| [INST-054](INST-054.md) | Les palettes de position sont stockées par lieu | P5 | I | Validé |
 | [INST-070](INST-070.md) | L'assistant enchaîne les étapes ci-dessus, chacune pouvant être passée | P5 | M | Reporté (chantier ergonomie) |
 | [INST-071](INST-071.md) | Test appareil par appareil avec résultat | P5 | M | Reporté (chantier ergonomie) |
 | [INST-072](INST-072.md) | Calibration des positions | P5 | M | Partiel |
@@ -349,11 +349,11 @@
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
-| [PAL-004](PAL-004.md) | Palettes de position par lieu | P5 | I | Réalisé |
+| [PAL-004](PAL-004.md) | Palettes de position par lieu | P5 | I | Validé |
 | [PAL-005](PAL-005.md) | Les scènes suivent les palettes | P4 | I | Validé |
 | [PAL-006](PAL-006.md) | Suppression d'une palette utilisée | P4 | I | Réalisé |
 | [PAL-007](PAL-007.md) | Grilles de palettes | P4 | M | Partiel |
-| [PAL-008](PAL-008.md) | Palettes de position manquantes dans un lieu | P5 | M | Réalisé |
+| [PAL-008](PAL-008.md) | Palettes de position manquantes dans un lieu | P5 | M | Validé |
 | [PAL-009](PAL-009.md) | Jeu de palettes couleur par défaut | P4 | M | Réalisé |
 | [PAL-010](PAL-010.md) | Palettes de combinaisons de couleurs | P5 | S | Reporté (P6) |
 | [SCN-001](SCN-001.md) | Créer, dupliquer, renommer, supprimer une scène | P4 | I | Validé |
