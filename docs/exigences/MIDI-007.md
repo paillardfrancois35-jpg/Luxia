@@ -31,3 +31,5 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Exigences). |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
+| 2026-09-27 | Utilisateur | Question | « Tu veux qu'on associe forcément cette couche Live à la platine ? Daslight permettait de faire ce qu'on veut avec une platine MIDI. » |
+| 2026-09-27 | Claude | Réponse | Non : les colonnes du Live ne sont que l'affectation par défaut ; `midi.json` affecte n'importe quel pad, bouton ou fader à n'importe quelle action (scène de n'importe quelle couche, master d'une couche au choix, Grand Master, blackout…), par modèle. Manquent : l'affectation à l'écran (MIDI-008, reportée) et un catalogue d'actions plus riche (idée « accroches », doc 99). Fader d'une colonne sans effet : ne fait rien (réponse utilisateur). |

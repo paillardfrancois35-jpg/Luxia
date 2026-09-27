@@ -42,7 +42,7 @@ Renommez `"name"` en « Show de travail » dans `samples/Show de travail/projet.
 2. Colonne **Intensité** : **Plein feu** → tout le parc s'allume en rouge.
 3. Colonne **Couleurs** : **Bleu – couleur seule** → le rouge cède la place au bleu en fondu croisé (la couche est exclusive) ; l'intensité ne bouge pas.
 4. Colonne **Mouvements** : **Lyres : piste centre** puis **Lyres : plafond** → les lyres bougent, couleur et intensité gardées.
-5. **Intensité 50 %** : tout baisse de moitié, couleur et position gardées. Master d'une colonne (curseur en bas) : n'agit que sur sa couche.
+5. **Intensité 50 %** : tout baisse de moitié, couleur et position gardées. Le master d'une colonne (curseur en bas) agit sur les **intensités** de sa couche : sans effet sur une couche qui n'en contient pas (couleurs seules, positions) ; essayez-le sur la colonne **Intensité**.
 6. **Ce que ça illustre** : peu de scènes, beaucoup de combinaisons. Clic sur une scène qui joue = l'arrêter.
 
 ## Exemple 2 – Flash et blackout partiel (MOT-072, COU-005, LIVE-004)
