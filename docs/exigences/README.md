@@ -331,7 +331,7 @@
 | [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
 | [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
 | [MOT-072](MOT-072.md) | Flash | P5 | I | Validé |
-| [MOT-073](MOT-073.md) | Figer | P5 | I | Réalisé |
+| [MOT-073](MOT-073.md) | Figer | P5 | I | Validé |
 | [MOT-074](MOT-074.md) | Surcharges conformes à la chaîne de rendu | P1 | I | Réalisé |
 | [MOT-075](MOT-075.md) | Identifier un appareil au-dessus de tout | P3 | I | Réalisé |
 | [MOT-080](MOT-080.md) | Limiteur de strobe | P5 | I | Validé |
