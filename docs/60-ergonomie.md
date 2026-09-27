@@ -14,6 +14,17 @@ Demandé par l'utilisateur (doc 99, 2026-09-26 et 2026-09-27) :
 
 **Écarté pour le moment** : la 3D (décision de l'utilisateur). Le simulateur reste en 2D.
 
+**Finalité rappelée par l'utilisateur (2026-09-27)** : le but est un **mode automatique** — écoute du titre en cours,
+détermination du style, choix d'un show adapté à ce style, et **réactions en surcouche** à la musique (le morceau se calme :
+changement d'ambiance ; il repart : un show est réactivé). La platine ne sert alors qu'à **quelques interventions** : couleur
+fixe (temps mort), coup de strobe, blackout… L'utilisateur n'est ni DJ ni éclairagiste : **LuXia est une porte d'entrée vers
+la création de shows par l'IA**, l'utilisateur ne faisant que des retouches. Mais les notions de fond (équipements, lieux,
+palettes, scènes) doivent rester **compréhensibles**.
+
+Ce qui en découle pour l'ergonomie : (a) l'écran le plus important à terme est celui du **spectacle automatique**
+(ce qui joue, pourquoi, et quelques boutons d'intervention) ; (b) l'édition fine est secondaire mais doit être **claire** ;
+(c) chaque notion doit s'expliquer d'elle-même (aide intégrée, vocabulaire unique).
+
 Contraintes qui ne changent pas : Live toujours prioritaire et jamais interrompu (GEN-062), blackout et Grand Master toujours
 visibles, tout se fait aussi sans souris pour le jeu (clavier, APC mini), et **l'IA construit les shows** (GEN-130 à 134) :
 l'écran sert surtout à jouer, régler et vérifier, pas à tout saisir à la main.
@@ -132,6 +143,29 @@ Un seul mécanisme : bouton « Affecter » (MIDI, clavier) dans l'en-tête ; tou
 le contrôle, puis on appuie sur la touche / le pad / le fader. La liste des affectations s'édite dans un panneau. Réalise
 MIDI-008 et LIVE-041, remplace l'édition à la main de `midi.json` pour l'utilisateur (le fichier reste la référence pour l'IA).
 
+### 4.8 Déclencheurs : n'importe quelle entrée, une ou plusieurs actions
+
+Constat : aujourd'hui une affectation relie **un** contrôle de l'APC à **une** action (`midi.json`), la grille suit les
+colonnes du Live (8 lignes, puis pages avec Shift), le clavier est figé, l'entrée DMX n'existe pas.
+
+Proposition (idée reprise de Daslight, où une même touche peut commander plusieurs éléments) : un **déclencheur** relie
+**une entrée** à **une liste d'actions**.
+
+| Élément | Choix |
+|---|---|
+| Entrée | touche du clavier (avec ou sans modificateur), note / fader MIDI de n'importe quel contrôleur, **canal DMX entrant** (plus tard : il faut une entrée DMX — le futur renifleur Leonardo pourra en servir), événement du mode automatique (P10) |
+| Actions | lancer / arrêter / basculer une ou **plusieurs** scènes, flash, blackout, strobe, fumée, figer, master d'une couche, Grand Master, palette rapide sur une sélection, **appeler un « look »** (voir ci-dessous) |
+| Comportement | appui (bascule), maintien (flash : actif tant qu'on appuie), valeur (fader) ; pour un fader : plage min / max |
+| Retour | LED du contrôleur selon l'état (déjà en place pour l'APC) |
+
+Un **look** (ou « préréglage de soirée ») est une liste nommée d'actions — par exemple « Temps mort » = arrêter les effets,
+lancer « Ambre – couleur seule », baisser l'intensité à 40 % — appelable par un déclencheur, par le Live ou par le mode
+automatique. C'est le même objet qui servira aux **commandes en surcouche** du mode auto (« la musique se calme → look
+calme »).
+
+La disposition par défaut de l'APC (grille = colonnes) reste proposée, mais comme **un ensemble de déclencheurs parmi
+d'autres**, modifiable par la surcouche « Affecter » (§4.7). `midi.json` devient `declencheurs.json` (toutes les entrées).
+
 ## 5. Composants communs (catalogue)
 
 Tous dans `Luxia.UI.Controls`, dessinés en 2D Avalonia, chacun avec son test et sa capture dans une **galerie** (écran de
@@ -193,8 +227,24 @@ restant une disposition dépouillée de la même chose.
 | E7 | Verrou soirée (§4.6) ? | Oui, simple |
 | E8 | Ordre : prototype, puis maquettes Contrôle, puis le reste (§7) ? | Oui |
 
+### 8.1 Décisions plus fines (à trancher avant les maquettes)
+
+| # | Question | Proposition |
+|---|---|---|
+| F1 | **Déclencheurs** (§4.8) : une entrée → plusieurs actions ; clavier, MIDI, DMX (plus tard) ; « looks » réutilisés par le mode auto | Oui |
+| F2 | Surcharge LIVE quand une scène qui utilise le même canal est lancée : la surcharge **reste** (jusqu'à « Libérer ») ou **cède** à la scène ? (Daslight propose les deux) | Reste — c'est une intervention voulue |
+| F3 | Annuler / rétablir : sur **tout le projet** (installation, scènes, palettes, couches) mais **jamais** sur ce qui a été joué (lancer une scène ne s'annule pas) | Oui |
+| F4 | Valeurs affichées : **%** partout par défaut, **0-255** au choix (bascule dans le panneau Faders), degrés pour Pan / Tilt | Oui |
+| F5 | Vocabulaire : on garde **couche** (Daslight dit « banque »), **sélection** (groupe d'appareils), **palette**, **lieu**, **look** ; chaque mot a une **infobulle d'explication** et une entrée du glossaire | Oui |
+| F6 | **Aide intégrée** : un bouton « ? » par panneau qui explique la notion en 3 lignes (ce que c'est, à quoi ça sert, un exemple) ; pas de visite guidée | Oui |
+| F7 | Zones de mouvement : garder les **zones interdites** et ajouter une **zone permise** (limites de la lyre, comme Daslight), dessinées sur la même grille | Oui, zone permise en option |
+| F8 | Taille de l'interface : un réglage « échelle » (100 / 125 / 150 %) pour écran tactile ou lecture de loin | Oui |
+| F9 | Écran distant (tablette, téléphone, comme Daslight Remote) | Plus tard, pas dans ce chantier |
+| F10 | Place réservée dès maintenant au **panneau du pilote automatique** (titre, style, show choisi, raison, boutons d'intervention = looks) dans la disposition « Spectacle » | Oui, vide jusqu'à P10 |
+
 ## 9. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | Version 1.1 : finalité (mode automatique, IA), déclencheurs multi-actions et « looks » (§4.8), décisions fines F1-F10 (§8.1). |
 | 2026-09-27 | Version 1 : lecture Daslight 4 / 5, inventaire des 8 écrans de LuXia v1.004, charte, composants, modules, décisions E1-E8. |
