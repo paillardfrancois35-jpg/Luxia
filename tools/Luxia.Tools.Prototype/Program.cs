@@ -5,7 +5,8 @@ namespace Luxia.Tools.Prototype;
 
 /// <summary>
 /// Prototype ergonomique (doc 60 §7.2) : <c>LuXia-Prototype</c> ouvre la fenêtre ;
-/// <c>LuXia-Prototype --captures "&lt;dossier&gt;"</c> écrit les images de la galerie et des dispositions sans écran.
+/// <c>LuXia-Prototype --captures "&lt;dossier&gt;"</c> écrit les images de la galerie et des dispositions sans écran ;
+/// <c>--maquettes "&lt;dossier&gt;"</c> celles des maquettes de la disposition Contrôle.
 /// </summary>
 internal static class Program
 {
@@ -15,9 +16,9 @@ internal static class Program
     [STAThread]
     public static int Main(string[] args)
     {
-        if (args.Length >= 2 && args[0] == "--captures")
+        if (args.Length >= 2 && args[0] is "--captures" or "--maquettes")
         {
-            return HeadlessCaptures.Run(Path.GetFullPath(args[1]));
+            return HeadlessCaptures.Run(Path.GetFullPath(args[1]), mockups: args[0] == "--maquettes");
         }
 
         using var mutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out var createdNew);

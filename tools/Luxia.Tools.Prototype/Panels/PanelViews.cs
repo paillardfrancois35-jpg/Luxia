@@ -37,7 +37,8 @@ internal static class PanelViews
         view.DetachedFromVisualTree += (_, _) => state.Changed -= OnChanged;
     }
 
-    private static Panel WithHelp(Control content, PanelInfo info)
+    /// <summary>Ajoute le bouton « ? » (F6) en haut à droite d'un contenu de panneau.</summary>
+    public static Panel WithHelp(Control content, PanelInfo info)
     {
         var help = new Button
         {

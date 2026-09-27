@@ -15,6 +15,7 @@ public sealed class App : Application
 
         // Au niveau de l'application, pas de la fenêtre : un panneau détaché vit dans une autre fenêtre (HostWindow)
         // et doit y retrouver son contenu.
+        DataTemplates.Add(new Mockups.MockPanelTemplate());
         DataTemplates.Add(new PanelTemplate(DemoState.Shared));
     }
 

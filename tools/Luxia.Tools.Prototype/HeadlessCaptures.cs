@@ -13,13 +13,28 @@ namespace Luxia.Tools.Prototype;
 /// </summary>
 internal static class HeadlessCaptures
 {
-    public static int Run(string output)
+    public static int Run(string output, bool mockups = false)
     {
         Directory.CreateDirectory(output);
         AppBuilder.Configure<App>()
             .UseSkia()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false })
             .SetupWithoutStarting();
+
+        if (mockups)
+        {
+            // Maquettes de la disposition Contrôle (ERG-007), en 1920 × 1080.
+            foreach (var scenario in Mockups.MockScenario.All)
+            {
+                var mockup = new Mockups.MockupWindow(scenario);
+                mockup.Show();
+                Capture(mockup, output, scenario.FileName);
+                mockup.Close();
+            }
+
+            Environment.Exit(0);
+            return 0;
+        }
 
         var store = new LayoutStore(Path.Combine(Path.GetTempPath(), "luxia-prototype", Guid.NewGuid().ToString("N")));
 

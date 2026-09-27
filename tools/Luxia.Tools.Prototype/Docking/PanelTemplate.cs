@@ -12,7 +12,7 @@ namespace Luxia.Tools.Prototype.Docking;
 internal sealed class PanelTemplate(DemoState state) : IDataTemplate
 {
     /// <inheritdoc />
-    public bool Match(object? data) => data is Tool;
+    public bool Match(object? data) => data is Tool and not Mockups.MockPanel;
 
     /// <inheritdoc />
     public Control? Build(object? param) => param is Tool tool ? PanelViews.Create(tool.Id, state) : null;

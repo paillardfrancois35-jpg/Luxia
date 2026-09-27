@@ -13,6 +13,7 @@ internal static class PanelCatalog
     public const string Columns = "colonnes";
     public const string Properties = "proprietes";
     public const string FixturePlan = "plan";
+    public const string Settings = "reglages";
     public const string Position = "position";
     public const string Color = "couleur";
     public const string Log = "journal";
@@ -25,6 +26,7 @@ internal static class PanelCatalog
         new(Columns, "Colonnes", "Les couches en colonnes et leurs scènes : on joue ici (grande zone du bouton) et on choisit la scène à éditer (bande de droite).", true),
         new(Properties, "Propriétés", "Réglages de la scène ou de la couche choisie : nom, couleur, vitesse, fondus, étapes.", true),
         new(FixturePlan, "Plan des appareils", "Le plan du lieu, vu de dessus : on y sélectionne les appareils pour tous les autres panneaux.", true),
+        new(Settings, "Réglages des appareils", "Les réglages des appareils sélectionnés sur le plan, par famille (Intensité, Couleur, Position, Faisceau, Autres, Faders). La pastille dit si la valeur est une surcharge LIVE (jaune) ou enregistrée dans la scène (verte).", true),
         new(Position, "Position", "Visée des lyres sur la grille Pan / Tilt, et zones interdites ou permises.", false),
         new(Color, "Couleur", "Couleur des appareils sélectionnés : teinte, saturation, intensité, favoris.", false),
         new(Log, "Journal", "Ce qui vient de se passer, du plus récent au plus ancien.", false),

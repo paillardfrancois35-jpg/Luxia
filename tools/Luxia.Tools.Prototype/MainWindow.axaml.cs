@@ -20,6 +20,15 @@ public sealed partial class MainWindow : Window
         var menu = (MenuFlyout)PanelsButton.Flyout!;
         menu.Opening += (_, _) => FillPanelsMenu(menu, shell);
         Closing += (_, _) => shell.Close();
+
+        // ERG-007 : chaque maquette s'ouvre dans sa fenêtre, pour la regarder en vrai (panneaux déplaçables).
+        var mockups = (MenuFlyout)MockupsButton.Flyout!;
+        foreach (var scenario in Mockups.MockScenario.All)
+        {
+            var item = new MenuItem { Header = scenario.Title };
+            item.Click += (_, _) => new Mockups.MockupWindow(scenario).Show();
+            mockups.Items.Add(item);
+        }
     }
 
     // Le menu est refait à chaque ouverture : il dit où est chaque panneau (affiché, replié, fermé).

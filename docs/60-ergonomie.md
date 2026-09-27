@@ -272,7 +272,12 @@ CONS-061) gardent leur identifiant et leur fiche.
   (`PrototypeDockFactory.ShowPanel`).
 - **Fichiers** : `%AppData%\LuXia\prototype\disposition-controle.json` et `disposition-spectacle.json`, enveloppe
   versionnée LuXia (`formatVersion` 1) autour du texte de Dock (≈ 40 Ko, verbeux mais lisible).
+- **Écart à corriger au développement** : les menus propres à Dock (▾ d'un panneau : *Float*, *Close*…) sont en
+  anglais, alors que l'interface est en français (doc 03 §2) ; à franciser en surchargeant les gabarits de Dock.
 - **Mesures** (ERG-006) : à relever avec l'utilisateur sur son poste (panneau Mesures).
+- **Maquettes** (ERG-007, §7.3) : `LuXia-Prototype --maquettes <dossier>` (1920 × 1080) et bouton **Maquettes ▾** du
+  prototype ; images dans [maquettes/](maquettes/) : LIVE, ÉDITION, AVEUGLE, zones. Validation : Q35. Guide d'essai :
+  [demos/ERG-prototype-et-maquettes.md](demos/ERG-prototype-et-maquettes.md).
 
 ## 11. Historique
 

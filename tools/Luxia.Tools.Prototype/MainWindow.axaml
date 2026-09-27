@@ -25,6 +25,12 @@
         </Button>
         <Button Content="Rétablir la disposition" Command="{Binding ResetLayoutCommand}"
                 ToolTip.Tip="Oublier la disposition enregistrée et revenir à celle livrée." />
+        <Button x:Name="MockupsButton" Content="Maquettes ▾" Margin="16,0,0,0"
+                ToolTip.Tip="Ouvrir une maquette de la disposition Contrôle (données fictives).">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft" />
+          </Button.Flyout>
+        </Button>
       </StackPanel>
     </Border>
     <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="10,3">
