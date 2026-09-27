@@ -138,7 +138,7 @@
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
 | [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
-| [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Réalisé, à valider sur matériel |
+| [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -211,7 +211,7 @@
 | [GEN-070](GEN-070.md) | Toute entrée | P5 | I | Réalisé |
 | [GEN-071](GEN-071.md) | Raccourcis clavier globaux en Live, actifs quel que soit le focus | P5 | I | Partiel |
 | [GEN-072](GEN-072.md) | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | P5 | M | Réalisé, à valider sur matériel |
-| [GEN-073](GEN-073.md) | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | P5 | M | Réalisé, à valider sur matériel |
+| [GEN-073](GEN-073.md) | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | P5 | M | Validé |
 | [GEN-074](GEN-074.md) | Les affectations MIDI sont modifiables par « apprentissage » | P5 | S | Reporté (chantier ergonomie) |
 | [GEN-080](GEN-080.md) | Perte du PC : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-081](GEN-081.md) | Arrêt anormal de l'application : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |

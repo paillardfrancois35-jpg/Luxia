@@ -281,7 +281,7 @@
 
 ## P5 – 73 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 21 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 4 · Validé : 31
+> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 21 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 3 · Validé : 32
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -306,7 +306,7 @@
 | [GEN-070](exigences/GEN-070.md) | I | Toute entrée | Réalisé |  |
 | [GEN-071](exigences/GEN-071.md) | I | Raccourcis clavier globaux en Live, actifs quel que soit le focus | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
 | [GEN-072](exigences/GEN-072.md) | M | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
-| [GEN-073](exigences/GEN-073.md) | M | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
+| [GEN-073](exigences/GEN-073.md) | M | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | Validé | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [GEN-074](exigences/GEN-074.md) | S | Les affectations MIDI sont modifiables par « apprentissage » | Reporté (chantier ergonomie) |  |
 | [GEN-083](exigences/GEN-083.md) | I | Strobe | Réalisé | SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
 | [GEN-084](exigences/GEN-084.md) | I | Fumée | Validé | LiveCommandTests.Smoke_HoldAndBurst_GoThroughTheLimiter<br>SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_RestsThreeTimesItsDuration |
