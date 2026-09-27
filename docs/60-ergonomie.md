@@ -1,7 +1,8 @@
 # 60 – Ergonomie : charte d'interaction, composants, modules
 
-> Chantier ouvert le 2026-09-27, à la validation de `v1.004` (branche `ergo/analyse`). **Version 1 de l'analyse** : à discuter
-> avec l'utilisateur avant toute maquette ou tout développement. Les décisions à prendre sont listées au §8 (et dans le doc 01).
+> Chantier ouvert le 2026-09-27, à la validation de `v1.004` (branche `ergo/analyse`). **Analyse validée par l'utilisateur le
+> 2026-09-27 : toutes les propositions du §8 (E1-E8) et du §8.1 (F1-F10) sont acceptées.** Suite : prototype technique puis
+> maquettes (§7), dans une nouvelle discussion.
 
 ## 1. Cadrage
 
@@ -216,7 +217,7 @@ restant une disposition dépouillée de la même chose.
 
 ## 8. Décisions à prendre avec l'utilisateur
 
-| # | Question | Proposition |
+| # | Question | Décision (utilisateur, 2026-09-27 : « d'accord pour tout ») |
 |---|---|---|
 | E1 | Modèle d'édition : trois modes ÉDITION / AVEUGLE / LIVE (§4.1), fin du programmeur-brouillon ? | Oui |
 | E2 | Fusion Scènes + Live en une disposition « Contrôle » (bouton de scène à deux zones), le Live devenant la disposition « Spectacle » ? | Oui |
@@ -229,7 +230,7 @@ restant une disposition dépouillée de la même chose.
 
 ### 8.1 Décisions plus fines (à trancher avant les maquettes)
 
-| # | Question | Proposition |
+| # | Question | Décision (utilisateur, 2026-09-27 : « d'accord pour tout ») |
 |---|---|---|
 | F1 | **Déclencheurs** (§4.8) : une entrée → plusieurs actions ; clavier, MIDI, DMX (plus tard) ; « looks » réutilisés par le mode auto | Oui |
 | F2 | Surcharge LIVE quand une scène qui utilise le même canal est lancée : la surcharge **reste** (jusqu'à « Libérer ») ou **cède** à la scène ? (Daslight propose les deux) | Reste — c'est une intervention voulue |
@@ -246,5 +247,6 @@ restant une disposition dépouillée de la même chose.
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | Analyse **validée** : E1-E8 et F1-F10 acceptés tels que proposés. |
 | 2026-09-27 | Version 1.1 : finalité (mode automatique, IA), déclencheurs multi-actions et « looks » (§4.8), décisions fines F1-F10 (§8.1). |
 | 2026-09-27 | Version 1 : lecture Daslight 4 / 5, inventaire des 8 écrans de LuXia v1.004, charte, composants, modules, décisions E1-E8. |

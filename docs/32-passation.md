@@ -1,8 +1,9 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** et fusionnée dans `main`
-> (étiquette **`v1.004`**). Prochain chantier : **analyse ergonomique** (branche dédiée), puis P6.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** (`main`, étiquette
+> **`v1.004`**) ; **analyse ergonomique validée** (doc 60, branche `ergo/analyse`). Prochain chantier : **ergonomie — prototype
+> technique puis maquettes** (doc 60 §7), avant P6.
 
 ## 1. Où en est-on
 
@@ -102,6 +103,21 @@
   - **Prochain chantier : analyse ergonomique** (demande de l'utilisateur) : charte d'interaction et catalogue de composants communs,
     contrôles 2D sur mesure (plan Pan/Tilt, roue de couleurs, effets), modules détachables / réagençables (ancrage type Dock),
     place réservée à la 3D (prototype isolé), captures Daslight 4/5 comme sources de principes. Idées déjà notées dans le doc 99.
+- **Chantier ergonomique — analyse validée le 2026-09-27** (branche `ergo/analyse`, poussée ; `main` a reçu la mise à jour
+  documentaire) : [60 – Ergonomie](60-ergonomie.md). Principes retenus de Daslight 4 / 5, constat des 8 écrans, **charte
+  d'interaction** (modes ÉDITION / AVEUGLE / LIVE, enregistrement immédiat + annuler, états visibles, clic droit partout,
+  couleurs à sens fixe, verrou soirée), **déclencheurs** (une entrée clavier / MIDI / DMX → plusieurs actions ; **looks**
+  réutilisés par le mode automatique), **composants 2D communs** (fader, grille Pan/Tilt, sélecteur de couleur, molette,
+  bouton de scène, plan des appareils, bande d'étapes, galerie), **modules ancrables et détachables** (*Dock*, dispositions
+  Contrôle / Installation / Spectacle / deux écrans). **Toutes les décisions E1-E8 et F1-F10 acceptées** (Q34). 3D écartée.
+  - **Étape suivante (nouvelle discussion)** : §7.2 **prototype technique** — ancrage *Dock* sous Avalonia 12, grille Pan/Tilt,
+    sélecteur de couleur, galerie de composants, enregistrement de la disposition ; puis §7.3 **maquettes** en images de la
+    disposition « Contrôle » (scènes + réglages des appareils + zones), à faire valider **avant** tout développement.
+  - Finalité rappelée par l'utilisateur : **mode automatique** (titre → style → show ; looks en surcouche quand la musique
+    se calme ou repart) ; LuXia = porte d'entrée vers la création de shows **par l'IA** ; l'écran « Spectacle / pilote
+    automatique » est la cible, l'édition fine doit surtout être **compréhensible** (aide « ? », vocabulaire unique).
+  - Les exigences d'ergonomie à créer (fiches) le seront au fil du chantier ; les 11 exigences « Reporté (chantier
+    ergonomie) » de P5 y sont rattachées (LIVE-006/007/011/041, MIDI-008/009, GEN-057/074, INST-070/071, CONS-061).
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -130,6 +146,7 @@
 | `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
 | `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, **midi**, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
 | `tools/Luxia.Tools.Captures` | Rendu hors écran de la fenêtre principale en PNG (Avalonia.Headless), sur une copie du projet : vérifier une mise en page sans lancer LuXia | `Program.cs` |
+| `tools/fiche-exigences.py` | Crée / met à jour les fiches `docs/exigences/*.md` à partir d'une liste JSON (statut, historique en ajout seul) ; puis `tools/matrice-exigences.py` | en-tête du script |
 | `firmware/arduino-dmx` | Firmware Leonardo 1.0 (Enttec) | `arduino-dmx.ino` |
 
 Tests : un projet par module + `Luxia.Integration.Tests` (rejeu du show de référence) + `Luxia.UI.Tests` (modèles de vue sans interface).
@@ -141,6 +158,7 @@ dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
 python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5
+PYTHONIOENCODING=utf-8 python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- valider "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- jouer "samples/Show de référence" --scene "Chenillard 4 couleurs" --duree 3
@@ -194,3 +212,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-26 | P4 | Guide P4 déroulé pas à pas avec l'utilisateur sur le matériel (exemples 1 à 12, tous conformes). Corrigés/ajoutés au fil de l'eau, chacun avec sa fiche : blanc chaud, vitesse en direct, enregistrement robuste (GEN-118), exceptions journalisées (GEN-117), Ctrl+Z/Y, bouton de mise à jour de palette, case Aveugle, numéro de compilation (GEN-119). Remarque utilisateur : ergonomie d'ensemble à reprendre plus tard (doc 99), non bloquante. **Validée, fusionnée dans `main`, étiquette `v1.003`.** Prochaine étape : P5. |
 | 2026-09-27 | P5 | Couches, Palettes, Live, MIDI développés sur `p5/couches-palettes-live` (questions Q28 à Q32 tranchées au démarrage, développement en autonomie, essais de l'utilisateur à la fin) : sûreté (D29), couches complètes, positions par lieu, zones interdites, écran Live, APC mini (`Luxia.Midi`, D30), fiabilité (D31), contenu et trames de référence P5, guide P5. 75 exigences P5 (43 Réalisé, 14 à valider sur matériel, 6 Partiel, 12 reportées). **En attente des essais de l'utilisateur**, puis proposition de l'analyse ergonomique avant `v1.004`. |
 | 2026-09-27 | P5 | Guide P5 déroulé pas à pas avec l'utilisateur au matériel (exemples 1 à 13). Corrigés au fil de l'eau, chacun avec sa fiche : trois courses écran / moteur, cellule des sélections automatiques, Problèmes du projet, fumée, clavier, MIDI rapide, fenêtre de démarrage ; parc réel corrigé (BUV463 8 canaux, WT05). 505 tests verts. **Validée, fusionnée dans `main`, étiquette `v1.004`.** Prochaine étape : analyse ergonomique. |
+| 2026-09-27 | Ergonomie | Documentation remise à jour après P5 (anciens noms `Dmx.*` corrigés, notes de modules, doc 03 §11). Analyse ergonomique menée dans la discussion de P5 : lecture Daslight 4 / 5, captures des écrans, doc 60 (charte, déclencheurs et looks, composants, modules) ; **validée par l'utilisateur** (E1-E8, F1-F10). Outil `tools/fiche-exigences.py` versé au dépôt. Suite dans une nouvelle discussion : prototype technique puis maquettes. |
