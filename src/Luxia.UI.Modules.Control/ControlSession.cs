@@ -218,6 +218,42 @@ public sealed class ControlSession
         Push();
     }
 
+    /// <summary>
+    /// Modifie la scène éditée (nom, lecture, étapes…) : geste écrit par <see cref="Commit"/>, annulable.
+    /// <paramref name="step"/> donne l'étape choisie après la modification (ajout, déplacement, suppression d'étape).
+    /// </summary>
+    public void UpdateScene(Func<Scene, Scene> change, string description, int? step = null)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        if (_working is not { } scene)
+        {
+            return;
+        }
+
+        BeginGesture(description);
+        _working = change(scene);
+        EditStep = Math.Clamp(step ?? EditStep, 0, Math.Max(_working.Steps.Count - 1, 0));
+        Push();
+    }
+
+    /// <summary>
+    /// Modifie l'ensemble des scènes (nouvelle, dupliquer, supprimer, déplacer de couche) : écrit tout de suite,
+    /// une entrée d'annulation. La scène éditée est relue (et abandonnée si elle a disparu).
+    /// </summary>
+    public void ChangeScenes(Func<SceneSet, SceneSet> change, string description)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        Commit();
+        var before = Snapshot();
+        if (Save(change(_runtime.Project.Scenes), null))
+        {
+            _history.Record(before, description);
+        }
+
+        ReloadWorking();
+        Push();
+    }
+
     /// <summary>Modifie les zones du lieu actif (geste en cours, écrit par <see cref="Commit"/>).</summary>
     public void EditVenues(Func<VenueSet, VenueSet> change, string description)
     {
@@ -424,6 +460,12 @@ public sealed class ControlSession
         Save(
             ReferenceEquals(snapshot.Scenes, project.Scenes) ? null : snapshot.Scenes,
             ReferenceEquals(snapshot.Venues, project.Venues) ? null : snapshot.Venues);
+        ReloadWorking();
+        Push();
+    }
+
+    private void ReloadWorking()
+    {
         if (_working is { } working)
         {
             _working = StoredScene(working.Id);
@@ -433,8 +475,6 @@ public sealed class ControlSession
                 Mode = EditMode.Live;
             }
         }
-
-        Push();
     }
 
     /// <summary>Écrit dans le projet ; un refus passager du disque est dit en clair (doc 03 §11), pas levé.</summary>

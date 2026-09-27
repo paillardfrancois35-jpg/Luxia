@@ -153,7 +153,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private Task ShowAboutAsync() => _dialogs.ShowInfoAsync("À propos de LuXia", BuildDiagnostics());
+    private Task ShowAboutAsync() => _dialogs.ShowAboutAsync(BuildDiagnostics());
 
     /// <summary>
     /// Signale une erreur inattendue de l'interface dans la barre d'état (elle est déjà au journal technique, GEN-117).

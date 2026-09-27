@@ -67,6 +67,10 @@
 
     <!-- Navigation -->
     <Border DockPanel.Dock="Left" Background="#0D1117" BorderBrush="#30363D" BorderThickness="0,0,1,0" Width="170">
+      <DockPanel>
+      <!-- ERG-009 : logo de l'identité visuelle en tête de la navigation. -->
+      <Image DockPanel.Dock="Top" Source="avares://LuXia/Assets/luxia-logo.png" Width="140" Margin="12,12,12,4"
+             ToolTip.Tip="LuXia : la lumière (Lu) et l'IA (ia) qui se croisent (X)" />
       <ListBox ItemsSource="{Binding Pages}" SelectedItem="{Binding SelectedPage}" Background="Transparent" Margin="0,8">
         <ListBox.ItemTemplate>
           <DataTemplate x:DataType="vm:NavigationItem">
@@ -77,6 +81,7 @@
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
+      </DockPanel>
     </Border>
 
     <!-- Écran courant -->

@@ -218,6 +218,48 @@ public sealed class ControlSessionTests : IAsyncLifetime
         _session.Selection.ShouldBeEmpty();
     }
 
+    [Fact]
+    [Trait("Exigence", "ERG-016")]
+    public void UpdateScene_StepsAndProperties_AreUndoable()
+    {
+        var scene = Scene("Chenillard 4 couleurs");
+        _session.ChooseScene(scene.Id);
+        var count = scene.Steps.Count;
+
+        _session.UpdateScene(s => s with { Steps = [.. s.Steps, s.Steps[^1]] }, "Dupliquer l'étape", step: count);
+        _session.Commit();
+        _session.EditStep.ShouldBe(count);
+        Stored(scene.Id).Steps.Count.ShouldBe(count + 1);
+
+        _session.UpdateScene(s => s with { Speed = 2 }, "Vitesse");
+        _session.Commit();
+        Stored(scene.Id).Speed.ShouldBe(2);
+
+        _session.Undo();
+        _session.Undo();
+        Stored(scene.Id).Steps.Count.ShouldBe(count);
+        Stored(scene.Id).Speed.ShouldBe(scene.Speed);
+        _session.EditStep.ShouldBeLessThan(count, "l'étape choisie reste dans la scène");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-016")]
+    public void ChangeScenes_DeleteEditedScene_BackToLive_AndUndoBringsItBack()
+    {
+        var scene = Scene("Rouge – couleur seule");
+        _session.ChooseScene(scene.Id);
+        _session.SetMode(EditMode.Edit);
+
+        _session.ChangeScenes(set => set with { Scenes = [.. set.Scenes.Where(s => s.Id != scene.Id)] }, "Supprimer la scène");
+
+        _session.EditScene.ShouldBeNull();
+        _session.Mode.ShouldBe(EditMode.Live);
+        _host.Runtime.Project.Scenes.Scenes.ShouldNotContain(s => s.Id == scene.Id);
+
+        _session.Undo();
+        _host.Runtime.Project.Scenes.Scenes.ShouldContain(s => s.Id == scene.Id);
+    }
+
     private Scene Scene(string name) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == name);
 
     private Scene Stored(Guid id) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Id == id);

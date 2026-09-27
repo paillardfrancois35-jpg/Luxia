@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\luxia.ico" />
+    <AvaloniaResource Include="Assets\*.png" />
   </ItemGroup>
 
   <ItemGroup>

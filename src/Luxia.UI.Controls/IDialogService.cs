@@ -12,6 +12,9 @@ public interface IDialogService
     /// <summary>Affiche un texte en lecture seule, copiable (diagnostic, « À propos »).</summary>
     Task ShowInfoAsync(string title, string message);
 
+    /// <summary>« À propos » : le texte de <see cref="ShowInfoAsync"/>, avec le logo de LuXia en tête (ERG-009).</summary>
+    Task ShowAboutAsync(string message) => ShowInfoAsync("À propos de LuXia", message);
+
     /// <summary>Demande un texte (nom d'un instantané, d'un projet…) ; null si annulé.</summary>
     Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null);
 
