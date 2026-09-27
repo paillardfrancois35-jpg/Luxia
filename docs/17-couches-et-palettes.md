@@ -38,6 +38,7 @@ On combine ainsi librement « couleur × mouvement × strobe » avec peu de scè
 | 4 | **Faisceau** | HTP | Gobos, prismes |
 | 5 | **Effets** | HTP | Strobe, programmes internes |
 | 6 | **Ambiance** | HTP | UV, fumée |
+| 7 | **Libre** | HTP | Ce qui n'entre dans aucune autre couche : un appareil piloté à part, un essai (sans famille attendue ; ERG-008, 2026-09-27 : donne un rôle au 8e fader de l'APC) |
 | 99 | **Flashs** | Prioritaire | Flash blanc, strobe flash, blackout partiel |
 
 ### 1.4 Exigences

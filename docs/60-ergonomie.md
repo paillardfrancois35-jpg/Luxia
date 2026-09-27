@@ -257,6 +257,7 @@ CONS-061) gardent leur identifiant et leur fiche.
 | ERG-004 | I | ERG | **Sélecteur de couleur** (composant commun, §5) : carré teinte × saturation, barre d'intensité, valeurs lisibles (°, %), **favoris** (clic = reprendre, clic droit = retirer, « + » = ajouter). | Tests des conversions et du découpage ; galerie ; essai utilisateur. |
 | ERG-005 | M | ERG | **Galerie des composants** : chaque composant commun dans chacun de ses états, manipulable ; source des **captures de référence** (`LuXia-Prototype --captures <dossier>`, sans écran). | Captures produites et relues. |
 | ERG-006 | I | ERG | **Mesures du prototype** : images par seconde, demandes par seconde des composants, mémoire, nombre de fenêtres, affichées dans un panneau ; bilan (fluidité d'un glisser, deux écrans) consigné au §10. | Relevé fait avec l'utilisateur. |
+| ERG-008 | I | ERG | **8e couche par défaut « Libre »** (★, priorité 7, sans famille attendue, avant Flashs) : les 8 faders de couche de l'APC ont chacun une couche (C2). | Test des couches par défaut. |
 | ERG-007 | I | ERG | **Maquettes de la disposition Contrôle** (§7.3) : images rendues par Avalonia avec les vrais composants et des données fictives (modes LIVE / ÉDITION / AVEUGLE, scène en édition, zones), validées par l'utilisateur **avant** tout développement des écrans. | Validation de l'utilisateur. |
 
 ## 10. Prototype technique (§7.2) : réalisation et bilan
@@ -279,10 +280,31 @@ CONS-061) gardent leur identifiant et leur fiche.
   prototype ; images dans [maquettes/](maquettes/) : LIVE, ÉDITION, AVEUGLE, zones. Validation : Q35. Guide d'essai :
   [demos/ERG-prototype-et-maquettes.md](demos/ERG-prototype-et-maquettes.md).
 
-## 11. Historique
+## 11. Choix de Claude (délégation du 2026-09-27), à rediscuter à l'exploitation
+
+L'utilisateur, devant l'ampleur des maquettes : « sans exploiter je n'arriverai pas à t'indiquer ce qui est bon ou ce qui
+est mauvais […] prends les décisions qui te semblent les plus pertinentes, et présente-moi tes choix à la fin ». Chaque
+choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est close sur cette base.
+
+| # | Choix | Pourquoi | Réversible par |
+|---|---|---|---|
+| C1 | Maquettes adoptées telles quelles (Q35, points 1 à 6) | Cohérentes avec la charte validée (E1-E8, F1-F10) | Nouvelle maquette |
+| C2 | **8 couches par défaut** : ajout de **« Libre »** (★, priorité 7, sans famille attendue) avant Flashs (ERG-008) | L'APC a 8 faders de couche : le 8e ne servait à rien ; l'utilisateur pensait à une colonne pour « un seul équipement particulier ». Les couches restent en nombre libre (COU-001) | Fenêtre Couches… (renommer, supprimer) |
+| C3 | Les couches vides restent affichées | Une colonne = un fader de l'APC : repère fixe | `live.json` (couches masquées) |
+| C4 | En édition des zones, le bandeau passe en **ZONES** : « zones du lieu, valables pour toutes les scènes » | Les zones n'appartiennent pas à la scène : ne pas laisser croire qu'elles s'y écrivent | — |
+| C5 | Contrôle arrive comme **nouvel écran, en tête** ; Live et Scènes restent en place jusqu'à la validation à l'exploitation, puis seront retirés | Rien de ce qui est validé ne disparaît avant que le remplaçant ait fait ses preuves | Retrait des anciens écrans |
+| C6 | Le sélecteur **LIVE / ÉDITION / AVEUGLE** est dans l'en-tête de l'écran Contrôle, pas de la fenêtre (écart au §4.1) | Seul Contrôle règle des appareils selon ce mode ; les autres écrans n'en ont pas l'usage tant qu'ils existent | Déplacement dans l'en-tête de la fenêtre quand Live / Scènes disparaîtront |
+| C7 | ÉDITION : l'étape choisie est **montrée sur la sortie** (ses valeurs par-dessus les scènes) ; chaque réglage s'y écrit ; un geste (glisser, molette) = **une** entrée d'annulation, écrite 0,5 s après le dernier mouvement | C'est « ce qu'on voit = ce qui est enregistré » ; écrire à chaque pixel de glisser saturerait le disque et l'historique | — |
+| C8 | LIVE : les surcharges restent quand on change de mode (F2) ; « Libérer » agit sur la sélection, « Libérer tout » sur tout | Une intervention voulue ne s'efface pas toute seule | — |
+| C9 | Démarrage et ouverture d'un projet : toujours en **LIVE** | Ne jamais modifier une scène sans l'avoir demandé | — |
+| C10 | Disposition des panneaux enregistrée **sur le poste** (`%AppData%\LuXia\dispositions`), pas dans le projet (écart à LIVE-006) | Elle dépend de l'écran (taille, deuxième écran), pas du show | — |
+| C11 | Menus de Dock traduits en français | Doc 03 §2 | — |
+
+## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | §11 choix de Claude par délégation (C1-C11), Q35 close ; ERG-008 (8e couche « Libre »). |
 | 2026-09-27 | §9 exigences ERG-001 à ERG-007 ; §10 prototype technique (réalisation, écart Dock sur la restauration d'un panneau fermé). |
 | 2026-09-27 | Analyse **validée** : E1-E8 et F1-F10 acceptés tels que proposés. |
 | 2026-09-27 | Version 1.1 : finalité (mode automatique, IA), déclencheurs multi-actions et « looks » (§4.8), décisions fines F1-F10 (§8.1). |

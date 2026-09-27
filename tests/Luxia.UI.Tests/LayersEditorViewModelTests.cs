@@ -32,7 +32,7 @@ public sealed class LayersEditorViewModelTests : IAsyncLifetime
     {
         var editor = new LayersEditorViewModel(_host.Runtime, _host.Dialogs);
 
-        editor.Layers.Select(l => l.Name).ShouldBe(["Intensité", "Couleurs", "Mouvements", "Faisceau", "Effets", "Ambiance", "Flashs"]);
+        editor.Layers.Select(l => l.Name).ShouldBe(["Intensité", "Couleurs", "Mouvements", "Faisceau", "Effets", "Ambiance", "Libre", "Flashs"]);
         editor.Layers.Single(l => l.Name == "Flashs").Kind.Value.ShouldBe(LayerKind.Flash);
         editor.Layers.Single(l => l.Name == "Ambiance").KeepOnStopAll.ShouldBeTrue();
     }
@@ -51,8 +51,8 @@ public sealed class LayersEditorViewModelTests : IAsyncLifetime
         editor.SaveCommand.Execute(null);
 
         var layers = _host.Runtime.Project.Layers.Layers.OrderBy(l => l.Priority).ToList();
-        layers.Select(l => l.Name).ShouldBe(["Intensité", "Couleurs fixes", "Mouvements", "Faisceau", "Effets", "Ambiance", "Lasers", "Flashs"]);
-        layers.Select(l => l.Priority).ShouldBe([1, 2, 3, 4, 5, 6, 7, 8]);
+        layers.Select(l => l.Name).ShouldBe(["Intensité", "Couleurs fixes", "Mouvements", "Faisceau", "Effets", "Ambiance", "Libre", "Lasers", "Flashs"]);
+        layers.Select(l => l.Priority).ShouldBe([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         layers[1].Id.ShouldBe(LayerSet.ColorsLayerId, "l'identifiant ne change pas : les scènes gardent leur couche");
         layers[1].CrossFade.ShouldBe(Duration.FromSeconds(2));
         File.Exists(Path.Combine(_host.ProjectFolder, "couches.json")).ShouldBeTrue();
