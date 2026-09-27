@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé, à valider sur matériel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Exigences](../18b-controleurs-midi.md) |
@@ -32,3 +32,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Exigences). |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
+| 2026-09-27 | Utilisateur | Test | Exemple 10 avec l'APC mini MK2 (v1.004.070) : tout ok. Validé. |

@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Exigences](../18b-controleurs-midi.md) |
@@ -35,3 +35,4 @@
 | 2026-09-27 | Claude | Décision | Le 8e bouton de droite (« Show : transition », P8) fait « Tout arrêter » en attendant ; Tap (5e) et Auto (7e) restent sans effet jusqu'à leur phase. Pages : Shift + bas 1 / 2 (scènes), 3 / 4 (couches), le doc 18b ne précisant pas lesquels. |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
 | 2026-09-27 | Claude | Développement | Même course que le Live (LIVE-003) : un pad décidait « lancer ou arrêter » d'après l'état relu. Désormais `LaunchSceneCommand` avec `StopIfPlaying`, tranché par le moteur. |
+| 2026-09-27 | Utilisateur | Test | Exemple 10 avec l'APC mini MK2 (v1.004.070) : tout ok. Validé. |

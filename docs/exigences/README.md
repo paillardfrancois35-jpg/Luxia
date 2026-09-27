@@ -293,17 +293,17 @@
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
 | [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Réalisé, à valider sur matériel |
-| [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Réalisé, à valider sur matériel |
-| [MIDI-002](MIDI-002.md) | Affectation par défaut du §3 | P5 | I | Réalisé |
-| [MIDI-003](MIDI-003.md) | Retour lumineux du §4, mis à jour à chaque changement d'état | P5 | I | Réalisé, à valider sur matériel |
-| [MIDI-004](MIDI-004.md) | Reprise douce des faders | P5 | I | Réalisé |
+| [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Réalisé, MK2 validé, MK1 à valider |
+| [MIDI-002](MIDI-002.md) | Affectation par défaut du §3 | P5 | I | Validé |
+| [MIDI-003](MIDI-003.md) | Retour lumineux du §4, mis à jour à chaque changement d'état | P5 | I | Validé |
+| [MIDI-004](MIDI-004.md) | Reprise douce des faders | P5 | I | Validé |
 | [MIDI-005](MIDI-005.md) | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | P5 | I | Réalisé |
-| [MIDI-006](MIDI-006.md) | Débranchement / rebranchement à chaud | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-006](MIDI-006.md) | Débranchement / rebranchement à chaud | P5 | I | Validé |
 | [MIDI-007](MIDI-007.md) | Affectations modifiables et enregistrées dans le projet | P5 | M | Réalisé |
 | [MIDI-008](MIDI-008.md) | Apprentissage | P5 | S | Reporté (chantier ergonomie) |
 | [MIDI-009](MIDI-009.md) | Disposition alternative « palettes » | P5 | S | Reporté (chantier ergonomie) |
-| [MIDI-010](MIDI-010.md) | Sur MK2, la couleur des pads reprend la couleur des scènes | P5 | M | Réalisé, à valider sur matériel |
-| [MIDI-011](MIDI-011.md) | Blackout du contrôleur tant que maintenu (comme Daslight) | P5 | I | Réalisé, à valider sur matériel |
+| [MIDI-010](MIDI-010.md) | Sur MK2, la couleur des pads reprend la couleur des scènes | P5 | M | Validé |
+| [MIDI-011](MIDI-011.md) | Blackout du contrôleur tant que maintenu (comme Daslight) | P5 | I | Validé |
 | [MOT-001](MOT-001.md) | Ordre de la boucle de rendu | P4 | I | Réalisé |
 | [MOT-002](MOT-002.md) | Budget de 5 ms par tick | P4 | I | Réalisé |
 | [MOT-003](MOT-003.md) | Fil d'exécution dédié, sans opération bloquante | P4 | I | Réalisé |

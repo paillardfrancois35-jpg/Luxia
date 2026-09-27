@@ -281,7 +281,7 @@
 
 ## P5 – 72 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 28 · Réalisé, à valider sur matériel : 12 · Validé : 16
+> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 26 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 7 · Validé : 22
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -333,17 +333,17 @@
 | [LIVE-041](exigences/LIVE-041.md) | S | Raccourcis personnalisables | Reporté (chantier ergonomie) |  |
 | [LIVE-060](exigences/LIVE-060.md) | I | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | Réalisé | LiveViewModelTests.Refresh_IsFarUnderTheFrameBudget |
 | [LIVE-061](exigences/LIVE-061.md) | I | Latence clic → sortie < 50 ms | Réalisé, à valider sur matériel |  |
-| [MIDI-001](exigences/MIDI-001.md) | I | Détection automatique des APC mini MK1 et MK2 | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
-| [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Réalisé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
-| [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Réalisé, à valider sur matériel | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
-| [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Réalisé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
+| [MIDI-001](exigences/MIDI-001.md) | I | Détection automatique des APC mini MK1 et MK2 | Réalisé, MK2 validé, MK1 à valider | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Validé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
+| [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Validé | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
+| [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Validé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
 | [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
-| [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Réalisé, à valider sur matériel | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
+| [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Validé | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
 | [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
 | [MIDI-009](exigences/MIDI-009.md) | S | Disposition alternative « palettes » | Reporté (chantier ergonomie) |  |
-| [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Réalisé, à valider sur matériel | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
-| [MIDI-011](exigences/MIDI-011.md) | I | Blackout du contrôleur tant que maintenu (comme Daslight) | Réalisé, à valider sur matériel | MidiControllerTests.BlackoutNote_IsMomentary_EvenIfBlackoutWasAlreadyOnFromTheScreen<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly |
+| [MIDI-010](exigences/MIDI-010.md) | M | Sur MK2, la couleur des pads reprend la couleur des scènes | Validé | MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiControllerTests.NearestPalette_IgnoresBrightness |
+| [MIDI-011](exigences/MIDI-011.md) | I | Blackout du contrôleur tant que maintenu (comme Daslight) | Validé | MidiControllerTests.BlackoutNote_IsMomentary_EvenIfBlackoutWasAlreadyOnFromTheScreen<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly |
 | [MOT-042](exigences/MOT-042.md) | I | Le modèle de couches par défaut | Validé | DefaultContentTests.NewProject_HasFullOnScene_InIntensityLayer_LightingEveryFixture<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [MOT-072](exigences/MOT-072.md) | I | Flash | Validé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Validé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |

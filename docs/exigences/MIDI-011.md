@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé, à valider sur matériel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Exigences](../18b-controleurs-midi.md) |
@@ -34,3 +34,4 @@
 | 2026-09-27 | Claude | Création | Exigence MIDI-011 ajoutée au doc 18b §5 (demande en session, doc 03 §10). Avant : le bouton Blackout de l'APC basculait à chaque appui. |
 | 2026-09-27 | Claude | Décision | Action `blackout` du contrôleur = maintien (défaut) ; nouvelle action `blackoutToggle` pour une bascule au contrôleur si voulu. LED du bouton allumée tant que le blackout est actif, quelle qu'en soit l'origine. La question plus large des « accroches » de toutes les actions à des contrôles (comme Daslight) est notée au carnet d'idées, à discuter. |
 | 2026-09-27 | Claude | Développement | `df15d49` feat(midi): blackout du contrôleur tant que maintenu, comme Daslight |
+| 2026-09-27 | Utilisateur | Test | Exemple 10 avec l'APC mini MK2 (v1.004.070) : tout ok. Validé. |
