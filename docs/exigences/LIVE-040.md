@@ -32,3 +32,5 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Raccourcis clavier (proposition)). |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Utilisateur | Test | Exemple 9 : ←/→, 1-9, B, F/S maintenus, G, Échap : ok. Page ↑ / Page ↓ : nok, le menu « Projet » se déplie au lieu de régler le Grand Master. |
+| 2026-09-27 | Claude | Développement | Code relu : Page ↑/↓ sont bien traduits en MasterUp/MasterDown ; la touche n'arrive pas au Live sous la forme attendue. Diagnostic : chaque touche pressée en Live est désormais tracée (« IHM – Live – touche … », modificateurs compris) dans le journal technique et le journal de l'enregistrement. |

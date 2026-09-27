@@ -69,6 +69,13 @@ public partial class MainWindow : Window
 
     private void OnKeyDownTunnel(object? sender, KeyEventArgs e)
     {
+        // SORT-066 : touches tracées en Live (journal technique et journal de l'enregistrement), pour comprendre ce
+        // que le clavier envoie réellement (essai P5 : Page ↑ ouvrait le menu Projet au lieu du Grand Master).
+        if (DataContext is MainWindowViewModel { SelectedPage.Page: Luxia.UI.Modules.Live.LiveViewModel } traced && !IsTyping())
+        {
+            traced.TraceUi(e.KeyModifiers == KeyModifiers.None ? $"touche {e.Key}" : $"touche {e.KeyModifiers}+{e.Key}");
+        }
+
         if (e.KeyModifiers != KeyModifiers.None || DataContext is not MainWindowViewModel vm || IsTyping())
         {
             return;
