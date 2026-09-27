@@ -159,7 +159,7 @@
                 HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                 ToolTip.Tip="Arrête toutes les couches sauf les couches protégées (Ambiance)" />
         <TextBlock Classes="small" TextWrapping="Wrap" Margin="0,6,0,0"
-                   Text="B blackout · F flash · S strobe · Z fumée · G figer · Échap libérer · 1-9 scène de la couche encadrée · ← → couche · Page ↑↓ Grand Master" />
+                   Text="B blackout · F flash · S strobe · Z fumée · G figer · Échap libérer · 1-9 scène de la couche encadrée · ← → couche · ↑ ↓ master de la couche · Page ↑↓ Grand Master" />
       </StackPanel>
     </Grid>
 

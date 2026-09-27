@@ -252,11 +252,13 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     /// <summary>
     /// Raccourci clavier (LIVE-040) : <paramref name="down"/> à l'appui, <c>false</c> au relâchement. Renvoie <c>true</c> si
-    /// la touche est prise en charge. La répétition automatique d'une touche maintenue est ignorée.
+    /// la touche est prise en charge. La répétition automatique d'une touche maintenue est ignorée, sauf pour les niveaux
+    /// (Grand Master, master de couche) : un appui maintenu continue de monter ou de descendre.
     /// </summary>
     public bool OnKey(LiveKey key, bool down)
     {
-        if (down && !_held.Add(key))
+        var level = key is LiveKey.MasterUp or LiveKey.MasterDown or LiveKey.LayerMasterUp or LiveKey.LayerMasterDown;
+        if (down && !_held.Add(key) && !level)
         {
             return true;
         }
@@ -287,7 +289,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
                 Release(released);
             }
 
-            return key >= LiveKey.Scene1 || key is LiveKey.Freeze or LiveKey.Release or LiveKey.PreviousLayer or LiveKey.NextLayer or LiveKey.MasterUp or LiveKey.MasterDown;
+            return key >= LiveKey.Scene1 || key is LiveKey.Freeze or LiveKey.Release or LiveKey.PreviousLayer or LiveKey.NextLayer or LiveKey.MasterUp or LiveKey.MasterDown or LiveKey.LayerMasterUp or LiveKey.LayerMasterDown;
         }
 
         switch (key)
@@ -304,9 +306,16 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             case LiveKey.NextLayer:
                 MoveSelection(1);
                 break;
+            case LiveKey.LayerMasterUp or LiveKey.LayerMasterDown:
+                if (Columns.FirstOrDefault(c => c.IsSelected) is { } column)
+                {
+                    column.Master = Math.Clamp(Math.Round(column.Master / 10) * 10 + (key == LiveKey.LayerMasterUp ? 10 : -10), 0, 100);
+                }
+
+                break;
             case LiveKey.MasterUp or LiveKey.MasterDown:
-                var level = _runtime.Engine.Snapshot.GrandMaster + (key == LiveKey.MasterUp ? 0.1 : -0.1);
-                _runtime.SetGrandMaster(Math.Clamp(Math.Round(level, 2), 0, 1));
+                var master = _runtime.Engine.Snapshot.GrandMaster + (key == LiveKey.MasterUp ? 0.1 : -0.1);
+                _runtime.SetGrandMaster(Math.Clamp(Math.Round(master, 2), 0, 1));
                 break;
             default:
                 if (SceneFor(key) is { } pressed)

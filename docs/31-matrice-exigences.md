@@ -329,7 +329,7 @@
 | [LIVE-009](exigences/LIVE-009.md) | M | Journal défilant des derniers événements | Réalisé | LiveViewModelTests.Journal_ShowsSceneStarts |
 | [LIVE-010](exigences/LIVE-010.md) | I | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | Réalisé, à valider sur matériel | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-011](exigences/LIVE-011.md) | M | Accès à l'assistant d'installation | Reporté (chantier ergonomie) |  |
-| [LIVE-040](exigences/LIVE-040.md) | I | Raccourcis du tableau ci-dessus | Partiel | LiveViewModelTests.Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster<br>LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
+| [LIVE-040](exigences/LIVE-040.md) | I | Raccourcis du tableau ci-dessus | Partiel | LiveViewModelTests.Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster<br>LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased<br>LiveViewModelTests.Keys_UpDownArrows_DriveTheMasterOfTheFramedLayer |
 | [LIVE-041](exigences/LIVE-041.md) | S | Raccourcis personnalisables | Reporté (chantier ergonomie) |  |
 | [LIVE-060](exigences/LIVE-060.md) | I | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | Réalisé | LiveViewModelTests.Refresh_IsFarUnderTheFrameBudget |
 | [LIVE-061](exigences/LIVE-061.md) | I | Latence clic → sortie < 50 ms | Réalisé, à valider sur matériel |  |

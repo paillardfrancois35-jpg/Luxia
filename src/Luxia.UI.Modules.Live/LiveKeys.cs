@@ -17,6 +17,10 @@ public static class LiveKeys
         Key.Right => LiveKey.NextLayer,
         Key.PageUp => LiveKey.MasterUp,
         Key.PageDown => LiveKey.MasterDown,
+
+        // ← → choisissent la couche, ↑ ↓ règlent son master (proposition de l'utilisateur, essai P5).
+        Key.Up => LiveKey.LayerMasterUp,
+        Key.Down => LiveKey.LayerMasterDown,
         >= Key.D1 and <= Key.D9 => LiveKey.Scene1 + (key - Key.D1),
         >= Key.NumPad1 and <= Key.NumPad9 => LiveKey.Scene1 + (key - Key.NumPad1),
         _ => null,

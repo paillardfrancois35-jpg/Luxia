@@ -32,6 +32,12 @@ public enum LiveKey
     /// <summary>Page ↓ : Grand Master − 10 %.</summary>
     MasterDown,
 
+    /// <summary>↑ : master de la couche encadrée + 10 % (essai P5).</summary>
+    LayerMasterUp,
+
+    /// <summary>↓ : master de la couche encadrée − 10 %.</summary>
+    LayerMasterDown,
+
     /// <summary>1 à 9 : scène N de la couche sélectionnée.</summary>
     Scene1,
 

@@ -89,7 +89,7 @@ Renommez `"name"` en « Show de travail » dans `samples/Show de travail/projet.
 
 ## Exemple 9 – Clavier (LIVE-040)
 
-Sans souris : **←/→** pour encadrer une colonne, **1-9** pour lancer ses scènes, **Page ↑/↓** pour le Grand Master, **B** blackout,
+Sans souris : **←/→** pour encadrer une colonne, **1-9** pour lancer ses scènes, **↑/↓** pour le master de la colonne encadrée, **Page ↑/↓** pour le Grand Master, **B** blackout,
 **F / S / Z** à maintenir, **G** figer, **Échap** libérer. Rappel des touches sous les actions.
 
 ## Exemple 10 – APC mini (MIDI-001 à 006)

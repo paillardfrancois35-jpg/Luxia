@@ -102,6 +102,25 @@ public sealed class LiveViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "LIVE-040")]
+    public void Keys_UpDownArrows_DriveTheMasterOfTheFramedLayer()
+    {
+        // Essai P5 (proposition de l'utilisateur) : ← → choisissent la couche, ↑ ↓ règlent son master, Page ↑ ↓ le Grand Master.
+        LiveKeys.From(Avalonia.Input.Key.Up).ShouldBe(LiveKey.LayerMasterUp);
+        LiveKeys.From(Avalonia.Input.Key.PageUp).ShouldBe(LiveKey.MasterUp);
+        _vm.OnKey(LiveKey.NextLayer, down: true);
+        var column = _vm.Columns.Single(c => c.IsSelected);
+
+        _vm.OnKey(LiveKey.LayerMasterDown, down: true).ShouldBeTrue();
+        _vm.OnKey(LiveKey.LayerMasterDown, down: true);
+        _host.Tick();
+
+        column.Master.ShouldBe(80);
+        _host.Runtime.Engine.Snapshot.LayerMasters.ShouldContain(m => Math.Abs(m - 0.8) < 1e-9);
+        _host.Runtime.Engine.Snapshot.GrandMaster.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-040")]
     public void Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster()
     {
         _vm.OnKey(LiveKey.NextLayer, down: true);
