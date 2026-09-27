@@ -34,3 +34,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Exigences). |
 | 2026-09-27 | Claude | Décision | Le 8e bouton de droite (« Show : transition », P8) fait « Tout arrêter » en attendant ; Tap (5e) et Auto (7e) restent sans effet jusqu'à leur phase. Pages : Shift + bas 1 / 2 (scènes), 3 / 4 (couches), le doc 18b ne précisant pas lesquels. |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
+| 2026-09-27 | Claude | Développement | Même course que le Live (LIVE-003) : un pad décidait « lancer ou arrêter » d'après l'état relu. Désormais `LaunchSceneCommand` avec `StopIfPlaying`, tranché par le moteur. |

@@ -43,7 +43,9 @@ public sealed class MidiControllerTests
         var controller = new MidiController(Mk2, "port");
         var snapshot = Snapshot([Playing(Red, Colors)]);
 
-        Single<StopSceneCommand>(controller.Handle(Press(Pad(Mk2, 1, 1)), Layout(), snapshot)).SceneId.ShouldBe(Red);
+        var toggle = Single<LaunchSceneCommand>(controller.Handle(Press(Pad(Mk2, 1, 1)), Layout(), snapshot));
+        toggle.SceneId.ShouldBe(Red);
+        toggle.StopIfPlaying.ShouldBeTrue("c'est le moteur qui arrête la scène si elle joue");
     }
 
     [Fact]

@@ -176,10 +176,8 @@ public sealed class MidiController
         switch (action)
         {
             case MidiAction.LaunchScene when pressed && id is { } scene:
-                var playing = snapshot.Playbacks.Any(p => p.SceneId == scene && !p.Flash && IsPlaying(p));
-                return playing && !layout.ActiveClickRestarts
-                    ? [new StopSceneCommand(Midi, scene)]
-                    : [new LaunchSceneCommand(Midi, scene)];
+                // Bascule tranchée par le moteur (pas d'après l'état relu, qui peut avoir un tick de retard).
+                return [new LaunchSceneCommand(Midi, scene, StopIfPlaying: !layout.ActiveClickRestarts)];
             case MidiAction.FlashScene when id is { } flash:
                 return [new FlashSceneCommand(Midi, flash, pressed)];
             case MidiAction.StopLayer when pressed && id is { } layer:

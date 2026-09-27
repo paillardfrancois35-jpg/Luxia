@@ -62,6 +62,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     private bool _syncingFromEngine;
 
+    /// <summary>Enregistrement des trames en cours : voyant REC dans la barre d'état, sur tous les écrans (SORT-065).</summary>
+    [ObservableProperty]
+    private bool _recording;
+
     /// <summary>Crée la coquille.</summary>
     public MainWindowViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -403,6 +407,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             CultureInfo.CurrentCulture,
             $"Blackout : {(snapshot.Blackout ? "ACTIF" : "non")}  ·  GM {Math.Round(snapshot.GrandMaster * 100)} %  ·  {snapshot.Playbacks.Count} scène(s) en cours  ·  Mode : manuel  ·  CPU {_runtime.CpuPercent:0} %");
 
+        Recording = _runtime.Recorder is not null;
         var routes = _runtime.Router.Routes;
         var main = routes.FirstOrDefault(r => r.Driver.Id != Output.Drivers.RecorderOutputDriver.DriverId);
         if (main.Driver is null)

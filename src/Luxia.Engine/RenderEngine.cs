@@ -437,6 +437,26 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
+        if (command.StopIfPlaying)
+        {
+            // Bascule (LIVE-003) : décidée ici, sur l'état exact du moteur, pas sur celui qu'affiche l'écran.
+            var stopped = false;
+            foreach (var playback in _playbacks)
+            {
+                if (playback.Scene.Id == scene.Id && !playback.Flash && playback.State is not (PlaybackState.FadingOut or PlaybackState.Done))
+                {
+                    playback.BeginExit(playback.Scene.FadeOut?.ToSeconds(Bpm) ?? 0);
+                    stopped = true;
+                }
+            }
+
+            if (stopped)
+            {
+                _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", scene.Name, command.Origin);
+                return null;
+            }
+        }
+
         Launch(scene, layerIndex, command.Fade?.TotalSeconds, command.Origin, command.Solo, null, now);
         return null;
     }
@@ -565,6 +585,11 @@ public sealed class RenderEngine : ICommandSink
                 playback.BeginExit(command.Fade?.TotalSeconds ?? playback.Scene.FadeOut?.ToSeconds(Bpm) ?? 0);
                 found = true;
             }
+        }
+
+        if (found)
+        {
+            _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", _show.Scene(command.SceneId)?.Name, command.Origin);
         }
 
         return found ? null : "la scène ne joue pas";

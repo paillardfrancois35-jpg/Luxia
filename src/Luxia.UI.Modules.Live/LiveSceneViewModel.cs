@@ -40,6 +40,21 @@ public sealed partial class LiveSceneViewModel : ViewModelBase
     /// <summary>Couleur de la scène (GEN-106).</summary>
     public string Color => Scene.Color;
 
+    private long _expectedAfterTick = -1;
+
+    /// <summary>
+    /// Affiche tout de suite l'état attendu après un clic, sans le laisser écraser par un état du moteur antérieur à la
+    /// commande (il est relu deux ticks plus tard).
+    /// </summary>
+    public void ExpectActive(bool active, long tick)
+    {
+        IsActive = active;
+        _expectedAfterTick = tick + 2;
+    }
+
+    /// <summary>Un clic attend encore d'être traité par le moteur.</summary>
+    public bool WaitingForEngine(long tick) => tick < _expectedAfterTick;
+
     /// <summary>Fond du bouton : la couleur de la scène (atténuée) quand elle joue, sinon neutre.</summary>
     public string Fill => IsActive && Color.Length == 7 ? "#66" + Color[1..] : "#161B22";
 

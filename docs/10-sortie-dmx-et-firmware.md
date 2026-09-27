@@ -124,6 +124,7 @@ shield en mode émission, terminaison 120 Ω en bout de chaîne.
 |---|---|---|---|---|
 | SORT-060 | I | P0 | **Enregistreur** : écrit chaque trame avec son horodatage (temps écoulé depuis le début, en ms) dans un fichier compact ; en-tête avec version, univers, fréquence. | Enregistrer 10 min, relire : trames et horodatages identiques. |
 | SORT-061 | I | P0 | L'Enregistreur peut être activé/désactivé à chaud, et utilisé en même temps que l'Arduino. | Test. |
+| SORT-065 | M | P5 | Enregistrement **visible** : voyant rouge clignotant et « Enregistrement en cours » à l'écran Sorties, voyant « REC » dans la barre d'état sur tous les écrans ; bouton « Arrêter l'enregistrement » ; chemin du fichier **sélectionnable** et bouton « Copier le chemin ». | Revue (demande utilisateur, essai P5). |
 | SORT-062 | I | P3 | **Simulateur** : transmet la trame en mémoire au visualiseur, sans copie bloquante. | Simulateur à jour à 40 Hz. |
 | SORT-063 | S | P3 | **Lecteur** : rejoue un fichier de l'Enregistreur à vitesse réelle (ou accélérée) vers le simulateur. | Rejouer une soirée enregistrée. |
 | SORT-064 | S | P3 | **Art-Net** : émet des paquets ArtDmx (UDP 6454) en diffusion ou vers une adresse donnée ; numéro d'univers Art-Net réglable. | Réception dans un visualiseur Art-Net tiers. |

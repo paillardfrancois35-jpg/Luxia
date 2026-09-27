@@ -143,7 +143,11 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             foreach (var button in column.Scenes)
             {
                 var playback = FindPlayback(snapshot, button.Scene.Id);
-                button.IsActive = playback is not null;
+                if (!button.WaitingForEngine(_runtime.Engine.TickCount))
+                {
+                    button.IsActive = playback is not null;
+                }
+
                 button.Progress = playback?.StepProgress ?? 0;
                 button.State = playback is { StepCount: > 1 } p
                     ? string.Create(CultureInfo.CurrentCulture, $"{p.StepIndex + 1}/{p.StepCount}")
@@ -178,15 +182,11 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             return;
         }
 
-        if (scene.IsActive && _runtime.Project.Live.ActiveSceneClick == ActiveSceneClick.Stop)
-        {
-            Send(new StopSceneCommand(CommandOrigin.User, scene.Scene.Id));
-            scene.IsActive = false;
-            return;
-        }
-
-        Send(new LaunchSceneCommand(CommandOrigin.User, scene.Scene.Id));
-        scene.IsActive = true;
+        // Le moteur tranche « lancer ou arrêter » (course écran / moteur, vécue à l'essai P5) ; l'écran affiche tout de
+        // suite l'état attendu et ne le relit du moteur qu'une fois la commande traitée.
+        var toggle = _runtime.Project.Live.ActiveSceneClick == ActiveSceneClick.Stop;
+        Send(new LaunchSceneCommand(CommandOrigin.User, scene.Scene.Id, StopIfPlaying: toggle));
+        scene.ExpectActive(!toggle || !scene.IsActive, _runtime.Engine.TickCount);
     }
 
     /// <summary>Relâche d'une scène : fin du flash pour une couche Flash.</summary>

@@ -68,6 +68,26 @@ public sealed class LiveCommandTests
     }
 
     [Fact]
+    [Trait("Exigence", "LIVE-003")]
+    [Trait("Exigence", "CMD-010")]
+    public void LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick()
+    {
+        var harness = new EngineHarness(_builder.Build());
+
+        // Deux clics avant le même tick : lancer puis arrêter, dans l'ordre (GEN-011), sans état intermédiaire côté écran.
+        harness.Send(new LaunchSceneCommand(CommandOrigin.User, _red.Id, StopIfPlaying: true));
+        harness.Tick();
+        harness.Playback(_red).ShouldNotBeNull();
+        harness.Send(new LaunchSceneCommand(CommandOrigin.User, _red.Id, StopIfPlaying: true));
+        harness.Send(new LaunchSceneCommand(CommandOrigin.User, _red.Id, StopIfPlaying: true));
+        harness.Tick();
+        harness.Playback(_red).ShouldNotBeNull("arrêtée puis relancée dans le même tick");
+        harness.Send(new LaunchSceneCommand(CommandOrigin.User, _red.Id, StopIfPlaying: true));
+        harness.Tick();
+        harness.Playback(_red).ShouldBeNull();
+    }
+
+    [Fact]
     [Trait("Exigence", "MOT-073")]
     [Trait("Exigence", "CMD-003")]
     public void Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive()

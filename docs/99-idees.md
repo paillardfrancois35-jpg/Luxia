@@ -6,6 +6,7 @@
 |---|---|---|---|
 | 2026-09-24 | Télécommande depuis un téléphone Android (via le catalogue de commandes) | Projet séparé | En attente |
 | 2026-09-24 | Second Arduino en renifleur DMX pour les tests automatisés matériels | Sortie / tests | Retenu en S (T-SORT-08) |
+| 2026-09-27 | **Renifleur DMX, rendu nécessaire par l'essai P5** (diagnostic de l'UV : impossible de savoir ce que reçoivent réellement les appareils) : l'utilisateur achète un second Leonardo + shield DMX. Firmware « écoute » (shield en réception, trames relayées au PC par l'USB) et commande `luxia-headless ecouter` qui compare ce qui circule sur la ligne à ce que LuXia envoie. La clé Freestyler (uDMX) ne convient pas : elle ne sait qu'émettre. | Sortie / tests (doc 10) | Retenu — à planifier à réception du matériel |
 | 2026-09-24 | Conception de scènes / shows par une IA à partir du matériel et de la documentation | Transverse (doc 02 §17b) | Retenu (GEN-130 à 134) |
 | 2026-09-24 | Test de sortie : **canaux maintenus** à la valeur de test pendant le chenillard (maîtres des appareils à gradateur), cf. Q23 | Sortie (SORT-007) | Retenu : SORT-008 (P3) |
 | 2026-09-24 | Test de sortie en **mode rampe** (tous les canaux varient) : réalisé pour l'endurance T-SORT-07 (`dmx-headless endurance`) | Sortie | Réalisé (P0) |

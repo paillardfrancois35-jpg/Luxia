@@ -32,7 +32,7 @@
   <UserControl.Resources>
     <DataTemplate x:Key="QuickPalette" x:DataType="vm:QuickPaletteViewModel">
       <Button FontSize="11" Padding="6,3" Margin="0,0,4,4" BorderBrush="{Binding Color}" BorderThickness="0,0,0,3"
-              Command="{Binding $parent[UserControl].((vm:LiveViewModel)DataContext).ApplyPaletteCommand}" CommandParameter="{Binding}">
+              Command="{Binding $parent[ItemsControl].((vm:LiveViewModel)DataContext).ApplyPaletteCommand}" CommandParameter="{Binding}">
         <StackPanel Orientation="Horizontal" Spacing="4">
           <Border Width="10" Height="10" CornerRadius="5" Background="{Binding Color}" />
           <TextBlock Text="{Binding Name}" />

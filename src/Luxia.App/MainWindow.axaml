@@ -53,6 +53,11 @@
           <Ellipse Width="10" Height="10" Fill="{Binding OutputColor}" VerticalAlignment="Center" />
           <TextBlock Text="{Binding OutputStatus}" VerticalAlignment="Center" />
           <TextBlock Text="{Binding FramesPerSecond}" VerticalAlignment="Center" Opacity="0.7" Margin="12,0,0,0" />
+          <StackPanel Orientation="Horizontal" Spacing="4" Margin="12,0,0,0" IsVisible="{Binding Recording}" VerticalAlignment="Center"
+                      ToolTip.Tip="Enregistrement des trames en cours (écran Sorties)">
+            <Ellipse Classes="rec" Width="10" Height="10" />
+            <TextBlock Text="REC" Foreground="#F85149" FontWeight="Bold" />
+          </StackPanel>
           <TextBlock Text="{Binding EngineIndicators}" VerticalAlignment="Center" Opacity="0.7" Margin="12,0,0,0" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Right" Text="{Binding ProjectName}" VerticalAlignment="Center" HorizontalAlignment="Right" />
