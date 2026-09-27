@@ -528,10 +528,14 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         {
             var names = group.Select(l => l.Label.Split(" – ")[0]).Distinct().ToList();
             var who = names.Count <= 2 ? string.Join(", ", names) : string.Create(CultureInfo.CurrentCulture, $"{names.Count} appareils");
+
+            // Temps avant la levée (retour d'essai P5 : « 30 s, c'est long ») : le plus long du groupe, arrondi au-dessus.
+            var remaining = group.Max(l => l.RemainingSeconds);
+            var left = remaining is { } seconds ? string.Create(CultureInfo.CurrentCulture, $" (encore {Math.Ceiling(seconds):0} s)") : string.Empty;
             parts.Add(group.Key switch
             {
-                SafetyLimitKind.Strobe => $"strobe limité : {who}",
-                SafetyLimitKind.Smoke => $"fumée en repos : {who}",
+                SafetyLimitKind.Strobe => $"strobe limité : {who}{left}",
+                SafetyLimitKind.Smoke => $"fumée en repos : {who}{left}",
                 _ => $"zone interdite : {who}",
             });
         }

@@ -292,7 +292,7 @@ internal sealed class SafetyLimiter
         }
 
         Write(frames, channel, channel.Rest);
-        _active.Add(new ActiveLimit(SafetyLimitKind.Smoke, channel.FixtureId, channel.Label, reason));
+        _active.Add(new ActiveLimit(SafetyLimitKind.Smoke, channel.FixtureId, channel.Label, reason, smoke.RestRemaining > 0 ? smoke.RestRemaining : null));
         if (!smoke.Reported)
         {
             smoke.Reported = true;
@@ -302,7 +302,7 @@ internal sealed class SafetyLimiter
 
     private void Report(StrobeGroup group, SafetyLimitKind kind, GuardedChannel channel, string reason, TimeSpan now, Action<SafetyLimitReached> publish)
     {
-        _active.Add(new ActiveLimit(kind, channel.FixtureId, channel.Label, reason));
+        _active.Add(new ActiveLimit(kind, channel.FixtureId, channel.Label, reason, group.PauseRemaining > 0 ? group.PauseRemaining : null));
         if (group.Reported)
         {
             return;

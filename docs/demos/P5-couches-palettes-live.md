@@ -67,7 +67,8 @@ Renommez `"name"` en « Show de travail » dans `samples/Show de travail/projet.
 ## Exemple 5 – Fumée plafonnée (MOT-081, DEMO-4) — sans machine pour l'instant (Q29)
 
 1. Colonne **Ambiance** : **Fumée longue (plafonnée à 10 s)**. La machine n'étant pas branchée, regardez le **canal 180** (écran Console, moniteur de sortie) ou le journal : 255 pendant 10 s, puis 0 et 30 s de repos.
-2. Bouton **FUMÉE** maintenu (touche **Z**) pendant ce repos : rien ne sort. **Rafale** : 3 s.
+2. **Arrêtez « Fumée longue » pendant le repos** (sinon, le repos fini, la scène émet de nouveau et sera recoupée 10 s plus tard). Bouton **FUMÉE** maintenu (touche **Z**) pendant ce repos : rien ne sort ; la pastille affiche le temps restant (« encore N s »).
+3. Le repos fini, **Rafale** : 3 s à 255. *Attention : toute émission, même courte (arrêt d'une scène de fumée, appui bref sur Z), est suivie de 30 s de repos minimal (GEN-084) : c'est voulu.*
 
 ## Exemple 6 – Zone interdite des lyres (MOT-082, INST-053, DEMO-4)
 

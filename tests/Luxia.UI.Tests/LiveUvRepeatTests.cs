@@ -85,6 +85,20 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
         interesting.FindIndex(on, l => l.StartsWith("DMX", StringComparison.Ordinal) && l.Contains("162:255→0")).ShouldBeGreaterThan(on, string.Join(Environment.NewLine, lines));
     }
 
+    [Fact]
+    [Trait("Exigence", "LIVE-008")]
+    [Trait("Exigence", "MOT-081")]
+    public void SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds()
+    {
+        var smoke = _vm.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == "Fumée longue (plafonnée à 10 s)");
+        _vm.Press(smoke);
+        _vm.Release(smoke);
+        Run(12 * 40); // 12 s : coupée à 10 s, encore 28,x s de repos
+
+        _vm.LimitsText.ShouldContain("fumée en repos");
+        _vm.LimitsText.ShouldContain("(encore 29 s)"); // 28,x s arrondis au-dessus
+    }
+
     private async Task Settle()
     {
         for (var i = 0; i < 8; i++)

@@ -279,7 +279,7 @@
 | [SCN-038](exigences/SCN-038.md) | M | Copier / coller, miroir | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
 | [SCN-039](exigences/SCN-039.md) | I | Annuler / rétablir dans l'éditeur de scènes | Validé | ScenesViewModelTests.DeleteScene_ThenUndo_RestoresIt |
 
-## P5 – 72 exigences, 49 couvertes par des tests automatiques
+## P5 – 72 exigences, 50 couvertes par des tests automatiques
 
 > Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 30 · Réalisé, à valider sur matériel : 14 · Validé : 11
 
@@ -325,7 +325,7 @@
 | [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Réalisé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
 | [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Reporté (chantier ergonomie) |  |
 | [LIVE-007](exigences/LIVE-007.md) | M | Mini-simulateur optionnel dans l'écran Live | Reporté (chantier ergonomie) |  |
-| [LIVE-008](exigences/LIVE-008.md) | I | Indication visible de toute limite de sûreté active et de tout verrou | Réalisé |  |
+| [LIVE-008](exigences/LIVE-008.md) | I | Indication visible de toute limite de sûreté active et de tout verrou | Réalisé | LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds |
 | [LIVE-009](exigences/LIVE-009.md) | M | Journal défilant des derniers événements | Réalisé | LiveViewModelTests.Journal_ShowsSceneStarts |
 | [LIVE-010](exigences/LIVE-010.md) | I | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | Réalisé, à valider sur matériel | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-011](exigences/LIVE-011.md) | M | Accès à l'assistant d'installation | Reporté (chantier ergonomie) |  |
@@ -348,7 +348,7 @@
 | [MOT-072](exigences/MOT-072.md) | I | Flash | Validé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
 | [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Validé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
-| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
+| [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds<br>ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>(+1) |
 | [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | ReferenceShowP5Tests.Trap_LyreTowardsThePublic_StopsAtTheZoneEdge<br>SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>(+2) |
 | [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |
 | [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |

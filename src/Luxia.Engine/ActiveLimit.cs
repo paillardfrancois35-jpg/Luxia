@@ -7,4 +7,5 @@ namespace Luxia.Engine;
 /// <param name="FixtureId">Appareil.</param>
 /// <param name="Label">Appareil ou canal, lisible.</param>
 /// <param name="Detail">Ce que fait le limiteur.</param>
-public readonly record struct ActiveLimit(SafetyLimitKind Kind, Guid FixtureId, string Label, string Detail);
+/// <param name="RemainingSeconds">Temps avant la levée de la limite (pause du strobe, repos de la fumée), si elle en a un.</param>
+public readonly record struct ActiveLimit(SafetyLimitKind Kind, Guid FixtureId, string Label, string Detail, double? RemainingSeconds = null);
