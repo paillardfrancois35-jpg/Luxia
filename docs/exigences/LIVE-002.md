@@ -1,0 +1,49 @@
+# LIVE-002 – Colonnes de couches
+
+| Champ | Valeur |
+|---|---|
+| **Statut** | Réalisé |
+| **Priorité** | I |
+| **Phase** | P5 |
+| **Source** | [doc 18 – 3. Exigences – structure](../18-live.md) |
+| **Remarque** | Une colonne par couche (ordre des priorités, couches masquées via live.json), scènes « visibles en Live » dans l'ordre de scènes.json, scène active encadrée de sa couleur avec progression et étape, stop et master de couche. |
+| **Liens** | COU-001, SCN-009 |
+
+## Description
+
+> **Colonnes de couches** : pour chaque couche, les scènes **visibles en Live**, dans l'ordre de la couche ; la scène active est mise en évidence avec sa progression (étape, barre) ; bouton stop et master de couche.
+
+**Critère d'acceptation** : Revue.
+
+## Réalisation
+
+- `src/Luxia.UI.Modules.Live/LiveItems.cs` (`LayerColumnViewModel`, `LiveSceneViewModel`)
+- `src/Luxia.UI.Modules.Live/LiveView.axaml`
+
+## Tests
+
+- `LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder`
+- `LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops`
+
+## Historique
+
+| Date | Par | Type | Entrée |
+|---|---|---|---|
+| 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
+| 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Utilisateur | Question | Avant de lancer l'exécutable : refaire une analyse des nouveaux écrans (lisible, saisissable, sans place perdue) — « la passe d'ergonomie à venir n'est pas une raison pour faire mal les nouveaux développements ». |
+| 2026-09-27 | Claude | Test | Revue par captures en 1680 × 1050 et 1366 × 768, Live « en jeu » : scène active trop peu distincte ; colonnes coupées en 1366 ; bloc Stop + master trop haut. |
+| 2026-09-27 | Claude | Développement | Scène active remplie de sa couleur, nom en gras, ▶ ; liseré de couleur à gauche sinon ; colonnes réparties sur la largeur (120 px minimum) ; arrêt et master sur une ligne ; boutons de 42 px ; nom complet en info-bulle. |
+| 2026-09-27 | Utilisateur | Test | Essai P5, exemple 1 : colonnes du Live, scène active remplie de sa couleur — conforme (étapes 1 à 4). |
+| 2026-09-27 | Utilisateur | Test | Essai P5, exemple 1 suite : positions des lyres (piste centre, plafond) sans toucher couleur ni intensité — ok ; Intensité 50 % — ok. **Étape 8 non conforme** : baisser le master de la colonne Couleurs n'a aucun effet. |
+| 2026-09-27 | Claude | Note | Analyse de l'étape 8 : conforme au cahier des charges (MOT-033 : le master agit sur l'intensité, « sur tous les attributs » en option) — les scènes « couleur seule » n'ont pas d'intensité, le master n'a rien à atténuer. Erreur du guide (« les couleurs s'atténuent »). Manque réel : l'option « master sur tous les attributs » n'est pas dans la fenêtre Couches (COU-001). Proposition soumise à l'utilisateur : case « Master sur tout », cochée par défaut pour Couleurs. |
+| 2026-09-27 | Claude | Note | Étape 8 (master Couleurs sans effet) : conforme, erreur du guide corrigée (décision utilisateur, voir COU-001). |
+| 2026-09-27 | Utilisateur | Test | Essai P5, exemple 2, étape 3 : « Où se trouve ce bouton Blackout partiel ? » — la colonne Flashs n'était pas visible. |
+| 2026-09-27 | Claude | Test | Reproduit en capture à 1100 × 700 (écran étroit ou mise à l'échelle Windows) : colonnes coupées à gauche et à droite, colonne Flashs sous les actions, **sans barre de défilement** — défaut introduit par la correction de la veille (défilement horizontal désactivé). |
+| 2026-09-27 | Claude | Développement | Colonnes réparties sur la largeur visible, 110 px minimum ; au-delà, défilement horizontal au lieu de couper. |
+| 2026-09-27 | Utilisateur | Note | Écran de l'utilisateur : 1920 × 1080, mise à l'échelle 100 %. |
+| 2026-09-27 | Claude | Test | Captures en 1920 × 1040 : les 7 colonnes visibles, « Blackout partiel (sauf UV) » en 4e position de la colonne Flashs ; en 1100 × 700 : défilement horizontal, plus rien de coupé. |
+| 2026-09-27 | Utilisateur | Test | Remarque : arrêter « UV plein » fait mettre « des plombes » à l'UV pour s'éteindre. |
+| 2026-09-27 | Claude | Test | Vérifié sans matériel : la scène n'a aucun fondu de sortie ; l'enregistrement des trames montre les canaux UV 162 à 165 passer de 255 à 0 **d'une trame à l'autre** à l'arrêt (gradateur 161 maintenu par Plein feu). Lenteur a priori propre à l'appareil (BeamZ BUV463) : diagnostic en cours avec l'utilisateur (essai par la Console). |
+| 2026-09-27 | Utilisateur | Test | Diagnostic UV (BUV463, UV 1 à l'adresse 161, raccordé ce jour) : à la Console, 161 à 165 réagissent instantanément. Avec la scène « UV plein », certaines rampes s'allument sans atteindre 100 % tout de suite ; pire avec « Plein feu » (même la Console ne répond plus immédiatement) ; après l'arrêt de UV plein, la Console affiche 162-165 à 0 alors que les rampes restent allumées. |
+| 2026-09-27 | Claude | Test | Notice BUV463 relue : un seul mode, 7 canaux (hypothèse du canal 168 écartée). Trame émise vérifiée (enregistrement) : 161-165 à 255, 166-167 à 0, extinction en une trame. La trame est correcte ; symptômes compatibles avec une réception DMX dégradée (terminaison de fin de ligne, câble) qui empire avec des trames chargées. Essais demandés : reproduire à la Console avec 20+ canaux allumés ; vérifier la terminaison 120 Ω / position de l'UV dans la chaîne. |

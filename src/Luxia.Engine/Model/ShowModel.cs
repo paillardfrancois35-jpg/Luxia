@@ -18,17 +18,20 @@ public sealed class ShowModel
     /// <param name="layers">Couches (au moins une si des scènes doivent jouer).</param>
     /// <param name="scenes">Scènes.</param>
     /// <param name="aliases">Autres appareils qui partagent les paramètres d'un appareil (jumeaux, MOT-092) : alias → appareil de référence.</param>
+    /// <param name="safety">Limites de sûreté (doc 15 §9) ; aucune par défaut.</param>
     public ShowModel(
         IReadOnlyList<RigParameter> parameters,
         IReadOnlyList<EngineLayer>? layers = null,
         IReadOnlyList<EngineScene>? scenes = null,
-        IReadOnlyDictionary<Guid, Guid>? aliases = null)
+        IReadOnlyDictionary<Guid, Guid>? aliases = null,
+        SafetyModel? safety = null)
     {
         ArgumentNullException.ThrowIfNull(parameters);
         Parameters = parameters;
         Layers = layers ?? [];
         Scenes = scenes ?? [];
         Aliases = aliases ?? new Dictionary<Guid, Guid>();
+        Safety = safety ?? SafetyModel.None;
 
         var index = new Dictionary<(Guid, string), int>();
         for (var i = 0; i < parameters.Count; i++)
@@ -66,6 +69,9 @@ public sealed class ShowModel
 
     /// <summary>Jumeaux : appareil alias → appareil dont il partage les paramètres.</summary>
     public IReadOnlyDictionary<Guid, Guid> Aliases { get; }
+
+    /// <summary>Limites de sûreté : réglages, canaux de strobe et de fumée, zones interdites du lieu actif.</summary>
+    public SafetyModel Safety { get; }
 
     /// <summary>Indice d'un paramètre, ou -1.</summary>
     public int IndexOf(Guid fixtureId, string channelKey) =>

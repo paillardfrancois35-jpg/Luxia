@@ -23,6 +23,9 @@ public sealed record Venue
     /// <summary>Positions des appareils placés (un appareil non placé n'apparaît pas au plan).</summary>
     public IReadOnlyList<FixturePlacement> Placements { get; init; } = [];
 
+    /// <summary>Zones interdites des lyres dans ce lieu (INST-053) ; aucune par défaut.</summary>
+    public IReadOnlyList<ForbiddenZone> ForbiddenZones { get; init; } = [];
+
     /// <summary>Position d'un appareil, si placé dans ce lieu.</summary>
     public FixturePlacement? PlacementOf(Guid fixtureId) => Placements.FirstOrDefault(p => p.FixtureId == fixtureId);
 }

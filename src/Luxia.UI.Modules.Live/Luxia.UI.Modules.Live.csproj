@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <ProjectReference Include="../Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
+    <ProjectReference Include="../Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../Luxia.Scenes/Luxia.Scenes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.UI.Tests" />
+  </ItemGroup>
+
+</Project>

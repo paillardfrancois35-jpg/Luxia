@@ -132,6 +132,7 @@ La couleur et la luminosité restent ainsi réglables séparément, même sur un
 | BIB-008 | M | P2 | Les plages de type **emplacement de roue** portent une couleur ; le simulateur et les palettes couleur « par intention » s'en servent. | Roue de lyre saisie → couleurs visibles. |
 | BIB-009 | M | P2 | Un modèle porte une **version** incrémentée à chaque modification enregistrée. | — |
 | BIB-010 | S | P2 | Un modèle peut être **dérivé** d'un autre (copier puis modifier), avec mention de l'origine. | Dupliquer LPC008S → LPC010. |
+| BIB-101 | I | P5 | Canal Strobe du **LPC008S**, du **LPC120** et de la **LCB803** : plage « Pas de strobe » distincte de la plage de strobe (Q28), pour que le simulateur, `jouer` et le limiteur de strobe (MOT-080) ne prennent pas un appareil qui éclaire fixe pour un strobe. | LPC008S : 0-4 néant, 5-255 strobe ; LCB803 : 0 néant, 1-255 strobe ; LPC120 comme le LPC008S (à confirmer). |
 
 ## 4. Exigences – éditeur
 
@@ -233,7 +234,7 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 | BIB-082, 083 | Import par lots hors du fil de l'interface avec progression ; un modèle déjà présent (même fabricant + modèle, ou même identifiant) n'est **pas** écrasé (« = » au rapport). |
 | Unités (GEN-021) | Faders d'appareil : nom de plage, degrés (Pan/Tilt si l'amplitude est connue), % (intensités, émetteurs), sinon 0-255. |
 | Non réalisés | BIB-027 (S, ouvrir notice / photo : seul le chemin est saisi), BIB-084 (S, export OFL). |
-| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; strobe et programme « rapide → lent » sans plage d'arrêt documentée, à vérifier. WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25, confirmée par Open Fixture Library et vérification en direct de l'utilisateur (BIB-095) ; Tilt 0-230° (pas 180°) ; obturateur ouvert par défaut (0) ; canal Reset en dernière position (121 en 11CH). |
+| Parc (annexe A) | 6 définitions dans `samples/Bibliothèque/` (script d'amorçage `generer.py`) ; tableaux LPC010 / LPC120 lus en rendant les PDF en images. LCB803 : saisie le 2026-09-25 d'après les pages fournies (Q24) ; programme « rapide → lent » sans plage d'arrêt documentée, à vérifier ; strobe : 0 = néant, 1-255 = strobe croissant (Q28, BIB-101). WZYBUTA : à vérifier (Q25). Lyre Tomshine : **refaite** le 2026-09-25, confirmée par Open Fixture Library et vérification en direct de l'utilisateur (BIB-095) ; Tilt 0-230° (pas 180°) ; obturateur ouvert par défaut (0) ; canal Reset en dernière position (121 en 11CH). |
 
 ## Annexe A – Appareils du parc (état de la documentation)
 
@@ -241,8 +242,9 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 |---|---|---|---|---|---|
 | PAR | 4 | Betopper LPC008S (RGB) | 3CH (`d001`), 7CH (`A001`) | PDF + fiche `betopper-lpc008s.md` | Tableau complet connu – à saisir |
 | Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | 4CH (`d001`), 8CH (`A001`) | PDF image (lus par rendu en P2) | **Saisi** (`samples/Bibliothèque/Betopper/`) |
+| Gros PAR (réels) | 2 | Générique **WT05** (PAR 160 W, RGB, sans marque) | 7CH, mêmes commandes que le LPC008S | Aucune notice (utilisateur, essai P5) | **Saisi** (`samples/Bibliothèque/Générique/WT05.json`) ; remplace le LPC120 dans le patch |
 | Lyre | 2 | Tomshine (lyre à gobos) | 9CH, 11CH (Pan/Tilt 16 bits en 11CH) | Photo de la notice (2026-09-25) | **Saisi** ; roue de couleur, gobo et canal Son à vérifier en direct (BIB-095) |
-| UV | 2 | BeamZ BUV463 (UV strobe) | 7CH | PDF texte | À saisir |
+| UV | 2 | BeamZ BUV463 (UV strobe) | **8CH** réel (7CH de la notice + 8e canal « lissage » non documenté, essai P5) | PDF texte | Saisi ; 8e canal ajouté le 2026-09-27 |
 | Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | 3, 6, 12, 24, 48CH (menu `ChNd`) ; 2 / 4 / 8 sections | Pages fournies le 2026-09-25 (Q24) | **Saisi** (`samples/Bibliothèque/BeamZ/LCB803.json`) |
 | Effet multi-têtes | 1 | WZYBUTA Moving Head 150 W (plateau + 4 barrettes de 3 projecteurs RGBW) | 20CH, 64CH (la notice décrit un 16CH qui ne correspond pas) | Captures ScanLibrary de l'utilisateur (2026-09-25) | **Saisi** (12 cellules en 64CH ; canaux 17-19 / 61-63 = laser optionnel absent) |
 | Fumée | 1 | — | 1CH | — | Modèle générique « Machine à fumée » |

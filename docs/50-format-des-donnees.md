@@ -174,6 +174,9 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
       "depthM": 8,
       "placements": [
         { "fixtureId": "5c9e2f10-...", "x": 1.5, "y": 0.5, "heightM": 2, "orientationDeg": 0, "mounting": "standing", "absent": false }
+      ],
+      "forbiddenZones": [
+        { "fixtureId": "9d0a...", "name": "Public", "panMin": 0.3, "panMax": 0.7, "tiltMin": 0.8, "tiltMax": 1 }
       ]
     }
   ],
@@ -185,6 +188,7 @@ Lieux du projet (doc 13 §5) : plan, position des appareils, présence, lieu act
 |---|---|
 | `venues[].placements[].mounting` | `standing` (posé) ou `hanging` (suspendu) |
 | `venues[].placements[].absent` | Appareil non emporté ce soir (INST-052) : non émis, absent du simulateur et des sélections actives |
+| `venues[].forbiddenZones` | Zones interdites des lyres dans ce lieu (INST-053, P5) : rectangles de Pan et Tilt **logiques normalisés 0-1** (valeurs lues au programmeur, avant inversion de montage) ; plusieurs par lyre possibles ; le moteur ramène toute cible qui y tombe au bord le plus proche (MOT-082). Rectangle vide (min ≥ max) ignoré et signalé par `valider` |
 | `activeVenueId` | Lieu actif ; absent ou introuvable = le premier lieu de la liste |
 
 ## 8. Bibliothèque : modèle d'appareil (format 1)
@@ -343,6 +347,7 @@ Schéma JSON : [`schemas/palettes.schema.json`](schemas/palettes.schema.json).
 |---|---|
 | `kind` | `color` (`light` : couleur logique), `intensity` (`level`), `position` (Pan/Tilt par appareil), `beam` (gobo, prisme… par modèle ou appareil) |
 | `values[]` | Valeurs par appareil (`fixtureId`) ou par modèle (`fixtureTypeId`) : pour une couleur, elles **priment** sur la traduction automatique pour ce modèle (PAL-002) |
+| `values[].venueId` | P5 (PAL-004) : lieu d'une valeur de **position**. Absent = lieu « Générique », qui sert aussi de **repli** là où la position n'a jamais été calibrée (signalé, PAL-008). Mettre à jour une palette depuis le programmeur n'écrit que pour les appareils sélectionnés et le lieu actif ; dupliquer un lieu copie ses positions (INST-054) |
 | `color`, `icon` | Bouton (GEN-106) ; une palette couleur sans `color` affiche sa propre couleur |
 
 L'ordre du tableau est l'ordre des grilles (PAL-007). Une palette se référence par son `id` : la renommer ne casse rien.
@@ -369,6 +374,90 @@ Couches (doc 17 §1). Absent = modèle par défaut du doc 17 §1.3 (D28), identi
 | `exclusive` | Lancer une scène remplace celle qui joue, en fondu croisé de `crossFade` (MOT-030) |
 | `intensityMode` | `htp`, `priority`, `additive`, `multiplicative` (doc 15 §5.2) |
 | `master`, `masterOnAllAttributes` | Master de la couche (MOT-033) |
+| `kind` | P5 : `normal` ou `flash` (scènes actives tant que maintenues en Live et sur l'APC mini, COU-005) |
+| `keepOnStopAll` | P5 : couche épargnée par « Tout arrêter » (Ambiance par défaut, COU-007) |
+| `restSceneId` | P5 : scène jouée dès que la couche n'a plus de scène (COU-009) |
+| `families` | P5 : familles d'attributs attendues (`intensity`, `color`, `position`, `beam`, `effectMotion`, `programs`, `atmosphere`…) ; une scène qui en touche d'autres est signalée par `valider` (COU-008) ; vide = aucune vérification |
+
+L'éditeur de couches (écran Scènes → « Couches… ») règle tout sauf `families` et `icon` ; l'ordre de la liste y donne
+les priorités. Schéma : [`schemas/couches.schema.json`](schemas/couches.schema.json).
+
+## 12b. Projet : `sûreté.json` (format 1)
+
+Réglages des limites de sûreté (doc 02 §13, D29). Absent = valeurs par défaut ci-dessous. Les canaux concernés sont ceux
+qu'une étiquette de sûreté désigne dans la bibliothèque (`strobe`, `fumée`, BIB-007) ; un canal compte comme « en strobe »
+quand sa valeur tombe dans une plage `strobe` / `pulse` / `random`, et il est forcé à sa plage `open` (sinon `rest`, sinon 0).
+
+```json
+{
+  "formatVersion": 1,
+  "strobe": { "maxContinuousSeconds": 10, "pauseSeconds": 10, "forbidden": false, "maxSpeedPercent": 100 },
+  "smoke": { "maxEmissionSeconds": 10, "minRestSeconds": 30, "restFactor": 3 }
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `strobe.maxContinuousSeconds` | Strobe continu maximal **par appareil** ; au-delà, pause forcée (MOT-080). Une coupure de moins de 1 s ne remet pas le compte à zéro |
+| `strobe.pauseSeconds` | Durée de la pause forcée |
+| `strobe.forbidden` | Strobe interdit partout |
+| `strobe.maxSpeedPercent` | Plafond de vitesse, en % de chaque plage de strobe progressive (100 = aucun) |
+| `smoke.maxEmissionSeconds` | Émission continue maximale de fumée (MOT-081), commande manuelle et surcharges comprises |
+| `smoke.minRestSeconds` | Repos après une émission **coupée** par la limite, et plafond de tout repos |
+| `smoke.restFactor` | Repos après une émission **plus courte** que la limite = durée émise × ce facteur, plafonné à `minRestSeconds` (défaut 3 : une bouffée de 2 s → 6 s de repos ; la machine ne fume jamais plus d'un quart du temps). 0 = pas de repos après une émission courte |
+
+## 12c. Projet : `live.json` (format 1)
+
+Réglages de l'écran Live (doc 18), tous facultatifs : sans fichier, une colonne par couche (priorité croissante), scènes
+« visibles en Live » dans l'ordre de `scènes.json`. Mêmes colonnes et mêmes boutons pour l'APC mini (D30).
+Schéma : [`schemas/live.schema.json`](schemas/live.schema.json).
+
+```json
+{ "formatVersion": 1, "flashSceneId": "…", "strobeSceneId": "…", "smokeBurstSeconds": 3, "activeSceneClick": "stop", "hiddenLayerIds": [] }
+```
+
+| Propriété | Rôle |
+|---|---|
+| `flashSceneId`, `strobeSceneId` | Scènes jouées **en flash** par les boutons FLASH (touche F) et STROBE (touche S) ; absentes = « Flash blanc » et la première scène « Strobe… » d'une couche de type Flash |
+| `smokeBurstSeconds` | Durée du bouton « Rafale » de fumée (toujours bornée par `sûreté.json`) |
+| `activeSceneClick` | Clic sur la scène qui joue : `stop` (défaut) ou `restart` |
+| `hiddenLayerIds` | Couches absentes du Live et de l'APC mini |
+
+## 12d. Projet : `midi.json` (format 1)
+
+Affectations **modifiées** des contrôleurs (MIDI-007) ; absent = affectation par défaut du doc 18b §3 sur tout contrôleur.
+Une affectation remplace celle du contrôle, pour tous les modèles ou pour celui dont le nom contient `model`
+(MIDI-005 : deux contrôleurs, deux affectations). Pour trouver un contrôle : `luxia-headless midi` affiche chaque appui.
+Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "bindings": [
+    { "model": "MK1", "control": "pad 1 1", "action": "launchScene", "sceneId": "…" },
+    { "control": "droite 5", "action": "smokeBurst" },
+    { "control": "fader 8", "action": "layerMaster", "layerId": "…" }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `control` | `pad <colonne 1-8> <ligne 1-8>` (ligne 1 en haut), `bas <1-8>`, `droite <1-8>` (de haut en bas), `fader <1-9>` (9 = master) |
+| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `none` |
+
+Profils des modèles (notes, LED) : fichiers de données du module (`src/Luxia.Midi/Profiles/*.json`).
+
+## 12e. Projet : dossier `Versions`
+
+Copies des fichiers JSON du projet (GEN-055, D31), `Versions\AAAAMMJJ-HHMMSS\` avec un `motif.txt` : toutes les
+2 minutes si le projet a changé et à chaque passage en Live ; 10 gardées ; menu Projet → Versions du projet… pour
+revenir à l'une d'elles. À ne pas modifier à la main.
+
+## 12f. Poste : `reprise.json` (format 1)
+
+`%AppData%\LuXia\reprise.json` (GEN-095, MOT-102) : scènes qui jouent, masters, Grand Master, blackout, figé, écrit
+toutes les 5 s s'il a changé ; marqué « arrêt propre » à la fermeture. Après un arrêt brutal, LuXia propose de reprendre.
 
 ## 13. Scénario de commandes `luxia-headless` (texte)
 
@@ -391,6 +480,11 @@ scène ou de couche entre guillemets s'il contient des espaces (ou identifiant).
 12    fin
 ```
 
+Verbes ajoutés en P5 : `flash "scène" appui|relache` (CMD-014), `figer oui|non [suspendre]` (CMD-003), `fumee appui|relache`
+ou `fumee rafale 3` (CMD-030), `canal 180 255` (surcharge brute de l'univers 1, pour éprouver les limites de sûreté),
+`liberer-canaux`, `arreter-couche "couche"`, `tout-arreter tout` (sans « tout », les couches protégées continuent).
+Chaque intervention d'une limite de sûreté apparaît dans le résumé (`⚠ sûreté : …`, MOT-083).
+
 Le résultat est un **résumé lisible** (qui s'allume, en quelle couleur, à quel niveau, où pointent les lyres, à quel
 moment) et, avec `--enregistrer`, un fichier `.dmxrec` (§9). `luxia-headless jouer <projet> --scene "nom"` joue une
 seule scène (GEN-132).
@@ -404,3 +498,4 @@ seule scène (GEN-132).
 | 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |
 | 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |
 | 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |
+| 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |

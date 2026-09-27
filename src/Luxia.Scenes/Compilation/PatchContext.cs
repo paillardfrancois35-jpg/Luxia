@@ -58,7 +58,15 @@ public sealed class PatchContext
 
         Fixtures = fixtures;
         Problems = problems;
+        Venue = venue;
+        VenueKey = Rules.VenuePalettes.Key(venue);
     }
+
+    /// <summary>Lieu actif.</summary>
+    public Venue Venue { get; }
+
+    /// <summary>Clé du lieu actif pour les palettes de position (<c>null</c> = « Générique », PAL-004).</summary>
+    public Guid? VenueKey { get; }
 
     /// <summary>Appareils résolus, dans l'ordre du patch (univers, adresse).</summary>
     public IReadOnlyList<FixtureInfo> Fixtures { get; }
@@ -113,7 +121,8 @@ public sealed class PatchContext
                 .FirstOrDefault(s => s.Kind == auto.Kind
                     && (auto.Kind != AutoSelectionKind.ByCategory || s.Category == auto.Category)
                     && (auto.Kind != AutoSelectionKind.ByModel || s.ModelDisplayName == auto.Model));
-            return selection is null ? [] : [.. selection.Items.Select(f => (Find(f.Id)!, 0))];
+            // SCN-007 : une cellule précisée vaut pour chaque membre (rangée 2 de tous les UV) ; 0 = l'appareil entier.
+            return selection is null ? [] : [.. selection.Items.Select(f => (Find(f.Id)!, target.Cell))];
         }
 
         problem = "cible vide (ni appareil, ni sélection)";

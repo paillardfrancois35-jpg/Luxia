@@ -2,6 +2,7 @@ using System.Globalization;
 using Luxia.Core.Dmx;
 using Luxia.Core.Time;
 using Luxia.Engine;
+using Luxia.Messaging.Events;
 using Luxia.Output.Recording;
 using Luxia.Patch.Rules;
 using Luxia.Scenes.Compilation;
@@ -42,7 +43,8 @@ public static class ScenarioRunner
         var patch = new PatchContext(content.Installation, content.Venues, content.TypeOf);
         var clock = new VirtualClock();
         var sink = new MemorySink();
-        var engine = new RenderEngine(sink, clock, seed: 1);
+        var bus = new InlineBus();
+        var engine = new RenderEngine(sink, clock, bus: bus, seed: 1);
         engine.LoadShow(compiled.Model);
 
         using var writer = recording is null ? null : new RecordingWriter(File.Create(recording), 1, rateHz, DateTime.UtcNow);
@@ -66,6 +68,12 @@ public static class ScenarioRunner
 
             engine.Tick();
             frames++;
+            foreach (var limit in bus.Drain())
+            {
+                // MOT-083 : chaque intervention d'un limiteur apparaît dans le résumé (une fois par épisode).
+                lines.Add($"{Time(limit.At)}  ⚠ sûreté : {limit.Label} — {limit.Detail}");
+            }
+
             writer?.Append(sink.Frame, now);
             if (now >= nextSample)
             {
@@ -134,6 +142,31 @@ public static class ScenarioRunner
     }
 
     private static string Time(TimeSpan t) => string.Create(CultureInfo.CurrentCulture, $"{t.TotalSeconds,7:0.00} s");
+
+    /// <summary>Bus synchrone : le déroulé est en temps virtuel, sans fil d'abonnés.</summary>
+    private sealed class InlineBus : IEventBus
+    {
+        private readonly List<SafetyLimitReached> _limits = [];
+
+        public void Publish<TEvent>(TEvent evt)
+            where TEvent : class
+        {
+            if (evt is SafetyLimitReached limit)
+            {
+                _limits.Add(limit);
+            }
+        }
+
+        public IDisposable Subscribe<TEvent>(Action<TEvent> handler)
+            where TEvent : class => throw new NotSupportedException();
+
+        public List<SafetyLimitReached> Drain()
+        {
+            var result = _limits.ToList();
+            _limits.Clear();
+            return result;
+        }
+    }
 
     private sealed class MemorySink : IFrameSink
     {

@@ -29,6 +29,18 @@ public sealed record EngineSnapshot
     /// <summary>Blackout actif.</summary>
     public bool Blackout { get; init; }
 
+    /// <summary>Sortie figée (MOT-073).</summary>
+    public bool Frozen { get; init; }
+
+    /// <summary>Fumée manuelle en cours (maintien ou rafale, CMD-030).</summary>
+    public bool Smoking { get; init; }
+
+    /// <summary>Repos de fumée restant en secondes (0 = fumée disponible), MOT-081.</summary>
+    public double SmokeRestSeconds { get; init; }
+
     /// <summary>Grand Master (0 à 1).</summary>
     public double GrandMaster { get; init; } = 1;
+
+    /// <summary>Limites de sûreté en train d'agir (GEN-086, LIVE-008).</summary>
+    public IReadOnlyList<ActiveLimit> ActiveLimits { get; init; } = [];
 }

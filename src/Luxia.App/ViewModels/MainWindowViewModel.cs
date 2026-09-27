@@ -7,6 +7,7 @@ using Luxia.Messaging.Events;
 using Luxia.UI.Controls;
 using Luxia.UI.Modules.Console;
 using Luxia.UI.Modules.Outputs;
+using Microsoft.Extensions.Logging;
 
 namespace Luxia.App.ViewModels;
 
@@ -23,6 +24,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
 
     private readonly LuxiaRuntime _runtime;
+    private readonly EngineEcho _grandMasterEcho = new();
     private readonly IDialogService _dialogs;
     private int _statusCountdown;
 
@@ -61,6 +63,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
     private bool _syncingFromEngine;
 
+    /// <summary>Enregistrement des trames en cours : voyant REC dans la barre d'état, sur tous les écrans (SORT-065).</summary>
+    [ObservableProperty]
+    private bool _recording;
+
     /// <summary>Crée la coquille.</summary>
     public MainWindowViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -69,6 +75,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         _dialogs = dialogs;
         Pages =
         [
+            new NavigationItem("Live", "▶", new Luxia.UI.Modules.Live.LiveViewModel(runtime)),
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
             new NavigationItem("Installation", "▦", new Luxia.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),
@@ -161,6 +168,98 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void ToggleBlackout() => Blackout = !Blackout;
 
+    /// <summary>Temps entre le lancement du processus et la fenêtre prête (GEN-064), en secondes.</summary>
+    public double? StartupSeconds { get; private set; }
+
+    /// <summary>Fenêtre ouverte : mesure du démarrage (GEN-064), écrite au journal technique et dans « À propos ».</summary>
+    public void ReportReady()
+    {
+        var started = System.Diagnostics.Process.GetCurrentProcess().StartTime;
+        StartupSeconds = Math.Round((DateTime.Now - started).TotalSeconds, 1);
+        _runtime.Loggers.CreateLogger("Démarrage").LogInformation("LuXia prêt en {Secondes} s (GEN-064 : moins de 10 s)", StartupSeconds);
+    }
+
+    /// <summary>
+    /// Après un arrêt brutal (GEN-095, SC-11) : propose de reprendre les scènes qui jouaient. Appelé à l'ouverture de la
+    /// fenêtre.
+    /// </summary>
+    public async Task OfferResumeAsync()
+    {
+        if (_runtime.PendingResume is not { } state)
+        {
+            return;
+        }
+
+        var names = state.Scenes
+            .Select(id => _runtime.Project.Scenes.Scenes.FirstOrDefault(s => s.Id == id)?.Name)
+            .OfType<string>()
+            .ToList();
+        var message = string.Create(
+            CultureInfo.CurrentCulture,
+            $"LuXia ne s'est pas fermé normalement (dernier état connu : {state.SavedAt:dd/MM à HH:mm:ss}).{Environment.NewLine}{Environment.NewLine}Reprendre là où il en était ?{Environment.NewLine}Scènes : {string.Join(", ", names)}{(state.Blackout ? " — blackout actif" : string.Empty)}");
+        if (await _dialogs.ConfirmAsync("Reprise après arrêt brutal", message).ConfigureAwait(true))
+        {
+            _runtime.Resume(state);
+        }
+        else
+        {
+            _runtime.DismissResume();
+        }
+    }
+
+    /// <summary>Versions du projet (GEN-055) : liste des 10 dernières, retour à l'une d'elles.</summary>
+    [RelayCommand]
+    private async Task ShowVersionsAsync()
+    {
+        if (_runtime.Project.Folder is not { } folder)
+        {
+            return;
+        }
+
+        var versions = ProjectVersions.List(folder);
+        if (versions.Count == 0)
+        {
+            await _dialogs.ShowInfoAsync("Versions du projet", "Aucune version enregistrée pour l'instant : une version est gardée toutes les 2 minutes si le projet a changé, et à chaque passage en Live.").ConfigureAwait(true);
+            return;
+        }
+
+        var list = string.Join(
+            Environment.NewLine,
+            versions.Select((v, i) => string.Create(CultureInfo.CurrentCulture, $"{i + 1}. {v.SavedAt:dd/MM/yyyy HH:mm:ss}  ({v.Reason})")));
+        var answer = await _dialogs.AskTextAsync(
+            "Versions du projet",
+            $"Versions gardées (la plus récente en premier) :{Environment.NewLine}{list}{Environment.NewLine}{Environment.NewLine}Numéro de la version à rétablir (vide = aucune) :").ConfigureAwait(true);
+        if (!int.TryParse(answer, NumberStyles.Integer, CultureInfo.CurrentCulture, out var number) || number < 1 || number > versions.Count)
+        {
+            return;
+        }
+
+        var chosen = versions[number - 1];
+        var confirm = await _dialogs.ConfirmAsync(
+            "Rétablir une version",
+            $"Rétablir la version du {chosen.SavedAt:dd/MM/yyyy HH:mm:ss} ? L'état actuel est d'abord gardé comme version (« avant restauration »).").ConfigureAwait(true);
+        if (!confirm)
+        {
+            return;
+        }
+
+        ProjectVersions.Restore(folder, chosen.Name, DateTime.Now);
+        _runtime.Project.Open(folder);
+        ProjectMessage = $"Version du {chosen.SavedAt:dd/MM/yyyy HH:mm:ss} rétablie.";
+    }
+
+    /// <summary>Trace une action de l'utilisateur sur l'onglet courant (SORT-066).</summary>
+    public void TraceUi(string action) => _runtime.TraceUi(SelectedPage.Title, action);
+
+    partial void OnSelectedPageChanged(NavigationItem value)
+    {
+        // GEN-054 : passage Atelier → Live = moment de garder une version du projet (sans bloquer l'écran).
+        if (value.Page is Luxia.UI.Modules.Live.LiveViewModel)
+        {
+            _runtime.SaveProjectVersion("passage en Live");
+        }
+    }
+
     partial void OnBlackoutChanged(bool value)
     {
         if (!_syncingFromEngine)
@@ -173,6 +272,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
         if (!_syncingFromEngine)
         {
+            _grandMasterEcho.Sent(value);
             _runtime.SetGrandMaster(Math.Clamp(value, 0, 100) / 100);
         }
     }
@@ -233,15 +333,24 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         await _dialogs.ShowInfoAsync("Import de scènes", string.Join(Environment.NewLine, result.Report.Prepend(summary))).ConfigureAwait(true);
     }
 
-    /// <summary>Problèmes trouvés en compilant le projet (références introuvables, valeurs ignorées).</summary>
+    /// <summary>
+    /// Problèmes du projet : compilation (références introuvables, valeurs ignorées) et règles d'organisation
+    /// (COU-008 hors famille…), les mêmes que <c>luxia-headless valider</c>.
+    /// </summary>
     [RelayCommand]
     private Task ShowProjectProblemsAsync()
     {
-        var issues = _runtime.Show.Last?.Issues ?? [];
+        var issues = _runtime.ProjectProblems();
         var text = issues.Count == 0
             ? "Aucun problème : toutes les scènes sont jouables telles quelles."
-            : string.Join(Environment.NewLine, issues.Select(i => i.ToString()));
+            : string.Join(Environment.NewLine + Environment.NewLine, issues.Select(Describe));
         return _dialogs.ShowInfoAsync("Problèmes du projet", text);
+
+        // Lisible d'abord (quoi, pourquoi), l'emplacement technique ensuite, pour qui corrige le fichier.
+        static string Describe(Luxia.Scenes.Compilation.CompileIssue issue) =>
+            $"{(issue.Severity == Luxia.Fixtures.Rules.IssueSeverity.Error ? "✖ Erreur" : "⚠ Avertissement")} – {(issue.Item.Length == 0 ? issue.File : char.ToUpper(issue.Item[0], CultureInfo.CurrentCulture) + issue.Item[1..])}{Environment.NewLine}"
+            + $"   {issue.Message}{Environment.NewLine}"
+            + $"   (fichier {issue.File}, champ {issue.Field})";
     }
 
     /// <summary>Texte de diagnostic copiable (exécutable, dossiers, préférences, projet) : à donner en cas d'analyse.</summary>
@@ -255,6 +364,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         {
             $"LuXia v{Version}",
             $"Généré le {DateTime.Now:yyyy-MM-dd HH:mm:ss}",
+            $"Démarrage : prêt en {StartupSeconds?.ToString("0.0", CultureInfo.CurrentCulture) ?? "?"} s ; processeur : {_runtime.CpuPercent:0.0} %",
             string.Empty,
             $"Exécutable : {Environment.ProcessPath ?? "?"}",
             $"Répertoire de travail : {Environment.CurrentDirectory}",
@@ -297,7 +407,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         try
         {
             Blackout = snapshot.Blackout;
-            if (Math.Abs((GrandMaster / 100) - snapshot.GrandMaster) > 0.005)
+            if (_grandMasterEcho.Accept(snapshot.GrandMaster * 100) && Math.Abs((GrandMaster / 100) - snapshot.GrandMaster) > 0.005)
             {
                 GrandMaster = Math.Round(snapshot.GrandMaster * 100);
             }
@@ -309,8 +419,9 @@ public sealed partial class MainWindowViewModel : ViewModelBase
 
         EngineIndicators = string.Create(
             CultureInfo.CurrentCulture,
-            $"Blackout : {(snapshot.Blackout ? "ACTIF" : "non")}  ·  GM {Math.Round(snapshot.GrandMaster * 100)} %  ·  {snapshot.Playbacks.Count} scène(s) en cours  ·  Mode : manuel");
+            $"Blackout : {(snapshot.Blackout ? "ACTIF" : "non")}  ·  GM {Math.Round(snapshot.GrandMaster * 100)} %  ·  {snapshot.Playbacks.Count} scène(s) en cours  ·  Mode : manuel  ·  CPU {_runtime.CpuPercent:0} %");
 
+        Recording = _runtime.Recorder is not null;
         var routes = _runtime.Router.Routes;
         var main = routes.FirstOrDefault(r => r.Driver.Id != Output.Drivers.RecorderOutputDriver.DriverId);
         if (main.Driver is null)

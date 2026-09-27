@@ -52,6 +52,7 @@
     <ProjectReference Include="../Luxia.UI.Modules.Installation/Luxia.UI.Modules.Installation.csproj" />
     <ProjectReference Include="../Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
     <ProjectReference Include="../Luxia.UI.Modules.Scenes/Luxia.UI.Modules.Scenes.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Live/Luxia.UI.Modules.Live.csproj" />
   </ItemGroup>
 
 </Project>

@@ -123,3 +123,11 @@ Parcours guidé, accessible depuis l'accueil et le Live, pour être prêt en **m
 | INST-051 | Positionnement par champs numériques (X, Y en mètres), pas de glisser-déposer sur un plan visuel. |
 | Identification (CMD-023) | Réalisée par des surcharges de canaux minutées côté interface (comme la découverte BIB-062), pas par une commande moteur dédiée : voir la fiche CMD-023 pour la discussion complète. |
 | Écran | `Dmx.UI.Modules.Installation` : onglets Univers et patch, Sélections, Lieux, Fiche d'installation. |
+
+## 9. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Zones interdites (INST-053) | `forbiddenZones` du lieu : rectangles Pan/Tilt (valeurs logiques 0-1) par lyre, plusieurs possibles (Q30). Saisie dans une fenêtre non modale depuis les palettes de l'écran Scènes : sélectionner la lyre au programmeur, viser un coin, puis l'autre. Pas encore dessinées au simulateur (SIM-008). |
+| Positions par lieu (INST-054) | Dupliquer un lieu copie ses positions calibrées (et ses zones, copiées avec le lieu). |
+| Assistant (INST-070, 071) | Reporté au chantier d'ergonomie (Q32). Calibration (INST-072) sans écran dédié : programmeur + « Mettre à jour une palette », enregistrée pour le lieu actif. |

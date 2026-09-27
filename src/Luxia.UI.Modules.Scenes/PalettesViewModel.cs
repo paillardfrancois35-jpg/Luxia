@@ -57,6 +57,12 @@ public sealed partial class PalettesViewModel : ViewModelBase
     /// <summary>Palettes de position.</summary>
     public ObservableCollection<PaletteButtonViewModel> Positions { get; } = [];
 
+    /// <summary>Titre des positions : elles sont propres au lieu actif (PAL-004).</summary>
+    public string PositionsTitle => $"Positions – {_runtime.Project.Venues.Active.Name}";
+
+    /// <summary>Le lieu actif a pu changer (recompilation) : titre des positions à jour.</summary>
+    public void RefreshVenue() => OnPropertyChanged(nameof(PositionsTitle));
+
     /// <summary>Palettes de faisceau.</summary>
     public ObservableCollection<PaletteButtonViewModel> Beams { get; } = [];
 
@@ -69,6 +75,7 @@ public sealed partial class PalettesViewModel : ViewModelBase
         Colors.Clear();
         Intensities.Clear();
         Positions.Clear();
+        OnPropertyChanged(nameof(PositionsTitle));
         Beams.Clear();
         foreach (var palette in _runtime.Project.Palettes.Palettes)
         {
@@ -134,6 +141,12 @@ public sealed partial class PalettesViewModel : ViewModelBase
             return;
         }
 
+        if (palette.Kind == PaletteKind.Position)
+        {
+            // PAL-004 : positions du lieu actif (et valeur de repli « Générique » pour les autres lieux).
+            palette = VenuePalettes.Merge(palette with { Values = [] }, palette.Values, VenueKey);
+        }
+
         Save([.. _runtime.Project.Palettes.Palettes, palette]);
         Message = $"Palette « {palette.Name} » créée.";
     }
@@ -154,7 +167,15 @@ public sealed partial class PalettesViewModel : ViewModelBase
             return;
         }
 
-        var ok = await _dialogs.ConfirmAsync("Mettre à jour la palette", $"Remplacer « {button.Palette.Name} » par les réglages actuels ? Les scènes qui l'utilisent suivront.").ConfigureAwait(true);
+        var where = string.Empty;
+        if (updated.Kind == PaletteKind.Position)
+        {
+            // PAL-004 : seuls les appareils sélectionnés, dans le lieu actif, sont recalibrés ; le reste est gardé.
+            updated = VenuePalettes.Merge(button.Palette, updated.Values, VenueKey);
+            where = $" (lieu « {_runtime.Project.Venues.Active.Name} »)";
+        }
+
+        var ok = await _dialogs.ConfirmAsync("Mettre à jour la palette", $"Remplacer « {button.Palette.Name} »{where} par les réglages actuels ? Les scènes qui l'utilisent suivront.").ConfigureAwait(true);
         if (ok)
         {
             Replace(updated);
@@ -301,6 +322,9 @@ public sealed partial class PalettesViewModel : ViewModelBase
                 return null;
         }
     }
+
+    /// <summary>Clé du lieu actif pour les palettes de position (<c>null</c> = « Générique »).</summary>
+    private Guid? VenueKey => VenuePalettes.Key(_runtime.Project.Venues.Active);
 
     private void Replace(Palette palette) =>
         Save([.. _runtime.Project.Palettes.Palettes.Select(p => p.Id == palette.Id ? palette : p)]);

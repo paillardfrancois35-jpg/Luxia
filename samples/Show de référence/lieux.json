@@ -133,142 +133,26 @@
           "mounting": "standing",
           "absent": false
         }
+      ],
+      "forbiddenZones": [
+        {
+          "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+          "name": "Public (exemple)",
+          "panMin": 0.3,
+          "panMax": 0.7,
+          "tiltMin": 0.85,
+          "tiltMax": 1.0
+        },
+        {
+          "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+          "name": "Public (exemple)",
+          "panMin": 0.3,
+          "panMax": 0.7,
+          "tiltMin": 0.85,
+          "tiltMax": 1.0
+        }
       ]
     }
   ],
-  "activeVenueId": "04d43735-5da0-57dc-9410-440ba1fd7c4a",
-  "active": {
-    "id": "04d43735-5da0-57dc-9410-440ba1fd7c4a",
-    "name": "Générique",
-    "widthM": 12,
-    "depthM": 8,
-    "placements": [
-      {
-        "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
-        "x": 1.5,
-        "y": 5.5,
-        "heightM": 2.2,
-        "orientationDeg": 135,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
-        "x": 1.5,
-        "y": 4.5,
-        "heightM": 2.2,
-        "orientationDeg": 135,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "a02f87cc-8f92-5b90-9af4-deefe83e68de",
-        "x": 1.5,
-        "y": 3.3,
-        "heightM": 2.2,
-        "orientationDeg": 135,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
-        "x": 1.5,
-        "y": 1,
-        "heightM": 2.6,
-        "orientationDeg": 135,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
-        "x": 10.5,
-        "y": 5.5,
-        "heightM": 2.2,
-        "orientationDeg": 225,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
-        "x": 10.5,
-        "y": 4.5,
-        "heightM": 2.2,
-        "orientationDeg": 225,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "41125b7f-3348-5ec2-a9ab-18aaaf177f66",
-        "x": 10.5,
-        "y": 3.3,
-        "heightM": 2.2,
-        "orientationDeg": 225,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
-        "x": 10.5,
-        "y": 1,
-        "heightM": 2.6,
-        "orientationDeg": 225,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "6c3d353d-218e-5902-b165-b31626a27f7d",
-        "x": 3.5,
-        "y": 7.2,
-        "heightM": 0.3,
-        "orientationDeg": 180,
-        "mounting": "standing",
-        "absent": false
-      },
-      {
-        "fixtureId": "f2e729d1-585b-5f85-8919-79efa6eba341",
-        "x": 8.5,
-        "y": 7.2,
-        "heightM": 0.3,
-        "orientationDeg": 180,
-        "mounting": "standing",
-        "absent": false
-      },
-      {
-        "fixtureId": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
-        "x": 6,
-        "y": 1.5,
-        "heightM": 2.8,
-        "orientationDeg": 180,
-        "mounting": "hanging",
-        "absent": false
-      },
-      {
-        "fixtureId": "f688d1e8-37e2-5a4f-b4b1-60c1d764f10c",
-        "x": 4,
-        "y": 7.6,
-        "heightM": 0.5,
-        "orientationDeg": 180,
-        "mounting": "standing",
-        "absent": false
-      },
-      {
-        "fixtureId": "05a33efe-38be-57cd-853c-5695750bf6f0",
-        "x": 8,
-        "y": 7.6,
-        "heightM": 0.5,
-        "orientationDeg": 180,
-        "mounting": "standing",
-        "absent": false
-      },
-      {
-        "fixtureId": "6177192f-1960-5dde-8a4a-92a23bfec442",
-        "x": 6,
-        "y": 0.5,
-        "heightM": 0.2,
-        "orientationDeg": 0,
-        "mounting": "standing",
-        "absent": false
-      }
-    ]
-  }
+  "activeVenueId": "04d43735-5da0-57dc-9410-440ba1fd7c4a"
 }

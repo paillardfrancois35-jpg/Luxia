@@ -1,0 +1,19 @@
+{
+  "name": "AKAI APC mini",
+  "shortName": "APC mini MK1",
+  "notes": "Protocole de l'APC mini (MK1) publié par AKAI : grille notes 0-63 (0 = en bas à gauche), boutons du bas 64-71, boutons de droite 82-89 (de haut en bas), Shift 98, faders CC 48-56 (56 = master). LED des pads 3 couleurs : 1 vert, 2 vert clignotant, 3 rouge, 4 rouge clignotant, 5 jaune, 6 jaune clignotant. À confirmer sur l'appareil (les notices du dépôt ne donnent pas la table MIDI).",
+  "portNames": [ "APC MINI" ],
+  "excludedPortNames": [ "mk2" ],
+  "gridBottomLeftNote": 0,
+  "bottomButtons": [ 64, 65, 66, 67, 68, 69, 70, 71 ],
+  "rightButtons": [ 82, 83, 84, 85, 86, 87, 88, 89 ],
+  "shiftNote": 98,
+  "faders": [ 48, 49, 50, 51, 52, 53, 54, 55, 56 ],
+  "pads": {
+    "rgb": false,
+    "available": { "channel": 0, "velocity": 5 },
+    "active": { "channel": 0, "velocity": 1 },
+    "fadingIn": { "channel": 0, "velocity": 2 }
+  },
+  "buttons": { "on": 1, "blink": 2 }
+}

@@ -8,9 +8,14 @@ namespace Luxia.Messaging.Commands;
 /// <param name="Solo">
 /// Jouer la scène seule (SCN-034) : les autres lectures sont masquées (pas arrêtées) tant qu'elle joue.
 /// </param>
+/// <param name="StopIfPlaying">
+/// Bascule (LIVE-003) : si la scène joue déjà, l'arrêter au lieu de la relancer. C'est le moteur qui tranche, au moment
+/// où il traite la commande : un écran ou un contrôleur ne décide jamais d'après un état qui peut avoir un tick de retard.
+/// </param>
 public sealed record LaunchSceneCommand(
     CommandOrigin Origin,
     Guid SceneId,
     Guid? LayerId = null,
     TimeSpan? Fade = null,
-    bool Solo = false) : Command(Origin);
+    bool Solo = false,
+    bool StopIfPlaying = false) : Command(Origin);

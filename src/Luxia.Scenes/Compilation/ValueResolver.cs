@@ -43,7 +43,7 @@ public sealed class ValueResolver
         for (var index = 0; index < members.Count; index++)
         {
             var (fixture, cell) = members[index];
-            foreach (var (key, level) in ResolveMember(fixture, cell, value, palette))
+            foreach (var (key, level) in ResolveMember(fixture, cell, value, palette, _patch.VenueKey))
             {
                 result.Add(new ResolvedValue(fixture.ReferenceId, key, Math.Clamp(level, 0, 1), index, members.Count));
             }
@@ -53,13 +53,18 @@ public sealed class ValueResolver
     }
 
     /// <summary>Valeurs (clé de canal → niveau) d'une valeur de scène pour un membre.</summary>
-    public static IEnumerable<(string Key, double Level)> ResolveMember(FixtureInfo fixture, int cell, SceneValue value, Palette? palette)
+    /// <param name="fixture">Appareil.</param>
+    /// <param name="cell">Cellule.</param>
+    /// <param name="value">Valeur de scène.</param>
+    /// <param name="palette">Palette référencée, le cas échéant.</param>
+    /// <param name="venueKey">Lieu actif pour les palettes de position (<c>null</c> = « Générique », PAL-004).</param>
+    public static IEnumerable<(string Key, double Level)> ResolveMember(FixtureInfo fixture, int cell, SceneValue value, Palette? palette, Guid? venueKey = null)
     {
         ArgumentNullException.ThrowIfNull(fixture);
         ArgumentNullException.ThrowIfNull(value);
         if (palette is not null)
         {
-            return ResolvePalette(fixture, cell, palette);
+            return ResolvePalette(fixture, cell, palette, venueKey);
         }
 
         if (value.Color is { } color)
@@ -144,13 +149,14 @@ public sealed class ValueResolver
         }
     }
 
-    private static IEnumerable<(string, double)> ResolvePalette(FixtureInfo fixture, int cell, Palette palette)
+    private static IEnumerable<(string, double)> ResolvePalette(FixtureInfo fixture, int cell, Palette palette, Guid? venueKey)
     {
         // Valeurs propres à cet appareil, sinon à son modèle : elles priment sur toute traduction automatique (PAL-002).
-        var specific = palette.Values.Where(v => v.FixtureId == fixture.Fixture.Id || v.FixtureId == fixture.ReferenceId).ToList();
+        // Celles du lieu actif d'abord, sinon celles du lieu « Générique » (PAL-004, PAL-008).
+        var specific = Rules.VenuePalettes.For(palette, venueKey, v => v.FixtureId == fixture.Fixture.Id || v.FixtureId == fixture.ReferenceId);
         if (specific.Count == 0)
         {
-            specific = [.. palette.Values.Where(v => v.FixtureId is null && v.FixtureTypeId == fixture.Type.Id)];
+            specific = Rules.VenuePalettes.For(palette, venueKey, v => v.FixtureId is null && v.FixtureTypeId == fixture.Type.Id);
         }
 
         if (specific.Count > 0)

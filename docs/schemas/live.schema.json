@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/live.schema.json",
+  "title": "LuXia – live.json (format 1)",
+  "description": "Réglages de l'écran Live (doc 18, doc 50 §12c). Tout est facultatif.",
+  "type": "object",
+  "required": [
+    "formatVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 1
+    },
+    "flashSceneId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "scène du bouton FLASH (touche F)"
+    },
+    "strobeSceneId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "scène du bouton STROBE (touche S)"
+    },
+    "smokeBurstSeconds": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 60
+    },
+    "activeSceneClick": {
+      "enum": [
+        "stop",
+        "restart"
+      ]
+    },
+    "hiddenLayerIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

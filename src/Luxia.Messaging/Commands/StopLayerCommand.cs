@@ -6,4 +6,8 @@ namespace Luxia.Messaging.Commands;
 /// <param name="Origin">Origine.</param>
 /// <param name="LayerId">Couche ; <c>null</c> = toutes.</param>
 /// <param name="Fade">Fondu de sortie imposé ; <c>null</c> = fondu de sortie de chaque scène.</param>
-public sealed record StopLayerCommand(CommandOrigin Origin, Guid? LayerId = null, TimeSpan? Fade = null) : Command(Origin);
+/// <param name="Everything">
+/// Pour « Tout arrêter » (<paramref name="LayerId"/> <c>null</c>) : arrêter aussi les couches protégées (Ambiance par
+/// défaut, COU-007) ; sinon elles continuent.
+/// </param>
+public sealed record StopLayerCommand(CommandOrigin Origin, Guid? LayerId = null, TimeSpan? Fade = null, bool Everything = false) : Command(Origin);

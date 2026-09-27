@@ -53,6 +53,15 @@ public sealed class ProjectSession
     /// <summary>Couches (doc 17 §1) ; modèle par défaut si le projet n'en a pas encore (D28).</summary>
     public LayerSet Layers { get; private set; } = LayerSet.Default();
 
+    /// <summary>Réglages MIDI (<c>midi.json</c>, affectations modifiées, MIDI-007) ; affectation par défaut si absents.</summary>
+    public Midi.MidiSettings Midi { get; private set; } = new();
+
+    /// <summary>Réglages de l'écran Live (<c>live.json</c>, doc 18) ; déduits des couches si absents.</summary>
+    public LiveSettings Live { get; private set; } = new();
+
+    /// <summary>Réglages des limites de sûreté (doc 02 §13, <c>sûreté.json</c>) ; valeurs par défaut si absents.</summary>
+    public SafetySettings Safety { get; private set; } = new();
+
     /// <summary>Copie des modèles d'appareils utilisés par le projet (GEN-053) ; <c>null</c> hors projet ouvert.</summary>
     public ProjectFixtureLibrary? FixtureLibrary { get; private set; }
 
@@ -118,7 +127,18 @@ public sealed class ProjectSession
             messages.Add(venuesMessage);
         }
 
-        var (scenes, palettes, layers) = LoadShowParts(folder, messages);
+        var (scenes, palettes, layers, safety) = LoadShowParts(folder, messages);
+        var (live, liveMessage) = LiveStore.Load(folder);
+        if (liveMessage is not null)
+        {
+            messages.Add(liveMessage);
+        }
+
+        var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
+        if (midiMessage is not null)
+        {
+            messages.Add(midiMessage);
+        }
 
         Folder = folder;
         Info = report.Info;
@@ -128,6 +148,9 @@ public sealed class ProjectSession
         Scenes = scenes;
         Palettes = palettes;
         Layers = layers;
+        Safety = safety;
+        Live = live;
+        Midi = midi;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -208,8 +231,30 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>Remplace les réglages du Live et les enregistre (doc 18).</summary>
+    public void SaveLive(LiveSettings live)
+    {
+        ArgumentNullException.ThrowIfNull(live);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        LiveStore.Save(folder, live);
+        Live = live;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Remplace les réglages de sûreté et les enregistre (GEN-083, GEN-084).</summary>
+    public void SaveSafety(SafetySettings safety)
+    {
+        ArgumentNullException.ThrowIfNull(safety);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        SafetyStore.Save(folder, safety);
+        Safety = safety;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>
-    /// Relit les scènes, palettes et couches depuis le disque, sans rouvrir le projet (GEN-133) : pour reprendre du
+    /// Relit les scènes, palettes, couches et réglages de sûreté depuis le disque, sans rouvrir le projet (GEN-133) : pour reprendre du
     /// contenu écrit par une IA de conception ou à la main pendant que l'application tourne.
     /// </summary>
     /// <returns>Messages de lecture (fichiers mis de côté, migrations).</returns>
@@ -217,7 +262,12 @@ public sealed class ProjectSession
     {
         var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
         var messages = new List<string>();
-        (Scenes, Palettes, Layers) = LoadShowParts(folder, messages);
+        (Scenes, Palettes, Layers, Safety) = LoadShowParts(folder, messages);
+        var (live, liveMessage) = LiveStore.Load(folder);
+        var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
+        Live = live;
+        Midi = midi;
+        messages.AddRange(new[] { liveMessage, midiMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();
@@ -227,12 +277,13 @@ public sealed class ProjectSession
     /// <summary>Signale une modification de ce que joue le moteur (ex. copie d'un modèle mise à jour, GEN-053).</summary>
     public void NotifyShowDataChanged() => ShowDataChanged?.Invoke(this, EventArgs.Empty);
 
-    private static (SceneSet, PaletteSet, LayerSet) LoadShowParts(string folder, List<string> messages)
+    private static (SceneSet, PaletteSet, LayerSet, SafetySettings) LoadShowParts(string folder, List<string> messages)
     {
         var (scenes, scenesMessage) = SceneStore.Load(folder);
         var (palettes, palettesMessage) = PaletteStore.Load(folder);
         var (layers, layersMessage) = LayerStore.Load(folder);
-        messages.AddRange(new[] { scenesMessage, palettesMessage, layersMessage }.OfType<string>());
-        return (scenes, palettes, layers);
+        var (safety, safetyMessage) = SafetyStore.Load(folder);
+        messages.AddRange(new[] { scenesMessage, palettesMessage, layersMessage, safetyMessage }.OfType<string>());
+        return (scenes, palettes, layers, safety);
     }
 }

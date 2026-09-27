@@ -1,11 +1,14 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Luxia.Core.Dmx;
 using Luxia.Core.Settings;
 using Luxia.Core.Time;
 using Luxia.Engine;
+using Luxia.Engine.Model;
 using Luxia.Engine.Timing;
 using Luxia.Messaging.Commands;
 using Luxia.Messaging.Events;
+using Luxia.Midi;
 using Luxia.Output;
 using Luxia.Output.Arduino;
 using Luxia.Output.Drivers;
@@ -19,21 +22,38 @@ namespace Luxia.Hosting;
 /// Assemblage des modules de P0 : préférences, bus, moteur, routeur, pilotes, boucle cadencée.
 /// Utilisé tel quel par l'application et par l'outil sans interface.
 /// </summary>
-public sealed class LuxiaRuntime : IAsyncDisposable
+public sealed partial class LuxiaRuntime : IAsyncDisposable
 {
     private readonly ILoggerFactory _loggers;
     private readonly ILogger _logger;
     private readonly ISerialPortProvider _serialPorts;
     private readonly Lock _lock = new();
     private ArduinoOutputDriver? _arduino;
-    private RecorderOutputDriver? _recorder;
+    private volatile RecorderOutputDriver? _recorder;
+    private Dictionary<Guid, string> _names = [];
+    private readonly ILogger _uiLogger;
     private readonly SleepInhibitor _sleepInhibitor;
     private bool _started;
     private bool _stopped;
     private bool _previewActive;
+    private MidiLayout _midiLayout = MidiLayout.Empty;
+    private Timer? _background;
+    private int _backgroundTicks;
+    private string? _lastResume;
+    private TimeSpan _lastCpu;
+    private DateTime _lastCpuAt;
+    private double _cpuPercent;
+
+    /// <summary>Instantané de reprise (MOT-102) : dans les préférences du poste, pas dans le projet.</summary>
+    private static readonly Persistence.Json.DocumentType<ResumeState> ResumeType = new("reprise", ResumeState.CurrentFormatVersion, []);
 
     /// <summary>Assemble les modules (sans rien démarrer).</summary>
-    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null)
+    /// <param name="paths">Emplacements des données.</param>
+    /// <param name="loggers">Journaux.</param>
+    /// <param name="serialPorts">Ports série (Arduino) ; ceux du système par défaut.</param>
+    /// <param name="clock">Horloge ; réelle par défaut.</param>
+    /// <param name="midiPorts">Ports MIDI (APC mini, doc 18b) ; <c>null</c> = pas de contrôleur (outils, tests).</param>
+    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(loggers);
@@ -52,12 +72,26 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         var universes = Math.Max(1, Preferences.Current.Outputs.Assignments.Select(a => a.Universe).DefaultIfEmpty(1).Max());
         Engine = new RenderEngine(Router, Clock, universes, loggers.CreateLogger<RenderEngine>(), Bus);
 
+        // SORT-066 : commandes traitées, versées au journal de l'enregistrement des trames.
+        Engine.CommandApplied += OnCommandApplied;
+        _uiLogger = loggers.CreateLogger("IHM");
+
         // GEN-063 : moteur d'aperçu pour l'édition en aveugle ; ses trames ne vont à aucune sortie, seulement au simulateur.
         Preview = new RenderEngine(DiscardFrames.Instance, Clock, universes, loggers.CreateLogger<RenderEngine>());
         Loop = new TickLoop(TickEngines, Clock, Preferences.Current.TickRateHz, loggers.CreateLogger<TickLoop>());
         Project = new ProjectSession(Preferences, loggers.CreateLogger<ProjectSession>());
         Project.OpenLast();
         Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
+
+        // Contrôleurs MIDI : mêmes colonnes et mêmes boutons que l'écran Live, relus à chaque recompilation.
+        Show.Compiled += (_, _) => _midiLayout = BuildMidiLayout();
+        _midiLayout = BuildMidiLayout();
+        Midi = midiPorts is null
+            ? null
+            : new MidiService(midiPorts, Engine, () => Engine.Snapshot, () => _midiLayout, loggers.CreateLogger<MidiService>());
+
+        // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
+        PendingResume = ReadPendingResume();
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
@@ -89,6 +123,21 @@ public sealed class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Message éventuel issu du chargement des préférences (migration, fichier mis de côté).</summary>
     public string? PreferencesLoadMessage { get; }
+
+    /// <summary>
+    /// Reprise proposée au démarrage (GEN-095) : l'application s'est arrêtée brutalement alors que des scènes jouaient dans
+    /// le projet qui vient d'être rouvert ; <c>null</c> sinon.
+    /// </summary>
+    public ResumeState? PendingResume { get; private set; }
+
+    /// <summary>Utilisation moyenne du processeur par l'application, en % de la machine (GEN-094), mesurée toutes les 5 s.</summary>
+    public double CpuPercent => Volatile.Read(ref _cpuPercent);
+
+    /// <summary>Fichier de l'instantané de reprise.</summary>
+    public string ResumeFile => Path.Combine(Paths.AppDataRoot, "reprise.json");
+
+    /// <summary>Contrôleurs MIDI (APC mini, doc 18b) ; <c>null</c> sans ports MIDI.</summary>
+    public MidiService? Midi { get; }
 
     /// <summary>Bus d'événements.</summary>
     public EventBus Bus { get; }
@@ -149,6 +198,13 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             }
 
             Loop.Start();
+            Midi?.Start();
+
+            // Toutes les 5 s : instantané de reprise (MOT-102) et mesure du processeur (GEN-094) ; toutes les 2 min :
+            // version du projet si quelque chose a changé (GEN-054, GEN-055).
+            _lastCpu = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+            _lastCpuAt = DateTime.UtcNow;
+            _background = new Timer(_ => Background(), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
 
             // GEN-096 : une mise en veille couperait la lumière (plus de trames → chien de garde → noir).
             _sleepInhibitor.Start();
@@ -303,6 +359,7 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             var folder = Preferences.Current.Outputs.RecordingsFolder ?? Paths.Recordings;
             path ??= Path.Combine(folder, $"trames-{DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture)}{RecordingFormat.Extension}");
             _recorder = new RecorderOutputDriver(path, 1, Loop.RateHz, _loggers.CreateLogger<RecorderOutputDriver>());
+            _names = BuildNames();
             Router.Attach(1, _recorder);
             return path;
         }
@@ -334,6 +391,16 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             _stopped = true;
         }
 
+        _background?.Dispose();
+
+        // GEN-061 : fondu au noir avant d'arrêter l'émission (le blackout final suit).
+        if (_started)
+        {
+            await FadeToBlackAsync(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+        }
+
+        WriteResume(clean: true);
+        Midi?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();
@@ -346,6 +413,198 @@ public sealed class LuxiaRuntime : IAsyncDisposable
         Router.Dispose();
         await Bus.DisposeAsync().ConfigureAwait(false);
         _logger.LogInformation("Arrêt de LuXia");
+    }
+
+    /// <summary>
+    /// Enregistre une version du projet si quelque chose a changé (GEN-054, GEN-055), sans bloquer l'appelant.
+    /// </summary>
+    /// <param name="reason">Motif (« passage en Live »…).</param>
+    public void SaveProjectVersion(string reason)
+    {
+        if (Project.Folder is not { } folder)
+        {
+            return;
+        }
+
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                if (ProjectVersions.Save(folder, reason, DateTime.Now) is { } name)
+                {
+                    _logger.LogInformation("Version du projet enregistrée : {Version} ({Motif})", name, reason);
+                }
+            }
+            catch (IOException exception)
+            {
+                _logger.LogWarning(exception, "Version du projet non enregistrée ({Motif})", reason);
+            }
+            catch (UnauthorizedAccessException exception)
+            {
+                _logger.LogWarning(exception, "Version du projet non enregistrée ({Motif})", reason);
+            }
+        });
+    }
+
+    /// <summary>Reprend les scènes, masters et modes de l'instantané (GEN-095).</summary>
+    public void Resume(ResumeState state)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        PendingResume = null;
+        foreach (var (layer, level) in state.LayerMasters)
+        {
+            Engine.Send(new SetLayerMasterCommand(CommandOrigin.Tool, layer, level));
+        }
+
+        foreach (var scene in state.Scenes)
+        {
+            Engine.Send(new LaunchSceneCommand(CommandOrigin.Tool, scene));
+        }
+
+        Engine.Send(new SetGrandMasterCommand(CommandOrigin.Tool, state.GrandMaster));
+        Engine.Send(new BlackoutCommand(CommandOrigin.Tool, state.Blackout));
+        if (state.Frozen)
+        {
+            Engine.Send(new FreezeCommand(CommandOrigin.Tool, true));
+        }
+
+        _logger.LogInformation("Reprise après arrêt brutal : {Scenes} scène(s) relancée(s)", state.Scenes.Count);
+    }
+
+    /// <summary>Renonce à la reprise proposée.</summary>
+    public void DismissResume() => PendingResume = null;
+
+    /// <summary>Fondu du Grand Master jusqu'à 0 (GEN-061), la boucle du moteur tournant encore.</summary>
+    private async Task FadeToBlackAsync(TimeSpan duration)
+    {
+        var start = Engine.Snapshot.GrandMaster;
+        if (start <= 0 || Engine.Snapshot.Blackout)
+        {
+            return;
+        }
+
+        const int Steps = 20;
+        for (var i = 1; i <= Steps; i++)
+        {
+            Engine.Send(new SetGrandMasterCommand(CommandOrigin.Tool, start * (1 - ((double)i / Steps))));
+            await Task.Delay(duration / Steps).ConfigureAwait(false);
+        }
+    }
+
+    private void Background()
+    {
+        try
+        {
+            SaveResumePoint();
+            MeasureCpu();
+            if (++_backgroundTicks % 24 == 0)
+            {
+                SaveProjectVersion("automatique");
+            }
+        }
+        catch (IOException exception)
+        {
+            _logger.LogWarning(exception, "Tâche de fond (reprise, versions) : écriture impossible");
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            _logger.LogWarning(exception, "Tâche de fond (reprise, versions) : écriture impossible");
+        }
+    }
+
+    private void MeasureCpu()
+    {
+        var now = DateTime.UtcNow;
+        var cpu = System.Diagnostics.Process.GetCurrentProcess().TotalProcessorTime;
+        var wall = (now - _lastCpuAt).TotalMilliseconds * Environment.ProcessorCount;
+        if (wall > 0)
+        {
+            Volatile.Write(ref _cpuPercent, Math.Round(100 * (cpu - _lastCpu).TotalMilliseconds / wall, 1));
+        }
+
+        _lastCpu = cpu;
+        _lastCpuAt = now;
+        if (_backgroundTicks % 12 == 0)
+        {
+            _logger.LogInformation("Processeur : {Cpu} % en moyenne sur 5 s (GEN-094)", CpuPercent);
+        }
+    }
+
+    /// <summary>Écrit l'instantané de reprise tout de suite (appelé toutes les 5 s, MOT-102).</summary>
+    public void SaveResumePoint() => WriteResume(clean: false);
+
+    private void WriteResume(bool clean)
+    {
+        var snapshot = Engine.Snapshot;
+        var state = new ResumeState
+        {
+            ProjectFolder = Project.Folder,
+            SavedAt = DateTime.Now,
+            CleanExit = clean,
+            Scenes = [.. snapshot.Playbacks
+                .Where(p => !p.Flash && p.State is not (PlaybackState.FadingOut or PlaybackState.Done))
+                .Select(p => p.SceneId)
+                .Distinct()],
+            LayerMasters = snapshot.Show.Layers.Select((l, i) => (l.Id, i)).Where(x => x.i < snapshot.LayerMasters.Length)
+                .ToDictionary(x => x.Id, x => snapshot.LayerMasters[x.i]),
+            GrandMaster = snapshot.GrandMaster,
+            Blackout = snapshot.Blackout,
+            Frozen = snapshot.Frozen,
+        };
+
+        // Écrit seulement si quelque chose a changé (hors horodatage) : pas d'écriture inutile toutes les 5 s.
+        var key = string.Join(
+            '|',
+            state.ProjectFolder,
+            state.CleanExit,
+            string.Join(',', state.Scenes),
+            string.Join(',', state.LayerMasters.OrderBy(m => m.Key).Select(m => string.Create(CultureInfo.InvariantCulture, $"{m.Key}={m.Value:0.###}"))),
+            state.GrandMaster.ToString("0.###", CultureInfo.InvariantCulture),
+            state.Blackout,
+            state.Frozen);
+        if (key == _lastResume)
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(Paths.AppDataRoot);
+        Persistence.Json.VersionedJsonFile.Save(ResumeFile, state, ResumeType);
+        _lastResume = key;
+    }
+
+    private ResumeState? ReadPendingResume()
+    {
+        var loaded = Persistence.Json.VersionedJsonFile.Load(ResumeFile, ResumeType);
+        if (!loaded.Succeeded || loaded.Value is not { } state)
+        {
+            return null;
+        }
+
+        var sameProject = state.ProjectFolder is { } folder && Project.Folder is { } open
+            && string.Equals(Path.GetFullPath(folder), Path.GetFullPath(open), StringComparison.OrdinalIgnoreCase);
+        var recent = DateTime.Now - state.SavedAt < TimeSpan.FromHours(12);
+        return !state.CleanExit && sameProject && recent && state.Scenes.Count > 0 ? state : null;
+    }
+
+    /// <summary>Disposition des contrôleurs MIDI d'après le projet : colonnes du Live, boutons, affectations (MIDI-002, MIDI-007).</summary>
+    private MidiLayout BuildMidiLayout()
+    {
+        var project = Project;
+        var live = project.Live;
+        var (flash, strobe) = Scenes.Rules.LiveRules.PermanentScenes(live, project.Layers, project.Scenes);
+        return new MidiLayout
+        {
+            Columns = [.. Scenes.Rules.LiveRules.Columns(live, project.Layers, project.Scenes)
+                .Select(c => new MidiColumn(
+                    c.Layer.Id,
+                    c.Layer.Kind == LayerKind.Flash,
+                    [.. c.Scenes.Select(s => new MidiSceneSlot(s.Id, s.Color))]))],
+            FlashSceneId = flash,
+            StrobeSceneId = strobe,
+            SmokeBurstSeconds = live.SmokeBurstSeconds,
+            ActiveClickRestarts = live.ActiveSceneClick == Scenes.Model.ActiveSceneClick.Restart,
+            Bindings = project.Midi.Bindings,
+        };
     }
 
     private void TickEngines()
@@ -379,6 +638,67 @@ public sealed class LuxiaRuntime : IAsyncDisposable
             Preferences.Update(p => p with { Outputs = p.Outputs with { Arduino = p.Outputs.Arduino with { LastPort = port } } });
         }
     }
+
+    /// <summary>
+    /// Problèmes du projet ouvert (menu Projet → Problèmes du projet) : ceux de la compilation, plus les règles vérifiées
+    /// par <c>luxia-headless valider</c> (COU-008 hors famille, COU-009 scène de repos, Live, MIDI…), sur les fichiers
+    /// enregistrés (chaque modification l'est tout de suite). Mêmes messages à l'écran et sans interface.
+    /// </summary>
+    public IReadOnlyList<Scenes.Compilation.CompileIssue> ProjectProblems() =>
+        Project.Folder is { } folder ? Tools.ProjectValidator.Validate(folder) : Show.Last?.Issues ?? [];
+
+    /// <summary>
+    /// Trace une action de l'utilisateur (SORT-066) : « IHM – onglet – action » dans le journal technique et, pendant un
+    /// enregistrement des trames, dans son journal, entre les lignes DMX.
+    /// </summary>
+    /// <param name="tab">Onglet (écran) d'où vient l'action.</param>
+    /// <param name="action">Action réalisée.</param>
+    public void TraceUi(string tab, string action)
+    {
+        _uiLogger.LogInformation("IHM – {Onglet} – {Action}", tab, action);
+        _recorder?.Note("IHM", $"{tab} – {action}");
+    }
+
+    private void OnCommandApplied(CommandLogEntry entry)
+    {
+        // Fil du moteur : rien à faire hors enregistrement.
+        if (_recorder is not { } recorder)
+        {
+            return;
+        }
+
+        var text = Guids().Replace(entry.Command.ToString() ?? string.Empty, m => Guid.TryParse(m.Value, out var id) && _names.TryGetValue(id, out var name) ? $"« {name} »" : m.Value);
+        recorder.Note("MOTEUR", entry.Rejection is null ? text : $"{text} REFUSÉE : {entry.Rejection}");
+    }
+
+    private Dictionary<Guid, string> BuildNames()
+    {
+        var names = new Dictionary<Guid, string>();
+        foreach (var scene in Project.Scenes.Scenes)
+        {
+            names.TryAdd(scene.Id, scene.Name);
+        }
+
+        foreach (var layer in Project.Layers.Layers)
+        {
+            names.TryAdd(layer.Id, "couche " + layer.Name);
+        }
+
+        foreach (var fixture in Project.Installation.Fixtures)
+        {
+            names.TryAdd(fixture.Id, fixture.Name);
+        }
+
+        foreach (var palette in Project.Palettes.Palettes)
+        {
+            names.TryAdd(palette.Id, "palette " + palette.Name);
+        }
+
+        return names;
+    }
+
+    [GeneratedRegex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")]
+    private static partial Regex Guids();
 
     private string? StopRecordingCore()
     {

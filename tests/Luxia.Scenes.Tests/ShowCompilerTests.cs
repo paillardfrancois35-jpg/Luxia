@@ -34,7 +34,8 @@ public sealed class ShowCompilerTests
         pan.Outputs.ShouldBe([new ChannelAddress(1, 111, 112)]);
         pan.Default.ShouldBe(128 / 255.0, 1e-9);
         model.Parameters[model.IndexOf(lyre, "color")].Discrete.ShouldBeTrue();
-        model.Parameters[model.IndexOf(par, "strobe")].Discrete.ShouldBeFalse();
+        // Q28 : le Strobe du LPC008S a une plage fixe « Pas de strobe » (0-4) : il devient discret, comme celui de l'UV.
+        model.Parameters[model.IndexOf(par, "strobe")].Discrete.ShouldBeTrue();
         model.Parameters[model.IndexOf(par, "fn")].Discrete.ShouldBeTrue();
     }
 
@@ -121,6 +122,37 @@ public sealed class ShowCompilerTests
 
     [Fact]
     [Trait("Exigence", "SCN-007")]
+    public void AutoSelection_WithCell_TargetsThatCellOfEachMember()
+    {
+        // Essai P5 : « UV plein » sans la rangée 4 → rangées 1 à 3 de tous les UV, la 4e jamais pilotée.
+        var scene = new Scene
+        {
+            Name = "UV sans rangée 4",
+            LayerId = LayerSet.IntensityLayerId,
+            Steps =
+            [
+                new SceneStep
+                {
+                    Values = [.. Enumerable.Range(1, 3).Select(cell => new SceneValue
+                    {
+                        Target = new ValueTarget { Auto = new AutoSelectionTarget(AutoSelectionKind.ByCategory, FixtureCategory.Uv), Cell = cell },
+                        Attribute = AttributeKind.Uv,
+                        Level = 1,
+                    })],
+                },
+            ],
+        };
+        var model = ShowCompiler.Compile(_project.Content(new SceneSet { Scenes = [scene] })).Model;
+        var uv = _project.Fixture("UV 1").Id;
+        var values = model.Scenes[0].Steps[0].Values;
+
+        values.ShouldContain(v => v.Parameter == model.IndexOf(uv, "uv1"));
+        values.ShouldContain(v => v.Parameter == model.IndexOf(uv, "uv3"));
+        values.ShouldNotContain(v => v.Parameter == model.IndexOf(uv, "uv4"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "SCN-007")]
     [Trait("Exigence", "SCN-010")]
     public void ManualSelection_KeepsItsOrder_ForTheFan()
     {
@@ -147,6 +179,7 @@ public sealed class ShowCompilerTests
     [Trait("Exigence", "PAL-002")]
     public void PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins()
     {
+        _project.PatchBigParsAsRgbw();
         var amber = DefaultPalettes.Colors.Single(p => p.Name == "Ambre");
         var bigPar = _project.Fixture("Gros PAR 1");
         var refined = amber with

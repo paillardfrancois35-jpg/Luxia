@@ -14,4 +14,7 @@ public enum SourceKind
 
     /// <summary>Intensité coupée par le blackout.</summary>
     Blackout,
+
+    /// <summary>Valeur gelée par « Figer » (MOT-073).</summary>
+    Frozen,
 }

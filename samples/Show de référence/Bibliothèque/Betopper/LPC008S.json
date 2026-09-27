@@ -4,7 +4,7 @@
   "manufacturer": "Betopper",
   "model": "LPC008S",
   "category": "par",
-  "version": 3,
+  "version": 4,
   "author": "LuXia (depuis la notice)",
   "source": "manual",
   "notes": "PAR LED RGB 54 × 3 W. Menu d001 = mode 3 canaux, A001 = mode 7 canaux (le menu d'adresse choisit le mode).",
@@ -66,6 +66,13 @@
       "capabilities": [
         {
           "min": 0,
+          "max": 4,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 5,
           "max": 255,
           "kind": "progressive",
           "label": "Strobe lent → rapide",
@@ -81,7 +88,7 @@
           "median": 128
         }
       ],
-      "notes": "La notice ne donne pas de plages : 0 = pas de strobe probablement (à vérifier en direct)."
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0-4 = néant, 5-255 = stroboscope croissant."
     },
     {
       "key": "fn",

@@ -222,8 +222,43 @@ public abstract class OutputDriver : IDisposable
             }
         }
 
+        // Arrêt : la trame encore en attente part avant la déconnexion (dernière trame d'un enregistrement, SORT-061 ;
+        // trame de blackout déposée juste avant l'arrêt).
+        FlushPending();
         SafeDisconnect();
         SetState(OutputConnectionState.Disconnected, null);
+    }
+
+    private void FlushPending()
+    {
+        if (Status.State != OutputConnectionState.Connected)
+        {
+            return;
+        }
+
+        TimeSpan timestamp;
+        lock (_slotLock)
+        {
+            if (!_hasFrame)
+            {
+                return;
+            }
+
+            _slot.CopyTo(_sending, 0);
+            timestamp = _slotTimestamp;
+            _hasFrame = false;
+        }
+
+        try
+        {
+            Write(_sending, timestamp);
+        }
+#pragma warning disable CA1031 // SORT-022 : une erreur d'écriture ne remonte jamais au moteur.
+        catch (Exception ex)
+#pragma warning restore CA1031
+        {
+            Logger.LogWarning(ex, "Sortie {Sortie} : dernière trame non écrite à l'arrêt", Name);
+        }
     }
 
     private bool TryConnect()

@@ -3,6 +3,7 @@ using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
 using Luxia.Fixtures.Rules;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 
 namespace Luxia.Scenes.Compilation;
 
@@ -52,7 +53,27 @@ public static class ShowCompiler
             scenes.Add(CompileScene(scene, provisional, resolver, layerIds, layers, issues));
         }
 
-        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases), issues);
+        // PAL-008 : positions jamais calibrées dans le lieu actif → valeur du lieu « Générique », signalée.
+        foreach (var palette in content.Palettes.Palettes.Where(p => p.Kind == PaletteKind.Position))
+        {
+            var missing = VenuePalettes.Uncalibrated(palette, patch.VenueKey)
+                .Select(id => patch.Find(id))
+                .Where(f => f is { Absent: false })
+                .Select(f => f!.Fixture.Name)
+                .ToList();
+            if (missing.Count > 0)
+            {
+                issues.Add(new CompileIssue(
+                    IssueSeverity.Warning,
+                    "palettes.json",
+                    $"palette « {palette.Name} »",
+                    "values",
+                    $"{string.Join(", ", missing)} : position non calibrée dans le lieu « {patch.Venue.Name} », valeur du lieu Générique utilisée (PAL-008)"));
+            }
+        }
+
+        var safety = SafetyCompiler.Build(patch, provisional, content.Safety ?? new SafetySettings(), content.Venues.Active, issues);
+        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety), issues);
     }
 
     /// <summary>Paramètres des appareils patchés (jumeaux regroupés sur l'appareil de référence).</summary>
@@ -204,6 +225,9 @@ public static class ShowCompiler
         IntensityMode = layer.IntensityMode,
         MasterOnAllAttributes = layer.MasterOnAllAttributes,
         CrossFade = layer.CrossFade,
+        Kind = layer.Kind,
+        KeepOnStopAll = layer.KeepOnStopAll,
+        RestSceneId = layer.RestSceneId,
     };
 
     private static EngineScene CompileScene(

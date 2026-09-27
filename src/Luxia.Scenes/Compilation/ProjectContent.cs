@@ -11,10 +11,12 @@ namespace Luxia.Scenes.Compilation;
 /// <param name="Layers">Couches.</param>
 /// <param name="Scenes">Scènes.</param>
 /// <param name="Palettes">Palettes.</param>
+/// <param name="Safety">Réglages de sûreté (<c>null</c> = valeurs par défaut).</param>
 public sealed record ProjectContent(
     Installation Installation,
     VenueSet Venues,
     Func<Guid, FixtureType?> TypeOf,
     LayerSet Layers,
     SceneSet Scenes,
-    PaletteSet Palettes);
+    PaletteSet Palettes,
+    SafetySettings? Safety = null);

@@ -22,17 +22,23 @@ public sealed class EnginePerformanceTests
 
         engine.Run(2);
 
-        var before = GC.GetAllocatedBytesForCurrentThread();
-        var watch = Stopwatch.StartNew();
+        // Seuil strict, série recommencée jusqu'à trois fois (docs/03 §11) ; l'allocation est comptée sur la dernière série.
         const int Ticks = 400;
-        for (var i = 0; i < Ticks; i++)
+        var watch = new Stopwatch();
+        long allocated = 0;
+        for (var attempt = 0; attempt < 3 && (attempt == 0 || watch.Elapsed.TotalMilliseconds / Ticks >= 5); attempt++)
         {
-            engine.Clock.Advance(EngineHarness.Period);
-            engine.Engine.Tick();
-        }
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            watch.Restart();
+            for (var i = 0; i < Ticks; i++)
+            {
+                engine.Clock.Advance(EngineHarness.Period);
+                engine.Engine.Tick();
+            }
 
-        watch.Stop();
-        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            watch.Stop();
+            allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        }
 
         engine.Engine.Snapshot.Playbacks.Count.ShouldBe(40);
         (watch.Elapsed.TotalMilliseconds / Ticks).ShouldBeLessThan(5);
@@ -56,16 +62,21 @@ public sealed class EnginePerformanceTests
         engine.Launch(chase);
         engine.Tick();
 
-        var worst = TimeSpan.Zero;
-        for (var i = 0; i < 80; i++)
+        // Chaque tick publie un ÉtapeChangée que l'abonné met 50 ms à traiter : si le tick l'attendait, il durerait
+        // au moins 50 ms. Seuil 25 ms, gardé strict ; la série de mesures recommence jusqu'à trois fois (docs/03 §11 :
+        // un pic de charge de la suite l'avait fait échouer une fois, essai P5 2026-09-27).
+        var worst = TimeSpan.MaxValue;
+        for (var attempt = 0; attempt < 3 && worst.TotalMilliseconds >= 25; attempt++)
         {
-            var watch = Stopwatch.StartNew();
-            engine.Tick();
-            worst = worst > watch.Elapsed ? worst : watch.Elapsed;
+            worst = TimeSpan.Zero;
+            for (var i = 0; i < 80; i++)
+            {
+                var watch = Stopwatch.StartNew();
+                engine.Tick();
+                worst = worst > watch.Elapsed ? worst : watch.Elapsed;
+            }
         }
 
-        // Chaque tick publie un ÉtapeChangée que l'abonné met 50 ms à traiter : si le tick l'attendait, il durerait
-        // au moins 50 ms. Seuil large (25 ms) pour ne pas dépendre de la charge de la machine pendant les tests.
         worst.TotalMilliseconds.ShouldBeLessThan(25);
     }
 

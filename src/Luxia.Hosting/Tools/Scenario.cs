@@ -10,9 +10,12 @@ namespace Luxia.Hosting.Tools;
 /// une scène se désigne par son nom (entre guillemets s'il a des espaces) ou son identifiant.
 /// </summary>
 /// <remarks>
-/// Commandes : <c>lancer "scène" [solo]</c>, <c>arreter "scène"</c>, <c>tout-arreter</c>, <c>etape-suivante "scène"</c>,
+/// Commandes : <c>lancer "scène" [solo]</c>, <c>arreter "scène"</c>, <c>tout-arreter [tout]</c> (sans « tout », les
+/// couches protégées comme Ambiance continuent, COU-007), <c>arreter-couche "couche"</c>, <c>etape-suivante "scène"</c>,
 /// <c>etape-precedente "scène"</c>, <c>vitesse "scène" 2</c>, <c>blackout oui|non</c>, <c>grand-master 50</c> (%),
-/// <c>master-couche "couche" 50</c> (%), <c>fin</c> (arrête le déroulé à cet instant).
+/// <c>master-couche "couche" 50</c> (%), <c>flash "scène" appui|relache</c> (CMD-014), <c>figer oui|non [suspendre]</c>
+/// (CMD-003), <c>fumee appui|relache</c> ou <c>fumee rafale 3</c> (s, CMD-030), <c>canal 180 255</c> (surcharge brute de
+/// l'univers 1, pour éprouver les limites de sûreté), <c>liberer-canaux</c>, <c>fin</c> (arrête le déroulé à cet instant).
 /// </remarks>
 public sealed class Scenario
 {
@@ -78,7 +81,48 @@ public sealed class Scenario
                     command = SceneOf(rest, scenes, out error) is { } stopped ? new StopSceneCommand(CommandOrigin.Tool, stopped) : null;
                     break;
                 case "tout-arreter":
-                    command = new StopLayerCommand(CommandOrigin.Tool);
+                    command = new StopLayerCommand(CommandOrigin.Tool, Everything: rest.Any(w => w.Equals("tout", StringComparison.OrdinalIgnoreCase)));
+                    break;
+                case "arreter-couche":
+                    var stopLayer = LayerOf(rest, layers, out error);
+                    command = stopLayer is { } stoppedLayer ? new StopLayerCommand(CommandOrigin.Tool, stoppedLayer) : null;
+                    break;
+                case "flash":
+                    var press = rest.Skip(1).FirstOrDefault()?.ToLowerInvariant();
+                    command = SceneOf(rest, scenes, out error) is { } flashed && press is "appui" or "relache"
+                        ? new FlashSceneCommand(CommandOrigin.Tool, flashed, press == "appui")
+                        : null;
+                    error ??= command is null ? "flash \"scène\" appui|relache" : null;
+                    break;
+                case "figer":
+                    var frozen = rest.FirstOrDefault()?.ToLowerInvariant();
+                    command = frozen is "oui" or "non"
+                        ? new FreezeCommand(CommandOrigin.Tool, frozen == "oui", rest.Skip(1).Any(w => w.Equals("suspendre", StringComparison.OrdinalIgnoreCase)))
+                        : null;
+                    error = command is null ? "figer oui ou non" : null;
+                    break;
+                case "fumee":
+                    var how = rest.FirstOrDefault()?.ToLowerInvariant();
+                    if (how == "rafale")
+                    {
+                        command = Number(rest, 1, out var burst, ref error) ? new SmokeCommand(CommandOrigin.Tool, false, TimeSpan.FromSeconds(burst)) : null;
+                    }
+                    else
+                    {
+                        command = how is "appui" or "relache" ? new SmokeCommand(CommandOrigin.Tool, how == "appui") : null;
+                        error = command is null ? "fumee appui|relache, ou fumee rafale <secondes>" : null;
+                    }
+
+                    break;
+                case "canal":
+                    command = Number(rest, 0, out var channel, ref error) && Number(rest, 1, out var value, ref error)
+                        && channel is >= 1 and <= 512 && value is >= 0 and <= 255
+                        ? new OverrideChannelsCommand(CommandOrigin.Tool, 1, [new ChannelValue((int)channel, (byte)value)])
+                        : null;
+                    error ??= command is null ? "canal <1-512> <0-255>" : null;
+                    break;
+                case "liberer-canaux":
+                    command = new ReleaseOverridesCommand(CommandOrigin.Tool);
                     break;
                 case "etape-suivante" or "etape-precedente":
                     command = SceneOf(rest, scenes, out error) is { } stepped
@@ -139,6 +183,13 @@ public sealed class Scenario
             : scenes.Scenes.FirstOrDefault(s => string.Equals(s.Name, key, StringComparison.CurrentCultureIgnoreCase));
         error = scene is null ? $"scène inconnue « {key} »" : null;
         return scene?.Id;
+    }
+
+    private static Guid? LayerOf(List<string> words, LayerSet layers, out string? error)
+    {
+        var layer = words.Count > 0 ? layers.Layers.FirstOrDefault(l => string.Equals(l.Name, words[0], StringComparison.CurrentCultureIgnoreCase)) : null;
+        error = layer is null ? "couche inconnue" : null;
+        return layer?.Id;
     }
 
     private static bool Number(List<string> words, int index, out double value, ref string? error)

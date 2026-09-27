@@ -42,7 +42,7 @@ Application C# (Avalonia, Windows) de pilotage d'éclairage, alternative légèr
 | [32 – Passation](32-passation.md) | **Point d'entrée pour reprendre dans une nouvelle discussion** : état, carte du code, commandes, démarrage d'une phase |
 | [31 – Matrice exigences ↔ tests](31-matrice-exigences.md) | Générée par `tools/matrice-exigences.py` |
 | [50 – Format des données](50-format-des-donnees.md) | Fichiers JSON et binaires de l'application (tenu au fil du développement) |
-| [demos/](demos/) | Guides de démonstration par phase (`P0-fondations.md`, `P1-console.md`, `P2-bibliotheque.md`) |
+| [demos/](demos/) | Guides de démonstration par phase (`P0-fondations.md` à `P5-couches-palettes-live.md`) |
 | [99 – Carnet d'idées](99-idees.md) | Idées en attente |
 
 ## Autres

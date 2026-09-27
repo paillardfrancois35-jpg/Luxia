@@ -13,9 +13,9 @@ public static class SceneStore
     /// <summary>Type de document « scènes ».</summary>
     public static readonly DocumentType<SceneSet> DocumentType = new("scènes", SceneSet.CurrentFormatVersion, []);
 
-    /// <summary>Charge les scènes d'un projet ; absent = aucune scène.</summary>
+    /// <summary>Charge les scènes d'un projet ; absent = contenu d'un nouveau projet (scène « Plein feu », MOT-042).</summary>
     public static (SceneSet Value, string? Message) Load(string projectFolder) =>
-        ProjectPartStore.Load(projectFolder, FileName, DocumentType, () => new SceneSet());
+        ProjectPartStore.Load(projectFolder, FileName, DocumentType, SceneSet.Default);
 
     /// <summary>Enregistre les scènes.</summary>
     public static void Save(string projectFolder, SceneSet scenes) =>

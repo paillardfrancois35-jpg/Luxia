@@ -21,7 +21,8 @@ namespace Luxia.Engine;
 /// (<see cref="ShowModel"/>, D26) : il ne connaît ni la bibliothèque, ni le patch, ni les palettes.
 /// Chaîne de rendu (doc 02 §9) : 1 valeurs par défaut · 2-3 couches et masters · 5 surcharges d'attributs ·
 /// 6 intensité virtuelle et Grand Master · 7 blackout · 10 conversion en octets · 11 surcharges brutes de la console
-/// (soumises au blackout, GEN-042) · puis test de sortie (D21). Les étapes 4 (flashs), 8 (figer) et 9 (sûreté) viendront en P5.
+/// (soumises au blackout, GEN-042) · puis test de sortie (D21) · 9 sûreté : zones interdites sur les paramètres, strobe et fumée
+/// sur les octets finaux, pour qu'aucune surcharge ni aucun test ne les contourne (GEN-042, MOT-080 à 083).
 /// </remarks>
 public sealed class RenderEngine : ICommandSink
 {
@@ -36,6 +37,8 @@ public sealed class RenderEngine : ICommandSink
     private readonly DmxFrame[] _published;
     private readonly Lock _publishedLock = new();
     private readonly TestPattern _testPattern = new();
+    private readonly SafetyLimiter _safety = new();
+    private readonly Action<SafetyLimitReached> _publishSafety;
     private readonly ChannelOverrides[] _channelOverrides;
     private readonly Random _random;
     private readonly List<Playback> _playbacks = new(64);
@@ -66,10 +69,17 @@ public sealed class RenderEngine : ICommandSink
     private bool[][] _blackoutMasks;
     private bool _blackout;
     private double _grandMaster = 1;
+    private double[] _frozen = [];
+    private bool _frozenActive;
+    private bool _freezeCapture;
+    private bool _freezeSuspend;
 
     // État publié pour l'interface (MOT-100), recopié à la fin de chaque tick.
     private ShowModel _publishedShow = ShowModel.Empty;
     private bool _publishedBlackout;
+    private bool _publishedFrozen;
+    private bool _publishedSmoking;
+    private double _publishedSmokeRest;
     private double _publishedGrandMaster = 1;
     private double[] _publishedValues = [];
     private ParameterSource[] _publishedSources = [];
@@ -77,6 +87,7 @@ public sealed class RenderEngine : ICommandSink
     private PlaybackInfo[] _publishedPlaybacks = new PlaybackInfo[64];
     private int _publishedPlaybackCount;
     private double[] _publishedLayerMasters = [];
+    private ActiveLimit[] _publishedLimits = [];
 
     /// <summary>Crée un moteur.</summary>
     /// <param name="sink">Destination des trames.</param>
@@ -99,6 +110,7 @@ public sealed class RenderEngine : ICommandSink
         _channelOverrides = [.. Enumerable.Range(0, universeCount).Select(_ => new ChannelOverrides())];
         _outputSlots = [.. Enumerable.Range(0, universeCount).Select(_ => Array.Empty<(int, ChannelAddress)>())];
         _blackoutMasks = [.. Enumerable.Range(0, universeCount).Select(_ => new bool[DmxConstants.ChannelCount])];
+        _publishSafety = PublishSafety;
 
         // MOT-004 : tout tirage aléatoire passe par ce générateur ; la graine est journalisée pour rejouer une session.
         Seed = seed ?? Environment.TickCount;
@@ -173,9 +185,15 @@ public sealed class RenderEngine : ICommandSink
         }
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
-        AdvancePlaybacks(elapsed, now);
+        // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
+        AdvancePlaybacks(_frozenActive && _freezeSuspend ? 0 : elapsed, now);
+        LaunchRestScenes(now);
         MergeLayers();
         ApplyMasters();
+
+        // Étape 9 (paramètres) : zones interdites Pan/Tilt (MOT-082).
+        _safety.BeginTick();
+        _safety.ApplyZones(_output, _result, now, _publishSafety);
 
         for (var u = 0; u < _frames.Length; u++)
         {
@@ -186,18 +204,23 @@ public sealed class RenderEngine : ICommandSink
             WriteParameters(u, frame);
 
             // Étape 11 : surcharges brutes de la console (CONS-003), soumises au blackout (GEN-042, CONS-008).
-            // TODO(P5, GEN-083) : limites de sûreté (strobe, fumée) appliquées aussi aux surcharges brutes.
             _channelOverrides[u].ApplyTo(frame, _blackout ? _blackoutMasks[u] : default);
 
             // Test de sortie : remplace toute la restitution de l'univers testé (D21).
             _testPattern.Render(u + 1, frame, now);
+        }
 
+        // Étape 9 (octets) : strobe et fumée, jamais contournables (GEN-042, MOT-080, MOT-081).
+        _safety.ApplyToFrames(_frames, elapsed, now, _publishSafety);
+
+        for (var u = 0; u < _frames.Length; u++)
+        {
             lock (_publishedLock)
             {
-                frame.CopyTo(_published[u]);
+                _frames[u].CopyTo(_published[u]);
             }
 
-            _sink.Submit(u + 1, frame, now);
+            _sink.Submit(u + 1, _frames[u], now);
         }
 
         Publish();
@@ -220,6 +243,12 @@ public sealed class RenderEngine : ICommandSink
 
     /// <summary>Copie les surcharges d'un univers : -1 = canal libre, sinon valeur imposée.</summary>
     public void CopyOverrides(int universe, Span<short> destination) => _channelOverrides[CheckUniverse(universe) - 1].CopyTo(destination);
+
+    /// <summary>
+    /// Commande traitée (acceptée ou refusée), levé sur le fil du moteur : le gestionnaire doit être immédiat
+    /// (journal de l'enregistrement, SORT-066).
+    /// </summary>
+    public event Action<CommandLogEntry>? CommandApplied;
 
     /// <summary>Dernières commandes reçues, de la plus ancienne à la plus récente (GEN-112).</summary>
     public IReadOnlyList<CommandLogEntry> CommandLog()
@@ -247,7 +276,9 @@ public sealed class RenderEngine : ICommandSink
     private void Apply(Command command, TimeSpan receivedAt, TimeSpan now)
     {
         var rejection = ApplyCore(command, now);
-        Log(new CommandLogEntry(receivedAt, now, command, rejection));
+        var entry = new CommandLogEntry(receivedAt, now, command, rejection);
+        Log(entry);
+        CommandApplied?.Invoke(entry);
         if (rejection is not null)
         {
             // GEN-012 : une commande refusée produit un événement avec le motif.
@@ -311,6 +342,25 @@ public sealed class RenderEngine : ICommandSink
 
             case SetLayerMasterCommand layerMaster:
                 return SetLayerMaster(layerMaster);
+
+            case FlashSceneCommand flash:
+                return Flash(flash, now);
+
+            case FreezeCommand freeze:
+                _frozenActive = freeze.Active;
+                _freezeCapture = freeze.Active;
+                _freezeSuspend = freeze.Active && freeze.SuspendPlaybacks;
+                _logger.LogInformation("Figer {Etat} (origine {Origine})", freeze.Active ? "activé" : "désactivé", freeze.Origin);
+                return null;
+
+            case SmokeCommand smoke:
+                if (_show.Safety.SmokeChannels.Count == 0)
+                {
+                    return "aucune machine à fumée dans le patch";
+                }
+
+                _safety.SetManualSmoke(smoke.Pressed, smoke.Burst?.TotalSeconds, smoke.Level);
+                return null;
 
             case StepSceneCommand step:
                 return StepScene(step, now);
@@ -396,22 +446,81 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
+        if (command.StopIfPlaying)
+        {
+            // Bascule (LIVE-003) : décidée ici, sur l'état exact du moteur, pas sur celui qu'affiche l'écran.
+            var stopped = false;
+            foreach (var playback in _playbacks)
+            {
+                if (playback.Scene.Id == scene.Id && !playback.Flash && playback.State is not (PlaybackState.FadingOut or PlaybackState.Done))
+                {
+                    playback.BeginExit(playback.Scene.FadeOut?.ToSeconds(Bpm) ?? 0);
+                    stopped = true;
+                }
+            }
+
+            if (stopped)
+            {
+                _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", scene.Name, command.Origin);
+                return null;
+            }
+        }
+
         Launch(scene, layerIndex, command.Fade?.TotalSeconds, command.Origin, command.Solo, null, now);
         return null;
     }
 
-    private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now)
+    private string? Flash(FlashSceneCommand command, TimeSpan now)
+    {
+        var scene = _show.Scene(command.SceneId);
+        if (scene is null)
+        {
+            return "scène inconnue";
+        }
+
+        if (!command.Pressed)
+        {
+            // Relâche : retour instantané (ou fondu court) à ce que jouent les couches (MOT-072).
+            var fade = command.ReleaseFade?.TotalSeconds ?? 0;
+            foreach (var playback in _playbacks)
+            {
+                if (playback.Flash && playback.Scene.Id == scene.Id)
+                {
+                    playback.BeginExit(fade);
+                }
+            }
+
+            return null;
+        }
+
+        if (scene.Steps.Count == 0)
+        {
+            return $"la scène « {scene.Name} » n'a aucune étape";
+        }
+
+        var layerIndex = LayerIndexFor(scene.LayerId);
+        if (layerIndex < 0)
+        {
+            return "aucune couche pour jouer la scène";
+        }
+
+        Launch(scene, layerIndex, 0, command.Origin, false, null, now, flash: true);
+        return null;
+    }
+
+    private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now, bool flash = false)
     {
         var layer = _show.Layers[layerIndex];
-        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo);
+        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash };
         playback.Bind(scene, _show);
 
         // Lectures remplacées : toute la couche si elle est exclusive (MOT-030), sinon une lecture de la même scène.
+        // Un flash ne remplace qu'un flash de la même scène, et une scène lancée ne coupe pas un flash maintenu.
         _scratch.Clear();
         foreach (var other in _playbacks)
         {
-            if (other.LayerIndex == layerIndex && other.State != PlaybackState.Done
-                && (layer.Exclusive || other.Scene.Id == scene.Id || other == replaced))
+            if (other.LayerIndex == layerIndex && other.State != PlaybackState.Done && other.Flash == flash
+                && (other == replaced || other.Scene.Id == scene.Id || (layer.Exclusive && !flash)))
             {
                 _scratch.Add(other);
             }
@@ -443,20 +552,29 @@ public sealed class RenderEngine : ICommandSink
             entry = fade ?? scene.FadeIn?.ToSeconds(bpm);
         }
 
-        playback.Start(entry, bpm);
+        playback.Start(flash ? 0 : entry, bpm);
         Insert(playback);
-        _logger.LogInformation("Scène « {Scene} » lancée dans la couche « {Couche} » (origine {Origine})", scene.Name, layer.Name, origin);
+        _logger.LogInformation(
+            "Scène « {Scene} » {Mode} dans la couche « {Couche} » (origine {Origine})",
+            scene.Name,
+            flash ? "en flash" : "lancée",
+            layer.Name,
+            origin);
         _bus?.Publish(new SceneStarted(scene.Id, scene.Name, layer.Id, origin, now));
     }
+
+    /// <summary>Rang de fusion : les flashs au-dessus de toutes les couches (étape 4), sinon la priorité de la couche.</summary>
+    private static long MergeRank(ShowModel show, Playback playback) =>
+        playback.Flash ? long.MaxValue : show.Layers[playback.LayerIndex].Priority;
 
     private void Insert(Playback playback)
     {
         // Ordre de fusion : priorité de couche croissante, puis ordre d'activation (la plus récente en dernier).
-        var priority = _show.Layers[playback.LayerIndex].Priority;
+        var priority = MergeRank(_show, playback);
         var index = _playbacks.Count;
         for (var i = 0; i < _playbacks.Count; i++)
         {
-            if (_show.Layers[_playbacks[i].LayerIndex].Priority > priority)
+            if (MergeRank(_show, _playbacks[i]) > priority)
             {
                 index = i;
                 break;
@@ -478,6 +596,11 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        if (found)
+        {
+            _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", _show.Scene(command.SceneId)?.Name, command.Origin);
+        }
+
         return found ? null : "la scène ne joue pas";
     }
 
@@ -495,7 +618,11 @@ public sealed class RenderEngine : ICommandSink
 
         foreach (var playback in _playbacks)
         {
-            if (layerIndex < 0 || playback.LayerIndex == layerIndex)
+            // « Tout arrêter » épargne les couches protégées (Ambiance par défaut), sauf demande expresse (COU-007).
+            var stop = layerIndex >= 0
+                ? playback.LayerIndex == layerIndex
+                : command.Everything || !_show.Layers[playback.LayerIndex].KeepOnStopAll;
+            if (stop)
             {
                 playback.BeginExit(command.Fade?.TotalSeconds ?? playback.Scene.FadeOut?.ToSeconds(Bpm) ?? 0);
             }
@@ -615,6 +742,32 @@ public sealed class RenderEngine : ICommandSink
         }
     }
 
+    /// <summary>COU-009 : une couche sans scène (hors fondu de sortie) rejoue sa scène de repos, avec son fondu croisé.</summary>
+    private void LaunchRestScenes(TimeSpan now)
+    {
+        var layers = _show.Layers;
+        for (var l = 0; l < layers.Count; l++)
+        {
+            if (layers[l].RestSceneId is not { } restId)
+            {
+                continue;
+            }
+
+            var busy = false;
+            foreach (var playback in _playbacks)
+            {
+                busy |= playback.LayerIndex == l && !playback.Flash && playback.State is not (PlaybackState.FadingOut or PlaybackState.Done);
+            }
+
+            if (busy || _show.Scene(restId) is not { Steps.Count: > 0 } rest)
+            {
+                continue;
+            }
+
+            Launch(rest, l, layers[l].CrossFade.ToSeconds(Bpm), CommandOrigin.Tool, false, null, now);
+        }
+    }
+
     /// <summary>Étapes 1 à 3 : valeurs par défaut, puis fusion des lectures par priorité de couche (doc 15 §5).</summary>
     private void MergeLayers()
     {
@@ -637,6 +790,9 @@ public sealed class RenderEngine : ICommandSink
 
             var layer = _show.Layers[playback.LayerIndex];
             var master = _layerMasters[playback.LayerIndex];
+
+            // Étape 4 : un flash passe au-dessus de toutes les couches, intensité comprise (MOT-072).
+            var intensityMode = playback.Flash ? IntensityMode.Priority : layer.IntensityMode;
             var source = new ParameterSource(SourceKind.Scene, playback.Scene.Id, layer.Id);
             var parameters = playback.Parameters;
             var fadingOut = playback.State == PlaybackState.FadingOut;
@@ -660,7 +816,7 @@ public sealed class RenderEngine : ICommandSink
                 var value = playback.Value[i];
                 if (_roles[p] == ParameterRole.Intensity)
                 {
-                    MergeIntensity(p, value, weight, master, layer.IntensityMode, source);
+                    MergeIntensity(p, value, weight, master, intensityMode, source);
                     continue;
                 }
 
@@ -718,7 +874,7 @@ public sealed class RenderEngine : ICommandSink
         _touched[p] = true;
     }
 
-    /// <summary>Étapes 5 à 7, puis « Suit l'intensité » (MOT-040).</summary>
+    /// <summary>Étapes 5 à 8, puis « Suit l'intensité » (MOT-040).</summary>
     private void ApplyMasters()
     {
         var count = _result.Length;
@@ -732,17 +888,37 @@ public sealed class RenderEngine : ICommandSink
                 _sources[p] = new ParameterSource(SourceKind.Override);
             }
 
-            if (_roles[p] != ParameterRole.Intensity)
+            // Étape 6 : Grand Master, sur les seules intensités (GEN-041).
+            if (_roles[p] == ParameterRole.Intensity)
             {
-                continue;
+                _result[p] *= _grandMaster;
             }
+        }
 
-            // Étapes 6 et 7 : Grand Master puis blackout, sur les seules intensités (GEN-041).
-            _result[p] *= _grandMaster;
-            if (_blackout)
+        // Étape 8 (MOT-073) : figer garde les valeurs du moment du gel ; le blackout (étape 7) et la sûreté (étape 9)
+        // restent actifs, d'où le blackout appliqué après.
+        if (_freezeCapture)
+        {
+            _freezeCapture = false;
+            Array.Copy(_result, _frozen, count);
+        }
+
+        if (_frozenActive)
+        {
+            Array.Copy(_frozen, _result, count);
+            Array.Fill(_sources, new ParameterSource(SourceKind.Frozen));
+        }
+
+        if (_blackout)
+        {
+            // Étape 7 : blackout, sur les seules intensités (GEN-041).
+            for (var p = 0; p < count; p++)
             {
-                _result[p] = 0;
-                _sources[p] = new ParameterSource(SourceKind.Blackout);
+                if (_roles[p] == ParameterRole.Intensity)
+                {
+                    _result[p] = 0;
+                    _sources[p] = new ParameterSource(SourceKind.Blackout);
+                }
             }
         }
 
@@ -809,7 +985,20 @@ public sealed class RenderEngine : ICommandSink
             masters[i] = old is not null ? _layerMasters[IndexOfLayer(previous, old.Id)] : Math.Clamp(show.Layers[i].Master, 0, 1);
         }
 
+        var frozen = new double[count];
+        for (var i = 0; i < _frozen.Length && i < previous.Parameters.Count; i++)
+        {
+            var p = previous.Parameters[i];
+            var index = show.IndexOf(p.FixtureId, p.ChannelKey);
+            if (index >= 0)
+            {
+                frozen[index] = _frozen[i];
+            }
+        }
+
         _show = show;
+        _safety.Load(show.Safety);
+        _frozen = frozen;
         _overrides = overrides;
         _layerMasters = masters;
         _defaults = [.. show.Parameters.Select(p => Math.Clamp(p.Default, 0, 1))];
@@ -846,7 +1035,7 @@ public sealed class RenderEngine : ICommandSink
 
         _playbacks.Sort((a, b) =>
         {
-            var byPriority = show.Layers[a.LayerIndex].Priority.CompareTo(show.Layers[b.LayerIndex].Priority);
+            var byPriority = MergeRank(show, a).CompareTo(MergeRank(show, b));
             return byPriority != 0 ? byPriority : a.Sequence.CompareTo(b.Sequence);
         });
 
@@ -918,6 +1107,9 @@ public sealed class RenderEngine : ICommandSink
             }
 
             _publishedBlackout = _blackout;
+            _publishedFrozen = _frozenActive;
+            _publishedSmoking = _safety.ManualSmoke;
+            _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
@@ -939,10 +1131,12 @@ public sealed class RenderEngine : ICommandSink
                     playback.Scene.Steps.Count,
                     playback.StepProgress,
                     playback.Speed,
-                    playback.Solo);
+                    playback.Solo,
+                    playback.Flash);
             }
 
             _publishedPlaybackCount = _playbacks.Count;
+            _publishedLimits = _safety.Active.Count == 0 ? [] : [.. _safety.Active];
         }
     }
 
@@ -958,8 +1152,19 @@ public sealed class RenderEngine : ICommandSink
             Playbacks = _publishedPlaybacks.AsSpan(0, _publishedPlaybackCount).ToArray(),
             LayerMasters = (double[])_publishedLayerMasters.Clone(),
             Blackout = _publishedBlackout,
+            Frozen = _publishedFrozen,
+            Smoking = _publishedSmoking,
+            SmokeRestSeconds = _publishedSmokeRest,
             GrandMaster = _publishedGrandMaster,
+            ActiveLimits = _publishedLimits,
         };
+    }
+
+    private void PublishSafety(SafetyLimitReached limit)
+    {
+        // MOT-083 : une seule fois par épisode (le limiteur s'en charge), journalisé et publié.
+        _logger.LogWarning("Sûreté ({Limite}) : {Appareil} — {Detail}", limit.Kind, limit.Label, limit.Detail);
+        _bus?.Publish(limit);
     }
 
     private void Log(CommandLogEntry entry)

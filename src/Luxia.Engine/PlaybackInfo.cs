@@ -11,6 +11,7 @@ namespace Luxia.Engine;
 /// <param name="StepProgress">Progression 0-1 dans l'étape.</param>
 /// <param name="Speed">Vitesse.</param>
 /// <param name="Solo">Jouée seule (SCN-034).</param>
+/// <param name="Flash">Flash maintenu (MOT-072).</param>
 public readonly record struct PlaybackInfo(
     Guid SceneId,
     Guid LayerId,
@@ -19,4 +20,5 @@ public readonly record struct PlaybackInfo(
     int StepCount,
     double StepProgress,
     double Speed,
-    bool Solo);
+    bool Solo,
+    bool Flash = false);

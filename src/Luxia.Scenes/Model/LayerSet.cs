@@ -1,4 +1,5 @@
 using Luxia.Engine.Model;
+using Luxia.Fixtures.Model;
 
 namespace Luxia.Scenes.Model;
 
@@ -41,18 +42,36 @@ public sealed record LayerSet
 
     private static IReadOnlyList<Layer> DefaultLayers() =>
     [
-        new Layer { Id = IntensityLayerId, Name = "Intensité", Priority = 1, Color = "#E3B341", Icon = "☀" },
-        new Layer { Id = ColorsLayerId, Name = "Couleurs", Priority = 2, Color = "#DB61A2", Icon = "◐" },
-        new Layer { Id = MovementsLayerId, Name = "Mouvements", Priority = 3, Color = "#58A6FF", Icon = "↻" },
-        new Layer { Id = BeamLayerId, Name = "Faisceau", Priority = 4, Color = "#A371F7", Icon = "◎" },
-        new Layer { Id = EffectsLayerId, Name = "Effets", Priority = 5, Color = "#F0883E", Icon = "✦" },
-        new Layer { Id = AtmosphereLayerId, Name = "Ambiance", Priority = 6, Color = "#8957E5", Icon = "☁" },
+        new Layer { Id = IntensityLayerId, Name = "Intensité", Priority = 1, Color = "#E3B341", Icon = "☀", Families = [AttributeFamily.Intensity] },
+        new Layer { Id = ColorsLayerId, Name = "Couleurs", Priority = 2, Color = "#DB61A2", Icon = "◐", Families = [AttributeFamily.Color, AttributeFamily.Intensity] },
+        new Layer { Id = MovementsLayerId, Name = "Mouvements", Priority = 3, Color = "#58A6FF", Icon = "↻", Families = [AttributeFamily.Position, AttributeFamily.EffectMotion] },
+        new Layer { Id = BeamLayerId, Name = "Faisceau", Priority = 4, Color = "#A371F7", Icon = "◎", Families = [AttributeFamily.Beam] },
+        new Layer
+        {
+            Id = EffectsLayerId,
+            Name = "Effets",
+            Priority = 5,
+            Color = "#F0883E",
+            Icon = "✦",
+            Families = [AttributeFamily.Beam, AttributeFamily.Programs, AttributeFamily.EffectMotion, AttributeFamily.Intensity, AttributeFamily.Color],
+        },
+        new Layer
+        {
+            Id = AtmosphereLayerId,
+            Name = "Ambiance",
+            Priority = 6,
+            Color = "#8957E5",
+            Icon = "☁",
+            KeepOnStopAll = true,
+            Families = [AttributeFamily.Atmosphere, AttributeFamily.Color, AttributeFamily.Intensity],
+        },
         new Layer
         {
             Id = FlashLayerId,
             Name = "Flashs",
             Priority = 99,
             IntensityMode = IntensityMode.Priority,
+            Kind = LayerKind.Flash,
             CrossFade = Duration.Zero,
             Color = "#F85149",
             Icon = "⚡",

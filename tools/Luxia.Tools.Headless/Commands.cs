@@ -21,6 +21,11 @@ internal static class Commands
               ports
                   Liste les ports série et signale les cartes Arduino.
 
+              midi [--duree 30] [--leds]
+                  Liste les ports MIDI, reconnaît les APC mini (MK1, MK2) puis affiche chaque message reçu pendant la durée :
+                  appuyez sur les pads, boutons et faders pour vérifier leurs numéros (doc 18b). --leds allume la grille
+                  (dégradé de couleurs) pour vérifier le retour lumineux.
+
               lancer [--duree s] [--nul] [--test 1-16] [--exclus 180] [--valeur 50] [--pas ms] [--une-fois]
                      [--enregistrer fichier.dmxrec] [--frequence 40]
                   Démarre le moteur et les sorties des préférences (ou la sortie Nulle avec --nul).
@@ -49,6 +54,53 @@ internal static class Commands
               scenario dossier fichier.txt [--duree 60] [--pas 0.25] [--enregistrer fichier.dmxrec]
                   MOT-103 : déroule des commandes horodatées (format : docs/50-format-des-donnees.md, « Scénario »).
             """);
+        return 0;
+    }
+
+    public static int Midi(Arguments args)
+    {
+        var ports = new Luxia.Midi.WinMmMidiPorts();
+        var inputs = ports.Inputs();
+        var outputs = ports.Outputs();
+        Console.WriteLine(inputs.Count == 0 ? "Aucune entrée MIDI." : "Entrées MIDI :");
+        foreach (var name in inputs)
+        {
+            Console.WriteLine($"  {name}{(Luxia.Midi.ControllerProfiles.Match(name) is { } p ? $"  → {p.ShortName}" : string.Empty)}");
+        }
+
+        Console.WriteLine(outputs.Count == 0 ? "Aucune sortie MIDI." : "Sorties MIDI :");
+        foreach (var name in outputs)
+        {
+            Console.WriteLine($"  {name}");
+        }
+
+        var seconds = args.GetDouble("duree", 30);
+        var opened = new List<IDisposable>();
+        foreach (var name in inputs.Where(n => Luxia.Midi.ControllerProfiles.Match(n) is not null))
+        {
+            opened.Add(ports.OpenInput(name, m => Console.WriteLine(
+                $"{DateTime.Now:HH:mm:ss.fff}  {name}  {(m.IsControlChange ? "CC" : m.IsNoteOn ? "note+" : m.IsNoteOff ? "note-" : "autre")}  " +
+                $"canal {(m.Status & 0x0F) + 1}  n° {m.Data1}  valeur {m.Data2}")));
+            if (args.Has("leds") && outputs.Contains(name) && Luxia.Midi.ControllerProfiles.Match(name) is { } profile)
+            {
+                using var output = ports.OpenOutput(name);
+                for (var i = 0; i < 64; i++)
+                {
+                    var velocity = profile.Pads.Rgb ? profile.Pads.Palette[i % profile.Pads.Palette.Count].Index : 1 + (i % 6);
+                    output.Send(Luxia.Midi.MidiMessage.NoteOn(profile.Pads.Rgb ? profile.Pads.Active.Channel : 0, profile.GridBottomLeftNote + i, velocity));
+                }
+            }
+        }
+
+        if (opened.Count == 0)
+        {
+            Console.WriteLine("Aucun APC mini reconnu.");
+            return 0;
+        }
+
+        Console.WriteLine($"Écoute pendant {seconds:0} s…");
+        Thread.Sleep(TimeSpan.FromSeconds(seconds));
+        opened.ForEach(o => o.Dispose());
         return 0;
     }
 

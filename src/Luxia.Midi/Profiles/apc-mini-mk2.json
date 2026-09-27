@@ -1,0 +1,574 @@
+{
+  "name": "AKAI APC mini mk2",
+  "shortName": "APC mini MK2",
+  "notes": "Protocole de l'APC mini mk2 (« APC mini mk2 - Communication Protocol - v1.0 », AKAI, docs/Equipements/AKAI/Mini MK2) : grille notes 0x00-0x3F (0x00 = en bas à gauche), boutons du bas 0x64-0x6B (LED rouges), boutons de droite 0x70-0x77 de haut en bas (LED vertes), Shift 0x7A, faders CC 0x30-0x38 (0x38 = master). LED des pads : note-on dont le canal règle l'effet (canaux 1-7 luminosité 10 à 100 %, 8-11 pulsation, 12-16 clignotement) et la vélocité la couleur dans la palette fixe de 128 couleurs ci-dessous ; LED des boutons : 0 éteinte, 1 allumée, 2 clignotante.",
+  "portNames": [
+    "APC mini mk2"
+  ],
+  "excludedPortNames": [
+    "MIDIIN",
+    "MIDIOUT"
+  ],
+  "gridBottomLeftNote": 0,
+  "bottomButtons": [
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107
+  ],
+  "rightButtons": [
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119
+  ],
+  "shiftNote": 122,
+  "faders": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+  ],
+  "pads": {
+    "rgb": true,
+    "available": {
+      "channel": 1,
+      "velocity": 0
+    },
+    "active": {
+      "channel": 6,
+      "velocity": 0
+    },
+    "fadingIn": {
+      "channel": 9,
+      "velocity": 0
+    },
+    "palette": [
+      {
+        "index": 1,
+        "color": "#1E1E1E"
+      },
+      {
+        "index": 2,
+        "color": "#7F7F7F"
+      },
+      {
+        "index": 3,
+        "color": "#FFFFFF"
+      },
+      {
+        "index": 4,
+        "color": "#FF4C4C"
+      },
+      {
+        "index": 5,
+        "color": "#FF0000"
+      },
+      {
+        "index": 6,
+        "color": "#590000"
+      },
+      {
+        "index": 7,
+        "color": "#190000"
+      },
+      {
+        "index": 8,
+        "color": "#FFBD6C"
+      },
+      {
+        "index": 9,
+        "color": "#FF5400"
+      },
+      {
+        "index": 10,
+        "color": "#591D00"
+      },
+      {
+        "index": 11,
+        "color": "#271B00"
+      },
+      {
+        "index": 12,
+        "color": "#FFFF4C"
+      },
+      {
+        "index": 13,
+        "color": "#FFFF00"
+      },
+      {
+        "index": 14,
+        "color": "#595900"
+      },
+      {
+        "index": 15,
+        "color": "#191900"
+      },
+      {
+        "index": 16,
+        "color": "#88FF4C"
+      },
+      {
+        "index": 17,
+        "color": "#54FF00"
+      },
+      {
+        "index": 18,
+        "color": "#1D5900"
+      },
+      {
+        "index": 19,
+        "color": "#142B00"
+      },
+      {
+        "index": 20,
+        "color": "#4CFF4C"
+      },
+      {
+        "index": 21,
+        "color": "#00FF00"
+      },
+      {
+        "index": 22,
+        "color": "#005900"
+      },
+      {
+        "index": 23,
+        "color": "#001900"
+      },
+      {
+        "index": 24,
+        "color": "#4CFF5E"
+      },
+      {
+        "index": 25,
+        "color": "#00FF19"
+      },
+      {
+        "index": 26,
+        "color": "#00590D"
+      },
+      {
+        "index": 27,
+        "color": "#001902"
+      },
+      {
+        "index": 28,
+        "color": "#4CFF88"
+      },
+      {
+        "index": 29,
+        "color": "#00FF55"
+      },
+      {
+        "index": 30,
+        "color": "#00591D"
+      },
+      {
+        "index": 31,
+        "color": "#001F12"
+      },
+      {
+        "index": 32,
+        "color": "#4CFFB7"
+      },
+      {
+        "index": 33,
+        "color": "#00FF99"
+      },
+      {
+        "index": 34,
+        "color": "#005935"
+      },
+      {
+        "index": 35,
+        "color": "#001912"
+      },
+      {
+        "index": 36,
+        "color": "#4CC3FF"
+      },
+      {
+        "index": 37,
+        "color": "#00A9FF"
+      },
+      {
+        "index": 38,
+        "color": "#004152"
+      },
+      {
+        "index": 39,
+        "color": "#001019"
+      },
+      {
+        "index": 40,
+        "color": "#4C88FF"
+      },
+      {
+        "index": 41,
+        "color": "#0055FF"
+      },
+      {
+        "index": 42,
+        "color": "#001D59"
+      },
+      {
+        "index": 43,
+        "color": "#000819"
+      },
+      {
+        "index": 44,
+        "color": "#4C4CFF"
+      },
+      {
+        "index": 45,
+        "color": "#0000FF"
+      },
+      {
+        "index": 46,
+        "color": "#000059"
+      },
+      {
+        "index": 47,
+        "color": "#000019"
+      },
+      {
+        "index": 48,
+        "color": "#874CFF"
+      },
+      {
+        "index": 49,
+        "color": "#5400FF"
+      },
+      {
+        "index": 50,
+        "color": "#190064"
+      },
+      {
+        "index": 51,
+        "color": "#0F0030"
+      },
+      {
+        "index": 52,
+        "color": "#FF4CFF"
+      },
+      {
+        "index": 53,
+        "color": "#FF00FF"
+      },
+      {
+        "index": 54,
+        "color": "#590059"
+      },
+      {
+        "index": 55,
+        "color": "#190019"
+      },
+      {
+        "index": 56,
+        "color": "#FF4C87"
+      },
+      {
+        "index": 57,
+        "color": "#FF0054"
+      },
+      {
+        "index": 58,
+        "color": "#59001D"
+      },
+      {
+        "index": 59,
+        "color": "#220013"
+      },
+      {
+        "index": 60,
+        "color": "#FF1500"
+      },
+      {
+        "index": 61,
+        "color": "#993500"
+      },
+      {
+        "index": 62,
+        "color": "#795100"
+      },
+      {
+        "index": 63,
+        "color": "#436400"
+      },
+      {
+        "index": 64,
+        "color": "#033900"
+      },
+      {
+        "index": 65,
+        "color": "#005735"
+      },
+      {
+        "index": 66,
+        "color": "#00547F"
+      },
+      {
+        "index": 67,
+        "color": "#0000FF"
+      },
+      {
+        "index": 68,
+        "color": "#00454F"
+      },
+      {
+        "index": 69,
+        "color": "#2500CC"
+      },
+      {
+        "index": 70,
+        "color": "#7F7F7F"
+      },
+      {
+        "index": 71,
+        "color": "#202020"
+      },
+      {
+        "index": 72,
+        "color": "#FF0000"
+      },
+      {
+        "index": 73,
+        "color": "#BDFF2D"
+      },
+      {
+        "index": 74,
+        "color": "#AFED06"
+      },
+      {
+        "index": 75,
+        "color": "#64FF09"
+      },
+      {
+        "index": 76,
+        "color": "#108B00"
+      },
+      {
+        "index": 77,
+        "color": "#00FF87"
+      },
+      {
+        "index": 78,
+        "color": "#00A9FF"
+      },
+      {
+        "index": 79,
+        "color": "#002AFF"
+      },
+      {
+        "index": 80,
+        "color": "#3F00FF"
+      },
+      {
+        "index": 81,
+        "color": "#7A00FF"
+      },
+      {
+        "index": 82,
+        "color": "#B21A7D"
+      },
+      {
+        "index": 83,
+        "color": "#402100"
+      },
+      {
+        "index": 84,
+        "color": "#FF4A00"
+      },
+      {
+        "index": 85,
+        "color": "#88E106"
+      },
+      {
+        "index": 86,
+        "color": "#72FF15"
+      },
+      {
+        "index": 87,
+        "color": "#00FF00"
+      },
+      {
+        "index": 88,
+        "color": "#3BFF26"
+      },
+      {
+        "index": 89,
+        "color": "#59FF71"
+      },
+      {
+        "index": 90,
+        "color": "#38FFCC"
+      },
+      {
+        "index": 91,
+        "color": "#5B8AFF"
+      },
+      {
+        "index": 92,
+        "color": "#3151C6"
+      },
+      {
+        "index": 93,
+        "color": "#877FE9"
+      },
+      {
+        "index": 94,
+        "color": "#D31DFF"
+      },
+      {
+        "index": 95,
+        "color": "#FF005D"
+      },
+      {
+        "index": 96,
+        "color": "#FF7F00"
+      },
+      {
+        "index": 97,
+        "color": "#B9B000"
+      },
+      {
+        "index": 98,
+        "color": "#90FF00"
+      },
+      {
+        "index": 99,
+        "color": "#835D07"
+      },
+      {
+        "index": 100,
+        "color": "#392B00"
+      },
+      {
+        "index": 101,
+        "color": "#144C10"
+      },
+      {
+        "index": 102,
+        "color": "#0D5038"
+      },
+      {
+        "index": 103,
+        "color": "#15152A"
+      },
+      {
+        "index": 104,
+        "color": "#16205A"
+      },
+      {
+        "index": 105,
+        "color": "#693C1C"
+      },
+      {
+        "index": 106,
+        "color": "#A8000A"
+      },
+      {
+        "index": 107,
+        "color": "#DE513D"
+      },
+      {
+        "index": 108,
+        "color": "#D86A1C"
+      },
+      {
+        "index": 109,
+        "color": "#FFE126"
+      },
+      {
+        "index": 110,
+        "color": "#9EE12F"
+      },
+      {
+        "index": 111,
+        "color": "#67B50F"
+      },
+      {
+        "index": 112,
+        "color": "#1E1E30"
+      },
+      {
+        "index": 113,
+        "color": "#DCFF6B"
+      },
+      {
+        "index": 114,
+        "color": "#80FFBD"
+      },
+      {
+        "index": 115,
+        "color": "#9A99FF"
+      },
+      {
+        "index": 116,
+        "color": "#8E66FF"
+      },
+      {
+        "index": 117,
+        "color": "#404040"
+      },
+      {
+        "index": 118,
+        "color": "#757575"
+      },
+      {
+        "index": 119,
+        "color": "#E0FFFF"
+      },
+      {
+        "index": 120,
+        "color": "#A00000"
+      },
+      {
+        "index": 121,
+        "color": "#350000"
+      },
+      {
+        "index": 122,
+        "color": "#1AD000"
+      },
+      {
+        "index": 123,
+        "color": "#074200"
+      },
+      {
+        "index": 124,
+        "color": "#B9B000"
+      },
+      {
+        "index": 125,
+        "color": "#3F3100"
+      },
+      {
+        "index": 126,
+        "color": "#B35F00"
+      },
+      {
+        "index": 127,
+        "color": "#4B1502"
+      }
+    ]
+  },
+  "buttons": {
+    "on": 1,
+    "blink": 2
+  }
+}

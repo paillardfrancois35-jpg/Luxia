@@ -6,6 +6,7 @@ using Luxia.Persistence;
 using Luxia.Scenes;
 using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 
 namespace Luxia.Hosting.Tools;
 
@@ -33,18 +34,156 @@ public static class ProjectValidator
         var (scenes, scenesMessage) = SceneStore.Load(folder);
         var (palettes, palettesMessage) = PaletteStore.Load(folder);
         var (layers, layersMessage) = LayerStore.Load(folder);
+        var (safety, safetyMessage) = SafetyStore.Load(folder);
+        var (live, liveMessage) = LiveStore.Load(folder);
+        var (midi, midiMessage) = Midi.MidiStore.Load(folder);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
         AddLoadMessage(issues, PaletteStore.FileName, palettesMessage);
         AddLoadMessage(issues, LayerStore.FileName, layersMessage);
+        AddLoadMessage(issues, SafetyStore.FileName, safetyMessage);
+        AddLoadMessage(issues, LiveStore.FileName, liveMessage);
+        AddLoadMessage(issues, Midi.MidiStore.FileName, midiMessage);
 
         var library = new ProjectFixtureLibrary(folder);
-        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes);
+        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
         issues.AddRange(ShowCompiler.Compile(content).Issues);
         issues.AddRange(CheckScenes(scenes, layers, palettes));
+        issues.AddRange(CheckLayers(scenes, layers, palettes));
         issues.AddRange(CheckPalettes(palettes));
+        issues.AddRange(CheckSafety(safety));
+        issues.AddRange(CheckLive(live, scenes, layers));
+        issues.AddRange(CheckMidi(midi, scenes, layers));
         return issues;
+    }
+
+    private static IEnumerable<CompileIssue> CheckLayers(SceneSet scenes, LayerSet layers, PaletteSet palettes)
+    {
+        var file = LayerStore.FileName;
+        foreach (var duplicate in layers.Layers.GroupBy(l => l.Id).Where(g => g.Count() > 1))
+        {
+            yield return Error(file, $"couche « {duplicate.First().Name} »", "id", "identifiant utilisé par plusieurs couches (GEN-052)");
+        }
+
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        foreach (var layer in layers.Layers)
+        {
+            if (layer.RestSceneId is { } rest && !sceneIds.Contains(rest))
+            {
+                yield return Warning(file, $"couche « {layer.Name} »", "restSceneId", "scène de repos introuvable (COU-009)");
+            }
+        }
+
+        // COU-008 : scène qui touche des familles d'attributs hors de celles de sa couche (non bloquant).
+        var byId = layers.Layers.GroupBy(l => l.Id).ToDictionary(g => g.Key, g => g.First());
+        foreach (var scene in scenes.Scenes)
+        {
+            if (!byId.TryGetValue(scene.LayerId, out var layer))
+            {
+                continue;
+            }
+
+            var outside = LayerRules.OutOfFamily(scene, layer, palettes);
+            if (outside.Count > 0)
+            {
+                yield return Warning(
+                    SceneStore.FileName,
+                    $"scène « {scene.Name} »",
+                    "layerId",
+                    $"touche {string.Join(", ", outside.Select(LayerRules.Label))}, hors des familles de la couche « {layer.Name} » (COU-008)");
+            }
+        }
+    }
+
+    private static IEnumerable<CompileIssue> CheckLive(LiveSettings live, SceneSet scenes, LayerSet layers)
+    {
+        var file = LiveStore.FileName;
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        if (live.FlashSceneId is { } flash && !sceneIds.Contains(flash))
+        {
+            yield return Warning(file, "Live", "flashSceneId", "scène du bouton FLASH introuvable");
+        }
+
+        if (live.StrobeSceneId is { } strobe && !sceneIds.Contains(strobe))
+        {
+            yield return Warning(file, "Live", "strobeSceneId", "scène du bouton STROBE introuvable");
+        }
+
+        var layerIds = layers.Layers.Select(l => l.Id).ToHashSet();
+        foreach (var hidden in live.HiddenLayerIds.Where(id => !layerIds.Contains(id)))
+        {
+            yield return Warning(file, "Live", "hiddenLayerIds", $"couche masquée introuvable ({hidden})");
+        }
+
+        if (live.SmokeBurstSeconds is <= 0 or > 60)
+        {
+            yield return Warning(file, "Live", "smokeBurstSeconds", "rafale de fumée hors de 0-60 s");
+        }
+    }
+
+    private static IEnumerable<CompileIssue> CheckMidi(Midi.MidiSettings midi, SceneSet scenes, LayerSet layers)
+    {
+        var file = Midi.MidiStore.FileName;
+        var sceneIds = scenes.Scenes.Select(s => s.Id).ToHashSet();
+        var layerIds = layers.Layers.Select(l => l.Id).ToHashSet();
+        foreach (var (binding, index) in midi.Bindings.Select((b, i) => (b, i)))
+        {
+            var where = string.Create(CultureInfo.CurrentCulture, $"affectation {index + 1} (« {binding.Control} »)");
+            if (Midi.MidiControl.Parse(binding.Control) is not { } control)
+            {
+                yield return Error(file, where, "control", "contrôle illisible : « pad <colonne> <ligne> », « bas <n> », « droite <n> » ou « fader <n> »");
+                continue;
+            }
+
+            var needsScene = binding.Action is Midi.MidiAction.LaunchScene or Midi.MidiAction.FlashScene;
+            var needsLayer = binding.Action is Midi.MidiAction.StopLayer or Midi.MidiAction.LayerMaster;
+            if (needsScene && (binding.SceneId is not { } scene || !sceneIds.Contains(scene)))
+            {
+                yield return Error(file, where, "sceneId", "scène absente ou introuvable");
+            }
+
+            if (needsLayer && (binding.LayerId is not { } layer || !layerIds.Contains(layer)))
+            {
+                yield return Error(file, where, "layerId", "couche absente ou introuvable");
+            }
+
+            var fader = control.Kind == Midi.MidiControlKind.Fader;
+            var continuous = binding.Action is Midi.MidiAction.LayerMaster or Midi.MidiAction.GrandMaster;
+            if (fader != continuous && binding.Action != Midi.MidiAction.None)
+            {
+                yield return Warning(file, where, "action", fader ? "un fader ne pilote qu'un master (couche ou Grand Master)" : "un master se pilote par un fader");
+            }
+        }
+    }
+
+    private static IEnumerable<CompileIssue> CheckSafety(SafetySettings safety)
+    {
+        var file = SafetyStore.FileName;
+        if (safety.Strobe.MaxContinuousSeconds is < 0.5 or > 600)
+        {
+            yield return Warning(file, "strobe", "maxContinuousSeconds", "durée de strobe hors de 0,5-600 s : ramenée dans ces bornes");
+        }
+
+        if (safety.Strobe.MaxSpeedPercent is < 0 or > 100)
+        {
+            yield return Warning(file, "strobe", "maxSpeedPercent", "vitesse maximale hors de 0-100 %");
+        }
+
+        if (safety.Smoke.MaxEmissionSeconds is < 0.5 or > 600)
+        {
+            yield return Warning(file, "fumée", "maxEmissionSeconds", "durée d'émission hors de 0,5-600 s : ramenée dans ces bornes");
+        }
+
+        if (safety.Smoke.MinRestSeconds < 0)
+        {
+            yield return Warning(file, "fumée", "minRestSeconds", "repos minimal négatif : compté comme 0");
+        }
+
+        if (safety.Smoke.RestFactor < 0)
+        {
+            yield return Warning(file, "fumée", "restFactor", "facteur de repos négatif : compté comme 0");
+        }
     }
 
     private static void AddLoadMessage(List<CompileIssue> issues, string file, string? message)

@@ -1,7 +1,8 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-26, P4 validée par l'utilisateur ; prochaine étape : **P5 – Couches, Palettes, Live, MIDI** (jalon 1).
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** et fusionnée dans `main`
+> (étiquette **`v1.004`**). Prochain chantier : **analyse ergonomique** (branche dédiée), puis P6.
 
 ## 1. Où en est-on
 
@@ -12,7 +13,7 @@
 | P2 – Bibliothèque | Développée | `p2/bibliotheque` (fusionnée dans `main`, `v1.001`) | [demos/P2-bibliotheque.md](demos/P2-bibliotheque.md) | ⏳ |
 | P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
-| P5 – Couches, Palettes, Live, MIDI | **À démarrer** | `p5/…` à créer depuis `main` | — | — |
+| P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -32,6 +33,18 @@
   dépôt dans `build/numero-de-compilation.txt`). Fusionnée dans `main`, étiquette `v1.003`.
   Bilan final P4 : 94 exigences, **36 Validé**, 49 Réalisé (couvertes par les tests automatiques, non rejouées à la main), 8 Partiel
   (GEN-023, GEN-040, GEN-042, GEN-112, GEN-113, PAL-007, SCN-030, SCN-031), 1 Non réalisé (MOT-054).
+- **P5 développée le 2026-09-26/27** (branche `p5/couches-palettes-live`, version de développement **1.004**) : questions Q28 à Q32
+  tranchées avec l'utilisateur au démarrage (Q28 plages sans strobe, Q27 gros PAR = LPC120 8CH, Q29 fumée non branchée, Q30 zones,
+  Q31 MK2 et winmm, **Q32 : ordre de la phase et report des exigences qui ajoutent des panneaux**). Livré, dans l'ordre :
+  **sûreté** (strobe, fumée, zones interdites ; D29, `sûreté.json`, zones dans `lieux.json`), **couches** (flash, figer, fumée
+  manuelle, tout arrêter, scène de repos, éditeur « Couches… », familles COU-008), **positions par lieu** et saisie des zones en
+  visant, **écran Live** (nouveau module, premier écran), **APC mini MK1/MK2** (nouveau projet `Luxia.Midi`, D30, winmm, profils
+  en données, `midi.json`, `luxia-headless midi`), **fiabilité** (versions du projet, reprise après arrêt brutal, fondu au noir,
+  CPU, D31), « Plein feu » par défaut, contenu P5 du show de référence et trames de référence `P5-scenes.txt`, doc 50 + schémas.
+  **Bilan P5 : 75 exigences** : 43 Réalisé, 14 Réalisé à valider sur matériel, 6 Partiel (GEN-071, INST-072, LIVE-001, LIVE-004,
+  LIVE-040 : attendent P7/P8/P10 ou l'assistant ; MOT-082 : option d'intensité pendant la traversée), 11 reportées au chantier
+  d'ergonomie, PAL-010 en P6. Tests : 490 environ, tous verts. **Écarts** : numéros MIDI absents des notices (pris des protocoles
+  AKAI, à confirmer) ; figer pris avant le blackout (MOT-073) ; « sauvegarde auto » = versions (D31).
 - **Remarque de l'utilisateur à la validation de P4 (à garder en tête pour toute la suite)** : l'ergonomie est jugée « un beau bazar » —
   tout se mélange, trop de place, trop de défilement ; formats d'affichage et formes à revoir. **Non bloquant** tant que le fonctionnel
   tient : l'utilisateur compte sur l'IA pour **construire les shows** (GEN-130 à 134) et lui expliquer ce qu'il veut. Chantier
@@ -41,9 +54,15 @@
 - **Fiches d'exigences** : [exigences/](exigences/README.md) — une fiche par exigence travaillée, avec statut et **historique complet** (questions, décisions et leur pourquoi, écarts, commits, tests, validations). **Lire la fiche avant de toucher à une exigence.**
 - **Statut exigence par exigence** : [31-matrice-exigences.md](31-matrice-exigences.md), générée depuis les fiches. Bilan P3 : 47 exigences, 34 Réalisé, 6 Partiel, 7 Non réalisé.
 - **Reliquats P0-P2 traités en P3** : SORT-008, CONS-007/020 à 024/041/043/092 (patch et mode appareils), BIB-093/096/097/098/099/100. **BIB-094** (plage « Fondu » du LPC008S) reste ouverte : une réserve honnête a été ajoutée au libellé, mais la correction exacte attend une vérification en direct sur l'appareil. **CONS-091** reste correctement en P4 (non traité maintenant, cohérent avec le doc 40).
+- **À faire pour valider P5** : dérouler le guide P5 **un exemple à la fois** avec l'utilisateur (régénérer d'abord le show de
+  travail) ; **confirmer les numéros MIDI** sur l'APC (exemple 10, `luxia-headless midi --leds`) ; relever CPU, démarrage,
+  latence. Puis, **avant la validation définitive** (fusion dans `main`, étiquette `v1.004`, `LuxiaDevVersion` vidé et
+  `Version` = 1.004), **demander à l'utilisateur s'il veut la phase d'analyse ergonomique** dans la même discussion (§5.6).
 - **Reste à faire sur les phases développées** (hors validation matérielle) :
-  - CONS-008 / GEN-042 : blackout appliqué aux surcharges (fait en P4) ; **limites de sûreté → P5**.
-  - P4 partiels : GEN-023 (tempo fixe 120 BPM → P7), GEN-040 (sûreté dans la chaîne → P5), GEN-112 (journal des commandes affiché → Live, P5), GEN-113 (enregistrement des trames depuis l'appli), PAL-007 (grilles de palettes), SCN-030 (sélection au plan), SCN-031 (roue chromatique, pad Pan/Tilt), MOT-054 (couleurs par teinte → P6), COU-006 (couches par défaut, éditeur en P5).
+  - P4 partiels restants : GEN-023 (tempo fixe 120 BPM → P7), GEN-113 (enregistrement des trames depuis l'appli), PAL-007
+    (grilles de palettes), SCN-030 (sélection au plan), SCN-031 (roue chromatique, pad Pan/Tilt), MOT-054 (couleurs par teinte → P6).
+    GEN-040, GEN-042, GEN-112 et COU-006 ont été terminées en P5.
+  - Chantier d'ergonomie (Q32, doc 99) : LIVE-006/007/011/041, INST-070/071, MIDI-008/009, GEN-057/074, CONS-061 reportées.
   - MOT-103 : `scenario` non rejoué à la main (tests automatiques seulement).
   - Lyre 2 : positions des palettes proposées, à calibrer quand elle sera raccordée.
   - CONS-021 (pastille couleur, pad Pan/Tilt XY combinés) → reste canal par canal ; à revoir avec le programmeur (P5).
@@ -52,8 +71,10 @@
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
   - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
-- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — Q25 (tableau WZYBUTA, points restants) ; Q27 : modèle réel des gros PAR (Betopper LPC010 ou LPC120 ?) — le show de référence patche provisoirement en LPC120 8 canaux ; **Q28 (P4)** : plage « sans strobe » du LPC008S et de la LCB803 (décodées « strobe » à 0 par le simulateur et par `luxia-headless jouer`) — **à trancher tôt en P5**, qui traite justement la sûreté du strobe.
-- **Méthode d'essai avec l'utilisateur (rodée en P4, à reprendre)** : dérouler le guide **un exemple à la fois** dans la discussion, avec des consignes cliquables pas à pas (onglet, bouton, libellé exact) ; tracer chaque exemple dans les fiches (entrées « Utilisateur | Test » puis « Validation ») + matrice + commit/push avant de passer au suivant. **Avant toute compilation**, demander à l'utilisateur de fermer LuXia (verrou mono-instance, fichiers verrouillés) puis lui annoncer le numéro de version à vérifier dans la barre de titre. Les commandes de terminal se donnent en blocs `bash` séparés (bouton Run) avec chemins absolus.
+- **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — seule **Q25** reste 🟡 (effet WZYBUTA : réglage
+  20/64 canaux et vitesse du canal 2 ; l'utilisateur laisse l'IA choisir, préférence 64CH, qui oblige à réadresser UV et fumée :
+  décision au rebranchement de l'effet). Q27 à Q32 tranchées le 2026-09-26.
+- **Méthode d'essai avec l'utilisateur (rodée en P4, à reprendre)** : dérouler le guide **un exemple à la fois** dans la discussion, avec des consignes cliquables pas à pas (onglet, bouton, libellé exact) ; tracer chaque exemple dans les fiches (entrées « Utilisateur | Test » puis « Validation ») + matrice + commit/push avant de passer au suivant. **Pendant les essais**, avant toute compilation, demander à l'utilisateur de fermer LuXia (verrou mono-instance, fichiers verrouillés) puis lui annoncer le numéro de version à vérifier dans la barre de titre. **Pendant le développement** (décision utilisateur du 2026-09-26, début P5), Claude compile en autonomie et peut arrêter `LuXia.exe` au besoin ; les essais de l'utilisateur ont lieu à la fin, une fois tout le développement de la phase réalisé. Les commandes de terminal se donnent en blocs `bash` séparés (bouton Run) avec chemins absolus.
 - **Renommage en « LuXia » effectué le 2026-09-26** (avant P4, décision utilisateur) : solution `LuXia.sln`, namespaces `Luxia.*`, exécutable
   `LuXia.exe`, outil `luxia-headless`, dossiers de données (`%AppData%\LuXia`, `Documents\LuXia`, migration automatique au premier lancement
   depuis les anciens dossiers `DMX`), docs. Le sous-espace de noms `Luxia.Core.Dmx` (protocole) et le format `.dmxrec` restent inchangés :
@@ -67,6 +88,20 @@
   donc `"name": "Show de référence"` tant qu'on ne le renomme pas à la main après une régénération. Le nom affiché dans le titre ne dit pas
   quel dossier est réellement ouvert : se fier au champ « Dossier du projet » de **Aide → À propos**, pas au nom affiché.
 
+- **P5 validée par l'utilisateur le 2026-09-27** : guide déroulé pas à pas au matériel (exemples 1 à 13 ; l'exemple 13, sans interface,
+  déroulé par Claude à la demande de l'utilisateur ; étape 3 de l'exemple 6 — définir une zone interdite — reportée à la refonte
+  ergonomique). Bilan : 79 exigences P5, **37 Validé**, 26 Réalisé (couverts par les tests), 4 Partiel, 11 reportées au chantier
+  ergonomie, 1 en P6. Faits marquants, chacun avec sa fiche :
+  - **course écran / moteur** corrigée trois fois (bascule lancer/arrêter tranchée par le moteur `StopIfPlaying` ; `EngineEcho` pour
+    les masters ; reprise douce MIDI qui retient les dernières valeurs envoyées) — à garder en tête pour tout nouvel écran ;
+  - **UV BeamZ BUV463 : 8e canal « lissage » non documenté** (cause de l'« allumage lent »), UV 2 déplacé en 169 ; gros PAR = générique
+    **WT05** 7 canaux (pas des LPC120) ; écoute de la ligne possible avec le DVC4 Daslight (`docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`) ;
+  - **journal de l'enregistrement** `.journal.txt` (SORT-066 : clics IHM, commandes moteur, canaux DMX, touches) ;
+  - repos de fumée proportionnel (GEN-084 précisé), décomptes de sûreté, fenêtre de démarrage (GEN-065), ↑ ↓ = master de couche,
+    Problèmes du projet = règles de `valider` ; test instable stabilisé (règle docs/03 §11). 505 tests verts.
+  - **Prochain chantier : analyse ergonomique** (demande de l'utilisateur) : charte d'interaction et catalogue de composants communs,
+    contrôles 2D sur mesure (plan Pan/Tilt, roue de couleurs, effets), modules détachables / réagençables (ancrage type Dock),
+    place réservée à la 3D (prototype isolé), captures Daslight 4/5 comme sources de principes. Idées déjà notées dans le doc 99.
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -88,11 +123,12 @@
 | `Luxia.Fixtures` | Modèles d'appareils, règles, validation, bibliothèque, imports, éditions | `FixtureType`, `FixtureRules`, `FixtureValidator`, `FixtureLibrary`, `FixtureEdits`, `DmxConversion` |
 | `Luxia.Patch` | Installation (patch, univers, sélections), lieux, copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `ProjectFixtureLibrary`, `FixtureDecoder` |
 | `Luxia.Scenes` | Scènes, palettes, couches (fichiers `scènes.json`, `palettes.json`, `couches.json`) ; compilation vers le moteur ; couleurs ; règles du programmeur ; rapports d'utilisation ; import | `ShowCompiler`, `ValueResolver`, `PatchContext`, `ColorConversion`, `ProgrammerRules`, `SceneUsage`, `SceneImport` |
-| `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface | `LuxiaRuntime` (`Engine`, `Preview`), `ProjectSession`, `ShowService`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
+| `Luxia.Midi` | Contrôleurs APC mini (D30) : profils en données, traduction en commandes, LED, reprise douce, ports `winmm`, branchement à chaud | `MidiService`, `MidiController`, `ControllerProfiles`, `WinMmMidiPorts`, `MidiSettings` (`midi.json`) |
+| `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface, versions du projet, reprise, MIDI | `LuxiaRuntime` (`Engine`, `Preview`, `Midi`, `PendingResume`), `ProjectSession`, `ShowService`, `ProjectVersions`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
 | `Luxia.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
-| `Luxia.UI.Modules.*` | Un écran par projet : Console (+ faders d'appareil), Library, Outputs, Installation, Simulator, **Scenes** | `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel`, `ScenesViewModel` (+ `ProgrammerViewModel`, `SceneEditorViewModel`, `PalettesViewModel`) |
+| `Luxia.UI.Modules.*` | Un écran par projet : **Live** (premier écran), Console (+ faders d'appareil), Library, Outputs, Installation, Simulator, Scenes (+ fenêtres Couches…, Zones interdites…) | `LiveViewModel`, `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel`, `ScenesViewModel` (+ `ProgrammerViewModel`, `SceneEditorViewModel`, `PalettesViewModel`, `LayersEditorViewModel`, `ZonesEditorViewModel`) |
 | `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
-| `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
+| `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, **midi**, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
 | `tools/Luxia.Tools.Captures` | Rendu hors écran de la fenêtre principale en PNG (Avalonia.Headless), sur une copie du projet : vérifier une mise en page sans lancer LuXia | `Program.cs` |
 | `firmware/arduino-dmx` | Firmware Leonardo 1.0 (Enttec) | `arduino-dmx.ino` |
 
@@ -111,7 +147,7 @@ dotnet run --project tools/Luxia.Tools.Headless -- jouer "samples/Show de réfé
 dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence" "<dossier des images>"
 ```
 
-- **Trames de référence P4** (`tests/assets/golden/P4-scenes.txt`) : après un changement **voulu et vérifié** du rendu des scènes,
+- **Trames de référence P4 et P5** (`tests/assets/golden/P4-scenes.txt`, `P5-scenes.txt`) : après un changement **voulu et vérifié** du rendu des scènes,
   les régénérer avec `LUXIA_GOLDEN_UPDATE=1 dotnet test --project tests/Luxia.Integration.Tests`, puis relire le résumé de
   `luxia-headless jouer` avant de committer.
 - **Captures d'écran** : l'outil ne lance pas l'application (pas de conflit avec le verrou mono-instance, GEN-115) ; relire les PNG
@@ -135,6 +171,9 @@ dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence"
 4. Développer par étapes vérifiables, un commit par étape (doc 03 §7), tests verts et sans avertissement.
 5. Livrer : guide `docs/demos/PN-*.md`, ajouts au show de référence + `JOURNAL.md`, notes de réalisation dans le doc du module,
    fiches d'exigences à jour (statut + historique), matrice et index régénérés (`python tools/matrice-exigences.py …`), **ce document mis à jour**.
+6. **Avant la validation définitive de la version** : demander à l'utilisateur s'il souhaite une **phase d'analyse ergonomique**
+   menée dans la même discussion (connaissance complète de ce qui a été ajouté) ; le chantier d'ergonomie se poursuit ensuite dans
+   une nouvelle discussion (Q32, doc 99).
 
 Modèle de message pour ouvrir une discussion :
 
@@ -153,3 +192,5 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-26 | Avant P4 | Renommage transverse « DMX » → « LuXia » (branche `chore/renommage-luxia`, fusionnée) : solution, 25 projets/namespaces, exécutable, outil, dossiers de données avec migration automatique, docs. GitHub câblé (`origin`). Icône de l'exécutable créée. Nettoyage : 0 avertissement de build. Ajouts pendant la vérification avec l'utilisateur : menu Aide → À propos (diagnostic copiable) et verrou mono-instance (`Program.cs`) après avoir constaté que deux `LuXia.exe` simultanés se disputaient le port Arduino et pouvaient vider le « dernier projet » des préférences. 300 tests verts. Tout validé par l'utilisateur avec le matériel réel, committé et poussé (`main` = `origin/main`). |
 | 2026-09-26 | P4 | Moteur + Scènes développés sur `p4/moteur-scenes` : moteur sur modèle compilé (D26-D28), `Luxia.Scenes`, écran Scènes, aveugle et aperçu, Console en attributs, outils sans interface, contenu P4 du show de référence et trames de référence, fiches (90 créées), guide P4. 408 tests verts. Tests de temps réel rendus robustes à la charge. **En attente de la revue de l'utilisateur** avant fusion et `v1.003`. |
 | 2026-09-26 | P4 | Guide P4 déroulé pas à pas avec l'utilisateur sur le matériel (exemples 1 à 12, tous conformes). Corrigés/ajoutés au fil de l'eau, chacun avec sa fiche : blanc chaud, vitesse en direct, enregistrement robuste (GEN-118), exceptions journalisées (GEN-117), Ctrl+Z/Y, bouton de mise à jour de palette, case Aveugle, numéro de compilation (GEN-119). Remarque utilisateur : ergonomie d'ensemble à reprendre plus tard (doc 99), non bloquante. **Validée, fusionnée dans `main`, étiquette `v1.003`.** Prochaine étape : P5. |
+| 2026-09-27 | P5 | Couches, Palettes, Live, MIDI développés sur `p5/couches-palettes-live` (questions Q28 à Q32 tranchées au démarrage, développement en autonomie, essais de l'utilisateur à la fin) : sûreté (D29), couches complètes, positions par lieu, zones interdites, écran Live, APC mini (`Luxia.Midi`, D30), fiabilité (D31), contenu et trames de référence P5, guide P5. 75 exigences P5 (43 Réalisé, 14 à valider sur matériel, 6 Partiel, 12 reportées). **En attente des essais de l'utilisateur**, puis proposition de l'analyse ergonomique avant `v1.004`. |
+| 2026-09-27 | P5 | Guide P5 déroulé pas à pas avec l'utilisateur au matériel (exemples 1 à 13). Corrigés au fil de l'eau, chacun avec sa fiche : trois courses écran / moteur, cellule des sélections automatiques, Problèmes du projet, fumée, clavier, MIDI rapide, fenêtre de démarrage ; parc réel corrigé (BUV463 8 canaux, WT05). 505 tests verts. **Validée, fusionnée dans `main`, étiquette `v1.004`.** Prochaine étape : analyse ergonomique. |

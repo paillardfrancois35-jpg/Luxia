@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Luxia.UI.Modules.Scenes"
+        x:Class="Luxia.UI.Modules.Scenes.ZonesWindow"
+        x:DataType="vm:ZonesEditorViewModel"
+        Title="{Binding Title}"
+        Width="1000" Height="440"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117">
+  <DockPanel Margin="14">
+    <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,10">
+      <TextBlock Classes="section" Text="{Binding Title}" />
+      <TextBlock FontSize="12" Foreground="#8B949E" TextWrapping="Wrap"
+                 Text="Le faisceau d'une lyre ne visera jamais l'intérieur d'une zone : le moteur le ramène au bord le plus proche. Pour définir une zone : sélectionnez la lyre au programmeur, visez un coin de la zone (faders Pan / Tilt) puis « Coin 1 », visez le coin opposé puis « Coin 2 ». Plusieurs zones par lyre sont possibles." />
+      <TextBlock Text="{Binding Message}" Foreground="#58A6FF" TextWrapping="Wrap"
+                 IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="6" Margin="0,10,0,0">
+      <Button Content="Nouvelle zone (lyre du programmeur)" Command="{Binding AddFromProgrammerCommand}" />
+      <Button Content="Coin 1 = position visée" Command="{Binding TakeFirstCornerCommand}" />
+      <Button Content="Coin 2 = position visée" Command="{Binding TakeSecondCornerCommand}" />
+      <Button Content="Supprimer" Classes="danger" Command="{Binding DeleteCommand}" />
+      <Border Width="30" />
+      <Button Content="Enregistrer" Command="{Binding SaveCommand}" FontWeight="SemiBold" />
+      <Button Content="Annuler" Command="{Binding CancelCommand}" />
+    </StackPanel>
+
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="170,170,110,110,110,110" Margin="8,0,8,4">
+      <Grid.Styles>
+        <Style Selector="TextBlock">
+          <Setter Property="FontSize" Value="11" />
+          <Setter Property="Foreground" Value="#8B949E" />
+        </Style>
+      </Grid.Styles>
+      <TextBlock Grid.Column="0" Text="Appareil" />
+      <TextBlock Grid.Column="1" Text="Nom" />
+      <TextBlock Grid.Column="2" Text="Pan min %" />
+      <TextBlock Grid.Column="3" Text="Pan max %" />
+      <TextBlock Grid.Column="4" Text="Tilt min %" />
+      <TextBlock Grid.Column="5" Text="Tilt max %" />
+    </Grid>
+
+    <ListBox ItemsSource="{Binding Zones}" SelectedItem="{Binding Selected}" Background="Transparent">
+      <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="vm:ZoneRowViewModel">
+          <Grid ColumnDefinitions="170,170,110,110,110,110">
+            <TextBlock Grid.Column="0" Text="{Binding Mover.Label}" VerticalAlignment="Center" />
+            <TextBox Grid.Column="1" Text="{Binding Name}" Width="160" HorizontalAlignment="Left" />
+            <NumericUpDown Grid.Column="2" Value="{Binding PanMin}" Minimum="0" Maximum="100" Increment="1" FormatString="0.#" Width="100" ShowButtonSpinner="False" />
+            <NumericUpDown Grid.Column="3" Value="{Binding PanMax}" Minimum="0" Maximum="100" Increment="1" FormatString="0.#" Width="100" ShowButtonSpinner="False" />
+            <NumericUpDown Grid.Column="4" Value="{Binding TiltMin}" Minimum="0" Maximum="100" Increment="1" FormatString="0.#" Width="100" ShowButtonSpinner="False" />
+            <NumericUpDown Grid.Column="5" Value="{Binding TiltMax}" Minimum="0" Maximum="100" Increment="1" FormatString="0.#" Width="100" ShowButtonSpinner="False" />
+          </Grid>
+        </DataTemplate>
+      </ListBox.ItemTemplate>
+    </ListBox>
+  </DockPanel>
+</Window>

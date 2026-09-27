@@ -68,7 +68,11 @@ public sealed partial class ScenesViewModel : ViewModelBase, IRefreshable
             Programmer.Clear();
             ReloadAll();
         };
-        runtime.Show.Compiled += (_, _) => Programmer.ReloadPatch();
+        runtime.Show.Compiled += (_, _) =>
+        {
+            Programmer.ReloadPatch();
+            Palettes.RefreshVenue();
+        };
         ReloadAll();
     }
 
@@ -205,7 +209,7 @@ public sealed partial class ScenesViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Arrête toutes les scènes (CMD-012 sur toutes les couches).</summary>
     [RelayCommand]
-    private void StopAll() => Programmer.TargetEngine.Send(new StopLayerCommand(CommandOrigin.User));
+    private void StopAll() => Programmer.TargetEngine.Send(new StopLayerCommand(CommandOrigin.User, Everything: true));
 
     [RelayCommand(CanExecute = nameof(CanUndo))]
     private void Undo()
@@ -267,7 +271,16 @@ public sealed partial class ScenesViewModel : ViewModelBase, IRefreshable
         RedoCommand.NotifyCanExecuteChanged();
     }
 
-    private void ReloadAll()
+    /// <summary>Éditeur de couches (COU-001), ouvert dans sa propre fenêtre par la vue ; <c>null</c> sans projet.</summary>
+    public LayersEditorViewModel? CreateLayersEditor() =>
+        _runtime.Project.Folder is null ? null : new LayersEditorViewModel(_runtime, _dialogs);
+
+    /// <summary>Zones interdites du lieu actif (INST-053), ouvertes dans une fenêtre non modale ; <c>null</c> sans projet.</summary>
+    public ZonesEditorViewModel? CreateZonesEditor() =>
+        _runtime.Project.Folder is null ? null : new ZonesEditorViewModel(_runtime, Programmer);
+
+    /// <summary>Relit couches, palettes et scènes (après l'éditeur de couches).</summary>
+    public void ReloadAll()
     {
         HasProject = _runtime.Project.Folder is not null;
         Programmer.ReloadPatch();

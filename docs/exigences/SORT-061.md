@@ -35,3 +35,5 @@
 | 2026-09-24 | Claude | Développement | `c0cce3e` feat(sortie): routeur, pilotes Nul / Enregistreur / Arduino, protocole Enttec |
 | 2026-09-24 | Claude | Développement | `e7ca543` feat(hote): journal technique, assemblage P0 et outil dmx-headless |
 | 2026-09-24 | Claude | Développement | `d5fdbac` feat(app): écran Sorties (état des pilotes, Arduino, test, enregistreur, cadence) |
+| 2026-09-27 | Claude | Développement | Défaut trouvé en cherchant un test instable (analyse d'une session parallèle) : à l'arrêt d'un pilote, la trame encore en attente n'était pas écrite (dernière trame d'un enregistrement perdue). `OutputDriver` l'écrit désormais avant de se déconnecter. Le test du journal attend la connexion de l'enregistreur au lieu de la supposer. |
+| 2026-09-27 | Claude | Test | v1.004.078 : enregistrement arrêté peu après l'extinction de l'UV : la dernière transition (161-173 : 255→0) figure bien dans le journal. |

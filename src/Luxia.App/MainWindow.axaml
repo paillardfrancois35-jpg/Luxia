@@ -7,6 +7,7 @@
         xmlns:installation="using:Luxia.UI.Modules.Installation"
         xmlns:simulator="using:Luxia.UI.Modules.Simulator"
         xmlns:scenes="using:Luxia.UI.Modules.Scenes"
+        xmlns:live="using:Luxia.UI.Modules.Live"
         x:Class="Luxia.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -27,6 +28,7 @@
         <MenuItem Header="_Importer des scènes…" Command="{Binding ImportScenesCommand}"
                   ToolTip.Tip="Ajoute les scènes d'un fichier (IA de conception) sans rien écraser (GEN-133)" />
         <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
+        <MenuItem Header="_Versions du projet…" Command="{Binding ShowVersionsCommand}" />
       </MenuItem>
       <MenuItem Header="_Aide">
         <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
@@ -51,6 +53,11 @@
           <Ellipse Width="10" Height="10" Fill="{Binding OutputColor}" VerticalAlignment="Center" />
           <TextBlock Text="{Binding OutputStatus}" VerticalAlignment="Center" />
           <TextBlock Text="{Binding FramesPerSecond}" VerticalAlignment="Center" Opacity="0.7" Margin="12,0,0,0" />
+          <StackPanel Orientation="Horizontal" Spacing="4" Margin="12,0,0,0" IsVisible="{Binding Recording}" VerticalAlignment="Center"
+                      ToolTip.Tip="Enregistrement des trames en cours (écran Sorties)">
+            <Ellipse Classes="rec" Width="10" Height="10" />
+            <TextBlock Text="REC" Foreground="#F85149" FontWeight="Bold" />
+          </StackPanel>
           <TextBlock Text="{Binding EngineIndicators}" VerticalAlignment="Center" Opacity="0.7" Margin="12,0,0,0" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Right" Text="{Binding ProjectName}" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -86,6 +93,9 @@
         </DataTemplate>
         <DataTemplate DataType="simulator:SimulatorViewModel">
           <simulator:SimulatorView />
+        </DataTemplate>
+        <DataTemplate DataType="live:LiveViewModel">
+          <live:LiveView />
         </DataTemplate>
         <DataTemplate DataType="scenes:ScenesViewModel">
           <scenes:ScenesView />

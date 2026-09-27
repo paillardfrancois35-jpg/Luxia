@@ -26,6 +26,19 @@ internal sealed class ReferenceProject
 
     public PatchContext Patch => new(Installation, Venues, Library.Find);
 
+    /// <summary>
+    /// Repatche les gros PAR en Betopper LPC120 8 canaux (RGBW) : le parc réel n'a plus d'appareil RGBW depuis que les gros
+    /// PAR se sont révélés être des WT05 RGB (essai P5), mais la conversion vers un émetteur blanc reste à couvrir.
+    /// </summary>
+    public void PatchBigParsAsRgbw()
+    {
+        var lpc120 = Guid.Parse("76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8");
+        Installation = Installation with
+        {
+            Fixtures = [.. Installation.Fixtures.Select(f => f.Name.StartsWith("Gros PAR", StringComparison.Ordinal) ? f with { FixtureTypeId = lpc120, ModeName = "8 canaux" } : f)],
+        };
+    }
+
     public PatchedFixture Fixture(string name) => Installation.Fixtures.Single(f => f.Name == name);
 
     public FixtureType Type(string fixtureName) => Library.Find(Fixture(fixtureName).FixtureTypeId)!;

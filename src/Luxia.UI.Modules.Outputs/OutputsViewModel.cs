@@ -64,6 +64,14 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
     private string _recordingStatus = "Aucun enregistrement en cours";
 
     [ObservableProperty]
+    private string? _recordingPath;
+
+    /// <summary>Libellé du bouton : démarrer ou arrêter (SORT-065).</summary>
+    public string RecordingButtonText => Recording ? "■ Arrêter l'enregistrement" : "● Enregistrer les trames";
+
+    partial void OnRecordingChanged(bool value) => OnPropertyChanged(nameof(RecordingButtonText));
+
+    [ObservableProperty]
     private decimal _tickRate;
 
     /// <summary>Crée l'écran.</summary>
@@ -128,7 +136,8 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
         Recording = _runtime.Recorder is not null;
         if (_runtime.Recorder is { } recorder)
         {
-            RecordingStatus = $"Enregistrement : {recorder.FilePath}";
+            RecordingPath = recorder.FilePath;
+            RecordingStatus = $"Fichier : {recorder.FilePath}";
         }
     }
 
@@ -219,6 +228,7 @@ public sealed partial class OutputsViewModel : ViewModelBase, IRefreshable
         else
         {
             var path = _runtime.StopRecording();
+            RecordingPath = path;
             RecordingStatus = $"Dernier enregistrement : {path}";
             Message = "Enregistrement arrêté.";
         }

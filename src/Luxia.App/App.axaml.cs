@@ -66,21 +66,55 @@ public partial class App : Application
             }));
             Avalonia.Logging.Logger.Sink = new Services.AvaloniaLogSink(_loggers.CreateLogger("Avalonia"));
 
-            _runtime = new LuxiaRuntime(DataPaths.Current, _loggers);
-
-            // LuXia.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
-            if (desktop.Args is [var projectFolder, ..] && Directory.Exists(projectFolder))
-            {
-                _runtime.Project.Open(Path.GetFullPath(projectFolder));
-            }
-
-            _runtime.Start();
-
-            var window = new MainWindow();
-            shell = new MainWindowViewModel(_runtime, new Services.DialogService(() => window));
-            window.DataContext = shell;
-            desktop.MainWindow = window;
+            // GEN-065 : fenêtre de démarrage tout de suite, le travail lourd hors du fil de l'interface pour qu'elle s'affiche.
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             desktop.Exit += (_, _) => Shutdown();
+            var splash = new SplashWindow();
+            splash.Show();
+            Dispatcher.UIThread.Post(async () =>
+            {
+                try
+                {
+                    splash.Report("Préférences, bibliothèque et dernier projet…", 10);
+                    await Task.Delay(50).ConfigureAwait(true); // laisse la fenêtre se dessiner
+                    var args = desktop.Args;
+                    var loggers = _loggers;
+                    _runtime = await Task.Run(() =>
+                    {
+                        var runtime = new LuxiaRuntime(DataPaths.Current, loggers, midiPorts: new Midi.WinMmMidiPorts());
+
+                        // LuXia.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
+                        if (args is [var projectFolder, ..] && Directory.Exists(projectFolder))
+                        {
+                            runtime.Project.Open(Path.GetFullPath(projectFolder));
+                        }
+
+                        return runtime;
+                    }).ConfigureAwait(true);
+
+                    // GEN-060 : le moteur démarre en émettant un blackout ; les sorties (Arduino) sont recherchées ici.
+                    splash.Report("Moteur DMX et sorties…", 60);
+                    var runtimeStarted = _runtime;
+                    await Task.Run(() => runtimeStarted.Start()).ConfigureAwait(true);
+
+                    splash.Report("Écrans…", 85);
+                    await Task.Delay(20).ConfigureAwait(true);
+                    var window = new MainWindow();
+                    shell = new MainWindowViewModel(_runtime, new Services.DialogService(() => window));
+                    window.DataContext = shell;
+                    desktop.MainWindow = window;
+                    splash.Report("Prêt", 100);
+                    window.Show();
+                    desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+                    splash.Close();
+                }
+                catch (Exception exception)
+                {
+                    logger.LogCritical(exception, "Démarrage impossible");
+                    splash.Close();
+                    desktop.Shutdown(1);
+                }
+            });
         }
 
         base.OnFrameworkInitializationCompleted();

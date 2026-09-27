@@ -65,6 +65,7 @@ du moteur. Rend le Live beaucoup plus confortable qu'à la souris.
 | MIDI-008 | S | P5 | **Apprentissage** : cliquer une cible à l'écran puis toucher le contrôle physique (GEN-074). | — |
 | MIDI-009 | S | P5 | Disposition alternative « palettes » : grille = palettes couleur / position pour une sélection. | — |
 | MIDI-010 | M | P5 | Sur MK2, la couleur des pads reprend la **couleur des scènes** (GEN-106), approchée dans la palette de couleurs du contrôleur. | — |
+| MIDI-011 | I | P5 | Le bouton **Blackout** du contrôleur agit **tant qu'il est maintenu** (comme Daslight) : appui = blackout, relâche = blackout annulé, **même s'il avait été activé à l'écran ou au clavier** (la note MIDI reprend le dessus). Le bouton de l'écran et la touche B restent des bascules. Une bascule reste possible au contrôleur par affectation (`blackoutToggle`, MIDI-007). | Écran : blackout ; note appuyée : blackout ; note relâchée : blackout annulé. |
 
 ## 6. Tests
 
@@ -74,3 +75,14 @@ du moteur. Rend le Live beaucoup plus confortable qu'à la souris.
 | T-MIDI-02 | Unitaire | Reprise douce des faders. |
 | T-MIDI-03 | Unitaire | Calcul des LED selon l'état (les deux profils). |
 | T-MIDI-04 | Manuel | Les deux contrôleurs branchés, 30 min de Live, débranchements à chaud. |
+
+## 7. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Module (D30) | Projet `Luxia.Midi` : API Windows `winmm` appelée directement (aucune dépendance, Q31), profils en fichiers de données (`src/Luxia.Midi/Profiles/*.json`). Le module ne connaît pas le projet : l'hôte lui fournit la disposition du Live (même règle `LiveRules`). |
+| **Écart** : numéros MIDI | Les notices du dépôt ne contiennent pas la table MIDI (PDF du MK2 : 2 pages). Numéros repris des protocoles publiés par AKAI : grille 0-63 (0 en bas à gauche) ; MK1 bas 64-71, droite 82-89, Shift 98, LED 1 vert / 3 rouge / 5 jaune (+1 = clignotant) ; MK2 bas 100-107, droite 112-119, Shift 122, LED par canal (luminosité, pulsation) et palette de couleurs ; faders CC 48-56. **À confirmer sur l'appareil** avec `luxia-headless midi`. |
+| Numéros MIDI (mise à jour 2026-09-27) | **MK2 confirmé** par « APC mini mk2 – Communication Protocol v1.0 » (AKAI, `docs/Equipements/AKAI/Mini MK2`) : tout concorde ; palette complète des 128 couleurs chargée (couleurs franches seulement pour les pads). **MK1** : toujours à confirmer sur l'appareil. |
+| Affectation | Conforme au §3 ; précisions : Shift + bas 1 / 2 = page de scènes précédente / suivante, Shift + bas 3 / 4 = couches ; boutons de droite 5 (Tap) et 7 (Auto) sans effet jusqu'à P7 / P10 ; le 8e fait « Tout arrêter » en attendant la transition de show (P8). |
+| Retour lumineux | Recalculé toutes les 40 ms d'après l'état du moteur, seuls les changements envoyés ; boutons stop allumés quand la couche joue ; LED éteintes à la fermeture. MK2 : couleur de la scène approchée dans une palette de couleurs franches. |
+| Affectations (MIDI-007) | `midi.json` (doc 50 §12d), par modèle possible (MIDI-005) ; apprentissage (MIDI-008) et disposition « palettes » (MIDI-009) reportés (Q32). |
