@@ -281,21 +281,21 @@
 
 ## P5 – 72 exigences, 49 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 35 · Réalisé, à valider sur matériel : 14 · Validé : 6
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 32 · Réalisé, à valider sur matériel : 14 · Validé : 9
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [BIB-101](exigences/BIB-101.md) | I | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | Réalisé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_ValueInNoStrobeRange_IsNeverCounted |
 | [CONS-061](exigences/CONS-061.md) | S | Une page de console peut être affectée aux faders d'un APC mini | Reporté (chantier ergonomie) |  |
-| [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Réalisé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
+| [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Validé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
 | [COU-003](exigences/COU-003.md) | I | Exclusivité | Validé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
 | [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Validé | LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
-| [COU-008](exigences/COU-008.md) | M | Avertissement | Réalisé | ProjectProblemsTests.ProjectProblems_ShowTheOutOfFamilyWarning<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
-| [COU-009](exigences/COU-009.md) | S | Scène de repos par couche | Réalisé | LayersEditorViewModelTests.RestScene_ChoicesAreTheLayerScenes<br>LiveCommandTests.RestScene_PlaysWhenTheLayerIsEmpty |
+| [COU-008](exigences/COU-008.md) | M | Avertissement | Validé | ProjectProblemsTests.ProjectProblems_ShowTheOutOfFamilyWarning<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
+| [COU-009](exigences/COU-009.md) | S | Scène de repos par couche | Validé | LayersEditorViewModelTests.RestScene_ChoicesAreTheLayerScenes<br>LiveCommandTests.RestScene_PlaysWhenTheLayerIsEmpty |
 | [GEN-054](exigences/GEN-054.md) | I | Sauvegarde automatique du projet ouvert | Réalisé | ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
 | [GEN-055](exigences/GEN-055.md) | M | Conservation des N dernières versions du projet | Réalisé | ReliabilityTests.Restore_BringsBackTheFiles_AndKeepsTheCurrentStateAsAVersion<br>ReliabilityTests.Versions_OnlyWhenChanged_KeepTen |
 | [GEN-057](exigences/GEN-057.md) | M | Export / import d'un projet complet sous forme d'archive unique | Reporté (chantier ergonomie) |  |

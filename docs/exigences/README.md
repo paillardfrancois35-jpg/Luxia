@@ -164,15 +164,15 @@
 | [CONS-061](CONS-061.md) | Une page de console peut être affectée aux faders d'un APC mini | P5 | S | Reporté (chantier ergonomie) |
 | [CONS-091](CONS-091.md) | Écart conservé au-delà des bornes en déplacement relatif multiple | P4 | I | Validé |
 | [CONS-092](CONS-092.md) | Survol immédiat du moniteur (numéro de canal + cadre) | P3 | S | Réalisé |
-| [COU-001](COU-001.md) | Créer, renommer, réordonner | P5 | I | Réalisé |
+| [COU-001](COU-001.md) | Créer, renommer, réordonner | P5 | I | Validé |
 | [COU-002](COU-002.md) | Une scène appartient à une couche | P5 | I | Réalisé |
 | [COU-003](COU-003.md) | Exclusivité | P5 | I | Validé |
 | [COU-004](COU-004.md) | Couche non exclusive | P5 | I | Réalisé |
 | [COU-005](COU-005.md) | Couche de type Flash | P5 | I | Validé |
 | [COU-006](COU-006.md) | Modèle de couches par défaut pour un nouveau projet | P5 | I | Réalisé |
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
-| [COU-008](COU-008.md) | Avertissement | P5 | M | Réalisé |
-| [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Réalisé |
+| [COU-008](COU-008.md) | Avertissement | P5 | M | Validé |
+| [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
