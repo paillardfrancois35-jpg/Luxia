@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Partiel |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Raccourcis clavier (proposition)](../18-live.md) |
@@ -37,3 +37,5 @@
 | 2026-09-27 | Utilisateur | Test | Précision : c'étaient les flèches ↑/↓ ; Page ↑/↓ règlent bien le Grand Master. Exemple 9 ok. |
 | 2026-09-27 | Utilisateur | Question | Proposition : Page ↑/↓ pour le Grand Master, flèches ↑/↓ pour le niveau réglable en bas de la colonne sélectionnée. |
 | 2026-09-27 | Claude | Développement | ↑ / ↓ : master de la couche encadrée ± 10 % (Page ↑ / ↓ : Grand Master) ; appui maintenu répété pour les quatre touches de niveau (la répétition reste ignorée pour flash, strobe, scènes…). Rappel des touches et guide mis à jour. Test `Keys_UpDownArrows_DriveTheMasterOfTheFramedLayer`. |
+| 2026-09-27 | Utilisateur | Test | v1.004.066 : ↑/↓ sur le master de la couche encadrée et Page ↑/↓ sur le Grand Master ok. Défaut d'affichage : le pourcentage « saute » (20 → 10 → 20) à chaque pas, quelle que soit la vitesse. |
+| 2026-09-27 | Claude | Développement | Même course écran / moteur que LIVE-003 : la relecture du moteur avant le traitement de la commande réaffichait l'ancienne valeur. `EngineEcho` (Luxia.UI.Controls) : la valeur réglée à l'écran est gardée jusqu'à sa confirmation par le moteur (au plus 10 relectures) ; appliqué au master de couche du Live et au Grand Master de l'en-tête. Test `LayerMaster_RefreshBeforeTheEngineTick_DoesNotJumpBack` (échoue sans la correction : 80, 90, 80). |

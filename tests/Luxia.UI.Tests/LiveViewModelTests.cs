@@ -121,6 +121,29 @@ public sealed class LiveViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "LIVE-040")]
+    public void LayerMaster_RefreshBeforeTheEngineTick_DoesNotJumpBack()
+    {
+        // Essai P5 : 10 % → 20 % affichait 20, 10, puis 20 (relecture du moteur avant le traitement de la commande).
+        _vm.OnKey(LiveKey.NextLayer, down: true);
+        var column = _vm.Columns.Single(c => c.IsSelected);
+        _vm.OnKey(LiveKey.LayerMasterDown, down: true);
+        _host.Tick();
+        _vm.Refresh();
+
+        var shown = new List<double>();
+        _vm.OnKey(LiveKey.LayerMasterDown, down: true);
+        shown.Add(column.Master);
+        _vm.Refresh(); // avant le tick
+        shown.Add(column.Master);
+        _host.Tick();
+        _vm.Refresh();
+        shown.Add(column.Master);
+
+        shown.ShouldBe([80, 80, 80]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "LIVE-040")]
     public void Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster()
     {
         _vm.OnKey(LiveKey.NextLayer, down: true);

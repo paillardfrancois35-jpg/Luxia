@@ -10,6 +10,7 @@ namespace Luxia.UI.Modules.Live;
 public sealed partial class LayerColumnViewModel : ViewModelBase
 {
     private readonly Action<LayerColumnViewModel, double> _masterChanged;
+    private readonly EngineEcho _echo = new();
     private bool _syncing;
 
     [ObservableProperty]
@@ -45,7 +46,7 @@ public sealed partial class LayerColumnViewModel : ViewModelBase
     /// <summary>Met à jour le master depuis le moteur (sans renvoyer de commande).</summary>
     public void SyncMaster(double percent)
     {
-        if (Math.Abs(percent - Master) < 0.5)
+        if (!_echo.Accept(percent) || Math.Abs(percent - Master) < 0.5)
         {
             return;
         }
@@ -59,6 +60,7 @@ public sealed partial class LayerColumnViewModel : ViewModelBase
     {
         if (!_syncing)
         {
+            _echo.Sent(value);
             _masterChanged(this, value);
         }
     }

@@ -24,6 +24,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "?";
 
     private readonly LuxiaRuntime _runtime;
+    private readonly EngineEcho _grandMasterEcho = new();
     private readonly IDialogService _dialogs;
     private int _statusCountdown;
 
@@ -271,6 +272,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     {
         if (!_syncingFromEngine)
         {
+            _grandMasterEcho.Sent(value);
             _runtime.SetGrandMaster(Math.Clamp(value, 0, 100) / 100);
         }
     }
@@ -405,7 +407,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         try
         {
             Blackout = snapshot.Blackout;
-            if (Math.Abs((GrandMaster / 100) - snapshot.GrandMaster) > 0.005)
+            if (_grandMasterEcho.Accept(snapshot.GrandMaster * 100) && Math.Abs((GrandMaster / 100) - snapshot.GrandMaster) > 0.005)
             {
                 GrandMaster = Math.Round(snapshot.GrandMaster * 100);
             }

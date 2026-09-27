@@ -289,7 +289,7 @@
 | [LIVE-009](LIVE-009.md) | Journal défilant des derniers événements | P5 | M | Réalisé |
 | [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Réalisé, à valider sur matériel |
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
-| [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Partiel |
+| [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
 | [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Réalisé, à valider sur matériel |
