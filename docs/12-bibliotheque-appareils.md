@@ -242,8 +242,9 @@ Les imports se font à partir de **fichiers locaux** (téléchargés à la maiso
 |---|---|---|---|---|---|
 | PAR | 4 | Betopper LPC008S (RGB) | 3CH (`d001`), 7CH (`A001`) | PDF + fiche `betopper-lpc008s.md` | Tableau complet connu – à saisir |
 | Gros PAR | 2 | Betopper LPC010 ou LPC120 (RGBW) | 4CH (`d001`), 8CH (`A001`) | PDF image (lus par rendu en P2) | **Saisi** (`samples/Bibliothèque/Betopper/`) |
+| Gros PAR (réels) | 2 | Générique **WT05** (PAR 160 W, RGB, sans marque) | 7CH, mêmes commandes que le LPC008S | Aucune notice (utilisateur, essai P5) | **Saisi** (`samples/Bibliothèque/Générique/WT05.json`) ; remplace le LPC120 dans le patch |
 | Lyre | 2 | Tomshine (lyre à gobos) | 9CH, 11CH (Pan/Tilt 16 bits en 11CH) | Photo de la notice (2026-09-25) | **Saisi** ; roue de couleur, gobo et canal Son à vérifier en direct (BIB-095) |
-| UV | 2 | BeamZ BUV463 (UV strobe) | 7CH | PDF texte | À saisir |
+| UV | 2 | BeamZ BUV463 (UV strobe) | **8CH** réel (7CH de la notice + 8e canal « lissage » non documenté, essai P5) | PDF texte | Saisi ; 8e canal ajouté le 2026-09-27 |
 | Barre LED | 2 | BeamZ LCB803 (80 × 3-en-1) | 3, 6, 12, 24, 48CH (menu `ChNd`) ; 2 / 4 / 8 sections | Pages fournies le 2026-09-25 (Q24) | **Saisi** (`samples/Bibliothèque/BeamZ/LCB803.json`) |
 | Effet multi-têtes | 1 | WZYBUTA Moving Head 150 W (plateau + 4 barrettes de 3 projecteurs RGBW) | 20CH, 64CH (la notice décrit un 16CH qui ne correspond pas) | Captures ScanLibrary de l'utilisateur (2026-09-25) | **Saisi** (12 cellules en 64CH ; canaux 17-19 / 61-63 = laser optionnel absent) |
 | Fumée | 1 | — | 1CH | — | Modèle générique « Machine à fumée » |

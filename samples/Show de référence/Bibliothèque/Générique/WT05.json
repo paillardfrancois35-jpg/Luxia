@@ -1,0 +1,241 @@
+{
+  "formatVersion": 1,
+  "id": "644f6efa-dd64-5eab-acbf-31a755228d63",
+  "manufacturer": "Générique",
+  "model": "WT05 (PAR 160 W)",
+  "category": "par",
+  "version": 1,
+  "author": "LuXia (d'après l'utilisateur)",
+  "source": "manual",
+  "notes": "« Gros PAR » du parc : projecteur sans marque, seule la référence WT05 figure dessus (aucune information en ligne). Un seul mode, 7 canaux, mêmes commandes que le Betopper LPC008S (utilisateur, 2026-09-27 : canaux 1 à 4 vérifiés sur l'appareil, gradateur puis R, V, B). Définition recopiée du LPC008S 7 canaux, à confirmer canal par canal.",
+  "physical": {
+    "sourceType": "LED RGB 3-en-1",
+    "power": 160
+  },
+  "wheels": [],
+  "channels": [
+    {
+      "key": "dim",
+      "name": "CH1 Gradation générale",
+      "attribute": "intensity",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": []
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe général",
+      "attribute": "shutter",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 4,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 5,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          },
+          "colors": [],
+          "autoPalette": false,
+          "median": 128
+        }
+      ],
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0-4 = néant, 5-255 = stroboscope croissant."
+    },
+    {
+      "key": "fn",
+      "name": "Sélecteur de fonction",
+      "attribute": "mode",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 28,
+          "kind": "fixed",
+          "label": "Gradation DMX",
+          "colors": [],
+          "autoPalette": false,
+          "median": 14
+        },
+        {
+          "min": 29,
+          "max": 39,
+          "kind": "fixed",
+          "label": "Nouvelle plage",
+          "colors": [],
+          "autoPalette": false,
+          "median": 34
+        },
+        {
+          "min": 40,
+          "max": 50,
+          "kind": "fixed",
+          "label": "Nouvelle plage",
+          "colors": [],
+          "autoPalette": false,
+          "median": 45
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "Sortie couleur (8 couleurs, choix par CH7)",
+          "colors": [],
+          "autoPalette": false,
+          "median": 76
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Fondu",
+          "colors": [],
+          "autoPalette": false,
+          "median": 126
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Transition",
+          "colors": [],
+          "autoPalette": false,
+          "median": 176
+        },
+        {
+          "min": 201,
+          "max": 250,
+          "kind": "program",
+          "label": "Pulsation",
+          "colors": [],
+          "autoPalette": false,
+          "median": 226
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "program",
+          "label": "Audio (sensibilité par CH7)",
+          "colors": [],
+          "autoPalette": false,
+          "median": 253
+        }
+      ]
+    },
+    {
+      "key": "speed",
+      "name": "Vitesse",
+      "attribute": "programSpeed",
+      "cell": 0,
+      "resolution": "bit8",
+      "default": 0,
+      "inverted": false,
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Vitesse des fonctions lent → rapide (ou choix de couleur)",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          },
+          "colors": [],
+          "autoPalette": false,
+          "median": 128
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "7 canaux",
+      "shortName": "7CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim",
+          "part": "coarse"
+        },
+        {
+          "channel": "r",
+          "part": "coarse"
+        },
+        {
+          "channel": "g",
+          "part": "coarse"
+        },
+        {
+          "channel": "b",
+          "part": "coarse"
+        },
+        {
+          "channel": "strobe",
+          "part": "coarse"
+        },
+        {
+          "channel": "fn",
+          "part": "coarse"
+        },
+        {
+          "channel": "speed",
+          "part": "coarse"
+        }
+      ],
+      "channelCount": 7
+    }
+  ],
+  "displayName": "Betopper LPC008S"
+}

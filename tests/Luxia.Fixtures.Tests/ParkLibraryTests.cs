@@ -10,16 +10,17 @@ public sealed class ParkLibraryTests
 
     [Fact]
     [Trait("Exigence", "BIB-001")]
-    public void ParkLibrary_LoadsSevenModels_WithoutMessage()
+    public void ParkLibrary_LoadsEightModels_WithoutMessage()
     {
         Library.Messages.ShouldBeEmpty();
-        Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+        Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(8); // + WT05, les gros PAR réels (essai P5)
     }
 
     [Theory]
     [InlineData("LPC008S")]
     [InlineData("LPC010")]
     [InlineData("LPC120")]
+    [InlineData("WT05 (PAR 160 W)")]
     [InlineData("Mini lyre gobo")]
     [InlineData("BUV463")]
     [InlineData("Effet 4 têtes 150 W")]

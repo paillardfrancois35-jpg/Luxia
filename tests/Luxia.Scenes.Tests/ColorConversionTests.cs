@@ -26,6 +26,7 @@ public sealed class ColorConversionTests
     [Trait("Exigence", "MOT-051")]
     public void Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault()
     {
+        _project.PatchBigParsAsRgbw();
         var levels = Levels("Gros PAR 1", new LogicalColor { R = 1, G = 1, B = 1 });
 
         levels["w"].ShouldBe(1);
@@ -39,6 +40,7 @@ public sealed class ColorConversionTests
     [Trait("Exigence", "MOT-051")]
     public void Rgbw_WhiteModes(WhiteMode mode, double red, double blue, double white)
     {
+        _project.PatchBigParsAsRgbw();
         var fixture = _project.Fixture("Gros PAR 1");
         var type = _project.Type("Gros PAR 1") with { WhiteMode = mode };
         var modeDef = type.Modes.Single(m => m.Name == fixture.ModeName);

@@ -34,11 +34,11 @@ Adresses « rondes » pour faciliter le réglage sur les appareils, avec des **r
 | Appareils | Qté | Modèle / mode | Adresses | Canaux | Réserve jusqu'à |
 |---|---|---|---|---|---|
 | PAR 1 à 4 | 4 | Betopper LPC008S – **7CH** (`A001`) | 1, 8, 15, 22 | 7 | 30 |
-| Gros PAR 1 et 2 | 2 | Betopper LPC010 / LPC120 – mode à définir | 31, 41 | ≤ 10 | 50 |
+| Gros PAR 1 et 2 | 2 | Générique **WT05** (PAR 160 W, sans marque) – **7CH**, mêmes commandes que le LPC008S *(essai P5, 2026-09-27 ; ce n'étaient pas des LPC120)* | 31, 41 | 7 | 50 |
 | Barres 1 et 2 | 2 | BeamZ LCB803 – **24CH** (4 sections, menu `ChNd 24Ch`) *(proposé : 48CH ne tient pas dans la réserve)* | 51, 81 | 24 | 110 |
 | Lyres 1 et 2 | 2 | Tomshine – **11CH** (Pan/Tilt 16 bits) | 111, 126 | 11 | 140 |
 | Effet multi-têtes | 1 | WZYBUTA 150 W – **20CH** (mode 1, couleur commune) *(proposé : 64CH ne tient pas dans la réserve)* | 141 | 20 | 160 |
-| UV 1 et 2 | 2 | BeamZ BUV463 – **7CH** | 161, 168 | 7 | 175 |
+| UV 1 et 2 | 2 | BeamZ BUV463 – **8CH** : les 7 canaux de la notice + un 8e **« lissage du gradateur »** non documenté (essai P5, 2026-09-27 ; à 255, ≈ 15 s de lissage) | 161, **169** | 8 | 177 |
 | Fumée | 1 | Générique « Machine à fumée » – 1CH | 180 | 1 | 180 |
 
 > À valider par l'utilisateur. Modes et adresses définitifs dès que les tableaux DMX manquants sont connus.

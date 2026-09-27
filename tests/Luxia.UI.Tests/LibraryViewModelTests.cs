@@ -189,12 +189,12 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
         var files = FixtureImporter.FindFiles(folder);
 
         await _library.ImportAsync(files);
-        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
-        _library.ImportReport.Count(l => l.StartsWith('✓')).ShouldBe(7);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(8);
+        _library.ImportReport.Count(l => l.StartsWith('✓')).ShouldBe(8);
 
         await _library.ImportAsync(files);
         _library.ImportReport.ShouldAllBe(l => l.StartsWith('='));
-        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(8);
     }
 
     [Fact]
@@ -209,8 +209,8 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
         _library.OverwriteExisting = true;
         await _library.ImportAsync(files);
 
-        _library.ImportReport.Count(l => l.Contains("remplacé", StringComparison.Ordinal)).ShouldBe(7);
-        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(7);
+        _library.ImportReport.Count(l => l.Contains("remplacé", StringComparison.Ordinal)).ShouldBe(8);
+        _host.Runtime.Library.Entries.Count(e => !e.IsBuiltIn).ShouldBe(8);
         var after = _host.Runtime.Library.Entries.First(e => e.Fixture.Id == before.Fixture.Id);
         after.Fixture.Version.ShouldBe(before.Fixture.Version + 1);
     }

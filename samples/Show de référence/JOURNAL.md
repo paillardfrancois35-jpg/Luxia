@@ -88,7 +88,7 @@ Barre LCB803 : notice incomplète (Q24), générique « RGB » en attendant.
 | Élément | Fichier | Description |
 |---|---|---|
 | Copie des modèles utilisés (GEN-053) | `Bibliothèque/<fabricant>/<modèle>.json` | 6 définitions du parc, copiées telles quelles depuis `samples/Bibliothèque/` |
-| Installation : univers, patch des 14 appareils | `installation.json` | Adresses conformes au plan (doc 41 §2) ; Gros PAR patchés en **Betopper LPC120, mode 8 canaux** (choix provisoire, Q27) |
+| Installation : univers, patch des 14 appareils | `installation.json` | Adresses conformes au plan (doc 41 §2) ; Gros PAR patchés en **Betopper LPC120, mode 8 canaux** (choix provisoire, Q27) — **corrigé le 2026-09-27** : gros PAR = générique **WT05** 7 canaux ; UV en **8 canaux** (8e canal « lissage »), UV 2 déplacé en **169** |
 | Lieu « Générique » | `lieux.json` | 12 × 8 m, deux totems (2 PAR + 1 gros PAR + 1 lyre chacun), barres au sol devant, effet au centre, UV en façade, fumée au fond ; disposition à corriger selon l'installation réelle (doc 41 §3, à valider) |
 
 ### Non-régression
@@ -100,7 +100,7 @@ chaque modèle utilisé est présent dans la copie du projet, chaque appareil es
 
 | Élément | Statut | Retour |
 |---|---|---|
-| Modèle réel des gros PAR (LPC010 ou LPC120) et son mode (Q27) | ⏳ en attente | |
+| Modèle réel des gros PAR (LPC010 ou LPC120) et son mode (Q27) | ✅ 2026-09-27 | Ni l'un ni l'autre : **WT05** sans marque, 7 canaux comme le LPC008S |
 | Disposition du lieu « Générique » conforme à l'installation réelle (doc 41 §13) | ⏳ en attente | |
 | Adresses réglées sur les appareils, identification OK (doc 41 §11) | ⏳ en attente | |
 

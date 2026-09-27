@@ -1,0 +1,157 @@
+{
+  "formatVersion": 1,
+  "id": "644f6efa-dd64-5eab-acbf-31a755228d63",
+  "manufacturer": "Générique",
+  "model": "WT05 (PAR 160 W)",
+  "category": "par",
+  "version": 1,
+  "author": "LuXia (d'après l'utilisateur)",
+  "source": "manual",
+  "notes": "« Gros PAR » du parc : projecteur sans marque, seule la référence WT05 figure dessus (aucune information en ligne). Un seul mode, 7 canaux, mêmes commandes que le Betopper LPC008S (utilisateur, 2026-09-27 : canaux 1 à 4 vérifiés sur l'appareil, gradateur puis R, V, B). Définition recopiée du LPC008S 7 canaux, à confirmer canal par canal.",
+  "physical": {
+    "sourceType": "LED RGB 3-en-1",
+    "power": 160
+  },
+  "channels": [
+    {
+      "key": "dim",
+      "name": "CH1 Gradation générale",
+      "attribute": "intensity"
+    },
+    {
+      "key": "r",
+      "name": "Rouge",
+      "attribute": "red"
+    },
+    {
+      "key": "g",
+      "name": "Vert",
+      "attribute": "green"
+    },
+    {
+      "key": "b",
+      "name": "Bleu",
+      "attribute": "blue"
+    },
+    {
+      "key": "strobe",
+      "name": "Strobe général",
+      "attribute": "shutter",
+      "notes": "Utilisateur (Q28, 2026-09-26) : 0-4 = néant, 5-255 = stroboscope croissant.",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 4,
+          "kind": "fixed",
+          "label": "Pas de strobe",
+          "strobe": "open"
+        },
+        {
+          "min": 5,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Strobe lent → rapide",
+          "strobe": "strobe",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    },
+    {
+      "key": "fn",
+      "name": "Sélecteur de fonction",
+      "attribute": "mode",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 50,
+          "kind": "fixed",
+          "label": "Gradation DMX"
+        },
+        {
+          "min": 51,
+          "max": 100,
+          "kind": "program",
+          "label": "Sortie couleur (8 couleurs, choix par CH7)"
+        },
+        {
+          "min": 101,
+          "max": 150,
+          "kind": "program",
+          "label": "Fondu (à vérifier : le rendu observé ne correspond pas exactement, BIB-094)"
+        },
+        {
+          "min": 151,
+          "max": 200,
+          "kind": "program",
+          "label": "Transition"
+        },
+        {
+          "min": 201,
+          "max": 250,
+          "kind": "program",
+          "label": "Pulsation"
+        },
+        {
+          "min": 251,
+          "max": 255,
+          "kind": "program",
+          "label": "Audio (sensibilité par CH7)"
+        }
+      ]
+    },
+    {
+      "key": "speed",
+      "name": "Vitesse",
+      "attribute": "programSpeed",
+      "capabilities": [
+        {
+          "min": 0,
+          "max": 255,
+          "kind": "progressive",
+          "label": "Vitesse des fonctions lent → rapide (ou choix de couleur)",
+          "parameter": {
+            "nature": "vitesse",
+            "start": 0,
+            "end": 100,
+            "unit": "%"
+          }
+        }
+      ]
+    }
+  ],
+  "modes": [
+    {
+      "name": "7 canaux",
+      "shortName": "7CH",
+      "deviceSetting": "A001",
+      "channels": [
+        {
+          "channel": "dim"
+        },
+        {
+          "channel": "r"
+        },
+        {
+          "channel": "g"
+        },
+        {
+          "channel": "b"
+        },
+        {
+          "channel": "strobe"
+        },
+        {
+          "channel": "fn"
+        },
+        {
+          "channel": "speed"
+        }
+      ]
+    }
+  ]
+}

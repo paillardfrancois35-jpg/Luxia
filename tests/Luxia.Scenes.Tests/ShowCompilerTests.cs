@@ -179,6 +179,7 @@ public sealed class ShowCompilerTests
     [Trait("Exigence", "PAL-002")]
     public void PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins()
     {
+        _project.PatchBigParsAsRgbw();
         var amber = DefaultPalettes.Colors.Single(p => p.Name == "Ambre");
         var bigPar = _project.Fixture("Gros PAR 1");
         var refined = amber with

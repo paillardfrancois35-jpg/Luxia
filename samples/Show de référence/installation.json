@@ -73,8 +73,8 @@
     },
     {
       "id": "a02f87cc-8f92-5b90-9af4-deefe83e68de",
-      "fixtureTypeId": "76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8",
-      "modeName": "8 canaux",
+      "fixtureTypeId": "644f6efa-dd64-5eab-acbf-31a755228d63",
+      "modeName": "7 canaux",
       "universe": 1,
       "address": 31,
       "name": "Gros PAR 1",
@@ -89,8 +89,8 @@
     },
     {
       "id": "41125b7f-3348-5ec2-a9ab-18aaaf177f66",
-      "fixtureTypeId": "76a6b0b5-b3d8-50dc-a4ad-0a294eb2a0e8",
-      "modeName": "8 canaux",
+      "fixtureTypeId": "644f6efa-dd64-5eab-acbf-31a755228d63",
+      "modeName": "7 canaux",
       "universe": 1,
       "address": 41,
       "name": "Gros PAR 2",
@@ -186,7 +186,7 @@
     {
       "id": "f688d1e8-37e2-5a4f-b4b1-60c1d764f10c",
       "fixtureTypeId": "be138280-6687-5576-a26f-f07414422ba7",
-      "modeName": "7 canaux",
+      "modeName": "8 canaux",
       "universe": 1,
       "address": 161,
       "name": "UV 1",
@@ -202,9 +202,9 @@
     {
       "id": "05a33efe-38be-57cd-853c-5695750bf6f0",
       "fixtureTypeId": "be138280-6687-5576-a26f-f07414422ba7",
-      "modeName": "7 canaux",
+      "modeName": "8 canaux",
       "universe": 1,
-      "address": 168,
+      "address": 169,
       "name": "UV 2",
       "number": 13,
       "color": "#8957E5",

@@ -92,7 +92,7 @@
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [BIB-001](exigences/BIB-001.md) | I | Modèle de données complet d'un appareil | Réalisé | FixtureLibraryTests.SaveThenLoad_IsLossless<br>ParkLibraryTests.Lcb803_SectionsBecomeCells<br>ParkLibraryTests.ParkLibrary_LoadsSevenModels_WithoutMessage<br>ParkLibraryTests.Wzybuta_20And64Channels_12CellsIn64 |
+| [BIB-001](exigences/BIB-001.md) | I | Modèle de données complet d'un appareil | Réalisé | FixtureLibraryTests.SaveThenLoad_IsLossless<br>ParkLibraryTests.Lcb803_SectionsBecomeCells<br>ParkLibraryTests.ParkLibrary_LoadsEightModels_WithoutMessage<br>ParkLibraryTests.Wzybuta_20And64Channels_12CellsIn64 |
 | [BIB-002](exigences/BIB-002.md) | I | Au moins un mode ; définitions de canaux partagées | Réalisé | FixtureValidatorTests.FixtureWithoutMode_IsAnError |
 | [BIB-003](exigences/BIB-003.md) | I | Attribut 16 bits = un seul attribut sur deux canaux | Réalisé | FixtureEditsTests.SetResolution_16Bit_AddsFineAfterCoarse_AndBackTo8BitRemovesIt<br>FixtureValidatorTests.CoarseWithoutFine_IsAWarning<br>OflImporterTests.Spot_FineChannelsAreOneAttribute_AndWheelsCarryColors<br>ParkLibraryTests.Lyre_11Channels_Has16BitPanTilt_9ChannelsCoarseOnly<br>(+2) |
 | [BIB-004](exigences/BIB-004.md) | I | Validation d'un modèle | Réalisé | FixtureValidatorTests.FineOf8BitChannel_IsAnError<br>FixtureValidatorTests.GapBetweenRanges_IsAWarning<br>FixtureValidatorTests.ModeWithoutChannel_IsAnError<br>FixtureValidatorTests.OrphanFineChannel_IsAnError<br>(+5) |
