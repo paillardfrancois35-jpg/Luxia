@@ -37,6 +37,8 @@ public static class ProjectValidator
         var (safety, safetyMessage) = SafetyStore.Load(folder);
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Midi.MidiStore.Load(folder);
+        var (looks, looksMessage) = LookStore.Load(folder);
+        AddLoadMessage(issues, LookStore.FileName, looksMessage);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
@@ -55,7 +57,20 @@ public static class ProjectValidator
         issues.AddRange(CheckSafety(safety));
         issues.AddRange(CheckLive(live, scenes, layers));
         issues.AddRange(CheckMidi(midi, scenes, layers));
+        issues.AddRange(CheckLooks(looks, scenes, layers));
         return issues;
+    }
+
+    // ERG-023 : un look qui lance une scène disparue ne ferait rien, sans le dire.
+    private static IEnumerable<CompileIssue> CheckLooks(LookSet looks, SceneSet scenes, LayerSet layers)
+    {
+        foreach (var look in looks.Looks)
+        {
+            foreach (var problem in LookRules.Problems(look, scenes, layers))
+            {
+                yield return Warning(LookStore.FileName, $"look « {look.Name} »", "actions", problem);
+            }
+        }
     }
 
     private static IEnumerable<CompileIssue> CheckLayers(SceneSet scenes, LayerSet layers, PaletteSet palettes)

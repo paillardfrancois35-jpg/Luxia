@@ -23,10 +23,12 @@ public sealed class ControlLayoutTests : IDisposable
     {
         var layout = NewLayout(out _);
 
-        foreach (var panel in ControlPanels.All)
+        foreach (var panel in ControlPanels.All.Where(p => p.Id != ControlPanels.Pilot))
         {
             DockTree.Find(layout, panel.Id).Place.ShouldBe(PanelPlace.Visible, panel.Title);
         }
+
+        DockTree.Find(layout, ControlPanels.Pilot).Place.ShouldBe(PanelPlace.Absent, "le pilote est dans la disposition Spectacle");
 
         DockTree.FindOwner(layout, ControlPanels.Journal)!.Id.ShouldBe(DockTree.FindOwner(layout, ControlPanels.Settings)!.Id, "journal en onglet avec les réglages");
     }
@@ -72,6 +74,24 @@ public sealed class ControlLayoutTests : IDisposable
         var layout = NewLayout(out _);
 
         DockTree.Find(layout, ControlPanels.Plan).Dockable!.Context.ShouldBe("Plan des appareils");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-024")]
+    public void ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately()
+    {
+        var factory = new ControlDockFactory(_contexts) { Preset = ControlLayoutPreset.Show };
+        var layout = factory.CreateLayout();
+        factory.InitLayout(layout);
+
+        foreach (var id in new[] { ControlPanels.Columns, ControlPanels.Pilot, ControlPanels.Looks, ControlPanels.Journal })
+        {
+            DockTree.Find(layout, id).Place.ShouldBe(PanelPlace.Visible, id);
+        }
+
+        DockTree.Find(layout, ControlPanels.Settings).Place.ShouldBe(PanelPlace.Absent, "le Spectacle ne montre pas les réglages");
+        factory.ShowPanel(layout, ControlPanels.Settings).ShouldNotBeNull("mais on peut les réafficher");
+        new ControlLayoutStore(_folder, ControlLayoutPreset.Show).Path.ShouldNotBe(new ControlLayoutStore(_folder).Path);
     }
 
     private IRootDock NewLayout(out ControlDockFactory factory)

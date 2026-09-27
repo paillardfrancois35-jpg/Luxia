@@ -49,6 +49,13 @@ public partial class ControlView : UserControl
         if (ViewModel is { } vm && _factory is null)
         {
             BuildLayout(vm);
+            vm.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(ControlViewModel.LayoutPreset))
+                {
+                    SwitchLayout(vm);
+                }
+            };
         }
     }
 
@@ -117,9 +124,32 @@ public partial class ControlView : UserControl
             [ControlPanels.Plan] = () => vm.Plan,
             [ControlPanels.Settings] = () => vm.Settings,
             [ControlPanels.Journal] = () => vm.Journal,
+            [ControlPanels.Looks] = () => vm.Looks,
+            [ControlPanels.Pilot] = () => vm.Looks,
         };
-        _factory = new ControlDockFactory(contexts);
-        _store = new ControlLayoutStore(vm.LayoutFolder);
+        _factory = new ControlDockFactory(contexts) { Preset = vm.LayoutPreset };
+        _store = new ControlLayoutStore(vm.LayoutFolder, vm.LayoutPreset);
+        var loaded = _store.Load(out var message);
+        if (message is not null)
+        {
+            vm.Message = message;
+        }
+
+        SetLayout(loaded ?? _factory.CreateLayout());
+        _saved = loaded is null ? null : _store.Serialize(_layout!);
+    }
+
+    // Contrôle ↔ Spectacle : la disposition quittée est enregistrée, l'autre reprise telle qu'on l'avait laissée.
+    private void SwitchLayout(ControlViewModel vm)
+    {
+        SaveLayout();
+        foreach (var window in _layout?.Windows?.ToList() ?? [])
+        {
+            window.Host?.Exit();
+        }
+
+        _factory!.Preset = vm.LayoutPreset;
+        _store = new ControlLayoutStore(vm.LayoutFolder, vm.LayoutPreset);
         var loaded = _store.Load(out var message);
         if (message is not null)
         {
@@ -158,6 +188,7 @@ public partial class ControlView : UserControl
                     ControlPanels.Properties => vm.Properties,
                     ControlPanels.Plan => vm.Plan,
                     ControlPanels.Settings => vm.Settings,
+                    ControlPanels.Looks or ControlPanels.Pilot => vm.Looks,
                     _ => vm.Journal,
                 };
             }

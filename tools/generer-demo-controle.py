@@ -10,7 +10,8 @@ Ajouts par rapport au show de référence :
   - couche « Libre » (8e couche par défaut, ERG-008) : « Effet multi-têtes seul », « Barre 1 : arc-en-ciel » ;
   - couche Couleurs : « Accueil ambre / bleu », deux étapes nommées ;
   - couche Mouvements : « Balayage doux des lyres », quatre étapes nommées réglées en Pan / Tilt ;
-  - lieu Générique : une zone **permise** « Limites » sur chaque lyre (F7), en plus de la zone interdite « Public ».
+  - lieu Générique : une zone **permise** « Limites » sur chaque lyre (F7), en plus de la zone interdite « Public » ;
+  - looks (ERG-023) : « Temps mort », « Retour de piste », « Ambiance UV ».
 """
 import json
 import os
@@ -119,6 +120,24 @@ def main():
         for lyre in ("Lyre 1", "Lyre 2"):
             zones.append({"fixtureId": FX[lyre], "name": "Limites", "panMin": 0.1, "panMax": 0.9, "tiltMin": 0.2, "tiltMax": 0.95, "allowed": True})
     json.dump(venues, open(venues_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+
+    by_name = {x["name"]: x["id"] for x in scenes["scenes"]}
+
+    def launch(name):
+        return {"kind": "launchScene", "sceneId": by_name[name]}
+
+    looks = {"formatVersion": 1, "looks": [
+        {"id": sid("look Temps mort"), "name": "Temps mort", "color": "#FFB000",
+         "notes": "Pause, discours : tout s'arrête, lumière ambre douce à 40 %.",
+         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Ambre – couleur seule"), {"kind": "grandMaster", "level": 0.4}]},
+        {"id": sid("look Retour de piste"), "name": "Retour de piste", "color": "#DB61A2",
+         "notes": "La musique repart : chenillard, lyres en mouvement, pleine intensité.",
+         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Chenillard 4 couleurs"), launch("Lyres sur 3 positions"), {"kind": "grandMaster", "level": 1.0}]},
+        {"id": sid("look Ambiance UV"), "name": "Ambiance UV", "color": "#8957E5",
+         "notes": "Tout s'arrête sauf l'ambiance ; UV seuls.",
+         "actions": [{"kind": "stopAll"}, launch("UV plein"), {"kind": "grandMaster", "level": 1.0}]},
+    ]}
+    json.dump(looks, open(os.path.join(TARGET, "looks.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 
     with open(os.path.join(TARGET, "JOURNAL.md"), "w", encoding="utf-8") as f:
         f.write("# Démo Contrôle\n\nCopie de travail fabriquée par `tools/generer-demo-controle.py` (show de référence + démonstration de "

@@ -481,6 +481,83 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         _vm.Columns.CanEdit.ShouldBeTrue();
     }
 
+    // ——— Looks ———
+
+    [Fact]
+    [Trait("Exigence", "ERG-023")]
+    public async Task Looks_CaptureWhatPlays_ThenReplayItFromAnotherState()
+    {
+        _vm.Columns.Press(Button("Plein feu"));
+        _vm.Columns.Press(Button("Bleu sur tout le parc"));
+        _vm.Columns.Columns.Single(c => c.Layer.Name == "Couleurs").Master = 50;
+        Ticks(40);
+        _host.Dialogs.TextAnswers.Enqueue("Bleu calme");
+
+        await _vm.Looks.CaptureCommand.ExecuteAsync(null);
+
+        var look = _host.Runtime.Project.Looks.Looks.ShouldHaveSingleItem();
+        look.Name.ShouldBe("Bleu calme");
+        look.Actions[0].Kind.ShouldBe(LookActionKind.StopAll);
+        look.Actions.Where(a => a.Kind == LookActionKind.LaunchScene).Select(a => a.SceneId).ShouldBe([Scene("Plein feu").Id, Scene("Bleu sur tout le parc").Id], ignoreOrder: true);
+        look.Actions.ShouldContain(a => a.Kind == LookActionKind.LayerMaster && a.LayerId == LayerSet.ColorsLayerId && a.Level == 0.5);
+        _vm.Looks.Looks.ShouldHaveSingleItem().Lines.ShouldContain("▶ lancer « Plein feu »");
+
+        // Autre état, puis le look le refait.
+        _host.Runtime.Engine.Send(new StopLayerCommand(CommandOrigin.User, Everything: true));
+        _vm.Columns.Columns.Single(c => c.Layer.Name == "Couleurs").Master = 100;
+        _vm.Columns.Press(Button("Rouge – couleur seule"));
+        Ticks(60);
+
+        _vm.Looks.PlayCommand.Execute(_vm.Looks.Looks[0]);
+        Ticks(60);
+        _vm.Refresh();
+
+        var playing = _host.Runtime.Engine.Snapshot.Playbacks.Where(p => p.State != Engine.Model.PlaybackState.FadingOut).Select(p => p.SceneId).ToList();
+        playing.ShouldContain(Scene("Plein feu").Id);
+        playing.ShouldContain(Scene("Bleu sur tout le parc").Id);
+        playing.ShouldNotContain(Scene("Rouge – couleur seule").Id);
+        _host.Runtime.Engine.Snapshot.LayerMasters[IndexOf(LayerSet.ColorsLayerId)].ShouldBe(0.5, 1e-9);
+        _vm.Journal.Lines.ShouldContain(l => l.Contains("look « Bleu calme »"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-023")]
+    public async Task Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying()
+    {
+        _host.Dialogs.TextAnswers.Enqueue("Temps mort");
+        await _vm.Looks.CaptureCommand.ExecuteAsync(null);
+        var look = _vm.Looks.Looks[0];
+
+        _host.Dialogs.TextAnswers.Enqueue("Pause");
+        await _vm.Looks.RenameCommand.ExecuteAsync(look);
+        _vm.Looks.SetColorCommand.Execute($"{look.Look.Id}|#F0883E");
+        _host.Runtime.Project.Looks.Looks[0].Name.ShouldBe("Pause");
+        _host.Runtime.Project.Looks.Looks[0].Color.ShouldBe("#F0883E");
+
+        _vm.ToggleLockCommand.Execute(null);
+        _vm.Looks.CanEdit.ShouldBeFalse();
+        await _vm.Looks.DeleteCommand.ExecuteAsync(_vm.Looks.Looks[0]);
+        _host.Runtime.Project.Looks.Looks.ShouldHaveSingleItem("verrou : pas de suppression");
+        _vm.Looks.PlayCommand.Execute(_vm.Looks.Looks[0]);
+        _vm.Refresh();
+        _vm.Journal.Lines.ShouldContain(l => l.Contains("look « Pause »"), "verrou : on joue quand même");
+
+        _vm.ToggleLockCommand.Execute(null);
+        await _vm.Looks.DeleteCommand.ExecuteAsync(_vm.Looks.Looks[0]);
+        _host.Runtime.Project.Looks.Looks.ShouldBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-024")]
+    public void LayoutPreset_SwitchesBetweenControlAndShow()
+    {
+        _vm.IsControlLayout.ShouldBeTrue();
+        _vm.SetLayoutCommand.Execute("spectacle");
+        _vm.IsShowLayout.ShouldBeTrue();
+        _vm.SetLayoutCommand.Execute("controle");
+        _vm.IsControlLayout.ShouldBeTrue();
+    }
+
     private ControlSceneViewModel Button(string name) => _vm.Columns.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == name);
 
     private Scene Scene(string name) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == name);

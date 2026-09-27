@@ -26,13 +26,34 @@ public sealed class ControlDockFactory : Factory
         HideToolsOnClose = true;
     }
 
+    /// <summary>Disposition prête que construit <see cref="CreateLayout()"/> (et où revient un panneau réaffiché).</summary>
+    public ControlLayoutPreset Preset { get; set; }
+
     /// <inheritdoc />
-    public override IRootDock CreateLayout()
+    public override IRootDock CreateLayout() => Preset == ControlLayoutPreset.Show ? CreateShow() : CreateControl();
+
+    // Contrôle (doc 60 §6) : colonnes au centre, propriétés et looks à droite, plan + réglages en bas, journal en onglet.
+    private IRootDock CreateControl()
     {
         var bottom = Split(0.46, Orientation.Horizontal, Tools(0.34, ControlPanels.Plan), Tools(0.66, ControlPanels.Settings, ControlPanels.Journal));
         var left = Split(0.78, Orientation.Vertical, Tools(0.58, ControlPanels.Columns), bottom);
-        var main = Split(double.NaN, Orientation.Horizontal, left, Tools(0.24, ControlPanels.Properties));
+        var right = Split(0.24, Orientation.Vertical, Tools(0.66, ControlPanels.Properties), Tools(0.34, ControlPanels.Looks));
+        var main = Split(double.NaN, Orientation.Horizontal, left, right);
         main.Id = "controle";
+        return Root(main);
+    }
+
+    // Spectacle (doc 60 §6, F10) : les colonnes en grand, le pilote automatique et ses interventions, le journal.
+    private IRootDock CreateShow()
+    {
+        var right = Split(0.28, Orientation.Vertical, Tools(0.62, ControlPanels.Pilot, ControlPanels.Looks), Tools(0.38, ControlPanels.Journal));
+        var main = Split(double.NaN, Orientation.Horizontal, Tools(0.72, ControlPanels.Columns), right);
+        main.Id = "spectacle";
+        return Root(main);
+    }
+
+    private IRootDock Root(IDockable main)
+    {
         var root = CreateRootDock();
         root.Id = "racine";
         root.IsCollapsable = false;

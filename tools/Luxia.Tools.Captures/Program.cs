@@ -127,6 +127,20 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewM
     control.Settings.IsZoneEditing = false;
     control.Flush();
 
+    // Disposition Spectacle (F10) avec deux looks.
+    runtime.Project.SaveLooks(new Luxia.Scenes.Model.LookSet
+    {
+        Looks =
+        [
+            new() { Name = "Temps mort", Color = "#FFB000", Actions = [new() { Kind = Luxia.Scenes.Model.LookActionKind.StopAll }, new() { Kind = Luxia.Scenes.Model.LookActionKind.LaunchScene, SceneId = SceneNamed("Ambre – couleur seule").Id }] },
+            new() { Name = "Retour de piste", Color = "#DB61A2", Actions = [new() { Kind = Luxia.Scenes.Model.LookActionKind.StopAll }, new() { Kind = Luxia.Scenes.Model.LookActionKind.LaunchScene, SceneId = SceneNamed("Chenillard 4 couleurs").Id }] },
+        ],
+    });
+    control.SetLayoutCommand.Execute("spectacle");
+    Tick(5);
+    Capture("Contrôle - disposition Spectacle");
+    control.SetLayoutCommand.Execute("controle");
+
     // F8 : la même chose à 125 %.
     vm.SetUiScaleCommand.Execute("1.25");
     Capture("Contrôle - taille 125 %");

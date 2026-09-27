@@ -24,6 +24,10 @@
       <Setter Property="Background" Value="#3FB950" />
       <Setter Property="Foreground" Value="#0D1117" />
     </Style>
+    <Style Selector="Button.layout.active">
+      <Setter Property="Background" Value="#58A6FF" />
+      <Setter Property="Foreground" Value="#0D1117" />
+    </Style>
     <Style Selector="Button.mode.blind.active">
       <Setter Property="Background" Value="#79C0FF" />
       <Setter Property="Foreground" Value="#0D1117" />
@@ -35,6 +39,10 @@
     <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,6">
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+          <Button Classes="mode layout" Classes.active="{Binding IsControlLayout}" Content="Contrôle" CornerRadius="6,0,0,6" Padding="10,4"
+                  Command="{Binding SetLayoutCommand}" CommandParameter="controle" ToolTip.Tip="Disposition Contrôle : jouer et corriger (colonnes, propriétés, plan, réglages)" />
+          <Button Classes="mode layout" Classes.active="{Binding IsShowLayout}" Content="Spectacle" CornerRadius="0,6,6,0" Padding="10,4" Margin="0,0,10,0"
+                  Command="{Binding SetLayoutCommand}" CommandParameter="spectacle" ToolTip.Tip="Disposition Spectacle : les colonnes en grand, le pilote automatique et ses interventions (looks)" />
           <ToggleButton Content="🔒 Verrou soirée" IsChecked="{Binding IsLocked, Mode=OneWay}" Command="{Binding ToggleLockCommand}" Margin="0,0,10,0"
                         ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'édition des scènes et des zones est bloquée (anti-fausse manipulation)." />
           <Button Content="↶" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />

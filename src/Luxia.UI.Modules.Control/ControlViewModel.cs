@@ -63,6 +63,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Settings = new SettingsPanelViewModel(runtime, Session, dialogs);
         Properties = new PropertiesPanelViewModel(runtime, Session);
         Journal = new JournalPanelViewModel(runtime);
+        Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Session.Changed += (_, _) =>
         {
             _changes++;
@@ -91,6 +92,28 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Panneau Journal.</summary>
     public JournalPanelViewModel Journal { get; }
+
+    /// <summary>Panneau Looks (et panneau Pilote automatique, qui montre les mêmes looks).</summary>
+    public LooksPanelViewModel Looks { get; }
+
+    /// <summary>Disposition affichée : Contrôle ou Spectacle (doc 60 §6).</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsControlLayout), nameof(IsShowLayout))]
+    private Docking.ControlLayoutPreset _layoutPreset;
+
+    /// <summary>Disposition Contrôle affichée.</summary>
+    public bool IsControlLayout => LayoutPreset == Docking.ControlLayoutPreset.Control;
+
+    /// <summary>Disposition Spectacle affichée.</summary>
+    public bool IsShowLayout => LayoutPreset == Docking.ControlLayoutPreset.Show;
+
+    /// <summary>Choisit la disposition (paramètre : controle, spectacle).</summary>
+    [RelayCommand]
+    private void SetLayout(string? preset)
+    {
+        LayoutPreset = preset == "spectacle" ? Docking.ControlLayoutPreset.Show : Docking.ControlLayoutPreset.Control;
+        _runtime.TraceUi("Contrôle", $"disposition {preset}");
+    }
 
     /// <summary>Dossier des dispositions de panneaux (sur le poste, C10).</summary>
     public string LayoutFolder => Path.Combine(_runtime.Paths.AppDataRoot, "dispositions");
