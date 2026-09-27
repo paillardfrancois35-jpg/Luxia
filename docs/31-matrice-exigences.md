@@ -361,7 +361,7 @@
 
 ## ERG – 7 exigences, 4 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 5 · À faire : 1
+> En cours : 1 · Réalisé : 6
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -371,4 +371,4 @@
 | [ERG-004](exigences/ERG-004.md) | I | Sélecteur de couleur | Réalisé | ColorPickerLayoutTests.BrightnessAt_BarTopAndBottom_IsFullAndBlack<br>ColorPickerLayoutTests.For_Size_SquareBarAndSwatchesDoNotOverlap<br>ColorPickerLayoutTests.HueSaturationAt_Corners_GivesHueAcrossAndSaturationDown<br>ColorPickerLayoutTests.SquarePoint_IsInverseOfHueSaturationAt<br>(+3) |
 | [ERG-005](exigences/ERG-005.md) | M | Galerie des composants | Réalisé |  |
 | [ERG-006](exigences/ERG-006.md) | I | Mesures du prototype | En cours |  |
-| [ERG-007](exigences/ERG-007.md) | I | Maquettes de la disposition Contrôle | À faire |  |
+| [ERG-007](exigences/ERG-007.md) | I | Maquettes de la disposition Contrôle | Réalisé |  |

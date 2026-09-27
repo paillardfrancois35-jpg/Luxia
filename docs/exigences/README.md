@@ -179,7 +179,7 @@
 | [ERG-004](ERG-004.md) | Sélecteur de couleur | ERG | I | Réalisé |
 | [ERG-005](ERG-005.md) | Galerie des composants | ERG | M | Réalisé |
 | [ERG-006](ERG-006.md) | Mesures du prototype | ERG | I | En cours |
-| [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | À faire |
+| [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
