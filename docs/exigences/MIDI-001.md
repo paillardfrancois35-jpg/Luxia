@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé, MK2 validé, MK1 à valider |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Exigences](../18b-controleurs-midi.md) |
@@ -40,3 +40,4 @@
 | 2026-09-27 | Claude | Test | Profil MK2 comparé au protocole : grille 0x00-0x3F (0x00 en bas à gauche), bas 0x64-0x6B (LED rouges), droite 0x70-0x77 (LED vertes), Shift 0x7A, faders CC 0x30-0x38, canaux des LED (luminosité / pulsation / clignotement), LED des boutons 0/1/2, 16 couleurs de palette : **tout concorde**, aucune correction. Écart du doc 18b levé pour le MK2. |
 | 2026-09-27 | Utilisateur | Test | Exemple 10 avec l'APC mini MK2 : détection, grille (couleurs des scènes, faible / fort), pads ↔ Live dans les deux sens, boutons de droite (blackout maintenu, flash, strobe, fumée, figer, tout arrêter), boutons d'arrêt de couche, branchement à chaud : ok. |
 | 2026-09-27 | Utilisateur | Test | MK2 : détection et pastille ok. MK1 pas encore branché. |
+| 2026-09-27 | Utilisateur | Test | APC mini MK1 branché à la place du MK2 : ok. MK1 et MK2 validés. |

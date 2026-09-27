@@ -210,7 +210,7 @@
 | [GEN-065](GEN-065.md) | Fenêtre de démarrage avec étapes et pourcentage | P5 | M | Réalisé |
 | [GEN-070](GEN-070.md) | Toute entrée | P5 | I | Réalisé |
 | [GEN-071](GEN-071.md) | Raccourcis clavier globaux en Live, actifs quel que soit le focus | P5 | I | Partiel |
-| [GEN-072](GEN-072.md) | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | P5 | M | Réalisé, à valider sur matériel |
+| [GEN-072](GEN-072.md) | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | P5 | M | Validé |
 | [GEN-073](GEN-073.md) | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | P5 | M | Validé |
 | [GEN-074](GEN-074.md) | Les affectations MIDI sont modifiables par « apprentissage » | P5 | S | Reporté (chantier ergonomie) |
 | [GEN-080](GEN-080.md) | Perte du PC : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
@@ -294,7 +294,7 @@
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
 | [LIVE-061](LIVE-061.md) | Latence clic → sortie < 50 ms | P5 | I | Validé |
-| [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Réalisé, MK2 validé, MK1 à valider |
+| [MIDI-001](MIDI-001.md) | Détection automatique des APC mini MK1 et MK2 | P5 | I | Validé |
 | [MIDI-002](MIDI-002.md) | Affectation par défaut du §3 | P5 | I | Validé |
 | [MIDI-003](MIDI-003.md) | Retour lumineux du §4, mis à jour à chaque changement d'état | P5 | I | Validé |
 | [MIDI-004](MIDI-004.md) | Reprise douce des faders | P5 | I | Validé |

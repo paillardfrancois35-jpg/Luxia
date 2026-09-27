@@ -281,7 +281,7 @@
 
 ## P5 – 73 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 21 · Réalisé, MK2 validé, MK1 à valider : 1 · Réalisé, à valider sur matériel : 1 · Validé : 34
+> Partiel : 4 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 21 · Validé : 36
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -305,7 +305,7 @@
 | [GEN-065](exigences/GEN-065.md) | M | Fenêtre de démarrage avec étapes et pourcentage | Réalisé |  |
 | [GEN-070](exigences/GEN-070.md) | I | Toute entrée | Réalisé |  |
 | [GEN-071](exigences/GEN-071.md) | I | Raccourcis clavier globaux en Live, actifs quel que soit le focus | Partiel | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
-| [GEN-072](exigences/GEN-072.md) | M | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | Réalisé, à valider sur matériel | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [GEN-072](exigences/GEN-072.md) | M | Les deux modèles d'APC mini sont reconnus automatiquement et peuvent être branchés simulta | Validé | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
 | [GEN-073](exigences/GEN-073.md) | M | Débrancher / rebrancher un contrôleur MIDI en cours de soirée est géré sans redémarrage | Validé | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [GEN-074](exigences/GEN-074.md) | S | Les affectations MIDI sont modifiables par « apprentissage » | Reporté (chantier ergonomie) |  |
 | [GEN-083](exigences/GEN-083.md) | I | Strobe | Réalisé | SafetyCompilerTests.Settings_AreCarriedToTheEngine<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
@@ -334,7 +334,7 @@
 | [LIVE-041](exigences/LIVE-041.md) | S | Raccourcis personnalisables | Reporté (chantier ergonomie) |  |
 | [LIVE-060](exigences/LIVE-060.md) | I | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | Réalisé | LiveViewModelTests.Refresh_IsFarUnderTheFrameBudget |
 | [LIVE-061](exigences/LIVE-061.md) | I | Latence clic → sortie < 50 ms | Validé |  |
-| [MIDI-001](exigences/MIDI-001.md) | I | Détection automatique des APC mini MK1 et MK2 | Réalisé, MK2 validé, MK1 à valider | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-001](exigences/MIDI-001.md) | I | Détection automatique des APC mini MK1 et MK2 | Validé | MidiControllerTests.Profiles_RecognizeBothModels<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
 | [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Validé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
 | [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Validé | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
 | [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Validé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
