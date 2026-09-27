@@ -1,0 +1,7 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             x:Class="Luxia.UI.Modules.Control.Views.JournalPanelView"
+             x:DataType="vm:JournalPanelViewModel">
+  <ListBox ItemsSource="{Binding Lines}" Margin="4,32,4,4" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="12" Background="Transparent" />
+</UserControl>

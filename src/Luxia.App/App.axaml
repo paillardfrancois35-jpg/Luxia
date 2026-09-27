@@ -1,15 +1,24 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dock="using:Dock.Avalonia.Themes.Fluent"
              x:Class="Luxia.App.App"
              RequestedThemeVariant="Dark">
   <!-- GEN-101 : thème sombre par défaut. -->
   <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <!-- C11 : libellés des menus de Dock (panneaux ancrables) en français. -->
+        <ResourceInclude Source="avares://Luxia.UI.Modules.Control/Views/DockStrings.fr.axaml" />
+      </ResourceDictionary.MergedDictionaries>
     <!-- BIB-097 : barre de défilement plus épaisse même repliée, plus facile à attraper à la souris. -->
     <x:Double x:Key="ScrollBarThumbThickness">8</x:Double>
     <x:Double x:Key="ScrollBarSize">16</x:Double>
+    </ResourceDictionary>
   </Application.Resources>
   <Application.Styles>
     <FluentTheme />
+    <!-- E4 : panneaux ancrables et détachables de l'écran Contrôle (bibliothèque Dock). -->
+    <dock:DockFluentTheme />
     <!-- SORT-065 : voyant rouge qui clignote pendant un enregistrement de trames. -->
     <Style Selector="Ellipse.rec">
       <Setter Property="Fill" Value="#F85149" />

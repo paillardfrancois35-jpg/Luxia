@@ -153,7 +153,16 @@ public sealed class ControlSession
     public void Apply(Func<ValueTarget, SceneValue> make, string description)
     {
         ArgumentNullException.ThrowIfNull(make);
-        var values = _selection.Select(id => make(ValueTarget.Fixture(id))).ToList();
+        ApplyValues([.. _selection.Select(id => make(ValueTarget.Fixture(id)))], description);
+    }
+
+    /// <summary>
+    /// Règle des valeurs dont la cible est déjà donnée (une par appareil : visée relative de plusieurs lyres…), selon
+    /// le mode, comme <see cref="Apply"/>.
+    /// </summary>
+    public void ApplyValues(IReadOnlyList<SceneValue> values, string description)
+    {
+        ArgumentNullException.ThrowIfNull(values);
         if (values.Count == 0)
         {
             return;

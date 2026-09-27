@@ -167,6 +167,66 @@ public sealed class SafetyTests
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-017")]
+    public void Limits_TargetOutside_IsBroughtToTheirEdge_ThenForbiddenZonesStillApply()
+    {
+        var builder = new ShowBuilder();
+        var lyre = builder.Lyre(111);
+        var layer = builder.Layer("Mouvements", 3);
+        var scene = builder.Scene("Trop haut", layer, ShowBuilder.Step(0, 1, ShowBuilder.V(lyre["pan"], 0.95), ShowBuilder.V(lyre["tilt"], 0.5)));
+        builder.Safety = new SafetyModel
+        {
+            Zones =
+            [
+                new MovementGuard
+                {
+                    FixtureId = lyre.Id,
+                    Label = "Lyre 1",
+                    Pan = lyre["pan"],
+                    Tilt = lyre["tilt"],
+                    Zones = [new PanTiltZone(0.75, 0.85, 0.4, 0.6)],
+                    Limits = new PanTiltZone(0.1, 0.8, 0.2, 0.9),
+                },
+            ],
+        };
+        var harness = new EngineHarness(builder.Build(), bus: _bus);
+
+        harness.Launch(scene);
+        harness.Run(0.5);
+
+        // Pan 0,95 → 0,8 (bord de la zone permise), qui tombe dans la zone interdite (0,75-0,85) : sortie par la
+        // gauche, à 0,75, qui reste dans la zone permise.
+        harness.Value(lyre["pan"]).ShouldBe(0.75, 1e-9);
+        harness.Value(lyre["tilt"]).ShouldBe(0.5, 1e-9);
+        _bus.Of<SafetyLimitReached>().Count.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-017")]
+    public void CombinedZones_LimitsBecomeFourOutsideBands_EmptyOnesDropped()
+    {
+        var guard = new MovementGuard { FixtureId = Guid.NewGuid(), Label = "L", Pan = 0, Tilt = 1, Limits = new PanTiltZone(0, 0.8, 0.2, 1) };
+
+        var zones = SafetyLimiter.CombinedZones(guard);
+
+        zones.ShouldBe([new PanTiltZone(0.8, 1, 0, 1), new PanTiltZone(0, 1, 0, 0.2)], ignoreOrder: true);
+        var g2 = new MovementGuard { FixtureId = Guid.NewGuid(), Label = "L", Pan = 0, Tilt = 1, Zones = [new PanTiltZone(0.75, 0.85, 0.4, 0.6)], Limits = new PanTiltZone(0.1, 0.8, 0.2, 0.9) };
+        var p2 = 0.95;
+        var t2 = 0.5;
+        SafetyLimiter.NearestAllowed(SafetyLimiter.CombinedZones(g2), ref p2, ref t2).ShouldBeTrue();
+        p2.ShouldBe(0.75, 1e-9, $"tilt {t2}");
+        var limiter = new SafetyLimiter();
+        limiter.Load(new SafetyModel { Zones = [g2 with { Pan = 0, Tilt = 1 }] });
+        double[] values = [0.95, 0.5];
+        double[] mirror = [0.95, 0.5];
+        limiter.ApplyZones(values, mirror, TimeSpan.Zero, _ => { });
+        values[0].ShouldBe(0.75, 1e-9, "par l'instance");
+        var pan = 0.5;
+        var tilt = 0.5;
+        SafetyLimiter.NearestAllowed(zones, ref pan, ref tilt).ShouldBeFalse("déjà dans la zone permise");
+    }
+
+    [Fact]
     [Trait("Exigence", "MOT-082")]
     public void NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit()
     {

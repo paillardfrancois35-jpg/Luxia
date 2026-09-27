@@ -75,6 +75,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         _dialogs = dialogs;
         Pages =
         [
+            // E2, C5 : l'écran Contrôle (jouer et corriger) arrive en tête ; Live et Scènes restent jusqu'à leur remplacement.
+            new NavigationItem("Contrôle", "◉", new Luxia.UI.Modules.Control.ControlViewModel(runtime, dialogs)),
             new NavigationItem("Live", "▶", new Luxia.UI.Modules.Live.LiveViewModel(runtime)),
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),

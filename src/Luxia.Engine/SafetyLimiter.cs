@@ -20,6 +20,7 @@ internal sealed class SafetyLimiter
     private StrobeGroup[] _strobeGroups = [];
     private SmokeState[] _smoke = [];
     private bool[] _zoneReported = [];
+    private PanTiltZone[][] _guardZones = [];
     private bool _smokeHeld;
     private double _smokeBurst;
     private byte _smokeLevel = 255;
@@ -90,6 +91,7 @@ internal sealed class SafetyLimiter
             return state;
         })];
         _zoneReported = new bool[model.Zones.Count];
+        _guardZones = [.. model.Zones.Select(CombinedZones)];
     }
 
     /// <summary>Zones interdites : ramène la cible Pan/Tilt au point autorisé le plus proche (MOT-082).</summary>
@@ -110,7 +112,10 @@ internal sealed class SafetyLimiter
 
             var pan = values[guard.Pan];
             var tilt = values[guard.Tilt];
-            if (!NearestAllowed(guard.Zones, ref pan, ref tilt))
+
+            // F7 : l'extérieur de la zone permise compte comme interdit (zones calculées au chargement) : le point
+            // autorisé le plus proche respecte à la fois les limites et les zones interdites.
+            if (!NearestAllowed(_guardZones[i], ref pan, ref tilt))
             {
                 _zoneReported[i] = false;
                 continue;
@@ -118,7 +123,7 @@ internal sealed class SafetyLimiter
 
             values[guard.Pan] = mirror[guard.Pan] = pan;
             values[guard.Tilt] = mirror[guard.Tilt] = tilt;
-            _active.Add(new ActiveLimit(SafetyLimitKind.Zone, guard.FixtureId, guard.Label, "position ramenée hors de la zone interdite"));
+            _active.Add(new ActiveLimit(SafetyLimitKind.Zone, guard.FixtureId, guard.Label, "position ramenée dans les zones permises"));
             if (!_zoneReported[i])
             {
                 _zoneReported[i] = true;
@@ -126,7 +131,7 @@ internal sealed class SafetyLimiter
                     SafetyLimitKind.Zone,
                     guard.FixtureId,
                     guard.Label,
-                    string.Create(CultureInfo.CurrentCulture, $"cible dans une zone interdite : ramenée à Pan {pan:P0}, Tilt {tilt:P0}"),
+                    string.Create(CultureInfo.CurrentCulture, $"cible hors des zones permises : ramenée à Pan {pan:P0}, Tilt {tilt:P0}"),
                     now));
             }
         }
@@ -375,6 +380,29 @@ internal sealed class SafetyLimiter
     }
 
     /// <summary>
+    /// Zones interdites d'une garde, plus l'extérieur de sa zone permise (F7) découpé en quatre bandes : un seul calcul
+    /// du point autorisé le plus proche respecte les deux.
+    /// </summary>
+    internal static PanTiltZone[] CombinedZones(MovementGuard guard)
+    {
+        ArgumentNullException.ThrowIfNull(guard);
+        var zones = guard.Zones.ToList();
+        if (guard.Limits is { } l)
+        {
+            PanTiltZone[] outside =
+            [
+                new(0, l.PanMin, 0, 1),
+                new(l.PanMax, 1, 0, 1),
+                new(0, 1, 0, l.TiltMin),
+                new(0, 1, l.TiltMax, 1),
+            ];
+            zones.AddRange(outside.Where(z => z.PanMax > z.PanMin && z.TiltMax > z.TiltMin));
+        }
+
+        return [.. zones];
+    }
+
+    /// <summary>
     /// Point autorisé le plus proche d'une cible (distance euclidienne dans le plan Pan/Tilt normalisé).
     /// Renvoie <c>false</c> si la cible est déjà autorisée.
     /// </summary>
@@ -389,10 +417,12 @@ internal sealed class SafetyLimiter
             open[i] = new PanTiltZone(z.PanMin <= 0 ? -1 : z.PanMin, z.PanMax >= 1 ? 2 : z.PanMax, z.TiltMin <= 0 ? -1 : z.TiltMin, z.TiltMax >= 1 ? 2 : z.TiltMax);
         }
 
-        return NearestAllowed(open, ref pan, ref tilt);
+        return NearestAllowedOpen(open, ref pan, ref tilt);
     }
 
-    private static bool NearestAllowed(ReadOnlySpan<PanTiltZone> zones, ref double pan, ref double tilt)
+    // Nom distinct exprès : avec la conversion implicite tableau → span (C# 14), une surcharge « NearestAllowed(span) »
+    // était choisie pour un tableau et sautait l'extension des zones qui touchent une butée (vécu, ERG-017).
+    private static bool NearestAllowedOpen(ReadOnlySpan<PanTiltZone> zones, ref double pan, ref double tilt)
     {
         var inside = false;
         foreach (var zone in zones)

@@ -92,4 +92,29 @@ public sealed class SafetyCompilerTests
         guard.Zones.ShouldBe([new PanTiltZone(0.3, 0.7, 0.8, 1)]);
         result.Issues.ShouldContain(i => i.Message.Contains("rectangle vide"));
     }
+
+    [Fact]
+    [Trait("Exigence", "ERG-017")]
+    public void AllowedZones_BecomeLimits_IntersectedWhenSeveral()
+    {
+        var lyre = _project.Fixture("Lyre 1");
+        var active = _project.Venues.Active;
+        var venues = _project.Venues with
+        {
+            Venues = [.. _project.Venues.Venues.Select(v => v.Id != active.Id ? v : v with
+            {
+                ForbiddenZones =
+                [
+                    new ForbiddenZone { FixtureId = lyre.Id, Name = "Limites", PanMin = 0.1, PanMax = 0.9, TiltMin = 0.2, TiltMax = 0.9, Allowed = true },
+                    new ForbiddenZone { FixtureId = lyre.Id, Name = "Plafond bas", PanMin = 0, PanMax = 1, TiltMin = 0, TiltMax = 0.8, Allowed = true },
+                ],
+            })],
+        };
+
+        var result = ShowCompiler.Compile(_project.Content() with { Venues = venues });
+
+        var guard = result.Model.Safety.Zones.ShouldHaveSingleItem("une zone permise seule suffit à créer la garde");
+        guard.Zones.ShouldBeEmpty();
+        guard.Limits.ShouldBe(new PanTiltZone(0.1, 0.9, 0.2, 0.8));
+    }
 }

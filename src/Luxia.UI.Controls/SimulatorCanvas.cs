@@ -215,7 +215,9 @@ public sealed class SimulatorCanvas : Control
                 context.DrawEllipse(null, new Pen(Brushes.White, 1.5), center, 14, 14);
             }
 
-            if (ShowNames)
+            // Noms seulement si le plan est assez grand pour les lire (sinon ils se chevauchent) ; les appareils
+            // sélectionnés gardent toujours le leur.
+            if (ShowNames && (selected || scale >= 45))
             {
                 var name = new FormattedText(
                     fixture.Name,

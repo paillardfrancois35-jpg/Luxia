@@ -1,0 +1,47 @@
+<!--
+  C11 (doc 60 §11) : libellés de la bibliothèque Dock en français (doc 03 §2). Dock les lit par DynamicResource
+  (ControlStrings.axaml de Dock 12.1) : ce dictionnaire, fusionné dans les ressources de l'application, les remplace.
+-->
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="DragPreviewControlDockString">Ancrer</x:String>
+  <x:String x:Key="DragPreviewControlFloatString">Détacher</x:String>
+  <x:String x:Key="DragPreviewControlNoneString">Aucun</x:String>
+
+  <x:String x:Key="DocumentTabStripItemFloatString">_Détacher dans une fenêtre</x:String>
+  <x:String x:Key="DocumentTabStripItemFloatAllString">Tout détacher</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseString">_Fermer</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseOtherTabsString">Fermer les autres onglets</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseAllTabsString">Fermer tous les onglets</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseTabsLeftString">Fermer les onglets à gauche</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseTabsRightString">Fermer les onglets à droite</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseTabsAboveString">Fermer les onglets au-dessus</x:String>
+  <x:String x:Key="DocumentTabStripItemCloseTabsBelowString">Fermer les onglets en dessous</x:String>
+  <x:String x:Key="DocumentTabStripItemNewHorizontalDockString">Nouveau groupe horizontal</x:String>
+  <x:String x:Key="DocumentTabStripItemNewVerticalDockString">Nouveau groupe vertical</x:String>
+  <x:String x:Key="DocumentTabStripItemTabLayoutString">Position des onglets</x:String>
+  <x:String x:Key="DocumentTabStripItemTabLayoutLeftString">Onglets à _gauche</x:String>
+  <x:String x:Key="DocumentTabStripItemTabLayoutTopString">Onglets en _haut</x:String>
+  <x:String x:Key="DocumentTabStripItemTabLayoutRightString">Onglets à _droite</x:String>
+  <x:String x:Key="DocumentTabStripItemLayoutModeString">Disposition</x:String>
+  <x:String x:Key="DocumentTabStripItemLayoutModeTabbedString">En onglets</x:String>
+  <x:String x:Key="DocumentTabStripItemLayoutModeMdiString">Fenêtres internes</x:String>
+
+  <x:String x:Key="ToolPinItemControlFloatString">_Détacher dans une fenêtre</x:String>
+  <x:String x:Key="ToolPinItemControlShowString">_Afficher</x:String>
+  <x:String x:Key="ToolPinItemControlDockAsDocumentString">Ancrer au centre, en onglet</x:String>
+  <x:String x:Key="ToolPinItemControlCloseString">_Fermer</x:String>
+
+  <x:String x:Key="ToolChromeControlFloatString">_Détacher dans une fenêtre</x:String>
+  <x:String x:Key="ToolChromeControlDockString">_Ancrer</x:String>
+  <x:String x:Key="ToolChromeControlAutoHideString">_Replier sur le bord</x:String>
+  <x:String x:Key="ToolChromeControlDockAsDocumentString">Ancrer au centre, en onglet</x:String>
+  <x:String x:Key="ToolChromeControlCloseString">_Fermer</x:String>
+
+  <x:String x:Key="ToolTabStripItemFloatString">_Détacher dans une fenêtre</x:String>
+  <x:String x:Key="ToolTabStripItemFloatAllString">Tout détacher</x:String>
+  <x:String x:Key="ToolTabStripItemDockString">_Ancrer</x:String>
+  <x:String x:Key="ToolTabStripItemAutoHideString">_Replier sur le bord</x:String>
+  <x:String x:Key="ToolTabStripItemDockAsDocumentString">Ancrer au centre, en onglet</x:String>
+  <x:String x:Key="ToolTabStripItemCloseString">_Fermer</x:String>
+</ResourceDictionary>

@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:dockc="using:Dock.Avalonia.Controls"
+             x:Class="Luxia.UI.Modules.Control.Views.ControlView"
+             x:DataType="vm:ControlViewModel"
+             Focusable="True">
+  <UserControl.Styles>
+    <!-- Sélecteur de mode (doc 60 §4.1) : un seul actif, à la couleur de son sens (charte §4.5). -->
+    <Style Selector="Button.mode">
+      <Setter Property="Padding" Value="14,5" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="Background" Value="#21262D" />
+      <Setter Property="BorderBrush" Value="#30363D" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="0" />
+    </Style>
+    <Style Selector="Button.mode.live.active">
+      <Setter Property="Background" Value="#D29922" />
+      <Setter Property="Foreground" Value="#0D1117" />
+    </Style>
+    <Style Selector="Button.mode.edit.active">
+      <Setter Property="Background" Value="#3FB950" />
+      <Setter Property="Foreground" Value="#0D1117" />
+    </Style>
+    <Style Selector="Button.mode.blind.active">
+      <Setter Property="Background" Value="#79C0FF" />
+      <Setter Property="Foreground" Value="#0D1117" />
+    </Style>
+  </UserControl.Styles>
+
+  <DockPanel>
+    <!-- En-tête : mode, annuler / rétablir, panneaux -->
+    <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,6">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+          <Button Content="↶" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />
+          <Button Content="↷" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding RedoText}" Command="{Binding RedoCommand}" />
+          <Button x:Name="PanelsButton" Content="Panneaux ▾" Margin="10,0,0,0" ToolTip.Tip="Réafficher un panneau fermé, ou le mettre au premier plan">
+            <Button.Flyout>
+              <MenuFlyout Placement="BottomEdgeAlignedRight" />
+            </Button.Flyout>
+          </Button>
+          <Button x:Name="ResetLayoutButton" Content="Rétablir la disposition" ToolTip.Tip="Oublier la disposition enregistrée et revenir à celle livrée" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">
+          <Button Classes="mode live" Classes.active="{Binding IsLive}" Content="LIVE" CornerRadius="6,0,0,6"
+                  Command="{Binding SetModeCommand}" CommandParameter="live"
+                  ToolTip.Tip="LIVE : vos réglages sont des surcharges temporaires par-dessus les scènes ; rien n'est enregistré." />
+          <Button Classes="mode edit" Classes.active="{Binding IsEdit}" Content="ÉDITION"
+                  Command="{Binding SetModeCommand}" CommandParameter="edition"
+                  ToolTip.Tip="ÉDITION : vos réglages s'écrivent tout de suite dans l'étape choisie de la scène éditée (✎), et sortent." />
+          <Button Classes="mode blind" Classes.active="{Binding IsBlind}" Content="👁 AVEUGLE" CornerRadius="0,6,6,0"
+                  Command="{Binding SetModeCommand}" CommandParameter="aveugle"
+                  ToolTip.Tip="AVEUGLE : vos réglages s'écrivent dans la scène éditée sans changer la sortie ; le plan montre l'aperçu." />
+          <TextBlock Text="{Binding Message}" Foreground="#D29922" VerticalAlignment="Center" Margin="14,0,0,0" TextTrimming="CharacterEllipsis" MaxWidth="600" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <!-- Bandeau : le mode en toutes lettres, et où vont les réglages -->
+    <Panel DockPanel.Dock="Top">
+      <Border Background="{Binding ModeColor}" Opacity="0.16" />
+      <Border BorderBrush="{Binding ModeColor}" BorderThickness="0,2,0,1" Padding="10,4">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Background="{Binding ModeColor}" CornerRadius="4" Padding="8,1" Margin="0,0,10,0" VerticalAlignment="Center">
+            <TextBlock Text="{Binding ModeTitle}" FontWeight="Bold" FontSize="12" Foreground="#0D1117" />
+          </Border>
+          <Button DockPanel.Dock="Right" Content="{Binding ModeActionText}" IsVisible="{Binding HasModeAction}" Padding="10,1" FontSize="12"
+                  BorderBrush="{Binding ModeColor}" BorderThickness="1" Foreground="{Binding ModeColor}" Background="Transparent"
+                  Command="{Binding ModeActionCommand}" />
+          <TextBlock Text="{Binding ModeText}" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis" />
+        </DockPanel>
+      </Border>
+    </Panel>
+
+    <TextBlock DockPanel.Dock="Top" Text="Aucun projet ouvert : menu Projet → Ouvrir." IsVisible="{Binding !HasProject}" Margin="12,8" />
+    <dockc:DockControl x:Name="DockHost" InitializeLayout="True" InitializeFactory="True" />
+  </DockPanel>
+</UserControl>

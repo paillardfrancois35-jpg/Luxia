@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:c="using:Luxia.UI.Controls"
+             x:Class="Luxia.UI.Modules.Control.Views.PropertiesPanelView"
+             x:DataType="vm:PropertiesPanelViewModel">
+  <UserControl.Styles>
+    <Style Selector="Border.section">
+      <Setter Property="Background" Value="#161B22" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="10,8" />
+      <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Expander">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+  </UserControl.Styles>
+
+  <Panel Margin="10,32,10,8">
+    <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,8" />
+    <ScrollViewer IsVisible="{Binding HasScene}">
+      <StackPanel>
+        <!-- Identité -->
+        <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+          <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" Margin="0,0,8,0" />
+          <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" ToolTip.Tip="Nom de la scène (enregistré à la frappe, Ctrl+Z pour annuler)" />
+        </Grid>
+        <TextBlock Text="{Binding Summary}" FontSize="12" Foreground="#8B949E" Margin="0,0,0,8" />
+        <ItemsControl ItemsSource="{x:Static vm:PropertiesPanelViewModel.Colors}" Margin="0,0,0,8">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <Button Width="22" Height="22" Padding="0" Margin="0,0,4,4" Background="{Binding}" CornerRadius="4"
+                      ToolTip.Tip="Couleur de la scène"
+                      Command="{Binding $parent[UserControl].((vm:PropertiesPanelViewModel)DataContext).SetColorCommand}" CommandParameter="{Binding}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Lecture -->
+        <Expander Header="Lecture" IsExpanded="True">
+          <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+            <TextBlock Classes="label" Text="Couche" />
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Layers}" SelectedItem="{Binding Layer}" HorizontalAlignment="Stretch" />
+            <TextBlock Grid.Row="1" Classes="label" Text="Vitesse (%)" />
+            <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding SpeedPercent}" Minimum="10" Maximum="1000" Increment="10" FormatString="0" Width="150" HorizontalAlignment="Left" />
+            <TextBlock Grid.Row="2" Classes="label" Text="Enchaînement" />
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.LoopOptions}" SelectedItem="{Binding Loop}" HorizontalAlignment="Stretch" />
+            <TextBlock Grid.Row="3" Classes="label" Text="À la fin" />
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.EndOptions}" SelectedItem="{Binding End}" HorizontalAlignment="Stretch" />
+            <TextBlock Grid.Row="4" Classes="label" Text="Fondu d'entrée (s)" />
+            <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding FadeInSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left"
+                           Watermark="celui de l'étape" ToolTip.Tip="Vide : le fondu de la première étape" />
+            <TextBlock Grid.Row="5" Classes="label" Text="Fondu de sortie (s)" />
+            <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding FadeOutSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left"
+                           Watermark="immédiat" ToolTip.Tip="Vide : arrêt immédiat" />
+            <CheckBox Grid.Row="6" Grid.Column="1" Content="Visible dans l'écran Live" IsChecked="{Binding VisibleInLive}" />
+          </Grid>
+        </Expander>
+
+        <!-- Étapes -->
+        <Expander Header="Étapes" IsExpanded="True">
+          <StackPanel Spacing="6">
+            <c:StepStrip x:Name="Strip" Items="{Binding Steps}" SelectedIndex="{Binding SelectedStep}" Accent="{Binding Accent}" />
+            <WrapPanel>
+              <Button Content="+ étape" Margin="0,0,4,4" Command="{Binding AddStepCommand}" ToolTip.Tip="Nouvelle étape vide après l'étape choisie" />
+              <Button Content="Dupliquer" Margin="0,0,4,4" Command="{Binding DuplicateStepCommand}" />
+              <Button Content="◀" Margin="0,0,4,4" Command="{Binding MoveStepLeftCommand}" ToolTip.Tip="Déplacer l'étape vers la gauche (plus tôt)" />
+              <Button Content="▶" Margin="0,0,4,4" Command="{Binding MoveStepRightCommand}" ToolTip.Tip="Déplacer l'étape vers la droite (plus tard)" />
+              <Button Content="Supprimer" Margin="0,0,4,4" Foreground="#F85149" Command="{Binding DeleteStepCommand}" ToolTip.Tip="Il reste toujours une étape (Ctrl+Z pour annuler)" />
+            </WrapPanel>
+            <TextBlock Text="Choisir une étape : clic dans la bande, ou flèches ← →." FontSize="11" Foreground="#8B949E" />
+          </StackPanel>
+        </Expander>
+
+        <!-- Étape choisie -->
+        <Expander Header="{Binding StepTitle}" IsExpanded="True">
+          <StackPanel Spacing="6">
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+              <TextBlock Classes="label" Text="Nom de l'étape" />
+              <TextBox Grid.Column="1" Text="{Binding StepName}" Watermark="(sans nom)" />
+              <TextBlock Grid.Row="1" Classes="label" Text="Fondu (s)" />
+              <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding StepFadeSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+              <TextBlock Grid.Row="2" Classes="label" Text="Maintien (s)" />
+              <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StepHoldSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+            </Grid>
+            <TextBlock Text="Contenu (réglé dans « Réglages des appareils », en ÉDITION ou AVEUGLE)" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap" />
+            <ItemsControl ItemsSource="{Binding StepValues}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:StepValueRow">
+                  <Grid ColumnDefinitions="18,110,*" Margin="0,2">
+                    <Ellipse Width="10" Height="10" Fill="{Binding Color}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Text="{Binding Who}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Grid.Column="2" Text="{Binding What}" FontSize="12" TextWrapping="Wrap" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Expander>
+
+        <!-- Essai et notes -->
+        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,0,8">
+          <Button Content="▶ Lancer" Command="{Binding TestCommand}" ToolTip.Tip="Lancer la scène dans son contexte (les autres couches continuent)" />
+          <Button Content="■ Arrêter" Command="{Binding StopTestCommand}" />
+        </StackPanel>
+        <Expander Header="Notes" IsExpanded="False">
+          <TextBox Text="{Binding Notes}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60" />
+        </Expander>
+      </StackPanel>
+    </ScrollViewer>
+  </Panel>
+</UserControl>

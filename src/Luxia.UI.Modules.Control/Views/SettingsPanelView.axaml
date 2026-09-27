@@ -1,0 +1,189 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:c="using:Luxia.UI.Controls"
+             xmlns:scenes="using:Luxia.Scenes.Model"
+             x:Class="Luxia.UI.Modules.Control.Views.SettingsPanelView"
+             x:DataType="vm:SettingsPanelViewModel">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.title">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Margin" Value="0,0,0,4" />
+    </Style>
+    <Style Selector="TextBlock.hint">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="Ellipse.dot">
+      <Setter Property="Width" Value="11" />
+      <Setter Property="Height" Value="11" />
+      <Setter Property="StrokeThickness" Value="1.5" />
+      <Setter Property="Stroke" Value="#8B949E" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Padding" Value="12,4" />
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+    <DataTemplate x:Key="PaletteButton" x:DataType="scenes:Palette">
+      <Button Padding="6,3" Margin="0,0,4,4" FontSize="12" ToolTip.Tip="Appliquer cette palette aux appareils sélectionnés (la scène la référence)"
+              Command="{Binding $parent[UserControl].((vm:SettingsPanelViewModel)DataContext).ApplyPaletteCommand}" CommandParameter="{Binding}">
+        <StackPanel Orientation="Horizontal" Spacing="5">
+          <Border Width="12" Height="12" CornerRadius="3" Background="{Binding Color}" IsVisible="{Binding Color, Converter={x:Static ObjectConverters.IsNotNull}}" />
+          <TextBlock Text="{Binding Name}" />
+        </StackPanel>
+      </Button>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <DockPanel Margin="8,32,8,6">
+    <!-- Qui, et où vont les réglages (selon le mode, doc 60 §4.1) -->
+    <DockPanel DockPanel.Dock="Top" Margin="2,0,30,6">
+      <Button DockPanel.Dock="Right" Content="{Binding ActionText}" ToolTip.Tip="{Binding ActionTip}" IsEnabled="{Binding HasSelection}"
+              BorderBrush="{Binding TargetColor}" BorderThickness="1" Foreground="{Binding TargetColor}" Command="{Binding RemoveSelectionCommand}" />
+      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+        <TextBlock Text="{Binding SelectionText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="520" />
+        <TextBlock Text="{Binding TargetText}" Foreground="{Binding TargetColor}" IsVisible="{Binding HasSelection}" />
+      </StackPanel>
+    </DockPanel>
+
+    <TabControl SelectedIndex="{Binding SelectedTab}" IsEnabled="{Binding HasSelection}">
+      <!-- Intensité -->
+      <TabItem Header="Intensité" IsEnabled="{Binding HasIntensity}" ToolTip.Tip="Aucun appareil de la sélection n'a d'intensité réglable">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid ColumnDefinitions="Auto,*" Margin="4,10">
+          <StackPanel Spacing="10" Width="420">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Ellipse Classes="dot" Fill="{Binding IntensityStateColor}" ToolTip.Tip="Jaune : surcharge LIVE · vert : dans la scène · vide : non utilisé" />
+              <TextBlock Classes="title" Text="Intensité" Margin="0" />
+              <TextBlock Text="{Binding IntensityText}" FontSize="22" FontWeight="SemiBold" Margin="12,0,0,0" />
+            </StackPanel>
+            <Slider Minimum="0" Maximum="100" Value="{Binding Intensity}" />
+            <Button Content="Retirer l'intensité" HorizontalAlignment="Left" Command="{Binding RemoveFamilyCommand}" CommandParameter="intensite"
+                    ToolTip.Tip="LIVE : rend l'intensité aux scènes · ÉDITION : l'étape ne règle plus l'intensité de ces appareils" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Margin="24,0,0,0">
+            <TextBlock Classes="title" Text="Palettes d'intensité" />
+            <ItemsControl ItemsSource="{Binding IntensityPalettes}" ItemTemplate="{StaticResource PaletteButton}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </StackPanel>
+        </Grid>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Couleur -->
+      <TabItem Header="Couleur" IsEnabled="{Binding HasColor}" ToolTip.Tip="Aucun appareil de la sélection n'a de couleur à mélanger">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid ColumnDefinitions="Auto,Auto,*" Margin="4,10">
+          <c:ColorPicker x:Name="Picker" Width="330" Height="240" VerticalAlignment="Top"
+                         SelectedColor="{Binding Color}" Favorites="{Binding ColorFavorites}" />
+          <StackPanel Grid.Column="1" Width="200" Margin="20,0,0,0" Spacing="5">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Ellipse Classes="dot" Fill="{Binding ColorStateColor}" />
+              <TextBlock Classes="title" Text="Émetteurs" Margin="0" />
+            </StackPanel>
+            <ItemsControl ItemsSource="{Binding ColorRows}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ParameterRowViewModel">
+                  <Grid ColumnDefinitions="18,*,Auto" Margin="0,2" ToolTip.Tip="{Binding StateTip}">
+                    <Ellipse Classes="dot" Fill="{Binding StateColor}" Stroke="{Binding StateStroke}" />
+                    <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="12" />
+                    <TextBlock Grid.Column="2" Text="{Binding ValueText}" FontSize="12" />
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Retirer la couleur" Margin="0,6,0,0" Command="{Binding RemoveFamilyCommand}" CommandParameter="couleur" />
+            <TextBlock Classes="hint" Text="Pastilles du sélecteur = palettes du projet ; « + » crée une palette avec la couleur courante." />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Margin="20,0,0,0">
+            <TextBlock Classes="title" Text="Palettes de couleur" />
+            <ItemsControl ItemsSource="{Binding ColorPalettes}" ItemTemplate="{StaticResource PaletteButton}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </StackPanel>
+        </Grid>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Position et zones -->
+      <TabItem Header="Position" IsEnabled="{Binding HasPosition}" ToolTip.Tip="Aucun appareil de la sélection n'a de Pan / Tilt">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid ColumnDefinitions="Auto,Auto,*" Margin="4,10">
+          <c:PanTiltGrid x:Name="Grid" Width="440" Height="260" VerticalAlignment="Top"
+                         Markers="{Binding Markers}" Zones="{Binding ZoneMarkers}" PanRange="{Binding PanRange}" TiltRange="{Binding TiltRange}"
+                         IsZoneEditing="{Binding IsZoneEditing}" SelectedZoneId="{Binding SelectedZoneId}" />
+          <StackPanel Grid.Column="1" Width="250" Margin="20,0,0,0" Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Ellipse Classes="dot" Fill="{Binding PositionStateColor}" />
+              <TextBlock Text="{Binding PositionText}" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+            <TextBlock Classes="hint" Text="Clic : la sélection vient sous le curseur (plusieurs lyres gardent leurs écarts) · Maj + glisser : fin · molette : Tilt (Maj : Pan, Ctrl : ×10)." />
+            <ToggleButton Content="Éditer les zones du lieu" IsChecked="{Binding IsZoneEditing}" Margin="0,8,0,0"
+                          ToolTip.Tip="Zones interdites (le faisceau n'y va jamais) et zone permise (limites de la lyre) : elles valent pour toutes les scènes" />
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsZoneEditing}">
+              <RadioButton Content="interdite" GroupName="zone" IsChecked="{Binding !NewZoneAllowed}" />
+              <RadioButton Content="permise" GroupName="zone" IsChecked="{Binding NewZoneAllowed}" />
+            </StackPanel>
+            <TextBlock Classes="hint" Text="{Binding ZonesTitle}" />
+            <ItemsControl ItemsSource="{Binding ZoneLines}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                  <TextBlock Text="{Binding}" FontSize="11" TextWrapping="Wrap" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Classes="hint" IsVisible="{Binding IsZoneEditing}" Text="Glisser dans le vide : nouvelle zone · glisser une zone : la déplacer · poignées : l'ajuster · Suppr : la retirer." />
+            <Button Content="Retirer la position" Command="{Binding RemoveFamilyCommand}" CommandParameter="position" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Margin="20,0,0,0">
+            <TextBlock Classes="title" Text="Palettes de position" />
+            <ItemsControl ItemsSource="{Binding PositionPalettes}" ItemTemplate="{StaticResource PaletteButton}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+            </ItemsControl>
+          </StackPanel>
+        </Grid>
+        </ScrollViewer>
+      </TabItem>
+
+      <!-- Faisceau et autres -->
+      <TabItem Header="Faisceau et autres" IsEnabled="{Binding HasOthers}" ToolTip.Tip="Aucun autre réglage pour la sélection">
+        <ScrollViewer Margin="4,10">
+          <ItemsControl ItemsSource="{Binding OtherRows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ParameterRowViewModel">
+                <Border Background="#161B22" CornerRadius="6" Padding="8,6" Margin="0,0,0,6">
+                  <StackPanel Spacing="4">
+                    <Grid ColumnDefinitions="18,160,*,170" ToolTip.Tip="{Binding StateTip}">
+                      <Ellipse Classes="dot" Fill="{Binding StateColor}" Stroke="{Binding StateStroke}" />
+                      <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                      <Slider Grid.Column="2" Minimum="0" Maximum="100" Value="{Binding Level}" VerticalAlignment="Center" Margin="0,-8" />
+                      <TextBlock Grid.Column="3" Text="{Binding ValueText}" FontSize="12" VerticalAlignment="Center" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding Ranges}" IsVisible="{Binding HasRanges}">
+                      <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RangeChoice">
+                          <Button Padding="6,2" Margin="0,0,4,4" FontSize="11" BorderBrush="{Binding Color}" BorderThickness="0,0,0,3"
+                                  Content="{Binding Label}"
+                                  Command="{Binding $parent[UserControl].((vm:SettingsPanelViewModel)DataContext).ApplyRangeCommand}" CommandParameter="{Binding}" />
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

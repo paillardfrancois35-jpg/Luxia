@@ -8,6 +8,8 @@
         xmlns:simulator="using:Luxia.UI.Modules.Simulator"
         xmlns:scenes="using:Luxia.UI.Modules.Scenes"
         xmlns:live="using:Luxia.UI.Modules.Live"
+        xmlns:control="using:Luxia.UI.Modules.Control"
+        xmlns:controlviews="using:Luxia.UI.Modules.Control.Views"
         x:Class="Luxia.App.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding Title}"
@@ -98,6 +100,9 @@
         </DataTemplate>
         <DataTemplate DataType="simulator:SimulatorViewModel">
           <simulator:SimulatorView />
+        </DataTemplate>
+        <DataTemplate DataType="control:ControlViewModel">
+          <controlviews:ControlView />
         </DataTemplate>
         <DataTemplate DataType="live:LiveViewModel">
           <live:LiveView />

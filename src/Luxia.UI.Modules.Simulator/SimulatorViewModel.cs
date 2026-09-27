@@ -71,7 +71,6 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
             return;
         }
 
-        var installation = _runtime.Project.Installation;
         var venue = _runtime.Project.Venues.Active;
 
         // Le lieu actif ou ses dimensions peuvent avoir changé dans l'écran Installation (doc 13 §5) : pas
@@ -80,39 +79,11 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
         RoomWidthM = venue.WidthM;
         RoomDepthM = venue.DepthM;
 
+        // GEN-063 : en aveugle, le simulateur montre le moteur d'aperçu (mêmes scènes, réglages non émis).
         Fixtures.Clear();
-        foreach (var fixture in installation.Fixtures)
+        foreach (var visual in SimulatorVisuals.Build(_runtime, _runtime.PreviewActive ? _runtime.Preview : _runtime.Engine, _frames))
         {
-            var placement = venue.PlacementOf(fixture.Id);
-            if (placement is not { Absent: false })
-            {
-                continue;
-            }
-
-            var type = _runtime.Project.FixtureLibrary?.Find(fixture.FixtureTypeId);
-            var mode = type?.Modes.FirstOrDefault(m => m.Name == fixture.ModeName);
-            if (type is null || mode is null)
-            {
-                Fixtures.Add(new SimulatorFixtureVisual(fixture.Id, fixture.Name, placement.X, placement.Y, placement.OrientationDeg, false, null, [], HasError: true, Strobing: false));
-                continue;
-            }
-
-            var frame = FrameOf(fixture.Universe);
-            var decoded = FixtureDecoder.Decode(type, mode, fixture, frame);
-            var cells = decoded.Cells.Count > 0
-                ? decoded.Cells.Select((c, i) => new SimulatorCellVisual(CellOffset(i, decoded.Cells.Count), c.Color.ToString(), c.Intensity)).ToList()
-                : [new SimulatorCellVisual(0, "#58A6FF", 0)];
-            Fixtures.Add(new SimulatorFixtureVisual(
-                fixture.Id,
-                fixture.Name,
-                placement.X,
-                placement.Y,
-                placement.OrientationDeg,
-                decoded.PanDegrees.HasValue,
-                decoded.PanDegrees,
-                cells,
-                HasError: false,
-                decoded.Cells.Any(c => c.Strobing)));
+            Fixtures.Add(visual);
         }
 
         Refreshed?.Invoke(this, EventArgs.Empty);
@@ -137,26 +108,6 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
         HoverText = string.Create(
             CultureInfo.CurrentCulture,
             $"{fixture.Name} — {type?.DisplayName ?? "modèle introuvable"} — univers {fixture.Universe}, adresse {fixture.Address}");
-    }
-
-    private static double CellOffset(int index, int count) => (index - ((count - 1) / 2.0)) * 0.15;
-
-    private byte[] FrameOf(int universe)
-    {
-        if (!_frames.TryGetValue(universe, out var frame))
-        {
-            frame = new byte[DmxConstants.ChannelCount];
-            _frames[universe] = frame;
-        }
-
-        // GEN-063 : en aveugle, le simulateur montre le moteur d'aperçu (mêmes scènes, programmeur non émis).
-        var engine = _runtime.PreviewActive ? _runtime.Preview : _runtime.Engine;
-        if (universe >= 1 && universe <= engine.UniverseCount)
-        {
-            engine.CopyLastFrame(universe, frame);
-        }
-
-        return frame;
     }
 
     private void LoadVenue()
