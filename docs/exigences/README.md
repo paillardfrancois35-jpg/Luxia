@@ -173,6 +173,13 @@
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Validé |
 | [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
+| [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Réalisé |
+| [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Réalisé |
+| [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Réalisé |
+| [ERG-004](ERG-004.md) | Sélecteur de couleur | ERG | I | Réalisé |
+| [ERG-005](ERG-005.md) | Galerie des composants | ERG | M | Réalisé |
+| [ERG-006](ERG-006.md) | Mesures du prototype | ERG | I | En cours |
+| [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | À faire |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -358,3 +358,17 @@
 | [PAL-010](exigences/PAL-010.md) | S | Palettes de combinaisons de couleurs | Reporté (P6) |  |
 | [SORT-065](exigences/SORT-065.md) | M | Enregistrement des trames visible, chemin copiable | Réalisé |  |
 | [SORT-066](exigences/SORT-066.md) | M | Journal de l'enregistrement : actions, commandes et canaux entrelacés | Réalisé | LiveUvRepeatTests.Recording_JournalInterleavesClicksCommandsAndChannelChanges |
+
+## ERG – 7 exigences, 4 couvertes par des tests automatiques
+
+> En cours : 1 · Réalisé : 5 · À faire : 1
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Réalisé | LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
+| [ERG-002](exigences/ERG-002.md) | I | Enregistrement de la disposition | Réalisé | LayoutStoreTests.Delete_ThenLoad_GivesNothing<br>LayoutStoreTests.Load_MissingFile_GivesNothingAndNoMessage<br>LayoutStoreTests.Load_UnreadableFile_IsSetAsideWithMessage<br>LayoutStoreTests.Load_ValidEnvelopeWithBrokenDock_GivesMessageInsteadOfThrowing<br>(+3) |
+| [ERG-003](exigences/ERG-003.md) | I | Grille Pan / Tilt | Réalisé | PanTiltGeometryTests.FromCorners_AnyOrder_GivesOrderedRect<br>PanTiltGeometryTests.FromScreen_OutsideGrid_IsClamped<br>PanTiltGeometryTests.HitTest_HandlesBodyAndOutside<br>PanTiltGeometryTests.MoveGroupTo_SingleFixture_IsAbsolute<br>(+6) |
+| [ERG-004](exigences/ERG-004.md) | I | Sélecteur de couleur | Réalisé | ColorPickerLayoutTests.BrightnessAt_BarTopAndBottom_IsFullAndBlack<br>ColorPickerLayoutTests.For_Size_SquareBarAndSwatchesDoNotOverlap<br>ColorPickerLayoutTests.HueSaturationAt_Corners_GivesHueAcrossAndSaturationDown<br>ColorPickerLayoutTests.SquarePoint_IsInverseOfHueSaturationAt<br>(+3) |
+| [ERG-005](exigences/ERG-005.md) | M | Galerie des composants | Réalisé |  |
+| [ERG-006](exigences/ERG-006.md) | I | Mesures du prototype | En cours |  |
+| [ERG-007](exigences/ERG-007.md) | I | Maquettes de la disposition Contrôle | À faire |  |
