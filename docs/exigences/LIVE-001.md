@@ -30,3 +30,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
 | 2026-09-26 | Claude | Décision | Pas d'indicateur « vide » pour ce qui n'existe pas encore (tempo, style, auto) : chaque élément du bandeau apparaît avec sa phase (remarque d'ergonomie de fin de P4, Q32). Blackout et Grand Master ne sont pas dupliqués : l'en-tête de la fenêtre les montre déjà sur tous les écrans. |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Claude | Développement | Pastille « Aucune sortie » en gris (le vert laissait croire à une sortie connectée). |

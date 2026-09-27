@@ -412,7 +412,7 @@
             <TextBlock Classes="section" Text="Palettes" />
             <TextBlock Text="Clic : appliquer à la sélection du programmeur. Clic droit : renommer, déplacer, supprimer…" TextWrapping="Wrap" FontSize="11" Opacity="0.7" />
             <ToggleButton IsChecked="{Binding UpdateArmed}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                          Content="✎ Mettre à jour une palette avec le programmeur…"
+                          Content="✎ Mettre à jour une palette…"
                           ToolTip.Tip="Réglez les appareils dans le programmeur, cliquez ici, puis cliquez la palette à mettre à jour : toutes les scènes qui l'utilisent suivent (PAL-005)" />
             <TextBlock Text="{Binding Message}" Foreground="#58A6FF" TextWrapping="Wrap"
                        IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />

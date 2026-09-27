@@ -28,7 +28,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     private const int JournalSize = 60;
 
     private readonly LuxiaRuntime _runtime;
-    private readonly ConcurrentQueue<string> _incoming = new();
+    private readonly ConcurrentQueue<(string? Group, string Label, string Text)> _incoming = new();
     private readonly HashSet<(Guid Fixture, string Key)> _quickOverrides = [];
     private readonly HashSet<LiveKey> _held = [];
     private Guid? _flashScene;
@@ -42,6 +42,15 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     [ObservableProperty]
     private bool _outputAlert;
+
+    [ObservableProperty]
+    private string _outputColor = "#30363D";
+
+    [ObservableProperty]
+    private string _limitsDetail = string.Empty;
+
+    [ObservableProperty]
+    private double _columnsMinWidth;
 
     [ObservableProperty]
     private string _controllersText = string.Empty;
@@ -84,7 +93,12 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         // LIVE-009 : journal alimenté par les événements (reçus sur le fil du bus, affichés au rafraîchissement).
         runtime.Bus.Subscribe<SceneStarted>(e => Log($"▶ {e.SceneName} ({Origin(e.Origin)})"));
         runtime.Bus.Subscribe<SceneStopped>(e => Log($"■ {e.SceneName}"));
-        runtime.Bus.Subscribe<SafetyLimitReached>(e => Log($"⚠ {e.Label} : {e.Detail}"));
+        runtime.Bus.Subscribe<SafetyLimitReached>(e =>
+        {
+            // Plusieurs appareils limités au même instant pour la même raison : une seule ligne au journal.
+            var fixture = e.Label.Split(" – ")[0];
+            _incoming.Enqueue(($"{e.Kind}|{e.Detail}", fixture, $"{DateTime.Now:HH:mm:ss}  ⚠ {{0}} : {e.Detail}"));
+        });
         runtime.Bus.Subscribe<OutputStateChanged>(e => Log($"⇄ {e.DriverName} : {OutputState(e.State)}{(e.Message is { } m ? $" ({m})" : string.Empty)}"));
         runtime.Bus.Subscribe<CommandRejected>(e => Log($"✕ {e.Command.GetType().Name.Replace("Command", string.Empty, StringComparison.Ordinal)} refusée : {e.Reason}"));
         Rebuild();
@@ -417,6 +431,9 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             Columns[0].IsSelected = true;
         }
 
+        // Les colonnes se partagent la largeur, sans descendre sous 120 px (défilement horizontal au-delà).
+        ColumnsMinWidth = Columns.Count * 120;
+
         // Scènes des boutons FLASH et STROBE : réglées dans live.json, sinon déduites de la couche Flash.
         (_flashScene, _strobeScene) = LiveRules.PermanentScenes(live, project.Layers, project.Scenes);
         OnPropertyChanged(nameof(HasFlash));
@@ -477,11 +494,13 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         {
             OutputText = "Aucune sortie : jeu au simulateur seulement";
             OutputAlert = false;
+            OutputColor = "#30363D";
             return;
         }
 
         var status = main.Driver.Status;
         OutputAlert = status.State != OutputConnectionState.Connected;
+        OutputColor = OutputAlert ? "#DA3633" : "#1A7F37";
         OutputText = status.State switch
         {
             OutputConnectionState.Connected => $"● {main.Driver.Name} connecté",
@@ -493,25 +512,29 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     private void RefreshLimits(EngineSnapshot snapshot)
     {
+        // Pastille courte (LIVE-008) : une phrase par nature de limite ; le détail par appareil est dans l'info-bulle.
+        var limits = snapshot.ActiveLimits.DistinctBy(l => (l.Kind, l.FixtureId)).ToList();
         var parts = new List<string>();
         if (snapshot.Show.Safety.Strobe.Forbidden)
         {
             parts.Add("strobe interdit");
         }
 
-        foreach (var limit in snapshot.ActiveLimits.DistinctBy(l => (l.Kind, l.FixtureId)).Take(3))
+        foreach (var group in limits.GroupBy(l => l.Kind))
         {
-            parts.Add($"{limit.Label} : {limit.Detail}");
-        }
-
-        var more = snapshot.ActiveLimits.DistinctBy(l => (l.Kind, l.FixtureId)).Count() - 3;
-        if (more > 0)
-        {
-            parts.Add(string.Create(CultureInfo.CurrentCulture, $"+{more}"));
+            var names = group.Select(l => l.Label.Split(" – ")[0]).Distinct().ToList();
+            var who = names.Count <= 2 ? string.Join(", ", names) : string.Create(CultureInfo.CurrentCulture, $"{names.Count} appareils");
+            parts.Add(group.Key switch
+            {
+                SafetyLimitKind.Strobe => $"strobe limité : {who}",
+                SafetyLimitKind.Smoke => $"fumée en repos : {who}",
+                _ => $"zone interdite : {who}",
+            });
         }
 
         HasLimits = parts.Count > 0;
         LimitsText = HasLimits ? "⚠ " + string.Join("  ·  ", parts) : "Sûreté : aucune limite active";
+        LimitsDetail = limits.Count == 0 ? "Aucune limite de sûreté n'agit en ce moment." : string.Join(Environment.NewLine, limits.Select(l => $"{l.Label} : {l.Detail}"));
     }
 
     private void RefreshCommands()
@@ -531,7 +554,43 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     private void DrainJournal()
     {
-        while (_incoming.TryDequeue(out var line))
+        var lines = new List<string>();
+        string? group = null;
+        var names = new List<string>();
+        var format = string.Empty;
+        void Flush()
+        {
+            if (group is not null)
+            {
+                lines.Add(string.Format(CultureInfo.CurrentCulture, format, string.Join(", ", names.Distinct())));
+            }
+
+            group = null;
+            names.Clear();
+        }
+
+        while (_incoming.TryDequeue(out var item))
+        {
+            if (item.Group is not null && item.Group == group)
+            {
+                names.Add(item.Label);
+                continue;
+            }
+
+            Flush();
+            if (item.Group is null)
+            {
+                lines.Add(item.Text);
+                continue;
+            }
+
+            group = item.Group;
+            format = item.Text;
+            names.Add(item.Label);
+        }
+
+        Flush();
+        foreach (var line in lines)
         {
             Journal.Insert(0, line);
         }
@@ -542,7 +601,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         }
     }
 
-    private void Log(string text) => _incoming.Enqueue($"{DateTime.Now:HH:mm:ss}  {text}");
+    private void Log(string text) => _incoming.Enqueue((null, string.Empty, $"{DateTime.Now:HH:mm:ss}  {text}"));
 
     private static PlaybackInfo? FindPlayback(EngineSnapshot snapshot, Guid sceneId)
     {

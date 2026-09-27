@@ -40,6 +40,18 @@ public sealed partial class LiveSceneViewModel : ViewModelBase
     /// <summary>Couleur de la scène (GEN-106).</summary>
     public string Color => Scene.Color;
 
+    /// <summary>Fond du bouton : la couleur de la scène (atténuée) quand elle joue, sinon neutre.</summary>
+    public string Fill => IsActive && Color.Length == 7 ? "#66" + Color[1..] : "#161B22";
+
+    /// <summary>Raccourci clavier affiché (1 à 9), ou ▶ quand la scène joue.</summary>
+    public string Marker => IsActive ? "▶" : Key;
+
+    partial void OnIsActiveChanged(bool value)
+    {
+        OnPropertyChanged(nameof(Fill));
+        OnPropertyChanged(nameof(Marker));
+    }
+
     /// <summary>Raccourci clavier affiché (1 à 9).</summary>
     public string Key => Index <= 9 ? Index.ToString(System.Globalization.CultureInfo.InvariantCulture) : string.Empty;
 }

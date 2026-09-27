@@ -32,3 +32,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 13, §4). |
 | 2026-09-26 | Claude | Décision | D24 : jamais enregistrées, toujours recalculées. |
 | 2026-09-26 | Claude | Développement | `5ee2e57` feat(patch): nouveau projet Dmx.Patch, modèle de domaine de l'installation ; `389fe64` (écran) |
+| 2026-09-27 | Claude | Développement | Titre des sélections automatiques accordé au féminin : « Toutes les lyres », « Toutes les barres LED », « Toutes les machines à fumée » (vu à la revue du Live). |

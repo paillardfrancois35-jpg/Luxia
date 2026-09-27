@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Claude | Développement | Journal compact (lignes retournées, sans marges de liste) ; limites identiques au même instant regroupées sur une ligne (« PAR 1, PAR 2… : strobe coupé… »). |

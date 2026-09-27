@@ -9,21 +9,17 @@ namespace Luxia.UI.Modules.Live;
 /// <summary>Écran Live : appui / relâche des boutons à maintenir (flash, strobe, fumée, scènes des couches Flash).</summary>
 public partial class LiveView : UserControl
 {
-    /// <summary>Fond d'une scène qui joue.</summary>
-    public static readonly IValueConverter ActiveBackground =
-        new FuncValueConverter<bool, IBrush>(active => new SolidColorBrush(Color.Parse(active ? "#30363D" : "#161B22")));
-
-    /// <summary>Bordure épaisse (couleur de la scène) quand elle joue.</summary>
+    /// <summary>Bordure : liseré à gauche (couleur de la scène), cadre complet quand elle joue.</summary>
     public static readonly IValueConverter ActiveThickness =
-        new FuncValueConverter<bool, Thickness>(active => active ? new Thickness(3) : new Thickness(1, 1, 1, 3));
+        new FuncValueConverter<bool, Thickness>(active => active ? new Thickness(4, 2, 2, 2) : new Thickness(4, 0, 0, 0));
+
+    /// <summary>Nom en gras quand la scène joue.</summary>
+    public static readonly IValueConverter ActiveWeight =
+        new FuncValueConverter<bool, FontWeight>(active => active ? FontWeight.Bold : FontWeight.Normal);
 
     /// <summary>Cadre de la couche choisie au clavier.</summary>
     public static readonly IValueConverter SelectedBorder =
         new FuncValueConverter<bool, IBrush>(selected => new SolidColorBrush(Color.Parse(selected ? "#58A6FF" : "#30363D")));
-
-    /// <summary>Fond d'alerte (sortie déconnectée).</summary>
-    public static readonly IValueConverter AlertBackground =
-        new FuncValueConverter<bool, IBrush>(alert => new SolidColorBrush(Color.Parse(alert ? "#DA3633" : "#1A7F37")));
 
     /// <summary>Fond d'avertissement (limite de sûreté active).</summary>
     public static readonly IValueConverter WarningBackground =

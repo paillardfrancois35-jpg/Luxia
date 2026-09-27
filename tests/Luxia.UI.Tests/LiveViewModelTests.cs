@@ -125,7 +125,7 @@ public sealed class LiveViewModelTests : IAsyncLifetime
     [Trait("Exigence", "LIVE-005")]
     public void QuickPalette_OverridesTheSelection_ThenReleaseGivesBack()
     {
-        _vm.SelectQuickCommand.Execute(_vm.QuickSelections.Single(s => s.Label == "Tous les lyres"));
+        _vm.SelectQuickCommand.Execute(_vm.QuickSelections.Single(s => s.Label == "Toutes les lyres"));
         _vm.ApplyPaletteCommand.Execute(_vm.Positions.Single(p => p.Name == "Plafond"));
         _host.Tick();
         var lyre = _host.Runtime.Project.Installation.Fixtures.Single(f => f.Name == "Lyre 1").Id;

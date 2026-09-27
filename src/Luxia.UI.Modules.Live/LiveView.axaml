@@ -44,7 +44,7 @@
   <Grid RowDefinitions="Auto,*,Auto" Margin="12,8,12,8">
     <!-- Bandeau d'état (LIVE-001, LIVE-008, LIVE-010) -->
     <WrapPanel Grid.Row="0" Margin="0,0,0,8">
-      <Border Classes="pill" Margin="0,0,6,4" Background="{Binding OutputAlert, Converter={x:Static vm:LiveView.AlertBackground}}">
+      <Border Classes="pill" Margin="0,0,6,4" Background="{Binding OutputColor}">
         <TextBlock Text="{Binding OutputText}" FontWeight="SemiBold" />
       </Border>
       <Border Classes="pill" Margin="0,0,6,4" Background="#161B22"
@@ -60,7 +60,8 @@
       <Border Classes="pill" Margin="0,0,6,4" Background="#161B22">
         <TextBlock Text="{Binding VenueText}" />
       </Border>
-      <Border Classes="pill" Margin="0,0,6,4" Background="{Binding HasLimits, Converter={x:Static vm:LiveView.WarningBackground}}">
+      <Border Classes="pill" Margin="0,0,6,4" Background="{Binding HasLimits, Converter={x:Static vm:LiveView.WarningBackground}}"
+              ToolTip.Tip="{Binding LimitsDetail}">
         <TextBlock Text="{Binding LimitsText}" />
       </Border>
       <Border Classes="pill" Margin="0,0,6,4" Background="#3D2E00"
@@ -72,16 +73,16 @@
 
     <!-- Couches (LIVE-002) et actions permanentes (LIVE-004) -->
     <Grid Grid.Row="1" ColumnDefinitions="*,190">
-      <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+      <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
         <ItemsControl ItemsSource="{Binding Columns}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="8" />
+              <UniformGrid Rows="1" MinWidth="{Binding $parent[UserControl].((vm:LiveViewModel)DataContext).ColumnsMinWidth}" />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:LayerColumnViewModel">
-              <Border Width="150" CornerRadius="6" Background="#0D1117" BorderThickness="1"
+              <Border CornerRadius="6" Background="#0D1117" BorderThickness="1" Margin="0,0,6,0" MaxWidth="220"
                       BorderBrush="{Binding IsSelected, Converter={x:Static vm:LiveView.SelectedBorder}}">
                 <DockPanel Margin="6">
                   <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,6">
@@ -89,29 +90,29 @@
                     <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                     <TextBlock Classes="small" Text="maintenir = flash" IsVisible="{Binding IsFlash}" />
                   </StackPanel>
-                  <StackPanel DockPanel.Dock="Bottom" Spacing="4" Margin="0,6,0,0">
-                    <Button Content="■ Stop" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                  <DockPanel DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                    <Button DockPanel.Dock="Left" Content="■" Width="32" Padding="0" HorizontalContentAlignment="Center"
+                            ToolTip.Tip="Arrêter la couche"
                             Command="{Binding $parent[ItemsControl].((vm:LiveViewModel)DataContext).StopLayerCommand}" CommandParameter="{Binding}" />
-                    <DockPanel>
-                      <TextBlock DockPanel.Dock="Right" Classes="small" Width="34" TextAlignment="Right"
-                                 Text="{Binding Master, StringFormat={}{0:0} %}" VerticalAlignment="Center" />
-                      <Slider Minimum="0" Maximum="100" Value="{Binding Master}" ToolTip.Tip="Master de la couche" />
-                    </DockPanel>
-                  </StackPanel>
+                    <TextBlock DockPanel.Dock="Right" Classes="small" Width="32" TextAlignment="Right"
+                               Text="{Binding Master, StringFormat={}{0:0} %}" VerticalAlignment="Center" />
+                    <Slider Minimum="0" Maximum="100" Value="{Binding Master}" Margin="4,0" ToolTip.Tip="Master de la couche" />
+                  </DockPanel>
                   <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Scenes}">
                       <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:LiveSceneViewModel">
-                          <Border Classes="pad" Height="46" Margin="0,0,0,4" Tag="{Binding}"
-                                  Background="{Binding IsActive, Converter={x:Static vm:LiveView.ActiveBackground}}"
-                                  BorderBrush="{Binding Color}"
+                          <Border Classes="pad" Height="42" Margin="0,0,0,4" Tag="{Binding}"
+                                  Background="{Binding Fill}" BorderBrush="{Binding Color}"
                                   BorderThickness="{Binding IsActive, Converter={x:Static vm:LiveView.ActiveThickness}}"
-                                  PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost">
-                            <Grid RowDefinitions="*,Auto" Margin="6,2">
+                                  PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost"
+                                  ToolTip.Tip="{Binding Name}">
+                            <Grid RowDefinitions="*,Auto" Margin="5,1">
                               <DockPanel Grid.Row="0">
-                                <TextBlock DockPanel.Dock="Left" Classes="small" Text="{Binding Key}" Width="12" VerticalAlignment="Center" />
+                                <TextBlock DockPanel.Dock="Left" Classes="small" Text="{Binding Marker}" Width="12" VerticalAlignment="Center" />
                                 <TextBlock DockPanel.Dock="Right" Classes="small" Text="{Binding State}" VerticalAlignment="Center" />
                                 <TextBlock Text="{Binding Name}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis"
+                                           FontWeight="{Binding IsActive, Converter={x:Static vm:LiveView.ActiveWeight}}"
                                            VerticalAlignment="Center" FontSize="12" Margin="4,0" />
                               </DockPanel>
                               <ProgressBar Grid.Row="1" Height="3" MinHeight="3" Minimum="0" Maximum="1" Value="{Binding Progress}"
@@ -161,7 +162,7 @@
     </Grid>
 
     <!-- Palettes rapides (LIVE-005) et journal (LIVE-009, GEN-112) -->
-    <Grid Grid.Row="2" ColumnDefinitions="*,380" Margin="0,8,0,0" Height="170">
+    <Grid Grid.Row="2" ColumnDefinitions="*,340" Margin="0,8,0,0" MaxHeight="170">
       <Border Grid.Column="0" Classes="panel" Margin="0,0,8,0" Padding="8">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
           <StackPanel Spacing="4">
@@ -214,10 +215,24 @@
             <CheckBox DockPanel.Dock="Right" Content="Commandes" IsChecked="{Binding ShowCommands}" FontSize="11" />
             <TextBlock Text="Journal" FontWeight="SemiBold" VerticalAlignment="Center" />
           </DockPanel>
-          <Panel>
-            <ListBox ItemsSource="{Binding Journal}" IsVisible="{Binding !ShowCommands}" Background="Transparent" FontSize="11" />
-            <ListBox ItemsSource="{Binding Commands}" IsVisible="{Binding ShowCommands}" Background="Transparent" FontSize="11" />
-          </Panel>
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,4,0,0">
+            <Panel>
+              <ItemsControl ItemsSource="{Binding Journal}" IsVisible="{Binding !ShowCommands}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,2" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <ItemsControl ItemsSource="{Binding Commands}" IsVisible="{Binding ShowCommands}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="x:String">
+                    <TextBlock Text="{Binding}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,2" />
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </Panel>
+          </ScrollViewer>
         </DockPanel>
       </Border>
     </Grid>

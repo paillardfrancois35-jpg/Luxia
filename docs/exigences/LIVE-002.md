@@ -31,3 +31,6 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 3. Exigences – structure). |
 | 2026-09-26 | Claude | Développement | `dbb3b1e` feat(live): écran Live |
+| 2026-09-27 | Utilisateur | Question | Avant de lancer l'exécutable : refaire une analyse des nouveaux écrans (lisible, saisissable, sans place perdue) — « la passe d'ergonomie à venir n'est pas une raison pour faire mal les nouveaux développements ». |
+| 2026-09-27 | Claude | Test | Revue par captures en 1680 × 1050 et 1366 × 768, Live « en jeu » : scène active trop peu distincte ; colonnes coupées en 1366 ; bloc Stop + master trop haut. |
+| 2026-09-27 | Claude | Développement | Scène active remplie de sa couleur, nom en gras, ▶ ; liseré de couleur à gauche sinon ; colonnes réparties sur la largeur (120 px minimum) ; arrêt et master sur une ligne ; boutons de 42 px ; nom complet en info-bulle. |

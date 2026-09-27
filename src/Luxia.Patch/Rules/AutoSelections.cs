@@ -35,7 +35,7 @@ public sealed record AutoSelection(AutoSelectionKind Kind, FixtureCategory? Cate
         return Kind switch
         {
             AutoSelectionKind.AllFixtures => "Tous",
-            AutoSelectionKind.ByCategory => $"Tous les {categoryLabel(Category!.Value)}",
+            AutoSelectionKind.ByCategory => $"{(Category is FixtureCategory.LedBar or FixtureCategory.MovingHead or FixtureCategory.Smoke ? "Toutes" : "Tous")} les {categoryLabel(Category!.Value)}",
             AutoSelectionKind.ByModel => $"Tous les {ModelDisplayName}",
             _ => throw new NotSupportedException(),
         };

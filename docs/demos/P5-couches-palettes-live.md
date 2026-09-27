@@ -83,7 +83,7 @@ Renommez `"name"` en « Show de travail » dans `samples/Show de travail/projet.
 
 ## Exemple 8 – Palettes rapides (LIVE-005)
 
-1. En bas du Live : choisissez **Tous les lyres**, puis la palette de position **Plafond** : les lyres sont forcées au plafond, par-dessus leurs scènes.
+1. En bas du Live : choisissez **Toutes les lyres**, puis la palette de position **Plafond** : les lyres sont forcées au plafond, par-dessus leurs scènes.
 2. **Libérer (Échap)** : elles reprennent ce que jouent les couches.
 
 ## Exemple 9 – Clavier (LIVE-040)

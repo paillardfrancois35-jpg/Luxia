@@ -40,7 +40,10 @@ var clock = new VirtualClock();
 var runtime = new LuxiaRuntime(new DataPaths(Path.Combine(root, "Documents"), Path.Combine(root, "AppData")), NullLoggerFactory.Instance, new NoSerialPorts(), clock);
 runtime.Project.Open(project);
 var vm = new MainWindowViewModel(runtime, new NoDialogs());
-var window = new MainWindow { DataContext = vm, Width = 1680, Height = 1050 };
+// Taille facultative (3e et 4e arguments) : vérifier un écran de portable (1366 × 768) ou plein HD.
+var width = args.Length > 3 && int.TryParse(args[2], out var w) ? w : 1680;
+var height = args.Length > 3 && int.TryParse(args[3], out var h) ? h : 1050;
+var window = new MainWindow { DataContext = vm, Width = width, Height = height };
 window.Show();
 
 void Tick(int count = 2)
@@ -72,6 +75,26 @@ foreach (var page in vm.Pages)
 {
     vm.SelectedPage = page;
     Capture(page.Title);
+}
+
+// Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Live.LiveViewModel) is { Page: Luxia.UI.Modules.Live.LiveViewModel live } livePage)
+{
+    vm.SelectedPage = livePage;
+    foreach (var name in new[] { "Plein feu", "Rouge – couleur seule", "Piège : lyre 1 vers le public", "Strobe PAR (plafonné à 10 s)" })
+    {
+        if (live.Columns.SelectMany(c => c.Scenes).FirstOrDefault(s => s.Name == name) is { } scene)
+        {
+            live.Press(scene);
+        }
+    }
+
+    Tick(40 * 11);
+    live.SelectQuickCommand.Execute(live.QuickSelections.FirstOrDefault(s => s.Label == "Toutes les lyres"));
+    live.ApplyPaletteCommand.Execute(live.Positions.FirstOrDefault());
+    live.ToggleFreezeCommand.Execute(null);
+    Tick();
+    Capture("Live - en jeu");
 }
 
 // Écran Scènes « en situation » : une scène choisie, les PAR sélectionnés au programmeur, puis une lyre.
