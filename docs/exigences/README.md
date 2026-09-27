@@ -216,7 +216,7 @@
 | [GEN-081](GEN-081.md) | Arrêt anormal de l'application : noir en 2 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-082](GEN-082.md) | Blackout accessible en permanence | P4 | I | Validé |
 | [GEN-083](GEN-083.md) | Strobe | P5 | I | Réalisé |
-| [GEN-084](GEN-084.md) | Fumée | P5 | I | Réalisé, à valider sur matériel |
+| [GEN-084](GEN-084.md) | Fumée | P5 | I | Validé |
 | [GEN-085](GEN-085.md) | Zones interdites Pan/Tilt par lieu et par lyre | P5 | I | Réalisé |
 | [GEN-086](GEN-086.md) | Un signal visuel permanent en Live indique toute limite de sûreté active ou tout verrou | P5 | M | Réalisé |
 | [GEN-090](GEN-090.md) | Latence action → trame < 50 ms | P1 | I | Réalisé |
