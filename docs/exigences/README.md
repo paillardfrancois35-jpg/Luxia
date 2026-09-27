@@ -282,7 +282,7 @@
 | [LIVE-002](LIVE-002.md) | Colonnes de couches | P5 | I | Réalisé |
 | [LIVE-003](LIVE-003.md) | Un clic sur une scène la lance | P5 | I | Validé |
 | [LIVE-004](LIVE-004.md) | Actions permanentes toujours visibles | P5 | I | Validé |
-| [LIVE-005](LIVE-005.md) | Palettes rapides | P5 | I | Réalisé |
+| [LIVE-005](LIVE-005.md) | Palettes rapides | P5 | I | Validé |
 | [LIVE-006](LIVE-006.md) | Disposition personnalisable | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-007](LIVE-007.md) | Mini-simulateur optionnel dans l'écran Live | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-008](LIVE-008.md) | Indication visible de toute limite de sûreté active et de tout verrou | P5 | I | Réalisé |

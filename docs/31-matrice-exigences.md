@@ -281,7 +281,7 @@
 
 ## P5 – 72 exigences, 50 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 29 · Réalisé, à valider sur matériel : 12 · Validé : 14
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 28 · Réalisé, à valider sur matériel : 12 · Validé : 15
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -322,7 +322,7 @@
 | [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
 | [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Validé | LiveCommandTests.LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick<br>LiveUvRepeatTests.FullOn_ThenTenClicksOnUv_EachClickTogglesTheUv<br>LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>(+2) |
 | [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Validé | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
-| [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Réalisé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
+| [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Validé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
 | [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Reporté (chantier ergonomie) |  |
 | [LIVE-007](exigences/LIVE-007.md) | M | Mini-simulateur optionnel dans l'écran Live | Reporté (chantier ergonomie) |  |
 | [LIVE-008](exigences/LIVE-008.md) | I | Indication visible de toute limite de sûreté active et de tout verrou | Réalisé | LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds |
