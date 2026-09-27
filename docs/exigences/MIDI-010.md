@@ -30,3 +30,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 5. Exigences). |
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
+| 2026-09-27 | Claude | Développement | Palette complète des 128 couleurs du protocole MK2 dans le profil ; seules les couleurs franches (composante maximale ≥ 0xC0) servent à approcher la couleur d'une scène, pour des pads toujours lumineux (ex. orange → #FF7F00 au lieu de #FF5400). |

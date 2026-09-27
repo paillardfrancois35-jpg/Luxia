@@ -151,8 +151,10 @@ public sealed class MidiController
             return 3;
         }
 
+        // Seules les couleurs franches de la palette : une teinte sombre ferait un pad à peine visible.
         var (r, g, b) = Normalized(color);
-        return palette.MinBy(p =>
+        var bright = palette.Where(p => Brightness(p.Color) >= 0xC0).ToList();
+        return (bright.Count > 0 ? bright : palette).MinBy(p =>
         {
             var (pr, pg, pb) = Normalized(p.Color);
             return ((pr - r) * (pr - r)) + ((pg - g) * (pg - g)) + ((pb - b) * (pb - b));
@@ -363,6 +365,11 @@ public sealed class MidiController
 
         return -1;
     }
+
+    private static int Brightness(string hex) =>
+        hex.Length == 7 && int.TryParse(hex.AsSpan(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var rgb)
+            ? Math.Max((rgb >> 16) & 0xFF, Math.Max((rgb >> 8) & 0xFF, rgb & 0xFF))
+            : 0;
 
     private static (double R, double G, double B) Normalized(string hex)
     {

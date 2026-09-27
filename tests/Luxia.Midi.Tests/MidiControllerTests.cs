@@ -187,6 +187,7 @@ public sealed class MidiControllerTests
     public void NearestPalette_IgnoresBrightness()
     {
         MidiController.NearestPaletteIndex(Mk2.Pads.Palette, "#7F0000").ShouldBe(5);
-        MidiController.NearestPaletteIndex(Mk2.Pads.Palette, "#FFA500").ShouldBe(9);
+        MidiController.NearestPaletteIndex(Mk2.Pads.Palette, "#FFA500").ShouldBe(96, "orange #FF7F00 de la palette complète du protocole");
+        MidiController.NearestPaletteIndex(Mk2.Pads.Palette, "#FFFFFF").ShouldBe(3);
     }
 }

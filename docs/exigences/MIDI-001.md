@@ -6,7 +6,7 @@
 | **Priorité** | I |
 | **Phase** | P5 |
 | **Source** | [doc 18 – 5. Exigences](../18b-controleurs-midi.md) |
-| **Remarque** | Reconnaissance par le nom du port MIDI (« APC MINI », « APC mini mk2 », port secondaire MIDIIN2 écarté), profils en fichiers de données. Numéros de notes et de LED pris dans les protocoles publiés par AKAI, les notices du dépôt ne les donnant pas (écart) : à confirmer avec `luxia-headless midi`. |
+| **Remarque** | Reconnaissance par le nom du port MIDI (« APC MINI », « APC mini mk2 », port secondaire MIDIIN2 écarté), profils en fichiers de données. MK2 : numéros **confirmés** par le protocole officiel d'AKAI (déposé le 2026-09-27). MK1 : numéros encore issus du protocole connu, à confirmer avec `luxia-headless midi` si le MK1 est branché un jour. |
 | **Liens** | GEN-072, Q31, D30 |
 
 ## Description
@@ -36,3 +36,5 @@
 | 2026-09-27 | Claude | Développement | `2f9a30e` feat(midi): APC mini MK1 et MK2 |
 | 2026-09-27 | Utilisateur | Note | Notice « APC mini mk2 – User Guide v1.7 » déposée (après un premier dépôt par erreur du guide de l'APC40 mkII, autre appareil). |
 | 2026-09-27 | Claude | Note | La notice confirme la disposition (bas = Clip Stop, droite = Scene Launch, Shift, 9 faders, port 2 réservé aux notes — écarté) mais ne donne toujours pas les numéros de notes ni les codes des LED, publiés dans un document séparé d'AKAI (« APC mini mk2 Communication Protocol »). Vérification sur l'appareil avec `luxia-headless midi` maintenue. |
+| 2026-09-27 | Utilisateur | Note | « APC mini mk2 - Communication Protocol - v1.0.pdf » déposé dans docs/Equipements/AKAI/Mini MK2. |
+| 2026-09-27 | Claude | Test | Profil MK2 comparé au protocole : grille 0x00-0x3F (0x00 en bas à gauche), bas 0x64-0x6B (LED rouges), droite 0x70-0x77 (LED vertes), Shift 0x7A, faders CC 0x30-0x38, canaux des LED (luminosité / pulsation / clignotement), LED des boutons 0/1/2, 16 couleurs de palette : **tout concorde**, aucune correction. Écart du doc 18b levé pour le MK2. |
