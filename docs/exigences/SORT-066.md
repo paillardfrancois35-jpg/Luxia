@@ -36,3 +36,4 @@
 | 2026-09-27 | Claude | Création | Exigence SORT-066 ajoutée au doc 10 (demande en session, doc 03 §10). |
 | 2026-09-27 | Claude | Développement | Journal `.journal.txt` à côté du `.dmxrec` : IHM (clics, choix, appuis Live), MOTEUR (commandes traitées, noms en clair, refus), DMX (canaux qui changent, avant→après). Clics tracés globalement depuis la fenêtre principale, sans code propre à chaque écran ; actions IHM aussi au journal technique. |
 | 2026-09-27 | Claude | Test | Test automatique vert (497 tests) : appui « UV plein » → commande → 162:0→255 dans la même trame ; second appui → 162:255→0. |
+| 2026-09-27 | Claude | Test | Premier usage réel (trames-20260927-154852) : le journal montre `SmokeCommand Pressed = True` à 15:48:55.259 et 180:0→255 dans la même milliseconde, puis relâche et 180:255→0 à 15:49:01.481 (6,2 s). Manque constaté : l'appui sur le bouton FUMÉE (maintenu, pas un clic) n'avait pas de ligne IHM ; ajoutée (« FUMÉE appuyé / relâché »). |

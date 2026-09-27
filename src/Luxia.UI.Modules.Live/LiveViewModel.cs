@@ -224,6 +224,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     /// <summary>FUMÉE maintenue (LIVE-004, touche Z) : toujours bornée par le limiteur (GEN-084).</summary>
     public void Smoke(bool pressed)
     {
+        _runtime.TraceUi("Live", pressed ? "FUMÉE appuyé" : "FUMÉE relâché");
         if (!HasSmoke)
         {
             Message = pressed ? "Aucune machine à fumée dans le patch." : Message;
