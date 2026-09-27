@@ -79,6 +79,7 @@ public sealed class RenderEngine : ICommandSink
     private bool _publishedBlackout;
     private bool _publishedFrozen;
     private bool _publishedSmoking;
+    private double _publishedSmokeRest;
     private double _publishedGrandMaster = 1;
     private double[] _publishedValues = [];
     private ParameterSource[] _publishedSources = [];
@@ -1108,6 +1109,7 @@ public sealed class RenderEngine : ICommandSink
             _publishedBlackout = _blackout;
             _publishedFrozen = _frozenActive;
             _publishedSmoking = _safety.ManualSmoke;
+            _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
@@ -1152,6 +1154,7 @@ public sealed class RenderEngine : ICommandSink
             Blackout = _publishedBlackout,
             Frozen = _publishedFrozen,
             Smoking = _publishedSmoking,
+            SmokeRestSeconds = _publishedSmokeRest,
             GrandMaster = _publishedGrandMaster,
             ActiveLimits = _publishedLimits,
         };

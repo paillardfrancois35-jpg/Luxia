@@ -108,9 +108,15 @@ public sealed class LiveUvRepeatTests : IAsyncLifetime
         _vm.Smoke(true);
         Run(6 * 40);
         _vm.Smoke(false);
-        Run(31 * 40);
+        Run(10 * 40);
+        _vm.SmokeResting.ShouldBeTrue("décompte visible même si rien ne demande de fumée");
+        _vm.SmokeBurstText.ShouldBe("Rafale (21 s)"); // 20,x s restantes, arrondies au-dessus
+        _vm.SmokeButtonText.ShouldBe("FUMÉE (Z) (21 s)");
+        Run(21 * 40);
         _host.Frame()[179].ShouldBe((byte)0);
 
+        _vm.SmokeResting.ShouldBeFalse();
+        _vm.SmokeBurstText.ShouldBe("Rafale");
         _vm.SmokeBurstCommand.Execute(null);
         var trace = new List<(int Tick, byte Value, bool Limited)>();
         for (var i = 0; i < 6 * 40; i++)

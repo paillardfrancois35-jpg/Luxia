@@ -34,6 +34,18 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
     private Guid? _flashScene;
     private Guid? _strobeScene;
 
+    /// <summary>Fumée en repos (boutons grisés, décompte).</summary>
+    [ObservableProperty]
+    private bool _smokeResting;
+
+    /// <summary>Texte du bouton FUMÉE, avec le décompte du repos.</summary>
+    [ObservableProperty]
+    private string _smokeButtonText = "FUMÉE (Z)";
+
+    /// <summary>Texte du bouton Rafale, avec le décompte du repos.</summary>
+    [ObservableProperty]
+    private string _smokeBurstText = "Rafale";
+
     [ObservableProperty]
     private bool _hasProject;
 
@@ -165,6 +177,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         Smoking = snapshot.Smoking;
         RefreshOutput();
         RefreshLimits(snapshot);
+        RefreshSmoke(snapshot);
         DrainJournal();
         if (ShowCommands)
         {
@@ -513,6 +526,19 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
             OutputConnectionState.Error => $"⚠ SORTIE EN ERREUR ({main.Driver.Name}) : reconnexion automatique",
             _ => $"⚠ SORTIE DÉCONNECTÉE ({main.Driver.Name}) : rebranchez, reconnexion automatique",
         };
+    }
+
+    /// <summary>
+    /// Décompte du repos de fumée sur les boutons FUMÉE et Rafale (essai P5) : sans lui, rien ne dit quand la fumée
+    /// redevient disponible, la pastille ne s'allumant que si la sûreté bloque réellement une demande.
+    /// </summary>
+    private void RefreshSmoke(EngineSnapshot snapshot)
+    {
+        var rest = snapshot.SmokeRestSeconds;
+        SmokeResting = rest > 0;
+        var left = SmokeResting ? string.Create(CultureInfo.CurrentCulture, $" ({Math.Ceiling(rest):0} s)") : string.Empty;
+        SmokeButtonText = "FUMÉE (Z)" + left;
+        SmokeBurstText = "Rafale" + left;
     }
 
     private void RefreshLimits(EngineSnapshot snapshot)

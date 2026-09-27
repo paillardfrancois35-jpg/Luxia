@@ -30,6 +30,24 @@ internal sealed class SafetyLimiter
     /// <summary>Fumée manuelle en cours (maintien ou rafale, CMD-030).</summary>
     public bool ManualSmoke => _smokeHeld || _smokeBurst > 0;
 
+    /// <summary>
+    /// Repos de fumée restant, en secondes (le plus long des canaux de fumée), même si rien ne demande de fumée :
+    /// l'écran Live en affiche le décompte sur ses boutons (MOT-081, essai P5).
+    /// </summary>
+    public double SmokeRestRemaining
+    {
+        get
+        {
+            var max = 0.0;
+            foreach (var smoke in _smoke)
+            {
+                max = Math.Max(max, smoke.RestRemaining);
+            }
+
+            return max;
+        }
+    }
+
     /// <summary>Commande de fumée manuelle (CMD-030) : maintien tant que <paramref name="pressed"/>, ou rafale.</summary>
     public void SetManualSmoke(bool pressed, double? burstSeconds, double level)
     {

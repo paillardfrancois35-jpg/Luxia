@@ -35,6 +35,9 @@ public sealed record EngineSnapshot
     /// <summary>Fumée manuelle en cours (maintien ou rafale, CMD-030).</summary>
     public bool Smoking { get; init; }
 
+    /// <summary>Repos de fumée restant en secondes (0 = fumée disponible), MOT-081.</summary>
+    public double SmokeRestSeconds { get; init; }
+
     /// <summary>Grand Master (0 à 1).</summary>
     public double GrandMaster { get; init; } = 1;
 

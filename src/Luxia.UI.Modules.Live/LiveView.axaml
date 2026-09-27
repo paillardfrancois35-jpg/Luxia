@@ -141,13 +141,15 @@
                 ToolTip.Tip="Maintenir : strobe général (touche S), borné par la sûreté. Scène : « Strobe… » d'une couche Flash, ou strobeSceneId de live.json">
           <TextBlock Text="STROBE  (S)" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
-        <Grid ColumnDefinitions="*,6,70">
+        <Grid ColumnDefinitions="*,6,96">
           <Border Grid.Column="0" Classes="pad" Height="54" Background="#2D333B"
                   PointerPressed="OnSmokePressed" PointerReleased="OnSmokeReleased" PointerCaptureLost="OnSmokeLost"
                   ToolTip.Tip="Maintenir : fumée (touche Z), bornée par la sûreté">
-            <TextBlock Text="FUMÉE (Z)" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding SmokeButtonText}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Opacity="{Binding SmokeResting, Converter={x:Static vm:LiveView.RestOpacity}}" />
           </Border>
-          <Button Grid.Column="2" Content="Rafale" Height="54" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+          <Button Grid.Column="2" Content="{Binding SmokeBurstText}" Height="54"
+                  Opacity="{Binding SmokeResting, Converter={x:Static vm:LiveView.RestOpacity}}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
                   VerticalContentAlignment="Center" Command="{Binding SmokeBurstCommand}" ToolTip.Tip="Rafale de fumée (durée : live.json)" />
         </Grid>
         <ToggleButton IsChecked="{Binding Frozen, Mode=OneWay}" Command="{Binding ToggleFreezeCommand}" Height="44"

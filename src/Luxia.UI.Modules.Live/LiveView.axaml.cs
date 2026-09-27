@@ -25,6 +25,9 @@ public partial class LiveView : UserControl
     public static readonly IValueConverter WarningBackground =
         new FuncValueConverter<bool, IBrush>(warning => new SolidColorBrush(Color.Parse(warning ? "#9E6A03" : "#161B22")));
 
+    /// <summary>Boutons de fumée estompés pendant le repos (MOT-081).</summary>
+    public static readonly IValueConverter RestOpacity = new FuncValueConverter<bool, double>(resting => resting ? 0.45 : 1);
+
     /// <summary>Crée la vue.</summary>
     public LiveView()
     {
