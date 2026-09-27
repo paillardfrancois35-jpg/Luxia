@@ -37,9 +37,16 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         _dialogs = dialogs;
         runtime.Project.Changed += (_, _) => Rebuild();
         runtime.Project.ShowDataChanged += (_, _) => Rebuild();
-        session.Changed += (_, _) => MarkEditTarget();
+        session.Changed += (_, _) =>
+        {
+            MarkEditTarget();
+            OnPropertyChanged(nameof(CanEdit));
+        };
         Rebuild();
     }
+
+    /// <summary>L'édition des scènes est permise (pas de verrou soirée).</summary>
+    public bool CanEdit => !_session.IsLocked;
 
     /// <summary>Colonnes de couches.</summary>
     public ObservableCollection<ControlColumnViewModel> Columns { get; } = [];

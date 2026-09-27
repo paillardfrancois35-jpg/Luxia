@@ -67,6 +67,13 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _recording;
 
+    /// <summary>Tailles d'interface proposées (F8).</summary>
+    public static IReadOnlyList<double> UiScales { get; } = [1, 1.25, 1.5];
+
+    /// <summary>Taille de l'interface (1 = 100 %), lue dans les préférences du poste (F8, ERG-022).</summary>
+    [ObservableProperty]
+    private double _uiScale = 1;
+
     /// <summary>Crée la coquille.</summary>
     public MainWindowViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -90,6 +97,18 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         runtime.Show.Compiled += (_, _) => UpdateProject();
         UpdateProject();
         RefreshStatus();
+        _uiScale = Math.Clamp(runtime.Preferences.Current.UiScale, 0.75, 2);
+    }
+
+    /// <summary>Change la taille de l'interface (paramètre : 1, 1.25, 1.5) et la garde dans les préférences du poste.</summary>
+    [RelayCommand]
+    private void SetUiScale(string? scale)
+    {
+        if (double.TryParse(scale, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            UiScale = Math.Clamp(value, 0.75, 2);
+            _runtime.Preferences.Update(p => p with { UiScale = UiScale });
+        }
     }
 
     /// <summary>Écrans de l'Atelier.</summary>

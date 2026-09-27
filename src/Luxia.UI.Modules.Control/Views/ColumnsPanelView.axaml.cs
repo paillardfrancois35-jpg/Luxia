@@ -59,7 +59,7 @@ public partial class ColumnsPanelView : UserControl
             return;
         }
 
-        var colors = new MenuItem { Header = "Couleur" };
+        var colors = new MenuItem { Header = "Couleur", IsEnabled = vm.CanEdit };
         foreach (var color in ColumnsPanelViewModel.SceneColors)
         {
             colors.Items.Add(new MenuItem
@@ -71,7 +71,7 @@ public partial class ColumnsPanelView : UserControl
             });
         }
 
-        var layers = new MenuItem { Header = "Couche" };
+        var layers = new MenuItem { Header = "Couche", IsEnabled = vm.CanEdit };
         foreach (var layer in vm.Layers)
         {
             layers.Items.Add(new MenuItem
@@ -87,13 +87,13 @@ public partial class ColumnsPanelView : UserControl
             Items =
             {
                 new MenuItem { Header = "✎ Éditer cette scène", Command = vm.ChooseForEditCommand, CommandParameter = scene },
-                new MenuItem { Header = "Renommer…", Command = vm.RenameCommand, CommandParameter = scene },
-                new MenuItem { Header = "Dupliquer", Command = vm.DuplicateCommand, CommandParameter = scene },
+                new MenuItem { Header = "Renommer…", Command = vm.RenameCommand, CommandParameter = scene, IsEnabled = vm.CanEdit },
+                new MenuItem { Header = "Dupliquer", Command = vm.DuplicateCommand, CommandParameter = scene, IsEnabled = vm.CanEdit },
                 colors,
                 layers,
                 new MenuItem { Header = scene.HiddenInLive ? "Montrer dans le Live" : "Masquer du Live", Command = vm.ToggleVisibleInLiveCommand, CommandParameter = scene },
                 new Separator(),
-                new MenuItem { Header = "Supprimer…", Foreground = new SolidColorBrush(Color.Parse("#F85149")), Command = vm.DeleteCommand, CommandParameter = scene },
+                new MenuItem { Header = "Supprimer…", IsEnabled = vm.CanEdit, Foreground = new SolidColorBrush(Color.Parse("#F85149")), Command = vm.DeleteCommand, CommandParameter = scene },
             },
         };
         menu.Open(control);

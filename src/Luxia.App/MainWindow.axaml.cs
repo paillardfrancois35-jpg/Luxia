@@ -14,10 +14,29 @@ public partial class MainWindow : Window
 {
     private readonly DispatcherTimer _refresh = new() { Interval = TimeSpan.FromMilliseconds(50) };
 
+    private void ApplyScale(double scale) =>
+        this.FindControl<LayoutTransformControl>("Scaled")!.LayoutTransform = new Avalonia.Media.ScaleTransform(scale, scale);
+
     /// <summary>Crée la fenêtre.</summary>
     public MainWindow()
     {
         InitializeComponent();
+
+        // F8 : taille de l'interface, appliquée à tout le contenu sous le menu.
+        DataContextChanged += (_, _) =>
+        {
+            if (DataContext is MainWindowViewModel vm)
+            {
+                ApplyScale(vm.UiScale);
+                vm.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == nameof(MainWindowViewModel.UiScale))
+                    {
+                        ApplyScale(vm.UiScale);
+                    }
+                };
+            }
+        };
 
         // L'interface lit l'état du moteur à son propre rythme (doc 02 §6.1), jamais l'inverse.
         _refresh.Tick += (_, _) => (DataContext as MainWindowViewModel)?.Refresh();

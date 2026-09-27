@@ -93,6 +93,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         Load();
     }
 
+    /// <summary>Les champs sont modifiables (pas de verrou soirée).</summary>
+    public bool IsEditable => !_session.IsLocked;
+
     /// <summary>Couches proposées.</summary>
     public ObservableCollection<Choice<Guid>> Layers { get; } = [];
 
@@ -274,6 +277,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             var scene = _session.EditScene;
             HasScene = scene is not null;
             Accent = _session.Mode == EditMode.Live ? ControlColors.Accent : ControlColors.Of(_session.Mode);
+            OnPropertyChanged(nameof(IsEditable));
             if (scene is null)
             {
                 Steps = [];

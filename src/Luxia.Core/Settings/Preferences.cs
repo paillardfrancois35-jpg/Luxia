@@ -18,6 +18,11 @@ public sealed record Preferences
     /// <summary>Dernier projet ouvert.</summary>
     public string? LastProjectPath { get; init; }
 
+    /// <summary>
+    /// Taille de l'interface (F8, ERG-022) : 1 = 100 %, 1,25, 1,5 (écran tactile, lecture de loin). Propre au poste.
+    /// </summary>
+    public double UiScale { get; init; } = 1;
+
     /// <summary>Sorties.</summary>
     public OutputPreferences Outputs { get; init; } = new();
 

@@ -35,6 +35,8 @@
     <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,6">
       <DockPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+          <ToggleButton Content="🔒 Verrou soirée" IsChecked="{Binding IsLocked, Mode=OneWay}" Command="{Binding ToggleLockCommand}" Margin="0,0,10,0"
+                        ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'édition des scènes et des zones est bloquée (anti-fausse manipulation)." />
           <Button Content="↶" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />
           <Button Content="↷" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding RedoText}" Command="{Binding RedoCommand}" />
           <Button x:Name="PanelsButton" Content="Panneaux ▾" Margin="10,0,0,0" ToolTip.Tip="Réafficher un panneau fermé, ou le mettre au premier plan">

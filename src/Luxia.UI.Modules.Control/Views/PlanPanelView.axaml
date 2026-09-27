@@ -6,27 +6,30 @@
              x:DataType="vm:PlanPanelViewModel">
   <DockPanel Margin="8,32,8,6">
     <!-- Sélections rapides (automatiques et enregistrées), puis ½ ⅓ ¼, inverser, aucun -->
-    <WrapPanel DockPanel.Dock="Top" Margin="0,0,30,4">
+    <!-- Une seule ligne qui défile : le plan garde la place (retour de capture à 125 %). -->
+    <ScrollViewer DockPanel.Dock="Top" Margin="0,0,30,4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+    <StackPanel Orientation="Horizontal">
       <ItemsControl ItemsSource="{Binding QuickSelections}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
-            <WrapPanel />
+            <StackPanel Orientation="Horizontal" />
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="vm:QuickSelection">
-            <Button Content="{Binding Label}" FontSize="12" Padding="8,3" Margin="0,0,4,4" BorderBrush="{Binding Color}" BorderThickness="0,0,0,2"
+            <Button Content="{Binding Label}" FontSize="11" Padding="6,2" Margin="0,0,3,4" BorderBrush="{Binding Color}" BorderThickness="0,0,0,2"
                     ToolTip.Tip="Sélectionner ces appareils"
                     Command="{Binding $parent[UserControl].((vm:PlanPanelViewModel)DataContext).QuickCommand}" CommandParameter="{Binding}" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-      <Button Content="½" FontSize="12" Padding="8,3" Margin="0,0,4,4" Command="{Binding EveryCommand}" CommandParameter="2" ToolTip.Tip="Garder un appareil sur deux de la sélection" />
-      <Button Content="⅓" FontSize="12" Padding="8,3" Margin="0,0,4,4" Command="{Binding EveryCommand}" CommandParameter="3" ToolTip.Tip="Garder un appareil sur trois" />
-      <Button Content="¼" FontSize="12" Padding="8,3" Margin="0,0,4,4" Command="{Binding EveryCommand}" CommandParameter="4" ToolTip.Tip="Garder un appareil sur quatre" />
-      <Button Content="Inverser" FontSize="12" Padding="8,3" Margin="0,0,4,4" Command="{Binding InvertCommand}" />
-      <Button Content="Aucun" FontSize="12" Padding="8,3" Margin="0,0,4,4" Command="{Binding SelectNoneCommand}" />
-    </WrapPanel>
+      <Button Content="½" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="2" ToolTip.Tip="Garder un appareil sur deux de la sélection" />
+      <Button Content="⅓" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="3" ToolTip.Tip="Garder un appareil sur trois" />
+      <Button Content="¼" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="4" ToolTip.Tip="Garder un appareil sur quatre" />
+      <Button Content="Inverser" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding InvertCommand}" />
+      <Button Content="Aucun" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding SelectNoneCommand}" />
+    </StackPanel>
+    </ScrollViewer>
     <TextBlock DockPanel.Dock="Bottom" Text="{Binding Summary}" FontSize="11" Foreground="#8B949E" TextTrimming="CharacterEllipsis" Margin="0,4,0,0" />
     <Border DockPanel.Dock="Top" Background="#79C0FF" CornerRadius="4" Padding="8,2" HorizontalAlignment="Left" IsVisible="{Binding IsPreview}" Margin="0,0,0,4">
       <TextBlock Text="{Binding Source}" Foreground="#0D1117" FontWeight="SemiBold" FontSize="12" />

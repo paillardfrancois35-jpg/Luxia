@@ -146,4 +146,31 @@ public sealed class PreferencesAndProjectTests : IDisposable
     }
 
     public void Dispose() => _temp.Dispose();
+
+    [Fact]
+    [Trait("Exigence", "ERG-022")]
+    public void UiScale_DefaultsTo100Percent_AndRoundTrips()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "luxia-echelle", Guid.NewGuid().ToString("N"));
+        try
+        {
+            var path = Path.Combine(root, "preferences.json");
+            var store = new PreferencesStore(path);
+            store.Load();
+            store.Current.UiScale.ShouldBe(1);
+
+            store.Update(p => p with { UiScale = 1.25 });
+            var again = new PreferencesStore(path);
+            again.Load();
+
+            again.Current.UiScale.ShouldBe(1.25);
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+            {
+                Directory.Delete(root, recursive: true);
+            }
+        }
+    }
 }

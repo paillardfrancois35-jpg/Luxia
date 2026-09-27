@@ -48,6 +48,9 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
     [ObservableProperty]
     private bool _hasProject;
 
+    [ObservableProperty]
+    private bool _isLocked;
+
     /// <summary>Crée l'écran.</summary>
     public ControlViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -150,6 +153,17 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         OnPropertyChanged(nameof(IsBlind));
     }
 
+    /// <summary>Verrou soirée (E7, §4.6) : jouer seulement ; l'édition des scènes et des zones est bloquée.</summary>
+    [RelayCommand]
+    private void ToggleLock()
+    {
+        Settings.IsZoneEditing = false;
+        Session.SetLocked(!Session.IsLocked);
+        Message = null;
+        Journal.Log(Session.IsLocked ? "🔒 Verrou soirée posé : jouer seulement" : "🔓 Verrou soirée levé");
+        _runtime.TraceUi("Contrôle", Session.IsLocked ? "verrou posé" : "verrou levé");
+    }
+
     /// <summary>Action du bandeau : « Libérer tout » (LIVE), « Revenir en LIVE », « Terminer les zones ».</summary>
     [RelayCommand]
     private void ModeAction()
@@ -244,6 +258,12 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
                         : $"Vos réglages sont des surcharges temporaires par-dessus les scènes : rien n'est enregistré. En cours : {count} appareil(s).";
                     break;
             }
+        }
+
+        IsLocked = Session.IsLocked;
+        if (IsLocked && Session.Mode == EditMode.Live && !Settings.IsZoneEditing)
+        {
+            ModeText = "🔒 Verrou soirée : on joue et on retouche en direct ; l'édition des scènes et des zones est bloquée. " + ModeText;
         }
 
         HasModeAction = Settings.IsZoneEditing || Session.Mode != EditMode.Live || Session.LiveFixtureCount > 0;

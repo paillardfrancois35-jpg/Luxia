@@ -85,7 +85,7 @@
                 </ItemsControl.ItemTemplate>
               </ItemsControl>
 
-              <Button Content="+ scène" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="#8B949E"
+              <Button Content="+ scène" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
                       ToolTip.Tip="Nouvelle scène dans cette couche, choisie aussitôt pour l'édition"
                       Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
             </StackPanel>

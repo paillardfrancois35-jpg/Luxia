@@ -134,12 +134,19 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
         _dialogs = dialogs;
         runtime.Show.Compiled += (_, _) => _signature = string.Empty;
         runtime.Project.Changed += (_, _) => IsZoneEditing = false;
-        session.Changed += (_, _) => UpdateHeader();
+        session.Changed += (_, _) =>
+        {
+            UpdateHeader();
+            OnPropertyChanged(nameof(CanEditZones));
+        };
         UpdateHeader();
     }
 
     /// <summary>Levé quand l'édition des zones commence ou finit (le bandeau passe en « ZONES », C4).</summary>
     public event EventHandler? ZoneEditingChanged;
+
+    /// <summary>Les zones sont modifiables (pas de verrou soirée).</summary>
+    public bool CanEditZones => !_session.IsLocked;
 
     /// <summary>Palettes d'intensité du projet.</summary>
     public ObservableCollection<Palette> IntensityPalettes { get; } = [];

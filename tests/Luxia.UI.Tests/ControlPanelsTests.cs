@@ -438,6 +438,49 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         _vm.Journal.Lines.ShouldContain(l => l.Contains("▶ Plein feu"));
     }
 
+    // ——— Verrou soirée ———
+
+    [Fact]
+    [Trait("Exigence", "ERG-021")]
+    public async Task Lock_PlayAndLiveStillWork_EditingIsRefused()
+    {
+        _vm.Session.ChooseScene(Scene("Chenillard 4 couleurs").Id);
+        _vm.SetModeCommand.Execute("edition");
+
+        _vm.ToggleLockCommand.Execute(null);
+
+        _vm.IsLocked.ShouldBeTrue();
+        _vm.Session.Mode.ShouldBe(EditMode.Live, "le verrou ramène en LIVE");
+        _vm.SetModeCommand.Execute("edition");
+        _vm.Session.Mode.ShouldBe(EditMode.Live);
+        _vm.Message.ShouldBe(ControlSession.LockedReason);
+        _vm.Columns.CanEdit.ShouldBeFalse();
+        _vm.Properties.IsEditable.ShouldBeFalse();
+        _vm.Settings.CanEditZones.ShouldBeFalse();
+        _vm.ModeText.ShouldContain("Verrou soirée");
+
+        // Jouer et retoucher en direct restent possibles.
+        _vm.Columns.Press(Button("Plein feu"));
+        Select("PAR 1");
+        _vm.Settings.RequestColor(new LightColor(0, 1, 1));
+        Ticks(3);
+        _host.Runtime.Engine.Snapshot.Playbacks.ShouldContain(p => p.SceneId == Scene("Plein feu").Id);
+        _vm.Session.LiveValues.ShouldNotBeEmpty();
+
+        // Modifier une scène ou le projet est refusé.
+        var count = _host.Runtime.Project.Scenes.Scenes.Count;
+        _host.Dialogs.TextAnswers.Enqueue("Interdit");
+        await _vm.Columns.NewSceneCommand.ExecuteAsync(_vm.Columns.Columns[0]);
+        _vm.Columns.DuplicateCommand.Execute(Button("Plein feu"));
+        _vm.Properties.Name = "Renommée malgré le verrou";
+        _host.Runtime.Project.Scenes.Scenes.Count.ShouldBe(count);
+        _host.Runtime.Project.Scenes.Scenes.ShouldNotContain(s => s.Name == "Renommée malgré le verrou");
+
+        _vm.ToggleLockCommand.Execute(null);
+        _vm.IsLocked.ShouldBeFalse();
+        _vm.Columns.CanEdit.ShouldBeTrue();
+    }
+
     private ControlSceneViewModel Button(string name) => _vm.Columns.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == name);
 
     private Scene Scene(string name) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == name);

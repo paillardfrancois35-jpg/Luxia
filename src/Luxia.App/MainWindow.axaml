@@ -32,11 +32,20 @@
         <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
         <MenuItem Header="_Versions du projet…" Command="{Binding ShowVersionsCommand}" />
       </MenuItem>
+      <MenuItem Header="Aff_ichage">
+        <MenuItem Header="Taille de l'interface : 100 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1" />
+        <MenuItem Header="Taille de l'interface : 125 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.25" />
+        <MenuItem Header="Taille de l'interface : 150 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.5"
+                  ToolTip.Tip="Écran tactile ou lecture de loin (F8). Gardé pour ce poste." />
+      </MenuItem>
       <MenuItem Header="_Aide">
         <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
       </MenuItem>
     </Menu>
 
+    <!-- F8 : taille de l'interface (préférence du poste). -->
+    <LayoutTransformControl x:Name="Scaled">
+    <DockPanel>
     <!-- Restitution toujours accessible : blackout (GEN-082, touche B) et Grand Master (CMD-002) -->
     <Border DockPanel.Dock="Top" Background="#0D1117" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="12,6">
       <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
@@ -115,5 +124,7 @@
         </DataTemplate>
       </ContentControl.DataTemplates>
     </ContentControl>
+    </DockPanel>
+    </LayoutTransformControl>
   </DockPanel>
 </Window>

@@ -126,7 +126,7 @@
               <TextBlock Text="{Binding PositionText}" FontSize="12" TextWrapping="Wrap" />
             </StackPanel>
             <TextBlock Classes="hint" Text="Clic : la sélection vient sous le curseur (plusieurs lyres gardent leurs écarts) · Maj + glisser : fin · molette : Tilt (Maj : Pan, Ctrl : ×10)." />
-            <ToggleButton Content="Éditer les zones du lieu" IsChecked="{Binding IsZoneEditing}" Margin="0,8,0,0"
+            <ToggleButton Content="Éditer les zones du lieu" IsChecked="{Binding IsZoneEditing}" Margin="0,8,0,0" IsEnabled="{Binding CanEditZones}"
                           ToolTip.Tip="Zones interdites (le faisceau n'y va jamais) et zone permise (limites de la lyre) : elles valent pour toutes les scènes" />
             <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsZoneEditing}">
               <RadioButton Content="interdite" GroupName="zone" IsChecked="{Binding !NewZoneAllowed}" />

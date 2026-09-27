@@ -126,6 +126,11 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewM
     Capture("Contrôle - zones");
     control.Settings.IsZoneEditing = false;
     control.Flush();
+
+    // F8 : la même chose à 125 %.
+    vm.SetUiScaleCommand.Execute("1.25");
+    Capture("Contrôle - taille 125 %");
+    vm.SetUiScaleCommand.Execute("1");
 }
 
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.

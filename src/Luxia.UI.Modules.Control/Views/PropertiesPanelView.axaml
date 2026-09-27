@@ -25,7 +25,7 @@
   <Panel Margin="10,32,10,8">
     <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,8" />
     <ScrollViewer IsVisible="{Binding HasScene}">
-      <StackPanel>
+      <StackPanel IsEnabled="{Binding IsEditable}">
         <!-- Identité -->
         <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
           <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" Margin="0,0,8,0" />

@@ -52,6 +52,15 @@ public sealed class ControlSession
     /// <summary>Mode d'édition courant.</summary>
     public EditMode Mode { get; private set; }
 
+    /// <summary>
+    /// Verrou soirée (doc 60 §4.6, E7) : on ne fait plus que jouer et retoucher en LIVE ; ÉDITION, AVEUGLE et toute
+    /// modification des scènes ou des zones sont refusées.
+    /// </summary>
+    public bool IsLocked { get; private set; }
+
+    /// <summary>Raison donnée quand le verrou refuse une action.</summary>
+    public const string LockedReason = "Verrou soirée : l'édition est bloquée (on joue seulement). Déverrouillez pour modifier.";
+
     /// <summary>Appareils sélectionnés (identifiants du patch), dans l'ordre de sélection.</summary>
     public IReadOnlyList<Guid> Selection => _selection;
 
@@ -100,6 +109,11 @@ public sealed class ControlSession
     /// </summary>
     public string? SetMode(EditMode mode)
     {
+        if (mode != EditMode.Live && IsLocked)
+        {
+            return LockedReason;
+        }
+
         if (mode != EditMode.Live && _working is null)
         {
             return "Choisissez d'abord la scène à éditer : bande ✎ à droite d'un bouton de scène.";
@@ -109,6 +123,24 @@ public sealed class ControlSession
         Mode = mode;
         Push();
         return null;
+    }
+
+    /// <summary>Pose ou lève le verrou soirée ; le poser écrit le geste en cours et revient en LIVE.</summary>
+    public void SetLocked(bool locked)
+    {
+        if (locked == IsLocked)
+        {
+            return;
+        }
+
+        Commit();
+        IsLocked = locked;
+        if (locked)
+        {
+            Mode = EditMode.Live;
+        }
+
+        Push();
     }
 
     /// <summary>Remplace la sélection d'appareils (plan, sélections rapides).</summary>
@@ -234,7 +266,7 @@ public sealed class ControlSession
     public void UpdateScene(Func<Scene, Scene> change, string description, int? step = null)
     {
         ArgumentNullException.ThrowIfNull(change);
-        if (_working is not { } scene)
+        if (_working is not { } scene || Refused())
         {
             return;
         }
@@ -252,6 +284,11 @@ public sealed class ControlSession
     public void ChangeScenes(Func<SceneSet, SceneSet> change, string description)
     {
         ArgumentNullException.ThrowIfNull(change);
+        if (Refused())
+        {
+            return;
+        }
+
         Commit();
         var before = Snapshot();
         if (Save(change(_runtime.Project.Scenes), null))
@@ -267,6 +304,11 @@ public sealed class ControlSession
     public void EditVenues(Func<VenueSet, VenueSet> change, string description)
     {
         ArgumentNullException.ThrowIfNull(change);
+        if (Refused())
+        {
+            return;
+        }
+
         BeginGesture(description);
         _workingVenues = change(Venues);
         Notify();
@@ -297,6 +339,11 @@ public sealed class ControlSession
     /// <summary>Annule le dernier geste (Ctrl+Z).</summary>
     public void Undo()
     {
+        if (Refused())
+        {
+            return;
+        }
+
         if (HasPendingCommit)
         {
             Commit();
@@ -311,7 +358,7 @@ public sealed class ControlSession
     /// <summary>Rétablit le dernier geste annulé (Ctrl+Y).</summary>
     public void Redo()
     {
-        if (!HasPendingCommit && _history.Redo(Snapshot()) is { } next)
+        if (!Refused() && !HasPendingCommit && _history.Redo(Snapshot()) is { } next)
         {
             Restore(next);
         }
@@ -377,6 +424,18 @@ public sealed class ControlSession
         }
 
         _pushed.Clear();
+    }
+
+    private bool Refused()
+    {
+        if (!IsLocked)
+        {
+            return false;
+        }
+
+        Message = LockedReason;
+        Notify();
+        return true;
     }
 
     private void Reset()
