@@ -281,11 +281,11 @@
 
 ## P5 – 72 exigences, 49 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 32 · Réalisé, à valider sur matériel : 14 · Validé : 9
+> Partiel : 5 · Reporté (P6) : 1 · Reporté (chantier ergonomie) : 11 · Réalisé : 30 · Réalisé, à valider sur matériel : 14 · Validé : 11
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [BIB-101](exigences/BIB-101.md) | I | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | Réalisé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_ValueInNoStrobeRange_IsNeverCounted |
+| [BIB-101](exigences/BIB-101.md) | I | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | Validé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_ValueInNoStrobeRange_IsNeverCounted |
 | [CONS-061](exigences/CONS-061.md) | S | Une page de console peut être affectée aux faders d'un APC mini | Reporté (chantier ergonomie) |  |
 | [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Validé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
@@ -347,7 +347,7 @@
 | [MOT-042](exigences/MOT-042.md) | I | Le modèle de couches par défaut | Validé | DefaultContentTests.NewProject_HasFullOnScene_InIntensityLayer_LightingEveryFixture<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [MOT-072](exigences/MOT-072.md) | I | Flash | Validé | LiveCommandTests.Flash_OfALayerScene_DoesNotReplaceTheScenePlayingInThatLayer<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>ReferenceShowP5Tests.PartialBlackoutFlash_KeepsTheUv_ThenGivesBack |
 | [MOT-073](exigences/MOT-073.md) | I | Figer | Réalisé | LiveCommandTests.Freeze_KeepsOutput_WhilePlaybacksGoOn_BlackoutStillActive<br>LiveCommandTests.Freeze_WithSuspendedPlaybacks_StopsTheirProgress |
-| [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Réalisé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
+| [MOT-080](exigences/MOT-080.md) | I | Limiteur de strobe | Validé | ReferenceShowP5Tests.StrobeScene_IsCutAfterTenSeconds_ThenResumesAfterThePause<br>SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_Forbidden_ForcesRestImmediately<br>SafetyTests.Strobe_MaxSpeed_CapsTheProgressiveRange<br>(+3) |
 | [MOT-081](exigences/MOT-081.md) | I | Limiteur de fumée | Réalisé, à valider sur matériel | ReferenceShowP5Tests.LongSmoke_IsCutAtTenSeconds<br>SafetyCompilerTests.SmokeChannel_OfReferenceRig_IsChannel180<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Smoke_ShortPuff_StartsTheMinimalRest |
 | [MOT-082](exigences/MOT-082.md) | I | Zones interdites | Partiel | ReferenceShowP5Tests.Trap_LyreTowardsThePublic_StopsAtTheZoneEdge<br>SafetyCompilerTests.Zones_OfActiveVenue_TargetThePanTiltParameters<br>SafetyTests.NearestAllowed_WithOverlappingZones_AvoidsAllOfThem<br>SafetyTests.NearestAllowed_ZoneTouchingTheTiltLimit_NeverStopsOnThatLimit<br>(+2) |
 | [MOT-083](exigences/MOT-083.md) | I | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | Réalisé | SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain<br>SafetyTests.Zone_TargetInside_IsBroughtToTheNearestEdge |

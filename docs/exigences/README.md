@@ -122,7 +122,7 @@
 | [BIB-098](BIB-098.md) | Import : proposer d'écraser un modèle déjà présent | P3 | S | Réalisé |
 | [BIB-099](BIB-099.md) | Mode découverte : ergonomie de « Nouvelle plage ici » | P2 | M | Partiel |
 | [BIB-100](BIB-100.md) | Signaler visiblement une erreur de validation et amener sur l'onglet concerné | P2 | M | Réalisé |
-| [BIB-101](BIB-101.md) | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | P5 | I | Réalisé |
+| [BIB-101](BIB-101.md) | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | P5 | I | Validé |
 | [CMD-001](CMD-001.md) | Commande Blackout | P4 | — | Réalisé |
 | [CMD-002](CMD-002.md) | Commande RéglerGrandMaster | P4 | — | Réalisé |
 | [CMD-003](CMD-003.md) | Commande Figer | P5 | I | Réalisé |
@@ -334,7 +334,7 @@
 | [MOT-073](MOT-073.md) | Figer | P5 | I | Réalisé |
 | [MOT-074](MOT-074.md) | Surcharges conformes à la chaîne de rendu | P1 | I | Réalisé |
 | [MOT-075](MOT-075.md) | Identifier un appareil au-dessus de tout | P3 | I | Réalisé |
-| [MOT-080](MOT-080.md) | Limiteur de strobe | P5 | I | Réalisé |
+| [MOT-080](MOT-080.md) | Limiteur de strobe | P5 | I | Validé |
 | [MOT-081](MOT-081.md) | Limiteur de fumée | P5 | I | Réalisé, à valider sur matériel |
 | [MOT-082](MOT-082.md) | Zones interdites | P5 | I | Partiel |
 | [MOT-083](MOT-083.md) | Toute intervention d'un limiteur publie LimiteSécuritéAtteinte | P5 | I | Réalisé |
