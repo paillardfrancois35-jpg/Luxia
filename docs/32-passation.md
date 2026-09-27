@@ -70,7 +70,7 @@
   - SIM-007 (fenêtre détachable), SIM-008 (zones interdites/repères), SIM-010 (sélection reprise par le programmeur) → non réalisés, dépendent de P4/P5.
   - GEN-104 : indicateurs blackout (P4) et mode auto (P10) affichés « — ».
   - Non réalisés (priorité S) : CONS-044, GEN-058, GEN-108, BIB-027 (partiel), BIB-084, SIM-013, SORT-063, SORT-064.
-  - **Mesure de gigue de 15 min (D23)** : `dmx-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
+  - **Mesure de gigue de 15 min (D23)** : `luxia-headless gigue`, veille bloquée par l'application (GEN-096) ; **toujours à faire**, prévue avec l'utilisateur quand il aura le temps.
 - **Questions ouvertes** : [01-questions-ouvertes.md](01-questions-ouvertes.md) — seule **Q25** reste 🟡 (effet WZYBUTA : réglage
   20/64 canaux et vitesse du canal 2 ; l'utilisateur laisse l'IA choisir, préférence 64CH, qui oblige à réadresser UV et fumée :
   décision au rebranchement de l'effet). Q27 à Q32 tranchées le 2026-09-26.

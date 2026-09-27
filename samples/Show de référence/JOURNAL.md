@@ -174,3 +174,7 @@ de 95 à 85 %), strobe coupé à 10 s puis repris après 10 s, fumée coupée à
 | Élément | Statut | Retour |
 |---|---|---|
 | Guide P5, au simulateur puis sur le matériel | 🟡 en cours (2026-09-27) : exemples 1 et 2 | UV 1 raccordé à l'adresse 161 pendant l'essai |
+
+## Essai P5 (2026-09-27)
+
+Guide P5 validé au matériel. Corrections du parc : **BUV463 en 8 canaux** (8e canal « lissage du gradateur » non documenté, cause de l'« allumage lent »), UV 2 en **169** ; gros PAR = générique **WT05** 7 canaux. `sûreté.json` : `restFactor` 3 (repos de fumée proportionnel). Trames de référence P4 / P5 régénérées.

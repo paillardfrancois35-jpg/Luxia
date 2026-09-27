@@ -13,7 +13,7 @@
 | Solution | **`Dmx.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `Dmx.sln`. |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
-| Assemblage | Projet `Dmx.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
+| Assemblage | Projet `Luxia.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
 | Journal | `Microsoft.Extensions.Logging` en façade, **Serilog** pour les fichiers tournants (GEN-110) |
 | JSON | `System.Text.Json` uniquement |
 | Série | `System.IO.Ports` |
@@ -51,28 +51,28 @@ LuXia/
 ```
 
 - On ne crée **que les projets utiles à la phase en cours** (pas de coquilles vides).
-- Un projet = un module (doc 02 §5.2). Espace de noms racine = nom du projet (`Dmx.Output`) ; les dossiers suivent les espaces de noms.
+- Un projet = un module (doc 02 §5.2). Espace de noms racine = nom du projet (`Luxia.Output`) ; les dossiers suivent les espaces de noms.
 - Un type public par fichier, fichier nommé comme le type.
 
 ### 3.1 Règles de dépendance
 
 | Projet | Peut dépendre de |
 |---|---|
-| `Dmx.Core` | rien (BCL uniquement) |
-| `Dmx.Messaging` | Core |
-| `Dmx.Engine` | Core, Messaging — **jamais** d'un pilote concret, de l'UI, de l'audio |
-| `Dmx.Output` | Core, Messaging |
-| `Dmx.Persistence` | Core |
-| `Dmx.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
-| `Dmx.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
+| `Luxia.Core` | rien (BCL uniquement) |
+| `Luxia.Messaging` | Core |
+| `Luxia.Engine` | Core, Messaging — **jamais** d'un pilote concret, de l'UI, de l'audio |
+| `Luxia.Output` | Core, Messaging |
+| `Luxia.Persistence` | Core |
+| `Luxia.Fixtures` | Core, Persistence (modèles d'appareils, validation, imports) |
+| `Luxia.Patch` | Core, Persistence, Fixtures (installation, sélections, lieux, GEN-053) |
 | `Luxia.Scenes` | Core, Messaging, Engine, Persistence, Fixtures, Patch (scènes, palettes, couches ; compilation vers le moteur, D26) |
 | `Luxia.Midi` | Core, Messaging, Engine, Persistence (contrôleurs APC mini : profils, traduction en commandes, retour lumineux, ports Windows `winmm` ; ne connaît ni les couches ni les scènes du projet, l'hôte lui fournit la disposition du Live) |
-| `Dmx.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
-| `Dmx.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
-| `Dmx.UI.Modules.*` | un projet par écran ; tout sauf `Dmx.App` ; n'agit que par commandes (P3) |
-| `Dmx.App`, `tools/*` | tout (composition) |
+| `Luxia.Hosting` | tous les projets non graphiques (assemblage, journal technique) |
+| `Luxia.UI.Controls` | contrôles réutilisables (fader, moniteur, barre de plages, historique annuler / rétablir) ; aucune dépendance métier |
+| `Luxia.UI.Modules.*` | un projet par écran ; tout sauf `Luxia.App` ; n'agit que par commandes (P3) |
+| `Luxia.App`, `tools/*` | tout (composition) |
 
-Ces règles sont **vérifiées par un test d'architecture** (`Dmx.Architecture.Tests`), qui échoue en cas de violation.
+Ces règles sont **vérifiées par un test d'architecture** (`Luxia.Architecture.Tests`), qui échoue en cas de violation.
 
 ## 4. Style C#
 
@@ -108,7 +108,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
 | Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
 | Commandes | `dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
-| Intégration | `tests/Dmx.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
+| Intégration | `tests/Luxia.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
 
@@ -167,10 +167,14 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 - **Compiler pendant que LuXia tourne n'a rien livré.** L'application ouverte verrouille ses DLL : la compilation échoue à la copie et l'utilisateur continue de tester l'ancienne version sans le savoir. Règle : demander de fermer LuXia **avant** de compiler, vérifier « 0 Erreur(s) » et annoncer le numéro de compilation obtenu (GEN-119) ; l'utilisateur le retrouve dans la barre de titre. (Rencontré le 2026-09-26, essai P4.)
 
+- **Un écran (ou un contrôleur) qui décide d'après l'état relu du moteur a toujours un temps de retard.** L'interface relit l'instantané du moteur 20 fois par seconde, un contrôleur MIDI envoie des dizaines de messages par seconde : entre une commande et son traitement, l'état relu est **l'ancien**. Trois défauts de l'essai P5 en venaient : une bascule lancer / arrêter qui relançait la scène au lieu de l'arrêter (LIVE-003), un niveau affiché qui « sautait » 20 → 10 → 20 (LIVE-040), un fader MIDI lâché en descente rapide (MIDI-004). Règles : (1) une décision qui dépend de l'état (bascule, « si déjà actif ») est prise **par le moteur**, au traitement de la commande (ex. `LaunchSceneCommand.StopIfPlaying`) ; (2) une valeur réglée à l'écran est **gardée jusqu'à sa confirmation** par le moteur (`EngineEcho`, Luxia.UI.Controls) ; (3) un contrôleur compare l'état relu à **ses derniers envois**, pas au seul dernier (`SoftTakeover`). Un test doit reproduire la course (rafraîchissement **avant** le tick), sinon il passe à tort : en temps virtuel, le moteur a toujours un temps d'avance. (Rencontré le 2026-09-27, essai P5.)
+- **La notice d'un appareil peut être fausse ou incomplète.** Le BeamZ BUV463 réel a un **8e canal** (« lissage du gradateur », ≈ 15 s à 255) absent de sa notice (7 canaux) : patché en 7 canaux, il lisait le gradateur de l'appareil suivant comme ce canal, d'où un « allumage lent » qui a coûté une journée, pendant qu'on soupçonnait LuXia, le firmware puis la ligne. Règles : quand un appareil réagit de façon inexplicable alors que la trame est juste, (1) vérifier ce que reçoit la ligne (journal `.journal.txt` d'un enregistrement, écoute avec le DVC4 Daslight : `docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`), (2) regarder les **canaux voisins** au-delà du dernier canal documenté, (3) comparer avec un appareil témoin à la même adresse. (Rencontré le 2026-09-27, essai P5.)
+
 ## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-27 | §11 : course écran / moteur (décision par le moteur, `EngineEcho`, historique des envois MIDI) ; notice d'appareil incomplète (8e canal du BUV463). Noms `Dmx.*` restants corrigés en `Luxia.*` dans les tables de ce document. |
 | 2026-09-26 | §11 : écriture de fichier refusée un instant par le poste (nouvelles tentatives dans `VersionedJsonFile.Save`). |
 | 2026-09-26 | §11 : tests de temps réel sensibles à la charge (trois essais, collection non parallélisée) ; copie `with` d'un `record` à propriété calculée à la construction. |
 | 2026-09-26 | P4 : projet `Luxia.Scenes` (Core, Messaging, Engine, Persistence, Fixtures, Patch) pour les scènes, palettes et couches et leur compilation vers le moteur (D26) ; le moteur reste limité à Core et Messaging. |

@@ -206,33 +206,33 @@ réutilisable qui parle au moteur via une interface commune.
 LuXia.sln
 │
 ├── src/
-│   ├── Dmx.Core               Modèle de domaine pur : Canal, Univers, Trame, Attribut, types de base. Aucune dépendance.
-│   ├── Dmx.Fixtures           Bibliothèque d'appareils : modèles, modes, attributs, plages. Import OFL / QLC+.
-│   ├── Dmx.Patch              Installation, univers, adresses, sélections, lieux, détection de chevauchements.
-│   ├── Dmx.Engine             Moteur de rendu temps réel : horloge, scènes, étapes, fondus, effets, couches, fusion, masters.
-│   ├── Dmx.Output             Abstraction des sorties + pilotes : Arduino série, Art-Net, sACN, Nulle, Enregistreur.
-│   ├── Dmx.Audio              Capture audio (boucle système / entrée), analyse : tempo, impulsions, énergie.
-│   ├── Dmx.Media              Lecture en cours (API Windows).
-│   ├── Dmx.Music              Identification de style : normalisation titres, rapprochement flou, API, cache.
-│   ├── Dmx.Show               Séquenceur de show (Grafcet), séquences en mesures, Directeur automatique.
-│   ├── Dmx.Persistence        Lecture/écriture des fichiers (bibliothèque, installation, lieux, show), migrations de format.
-│   ├── Dmx.Messaging          Bus d'événements / commandes entre modules (contrats uniquement).
+│   ├── Luxia.Core               Modèle de domaine pur : Canal, Univers, Trame, Attribut, types de base. Aucune dépendance.
+│   ├── Luxia.Fixtures           Bibliothèque d'appareils : modèles, modes, attributs, plages. Import OFL / QLC+.
+│   ├── Luxia.Patch              Installation, univers, adresses, sélections, lieux, détection de chevauchements.
+│   ├── Luxia.Engine             Moteur de rendu temps réel : horloge, scènes, étapes, fondus, effets, couches, fusion, masters.
+│   ├── Luxia.Output             Abstraction des sorties + pilotes : Arduino série, Art-Net, sACN, Nulle, Enregistreur.
+│   ├── Luxia.Audio              Capture audio (boucle système / entrée), analyse : tempo, impulsions, énergie.
+│   ├── Luxia.Media              Lecture en cours (API Windows).
+│   ├── Luxia.Music              Identification de style : normalisation titres, rapprochement flou, API, cache.
+│   ├── Luxia.Show               Séquenceur de show (Grafcet), séquences en mesures, Directeur automatique.
+│   ├── Luxia.Persistence        Lecture/écriture des fichiers (bibliothèque, installation, lieux, show), migrations de format.
+│   ├── Luxia.Messaging          Bus d'événements / commandes entre modules (contrats uniquement).
 │   │
-│   ├── Dmx.UI.Controls        Contrôles réutilisables : fader, roue de couleur, pad Pan/Tilt, timeline, grafcet…
-│   ├── Dmx.UI.Modules.*       Un projet par écran/module : Console, Bibliothèque, Patch, Scènes, Couches, Live, Show, Visualiseur…
-│   └── Dmx.App                Application hôte (shell, navigation, DI, configuration).
+│   ├── Luxia.UI.Controls        Contrôles réutilisables : fader, roue de couleur, pad Pan/Tilt, timeline, grafcet…
+│   ├── Luxia.UI.Modules.*       Un projet par écran/module : Console, Bibliothèque, Patch, Scènes, Couches, Live, Show, Visualiseur…
+│   └── Luxia.App                Application hôte (shell, navigation, DI, configuration).
 │
 ├── tools/
-│   ├── Dmx.Tools.FixtureImport    Outil ligne de commande d'import de bibliothèques.
-│   ├── Dmx.Tools.MusicEnrich      Enrichissement hors-ligne de la base artistes/styles (API, IA locale éventuelle).
-│   └── Dmx.Tools.Headless         Exécution d'un show sans UI (tests d'endurance, futur mode « service »).
+│   ├── Luxia.Tools.FixtureImport    Outil ligne de commande d'import de bibliothèques.
+│   ├── Luxia.Tools.MusicEnrich      Enrichissement hors-ligne de la base artistes/styles (API, IA locale éventuelle).
+│   └── Luxia.Tools.Headless         Exécution d'un show sans UI (tests d'endurance, futur mode « service »).
 │
 ├── firmware/
 │   └── arduino-dmx                Firmware Leonardo (versionné avec le reste, protocole documenté).
 │
 └── tests/
-    ├── Dmx.Core.Tests, Dmx.Fixtures.Tests, Dmx.Engine.Tests, …   Tests unitaires
-    ├── Dmx.Integration.Tests                                       Scénarios bout-en-bout avec sortie simulée
+    ├── Luxia.Core.Tests, Luxia.Fixtures.Tests, Luxia.Engine.Tests, …   Tests unitaires
+    ├── Luxia.Integration.Tests                                       Scénarios bout-en-bout avec sortie simulée
     └── assets/                                                     Fichiers audio de référence, bibliothèques de test, listes de titres « sales »
 ```
 
@@ -244,15 +244,15 @@ envoie des commandes et observe l'état.
 
 ```
              ┌──────────────┐   signaux tempo/énergie   ┌───────────────┐
- Audio ────▶ │  Dmx.Audio   │ ─────────────────────────▶│               │
+ Audio ────▶ │  Luxia.Audio   │ ─────────────────────────▶│               │
              └──────────────┘                            │               │
-             ┌──────────────┐   morceau en cours          │  Dmx.Show     │  commandes (lancer scène,
- Windows ──▶ │  Dmx.Media   │ ──────────┐                │  (Directeur,  │  changer master, …)
+             ┌──────────────┐   morceau en cours          │  Luxia.Show     │  commandes (lancer scène,
+ Windows ──▶ │  Luxia.Media   │ ──────────┐                │  (Directeur,  │  changer master, …)
              └──────────────┘           ▼                │  Grafcet)     │──────────┐
                                 ┌──────────────┐ style   │               │          │
-                                │  Dmx.Music   │────────▶│               │          ▼
+                                │  Luxia.Music   │────────▶│               │          ▼
                                 └──────────────┘         └───────────────┘   ┌──────────────┐  trames   ┌────────────┐
-                                                                             │  Dmx.Engine  │──────────▶│ Dmx.Output │──▶ Arduino / Art-Net / Simulateur
+                                                                             │  Luxia.Engine  │──────────▶│ Luxia.Output │──▶ Arduino / Art-Net / Simulateur
  Utilisateur ──▶ UI (Live, Console, éditeurs) ── commandes ─────────────────▶│  (40-44 Hz)  │           └────────────┘
                      ▲                                                       └──────┬───────┘
                      └──────────────── état (scènes actives, valeurs, trames) ──────┘

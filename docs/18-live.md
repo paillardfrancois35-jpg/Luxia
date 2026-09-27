@@ -82,7 +82,8 @@ Actifs quel que soit le focus en Live (GEN-071). Les touches à maintenir n'agis
 | **Échap** | Libérer les palettes rapides / surcharges live | appui |
 | **1 … 9** | Lancer la scène N de la couche sélectionnée | appui |
 | **← →** | Changer de couche sélectionnée | appui |
-| **Page ↑ / ↓** | Grand Master ± 10 % | appui |
+| **↑ / ↓** | Master de la couche encadrée ± 10 % (proposition de l'utilisateur, essai P5) | appui (répété si maintenu) |
+| **Page ↑ / ↓** | Grand Master ± 10 % | appui (répété si maintenu) |
 | **N** | Forcer la transition suivante du show | appui |
 
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
@@ -113,5 +114,8 @@ Actifs quel que soit le focus en Live (GEN-071). Les touches à maintenir n'agis
 | Écran | Module `Luxia.UI.Modules.Live`, premier écran de la navigation. Bandeau d'état en pastilles (sortie, contrôleurs MIDI, figé, fumée, lieu, sûreté, positions non calibrées) ; colonnes de couches (150 px) ; actions à droite ; palettes rapides et journal en bas. Blackout et Grand Master ne sont pas dupliqués : l'en-tête de la fenêtre les montre sur tous les écrans. |
 | Écarts assumés (Q32) | Rien n'est affiché pour ce qui n'existe pas encore (tempo, style, show, auto : P7 à P10). Disposition personnalisable (LIVE-006), mini-simulateur (LIVE-007), assistant (LIVE-011) et raccourcis personnalisables (LIVE-041) reportés au chantier d'ergonomie ; `live.json` règle les couches masquées et les boutons. |
 | Boutons à maintenir | Appui / relâche sur le pointeur (la perte du pointeur relâche aussi : jamais de flash coincé). |
-| Raccourcis (LIVE-040) | B, F, S, Z, G, Échap, 1-9 (couche encadrée), ← →, Page ↑↓ ; hors saisie de texte, répétition automatique ignorée, relâche toujours traitée. Espace, Ctrl+A et N avec leur phase. |
+| Raccourcis (LIVE-040) | B, F, S, Z, G, Échap, 1-9 (couche encadrée), ← →, ↑ ↓ (master de la couche encadrée), Page ↑↓ (Grand Master) ; hors saisie de texte, répétition automatique ignorée sauf pour les quatre touches de niveau, relâche toujours traitée. Espace, Ctrl+A et N avec leur phase. |
+| Clic sur une scène (LIVE-003, essai P5) | La bascule lancer / arrêter est tranchée **par le moteur** (`StopIfPlaying`) ; le bouton affiche tout de suite l'état attendu et ne le relit du moteur qu'une fois la commande traitée (doc 03 §11). Idem pour les masters (`EngineEcho`). |
+| Sûreté et fumée (essai P5) | La pastille Sûreté donne le temps restant (« encore N s ») ; pendant tout le repos de la fumée, les boutons FUMÉE et Rafale affichent le décompte, estompés. |
+| Traçabilité (SORT-066) | Appuis sur les scènes, FLASH, STROBE, FUMÉE et touches du Live tracés « IHM – Live – … » (journal technique, journal de l'enregistrement). |
 | Journal (LIVE-009, GEN-112) | Événements du bus (scènes avec origine, sûreté, sortie, refus) ; case « Commandes » : journal des commandes du moteur. |

@@ -47,5 +47,6 @@ Application C# (Avalonia, Windows) de pilotage d'éclairage, alternative légèr
 
 ## Autres
 
-- `Equipements/` : notices et photos du matériel.
+- `Equipements/` : notices et photos du matériel ; `Equipements/DasLight/ecoute-ligne-dmx-dvc4.md` : écouter la ligne DMX avec le DVC4.
+- `Daslight4/` et `Daslight 5/` : documentations et captures de Daslight, sources de principes pour le chantier ergonomique (pas de copie).
 - [03 – Règles de développement](03-regles-de-developpement.md) : conventions de code, structure, tests, Git.

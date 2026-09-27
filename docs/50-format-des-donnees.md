@@ -250,7 +250,11 @@ Fichier binaire compact (SORT-060), petit-boutiste.
 
 Une **longueur 0** signifie « trame identique à la précédente » : un univers au repos ne coûte que 6 octets par trame.
 Une fin de fichier tronquée (arrêt brutal) est tolérée à la lecture : seules les trames complètes sont relues.
-Lecture : `dmx-headless relire fichier.dmxrec`.
+Lecture : `luxia-headless relire fichier.dmxrec`.
+
+À côté de chaque enregistrement fait depuis l'application, un **journal texte** `<même nom>.journal.txt` (SORT-066, UTF-8) :
+une ligne par événement, `heure  écart(s)  nature  détail`, natures `IHM` (onglet – action), `MOTEUR` (commande traitée),
+`DMX` (canaux qui changent, `canal:avant→après`, 64 au plus par ligne) et `DMX*` (première trame). Lisible à la main ; non relu par l'application.
 
 ## 10. Projet : `scènes.json` (format 1)
 

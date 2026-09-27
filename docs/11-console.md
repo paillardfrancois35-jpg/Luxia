@@ -81,7 +81,7 @@ Deux usages principaux :
 | CONS-001 | 16, 32 ou 48 faders par page selon la largeur (tranches de 42 px) ; pages en boucle. |
 | CONS-002 | Glisser **relatif** (pas de saut au point cliqué) ; un clic simple prend le fader à sa valeur actuelle. Saisie directe dans la case sous le fader (ou double-clic), `%` accepté. |
 | CONS-006 | Ctrl+clic : ajouter / retirer ; Maj+clic : plage ; clic simple hors sélection : sélection de ce seul fader ; Échap : désélection. Mode relatif par défaut. |
-| CONS-007, CONS-041 (P3) | Nom d'appareil, attribut et nom de plage (au lieu du %) dès qu'un patch existe ; recalculés à chaque rafraîchissement (`Dmx.Patch.Rules.PatchLookup`). |
+| CONS-007, CONS-041 (P3) | Nom d'appareil, attribut et nom de plage (au lieu du %) dès qu'un patch existe ; recalculés à chaque rafraîchissement (`Luxia.Patch.Rules.PatchLookup`). |
 | CONS-008 | P4 : le blackout coupe aussi les surcharges brutes des canaux d'intensité et de ceux qui suivent l'intensité. Limites de sûreté : P5 (`TODO(P5, GEN-083)` dans le moteur). |
 | CONS-010 | Réalisé (demandé par les démonstrations P1) : instantanés rangés dans le projet (`console.json`, doc 50) ; un rappel remplace les faders pris de l'univers. |
 | CONS-020 à 024 (P3) | Mode « Appareils » : un `FixtureFadersViewModel` (CONS-060) par appareil patché de l'univers affiché, via `Attach`/`Detach` (n'écrit pas de valeurs par défaut, ne libère pas les surcharges en quittant — à la différence de `Start`/`Stop`, réservées au test en direct jetable de la bibliothèque). Bouton Identifier commun aux deux usages. |
@@ -89,7 +89,7 @@ Deux usages principaux :
 | CONS-025 (P4) | Écart : pas de bouton dans l'écran Console ; la capture se fait depuis le programmeur de l'écran Scènes (« Capturer la sortie »), surcharges de la console comprises. |
 | CONS-042 (P4) | Au survol du moniteur : couche et scène, surcharge d'attribut, blackout ou défaut (limites de sûreté en P5). |
 | CONS-091 (P4) | Valeur virtuelle par fader sélectionné en relatif, gardée à travers plusieurs glissés ; oubliée au changement de sélection, à « Désélectionner » et à la libération. |
-| CONS-043 (P3) | Canaux surchargés encadrés en orange ; appareils délimités par un trait (`Dmx.UI.Controls.OutputMonitor.FixtureBoundaries`). |
+| CONS-043 (P3) | Canaux surchargés encadrés en orange ; appareils délimités par un trait (`Luxia.UI.Controls.OutputMonitor.FixtureBoundaries`). |
 | CONS-044 (S) | Non réalisé. |
 | CONS-092 (P3) | Cadre immédiat sur la case survolée (numéro et valeur l'étaient déjà, via `HoverText`, pas un `ToolTip` standard). |
 | Test de sortie | Tant qu'il est actif, le chenillard de test remplace aussi les faders pris (D21). |

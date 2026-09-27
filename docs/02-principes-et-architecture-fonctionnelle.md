@@ -204,7 +204,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-001 | `Blackout` | actif / inactif | Moteur | P4 |
 | CMD-002 | `RéglerGrandMaster` | niveau 0-1 | Moteur | P4 |
 | CMD-003 | `Figer` | actif / inactif | Moteur | P5 |
-| CMD-010 | `LancerScène` | scène, couche (optionnel si unique), temps de fondu (optionnel) | Moteur | P4 |
+| CMD-010 | `LancerScène` | scène, couche (optionnel si unique), temps de fondu (optionnel), solo, `StopIfPlaying` (bascule : arrête si la scène joue, tranché par le moteur — P5, LIVE-003) | Moteur | P4 |
 | CMD-011 | `ArrêterScène` | scène, temps de fondu (optionnel) | Moteur | P4 |
 | CMD-012 | `ArrêterCouche` | couche, temps de fondu | Moteur | P5 |
 | CMD-013 | `RéglerMasterCouche` | couche, niveau 0-1 | Moteur | P5 |
@@ -289,7 +289,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
 |---|---|---|---|---|
 | GEN-030 | I | P0 | Le moteur est cadencé par un **tick** régulier, par défaut **40 Hz**, réglable de 25 à 44 Hz. | Mesure de 15 min (≈ 36 000 ticks) : fréquence moyenne 40 ± 0,5 Hz. *(1 h avant D23.)* |
-| GEN-031 | I | P0 | La gigue du tick doit rester inférieure à 5 ms (99e centile) sur un PC standard, interface ouverte. | Mesure de 15 min, rapport de gigue (`dmx-headless gigue`). *(1 h avant D23.)* |
+| GEN-031 | I | P0 | La gigue du tick doit rester inférieure à 5 ms (99e centile) sur un PC standard, interface ouverte. | Mesure de 15 min, rapport de gigue (`luxia-headless gigue`). *(1 h avant D23.)* |
 | GEN-032 | I | P4 | Les calculs du moteur utilisent le **temps écoulé réel** (et non le nombre de ticks) : un tick en retard ne ralentit pas les fondus. | Test : ticks irréguliers simulés → fondu de 2 s terminé à 2 s ± 1 tick. |
 | GEN-033 | I | P4 | Toutes les horloges sont **injectables** pour les tests (temps virtuel). | Tests moteur exécutés en temps virtuel, 1 h simulée en quelques secondes. |
 | GEN-034 | I | P7 | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît (break, silence) et se recale quand il revient. | Test sur fichier avec break de 8 s : pas d'arrêt des temps. |
@@ -518,6 +518,9 @@ Cela se fait **à la maison**, jamais en soirée (P7).
 ---
 
 ## 19. Registre des décisions
+
+> Les décisions antérieures au renommage transverse (2026-09-26, avant P4) citent les anciens noms `Dmx.*` et `dmx-headless` :
+> ce sont aujourd'hui `Luxia.*` et `luxia-headless`.
 
 | # | Date | Décision | Origine |
 |---|---|---|---|

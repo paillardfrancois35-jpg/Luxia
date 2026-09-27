@@ -90,8 +90,8 @@ Pour l'effet WZYBUTA, découvrez le canal 2 (rotation continue) : dans chaque se
 
 ## Exemple 7 – Importer depuis OFL ou QLC+ (BIB-080 à 083)
 
-Des fichiers d'essai (rédigés au format OFL / QLC+) sont dans `tests/Dmx.Fixtures.Tests/assets/` :
-**Importer un dossier…** → `tests/Dmx.Fixtures.Tests/assets` → 8 modèles (dont une barre de 8 pixels = 8 cellules, une lyre avec roues).
+Des fichiers d'essai (rédigés au format OFL / QLC+) sont dans `tests/Luxia.Fixtures.Tests/assets/` :
+**Importer un dossier…** → `tests/Luxia.Fixtures.Tests/assets` → 8 modèles (dont une barre de 8 pixels = 8 cellules, une lyre avec roues).
 Le **rapport** liste ce qui a été approximé (« type BladeInsertion non reconnu, converti en Générique », « préréglage EffectSparkle… »).
 
 Avec de vrais fichiers téléchargés à la maison depuis open-fixture-library.org ou QLC+, même démarche (jamais en soirée : GEN-120).

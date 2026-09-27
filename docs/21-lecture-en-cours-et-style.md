@@ -119,7 +119,7 @@ Le **rapprochement flou** utilise une similarité tolérante (fautes, mots inver
 
 ## 4. Outil d'enrichissement (à la maison)
 
-Outil **séparé** (`Dmx.Tools.MusicEnrich`), lancé explicitement, jamais en Live (GEN-121).
+Outil **séparé** (`Luxia.Tools.MusicEnrich`), lancé explicitement, jamais en Live (GEN-121).
 
 | ID | Pri. | Phase | Exigence | Critère d'acceptation |
 |---|---|---|---|---|

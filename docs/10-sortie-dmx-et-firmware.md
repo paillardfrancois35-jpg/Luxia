@@ -160,7 +160,16 @@ shield en mode émission, terminaison 120 Ω en bout de chaîne.
 | Label 3 | Réponse : version mineure, version majeure, break (9 × 10,67 µs), MAB (1 × 10,67 µs), débit (40). |
 | EVT-002 `TrameÉmise` | Non publié sur le bus en P0 : l'interface lit la dernière trame du moteur à son rythme (état observable, doc 02 §6.4). À publier si le simulateur (P3) en a besoin. |
 | Arrêt propre | À la fermeture, une trame de blackout est envoyée à toutes les sorties avant l'arrêt des pilotes : les appareils s'éteignent tout de suite (le fondu de GEN-061 viendra en P5). |
-| Outil | `dmx-headless` : `ports`, `lancer`, `endurance`, `gigue`, `relire`, `projet`. |
+| Outil | `luxia-headless` : `ports`, `lancer`, `endurance`, `gigue`, `relire`, `projet`. |
+
+## 9b. Notes de réalisation (P5)
+
+| Sujet | Réalisation |
+|---|---|
+| Enregistrement visible (SORT-065) | Point rouge clignotant et « Enregistrement en cours » à l'écran Sorties, voyant REC dans la barre d'état, chemin sélectionnable et « Copier le chemin ». |
+| Journal de l'enregistrement (SORT-066) | `.journal.txt` à côté du `.dmxrec`, sur la même horloge : lignes IHM (onglet, action), MOTEUR (commandes traitées, noms en clair), DMX (canaux qui changent, `canal:avant→après`). Outil de diagnostic principal de l'essai P5. |
+| Arrêt d'un pilote | La trame encore en attente est écrite avant la déconnexion (dernière trame d'un enregistrement ; blackout déposé juste avant l'arrêt). |
+| Écoute de la ligne | En attendant le renifleur Leonardo (doc 99), le boîtier Daslight DVC4 Gold écoute la ligne (prise 2 en entrée) : `docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`. |
 
 ## 10. Points ouverts
 

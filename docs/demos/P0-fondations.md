@@ -9,7 +9,7 @@
 | Élément | Où |
 |---|---|
 | Application (écran « Sorties ») | `src/Luxia.App` → `LuXia.exe` |
-| Outil sans interface | `tools/Dmx.Tools.Headless` → `dmx-headless` |
+| Outil sans interface | `tools/Luxia.Tools.Headless` → `luxia-headless` |
 | Firmware 1.0 (protocole Enttec) | `firmware/arduino-dmx` |
 | Show de référence : fiche projet + enregistrement du chenillard 1-180 | `samples/Show de référence/` |
 | Journal technique | `Documents\LuXia\Journaux\technique-AAAAMMJJ.log` |
@@ -20,11 +20,11 @@
 ## Préparer
 
 ```bash
-dotnet build Dmx.sln
+dotnet build Luxia.sln
 ```
 
 L'application se lance avec `src/Luxia.App/bin/Debug/net10.0/LuXia.exe` (ou `dotnet run --project src/Luxia.App`).
-L'outil : `dotnet tools/Dmx.Tools.Headless/bin/Debug/net10.0/dmx-headless.dll` (appelé `dmx-headless` ci-dessous).
+L'outil : `dotnet tools/Luxia.Tools.Headless/bin/Debug/net10.0/luxia-headless.dll` (appelé `luxia-headless` ci-dessous).
 
 **Téléverser le firmware** (une seule fois, remplace le POC) — *je ne l'ai pas fait : à faire par vous ou avec votre accord* :
 
@@ -32,7 +32,7 @@ L'outil : `dotnet tools/Dmx.Tools.Headless/bin/Debug/net10.0/dmx-headless.dll` (
 arduino-cli upload --fqbn arduino:avr:leonardo -p COMx firmware/arduino-dmx
 ```
 
-(`dmx-headless ports` indique le port de l'Arduino ; arduino-cli est dans `%LOCALAPPDATA%\Programs\arduino-cli`.)
+(`luxia-headless ports` indique le port de l'Arduino ; arduino-cli est dans `%LOCALAPPDATA%\Programs\arduino-cli`.)
 
 **Le PAR pour la démonstration** : adresse **1**, de préférence en **mode 3 canaux** (`d001`) — voir l'exemple 3 pour la raison.
 
@@ -100,7 +100,7 @@ pour ne déclencher ni la fumée, ni les canaux Reset de l'effet multi-têtes (W
 **Relire** :
 
 ```bash
-dmx-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1-180.dmxrec" --canaux 170-180
+luxia-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1-180.dmxrec" --canaux 170-180
 ```
 
 **Observer** : 1817 trames sur 45,4 s (40 trames/s), canaux 170 à 179 allumés à 250 ms d'intervalle, valeur 128,
@@ -112,8 +112,8 @@ dmx-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1
 
 | Mesure | Commande | Attendu |
 |---|---|---|
-| Cadence et gigue, 15 min (D23) | `dmx-headless gigue` (900 s par défaut ; la veille du PC est bloquée pendant la mesure, GEN-096) | 40 ± 0,5 Hz ; gigue p99 < 5 ms (GEN-030, GEN-031) — *mesuré sur 20 s : 40,04 Hz, p99 0,8 ms* |
-| Endurance matériel, 1 h, 512 canaux | `dmx-headless endurance --duree 3600` (Arduino branché, **appareils débranchés ou PAR seul**) | aucune erreur, ~40 trames/s constantes (T-SORT-07) |
+| Cadence et gigue, 15 min (D23) | `luxia-headless gigue` (900 s par défaut ; la veille du PC est bloquée pendant la mesure, GEN-096) | 40 ± 0,5 Hz ; gigue p99 < 5 ms (GEN-030, GEN-031) — *mesuré sur 20 s : 40,04 Hz, p99 0,8 ms* |
+| Endurance matériel, 1 h, 512 canaux | `luxia-headless endurance --duree 3600` (Arduino branché, **appareils débranchés ou PAR seul**) | aucune erreur, ~40 trames/s constantes (T-SORT-07) |
 | Ligne DMX plus rapide | écran Sorties, « Canaux émis » = 30 | le firmware émet des trames courtes (SORT-049) ; le PAR réagit de la même façon |
 | Compatibilité Enttec | QLC+ → sortie « DMX USB » | **à tester** (T-SORT-09) : QLC+ cherche les Enttec via le pilote FTDI ; le Leonardo (USB natif) risque de ne pas être listé |
 

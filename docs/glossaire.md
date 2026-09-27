@@ -21,7 +21,8 @@
 | **Splitter / Répartiteur** | Splitter | Duplique une ligne DMX en plusieurs branches isolées. |
 | **DMX sans fil** | Wireless DMX | Émetteur/récepteur radio remplaçant un câble DMX. |
 | **Décodeur DMX** | DMX decoder | Récepteur DMX qui pilote directement des sorties (bandes LED, relais…). |
-| **Renifleur** | DMX sniffer | Récepteur qui affiche/transmet la trame réellement présente sur la ligne (outil de test). |
+| **Renifleur** | DMX sniffer | Récepteur qui affiche/transmet la trame réellement présente sur la ligne (outil de test). En attendant le renifleur Leonardo, le DVC4 Daslight sait écouter la ligne. |
+| **Journal de l'enregistrement** | Recording log | Fichier `.journal.txt` écrit à côté d'un enregistrement de trames : actions de l'utilisateur, commandes du moteur et canaux qui changent, sur la même horloge (SORT-066). |
 | **HTP** | Highest Takes Precedence | Règle de fusion : la valeur la plus haute gagne. |
 | **LTP** | Latest Takes Precedence | Règle de fusion : la dernière valeur (ou la plus prioritaire) gagne. |
 
@@ -105,6 +106,8 @@
 | **Paramètre** | Parameter | Unité de calcul du moteur : un attribut d'un appareil patché (une définition de canal de son modèle), ou son intensité virtuelle (D26). |
 | **Lecture (de scène)** | Playback | Instance en cours d'une scène dans une couche : étape, temps, poids, état (doc 15 §2). |
 | **Scénario** | Script | Fichier de commandes horodatées joué sans interface (`luxia-headless scenario`, MOT-103). |
+| **Reprise douce** | Soft takeover / Pickup | Un fader physique (APC mini) ne prend la main sur un niveau qu'en croisant la valeur affichée, pour éviter un saut de lumière (MIDI-004). |
+| **Lissage (du gradateur)** | Dimmer smoothing | Canal de certains appareils qui adoucit allumages et extinctions ; sur le BUV463, 8e canal non documenté (≈ 15 s à 255). |
 
 ## 6. Musique et automatique
 
