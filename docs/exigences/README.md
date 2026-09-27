@@ -203,7 +203,7 @@
 | [GEN-057](GEN-057.md) | Export / import d'un projet complet sous forme d'archive unique | P5 | M | Reporté (chantier ergonomie) |
 | [GEN-058](GEN-058.md) | Chemins relatifs (projet déplaçable) | P2 | S | Non réalisé |
 | [GEN-060](GEN-060.md) | Blackout au démarrage | P0 | I | Réalisé |
-| [GEN-061](GEN-061.md) | Fondu au noir à la fermeture | P5 | I | Réalisé, à valider sur matériel |
+| [GEN-061](GEN-061.md) | Fondu au noir à la fermeture | P5 | I | Validé |
 | [GEN-062](GEN-062.md) | Le passage Atelier ↔ Live ne doit jamais interrompre la restitution en cours | P5 | I | Réalisé |
 | [GEN-063](GEN-063.md) | Mode aveugle en Atelier | P4 | M | Validé |
 | [GEN-064](GEN-064.md) | Démarrage jusqu'à « prêt en Live » en moins de 10 s | P5 | I | Réalisé, à valider sur matériel |
@@ -223,7 +223,7 @@
 | [GEN-091](GEN-091.md) | Sortie déconnectée non bloquante, reconnexion < 3 s | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-093](GEN-093.md) | Panne d'un module secondaire isolée | P0 | I | Réalisé |
 | [GEN-094](GEN-094.md) | Utilisation CPU moyenne < 15 % en Live | P5 | M | Réalisé, à valider sur matériel |
-| [GEN-095](GEN-095.md) | Reprise après plantage | P5 | M | Réalisé |
+| [GEN-095](GEN-095.md) | Reprise après plantage | P5 | M | Validé |
 | [GEN-096](GEN-096.md) | Pas de mise en veille du PC pendant l'émission | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-100](GEN-100.md) | Interface en français | P1 | I | Réalisé |
 | [GEN-101](GEN-101.md) | Thème sombre | P1 | I | Réalisé |
