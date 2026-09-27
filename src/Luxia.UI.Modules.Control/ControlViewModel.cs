@@ -111,8 +111,8 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Plan.Refresh();
         Settings.Refresh();
         Properties.Refresh();
-        Journal.Refresh();
         CountDownCommit();
+        Journal.Refresh();
     }
 
     /// <summary>Écrit tout de suite le geste en cours (changement d'écran, fermeture).</summary>
