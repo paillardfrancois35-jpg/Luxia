@@ -51,7 +51,7 @@ public static class ProjectValidator
         var library = new ProjectFixtureLibrary(folder);
         var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
         issues.AddRange(ShowCompiler.Compile(content).Issues);
-        issues.AddRange(CheckScenes(scenes, layers, palettes));
+        issues.AddRange(CheckScenes(scenes));
         issues.AddRange(CheckLayers(scenes, layers, palettes));
         issues.AddRange(CheckPalettes(palettes));
         issues.AddRange(CheckSafety(safety));
@@ -209,7 +209,7 @@ public static class ProjectValidator
         }
     }
 
-    private static IEnumerable<CompileIssue> CheckScenes(SceneSet scenes, LayerSet layers, PaletteSet palettes)
+    private static IEnumerable<CompileIssue> CheckScenes(SceneSet scenes)
     {
         var file = SceneStore.FileName;
         foreach (var duplicate in scenes.Scenes.GroupBy(s => s.Id).Where(g => g.Count() > 1))
@@ -218,7 +218,6 @@ public static class ProjectValidator
         }
 
         var ids = scenes.Scenes.Select(s => s.Id).ToHashSet();
-        var paletteKinds = palettes.Palettes.GroupBy(p => p.Id).ToDictionary(g => g.Key, g => g.First().Kind);
         foreach (var scene in scenes.Scenes)
         {
             var where = $"scène « {scene.Name} »";
@@ -254,7 +253,7 @@ public static class ProjectValidator
                     var value = scene.Steps[s].Values[v];
                     var at = string.Create(CultureInfo.CurrentCulture, $"{where}, étape {s + 1}");
                     var field = string.Create(CultureInfo.CurrentCulture, $"values[{v}]");
-                    if (CheckValue(value, paletteKinds) is { } problem)
+                    if (CheckValue(value) is { } problem)
                     {
                         yield return Error(file, at, field, problem);
                     }
@@ -264,7 +263,7 @@ public static class ProjectValidator
     }
 
     /// <summary>Une valeur de scène a exactement une forme valide (doc 50 : attribut ou canal + niveau ou plage, couleur, palette).</summary>
-    private static string? CheckValue(SceneValue value, Dictionary<Guid, Scenes.Model.PaletteKind> palettes)
+    private static string? CheckValue(SceneValue value)
     {
         var forms = (value.PaletteId is not null ? 1 : 0) + (value.Color is not null ? 1 : 0) + (value.Level is not null || value.Range is not null ? 1 : 0);
         if (forms != 1)

@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Luxia.Fixtures;
 using Luxia.Fixtures.Import;
-using Luxia.Fixtures.Model;
 using Luxia.Fixtures.Rules;
 using Luxia.Hosting;
 using Luxia.UI.Controls;

@@ -68,7 +68,6 @@ public sealed class SimulatorCanvas : Control
     private const double HitRadiusPx = 16;
     private static readonly IPen RoomPen = new Pen(new SolidColorBrush(Color.Parse("#30363D")), 1);
     private static readonly IPen ErrorPen = new Pen(new SolidColorBrush(Color.Parse("#F85149")), 2, dashStyle: DashStyle.Dash);
-    private static readonly IPen BeamPen = new Pen(new SolidColorBrush(Color.Parse("#F6F8FA"), 0.5), 3);
     private static readonly SolidColorBrush RoomBrush = new(Color.Parse("#0D1117"));
     private static readonly SolidColorBrush BodyBrush = new(Color.Parse("#30363D"));
     private static readonly IPen SelectedPen = new Pen(new SolidColorBrush(Color.Parse("#58A6FF")), 3);

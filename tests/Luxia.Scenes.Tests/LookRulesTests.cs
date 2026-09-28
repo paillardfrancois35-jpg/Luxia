@@ -1,4 +1,3 @@
-using Luxia.Engine.Model;
 using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;

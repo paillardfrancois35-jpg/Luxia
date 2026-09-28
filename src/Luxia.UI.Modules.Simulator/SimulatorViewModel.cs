@@ -1,11 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Luxia.Core.Dmx;
-using Luxia.Fixtures.Model;
 using Luxia.Hosting;
-using Luxia.Patch.Model;
-using Luxia.Patch.Rules;
 using Luxia.UI.Controls;
 
 namespace Luxia.UI.Modules.Simulator;

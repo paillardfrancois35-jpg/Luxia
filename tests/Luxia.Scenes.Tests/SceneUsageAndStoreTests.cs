@@ -1,6 +1,5 @@
 using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
-using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
 

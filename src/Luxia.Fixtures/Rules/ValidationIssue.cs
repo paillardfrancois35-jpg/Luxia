@@ -1,6 +1,3 @@
-using System.Globalization;
-using Luxia.Fixtures.Model;
-
 namespace Luxia.Fixtures.Rules;
 
 /// <summary>Problème détecté dans un modèle.</summary>

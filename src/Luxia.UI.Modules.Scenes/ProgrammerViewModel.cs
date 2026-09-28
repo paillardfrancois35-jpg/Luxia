@@ -3,7 +3,6 @@ using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Luxia.Engine;
-using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
 using Luxia.Fixtures.Rules;
 using Luxia.Hosting;

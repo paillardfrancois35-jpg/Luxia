@@ -1,5 +1,3 @@
-using System.Collections.Frozen;
-
 namespace Luxia.Fixtures.Model;
 
 /// <summary>Description d'un attribut du catalogue.</summary>

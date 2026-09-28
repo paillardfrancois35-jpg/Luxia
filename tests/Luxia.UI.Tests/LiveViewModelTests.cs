@@ -1,4 +1,3 @@
-using Luxia.Fixtures.Model;
 using Luxia.Scenes.Model;
 using Luxia.UI.Modules.Live;
 

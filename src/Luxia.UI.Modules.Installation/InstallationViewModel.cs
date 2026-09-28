@@ -7,7 +7,6 @@ using Luxia.Fixtures;
 using Luxia.Fixtures.Model;
 using Luxia.Hosting;
 using Luxia.Messaging.Commands;
-using Luxia.Patch;
 using Luxia.Patch.Model;
 using Luxia.Patch.Rules;
 using Luxia.Scenes.Rules;
