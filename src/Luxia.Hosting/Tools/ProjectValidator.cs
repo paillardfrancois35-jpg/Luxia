@@ -38,7 +38,9 @@ public static class ProjectValidator
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Midi.MidiStore.Load(folder);
         var (looks, looksMessage) = LookStore.Load(folder);
+        var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         AddLoadMessage(issues, LookStore.FileName, looksMessage);
+        AddLoadMessage(issues, EffectLibraryStore.FileName, effectsMessage);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
         AddLoadMessage(issues, VenueStore.FileName, venuesMessage);
         AddLoadMessage(issues, SceneStore.FileName, scenesMessage);
@@ -58,7 +60,49 @@ public static class ProjectValidator
         issues.AddRange(CheckLive(live, scenes, layers));
         issues.AddRange(CheckMidi(midi, scenes, layers));
         issues.AddRange(CheckLooks(looks, scenes, layers));
+        issues.AddRange(CheckEffects(scenes, effects));
         return issues;
+    }
+
+    // EFF-001, EFF-007 : réglages d'effets hors bornes, dans les scènes et dans la bibliothèque.
+    private static IEnumerable<CompileIssue> CheckEffects(SceneSet scenes, EffectLibrary library)
+    {
+        foreach (var scene in scenes.Scenes)
+        {
+            for (var s = 0; s < scene.Steps.Count; s++)
+            {
+                var effects = scene.Steps[s].Effects;
+                foreach (var duplicate in effects.GroupBy(e => e.Id).Where(g => g.Count() > 1))
+                {
+                    yield return Error(SceneStore.FileName, string.Create(CultureInfo.CurrentCulture, $"scène « {scene.Name} », étape {s + 1}"), "effects", "même identifiant pour deux effets de l'étape (GEN-052)");
+                }
+
+                for (var e = 0; e < effects.Count; e++)
+                {
+                    foreach (var (field, message) in EffectRules.Problems(effects[e]))
+                    {
+                        yield return Warning(
+                            SceneStore.FileName,
+                            string.Create(CultureInfo.CurrentCulture, $"scène « {scene.Name} », étape {s + 1}, effet « {effects[e].Name ?? (e + 1).ToString(CultureInfo.CurrentCulture)} »"),
+                            string.Create(CultureInfo.CurrentCulture, $"effects[{e}].{field}"),
+                            message);
+                    }
+                }
+            }
+        }
+
+        foreach (var duplicate in library.Templates.GroupBy(t => t.Id).Where(g => g.Count() > 1))
+        {
+            yield return Error(EffectLibraryStore.FileName, $"modèle « {duplicate.First().Name} »", "id", "identifiant utilisé par plusieurs modèles (GEN-052)");
+        }
+
+        foreach (var template in library.Templates)
+        {
+            foreach (var (field, message) in EffectRules.Problems(template.Effect))
+            {
+                yield return Warning(EffectLibraryStore.FileName, $"modèle « {template.Name} »", "effect." + field, message);
+            }
+        }
     }
 
     // ERG-023 : un look qui lance une scène disparue ne ferait rien, sans le dire.

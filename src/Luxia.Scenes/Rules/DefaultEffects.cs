@@ -160,11 +160,11 @@ public static class DefaultEffects
     public static EffectLibrary Create() => new() { Templates = Templates };
 
     /// <summary>Copie d'un modèle appliquée à une cible (EFF-007) : nouvel identifiant, nom du modèle.</summary>
-    public static SceneEffect Apply(EffectTemplate template, ValueTarget target, bool perCell = false)
+    public static SceneEffect Apply(EffectTemplate template, IReadOnlyList<ValueTarget> targets, bool perCell = false)
     {
         ArgumentNullException.ThrowIfNull(template);
-        ArgumentNullException.ThrowIfNull(target);
-        return template.Effect with { Id = Guid.NewGuid(), Name = template.Name, Target = target, PerCell = perCell };
+        ArgumentNullException.ThrowIfNull(targets);
+        return template.Effect with { Id = Guid.NewGuid(), Name = template.Name, Targets = targets, PerCell = perCell };
     }
 
     private static EffectTemplate Template(int number, string name, string category, string description, SceneEffect effect) => new()

@@ -21,6 +21,9 @@ public static class ControlPanels
     /// <summary>Réglages des appareils sélectionnés.</summary>
     public const string Settings = "reglages";
 
+    /// <summary>Effets de l'étape éditée (doc 16 §6).</summary>
+    public const string Effects = "effets";
+
     /// <summary>Journal.</summary>
     public const string Journal = "journal";
 
@@ -37,6 +40,7 @@ public static class ControlPanels
         new(Properties, "Propriétés", "La scène choisie avec ✎ : nom, couche, vitesse, fondus, étapes. Tout est enregistré dès la saisie ; Ctrl+Z annule."),
         new(Plan, "Plan des appareils", "Le lieu vu de dessus, avec les couleurs réellement émises (l'aperçu en AVEUGLE). C'est ici qu'on choisit les appareils : clic, Ctrl + clic pour ajouter, glisser pour un rectangle."),
         new(Settings, "Réglages des appareils", "Les réglages des appareils sélectionnés sur le plan. En LIVE : surcharges temporaires (pastille jaune). En ÉDITION / AVEUGLE : écrits dans l'étape choisie (pastille verte)."),
+        new(Effects, "Effets", "Les effets de l'étape éditée : une forme (vague, cercle, arc-en-ciel…) qui tourne en boucle sur les appareils choisis, décalée d'un appareil à l'autre. Choisissez les appareils au plan, un modèle de la bibliothèque, « + Ajouter », puis réglez avec les molettes (glisser, molette de la souris, double-clic = valeur par défaut). En ÉDITION on le voit sur la sortie, en AVEUGLE sur l'aperçu."),
         new(Journal, "Journal", "Ce qui vient de se passer, le plus récent en haut : scènes, sûreté, enregistrements, annulations."),
         new(Looks, "Looks", "Un look est une liste d'actions appelée d'un clic : « Temps mort » = tout arrêter, lancer l'ambre, master Intensité à 40 %. On le crée en capturant ce qui joue. Le pilote automatique s'en servira pour réagir à la musique."),
         new(Pilot, "Pilote automatique", "Ce que joue le mode automatique, pourquoi, et les boutons d'intervention (les looks). Le pilote lui-même arrive en P10."),

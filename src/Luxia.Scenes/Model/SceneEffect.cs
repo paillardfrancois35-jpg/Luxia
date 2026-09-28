@@ -20,8 +20,11 @@ public sealed record SceneEffect
     /// <summary>Nom affiché (« Vague douce »…).</summary>
     public string? Name { get; init; }
 
-    /// <summary>Cible : appareil, cellule, sélection manuelle ou automatique ; ses membres dans l'ordre (EFF-005).</summary>
-    public ValueTarget Target { get; init; } = new();
+    /// <summary>
+    /// Cibles : appareils, cellules, sélections manuelles ou automatiques ; leurs membres mis bout à bout, dans l'ordre,
+    /// forment les membres de l'effet (EFF-005). Un membre présent deux fois ne compte qu'une fois.
+    /// </summary>
+    public IReadOnlyList<ValueTarget> Targets { get; init; } = [];
 
     /// <summary>Chaque cellule de chaque membre devient un membre (segments des barres, têtes, EFF-008).</summary>
     public bool PerCell { get; init; }

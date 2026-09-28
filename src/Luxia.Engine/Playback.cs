@@ -477,6 +477,21 @@ internal sealed class Playback
         AdvanceEffects(0, bpm);
     }
 
+    /// <summary>
+    /// Fige la lecture sur une étape, prise d'emblée (CMD-017, aperçu de l'édition) : l'étape ne change plus, ses effets
+    /// tournent.
+    /// </summary>
+    public void Pin(int index, double bpm)
+    {
+        State = PlaybackState.Running;
+        _direction = 1;
+        _passes = 0;
+        EnterStep(Math.Clamp(index, 0, Scene.Steps.Count - 1), 0, bpm);
+        Holding = true;
+        UpdateContributions();
+        AdvanceEffects(0, bpm);
+    }
+
     /// <summary>Pas à pas manuel (CMD-015) : l'étape visée démarre avec son propre fondu.</summary>
     public void Step(StepDirection direction, double bpm)
     {

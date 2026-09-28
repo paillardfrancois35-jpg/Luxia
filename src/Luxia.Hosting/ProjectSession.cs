@@ -146,6 +146,12 @@ public sealed class ProjectSession
             messages.Add(looksMessage);
         }
 
+        var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
+        if (effectsMessage is not null)
+        {
+            messages.Add(effectsMessage);
+        }
+
         Folder = folder;
         Info = report.Info;
         Console = console;
@@ -158,6 +164,7 @@ public sealed class ProjectSession
         Live = live;
         Midi = midi;
         Looks = looks;
+        Effects = effects;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -252,6 +259,19 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>Bibliothèque d'effets (<c>effets.json</c>, EFF-007) ; modèles livrés si absente.</summary>
+    public EffectLibrary Effects { get; private set; } = DefaultEffects.Create();
+
+    /// <summary>Remplace la bibliothèque d'effets et l'enregistre (EFF-007). Ne change pas ce que joue le moteur (les scènes gardent leur copie).</summary>
+    public void SaveEffects(EffectLibrary effects)
+    {
+        ArgumentNullException.ThrowIfNull(effects);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        EffectLibraryStore.Save(folder, effects);
+        Effects = effects;
+        Info = ProjectStore.Save(folder, Info!);
+    }
+
     /// <summary>Remplace les réglages du Live et les enregistre (doc 18).</summary>
     public void SaveLive(LiveSettings live)
     {
@@ -287,10 +307,12 @@ public sealed class ProjectSession
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
         var (looks, looksMessage) = LookStore.Load(folder);
+        var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         Live = live;
         Midi = midi;
         Looks = looks;
-        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage }.OfType<string>());
+        Effects = effects;
+        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, effectsMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

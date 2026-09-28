@@ -32,6 +32,7 @@ public sealed class ControlPanelTemplate : IDataTemplate
             ControlPanels.Properties => new PropertiesPanelView(),
             ControlPanels.Plan => new PlanPanelView(),
             ControlPanels.Settings => new SettingsPanelView(),
+            ControlPanels.Effects => new EffectsPanelView(),
             ControlPanels.Journal => new JournalPanelView(),
             ControlPanels.Looks => new LooksPanelView(),
             ControlPanels.Pilot => new PilotPanelView(),

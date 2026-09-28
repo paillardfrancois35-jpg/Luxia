@@ -89,7 +89,22 @@ public sealed class EffectCompiler
     public IReadOnlyList<(FixtureInfo Fixture, int Cell)> Members(SceneEffect effect, out string? problem)
     {
         ArgumentNullException.ThrowIfNull(effect);
-        var members = _patch.Members(effect.Target, out problem);
+        problem = effect.Targets.Count == 0 ? "aucune cible (choisir des appareils)" : null;
+        var members = new List<(FixtureInfo Fixture, int Cell)>();
+        foreach (var target in effect.Targets)
+        {
+            var targetMembers = _patch.Members(target, out var targetProblem);
+            foreach (var member in targetMembers)
+            {
+                if (!members.Exists(m => m.Fixture.Fixture.Id == member.Fixture.Fixture.Id && m.Cell == member.Cell))
+                {
+                    members.Add(member);
+                }
+            }
+
+            problem ??= targetProblem;
+        }
+
         if (!effect.PerCell)
         {
             return members;
@@ -154,7 +169,8 @@ public sealed class EffectCompiler
     /// <summary>Graine stable d'un effet (dérivée de son identifiant).</summary>
     public static ulong SeedOf(Guid id) => BitConverter.ToUInt64(id.ToByteArray(), 0);
 
-    private static EffectShape ToEngine(SceneEffectShape shape) => shape switch
+    /// <summary>Forme du moteur qui joue une forme de scène (les formes de couleur deviennent des tables).</summary>
+    public static EffectShape ToEngine(SceneEffectShape shape) => shape switch
     {
         SceneEffectShape.Sine => EffectShape.Sine,
         SceneEffectShape.Triangle => EffectShape.Triangle,

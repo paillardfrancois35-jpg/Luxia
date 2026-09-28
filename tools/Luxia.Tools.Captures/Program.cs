@@ -109,6 +109,26 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewM
     Tick(10);
     Capture("Contrôle - ÉDITION");
 
+    // P6 : panneau Effets, un chenillard sur les PAR (courbe et points des membres), puis des cercles opposés sur les lyres.
+    control.Session.ChooseScene(SceneNamed("Plein feu").Id);
+    control.SetModeCommand.Execute("edition");
+    control.Session.Select([Id("PAR 1"), Id("PAR 2"), Id("PAR 3"), Id("PAR 4")]);
+    control.Effects.SelectedTemplate = control.Effects.Templates.First(t => t.Template.Name == "Vague douce");
+    control.Effects.AddEffectCommand.Execute(null);
+    control.Session.Commit();
+    control.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Effects);
+    Tick(20);
+    Capture("Contrôle - Effets vague");
+    control.Session.Select([Id("Lyre 1"), Id("Lyre 2")]);
+    control.Effects.SelectedTemplate = control.Effects.Templates.First(t => t.Template.Name == "Cercles opposés");
+    control.Effects.AddEffectCommand.Execute(null);
+    control.Session.Commit();
+    Tick(20);
+    Capture("Contrôle - Effets cercles");
+    control.Session.Undo();
+    control.Session.Undo();
+    control.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Settings);
+
     // AVEUGLE : les lyres, onglet Position.
     control.Session.ChooseScene(SceneNamed("Lyres sur 3 positions").Id);
     control.SetModeCommand.Execute("aveugle");

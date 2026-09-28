@@ -67,7 +67,7 @@ public sealed class EffectCompilerTests
     [Trait("Exigence", "EFF-002")]
     public void Wave_OnFourPars_OneDimmerPerMember_InPatchOrder()
     {
-        var (model, issues) = Compile(new SceneEffect { Name = "Vague", Target = Pars, Shape = SceneEffectShape.Sine });
+        var (model, issues) = Compile(new SceneEffect { Name = "Vague", Targets = [Pars], Shape = SceneEffectShape.Sine });
         issues.ShouldBeEmpty();
         var effect = Only(model);
         effect.Shape.ShouldBe(EffectShape.Sine);
@@ -85,7 +85,7 @@ public sealed class EffectCompilerTests
         var cells = Fixtures.Rules.FixtureRules.ChannelsOf(bar, mode).Select(c => c.Cell).Where(c => c > 0).Distinct().Count();
         cells.ShouldBeGreaterThan(1);
 
-        var (model, issues) = Compile(new SceneEffect { Target = Bars, PerCell = true, Shape = SceneEffectShape.Square, DutyCycle = 0.125 });
+        var (model, issues) = Compile(new SceneEffect { Targets = [Bars], PerCell = true, Shape = SceneEffectShape.Square, DutyCycle = 0.125 });
         issues.ShouldBeEmpty();
         var effect = Only(model);
         effect.Channels.Select(c => c.Member).Distinct().Count().ShouldBe(2 * cells);
@@ -99,7 +99,7 @@ public sealed class EffectCompilerTests
     {
         var multi = _project.Fixture("Effet multi-têtes");
         multi.ModeName.ShouldBe("64 canaux");
-        var (model, issues) = Compile(new SceneEffect { Target = ValueTarget.Fixture(multi.Id), PerCell = true, Shape = SceneEffectShape.Rainbow });
+        var (model, issues) = Compile(new SceneEffect { Targets = [ValueTarget.Fixture(multi.Id)], PerCell = true, Shape = SceneEffectShape.Rainbow });
         issues.ShouldBeEmpty();
         var effect = Only(model);
         effect.Channels.Select(c => c.Member).Distinct().Count().ShouldBe(12);
@@ -117,7 +117,7 @@ public sealed class EffectCompilerTests
         var track = palettes.Palettes.Single(p => p.Name == "Piste centre");
         var lyre = _project.Fixture("Lyre 1");
         var (model, issues) = Compile(
-            new SceneEffect { Target = ValueTarget.Fixture(lyre.Id), Shape = SceneEffectShape.Circle, Size = 60, PositionPaletteId = track.Id, Relative = true },
+            new SceneEffect { Targets = [ValueTarget.Fixture(lyre.Id)], Shape = SceneEffectShape.Circle, Size = 60, PositionPaletteId = track.Id, Relative = true },
             palettes);
         issues.ShouldBeEmpty();
         var effect = Only(model);
@@ -141,7 +141,7 @@ public sealed class EffectCompilerTests
     public void Alternate_FromTheme_SteppedTables()
     {
         var latino = DefaultPalettes.Themes.Single(t => t.Name == "Latino");
-        var (model, issues) = Compile(new SceneEffect { Target = Pars, Shape = SceneEffectShape.Alternate, ThemeId = latino.Id });
+        var (model, issues) = Compile(new SceneEffect { Targets = [Pars], Shape = SceneEffectShape.Alternate, ThemeId = latino.Id });
         issues.ShouldBeEmpty();
         var effect = Only(model);
         effect.Stepped.ShouldBeTrue();
@@ -156,7 +156,7 @@ public sealed class EffectCompilerTests
     {
         var red = DefaultPalettes.Colors.Single(p => p.Name == "Rouge");
         var blue = DefaultPalettes.Colors.Single(p => p.Name == "Bleu");
-        var (model, issues) = Compile(new SceneEffect { Target = Pars, Shape = SceneEffectShape.Gradient, Colors = [EffectColor.Palette(red.Id), EffectColor.Palette(blue.Id)] });
+        var (model, issues) = Compile(new SceneEffect { Targets = [Pars], Shape = SceneEffectShape.Gradient, Colors = [EffectColor.Palette(red.Id), EffectColor.Palette(blue.Id)] });
         issues.ShouldBeEmpty();
         var effect = Only(model);
         effect.Stepped.ShouldBeFalse();
@@ -167,11 +167,11 @@ public sealed class EffectCompilerTests
     [Trait("Exigence", "EFF-001")]
     public void Problems_Reported_EffectDropped()
     {
-        var (model, issues) = Compile(new SceneEffect { Name = "Cercle", Target = Pars, Shape = SceneEffectShape.Circle });
+        var (model, issues) = Compile(new SceneEffect { Name = "Cercle", Targets = [Pars], Shape = SceneEffectShape.Circle });
         issues.ShouldContain(i => i.Message.Contains("Pan", StringComparison.Ordinal) && i.Item.Contains("Cercle", StringComparison.Ordinal));
         model.Scenes.Single().Steps.Single().Effects.ShouldBeEmpty();
 
-        (_, issues) = Compile(new SceneEffect { Target = Pars, Shape = SceneEffectShape.Alternate, ThemeId = Guid.NewGuid() });
+        (_, issues) = Compile(new SceneEffect { Targets = [Pars], Shape = SceneEffectShape.Alternate, ThemeId = Guid.NewGuid() });
         issues.ShouldContain(i => i.Message.Contains("thème", StringComparison.Ordinal));
     }
 
@@ -179,7 +179,7 @@ public sealed class EffectCompilerTests
     [Trait("Exigence", "MOT-054")]
     public void ColorGroups_OnePerRgbCell()
     {
-        var (model, _) = Compile(new SceneEffect { Target = Pars });
+        var (model, _) = Compile(new SceneEffect { Targets = [Pars] });
         model.ColorGroups.Count.ShouldBeGreaterThanOrEqualTo(4 + 2 + 8);
         model.ColorGroups.ShouldContain(g => model.Parameters[g.Red].Label == "PAR 1 – Rouge");
     }
@@ -190,7 +190,7 @@ public sealed class EffectCompilerTests
     public void Rainbow_PlayedByEngine_ColorChangesOverCycle()
     {
         var (model, _) = Compile(
-            new SceneEffect { Target = Pars, Shape = SceneEffectShape.Rainbow, Period = Duration.FromSeconds(3), Spread = 0 },
+            new SceneEffect { Targets = [Pars], Shape = SceneEffectShape.Rainbow, Period = Duration.FromSeconds(3), Spread = 0 },
             null,
             new SceneValue { Target = Pars, Attribute = AttributeKind.Intensity, Level = 1 });
         var sink = new FrameSink();
@@ -224,17 +224,17 @@ public sealed class EffectCompilerTests
     public void Library_Apply_CopiesWithNewIdAndTarget()
     {
         var template = DefaultEffects.Templates.First(t => t.Name == "Vague douce");
-        var applied = DefaultEffects.Apply(template, Pars);
+        var applied = DefaultEffects.Apply(template, [Pars]);
         applied.Id.ShouldNotBe(template.Effect.Id);
         applied.Name.ShouldBe("Vague douce");
-        applied.Target.ShouldBe(Pars);
+        applied.Targets.ShouldBe([Pars]);
         applied.Shape.ShouldBe(template.Effect.Shape);
 
         // Tous les modèles livrés se compilent sans problème sur le parc (les mouvements sur les lyres).
         var lyres = new ValueTarget { Auto = new AutoSelectionTarget(AutoSelectionKind.ByCategory, Category: FixtureCategory.MovingHead) };
         foreach (var t in DefaultEffects.Templates)
         {
-            var (_, issues) = Compile(DefaultEffects.Apply(t, t.Effect.IsPosition ? lyres : Pars));
+            var (_, issues) = Compile(DefaultEffects.Apply(t, [t.Effect.IsPosition ? lyres : Pars]));
             issues.ShouldBeEmpty(t.Name);
         }
     }

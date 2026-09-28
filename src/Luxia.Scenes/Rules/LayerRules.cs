@@ -41,6 +41,15 @@ public static class LayerRules
             }
         }
 
+        foreach (var effect in scene.Steps.SelectMany(s => s.Effects))
+        {
+            var family = EffectRules.Family(effect);
+            if (family is not (AttributeFamily.Control or AttributeFamily.Other) && !layer.Families.Contains(family))
+            {
+                found.Add(family);
+            }
+        }
+
         return [.. found];
     }
 

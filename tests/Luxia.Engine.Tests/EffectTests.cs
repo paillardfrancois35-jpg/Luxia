@@ -331,6 +331,35 @@ public sealed class EffectTests
         engine.Value(par["g"]).ShouldBe(0.5, 1e-6);
     }
 
+    [Fact]
+    [Trait("Exigence", "EFF-006")]
+    [Trait("Exigence", "CMD-017")]
+    public void ShowStep_PinsStepWithEffects_AboveLayers_NotListedAsPlaying()
+    {
+        var below = _show.Scene("Fond", _layer, Step(0, 60, V(_pars[0]["dim"], 0.3)));
+        var wave = IntensityWave(EffectShape.SawUp, period: 4);
+        var edited = _show.Scene(
+            "Éditée",
+            _show.Layer("Autre", 0),
+            Step(0, 0.5, V(_pars[1]["dim"], 0.9)),
+            StepWith(0, [], wave) with { Hold = Duration.FromSeconds(0.5) });
+        var engine = new EngineHarness(_show.Build());
+        engine.Launch(below);
+        engine.Send(new Messaging.Commands.ShowStepCommand(Messaging.Commands.CommandOrigin.User, edited.Id, 1));
+        engine.Tick();
+        engine.Run(2);
+
+        // Étape 2 figée (pas de retour à l'étape 1 après 0,5 s), effet en marche, au-dessus de la couche du fond.
+        // Dent de scie de 4 s : à 2 s, PAR 1 est à mi-course (0,5), PAR 2, en retard d'un quart, à 0,25.
+        engine.Value(_pars[0]["dim"]).ShouldBe(0.5, 1e-6);
+        engine.Value(_pars[1]["dim"]).ShouldBe(0.25, 1e-6);
+        engine.Playback(edited).ShouldBeNull();
+
+        engine.Send(new Messaging.Commands.ShowStepCommand(Messaging.Commands.CommandOrigin.User, null));
+        engine.Tick();
+        engine.Value(_pars[0]["dim"]).ShouldBe(0.3, 1e-9);
+    }
+
     [Theory]
     [InlineData(EffectShape.Triangle, 0.25, 0.0)]
     [InlineData(EffectShape.Triangle, 0.5, 0.5)]

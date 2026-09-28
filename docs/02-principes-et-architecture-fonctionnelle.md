@@ -211,6 +211,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-014 | `FlashScène` | scène, appui / relâche | Moteur | P5 |
 | CMD-015 | `ÉtapeSuivante` / `ÉtapePrécédente` | scène | Moteur | P4 |
 | CMD-016 | `RéglerVitesseScène` | scène, multiplicateur | Moteur | P5 |
+| CMD-017 | `MontrerÉtape` | scène, étape (ou aucune) : l'étape éditée est jouée, effets compris, au-dessus des couches et figée sur cette étape (aperçu des effets pendant le réglage, EFF-006) | Moteur | P6 |
 | CMD-020 | `SurchargerCanal` | univers, canal, valeur | Moteur (console) | P1 |
 | CMD-021 | `SurchargerAttribut` | appareil(s), attribut, valeur | Moteur (console / programmeur) | P4 |
 | CMD-022 | `LibérerSurcharges` | tout / canal / appareil | Moteur | P1 |

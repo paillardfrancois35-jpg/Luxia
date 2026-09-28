@@ -65,6 +65,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Properties = new PropertiesPanelViewModel(runtime, Session);
         Journal = new JournalPanelViewModel(runtime);
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
+        Effects = new EffectsPanelViewModel(runtime, Session, dialogs);
         Session.Changed += (_, _) =>
         {
             _changes++;
@@ -91,11 +92,20 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
     /// <summary>Panneau Propriétés.</summary>
     public PropertiesPanelViewModel Properties { get; }
 
+    /// <summary>Panneau Effets (doc 16 §6).</summary>
+    public EffectsPanelViewModel Effects { get; }
+
     /// <summary>Panneau Journal.</summary>
     public JournalPanelViewModel Journal { get; }
 
     /// <summary>Panneau Looks (et panneau Pilote automatique, qui montre les mêmes looks).</summary>
     public LooksPanelViewModel Looks { get; }
+
+    /// <summary>Levé pour amener un panneau au premier plan (réaffiché s'il était fermé).</summary>
+    public event EventHandler<string>? PanelRequested;
+
+    /// <summary>Amène un panneau au premier plan (identifiant de <see cref="Docking.ControlPanels"/>).</summary>
+    public void RequestPanel(string id) => PanelRequested?.Invoke(this, id);
 
     /// <summary>Disposition affichée : Contrôle ou Spectacle (doc 60 §6).</summary>
     [ObservableProperty]
@@ -138,6 +148,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Plan.Refresh();
         Settings.Refresh();
         Properties.Refresh();
+        Effects.Refresh();
         CountDownCommit();
         Journal.Refresh();
     }

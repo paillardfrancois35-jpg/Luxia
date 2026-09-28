@@ -58,6 +58,15 @@ public partial class ControlView : UserControl
 
             // Bande ✎ avec le panneau Propriétés fermé : on le rouvre, sinon le clic semblait sans effet (essai 1.005.198).
             vm.Columns.EditChosen += (_, _) => ShowPanelIfHidden(ControlPanels.Properties);
+            vm.PanelRequested += (_, id) =>
+            {
+                if (_layout is not null && _factory is not null)
+                {
+                    _factory.ShowPanel(_layout, id);
+                    AssignContexts(_layout);
+                    SaveLayout();
+                }
+            };
             vm.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(ControlViewModel.LayoutPreset))
@@ -139,6 +148,7 @@ public partial class ControlView : UserControl
             [ControlPanels.Properties] = () => vm.Properties,
             [ControlPanels.Plan] = () => vm.Plan,
             [ControlPanels.Settings] = () => vm.Settings,
+            [ControlPanels.Effects] = () => vm.Effects,
             [ControlPanels.Journal] = () => vm.Journal,
             [ControlPanels.Looks] = () => vm.Looks,
             [ControlPanels.Pilot] = () => vm.Looks,
@@ -153,6 +163,28 @@ public partial class ControlView : UserControl
 
         SetLayout(loaded ?? _factory.CreateLayout());
         _saved = loaded is null ? null : _store.Serialize(_layout!);
+        AddNewPanels(vm);
+    }
+
+    // Disposition enregistrée par une version antérieure : un panneau apparu depuis (Effets, P6) y est ajouté à sa place
+    // livrée, sans prendre le premier plan ; ensuite, le fermer reste possible (il ne revient plus tout seul).
+    private void AddNewPanels(ControlViewModel vm)
+    {
+        if (_layout is null || _factory is null || vm.LayoutPreset != ControlLayoutPreset.Control
+            || DockTree.Find(_layout, ControlPanels.Effects).Place != PanelPlace.Absent)
+        {
+            return;
+        }
+
+        var (active, _) = DockTree.Find(_layout, ControlPanels.Settings);
+        _factory.ShowPanel(_layout, ControlPanels.Effects);
+        if (active is not null)
+        {
+            _factory.SetActiveDockable(active);
+        }
+
+        AssignContexts(_layout);
+        SaveLayout();
     }
 
     // Contrôle ↔ Spectacle : la disposition quittée est enregistrée, l'autre reprise telle qu'on l'avait laissée.
@@ -174,6 +206,7 @@ public partial class ControlView : UserControl
 
         SetLayout(loaded ?? _factory.CreateLayout());
         _saved = loaded is null ? null : _store.Serialize(_layout!);
+        AddNewPanels(vm);
     }
 
     private void SetLayout(IRootDock layout)
@@ -218,6 +251,7 @@ public partial class ControlView : UserControl
                     ControlPanels.Plan => vm.Plan,
                     ControlPanels.Settings => vm.Settings,
                     ControlPanels.Looks or ControlPanels.Pilot => vm.Looks,
+                    ControlPanels.Effects => vm.Effects,
                     _ => vm.Journal,
                 };
             }
