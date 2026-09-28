@@ -191,6 +191,7 @@
     02, glossaire, doc 99 (4 idées).
   - Bilan : **15 exigences P6 Réalisé** (+ PAL-010, INST-034, MOT-054 reportées et réalisées, CMD-017). Tests : 675,
     tous verts ; 0 avertissement.
+  - **Essai en cours (2026-09-28)** : exemples 1 à 3 conformes (vague et miroir ramenés de 10 à 100 % à la demande de l'utilisateur) ; **exemple 4 (WZYBUTA 64 canaux, adresse 181, canal 182 / Q25) en attente** : appareil pas encore installé, à reprendre dès qu'il l'est.
   - **À faire pour valider P6** : dérouler le guide P6 **un exemple à la fois** avec l'utilisateur (régénérer d'abord le show
     de travail ; faire régler l'effet multi-têtes en 64 canaux, adresse 181 ; vérifier la vitesse du canal 2, Q25) ; puis
     proposer l'analyse ergonomique de fin de phase (§5.6) avant la fusion dans `main` et l'étiquette `v1.006`.
