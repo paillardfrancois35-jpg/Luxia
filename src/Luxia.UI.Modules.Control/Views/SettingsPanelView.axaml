@@ -139,12 +139,22 @@
             <TextBlock Classes="hint" Text="{Binding ZonesTitle}" />
             <ItemsControl ItemsSource="{Binding ZoneLines}">
               <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                  <TextBlock Text="{Binding}" FontSize="11" TextWrapping="Wrap" />
+                <DataTemplate x:DataType="vm:ZoneLine">
+                  <Button Background="{Binding Background}" Padding="4,2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                          IsEnabled="{Binding $parent[UserControl].((vm:SettingsPanelViewModel)DataContext).IsZoneEditing}"
+                          ToolTip.Tip="Choisir cette zone (utile quand elle est sous une autre sur la grille)"
+                          Command="{Binding $parent[UserControl].((vm:SettingsPanelViewModel)DataContext).SelectZoneCommand}" CommandParameter="{Binding Id}">
+                    <TextBlock Text="{Binding Text}" FontSize="11" TextWrapping="Wrap" />
+                  </Button>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <TextBlock Classes="hint" IsVisible="{Binding IsZoneEditing}" Text="Glisser dans le vide : nouvelle zone · glisser une zone : la déplacer · poignées : l'ajuster · Suppr : la retirer." />
+            <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasSelectedZone}">
+              <TextBox Text="{Binding SelectedZoneName, UpdateSourceTrigger=LostFocus}" FontSize="12" PlaceholderText="Nom de la zone"
+                       ToolTip.Tip="Nom de la zone choisie (enregistré en quittant le champ ; Ctrl+Z pour annuler)" />
+              <Button Grid.Column="1" Content="Supprimer" Margin="6,0,0,0" Command="{Binding DeleteSelectedZoneCommand}" ToolTip.Tip="Retirer la zone choisie (Suppr sur la grille)" />
+            </Grid>
+            <TextBlock Classes="hint" IsVisible="{Binding IsZoneEditing}" Text="Glisser dans le vide : nouvelle zone · glisser une zone : la déplacer (la plus petite sous le curseur est prise) · poignées : l'ajuster · liste : choisir, renommer · Suppr : la retirer." />
             <Button Content="Retirer la position" Command="{Binding RemoveFamilyCommand}" CommandParameter="position" />
           </StackPanel>
           <StackPanel Grid.Column="2" Margin="20,0,0,0">

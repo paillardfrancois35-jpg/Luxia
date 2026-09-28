@@ -124,6 +124,12 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
     [ObservableProperty]
     private string _zonesTitle = string.Empty;
 
+    /// <summary>Nom de la zone choisie (modifiable en édition des zones).</summary>
+    [ObservableProperty]
+    private string _selectedZoneName = string.Empty;
+
+    private bool _syncingZoneName;
+
     [ObservableProperty]
     private string? _message;
 
@@ -167,8 +173,11 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
     /// <summary>Faisceau, strobe, programmes… (tout sauf intensité, couleur et position).</summary>
     public ObservableCollection<ParameterRowViewModel> OtherRows { get; } = [];
 
-    /// <summary>Zones de l'appareil (liste lisible à côté de la grille).</summary>
-    public ObservableCollection<string> ZoneLines { get; } = [];
+    /// <summary>Zones de l'appareil (liste à côté de la grille : un clic choisit la zone en édition).</summary>
+    public ObservableCollection<ZoneLine> ZoneLines { get; } = [];
+
+    /// <summary>Vrai quand une zone est choisie en édition des zones.</summary>
+    public bool HasSelectedZone => IsZoneEditing && SelectedZoneIndex() is not null;
 
     /// <summary>Premier appareil sélectionné qui a Pan et Tilt (zones), ou nul.</summary>
     public FixtureInfo? ZoneFixture { get; private set; }
@@ -288,11 +297,51 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
         RefreshZones();
     }
 
-    /// <summary>Zone choisie sur la grille.</summary>
+    /// <summary>Zone choisie sur la grille ou dans la liste.</summary>
+    [RelayCommand]
     public void SelectZone(string? id)
     {
         SelectedZoneId = id;
         RefreshZones();
+    }
+
+    /// <summary>Bouton « Supprimer » de la zone choisie.</summary>
+    [RelayCommand]
+    private void DeleteSelectedZone()
+    {
+        if (SelectedZoneId is { } id)
+        {
+            DeleteZone(id);
+        }
+    }
+
+    partial void OnSelectedZoneNameChanged(string value)
+    {
+        if (_syncingZoneName || ZoneFixture is not { } fixture || SelectedZoneIndex() is not { } index || string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        var zones = Zones.Of(_session.Venues, fixture.Fixture.Id).ToList();
+        if (zones[index].Name == value.Trim())
+        {
+            return;
+        }
+
+        zones[index] = zones[index] with { Name = value.Trim() };
+        _session.EditVenues(v => Zones.Replace(v, fixture.Fixture.Id, zones), "Renommer la zone");
+        _session.Commit();
+        RefreshZones();
+    }
+
+    private int? SelectedZoneIndex()
+    {
+        if (ZoneFixture is not { } fixture || !int.TryParse(SelectedZoneId, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index))
+        {
+            return null;
+        }
+
+        return index >= 0 && index < Zones.Of(_session.Venues, fixture.Fixture.Id).Count ? index : null;
     }
 
     /// <summary>Retire la zone choisie (Suppr).</summary>
@@ -599,12 +648,22 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
             new PanTiltRect(z.PanMin, z.PanMax, z.TiltMin, z.TiltMax),
             z.Allowed ? PanTiltZoneKind.Allowed : PanTiltZoneKind.Forbidden))];
         ZonesTitle = $"Zones de « {fixture.Fixture.Name} » — lieu {_session.Venues.Active.Name}, valables pour toutes les scènes";
-        foreach (var zone in zones)
+        for (var i = 0; i < zones.Count; i++)
         {
-            ZoneLines.Add(string.Create(
-                CultureInfo.CurrentCulture,
-                $"{(zone.Allowed ? "▢ permise" : "■ interdite")} · {zone.Name ?? "sans nom"} · Pan {zone.PanMin * PanRange:0}-{zone.PanMax * PanRange:0}°, Tilt {zone.TiltMin * TiltRange:0}-{zone.TiltMax * TiltRange:0}°"));
+            var zone = zones[i];
+            var id = i.ToString(CultureInfo.InvariantCulture);
+            ZoneLines.Add(new ZoneLine(
+                id,
+                string.Create(
+                    CultureInfo.CurrentCulture,
+                    $"{(zone.Allowed ? "▢ permise" : "■ interdite")} · {zone.Name ?? "sans nom"} · Pan {zone.PanMin * PanRange:0}-{zone.PanMax * PanRange:0}°, Tilt {zone.TiltMin * TiltRange:0}-{zone.TiltMax * TiltRange:0}°"),
+                IsZoneEditing && id == SelectedZoneId));
         }
+
+        _syncingZoneName = true;
+        SelectedZoneName = SelectedZoneIndex() is { } selected ? zones[selected].Name ?? string.Empty : string.Empty;
+        _syncingZoneName = false;
+        OnPropertyChanged(nameof(HasSelectedZone));
     }
 
     private static void Fill(ObservableCollection<Palette> target, IEnumerable<Palette> source)
@@ -623,4 +682,14 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
     }
 
     private static byte ToByte(double level) => (byte)Math.Clamp((int)Math.Round(level * 255), 0, 255);
+}
+
+/// <summary>Une zone dans la liste à côté de la grille Pan / Tilt.</summary>
+/// <param name="Id">Identifiant (rang de la zone pour l'appareil).</param>
+/// <param name="Text">Ligne lisible : type, nom, étendue.</param>
+/// <param name="IsSelected">Zone choisie en édition des zones.</param>
+public sealed record ZoneLine(string Id, string Text, bool IsSelected)
+{
+    /// <summary>Fond de la ligne (choisie : couleur des zones, estompée).</summary>
+    public string Background => IsSelected ? "#33F0883E" : "#00000000";
 }

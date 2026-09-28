@@ -151,6 +151,15 @@ public static class PanTiltGeometry
         yield return (PanTiltHandle.Left, new Point(r.Left, r.Center.Y));
     }
 
+    /// <summary>
+    /// Zone prise par un clic : la plus petite qui contient le point, pour qu'une zone dessinée dans une grande (permise)
+    /// reste attrapable (essai 1.005.202).
+    /// </summary>
+    public static PanTiltZoneMarker? ZoneAt(IEnumerable<PanTiltZoneMarker> zones, Rect area, Point point) => zones
+        .Where(z => HitTest(z.Area, area, point, 0) == PanTiltHandle.Body)
+        .OrderBy(z => z.Area.PanSize * z.Area.TiltSize)
+        .FirstOrDefault();
+
     /// <summary>Partie d'une zone sous un point de l'écran : poignée (à <paramref name="tolerance"/> près), corps ou rien.</summary>
     public static PanTiltHandle HitTest(PanTiltRect zone, Rect area, Point point, double tolerance)
     {

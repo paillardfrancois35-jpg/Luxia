@@ -316,7 +316,7 @@ public sealed class PanTiltGrid : Control
         var zones = Zones ?? [];
         _dragStart = point;
 
-        // D'abord les poignées de la zone sélectionnée, puis le corps des zones (la dernière dessinée est au-dessus).
+        // D'abord les poignées de la zone sélectionnée, puis le corps des zones (la plus petite sous le curseur).
         var selected = zones.FirstOrDefault(z => z.Id == SelectedZoneId);
         if (selected is not null)
         {
@@ -329,15 +329,12 @@ public sealed class PanTiltGrid : Control
             }
         }
 
-        for (var i = zones.Count - 1; i >= 0; i--)
+        if (PanTiltGeometry.ZoneAt(zones, area, point) is { } hitZone)
         {
-            if (PanTiltGeometry.HitTest(zones[i].Area, area, point, 0) == PanTiltHandle.Body)
-            {
-                _zoneOrigin = zones[i];
-                _zoneHandle = PanTiltHandle.Body;
-                ZoneSelected?.Invoke(this, zones[i].Id);
-                return;
-            }
+            _zoneOrigin = hitZone;
+            _zoneHandle = PanTiltHandle.Body;
+            ZoneSelected?.Invoke(this, hitZone.Id);
+            return;
         }
 
         ZoneSelected?.Invoke(this, null);

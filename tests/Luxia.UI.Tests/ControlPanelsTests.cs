@@ -395,6 +395,35 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-017")]
+    public void Settings_Zones_ChosenFromTheList_Renamed_Deleted()
+    {
+        Select("Lyre 2");
+        _vm.Settings.SelectedTab = 2;
+        _vm.Refresh();
+        _vm.Settings.IsZoneEditing = true;
+        _vm.Settings.RequestZone(new PanTiltZoneRequest(null, new PanTiltRect(0.4, 0.6, 0.1, 0.3)));
+        _vm.Flush();
+        var id = _vm.Settings.ZoneLines[^1].Id;
+
+        _vm.Settings.SelectZoneCommand.Execute(null);
+        _vm.Settings.HasSelectedZone.ShouldBeFalse();
+        _vm.Settings.SelectZoneCommand.Execute(id);
+        _vm.Settings.HasSelectedZone.ShouldBeTrue();
+        _vm.Settings.ZoneLines[^1].IsSelected.ShouldBeTrue("la ligne choisie est mise en évidence");
+
+        _vm.Settings.SelectedZoneName = "Régie";
+        Modules.Control.Zones.Of(_host.Runtime.Project.Venues, Id("Lyre 2"))[^1].Name.ShouldBe("Régie");
+        _vm.Undo();
+        Modules.Control.Zones.Of(_host.Runtime.Project.Venues, Id("Lyre 2"))[^1].Name.ShouldNotBe("Régie", "Ctrl+Z annule le renommage");
+
+        var count = _vm.Settings.ZoneLines.Count;
+        _vm.Settings.SelectZoneCommand.Execute(id);
+        _vm.Settings.DeleteSelectedZoneCommand.Execute(null);
+        _vm.Settings.ZoneLines.Count.ShouldBe(count - 1);
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-019")]
     [Trait("Exigence", "SCN-008")]
     public void Settings_PaletteAndRange_AreApplied()
