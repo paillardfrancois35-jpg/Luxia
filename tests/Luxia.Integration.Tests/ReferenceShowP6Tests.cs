@@ -33,16 +33,18 @@ public sealed class ReferenceShowP6Tests
     {
         var frames = Run("0 lancer \"Vague sur les PAR (gauche → droite)\"", 0.5);
 
-        // PAR 1 à 4 : gradateurs aux canaux 1, 8, 15, 22 ; départ : bas, mi-course, haut, mi-course.
-        frames[0][0].ShouldBe((byte)0);
-        ((double)frames[0][7]).ShouldBe(128, 1);
+        // PAR 1 à 4 : gradateurs aux canaux 1, 8, 15, 22 ; vague de 20 à 100 % (les PAR ne s'éteignent pas, essai P6) ;
+        // départ : bas, mi-course, haut, mi-course.
+        ((double)frames[0][0]).ShouldBe(51, 1);
+        ((double)frames[0][7]).ShouldBe(153, 1);
         frames[0][14].ShouldBe((byte)255);
-        ((double)frames[0][21]).ShouldBe(128, 1);
+        ((double)frames[0][21]).ShouldBe(153, 1);
 
         // Un demi-cycle plus tard (1 s), c'est l'inverse.
         var later = Run("0 lancer \"Vague sur les PAR (gauche → droite)\"", 1);
         later[^1][0].ShouldBe((byte)255);
-        later[^1][14].ShouldBe((byte)0);
+        ((double)later[^1][14]).ShouldBe(51, 1);
+        frames.Concat(later).ShouldAllBe(f => f[0] >= 50, "jamais éteint");
     }
 
     [Fact]
