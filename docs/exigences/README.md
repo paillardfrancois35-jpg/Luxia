@@ -197,9 +197,9 @@
 | [ERG-022](ERG-022.md) | Taille de l'interface | ERG | M | Validé |
 | [ERG-023](ERG-023.md) | Looks | ERG | I | Validé |
 | [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Validé |
-| [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Réalisé |
+| [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Validé |
 | [ERG-026](ERG-026.md) | Stop et Tout stopper | ERG | I | Validé |
-| [ERG-027](ERG-027.md) | Marges | ERG | M | Réalisé |
+| [ERG-027](ERG-027.md) | Marges | ERG | M | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

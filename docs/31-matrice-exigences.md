@@ -361,7 +361,7 @@
 
 ## ERG – 27 exigences, 19 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 4 · Validé : 22
+> En cours : 1 · Réalisé : 2 · Validé : 24
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -389,6 +389,6 @@
 | [ERG-022](exigences/ERG-022.md) | M | Taille de l'interface | Validé | PreferencesAndProjectTests.UiScale_DefaultsTo100Percent_AndRoundTrips |
 | [ERG-023](exigences/ERG-023.md) | I | Looks | Validé | ControlPanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>ControlPanelsTests.Looks_Capture_LeavesTheGrandMasterToTheOperator<br>ControlPanelsTests.Looks_FunctionKeys_PlayByRank<br>ControlPanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>(+3) |
 | [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Validé | ControlLayoutTests.ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately<br>ControlPanelsTests.LayoutPreset_SwitchesBetweenControlAndShow |
-| [ERG-025](exigences/ERG-025.md) | M | Scènes resserrées | Réalisé |  |
+| [ERG-025](exigences/ERG-025.md) | M | Scènes resserrées | Validé |  |
 | [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
-| [ERG-027](exigences/ERG-027.md) | M | Marges | Réalisé |  |
+| [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |

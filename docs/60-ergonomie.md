@@ -326,6 +326,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-09-28 | **Chantier validé** par l'utilisateur (1.005.237), fusionné dans `main`, étiquette `v1.005`. |
 | 2026-09-28 | Essai de l'écran Contrôle par l'utilisateur, au matériel (guide §0 à §7, 1.005.192 → 1.005.226) : corrections au fil de l'eau (ERG-001, 013, 014, 016, 017, 018, 019, 023) ; ERG-025 scènes resserrées, ERG-026 Stop / Tout stopper, ERG-027 marges ; choix C12 à C14. |
 | 2026-09-28 | Nuit de développement par délégation : écran Contrôle dans LuXia, zone permise, identité visuelle, démo ; ERG-009 à ERG-020. |
 | 2026-09-27 | §11 choix de Claude par délégation (C1-C11), Q35 close ; ERG-008 (8e couche « Libre »). |
