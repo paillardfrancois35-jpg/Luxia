@@ -33,7 +33,7 @@ public sealed class ReferenceShowP3Tests
         addresses["Barre 2"].ShouldBe(81);
         addresses["Lyre 1"].ShouldBe(111);
         addresses["Lyre 2"].ShouldBe(126);
-        addresses["Effet multi-têtes"].ShouldBe(141);
+        addresses["Effet multi-têtes"].ShouldBe(181); // 64 canaux (P6, Q25) : après la fumée, rien d'autre ne bouge
         addresses["UV 1"].ShouldBe(161);
         addresses["UV 2"].ShouldBe(169); // UV en 8 canaux (8e canal « lissage » découvert à l'essai P5)
         addresses["Fumée"].ShouldBe(180);

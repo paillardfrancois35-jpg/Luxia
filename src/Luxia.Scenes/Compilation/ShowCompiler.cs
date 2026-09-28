@@ -46,11 +46,12 @@ public static class ShowCompiler
         var layers = content.Layers.Layers.Select(ToEngine).ToList();
         var provisional = new ShowModel(parameters, layers, [], aliases);
         var resolver = new ValueResolver(patch, content.Palettes);
+        var effects = new EffectCompiler(patch, resolver);
         var layerIds = layers.Select(l => l.Id).ToHashSet();
         var scenes = new List<EngineScene>();
         foreach (var scene in content.Scenes.Scenes)
         {
-            scenes.Add(CompileScene(scene, provisional, resolver, layerIds, layers, issues));
+            scenes.Add(CompileScene(scene, provisional, resolver, effects, layerIds, layers, issues));
         }
 
         // PAL-008 : positions jamais calibrées dans le lieu actif → valeur du lieu « Générique », signalée.
@@ -73,7 +74,7 @@ public static class ShowCompiler
         }
 
         var safety = SafetyCompiler.Build(patch, provisional, content.Safety ?? new SafetySettings(), content.Venues.Active, issues);
-        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety), issues);
+        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety, ColorGroups(patch, provisional)), issues);
     }
 
     /// <summary>Paramètres des appareils patchés (jumeaux regroupés sur l'appareil de référence).</summary>
@@ -234,6 +235,7 @@ public static class ShowCompiler
         Scene scene,
         ShowModel model,
         ValueResolver resolver,
+        EffectCompiler effects,
         HashSet<Guid> layerIds,
         List<EngineLayer> layers,
         List<CompileIssue> issues)
@@ -248,7 +250,7 @@ public static class ShowCompiler
         var steps = new List<EngineStep>();
         for (var s = 0; s < scene.Steps.Count; s++)
         {
-            steps.Add(CompileStep(scene, s, model, resolver, issues));
+            steps.Add(CompileStep(scene, s, model, resolver, effects, issues));
         }
 
         if (steps.Count == 0)
@@ -272,7 +274,7 @@ public static class ShowCompiler
         };
     }
 
-    private static EngineStep CompileStep(Scene scene, int stepIndex, ShowModel model, ValueResolver resolver, List<CompileIssue> issues)
+    private static EngineStep CompileStep(Scene scene, int stepIndex, ShowModel model, ValueResolver resolver, EffectCompiler effects, List<CompileIssue> issues)
     {
         var step = scene.Steps[stepIndex];
         var where = string.Create(CultureInfo.CurrentCulture, $"scène « {scene.Name} », étape {stepIndex + 1}");
@@ -321,6 +323,26 @@ public static class ShowCompiler
             }
         }
 
+        var compiled = new List<EngineEffect>();
+        for (var e = 0; e < step.Effects.Count; e++)
+        {
+            var effect = effects.Compile(step.Effects[e], model, out var problem);
+            if (problem is not null)
+            {
+                issues.Add(new CompileIssue(
+                    IssueSeverity.Warning,
+                    ScenesFile,
+                    $"{where}, effet « {step.Effects[e].Name ?? (e + 1).ToString(CultureInfo.CurrentCulture)} »",
+                    string.Create(CultureInfo.CurrentCulture, $"effects[{e}]"),
+                    problem));
+            }
+
+            if (effect.Channels.Count > 0)
+            {
+                compiled.Add(effect);
+            }
+        }
+
         return new EngineStep
         {
             Fade = step.Fade,
@@ -328,7 +350,34 @@ public static class ShowCompiler
             Curve = step.Curve,
             Switch = step.Switch,
             Values = [.. values.Values.OrderBy(v => v.Parameter)],
+            Effects = compiled,
+            HueFade = step.HueFade,
         };
+    }
+
+    /// <summary>Triplets rouge / vert / bleu de chaque cellule (fondu par la teinte, MOT-054).</summary>
+    private static List<ColorGroup> ColorGroups(PatchContext patch, ShowModel model)
+    {
+        var groups = new List<ColorGroup>();
+        foreach (var fixture in patch.Fixtures.Where(f => f.ReferenceId == f.Fixture.Id))
+        {
+            foreach (var cell in fixture.Cells)
+            {
+                int Find(AttributeKind attribute)
+                {
+                    var channels = fixture.Channels.Where(c => c.Attribute == attribute && c.Cell == cell).ToList();
+                    return channels.Count == 1 ? model.IndexOf(fixture.ReferenceId, channels[0].Key) : -1;
+                }
+
+                var (r, g, b) = (Find(AttributeKind.Red), Find(AttributeKind.Green), Find(AttributeKind.Blue));
+                if (r >= 0 && g >= 0 && b >= 0)
+                {
+                    groups.Add(new ColorGroup(r, g, b));
+                }
+            }
+        }
+
+        return groups;
     }
 
     private static int Specificity(ValueTarget target) => target.FixtureId is null ? 0 : target.Cell == 0 ? 1 : 2;

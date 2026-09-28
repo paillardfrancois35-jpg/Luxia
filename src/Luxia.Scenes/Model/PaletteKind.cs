@@ -14,4 +14,7 @@ public enum PaletteKind
 
     /// <summary>Niveau d'intensité nommé.</summary>
     Intensity,
+
+    /// <summary>Thème : combinaison de couleurs (« Latino », « Froid »), pour les effets d'alternance et le Directeur (PAL-010).</summary>
+    Theme,
 }

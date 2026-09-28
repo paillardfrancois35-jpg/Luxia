@@ -37,7 +37,7 @@ Adresses « rondes » pour faciliter le réglage sur les appareils, avec des **r
 | Gros PAR 1 et 2 | 2 | Générique **WT05** (PAR 160 W, sans marque) – **7CH**, mêmes commandes que le LPC008S *(essai P5, 2026-09-27 ; ce n'étaient pas des LPC120)* | 31, 41 | 7 | 50 |
 | Barres 1 et 2 | 2 | BeamZ LCB803 – **24CH** (4 sections, menu `ChNd 24Ch`) *(proposé : 48CH ne tient pas dans la réserve)* | 51, 81 | 24 | 110 |
 | Lyres 1 et 2 | 2 | Tomshine – **11CH** (Pan/Tilt 16 bits) | 111, 126 | 11 | 140 |
-| Effet multi-têtes | 1 | WZYBUTA 150 W – **20CH** (mode 1, couleur commune) *(proposé : 64CH ne tient pas dans la réserve)* | 141 | 20 | 160 |
+| Effet multi-têtes | 1 | WZYBUTA 150 W – **64CH** (mode 2 : 12 cellules RVBW pilotables une à une, EFF-008) *(P6, 2026-09-28, Q25 : placé **après la fumée** pour ne réadresser aucun autre appareil ; 141-160 restent libres)* | **181** | 64 | 244 |
 | UV 1 et 2 | 2 | BeamZ BUV463 – **8CH** : les 7 canaux de la notice + un 8e **« lissage du gradateur »** non documenté (essai P5, 2026-09-27 ; à 255, ≈ 15 s de lissage) | 161, **169** | 8 | 177 |
 | Fumée | 1 | Générique « Machine à fumée » – 1CH | 180 | 1 | 180 |
 

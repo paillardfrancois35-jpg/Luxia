@@ -24,6 +24,9 @@ public sealed record Palette
     /// <summary>Couleur logique (palette couleur).</summary>
     public LogicalColor? Light { get; init; }
 
+    /// <summary>Couleurs d'un thème (PAL-010), dans l'ordre de l'alternance.</summary>
+    public IReadOnlyList<LogicalColor> Colors { get; init; } = [];
+
     /// <summary>Niveau (palette intensité).</summary>
     public double? Level { get; init; }
 
@@ -34,5 +37,5 @@ public sealed record Palette
     public IReadOnlyList<PaletteValue> Values { get; init; } = [];
 
     /// <summary>Couleur du bouton à afficher.</summary>
-    public string DisplayColor() => Color ?? Light?.Hex ?? "#58A6FF";
+    public string DisplayColor() => Color ?? Light?.Hex ?? (Colors.Count > 0 ? Colors[0].Hex : null) ?? "#58A6FF";
 }
