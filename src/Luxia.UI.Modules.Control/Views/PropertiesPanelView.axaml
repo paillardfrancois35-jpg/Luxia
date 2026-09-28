@@ -56,10 +56,10 @@
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.EndOptions}" SelectedItem="{Binding End}" HorizontalAlignment="Stretch" />
             <TextBlock Grid.Row="4" Classes="label" Text="Fondu d'entrée (s)" />
             <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding FadeInSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left"
-                           Watermark="celui de l'étape" ToolTip.Tip="Vide : le fondu de la première étape" />
+                           PlaceholderText="celui de l'étape" ToolTip.Tip="Vide : le fondu de la première étape" />
             <TextBlock Grid.Row="5" Classes="label" Text="Fondu de sortie (s)" />
             <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding FadeOutSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left"
-                           Watermark="immédiat" ToolTip.Tip="Vide : arrêt immédiat" />
+                           PlaceholderText="immédiat" ToolTip.Tip="Vide : arrêt immédiat" />
             <CheckBox Grid.Row="6" Grid.Column="1" Content="Visible dans l'écran Live" IsChecked="{Binding VisibleInLive}" />
           </Grid>
         </Expander>
@@ -84,7 +84,7 @@
           <StackPanel Spacing="6">
             <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
               <TextBlock Classes="label" Text="Nom de l'étape" />
-              <TextBox Grid.Column="1" Text="{Binding StepName}" Watermark="(sans nom)" />
+              <TextBox Grid.Column="1" Text="{Binding StepName}" PlaceholderText="(sans nom)" />
               <TextBlock Grid.Row="1" Classes="label" Text="Fondu (s)" />
               <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding StepFadeSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
               <TextBlock Grid.Row="2" Classes="label" Text="Maintien (s)" />
