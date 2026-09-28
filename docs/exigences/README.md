@@ -178,7 +178,7 @@
 | [EFF-002](EFF-002.md) | Formes d'intensité | P6 | I | Réalisé |
 | [EFF-003](EFF-003.md) | Formes de position | P6 | I | Réalisé |
 | [EFF-004](EFF-004.md) | Formes de couleur | P6 | I | Réalisé |
-| [EFF-005](EFF-005.md) | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | P6 | I | Réalisé |
+| [EFF-005](EFF-005.md) | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | P6 | I | Validé |
 | [EFF-006](EFF-006.md) | Aperçu en direct au simulateur pendant le réglage des paramètres | P6 | I | Réalisé |
 | [EFF-007](EFF-007.md) | Bibliothèque d'effets prédéfinis | P6 | M | Réalisé |
 | [EFF-008](EFF-008.md) | Effets sur cellules | P6 | M | Réalisé |

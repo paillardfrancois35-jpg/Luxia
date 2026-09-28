@@ -1673,7 +1673,7 @@
       "name": "Vague sur les PAR (gauche → droite)",
       "color": "#58A6FF",
       "category": "Phase P6",
-      "notes": "Sinus d'intensité de 2 s, de 20 à 100 % (les PAR ne s'éteignent pas), décalé d'un quart de cycle d'un PAR à l'autre, dans l'ordre de la sélection « PAR gauche → droite » (EFF-002, EFF-005 linéaire). PAR en bleu.",
+      "notes": "Sinus d'intensité de 2 s, de 10 à 100 % (les PAR ne s'éteignent pas), décalé d'un quart de cycle d'un PAR à l'autre, dans l'ordre de la sélection « PAR gauche → droite » (EFF-002, EFF-005 linéaire). PAR en bleu.",
       "visibleInLive": true,
       "layerId": "7c1a0001-0000-4000-8000-000000000005",
       "loop": "infinite",
@@ -1717,8 +1717,8 @@
                 "unit": "seconds"
               },
               "spread": 360,
-              "size": 0.8,
-              "center": 0.6
+              "size": 0.9,
+              "center": 0.55
             }
           ]
         }
@@ -1774,8 +1774,8 @@
               },
               "spread": 360,
               "phaseMode": "mirror",
-              "size": 0.8,
-              "center": 0.6
+              "size": 0.9,
+              "center": 0.55
             }
           ]
         }

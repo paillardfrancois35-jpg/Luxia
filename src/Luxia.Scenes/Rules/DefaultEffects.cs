@@ -21,14 +21,14 @@ public static class DefaultEffects
     /// <summary>Modèles livrés.</summary>
     public static IReadOnlyList<EffectTemplate> Templates { get; } =
     [
-        Template(1, "Vague douce", IntensityCategory, "L'intensité monte et descend (20 à 100 %) d'un appareil à l'autre, dans l'ordre de la sélection.", new SceneEffect
+        Template(1, "Vague douce", IntensityCategory, "L'intensité monte et descend (10 à 100 %) d'un appareil à l'autre, dans l'ordre de la sélection.", new SceneEffect
         {
             Shape = SceneEffectShape.Sine,
             Period = Duration.FromSeconds(3),
 
-            // De 20 à 100 % : les appareils ne s'éteignent jamais complètement (essai P6).
-            Size = 0.8,
-            Center = 0.6,
+            // De 10 à 100 % : les appareils ne s'éteignent jamais complètement (essai P6, minimum choisi par l'utilisateur).
+            Size = 0.9,
+            Center = 0.55,
         }),
         Template(2, "Chenillard on/off", IntensityCategory, "Un seul appareil allumé à la fois, qui passe de l'un à l'autre.", new SceneEffect
         {
@@ -48,8 +48,8 @@ public static class DefaultEffects
             Shape = SceneEffectShape.Sine,
             Period = Duration.FromSeconds(4),
             Spread = 0,
-            Size = 0.8,
-            Center = 0.6,
+            Size = 0.9,
+            Center = 0.55,
         }),
         Template(5, "Miroir", IntensityCategory, "La vague part du centre de la sélection vers les deux bords.", new SceneEffect
         {
@@ -57,8 +57,8 @@ public static class DefaultEffects
             Period = Duration.FromSeconds(2),
             PhaseMode = EffectPhaseMode.Mirror,
             Spread = 180,
-            Size = 0.8,
-            Center = 0.6,
+            Size = 0.9,
+            Center = 0.55,
         }),
         Template(6, "Scintillement", IntensityCategory, "Chaque appareil varie au hasard, vite.", new SceneEffect
         {

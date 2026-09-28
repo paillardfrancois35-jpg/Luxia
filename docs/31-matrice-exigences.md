@@ -395,7 +395,7 @@
 
 ## P6 – 15 exigences, 15 couvertes par des tests automatiques
 
-> Réalisé : 15
+> Réalisé : 14 · Validé : 1
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -403,7 +403,7 @@
 | [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Réalisé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+1) |
 | [EFF-003](exigences/EFF-003.md) | I | Formes de position | Réalisé | EffectCompilerTests.Circle_AroundPositionPalette_CenterFromPalette_SizeInDegrees<br>EffectTests.PositionShapes_CircleAndEight<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees<br>(+1) |
 | [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Réalisé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
-| [EFF-005](exigences/EFF-005.md) | I | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | Réalisé | EffectCompilerTests.Lag_Mirror_OddCount_CenterLeads<br>EffectCompilerTests.Lag_PhaseModes<br>EffectCompilerTests.Lag_Random_SameEffect_SameOrder_AllDistinct<br>EffectTests.Directions_BackwardAndPingPong<br>(+2) |
+| [EFF-005](exigences/EFF-005.md) | I | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | Validé | EffectCompilerTests.Lag_Mirror_OddCount_CenterLeads<br>EffectCompilerTests.Lag_PhaseModes<br>EffectCompilerTests.Lag_Random_SameEffect_SameOrder_AllDistinct<br>EffectTests.Directions_BackwardAndPingPong<br>(+2) |
 | [EFF-006](exigences/EFF-006.md) | I | Aperçu en direct au simulateur pendant le réglage des paramètres | Réalisé | EffectTests.ShowStep_PinsStepWithEffects_AboveLayers_NotListedAsPlaying<br>EffectsPanelTests.Blind_EffectPlaysOnPreviewOnly<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt |
 | [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Réalisé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
 | [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Réalisé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime |
