@@ -4,8 +4,8 @@ namespace Luxia.Patch.Rules;
 
 /// <summary>
 /// Rapport d'impact d'un changement de définition (INST-016 : changer le mode d'un appareil patché ;
-/// GEN-053 : mettre à jour la copie du projet depuis la bibliothèque partagée). Les scènes impactées
-/// (doc 13 §3, INST-016) ne peuvent pas encore être calculées : les scènes n'existent qu'à partir de P4.
+/// GEN-053 : mettre à jour la copie du projet depuis la bibliothèque partagée). Il ne porte que sur les canaux :
+/// les scènes touchées (doc 13 §3, INST-016) ne sont pas listées ici (<c>Luxia.Patch</c> ne connaît pas les scènes).
 /// </summary>
 /// <param name="LostChannels">Noms des canaux (attributs) présents avant et absents après.</param>
 /// <param name="GainedChannels">Noms des canaux (attributs) absents avant et présents après.</param>

@@ -375,9 +375,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     }
 
     /// <summary>
-    /// Arrêt propre : arrêt de la boucle, trame de blackout envoyée à toutes les sorties
+    /// Arrêt propre : fondu au noir (GEN-061), arrêt de la boucle, trame de blackout envoyée à toutes les sorties
     /// (les appareils s'éteignent tout de suite, sans attendre le chien de garde), fermeture des pilotes.
-    /// Le fondu au noir de GEN-061 viendra en P5.
     /// </summary>
     public async ValueTask DisposeAsync()
     {

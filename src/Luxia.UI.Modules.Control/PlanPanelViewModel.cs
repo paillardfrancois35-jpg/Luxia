@@ -157,7 +157,7 @@ public sealed partial class PlanPanelViewModel : ViewModelBase
         var fixtures = _runtime.Project.Installation.Fixtures.Where(f => present.Contains(f.Id)).ToList();
         foreach (var auto in AutoSelections.Build(fixtures, f => library?.Find(f.FixtureTypeId)).Where(a => a.Kind == AutoSelectionKind.ByCategory))
         {
-            QuickSelections.Add(new QuickSelection(auto.Title(CategoryLabel), [.. auto.Items.Select(f => f.Id)], "#8B949E"));
+            QuickSelections.Add(new QuickSelection(auto.Title(FixtureCategoryLabels.Plural), [.. auto.Items.Select(f => f.Id)], "#8B949E"));
         }
 
         foreach (var selection in _runtime.Project.Installation.Selections)
@@ -165,18 +165,4 @@ public sealed partial class PlanPanelViewModel : ViewModelBase
             QuickSelections.Add(new QuickSelection(selection.Name, [.. selection.Items.Select(i => i.FixtureId)], selection.Color));
         }
     }
-
-    private static string CategoryLabel(FixtureCategory category) => category switch
-    {
-        FixtureCategory.Par => "PAR",
-        FixtureCategory.LedBar => "barres LED",
-        FixtureCategory.MovingHead => "lyres",
-        FixtureCategory.Effect => "effets",
-        FixtureCategory.Strobe => "stroboscopes",
-        FixtureCategory.Uv => "UV",
-        FixtureCategory.Smoke => "machines à fumée",
-        FixtureCategory.Laser => "lasers",
-        FixtureCategory.Dimmer => "gradateurs",
-        _ => "autres",
-    };
 }

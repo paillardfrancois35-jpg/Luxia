@@ -429,11 +429,17 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     [Fact]
     [Trait("Exigence", "ERG-018")]
     [Trait("Exigence", "LIVE-009")]
-    public void Journal_ShowsLaunchedScenes()
+    public async Task Journal_ShowsLaunchedScenes()
     {
         _vm.Columns.Press(Button("Plein feu"));
         Ticks(3);
-        _vm.Refresh();
+
+        // Les événements arrivent sur le fil du bus : on laisse le temps de les recevoir (test instable sinon, vu le 2026-09-28).
+        for (var i = 0; i < 50 && !_vm.Journal.Lines.Any(l => l.Contains("▶ Plein feu")); i++)
+        {
+            await Task.Delay(20);
+            _vm.Refresh();
+        }
 
         _vm.Journal.Lines.ShouldContain(l => l.Contains("▶ Plein feu"));
     }

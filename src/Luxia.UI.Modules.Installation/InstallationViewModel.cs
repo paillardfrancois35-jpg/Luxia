@@ -668,7 +668,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         AutoSelections.Clear();
         foreach (var auto in Luxia.Patch.Rules.AutoSelections.Build(installation.Fixtures, TypeOf))
         {
-            AutoSelections.Add(new AutoSelectionRowViewModel(auto.Title(CategoryLabel), auto.Items.Count));
+            AutoSelections.Add(new AutoSelectionRowViewModel(auto.Title(FixtureCategoryLabels.Plural), auto.Items.Count));
         }
     }
 
@@ -698,18 +698,4 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
                 $"{fixture.Name} — {type?.DisplayName ?? "?"} ({mode?.ShortName ?? fixture.ModeName}) — régler « {setting} » — univers {fixture.Universe}, adresse {fixture.Address}"));
         }
     }
-
-    private static string CategoryLabel(FixtureCategory category) => category switch
-    {
-        FixtureCategory.Par => "PAR",
-        FixtureCategory.LedBar => "barres LED",
-        FixtureCategory.MovingHead => "lyres",
-        FixtureCategory.Effect => "effets",
-        FixtureCategory.Strobe => "stroboscopes",
-        FixtureCategory.Uv => "UV",
-        FixtureCategory.Smoke => "machines à fumée",
-        FixtureCategory.Laser => "lasers",
-        FixtureCategory.Dimmer => "gradateurs",
-        _ => "autres",
-    };
 }

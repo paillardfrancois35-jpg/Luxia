@@ -141,7 +141,7 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
         foreach (var auto in AutoSelections.Build(present, f => library?.Find(f.FixtureTypeId)))
         {
             var target = new ValueTarget { Auto = new AutoSelectionTarget(auto.Kind, auto.Category, auto.ModelDisplayName) };
-            Shortcuts.Add(new SelectionShortcut(auto.Title(CategoryLabel), target, [.. auto.Items.Select(f => f.Id)], "#8B949E"));
+            Shortcuts.Add(new SelectionShortcut(auto.Title(FixtureCategoryLabels.Plural), target, [.. auto.Items.Select(f => f.Id)], "#8B949E"));
         }
 
         foreach (var selection in _runtime.Project.Installation.Selections)
@@ -588,18 +588,4 @@ public sealed partial class ProgrammerViewModel : ViewModelBase
         var map = palettes.Palettes.ToDictionary(p => p.Id);
         return id => map.GetValueOrDefault(id);
     }
-
-    private static string CategoryLabel(FixtureCategory category) => category switch
-    {
-        FixtureCategory.Par => "PAR",
-        FixtureCategory.LedBar => "barres LED",
-        FixtureCategory.MovingHead => "lyres",
-        FixtureCategory.Effect => "effets",
-        FixtureCategory.Strobe => "stroboscopes",
-        FixtureCategory.Uv => "UV",
-        FixtureCategory.Smoke => "machines à fumée",
-        FixtureCategory.Laser => "lasers",
-        FixtureCategory.Dimmer => "gradateurs",
-        _ => "autres",
-    };
 }

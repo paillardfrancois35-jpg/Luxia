@@ -213,7 +213,7 @@ public sealed class MidiController
             case MidiAction.GrandMaster:
                 return takeover.Move(value, snapshot.GrandMaster) is { } level ? [new SetGrandMasterCommand(CommandOrigin.Midi, level)] : [];
             case MidiAction.LayerMaster when id is { } layer:
-                var index = IndexOfLayer(snapshot.Show, layer);
+                var index = snapshot.Show.IndexOfLayer(layer);
                 var current = index >= 0 && index < snapshot.LayerMasters.Length ? snapshot.LayerMasters[index] : 1;
                 return takeover.Move(value, current) is { } master ? [new SetLayerMasterCommand(CommandOrigin.Midi, layer, master)] : [];
             default:
@@ -346,19 +346,6 @@ public sealed class MidiController
         for (var i = 0; i < values.Count; i++)
         {
             if (values[i] == value)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private static int IndexOfLayer(ShowModel show, Guid id)
-    {
-        for (var i = 0; i < show.Layers.Count; i++)
-        {
-            if (show.Layers[i].Id == id)
             {
                 return i;
             }

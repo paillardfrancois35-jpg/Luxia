@@ -66,7 +66,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             var playing = false;
             foreach (var button in column.Scenes)
             {
-                var playback = FindPlayback(snapshot, button.Scene.Id);
+                var playback = snapshot.ActivePlayback(button.Scene.Id);
                 if (!button.WaitingForEngine(_runtime.Engine.TickCount))
                 {
                     button.IsActive = playback is not null;
@@ -80,7 +80,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             }
 
             column.IsPlaying = playing;
-            var index = IndexOfLayer(snapshot.Show, column.Layer.Id);
+            var index = snapshot.Show.IndexOfLayer(column.Layer.Id);
             if (index >= 0 && index < snapshot.LayerMasters.Length)
             {
                 column.SyncMaster(Math.Round(snapshot.LayerMasters[index] * 100));
@@ -314,32 +314,5 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             button.IsEditTarget = button.Scene.Id == edited;
             button.EditColor = color;
         }
-    }
-
-    private static PlaybackInfo? FindPlayback(EngineSnapshot snapshot, Guid sceneId)
-    {
-        PlaybackInfo? found = null;
-        foreach (var playback in snapshot.Playbacks)
-        {
-            if (playback.SceneId == sceneId && playback.State is not (PlaybackState.FadingOut or PlaybackState.Done))
-            {
-                found = playback;
-            }
-        }
-
-        return found;
-    }
-
-    private static int IndexOfLayer(ShowModel show, Guid id)
-    {
-        for (var i = 0; i < show.Layers.Count; i++)
-        {
-            if (show.Layers[i].Id == id)
-            {
-                return i;
-            }
-        }
-
-        return -1;
     }
 }

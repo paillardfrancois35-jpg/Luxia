@@ -82,4 +82,7 @@ public sealed class ShowModel
 
     /// <summary>Couche par identifiant.</summary>
     public EngineLayer? Layer(Guid id) => _layerIndex.TryGetValue(id, out var index) ? Layers[index] : null;
+
+    /// <summary>Rang d'une couche dans <see cref="Layers"/> (et dans les masters d'un instantané), ou -1.</summary>
+    public int IndexOfLayer(Guid id) => _layerIndex.TryGetValue(id, out var index) ? index : -1;
 }
