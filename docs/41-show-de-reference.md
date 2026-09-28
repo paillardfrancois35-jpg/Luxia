@@ -136,7 +136,7 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 | P3 | Installation (§2), sélections (§4), lieux (§3), fiche d'installation | Adresses réglées sur les appareils, identification OK |
 | P4 | Palettes (§5, hors thèmes), scènes statiques et chenillards simples (§7) | Rendu simulateur puis matériel |
 | P5 | Couches (§6), flashs, ambiance, positions calibrées, disposition Live, affectation APC mini | **Jalon 1** : soirée manuelle avec ce show |
-| P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) | Rendu |
+| P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) — **fait le 2026-09-28** : 10 scènes « Phase P6 » (couches Effets et Mouvements), dont un piège (grand cercle ramené par la zone interdite) ; 6 thèmes dans `palettes.json` ; trames de référence `P6-scenes.txt` | Rendu |
 | P7 | Versions « au temps » / « sur kick » / « selon l'énergie » | Synchro sur morceaux au choix |
 | P8 | Séquences (§8), shows génériques et par style (§9) | Répétition au simulateur |
 | P9 | Base musicale d'amorçage (artistes par famille), thèmes par style | Styles détectés sur une playlist |

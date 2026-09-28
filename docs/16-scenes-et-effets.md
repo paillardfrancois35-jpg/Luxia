@@ -128,6 +128,18 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | EFF-008 | M | P6 | Effets sur **cellules** (segments de barre, têtes de l'effet multi-têtes). | Chenillard sur les 16 segments des 2 barres. |
 | EFF-009 | S | P6 | Combinaison de deux effets sur un même attribut (ex. cercle + balayage) par addition. | — |
 
+### 6.3 Précisions (P6)
+
+| Sujet | Précision |
+|---|---|
+| Cible | **Plusieurs** cibles possibles (appareils, cellules, sélections, sélections automatiques), mises bout à bout dans l'ordre : leurs membres forment ceux de l'effet (un membre en double ne compte qu'une fois). Option **par cellule** : chaque segment d'une barre, chaque tête d'un effet multi-têtes devient un membre (EFF-008). |
+| Taille, centre | Intensité (et tout attribut continu) : fraction 0-1 (affichée en %). Position : **degrés**, convertis selon la course Pan / Tilt du modèle (540° / 270° si elle n'est pas renseignée). |
+| Décalage (phase) | En degrés, entre le premier et le dernier membre : 0 = tous ensemble, 360 = un cycle réparti. **Par groupes de N** = un membre sur N ensemble (N = 2 : pairs / impairs). **Miroir** = du centre de la sélection vers les bords. **Aléatoire** = ordre tiré une fois pour toutes (même effet, même ordre). |
+| Centre d'un mouvement | Palette de position (lieu actif, PAL-004) : l'effet est alors absolu autour d'elle ; sinon relatif (autour de la position de l'étape ou de la position sous-jacente) ou absolu autour du milieu de la course. |
+| Couleurs | Arc-en-ciel (tour des teintes) ; alternance (en escalier) ; dégradé (progressif, revient à la première couleur) ; couleurs données une à une (couleur ou palette) ou par un **thème** (PAL-010). Toujours absolu. Un effet de couleur n'allume pas un appareil éteint : l'écran ajoute l'intensité à 100 % aux cibles qui n'en ont pas (MOT-041). |
+| Vitesse | Durée d'un cycle, en secondes (affichée aussi en Hz) ou en temps musicaux (120 BPM fixe jusqu'à P7, MOT-062). La vitesse de la scène (MOT-015) s'applique aussi à ses effets. |
+| Aléatoire | Reproductible : même graine de session, mêmes trames (MOT-004, principe P6 du doc 02). |
+
 ## 7. Tests
 
 | Test | Type | Contenu |
@@ -155,3 +167,14 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | SCN-013 | Enchaînements ; couches, séquences et shows s'y ajouteront. |
 | SCN-037, CONS-025 | « Capturer la sortie » : ce qui est émis pour les appareils choisis (tous si aucun), hors valeurs par défaut, entre dans le programmeur. |
 | IA de conception (GEN-133) | Projet → Importer des scènes… (ajout seul, catégorie « Proposé par IA ») ; Projet → Relire les scènes et palettes. |
+
+## 9. Notes de réalisation (P6)
+
+| Sujet | Réalisation |
+|---|---|
+| Données | `SceneStep.Effects` (`SceneEffect`) et `SceneStep.HueFade` dans `scènes.json` (champs facultatifs, format 1 inchangé) ; bibliothèque `effets.json` (EFF-007) ; thèmes = palettes `theme` (PAL-010). Doc 50 §10, §11, §12d-ter. |
+| Compilation | `EffectCompiler` : membres ordonnés, retard de phase par membre, degrés → course du modèle, couleurs traduites par appareil en **tables** (une par canal : RVB, RVBW, roue), problèmes signalés (`valider`) et effet écarté s'il ne pilote rien. |
+| Écran | Panneau **Effets** de l'écran Contrôle (ERG-029) : bibliothèque, effets de l'étape, dessin animé, molettes (ERG-028). On écrit en ÉDITION / AVEUGLE ; l'étape est jouée par le moteur (CMD-017) pour voir l'effet tout de suite (EFF-006). L'ancien écran Scènes ne montre pas les effets (il les conserve). |
+| Ordre des membres | Créé depuis le plan : de gauche à droite (colonnes d'un mètre), puis ordre du patch (appareils empilés sur un pied). |
+| Assistants (SCN-014) | Panneau Propriétés, « Assistant : générer les étapes » : chenillard de couleurs, alternance de 2 couleurs, balayage de positions ; remplace les étapes, Ctrl+Z revient. |
+| Réactivité musicale | Non traitée (P7) : un effet en temps suit le tempo fixe. |

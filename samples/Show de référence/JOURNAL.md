@@ -178,3 +178,27 @@ de 95 à 85 %), strobe coupé à 10 s puis repris après 10 s, fumée coupée à
 ## Essai P5 (2026-09-27)
 
 Guide P5 validé au matériel. Corrections du parc : **BUV463 en 8 canaux** (8e canal « lissage du gradateur » non documenté, cause de l'« allumage lent »), UV 2 en **169** ; gros PAR = générique **WT05** 7 canaux. `sûreté.json` : `restFactor` 3 (repos de fumée proportionnel). Trames de référence P4 / P5 régénérées.
+
+## Phase P6 – Effets (2026-09-28)
+
+| Élément | Fichier | Contenu |
+|---|---|---|
+| Effet multi-têtes | `installation.json` | WZYBUTA passé en **64 canaux à l'adresse 181** (après la fumée) : 12 têtes RVBW pilotables une à une ; aucun autre appareil ne bouge (Q25) |
+| Scènes « Phase P6 » | `scènes.json` | 10 scènes à effets : vague et miroir sur les PAR, arc-en-ciel et chenillard des 8 sections des barres, têtes décalées de l'effet multi-têtes, alternance Latino, scintillement UV, cercle et huit des lyres, **piège** « grand cercle de la lyre 1 » (ramené par la zone interdite) |
+| Thèmes | `palettes.json` | Latino, Froid, Chaud, Disco, Club, Tricolore (PAL-010) |
+| Bibliothèque d'effets | *(implicite)* | Pas de `effets.json` : les 19 modèles livrés (EFF-007) |
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --scene "Vague sur les PAR (gauche → droite)" --duree 2 --pas 0.5
+```
+
+### Non-régression
+
+`ReferenceShowP6Tests` : chaque scène « Phase P6 » rejouée 6 s et comparée à `tests/assets/golden/P6-scenes.txt` ;
+contrôles ciblés : vague à un quart de cycle d'écart, chenillard d'une seule section à la fois, 4 couleurs sur les 12 têtes,
+cercle de 60° de Pan, grand cercle jamais dans la zone interdite. Trames P4 / P5 régénérées (scènes visant tout le parc :
+l'effet multi-têtes a d'autres canaux).
+

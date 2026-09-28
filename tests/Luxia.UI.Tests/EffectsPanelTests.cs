@@ -53,6 +53,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     [Trait("Exigence", "EFF-001")]
     [Trait("Exigence", "EFF-007")]
     [Trait("Exigence", "EFF-006")]
+    [Trait("Exigence", "ERG-029")]
     public void Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt()
     {
         var scene = Scene("Plein feu");
@@ -89,6 +90,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "EFF-001")]
+    [Trait("Exigence", "ERG-028")]
     public void Dials_WriteIntoTheEffect_OneGesture()
     {
         AddInEdit("Vague douce");
@@ -186,6 +188,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "EFF-003")]
+    [Trait("Exigence", "ERG-029")]
     public void PositionShape_ShowsPlane_AndDegrees()
     {
         var scene = Scene("Plein feu");
@@ -205,6 +208,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "EFF-001")]
+    [Trait("Exigence", "ERG-029")]
     public void DefaultLayout_HasEffectsPanel_NextToSettings()
     {
         var factory = new ControlDockFactory(ControlPanels.All.ToDictionary(p => p.Id, p => (Func<object?>)(() => null)));
@@ -251,6 +255,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     [InlineData(-5, 0, 100, 0)]
     [InlineData(4, 1, 1, 0)]
     [Trait("Exigence", "EFF-001")]
+    [Trait("Exigence", "ERG-028")]
     public void Dial_Fraction(double value, double minimum, double maximum, double expected) =>
         Dial.Fraction(value, minimum, maximum).ShouldBe(expected, 1e-9);
 

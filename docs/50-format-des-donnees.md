@@ -331,6 +331,46 @@ n'allume pas un appareil dont l'intensité vaut 0** : ajouter `intensity` (le pr
 `luxia-headless valider <projet>` et `luxia-headless jouer <projet> --scene "<nom>"`. Dans l'application : menu
 **Projet → Relire les scènes et palettes**, sans redémarrer.
 
+### 10.1 Effets d'une étape (P6)
+
+Une étape peut porter des **effets générés** (doc 16 §6) ; `hueFade` demande le fondu des couleurs par la teinte (MOT-054).
+
+```json
+"steps": [
+  {
+    "fade": { "value": 0, "unit": "seconds" }, "hold": { "value": 1, "unit": "seconds" }, "hueFade": false,
+    "values": [ { "target": { "selectionId": "c8e4…" }, "paletteId": "9a1e0001-0000-4000-8000-000000000009" } ],
+    "effects": [
+      {
+        "id": "6e6f0007-…", "name": "Vague",
+        "targets": [ { "selectionId": "c8e4…" } ], "perCell": false,
+        "shape": "sine", "attribute": "intensity", "period": { "value": 2, "unit": "seconds" },
+        "size": 1, "center": 0.5, "relative": false,
+        "spread": 360, "phaseMode": "linear", "groupSize": 2, "direction": "forward", "dutyCycle": 0.5,
+        "positionPaletteId": null, "colors": [], "themeId": null
+      }
+    ]
+  }
+]
+```
+
+| Propriété | Valeurs | Rôle |
+|---|---|---|
+| `targets` | liste de cibles (même forme que `values[].target`) | Membres de l'effet, bout à bout, dans l'ordre (EFF-005) |
+| `perCell` | booléen | Chaque cellule de chaque membre devient un membre (segments, têtes, EFF-008) |
+| `shape` | intensité : `sine`, `triangle`, `square`, `sawUp`, `sawDown`, `pulse`, `random` ; position : `circle`, `eight`, `sweepPan`, `sweepTilt`, `randomSlow` ; couleur : `rainbow`, `alternate`, `gradient` | Forme (EFF-002 à 004) |
+| `attribute` | nom d'attribut (défaut `intensity`) | Attribut animé par une forme d'intensité |
+| `period` | durée | Un cycle (secondes ou temps) |
+| `size` / `center` | 0-1 (intensité) ; `size` en **degrés** (position) | Amplitude crête à crête, centre en absolu |
+| `relative` | booléen | S'ajoute à la valeur de l'étape ou sous-jacente (MOT-061) ; ignoré pour la couleur et autour d'une palette de position |
+| `spread`, `phaseMode`, `groupSize` | degrés ; `linear`, `mirror`, `groups`, `random` | Décalage entre membres (EFF-005) |
+| `direction`, `dutyCycle` | `forward`, `backward`, `pingPong` ; 0-1 | Sens ; part allumée (carré, impulsion) |
+| `positionPaletteId` | palette `position` | Centre d'un mouvement (EFF-003) |
+| `colors`, `themeId` | liste de `{ "color": {…} }` ou `{ "paletteId": "…" }` ; palette `theme` | Couleurs d'une alternance ou d'un dégradé (EFF-004, PAL-010) |
+
+Un effet de couleur **n'allume pas** : prévoir `intensity` dans les valeurs de l'étape. `valider` signale un effet sans
+cible, sans attribut sur ses appareils, sans couleur, ou hors bornes.
+
 ## 11. Projet : `palettes.json` (format 1)
 
 Palettes (doc 17 §2). Absent = jeu par défaut (13 couleurs, 4 intensités, identifiants fixes `9a1e0001-…`).
@@ -358,6 +398,10 @@ Schéma JSON : [`schemas/palettes.schema.json`](schemas/palettes.schema.json).
 | `color`, `icon` | Bouton (GEN-106) ; une palette couleur sans `color` affiche sa propre couleur |
 
 L'ordre du tableau est l'ordre des grilles (PAL-007). Une palette se référence par son `id` : la renommer ne casse rien.
+
+Palette **thème** (PAL-010) : `"kind": "theme"`, `"colors": [ { "r": 1, "g": 0.9, "b": 0 }, … ]` (couleurs logiques, dans
+l'ordre de l'alternance). Six thèmes livrés (Latino, Froid, Chaud, Disco, Club, Tricolore, `9a1e0001-…-000000000201` à
+`206`), ajoutés au chargement d'un projet qui n'a encore **aucun** thème.
 
 ## 12. Projet : `couches.json` (format 1)
 
@@ -483,6 +527,22 @@ conception ; `valider` signale une scène ou une couche introuvable.
 | `looks[].actions[].kind` | `launchScene`, `stopScene` (avec `sceneId`) ; `stopLayer` (avec `layerId`) ; `stopAll` (« tout arrêter », sauf les couches épargnées comme Ambiance) ; `layerMaster` (`layerId`, `level` 0-1) ; `grandMaster` (`level` 0-1 : lu, mais « Capturer ce qui joue » n'en produit pas, le Grand Master reste à l'opérateur, C13). Jouées dans l'ordre ; une action incomplète est ignorée |
 | `color`, `notes` | Couleur du bouton ; explication lisible (infobulle) |
 
+## 12d-ter. Projet : `effets.json` (format 1)
+
+Bibliothèque d'effets du projet (EFF-007). Absente = 19 modèles livrés (identifiants fixes `7e0f0001-…`). Un modèle = les
+réglages d'un effet de scène (§10.1) **sans cible** ; l'appliquer à une étape en fait une copie (le modifier ensuite ne
+change pas les scènes). Schéma : [`schemas/effets.schema.json`](schemas/effets.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "templates": [
+    { "id": "…", "name": "Vague douce", "category": "Intensité", "description": "L'intensité monte et descend d'un appareil à l'autre.",
+      "effect": { "shape": "sine", "period": { "value": 3, "unit": "seconds" }, "size": 1, "center": 0.5, "spread": 360 } }
+  ]
+}
+```
+
 ## 12e. Projet : dossier `Versions`
 
 Copies des fichiers JSON du projet (GEN-055, D31), `Versions\AAAAMMJJ-HHMMSS\` avec un `motif.txt` : toutes les
@@ -534,6 +594,7 @@ seule scène (GEN-132).
 | 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |
 | 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |
 | 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
+| 2026-09-28 | P6 : `effects` et `hueFade` des étapes (§10.1), palettes `theme` avec `colors` (PAL-010, thèmes par défaut ajoutés à un projet qui n'en a aucun), `effets.json` (§12d-ter) ; schémas mis à jour ; champs facultatifs : format 1 inchangé, sans migration. |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |
