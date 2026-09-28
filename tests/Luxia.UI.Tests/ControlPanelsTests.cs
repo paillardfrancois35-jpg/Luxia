@@ -249,6 +249,20 @@ public sealed class ControlPanelsTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-019")]
+    public void Settings_WarnWhenIntensityIsZero_ColorWouldNotShow()
+    {
+        Select("PAR 1", "PAR 2");
+        _vm.Refresh();
+        _vm.Settings.IsDark.ShouldBeTrue("rien ne joue : intensité à 0");
+
+        _vm.Columns.Press(Button("Plein feu"));
+        Ticks(40);
+        _vm.Refresh();
+        _vm.Settings.IsDark.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-019")]
     public void Settings_TabsFollowTheSelection()
     {
         Select("PAR 1", "PAR 2");

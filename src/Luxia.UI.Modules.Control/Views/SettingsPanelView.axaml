@@ -100,6 +100,10 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <Border IsVisible="{Binding IsDark}" Background="#33D29922" BorderBrush="#D29922" BorderThickness="1" CornerRadius="4" Padding="6,4">
+              <TextBlock Text="Intensité à 0 % : la couleur ne se verra pas. Montez-la dans l'onglet Intensité." TextWrapping="Wrap" FontSize="12" />
+            </Border>
+            <TextBlock Classes="hint" Text="● jaune : retouche LIVE (temporaire) · ● verte : écrit dans la scène · vide : vient des scènes." />
             <Button Content="Retirer la couleur" Margin="0,6,0,0" Command="{Binding RemoveFamilyCommand}" CommandParameter="couleur" />
             <TextBlock Classes="hint" Text="Pastilles du sélecteur = palettes du projet ; « + » crée une palette avec la couleur courante." />
           </StackPanel>

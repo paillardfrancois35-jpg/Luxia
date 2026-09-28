@@ -81,6 +81,10 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
     [ObservableProperty]
     private string _intensityStateColor = "#00000000";
 
+    /// <summary>Vrai quand la sélection a une intensité réglable à 0 % : une couleur choisie ne se verrait pas.</summary>
+    [ObservableProperty]
+    private bool _isDark;
+
     [ObservableProperty]
     private LightColor _color = LightColor.White;
 
@@ -483,6 +487,7 @@ public sealed partial class SettingsPanelViewModel : ViewModelBase
 
         var state = _session.StateOf(first, AttributeKind.Intensity);
         IntensityStateColor = ControlColors.Of(state);
+        IsDark = (_session.LevelOf(first, AttributeKind.Intensity) ?? 0) <= 0;
         if (_holdIntensity > 0)
         {
             _holdIntensity--;
