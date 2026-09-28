@@ -57,7 +57,7 @@
 | **Installation / Patch** | Patch / Rig | Ensemble des appareils patchés, des univers et de leurs sorties. |
 | **Patcher** | To patch | Affecter un appareil à un univers et une adresse. |
 | **Chevauchement** | Address conflict / Overlap | Deux appareils qui occupent un même canal (erreur, sauf duplication volontaire). |
-| **Look** | Look / Preset (soirée) | Liste nommée d'actions (lancer ou arrêter des scènes, arrêter des couches, régler des masters) appelée d'un geste : « Temps mort », « Retour de piste ». Sert aussi d'intervention au pilote automatique (doc 60 §4.8). |
+| **Look** | Look / Preset (soirée) | Liste nommée d'actions (lancer ou arrêter des scènes, arrêter des couches, régler des masters) appelée d'un geste : « Temps mort », « Retour de piste ». Sert aussi d'intervention au pilote automatique (doc 60 §4.8). Ce n'est pas une bascule : re-cliquer le rejoue ; il ne touche pas au Grand Master. |
 | **Zone permise** | Allowed zone / Limits | Rectangle Pan / Tilt dont une lyre ne sort jamais dans un lieu (ses limites) ; le contraire d'une zone interdite (F7). |
 | **Verrou soirée** | Show lock | Verrou de l'écran Contrôle : on ne fait plus que jouer et retoucher en direct ; l'édition est bloquée (doc 60 §4.6). |
 | **Lieu** | Venue | Données propres à une salle : disposition sur le plan, palettes de position, appareils absents, zones interdites. |

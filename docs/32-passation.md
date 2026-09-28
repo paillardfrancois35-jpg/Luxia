@@ -157,6 +157,16 @@
   - **Reste du chantier** (doc 60 §7.4) : affectation MIDI / clavier par surcouche (E6, MIDI-008), déclencheurs MIDI
     des looks, molette, mixeur live, retrait des écrans Live et Scènes après validation, Installation / Bibliothèque
     en panneaux.
+- **Essai de l'écran Contrôle par l'utilisateur (2026-09-28, au matériel, 1.005.192 → 1.005.226)** : guide
+  `docs/demos/ERG-controle.md` §0 à §7 déroulé pas à pas, **tout validé**. Corrigé au fil de l'eau, chaque fois avec sa
+  fiche : ◀ ▶ grisés pour une scène à une étape, stop net (le fondu vient de la scène), barre d'avancement discrète,
+  barre LED du plan, avertissement « intensité à 0 » et légende des pastilles, menu **Panneaux** (s'ouvrait vide),
+  ✎ qui rouvre Propriétés, panneau détaché remis à sa place (groupe recréé), double-clic d'agrandissement, zones
+  (plus petite prise, liste, renommage), looks sans Grand Master, **■ Stop / ■ Tout stopper**. Puis analyse de fin
+  d'essai : **scènes resserrées** (ERG-025), **marges** (ERG-027 : menu et Grand Master sur une ligne, lignes du « ? »
+  réutilisées, Journal serré). Choix C12 à C14 (doc 60 §11). Compteur de compilation par version (repart de 1 après
+  validation). Deux tests de temps (moteur, routeur de sorties) échouent parfois sous la charge de la série complète
+  et passent seuls : à fiabiliser.
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -259,3 +269,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-27 | Ergonomie | Documentation remise à jour après P5 (anciens noms `Dmx.*` corrigés, notes de modules, doc 03 §11). Analyse ergonomique menée dans la discussion de P5 : lecture Daslight 4 / 5, captures des écrans, doc 60 (charte, déclencheurs et looks, composants, modules) ; **validée par l'utilisateur** (E1-E8, F1-F10). Outil `tools/fiche-exigences.py` versé au dépôt. Suite dans une nouvelle discussion : prototype technique puis maquettes. |
 | 2026-09-27 | Ergonomie | Prototype technique (Dock, grille Pan/Tilt, sélecteur de couleur, galerie, disposition enregistrée) et maquettes « Contrôle » sur `ergo/analyse` (`v1.005.001`, `v1.005.002`), ERG-001 à ERG-007, Q35 ; reliquats du renommage corrigés. **En attente des essais et de la validation de l'utilisateur.** |
 | 2026-09-28 | Ergonomie | Nuit de développement par délégation sur `ergo/analyse` (`v1.005.003`, `v1.005.004`) : écran Contrôle dans LuXia (modes, panneaux ancrables, dispositions Contrôle / Spectacle, verrou soirée, looks, F1-F12), zone permise, 8e couche « Libre », identité visuelle, taille de l'interface, démo `samples/Démo Contrôle` et guide `docs/demos/ERG-controle.md`. ERG-008 à ERG-024. **En attente de l'essai de l'utilisateur ; choix C1-C11 à rediscuter à l'usage.** |
+| 2026-09-28 | Ergonomie | Essai de l'écran Contrôle au matériel avec l'utilisateur (guide §0 à §7, tout validé ; 1.005.192 → 1.005.226), corrections au fil de l'eau avec leurs fiches ; analyse de fin d'essai : scènes resserrées (ERG-025), Stop / Tout stopper (ERG-026), marges (ERG-027) ; C12-C14 ; compteur de compilation par version. |

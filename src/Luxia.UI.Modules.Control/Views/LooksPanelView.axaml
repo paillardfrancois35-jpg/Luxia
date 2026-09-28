@@ -3,14 +3,14 @@
              xmlns:vm="using:Luxia.UI.Modules.Control"
              x:Class="Luxia.UI.Modules.Control.Views.LooksPanelView"
              x:DataType="vm:LooksPanelViewModel">
-  <DockPanel Margin="8,32,8,6">
+  <DockPanel Margin="8,4,8,6">
     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,30,8">
       <Button Content="+ Capturer ce qui joue" Command="{Binding CaptureCommand}" IsEnabled="{Binding CanEdit}"
               ToolTip.Tip="Nouveau look qui refera ce qui joue maintenant : tout arrêter, relancer ces scènes, remettre les masters" />
     </StackPanel>
     <TextBlock DockPanel.Dock="Bottom" Text="{Binding Message}" Foreground="#D29922" TextWrapping="Wrap" />
     <TextBlock DockPanel.Dock="Top" IsVisible="{Binding IsEmpty}" TextWrapping="Wrap" Foreground="#8B949E" Margin="0,0,0,8"
-               Text="Un look est une liste d'actions appelée d'un clic (« Temps mort » : tout arrêter, ambre, Grand Master à 40 %). Lancez des scènes, réglez les masters, puis « Capturer ce qui joue »." />
+               Text="Un look est une liste d'actions appelée d'un clic (« Temps mort » : tout arrêter, ambre, master Intensité à 40 %). Lancez des scènes, réglez les masters, puis « Capturer ce qui joue »." />
     <ScrollViewer>
       <ItemsControl ItemsSource="{Binding Looks}">
         <ItemsControl.ItemsPanel>

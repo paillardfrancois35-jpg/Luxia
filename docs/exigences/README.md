@@ -173,30 +173,33 @@
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Validé |
 | [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
-| [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Réalisé |
-| [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Réalisé |
-| [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Réalisé |
-| [ERG-004](ERG-004.md) | Sélecteur de couleur | ERG | I | Réalisé |
+| [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Validé |
+| [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Validé |
+| [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Validé |
+| [ERG-004](ERG-004.md) | Sélecteur de couleur | ERG | I | Validé |
 | [ERG-005](ERG-005.md) | Galerie des composants | ERG | M | Réalisé |
 | [ERG-006](ERG-006.md) | Mesures du prototype | ERG | I | En cours |
 | [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | Réalisé |
-| [ERG-008](ERG-008.md) | 8e couche par défaut « Libre » | ERG | I | Réalisé |
-| [ERG-009](ERG-009.md) | Identité visuelle | ERG | I | Réalisé |
-| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Réalisé |
-| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Réalisé |
-| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Réalisé |
-| [ERG-013](ERG-013.md) | Zones du lieu dans l'écran Contrôle | ERG | I | Réalisé |
-| [ERG-014](ERG-014.md) | Plan des appareils = la sélection | ERG | I | Réalisé |
-| [ERG-015](ERG-015.md) | Bande d'étapes | ERG | M | Réalisé |
-| [ERG-016](ERG-016.md) | Propriétés de la scène éditée | ERG | I | Réalisé |
-| [ERG-017](ERG-017.md) | Zone permise | ERG | I | Réalisé |
-| [ERG-018](ERG-018.md) | Colonnes de l'écran Contrôle | ERG | I | Réalisé |
-| [ERG-019](ERG-019.md) | Réglages des appareils | ERG | I | Réalisé |
-| [ERG-020](ERG-020.md) | Démonstration | ERG | I | Réalisé |
-| [ERG-021](ERG-021.md) | Verrou soirée | ERG | I | Réalisé |
-| [ERG-022](ERG-022.md) | Taille de l'interface | ERG | M | Réalisé |
-| [ERG-023](ERG-023.md) | Looks | ERG | I | Réalisé |
-| [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Réalisé |
+| [ERG-008](ERG-008.md) | 8e couche par défaut « Libre » | ERG | I | Validé |
+| [ERG-009](ERG-009.md) | Identité visuelle | ERG | I | Validé |
+| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Validé |
+| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Validé |
+| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Validé |
+| [ERG-013](ERG-013.md) | Zones du lieu dans l'écran Contrôle | ERG | I | Validé |
+| [ERG-014](ERG-014.md) | Plan des appareils = la sélection | ERG | I | Validé |
+| [ERG-015](ERG-015.md) | Bande d'étapes | ERG | M | Validé |
+| [ERG-016](ERG-016.md) | Propriétés de la scène éditée | ERG | I | Validé |
+| [ERG-017](ERG-017.md) | Zone permise | ERG | I | Validé |
+| [ERG-018](ERG-018.md) | Colonnes de l'écran Contrôle | ERG | I | Validé |
+| [ERG-019](ERG-019.md) | Réglages des appareils | ERG | I | Validé |
+| [ERG-020](ERG-020.md) | Démonstration | ERG | I | Validé |
+| [ERG-021](ERG-021.md) | Verrou soirée | ERG | I | Validé |
+| [ERG-022](ERG-022.md) | Taille de l'interface | ERG | M | Validé |
+| [ERG-023](ERG-023.md) | Looks | ERG | I | Validé |
+| [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Validé |
+| [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Réalisé |
+| [ERG-026](ERG-026.md) | Stop et Tout stopper | ERG | I | Validé |
+| [ERG-027](ERG-027.md) | Marges | ERG | M | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

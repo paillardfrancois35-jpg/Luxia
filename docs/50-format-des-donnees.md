@@ -39,6 +39,7 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
   "tickRateHz": 40,
   "lastProjectPath": null,
   "uiScale": 1,
+  "compactScenes": false,
   "outputs": {
     "assignments": [ { "universe": 1, "driver": "arduino" } ],
     "arduino": {
@@ -479,7 +480,7 @@ conception ; `valider` signale une scène ou une couche introuvable.
 
 | Propriété | Rôle |
 |---|---|
-| `looks[].actions[].kind` | `launchScene`, `stopScene` (avec `sceneId`) ; `stopLayer` (avec `layerId`) ; `stopAll` (« tout arrêter », sauf les couches épargnées comme Ambiance) ; `layerMaster` (`layerId`, `level` 0-1) ; `grandMaster` (`level` 0-1). Jouées dans l'ordre ; une action incomplète est ignorée |
+| `looks[].actions[].kind` | `launchScene`, `stopScene` (avec `sceneId`) ; `stopLayer` (avec `layerId`) ; `stopAll` (« tout arrêter », sauf les couches épargnées comme Ambiance) ; `layerMaster` (`layerId`, `level` 0-1) ; `grandMaster` (`level` 0-1 : lu, mais « Capturer ce qui joue » n'en produit pas, le Grand Master reste à l'opérateur, C13). Jouées dans l'ordre ; une action incomplète est ignorée |
 | `color`, `notes` | Couleur du bouton ; explication lisible (infobulle) |
 
 ## 12e. Projet : dossier `Versions`
@@ -532,6 +533,7 @@ seule scène (GEN-132).
 | 2026-09-25 | P2 : modèle d'appareil de la bibliothèque. |
 | 2026-09-26 | P3 : `installation.json`, `lieux.json`, copie de la bibliothèque dans le projet (GEN-053), `testOutput.heldChannels` (SORT-008). |
 | 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |
+| 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |

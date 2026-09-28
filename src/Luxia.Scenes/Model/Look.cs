@@ -3,7 +3,7 @@ namespace Luxia.Scenes.Model;
 /// <summary>
 /// Look (« préréglage de soirée », doc 60 §4.8, F1, glossaire) : une liste nommée d'actions — lancer ou arrêter des
 /// scènes, arrêter des couches, régler des masters — appelée d'un geste. Par exemple « Temps mort » : tout arrêter,
-/// lancer « Ambre – couleur seule », Grand Master à 40 %. Le même objet servira aux interventions du mode automatique
+/// lancer « Ambre – couleur seule », master Intensité à 40 %. Le même objet servira aux interventions du mode automatique
 /// (P10 : « la musique se calme → look calme »).
 /// </summary>
 public sealed record Look

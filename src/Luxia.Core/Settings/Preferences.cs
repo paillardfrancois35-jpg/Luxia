@@ -23,6 +23,12 @@ public sealed record Preferences
     /// </summary>
     public double UiScale { get; init; } = 1;
 
+    /// <summary>
+    /// Boutons de scène resserrés dans l'écran Contrôle (une ligne, environ moitié moins hauts ; essai 1.005.226).
+    /// Propre au poste.
+    /// </summary>
+    public bool CompactScenes { get; init; }
+
     /// <summary>Sorties.</summary>
     public OutputPreferences Outputs { get; init; } = new();
 

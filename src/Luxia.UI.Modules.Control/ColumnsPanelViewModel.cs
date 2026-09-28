@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Luxia.Engine;
 using Luxia.Engine.Model;
@@ -42,6 +43,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             MarkEditTarget();
             OnPropertyChanged(nameof(CanEdit));
         };
+        _isCompact = runtime.Preferences.Current.CompactScenes;
         Rebuild();
     }
 
@@ -56,6 +58,16 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
 
     /// <summary>Dernier message (clic refusé…), ou nul.</summary>
     public string? Message { get; private set; }
+
+    /// <summary>Boutons de scène resserrés (une ligne, nom coupé par « … », nom complet en infobulle) ; gardé sur le poste.</summary>
+    [ObservableProperty]
+    private bool _isCompact;
+
+    partial void OnIsCompactChanged(bool value)
+    {
+        _runtime.Preferences.Update(p => p with { CompactScenes = value });
+        _runtime.TraceUi("Contrôle", value ? "scènes resserrées" : "scènes normales");
+    }
 
     /// <summary>Une scène vient d'être choisie pour l'édition (la vue rouvre alors le panneau Propriétés s'il est fermé).</summary>
     public event EventHandler? EditChosen;

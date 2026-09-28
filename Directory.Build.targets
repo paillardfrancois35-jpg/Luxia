@@ -2,10 +2,12 @@
   <!--
     GEN-119 : numéro de compilation en développement. Le compteur vit hors du dépôt (build/, ignoré par Git) :
     chaque compilation d'un exécutable qui l'affiche (LuXia, prototype ergonomique) l'augmente de 1 et l'inscrit dans la version affichée (barre de titre, À propos).
+    Un compteur par version de développement (fichier nommé d'après LuxiaDevVersion) : il repart de 1 à chaque nouvelle
+    version, après une validation (demande de l'utilisateur, 2026-09-28).
   -->
   <Target Name="LuxiaBuildNumber" BeforeTargets="GetAssemblyAttributes" Condition="'$(LuxiaDevVersion)' != '' And '$(LuxiaShowsBuildNumber)' == 'true'">
     <PropertyGroup>
-      <LuxiaBuildNumberFile>$(MSBuildThisFileDirectory)build/numero-de-compilation.txt</LuxiaBuildNumberFile>
+      <LuxiaBuildNumberFile>$(MSBuildThisFileDirectory)build/numero-de-compilation-$(LuxiaDevVersion).txt</LuxiaBuildNumberFile>
     </PropertyGroup>
     <ReadLinesFromFile File="$(LuxiaBuildNumberFile)" Condition="Exists('$(LuxiaBuildNumberFile)')">
       <Output TaskParameter="Lines" PropertyName="LuxiaLastBuildNumber" />

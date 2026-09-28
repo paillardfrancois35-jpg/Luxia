@@ -4,7 +4,7 @@
              xmlns:c="using:Luxia.UI.Controls"
              x:Class="Luxia.UI.Modules.Control.Views.PlanPanelView"
              x:DataType="vm:PlanPanelViewModel">
-  <DockPanel Margin="8,32,8,6">
+  <DockPanel Margin="8,4,8,6">
     <!-- Sélections rapides (automatiques et enregistrées) sur plusieurs lignes, outils ½ ⅓ ¼, inverser, aucun à droite.
          Une ligne qui défilait masquait les boutons sous sa barre (essai 1.005.202) ; au-delà de trois lignes, défilement vertical. -->
     <DockPanel DockPanel.Dock="Top" Margin="0,0,30,4">
@@ -15,7 +15,7 @@
         <Button Content="Inverser" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding InvertCommand}" />
         <Button Content="Aucun" FontSize="11" Padding="6,2" Margin="0,0,0,4" Command="{Binding SelectNoneCommand}" />
       </StackPanel>
-      <ScrollViewer MaxHeight="84" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+      <ScrollViewer MaxHeight="75" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <ItemsControl ItemsSource="{Binding QuickSelections}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

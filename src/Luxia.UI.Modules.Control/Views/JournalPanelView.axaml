@@ -3,5 +3,13 @@
              xmlns:vm="using:Luxia.UI.Modules.Control"
              x:Class="Luxia.UI.Modules.Control.Views.JournalPanelView"
              x:DataType="vm:JournalPanelViewModel">
-  <ListBox ItemsSource="{Binding Lines}" Margin="4,32,4,4" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="12" Background="Transparent" />
+  <!-- Une ligne par événement, serrées (l'interligne du thème était énorme, analyse de fin d'essai). -->
+  <ListBox ItemsSource="{Binding Lines}" Margin="4,30,4,4" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="12" Background="Transparent">
+    <ListBox.Styles>
+      <Style Selector="ListBoxItem">
+        <Setter Property="Padding" Value="6,1" />
+        <Setter Property="MinHeight" Value="0" />
+      </Style>
+    </ListBox.Styles>
+  </ListBox>
 </UserControl>

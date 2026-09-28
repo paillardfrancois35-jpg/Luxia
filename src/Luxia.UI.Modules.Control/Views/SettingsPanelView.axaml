@@ -42,7 +42,7 @@
     </DataTemplate>
   </UserControl.Resources>
 
-  <DockPanel Margin="8,32,8,6">
+  <DockPanel Margin="8,6,8,6">
     <!-- Qui, et où vont les réglages (selon le mode, doc 60 §4.1) -->
     <DockPanel DockPanel.Dock="Top" Margin="2,0,30,6">
       <Button DockPanel.Dock="Right" Content="{Binding ActionText}" ToolTip.Tip="{Binding ActionTip}" IsEnabled="{Binding HasSelection}"

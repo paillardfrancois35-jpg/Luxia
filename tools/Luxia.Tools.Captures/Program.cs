@@ -95,6 +95,12 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewM
     Tick(40);
     Capture("Contrôle - LIVE surcharge");
 
+    // Boutons de scène resserrés (essai 1.005.226).
+    control.Columns.IsCompact = true;
+    Tick(5);
+    Capture("Contrôle - scènes resserrées");
+    control.Columns.IsCompact = false;
+
     // ÉDITION : étape 2 du chenillard, PAR sélectionnés.
     control.Session.ReleaseAll();
     control.Session.ChooseScene(SceneNamed("Chenillard 4 couleurs").Id);

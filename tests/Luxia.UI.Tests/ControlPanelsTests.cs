@@ -612,6 +612,18 @@ public sealed class ControlPanelsTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-018")]
+    public void Compact_IsKeptOnThisComputer()
+    {
+        _vm.Columns.IsCompact.ShouldBeFalse();
+
+        _vm.Columns.IsCompact = true;
+
+        _host.Runtime.Preferences.Current.CompactScenes.ShouldBeTrue();
+        new ColumnsPanelViewModel(_host.Runtime, _vm.Session, _host.Dialogs).IsCompact.ShouldBeTrue("repris au prochain lancement");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-018")]
     [Trait("Exigence", "CMD-012")]
     public void StopAll_SparesTheAtmosphere_UnlessEverything_EvenLocked()
     {

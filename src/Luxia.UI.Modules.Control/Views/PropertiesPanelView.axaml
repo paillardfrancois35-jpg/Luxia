@@ -22,12 +22,12 @@
     </Style>
   </UserControl.Styles>
 
-  <Panel Margin="10,32,10,8">
-    <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,8" />
+  <Panel Margin="10,4,10,8">
+    <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,4,30,8" />
     <ScrollViewer IsVisible="{Binding HasScene}">
       <StackPanel IsEnabled="{Binding IsEditable}">
         <!-- Identité -->
-        <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,4">
+        <Grid ColumnDefinitions="Auto,*" Margin="0,0,30,4">
           <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" Margin="0,0,8,0" />
           <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" ToolTip.Tip="Nom de la scène (enregistré à la frappe, Ctrl+Z pour annuler)" />
         </Grid>
