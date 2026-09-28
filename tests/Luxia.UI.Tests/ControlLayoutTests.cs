@@ -94,6 +94,44 @@ public sealed class ControlLayoutTests : IDisposable
         new ControlLayoutStore(_folder, ControlLayoutPreset.Show).Path.ShouldNotBe(new ControlLayoutStore(_folder).Path);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [Trait("Exigence", "ERG-001")]
+    public void Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes(bool closedInWindow)
+    {
+        var factory = new ControlDockFactory(_contexts) { HostWindowFactory = () => null };
+        var layout = factory.CreateLayout();
+        factory.InitLayout(layout);
+        var plan = DockTree.Find(layout, ControlPanels.Plan).Dockable!;
+        var home = DockTree.FindOwner(layout, ControlPanels.Plan)!.Id;
+
+        // Fenêtre détachée telle que Dock l'enregistre : une racine, un groupe d'onglets, le panneau.
+        ((Dock.Model.Core.IDock)plan.Owner!).VisibleDockables!.Remove(plan);
+        var tools = new Dock.Model.Mvvm.Controls.ToolDock { Id = "flottant", VisibleDockables = factory.CreateList<Dock.Model.Core.IDockable>(plan), ActiveDockable = plan };
+        var windowRoot = factory.CreateRootDock();
+        windowRoot.VisibleDockables = factory.CreateList<Dock.Model.Core.IDockable>(tools);
+        var window = factory.CreateDockWindow();
+        window.Layout = windowRoot;
+        layout.Windows = factory.CreateList(window);
+        factory.InitLayout(layout);
+        if (closedInWindow)
+        {
+            factory.CloseDockable(plan);
+            DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Hidden);
+        }
+        else
+        {
+            DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Floating);
+        }
+
+        factory.ShowPanel(layout, ControlPanels.Plan).ShouldNotBeNull();
+
+        DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Visible, "remis dans la fenêtre principale");
+        DockTree.FindOwner(layout, ControlPanels.Plan)!.Id.ShouldBe(home, "à sa place livrée");
+        layout.Windows.ShouldBeEmpty("la fenêtre vide est fermée");
+    }
+
     private IRootDock NewLayout(out ControlDockFactory factory)
     {
         factory = new ControlDockFactory(_contexts);

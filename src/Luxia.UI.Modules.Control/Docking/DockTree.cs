@@ -17,6 +17,9 @@ public enum PanelPlace
 
     /// <summary>Fermé : masqué, il peut revenir à sa place.</summary>
     Hidden,
+
+    /// <summary>Détaché dans une fenêtre.</summary>
+    Floating,
 }
 
 /// <summary>Recherches dans l'arbre Dock, fenêtres détachées et panneaux masqués compris.</summary>
@@ -51,12 +54,19 @@ public static class DockTree
                 var (found, place) = Find(layout, id);
                 if (found is not null)
                 {
-                    return (found, place);
+                    return (found, place == PanelPlace.Visible ? PanelPlace.Floating : place);
                 }
             }
         }
 
         return (null, PanelPlace.Absent);
+    }
+
+    /// <summary>Fenêtre détachée qui contient le panneau (affiché, replié ou fermé dedans), ou nul.</summary>
+    public static IDockWindow? WindowOf(IRootDock root, string id)
+    {
+        ArgumentNullException.ThrowIfNull(root);
+        return root.Windows?.FirstOrDefault(w => w.Layout is { } layout && Find(layout, id).Dockable is not null);
     }
 
     /// <summary>Tous les éléments de la disposition : groupes et panneaux, fenêtres détachées et panneaux fermés compris.</summary>

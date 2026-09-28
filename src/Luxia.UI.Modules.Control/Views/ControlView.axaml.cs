@@ -269,7 +269,7 @@ public partial class ControlView : UserControl
 
     private void ShowPanelIfHidden(string id)
     {
-        if (_layout is null || _factory is null || DockTree.Find(_layout, id).Place == PanelPlace.Visible)
+        if (_layout is null || _factory is null || DockTree.Find(_layout, id).Place is PanelPlace.Visible or PanelPlace.Floating)
         {
             return;
         }
@@ -296,6 +296,7 @@ public partial class ControlView : UserControl
                 {
                     PanelPlace.Hidden => "  (fermé)",
                     PanelPlace.Pinned => "  (replié)",
+                    PanelPlace.Floating => "  (détaché : le remettre en place)",
                     PanelPlace.Absent => "  (absent)",
                     _ => string.Empty,
                 },

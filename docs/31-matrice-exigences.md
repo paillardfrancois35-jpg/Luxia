@@ -365,7 +365,7 @@
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Réalisé | ControlLayoutTests.DefaultLayout_HasEveryPanelOnce<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
+| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Réalisé | ControlLayoutTests.DefaultLayout_HasEveryPanelOnce<br>ControlLayoutTests.Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
 | [ERG-002](exigences/ERG-002.md) | I | Enregistrement de la disposition | Réalisé | ControlLayoutTests.Load_Missing_IsNullWithoutMessage_Unreadable_IsSetAside<br>ControlLayoutTests.SaveThenLoad_ClosedPanel_StaysClosed_AndComesBackHome<br>LayoutStoreTests.Delete_ThenLoad_GivesNothing<br>LayoutStoreTests.Load_MissingFile_GivesNothingAndNoMessage<br>(+5) |
 | [ERG-003](exigences/ERG-003.md) | I | Grille Pan / Tilt | Réalisé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>PanTiltGeometryTests.FromCorners_AnyOrder_GivesOrderedRect<br>PanTiltGeometryTests.FromScreen_OutsideGrid_IsClamped<br>PanTiltGeometryTests.HitTest_HandlesBodyAndOutside<br>(+7) |
 | [ERG-004](exigences/ERG-004.md) | I | Sélecteur de couleur | Réalisé | ColorPickerLayoutTests.BrightnessAt_BarTopAndBottom_IsFullAndBlack<br>ColorPickerLayoutTests.For_Size_SquareBarAndSwatchesDoNotOverlap<br>ColorPickerLayoutTests.HueSaturationAt_Corners_GivesHueAcrossAndSaturationDown<br>ColorPickerLayoutTests.SquarePoint_IsInverseOfHueSaturationAt<br>(+4) |

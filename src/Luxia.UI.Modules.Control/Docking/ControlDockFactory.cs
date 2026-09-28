@@ -29,6 +29,9 @@ public sealed class ControlDockFactory : Factory
     /// <summary>Disposition prête que construit <see cref="CreateLayout()"/> (et où revient un panneau réaffiché).</summary>
     public ControlLayoutPreset Preset { get; set; }
 
+    /// <summary>Crée la fenêtre d'un panneau détaché (remplaçable pour les tests, sans fenêtrage).</summary>
+    public Func<IHostWindow?> HostWindowFactory { get; init; } = () => new ControlHostWindow();
+
     /// <inheritdoc />
     public override IRootDock CreateLayout() => Preset == ControlLayoutPreset.Show ? CreateShow() : CreateControl();
 
@@ -67,8 +70,8 @@ public sealed class ControlDockFactory : Factory
     public override void InitLayout(IDockable layout)
     {
         ContextLocator = _contexts.ToDictionary(kv => kv.Key, kv => kv.Value);
-        HostWindowLocator = new Dictionary<string, Func<IHostWindow?>> { [nameof(IDockWindow)] = () => new HostWindow() };
-        DefaultHostWindowLocator = () => new HostWindow();
+        HostWindowLocator = new Dictionary<string, Func<IHostWindow?>> { [nameof(IDockWindow)] = HostWindowFactory };
+        DefaultHostWindowLocator = HostWindowFactory;
         base.InitLayout(layout);
     }
 
@@ -79,11 +82,19 @@ public sealed class ControlDockFactory : Factory
     /// <summary>
     /// Réaffiche un panneau : fermé, il revient à sa place ; absent, il est créé dans le groupe qui l'accueille dans la
     /// disposition livrée (Dock perd le groupe d'origine d'un panneau fermé après relecture : écart vu au prototype).
+    /// Détaché, ou fermé depuis une fenêtre détachée, il revient dans la fenêtre principale à sa place livrée, et la
+    /// fenêtre vide se ferme (essai 1.005.210 : il revenait détaché, derrière la fenêtre principale).
     /// </summary>
     public IDockable? ShowPanel(IRootDock root, string id)
     {
         ArgumentNullException.ThrowIfNull(root);
         var (dockable, place) = DockTree.Find(root, id);
+        if (DockTree.WindowOf(root, id) is { } window)
+        {
+            TakeOutOfWindow(root, window, dockable!, place);
+            return DockHome(root, id, dockable!);
+        }
+
         if (place == PanelPlace.Hidden && dockable!.OriginalOwner is not null)
         {
             RestoreDockable(dockable);
@@ -99,20 +110,60 @@ public sealed class ControlDockFactory : Factory
                 dockable = CreatePanel(id);
             }
 
-            var home = DockTree.FindOwner(CreateLayout(), id) is { Id: { } homeId } && DockTree.FindDock(root, homeId) is IToolDock found
-                ? found
-                : DockTree.FirstToolDock(root);
-            if (home is null)
-            {
-                return null;
-            }
-
-            AddDockable(home, dockable!);
-            InitDockable(dockable!, home);
+            return DockHome(root, id, dockable!);
         }
 
         SetActiveDockable(dockable!);
         return dockable;
+    }
+
+    // Dans le groupe qui l'accueille dans la disposition livrée (ou le premier groupe de panneaux).
+    private IDockable? DockHome(IRootDock root, string id, IDockable dockable)
+    {
+        var home = DockTree.FindOwner(CreateLayout(), id) is { Id: { } homeId } && DockTree.FindDock(root, homeId) is IToolDock found
+            ? found
+            : DockTree.FirstToolDock(root);
+        if (home is null)
+        {
+            return null;
+        }
+
+        AddDockable(home, dockable);
+        InitDockable(dockable, home);
+        SetActiveDockable(dockable);
+        return dockable;
+    }
+
+    private void TakeOutOfWindow(IRootDock root, IDockWindow window, IDockable dockable, PanelPlace place)
+    {
+        var windowRoot = (IRootDock)window.Layout!;
+        if (place == PanelPlace.Hidden)
+        {
+            windowRoot.HiddenDockables?.Remove(dockable);
+        }
+        else if (dockable.Owner is IDock owner)
+        {
+            owner.VisibleDockables?.Remove(dockable);
+            if (ReferenceEquals(owner.ActiveDockable, dockable))
+            {
+                owner.ActiveDockable = owner.VisibleDockables?.FirstOrDefault();
+            }
+        }
+
+        foreach (var pinned in new[] { windowRoot.LeftPinnedDockables, windowRoot.RightPinnedDockables, windowRoot.TopPinnedDockables, windowRoot.BottomPinnedDockables })
+        {
+            pinned?.Remove(dockable);
+        }
+
+        dockable.Owner = null;
+        dockable.OriginalOwner = null;
+
+        // Plus aucun panneau dans la fenêtre : on la ferme.
+        if (!DockTree.All(windowRoot).Any(d => d is not IDock))
+        {
+            window.Exit();
+            root.Windows?.Remove(window);
+        }
     }
 
     private ToolDock Tools(double proportion, params string[] ids)

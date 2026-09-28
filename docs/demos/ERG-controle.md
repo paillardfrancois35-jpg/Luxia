@@ -84,6 +84,7 @@ panneau a un **?** qui explique à quoi il sert.
 |---|---|---|
 | 1 | Glisser l'onglet **Journal** ailleurs, détacher **Plan des appareils** dans une fenêtre (menu ▾ du panneau → **Détacher dans une fenêtre**), replier un panneau (épingle) | Menus **en français** ; la fenêtre détachée va sur le deuxième écran. |
 | 2 | Fermer un panneau (✕), puis **Panneaux ▾** | « (fermé) » ; le choisir le remet à sa place. |
+| 2 bis | Détacher un panneau, double-clic sur sa barre de titre ; puis **Panneaux ▾** → « (détaché : le remettre en place) » (ou le fermer puis le rappeler) | Le double-clic agrandit / restaure la fenêtre ; le panneau revient à sa place dans la fenêtre principale et la fenêtre vide se ferme. |
 | 3 | Quitter LuXia, relancer | Même disposition (enregistrée sur ce poste). **Rétablir la disposition** revient à celle livrée. |
 
 ## 7. Looks, disposition Spectacle, verrou, taille
