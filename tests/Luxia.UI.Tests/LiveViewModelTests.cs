@@ -1,4 +1,3 @@
-using Luxia.Fixtures.Model;
 using Luxia.Scenes.Model;
 using Luxia.UI.Modules.Live;
 
@@ -36,7 +35,7 @@ public sealed class LiveViewModelTests : IAsyncLifetime
     [Trait("Exigence", "LIVE-002")]
     public void Columns_AreTheLayers_WithTheirLiveScenes_InOrder()
     {
-        _vm.Columns.Select(c => c.Layer.Name).ShouldBe(["Intensité", "Couleurs", "Mouvements", "Faisceau", "Effets", "Ambiance", "Flashs"]);
+        _vm.Columns.Select(c => c.Layer.Name).ShouldBe(["Intensité", "Couleurs", "Mouvements", "Faisceau", "Effets", "Ambiance", "Libre", "Flashs"]);
         var colors = _vm.Columns.Single(c => c.Layer.Name == "Couleurs");
         colors.Scenes.Select(s => s.Name).ShouldBe(_host.Runtime.Project.Scenes.Scenes
             .Where(s => s.LayerId == LayerSet.ColorsLayerId && s.VisibleInLive).Select(s => s.Name));

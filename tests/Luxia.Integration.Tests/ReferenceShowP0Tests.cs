@@ -2,7 +2,6 @@ using Luxia.Core.Dmx;
 using Luxia.Core.Time;
 using Luxia.Engine;
 using Luxia.Messaging.Commands;
-using Luxia.Output;
 using Luxia.Output.Recording;
 
 namespace Luxia.Integration.Tests;

@@ -140,6 +140,12 @@ public sealed class ProjectSession
             messages.Add(midiMessage);
         }
 
+        var (looks, looksMessage) = LookStore.Load(folder);
+        if (looksMessage is not null)
+        {
+            messages.Add(looksMessage);
+        }
+
         Folder = folder;
         Info = report.Info;
         Console = console;
@@ -151,6 +157,7 @@ public sealed class ProjectSession
         Safety = safety;
         Live = live;
         Midi = midi;
+        Looks = looks;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -231,6 +238,20 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>Looks du projet (ERG-023, doc 60 §4.8).</summary>
+    public LookSet Looks { get; private set; } = new();
+
+    /// <summary>Remplace les looks et les enregistre (<c>looks.json</c>).</summary>
+    public void SaveLooks(LookSet looks)
+    {
+        ArgumentNullException.ThrowIfNull(looks);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        LookStore.Save(folder, looks);
+        Looks = looks;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Remplace les réglages du Live et les enregistre (doc 18).</summary>
     public void SaveLive(LiveSettings live)
     {
@@ -265,9 +286,11 @@ public sealed class ProjectSession
         (Scenes, Palettes, Layers, Safety) = LoadShowParts(folder, messages);
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
+        var (looks, looksMessage) = LookStore.Load(folder);
         Live = live;
         Midi = midi;
-        messages.AddRange(new[] { liveMessage, midiMessage }.OfType<string>());
+        Looks = looks;
+        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

@@ -67,6 +67,13 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool _recording;
 
+    /// <summary>Tailles d'interface proposées (F8).</summary>
+    public static IReadOnlyList<double> UiScales { get; } = [1, 1.25, 1.5];
+
+    /// <summary>Taille de l'interface (1 = 100 %), lue dans les préférences du poste (F8, ERG-022).</summary>
+    [ObservableProperty]
+    private double _uiScale = 1;
+
     /// <summary>Crée la coquille.</summary>
     public MainWindowViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -75,6 +82,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         _dialogs = dialogs;
         Pages =
         [
+            // E2, C5 : l'écran Contrôle (jouer et corriger) arrive en tête ; Live et Scènes restent jusqu'à leur remplacement.
+            new NavigationItem("Contrôle", "◉", new Luxia.UI.Modules.Control.ControlViewModel(runtime, dialogs)),
             new NavigationItem("Live", "▶", new Luxia.UI.Modules.Live.LiveViewModel(runtime)),
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
@@ -88,6 +97,18 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         runtime.Show.Compiled += (_, _) => UpdateProject();
         UpdateProject();
         RefreshStatus();
+        _uiScale = Math.Clamp(runtime.Preferences.Current.UiScale, 0.75, 2);
+    }
+
+    /// <summary>Change la taille de l'interface (paramètre : 1, 1.25, 1.5) et la garde dans les préférences du poste.</summary>
+    [RelayCommand]
+    private void SetUiScale(string? scale)
+    {
+        if (double.TryParse(scale, NumberStyles.Float, CultureInfo.InvariantCulture, out var value))
+        {
+            UiScale = Math.Clamp(value, 0.75, 2);
+            _runtime.Preferences.Update(p => p with { UiScale = UiScale });
+        }
     }
 
     /// <summary>Écrans de l'Atelier.</summary>
@@ -153,7 +174,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private Task ShowAboutAsync() => _dialogs.ShowInfoAsync("À propos de LuXia", BuildDiagnostics());
+    private Task ShowAboutAsync() => _dialogs.ShowAboutAsync(BuildDiagnostics());
 
     /// <summary>
     /// Signale une erreur inattendue de l'interface dans la barre d'état (elle est déjà au journal technique, GEN-117).

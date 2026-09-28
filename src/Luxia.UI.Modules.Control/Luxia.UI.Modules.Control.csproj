@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Écran « Contrôle » (doc 60 §6, E2) : jouer et corriger au même endroit, panneaux ancrables (Dock, E4). -->
+  <PropertyGroup>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Dock.Avalonia" />
+    <PackageReference Include="Dock.Avalonia.Themes.Fluent" />
+    <PackageReference Include="Dock.Model.Mvvm" />
+    <PackageReference Include="Dock.Serializer.SystemTextJson" />
+    <ProjectReference Include="../Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
+    <ProjectReference Include="../Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../Luxia.Fixtures/Luxia.Fixtures.csproj" />
+    <ProjectReference Include="../Luxia.Patch/Luxia.Patch.csproj" />
+    <ProjectReference Include="../Luxia.Scenes/Luxia.Scenes.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
+    <ProjectReference Include="../Luxia.UI.Modules.Scenes/Luxia.UI.Modules.Scenes.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.UI.Tests" />
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,4 @@
 using Luxia.Hosting;
-using Luxia.Persistence;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Luxia.UI.Tests;

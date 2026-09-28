@@ -10,7 +10,7 @@
 | Élément | Choix |
 |---|---|
 | Framework | **.NET 10** (LTS), `net10.0` ; `net10.0-windows` uniquement pour ce qui dépend de Windows (application, API Windows) |
-| Solution | **`Dmx.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `Dmx.sln`. |
+| Solution | **`LuXia.sln` au format classique** (jamais `.slnx`) : l'outil de l'utilisateur pour ouvrir/compiler le projet ne prend pas en charge le nouveau format XML (D25). Toute commande, script ou doc qui référence la solution utilise `LuXia.sln`. |
 | Langage | C# de la version par défaut du SDK |
 | Interface | Avalonia (version stable courante), MVVM avec **CommunityToolkit.Mvvm** |
 | Assemblage | Projet `Luxia.Hosting` : assemblage explicite des modules, sans conteneur d'injection de dépendances pour l'instant (D20) |
@@ -107,7 +107,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 | Nommage | `Methode_Condition_ResultatAttendu` (anglais) ; `DisplayName` en français si utile |
 | Traçabilité | Chaque test lié à une exigence porte `[Trait("Exigence", "SORT-003")]` (plusieurs si besoin) |
 | Matériel | Tests nécessitant l'Arduino : `[Trait("Categorie", "Materiel")]`, **exclus** de la commande courante |
-| Commandes | `dotnet test --solution Dmx.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
+| Commandes | `dotnet test --solution LuXia.sln -- --filter-not-trait "Categorie=Materiel"` (xUnit v3 sur Microsoft.Testing.Platform, `global.json`) |
 | Intégration | `tests/Luxia.Integration.Tests` : scénarios bout en bout et **rejeu des exemples du show de référence** (DEMO-3) |
 | Temps | Horloge injectée : aucun `Thread.Sleep` pour attendre un résultat dans un test unitaire |
 | Couverture attendue | Toute exigence I testable automatiquement a au moins un test ; les autres sont couvertes par le guide de démonstration ou une check-list (doc 30) |
@@ -165,15 +165,26 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 - **Un enregistrement de fichier peut être refusé un court instant par le poste lui-même.** Sur le PC de l'utilisateur (outils de sécurité d'entreprise), environ 2 % des remplacements de fichier rapprochés échouent avec « accès refusé » (mesuré : 9 sur 500). Une écriture faite à chaque cran d'un champ numérique finit donc par tomber dessus, et Avalonia affiche l'exception sous le champ sans la journaliser. Règle : toute écriture de données passe par `VersionedJsonFile.Save`, qui réessaie (10 fois, attente croissante) ; un écran qui enregistre en continu attrape l'échec résiduel et l'affiche en message. (Rencontré le 2026-09-26, essai P4 avec l'utilisateur : champ Vitesse de l'écran Scènes.)
 
-- **Compiler pendant que LuXia tourne n'a rien livré.** L'application ouverte verrouille ses DLL : la compilation échoue à la copie et l'utilisateur continue de tester l'ancienne version sans le savoir. Règle : demander de fermer LuXia **avant** de compiler, vérifier « 0 Erreur(s) » et annoncer le numéro de compilation obtenu (GEN-119) ; l'utilisateur le retrouve dans la barre de titre. (Rencontré le 2026-09-26, essai P4.)
+- **Compiler pendant que LuXia tourne n'a rien livré.** L'application ouverte verrouille ses DLL : la compilation échoue à la copie et l'utilisateur continue de tester l'ancienne version sans le savoir. Règle : demander de fermer LuXia **avant** de compiler, vérifier « 0 Erreur(s) » et annoncer le numéro de compilation obtenu (GEN-119) ; l'utilisateur le retrouve dans la barre de titre. (Rencontré le 2026-09-26, essai P4.) Le compteur est propre à chaque version de développement (`build/numero-de-compilation-<version>.txt`) : il repart de 1 après une validation. `dotnet format` recompile aussi : lire le numéro **après** la dernière commande. LuXia peut mettre quelques secondes à se fermer : si la copie échoue (« verrouillé par LuXia »), relancer.
 
 - **Un écran (ou un contrôleur) qui décide d'après l'état relu du moteur a toujours un temps de retard.** L'interface relit l'instantané du moteur 20 fois par seconde, un contrôleur MIDI envoie des dizaines de messages par seconde : entre une commande et son traitement, l'état relu est **l'ancien**. Trois défauts de l'essai P5 en venaient : une bascule lancer / arrêter qui relançait la scène au lieu de l'arrêter (LIVE-003), un niveau affiché qui « sautait » 20 → 10 → 20 (LIVE-040), un fader MIDI lâché en descente rapide (MIDI-004). Règles : (1) une décision qui dépend de l'état (bascule, « si déjà actif ») est prise **par le moteur**, au traitement de la commande (ex. `LaunchSceneCommand.StopIfPlaying`) ; (2) une valeur réglée à l'écran est **gardée jusqu'à sa confirmation** par le moteur (`EngineEcho`, Luxia.UI.Controls) ; (3) un contrôleur compare l'état relu à **ses derniers envois**, pas au seul dernier (`SoftTakeover`). Un test doit reproduire la course (rafraîchissement **avant** le tick), sinon il passe à tort : en temps virtuel, le moteur a toujours un temps d'avance. (Rencontré le 2026-09-27, essai P5.)
 - **La notice d'un appareil peut être fausse ou incomplète.** Le BeamZ BUV463 réel a un **8e canal** (« lissage du gradateur », ≈ 15 s à 255) absent de sa notice (7 canaux) : patché en 7 canaux, il lisait le gradateur de l'appareil suivant comme ce canal, d'où un « allumage lent » qui a coûté une journée, pendant qu'on soupçonnait LuXia, le firmware puis la ligne. Règles : quand un appareil réagit de façon inexplicable alors que la trame est juste, (1) vérifier ce que reçoit la ligne (journal `.journal.txt` d'un enregistrement, écoute avec le DVC4 Daslight : `docs/Equipements/DasLight/ecoute-ligne-dmx-dvc4.md`), (2) regarder les **canaux voisins** au-delà du dernier canal documenté, (3) comparer avec un appareil témoin à la même adresse. (Rencontré le 2026-09-27, essai P5.)
+
+- **Surcharges et conversion implicite tableau → span (C# 14).** Une méthode privée `F(ReadOnlySpan<T>)` à côté d'une
+  méthode `F(IReadOnlyList<T>)` : un appel `F(tableau)` choisit désormais la version span (conversion « de première
+  classe »), sans erreur ni avertissement. Dans `SafetyLimiter`, cela sautait l'extension des zones touchant une butée,
+  et une lyre pouvait se coller au bord interdit. Règle : ne pas surcharger par `ReadOnlySpan` une méthode qui prend une
+  collection ; donner un autre nom à la variante interne. (Rencontré le 2026-09-28, zone permise, trouvé par un test.)
+- **Espace de noms qui masque un type d'Avalonia.** Dans `Luxia.UI.Modules.Control.Views`, le nom `Control` désigne
+  l'espace de noms `Luxia.UI.Modules.Control`, plus le type `Avalonia.Controls.Control` (erreur CS0118). Écrire
+  `Avalonia.Controls.Control` dans ce module. (Rencontré le 2026-09-28.)
 
 ## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-09-28 | §11 : surcharge par span choisie pour un tableau (C# 14) ; espace de noms `…Control` qui masque `Avalonia.Controls.Control`. |
+| 2026-09-27 | Reliquats du renommage DMX → LuXia : `Dmx.sln` → `LuXia.sln` (§1, §6) ; `.editorconfig` visait encore `src/Dmx.UI.**` (réglage CA1822 des écrans sans effet) ; `dmx-headless` dans le `JOURNAL.md` du show de référence. Les entrées d'historique et décisions antérieures gardent les anciens noms (doc 02 §19). |
 | 2026-09-27 | §11 : course écran / moteur (décision par le moteur, `EngineEcho`, historique des envois MIDI) ; notice d'appareil incomplète (8e canal du BUV463). Noms `Dmx.*` restants corrigés en `Luxia.*` dans les tables de ce document. |
 | 2026-09-26 | §11 : écriture de fichier refusée un instant par le poste (nouvelles tentatives dans `VersionedJsonFile.Save`). |
 | 2026-09-26 | §11 : tests de temps réel sensibles à la charge (trois essais, collection non parallélisée) ; copie `with` d'un `record` à propriété calculée à la construction. |

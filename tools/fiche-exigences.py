@@ -1,18 +1,22 @@
 """Création / mise à jour des fiches d'exigences (docs/exigences).
 
 Usage (depuis la racine du dépôt), puis régénérer la matrice (tools/matrice-exigences.py) :
-  PYTHONIOENCODING=utf-8 python tools/fiche-exigences.py spec.json
+  python tools/fiche-exigences.py spec.json
 L'historique d'une fiche est en ajout seul ; « statut » remplace le statut courant.
 spec.json : liste d'objets
   {"id": "MOT-080", "statut": "Réalisé", "remarque": "...", "liens": "...",
    "realisation": ["..."], "tests": ["..."], "historique": [["2026-09-26","Claude","Développement","..."]],
-   "titre": "(facultatif, sinon tiré du cahier des charges)"}
+   "titre": "(facultatif, sinon tiré du cahier des charges)", "creation": "(date de rédaction, facultative)"}
 """
 import glob
 import json
 import os
 import re
 import sys
+
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = os.getcwd()
 DOCS = os.path.join(ROOT, "docs")
@@ -71,7 +75,7 @@ def create(spec):
     lines += ["", "## Tests", ""]
     lines += [f"- {t}" for t in spec.get("tests", [])] or ["- —"]
     lines += ["", "## Historique", "", "| Date | Par | Type | Entrée |", "|---|---|---|---|",
-              f"| 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc {name[:2]}, {anchor}). |"]
+              f"| {spec.get('creation', '2026-09-24')} | Conception | Création | Exigence rédigée au cahier des charges (doc {name[:2]}, {anchor}). |"]
     lines += [f"| {d} | {p} | {t} | {e} |" for d, p, t, e in spec.get("historique", [])]
     return "\n".join(lines) + "\n"
 

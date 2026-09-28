@@ -1,8 +1,4 @@
-using System.Text;
 using Luxia.Fixtures.Model;
-using Luxia.Persistence.Json;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Luxia.Fixtures;
 

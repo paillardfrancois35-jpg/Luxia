@@ -24,6 +24,7 @@
     <ProjectReference Include="../../src/Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Scenes/Luxia.UI.Modules.Scenes.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Live/Luxia.UI.Modules.Live.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Control/Luxia.UI.Modules.Control.csproj" />
   </ItemGroup>
 
   <ItemGroup>

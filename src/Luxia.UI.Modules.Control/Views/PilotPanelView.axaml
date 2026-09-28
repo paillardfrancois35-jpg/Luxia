@@ -1,0 +1,41 @@
+<!--
+  F10 (doc 60 §8.1) : place réservée au pilote automatique dans la disposition Spectacle. Il arrive en P10 ; en
+  attendant, le panneau dit ce qu'il montrera et offre déjà les interventions : les looks.
+-->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             x:Class="Luxia.UI.Modules.Control.Views.PilotPanelView"
+             x:DataType="vm:LooksPanelViewModel">
+  <DockPanel Margin="10,4,10,8">
+    <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,30,10">
+      <Border Background="#161B22" CornerRadius="8" Padding="10,8">
+        <StackPanel Spacing="4">
+          <TextBlock Text="♪ Titre en cours : —" Foreground="#8B949E" />
+          <TextBlock Text="Style : —      Show choisi : —" Foreground="#8B949E" />
+          <TextBlock Text="Pourquoi : —" Foreground="#8B949E" />
+        </StackPanel>
+      </Border>
+      <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#8B949E"
+                 Text="Arrive en P10 : LuXia écoutera le titre en cours, en déduira le style, choisira un show adapté et réagira quand la musique se calme ou repart. Les interventions à la main sont les looks ci-dessous." />
+    </StackPanel>
+    <TextBlock DockPanel.Dock="Top" Text="Interventions (looks)" FontWeight="SemiBold" Margin="0,0,0,6" />
+    <TextBlock DockPanel.Dock="Top" IsVisible="{Binding IsEmpty}" Text="Aucun look : créez-en dans le panneau Looks (« Capturer ce qui joue »)." Foreground="#8B949E" TextWrapping="Wrap" />
+    <ScrollViewer>
+      <ItemsControl ItemsSource="{Binding Looks}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:LookButtonViewModel">
+            <Button HorizontalAlignment="Stretch" MinHeight="44" Margin="0,0,0,6" FontSize="15" FontWeight="SemiBold"
+                    BorderBrush="{Binding Color}" BorderThickness="6,0,0,0" ToolTip.Tip="{Binding Tip}"
+                    Command="{Binding $parent[UserControl].((vm:LooksPanelViewModel)DataContext).PlayCommand}" CommandParameter="{Binding}">
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Key}" FontSize="12" Foreground="#E3B341" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding Name}" />
+              </DockPanel>
+            </Button>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

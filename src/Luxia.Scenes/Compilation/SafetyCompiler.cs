@@ -125,7 +125,7 @@ public static class SafetyCompiler
         foreach (var group in venue.ForbiddenZones.GroupBy(z => z.FixtureId))
         {
             var fixture = patch.Find(group.Key);
-            var where = $"lieu « {venue.Name} », zone interdite";
+            var where = $"lieu « {venue.Name} », zone";
             if (fixture is null)
             {
                 issues.Add(new CompileIssue(IssueSeverity.Warning, "lieux.json", where, "fixtureId", "appareil introuvable dans le patch : zone ignorée"));
@@ -143,6 +143,7 @@ public static class SafetyCompiler
             }
 
             var zones = new List<PanTiltZone>();
+            PanTiltZone? limits = null;
             foreach (var zone in group)
             {
                 if (zone.PanMin >= zone.PanMax || zone.TiltMin >= zone.TiltMax)
@@ -156,22 +157,38 @@ public static class SafetyCompiler
                     continue;
                 }
 
-                zones.Add(new PanTiltZone(
+                var rect = new PanTiltZone(
                     Math.Clamp(zone.PanMin, 0, 1),
                     Math.Clamp(zone.PanMax, 0, 1),
                     Math.Clamp(zone.TiltMin, 0, 1),
-                    Math.Clamp(zone.TiltMax, 0, 1)));
+                    Math.Clamp(zone.TiltMax, 0, 1));
+                if (!zone.Allowed)
+                {
+                    zones.Add(rect);
+                    continue;
+                }
+
+                // F7 : plusieurs zones permises se combinent par intersection (la plus prudente).
+                limits = limits is { } l
+                    ? new PanTiltZone(Math.Max(l.PanMin, rect.PanMin), Math.Min(l.PanMax, rect.PanMax), Math.Max(l.TiltMin, rect.TiltMin), Math.Min(l.TiltMax, rect.TiltMax))
+                    : rect;
+            }
+
+            if (limits is { } empty && (empty.PanMin >= empty.PanMax || empty.TiltMin >= empty.TiltMax))
+            {
+                issues.Add(new CompileIssue(IssueSeverity.Warning, "lieux.json", $"{where} de « {fixture.Fixture.Name} »", "allowed", "zones permises sans partie commune : limites ignorées"));
+                limits = null;
             }
 
             // Des jumeaux partagent Pan/Tilt : une seule garde par paramètre, avec toutes les zones du groupe.
             var existing = guards.FindIndex(g => g.Pan == panIndex && g.Tilt == tiltIndex);
             if (existing >= 0)
             {
-                guards[existing] = guards[existing] with { Zones = [.. guards[existing].Zones, .. zones] };
+                guards[existing] = guards[existing] with { Zones = [.. guards[existing].Zones, .. zones], Limits = guards[existing].Limits ?? limits };
             }
-            else if (zones.Count > 0)
+            else if (zones.Count > 0 || limits is not null)
             {
-                guards.Add(new MovementGuard { FixtureId = fixture.ReferenceId, Label = fixture.Fixture.Name, Pan = panIndex, Tilt = tiltIndex, Zones = zones });
+                guards.Add(new MovementGuard { FixtureId = fixture.ReferenceId, Label = fixture.Fixture.Name, Pan = panIndex, Tilt = tiltIndex, Zones = zones, Limits = limits });
             }
         }
 

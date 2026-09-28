@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:c="using:Luxia.UI.Controls"
+             x:Class="Luxia.UI.Modules.Control.Views.PlanPanelView"
+             x:DataType="vm:PlanPanelViewModel">
+  <DockPanel Margin="8,4,8,6">
+    <!-- Sélections rapides (automatiques et enregistrées) sur plusieurs lignes, outils ½ ⅓ ¼, inverser, aucun à droite.
+         Une ligne qui défilait masquait les boutons sous sa barre (essai 1.005.202) ; au-delà de trois lignes, défilement vertical. -->
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,30,4">
+      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top" Margin="6,0,0,0">
+        <Button Content="½" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="2" ToolTip.Tip="Garder un appareil sur deux de la sélection" />
+        <Button Content="⅓" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="3" ToolTip.Tip="Garder un appareil sur trois" />
+        <Button Content="¼" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding EveryCommand}" CommandParameter="4" ToolTip.Tip="Garder un appareil sur quatre" />
+        <Button Content="Inverser" FontSize="11" Padding="6,2" Margin="0,0,3,4" Command="{Binding InvertCommand}" />
+        <Button Content="Aucun" FontSize="11" Padding="6,2" Margin="0,0,0,4" Command="{Binding SelectNoneCommand}" />
+      </StackPanel>
+      <ScrollViewer MaxHeight="75" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding QuickSelections}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:QuickSelection">
+              <Button Content="{Binding Label}" FontSize="11" Padding="6,2" Margin="0,0,3,4" BorderBrush="{Binding Color}" BorderThickness="0,0,0,2"
+                      ToolTip.Tip="Sélectionner ces appareils"
+                      Command="{Binding $parent[UserControl].((vm:PlanPanelViewModel)DataContext).QuickCommand}" CommandParameter="{Binding}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Summary}" FontSize="11" Foreground="#8B949E" TextTrimming="CharacterEllipsis" Margin="0,4,0,0" />
+    <Border DockPanel.Dock="Top" Background="#79C0FF" CornerRadius="4" Padding="8,2" HorizontalAlignment="Left" IsVisible="{Binding IsPreview}" Margin="0,0,0,4">
+      <TextBlock Text="{Binding Source}" Foreground="#0D1117" FontWeight="SemiBold" FontSize="12" />
+    </Border>
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Source}" FontSize="11" Foreground="#8B949E" IsVisible="{Binding !IsPreview}" Margin="0,0,0,2" />
+    <c:SimulatorCanvas x:Name="Plan" IsSelectable="True" ShowNames="True"
+                       RoomWidthM="{Binding RoomWidthM}" RoomDepthM="{Binding RoomDepthM}"
+                       Fixtures="{Binding Fixtures}" SelectedIds="{Binding SelectedIds}" />
+  </DockPanel>
+</UserControl>

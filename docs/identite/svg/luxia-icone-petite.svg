@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>LuXia</title>
+  <defs>
+    <linearGradient id="iwarm" gradientUnits="userSpaceOnUse" x1="174.08" y1="174.08" x2="849.92" y2="849.92">
+      <stop offset="0" stop-color="#FFECAA"/><stop offset="0.5" stop-color="#FFAA3C" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#FF6E28" stop-opacity="0.6"/></linearGradient>
+    <linearGradient id="icool" gradientUnits="userSpaceOnUse" x1="849.92" y1="174.08" x2="174.08" y2="849.92">
+      <stop offset="0" stop-color="#96F5FF"/><stop offset="0.5" stop-color="#46BEFF" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#8C5AFF" stop-opacity="0.75"/></linearGradient>
+    <radialGradient id="icore" gradientUnits="userSpaceOnUse" cx="512.0" cy="512.0" r="307.2">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="1"/><stop offset="0.12" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="0.4" stop-color="#FFF6E6" stop-opacity="0.35"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+    <filter id="iglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22.528"/></filter>
+    <pattern id="igrid" patternUnits="userSpaceOnUse" width="22.528" height="22.528">
+      <rect x="2.48" y="2.48" width="17.57" height="17.57" rx="2.11" fill="#FFFFFF"/></pattern>
+    <mask id="ipix" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+      <rect x="0" y="0" width="1024" height="1024" fill="url(#igrid)"/></mask>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#161B26"/><stop offset="1" stop-color="#080A10"/></linearGradient>
+    <clipPath id="clip"><rect x="0" y="0" width="1024" height="1024" rx="225.28"/></clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+    <g filter="url(#iglow)" opacity="0.9"><polygon points="163.2,184.9 755.8,944.1 944.1,755.8 184.9,163.2" fill="url(#iwarm)"/><polygon points="839.1,163.2 79.9,755.8 268.2,944.1 860.8,184.9" fill="url(#icool)"/></g>
+    <polygon points="163.2,184.9 755.8,944.1 944.1,755.8 184.9,163.2" fill="url(#iwarm)"/>
+    <polygon points="839.1,163.2 79.9,755.8 268.2,944.1 860.8,184.9" fill="url(#icool)"/>
+    <circle cx="512.0" cy="512.0" r="307.2" fill="url(#icore)"/>
+    <circle cx="174.08" cy="174.08" r="53.2" fill="#FFD68C" stroke="#FFF5DC" stroke-width="8.2"/>
+    <g stroke="#A0EBFF" stroke-width="8.2" stroke-linecap="round"></g>
+    <rect x="798.7" y="122.9" width="102.4" height="102.4" rx="15.4" fill="#5AC8FF" stroke="#C8FAFF" stroke-width="8.2"/>
+  </g>
+</svg>

@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:Luxia.Tools.Prototype"
+        xmlns:dockc="using:Dock.Avalonia.Controls"
+        x:Class="Luxia.Tools.Prototype.MainWindow"
+        x:DataType="local:ShellViewModel"
+        Title="{Binding Title}"
+        Width="1500" Height="950"
+        Background="#0D1117">
+  <DockPanel>
+    <!-- Bandeau : dispositions prêtes, panneaux, retour à la disposition livrée. -->
+    <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,6">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <TextBlock Text="LuXia · prototype ergonomique" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0" />
+        <TextBlock Text="Disposition" VerticalAlignment="Center" Classes="secondary" />
+        <RadioButton GroupName="preset" Content="Contrôle" IsChecked="{Binding IsControl}"
+                     ToolTip.Tip="Jouer et corriger : colonnes au centre, propriétés à droite, plan et réglages en bas." />
+        <RadioButton GroupName="preset" Content="Spectacle" IsChecked="{Binding IsShow}"
+                     ToolTip.Tip="Soirée : les colonnes en grand et le pilote automatique ; le reste est masqué." />
+        <Button x:Name="PanelsButton" Content="Panneaux ▾" Margin="16,0,0,0"
+                ToolTip.Tip="Réafficher un panneau fermé (ou le mettre au premier plan).">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft" />
+          </Button.Flyout>
+        </Button>
+        <Button Content="Rétablir la disposition" Command="{Binding ResetLayoutCommand}"
+                ToolTip.Tip="Oublier la disposition enregistrée et revenir à celle livrée." />
+        <Button x:Name="MockupsButton" Content="Maquettes ▾" Margin="16,0,0,0"
+                ToolTip.Tip="Ouvrir une maquette de la disposition Contrôle (données fictives).">
+          <Button.Flyout>
+            <MenuFlyout Placement="BottomEdgeAlignedLeft" />
+          </Button.Flyout>
+        </Button>
+      </StackPanel>
+    </Border>
+    <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="10,3">
+      <TextBlock Text="{Binding Status}" Classes="secondary" TextTrimming="CharacterEllipsis" />
+    </Border>
+    <dockc:DockControl x:Name="DockHost" Layout="{Binding Layout}" InitializeLayout="True" InitializeFactory="True" />
+  </DockPanel>
+</Window>

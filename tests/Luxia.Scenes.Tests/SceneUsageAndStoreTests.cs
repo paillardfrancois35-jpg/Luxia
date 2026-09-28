@@ -1,6 +1,5 @@
 using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
-using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
 
@@ -157,7 +156,21 @@ public sealed class SceneUsageAndStoreTests : IDisposable
         palettes.Palettes.Where(p => p.Kind == PaletteKind.Color).Select(p => p.Name).ShouldBe(
             ["Blanc", "Blanc chaud", "Rouge", "Orange", "Ambre", "Jaune", "Vert", "Cyan", "Bleu", "Lavande", "Magenta", "Rose", "UV"]);
         layers.Layers.Select(l => (l.Name, l.Priority)).ShouldBe(
-            [("Intensité", 1), ("Couleurs", 2), ("Mouvements", 3), ("Faisceau", 4), ("Effets", 5), ("Ambiance", 6), ("Flashs", 99)]);
+            [("Intensité", 1), ("Couleurs", 2), ("Mouvements", 3), ("Faisceau", 4), ("Effets", 5), ("Ambiance", 6), ("Libre", 7), ("Flashs", 99)]);
         layers.Layers.Single(l => l.Name == "Flashs").IntensityMode.ShouldBe(IntensityMode.Priority);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-008")]
+    public void DefaultLayers_HaveEightNonFlashAndFlash_WithFreeLayerWithoutFamilies()
+    {
+        var layers = LayerSet.Default().Layers;
+
+        // Huit colonnes : une par fader de couche de l'APC mini (faders 1 à 8).
+        layers.Count.ShouldBe(8);
+        var free = layers.Single(l => l.Id == LayerSet.FreeLayerId);
+        free.Name.ShouldBe("Libre");
+        free.Families.ShouldBeEmpty("aucune famille attendue : rien n'y est signalé « hors famille »");
+        layers.OrderBy(l => l.Priority).Last().Id.ShouldBe(LayerSet.FlashLayerId);
     }
 }

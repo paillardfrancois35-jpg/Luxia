@@ -1,6 +1,3 @@
-using System.Globalization;
-using Luxia.Fixtures.Model;
-
 namespace Luxia.Fixtures.Rules;
 
 /// <summary>Gravité d'un problème de validation.</summary>

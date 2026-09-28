@@ -154,7 +154,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         {
             foreach (var button in column.Scenes)
             {
-                var playback = FindPlayback(snapshot, button.Scene.Id);
+                var playback = snapshot.ActivePlayback(button.Scene.Id);
                 if (!button.WaitingForEngine(_runtime.Engine.TickCount))
                 {
                     button.IsActive = playback is not null;
@@ -166,7 +166,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
                     : string.Empty;
             }
 
-            var index = IndexOfLayer(snapshot.Show, column.Layer.Id);
+            var index = snapshot.Show.IndexOfLayer(column.Layer.Id);
             if (index >= 0 && index < snapshot.LayerMasters.Length)
             {
                 column.SyncMaster(Math.Round(snapshot.LayerMasters[index] * 100));
@@ -484,7 +484,7 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         foreach (var auto in AutoSelections.Build(present, f => library?.Find(f.FixtureTypeId)).Where(a => a.Kind != AutoSelectionKind.ByModel))
         {
             var target = new ValueTarget { Auto = new AutoSelectionTarget(auto.Kind, auto.Category, auto.ModelDisplayName) };
-            QuickSelections.Add(new QuickSelectionViewModel(auto.Title(CategoryLabel), target, "#8B949E"));
+            QuickSelections.Add(new QuickSelectionViewModel(auto.Title(FixtureCategoryLabels.Plural), target, "#8B949E"));
         }
 
         foreach (var selection in _runtime.Project.Installation.Selections)
@@ -647,33 +647,6 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
 
     private void Log(string text) => _incoming.Enqueue((null, string.Empty, $"{DateTime.Now:HH:mm:ss}  {text}"));
 
-    private static PlaybackInfo? FindPlayback(EngineSnapshot snapshot, Guid sceneId)
-    {
-        PlaybackInfo? found = null;
-        foreach (var playback in snapshot.Playbacks)
-        {
-            if (playback.SceneId == sceneId && playback.State is not (PlaybackState.FadingOut or PlaybackState.Done))
-            {
-                found = playback;
-            }
-        }
-
-        return found;
-    }
-
-    private static int IndexOfLayer(ShowModel show, Guid id)
-    {
-        for (var i = 0; i < show.Layers.Count; i++)
-        {
-            if (show.Layers[i].Id == id)
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     private static string Origin(CommandOrigin origin) => origin switch
     {
         CommandOrigin.User => "utilisateur",
@@ -691,19 +664,5 @@ public sealed partial class LiveViewModel : ViewModelBase, IRefreshable
         OutputConnectionState.Connecting => "connexion…",
         OutputConnectionState.Error => "en erreur",
         _ => "déconnectée",
-    };
-
-    private static string CategoryLabel(FixtureCategory category) => category switch
-    {
-        FixtureCategory.Par => "PAR",
-        FixtureCategory.LedBar => "barres LED",
-        FixtureCategory.MovingHead => "lyres",
-        FixtureCategory.Effect => "effets",
-        FixtureCategory.Strobe => "stroboscopes",
-        FixtureCategory.Uv => "UV",
-        FixtureCategory.Smoke => "machines à fumée",
-        FixtureCategory.Laser => "lasers",
-        FixtureCategory.Dimmer => "gradateurs",
-        _ => "autres",
     };
 }

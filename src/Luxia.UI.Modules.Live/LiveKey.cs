@@ -1,5 +1,3 @@
-using Avalonia.Input;
-
 namespace Luxia.UI.Modules.Live;
 
 /// <summary>Raccourcis clavier du Live (doc 18 §5, LIVE-040, GEN-071).</summary>

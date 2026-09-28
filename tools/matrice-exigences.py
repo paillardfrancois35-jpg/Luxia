@@ -2,10 +2,14 @@
 #   - docs/31-matrice-exigences.md : exigences des phases demandées ↔ statut ↔ tests automatiques (doc 30 §7) ;
 #   - l'index des fiches dans docs/exigences/README.md (entre les marqueurs INDEX).
 # Les tests déclarent les exigences couvertes par [Trait("Exigence", "XXX-000")].
-# Usage : python tools/matrice-exigences.py P0 P1 P2
+# Usage : python tools/matrice-exigences.py P0 P1 P2 … ERG (ERG = chantier ergonomique, doc 60 §9)
 import os
 import re
 import sys
+
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,7 +33,7 @@ for name in sorted(os.listdir(TICKETS)):
     tickets[name[:-3]] = info
 
 # 2. Exigences du cahier des charges pour les phases demandées.
-req_line = re.compile(r"^\|\s*((?:GEN|SORT|CONS|BIB|INST|SIM|MOT|SCN|EFF|COU|PAL|LIVE|MIDI|AUD|SHOW|MUS|AUTO|TL)-\d{3})\s*\|\s*([IMS])\s*\|\s*(P\d+)\s*\|")
+req_line = re.compile(r"^\|\s*((?:GEN|SORT|CONS|BIB|INST|SIM|MOT|SCN|EFF|COU|PAL|LIVE|MIDI|AUD|SHOW|MUS|AUTO|TL|ERG)-\d{3})\s*\|\s*([IMS])\s*\|\s*(P\d+|ERG)\s*\|")
 requirements = {}
 for name in sorted(os.listdir(os.path.join(ROOT, "docs"))):
     if name.endswith(".md"):

@@ -1,5 +1,4 @@
 using Luxia.Fixtures.Model;
-using Luxia.Fixtures.Rules;
 
 namespace Luxia.Patch.Rules;
 

@@ -2,8 +2,10 @@
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
 > À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** (`main`, étiquette
-> **`v1.004`**) ; **analyse ergonomique validée** (doc 60, branche `ergo/analyse`). Prochain chantier : **ergonomie — prototype
-> technique puis maquettes** (doc 60 §7), avant P6.
+> **`v1.004`**) ; **chantier ergonomique en cours** sur `ergo/analyse` (version de développement 1.005, dernière
+> étiquette **`v1.005.004`**) : l'**écran Contrôle** est dans LuXia, développé en autonomie la nuit du 2026-09-27 au
+> 28 par délégation de l'utilisateur (choix C1-C11 du doc 60 §11, à rediscuter à l'usage). **En attente de l'essai de
+> l'utilisateur** : guide [demos/ERG-controle.md](demos/ERG-controle.md) sur `samples/Démo Contrôle`.
 
 ## 1. Où en est-on
 
@@ -15,6 +17,7 @@
 | P3 – Installation + Simulateur | Validée | `p3/installation-simulateur` (fusionnée dans `main`, `v1.002`) | [demos/P3-installation-simulateur.md](demos/P3-installation-simulateur.md) | ✅ 2026-09-26, matériel réel (4 PAR + 1 lyre) |
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
 | P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
+| Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -118,6 +121,53 @@
     automatique » est la cible, l'édition fine doit surtout être **compréhensible** (aide « ? », vocabulaire unique).
   - Les exigences d'ergonomie à créer (fiches) le seront au fil du chantier ; les 11 exigences « Reporté (chantier
     ergonomie) » de P5 y sont rattachées (LIVE-006/007/011/041, MIDI-008/009, GEN-057/074, INST-070/071, CONS-061).
+- **Chantier ergonomique — prototype et maquettes (2026-09-27, branche `ergo/analyse`, `v1.005.001` puis `v1.005.002`)** :
+  reliquats du renommage DMX → LuXia corrigés (`.editorconfig` visait encore `src/Dmx.UI.**`, `Dmx.sln` au doc 03,
+  `dmx-headless` au `JOURNAL.md`). Exigences **ERG-001 à ERG-007** (doc 60 §9, famille et phase « ERG » dans la matrice :
+  `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG`).
+  - **Prototype** `tools/Luxia.Tools.Prototype` (`LuXia-Prototype.exe`, **séparé de LuXia**, décision utilisateur) : Dock
+    12.1.0.6 (MIT), dispositions Contrôle / Spectacle, panneaux détachables, menu Panneaux, enregistrement automatique
+    (`%AppData%\LuXia\prototype`), galerie, mesures, aide « ? ». **Composants durables** dans `Luxia.UI.Controls` :
+    `PanTiltGrid` (+ `PanTiltGeometry`), `ColorPicker` (+ `ColorPickerLayout`), `LightColor` (pas `HsvColor` : homonyme
+    d'Avalonia). Écarts : Dock perd le groupe d'origine d'un panneau fermé après relecture (contourné, test) ; menus de
+    Dock en anglais (à franciser au développement).
+  - **Maquettes** « Contrôle » rendues par Avalonia (décision utilisateur) : `docs/maquettes/` (LIVE, ÉDITION, AVEUGLE,
+    zones) + galerie ; `LuXia-Prototype --maquettes <dossier>` ; bouton **Maquettes ▾** du prototype.
+  - **À faire** : dérouler le guide [demos/ERG-prototype-et-maquettes.md](demos/ERG-prototype-et-maquettes.md) avec
+    l'utilisateur (un point à la fois), relever les mesures (ERG-006), faire trancher **Q35** ; puis développement par
+    lots (charte et composants → Contrôle → Live / Spectacle → Installation / Bibliothèque → Affectations).
+- **Nuit du 2026-09-27 au 28 — développement par délégation** (« prends les décisions qui te semblent les plus
+  pertinentes, présente-moi tes choix à la fin » ; « va le plus loin que tu peux, pousse les tests au maximum, réalise
+  des configurations d'exemple ») :
+  - **Écran « Contrôle »** (nouveau projet `Luxia.UI.Modules.Control`, en tête de la navigation ; Live et Scènes
+    restent, C5) : `ControlSession` (modes **LIVE / ÉDITION / AVEUGLE**, sélection partagée, un geste = une
+    annulation, écrit 0,5 s après le dernier mouvement), panneaux ancrables Dock (**Colonnes**, **Propriétés**,
+    **Plan des appareils**, **Réglages des appareils**, **Journal**, **Looks**, **Pilote automatique**), dispositions
+    **Contrôle** et **Spectacle** enregistrées sur le poste, menus Dock en français, **verrou soirée**, **F1-F12 =
+    looks**.
+  - **Moteur** : **zone permise** (`allowed` dans `lieux.json`, F7) ; défaut corrigé (surcharge span choisie pour un
+    tableau, doc 03 §11).
+  - **Données** : `looks.json` (ERG-023), `uiScale` des préférences (taille 100 / 125 / 150 %), 8e couche par défaut
+    **« Libre »** (ERG-008, fader 8 de l'APC).
+  - **Identité visuelle** (dossier de l'utilisateur → `docs/identite`) : icône, logo au démarrage, dans « À propos »,
+    en tête de la navigation, README.
+  - **Démo** : `tools/generer-demo-controle.py` → `samples/Démo Contrôle` (ignoré par Git) ; captures réelles dans
+    `docs/maquettes/captures`.
+  - Exigences **ERG-008 à ERG-024** (fiches), Q35 close par délégation. Tests : 597, tous verts ; 0 avertissement de
+    compilation ; 0 avertissement au journal technique au démarrage réel.
+  - **Reste du chantier** (doc 60 §7.4) : affectation MIDI / clavier par surcouche (E6, MIDI-008), déclencheurs MIDI
+    des looks, molette, mixeur live, retrait des écrans Live et Scènes après validation, Installation / Bibliothèque
+    en panneaux.
+- **Essai de l'écran Contrôle par l'utilisateur (2026-09-28, au matériel, 1.005.192 → 1.005.226)** : guide
+  `docs/demos/ERG-controle.md` §0 à §7 déroulé pas à pas, **tout validé**. Corrigé au fil de l'eau, chaque fois avec sa
+  fiche : ◀ ▶ grisés pour une scène à une étape, stop net (le fondu vient de la scène), barre d'avancement discrète,
+  barre LED du plan, avertissement « intensité à 0 » et légende des pastilles, menu **Panneaux** (s'ouvrait vide),
+  ✎ qui rouvre Propriétés, panneau détaché remis à sa place (groupe recréé), double-clic d'agrandissement, zones
+  (plus petite prise, liste, renommage), looks sans Grand Master, **■ Stop / ■ Tout stopper**. Puis analyse de fin
+  d'essai : **scènes resserrées** (ERG-025), **marges** (ERG-027 : menu et Grand Master sur une ligne, lignes du « ? »
+  réutilisées, Journal serré). Choix C12 à C14 (doc 60 §11). Compteur de compilation par version (repart de 1 après
+  validation). Deux tests de temps (moteur, routeur de sorties) échouent parfois sous la charge de la série complète
+  et passent seuls : à fiabiliser.
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -143,8 +193,10 @@
 | `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface, versions du projet, reprise, MIDI | `LuxiaRuntime` (`Engine`, `Preview`, `Midi`, `PendingResume`), `ProjectSession`, `ShowService`, `ProjectVersions`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
 | `Luxia.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
 | `Luxia.UI.Modules.*` | Un écran par projet : **Live** (premier écran), Console (+ faders d'appareil), Library, Outputs, Installation, Simulator, Scenes (+ fenêtres Couches…, Zones interdites…) | `LiveViewModel`, `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel`, `ScenesViewModel` (+ `ProgrammerViewModel`, `SceneEditorViewModel`, `PalettesViewModel`, `LayersEditorViewModel`, `ZonesEditorViewModel`) |
+| `Luxia.UI.Modules.Control` | Écran **Contrôle** (doc 60) : session d'édition LIVE / ÉDITION / AVEUGLE, panneaux ancrables Dock (Colonnes, Propriétés, Plan, Réglages, Journal, Looks, Pilote), dispositions Contrôle / Spectacle, verrou soirée | `ControlSession`, `ControlViewModel`, `*PanelViewModel`, `Docking/ControlDockFactory`, `Docking/ControlLayoutStore`, `Views/ControlView` |
 | `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
 | `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, **midi**, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
+| `tools/Luxia.Tools.Prototype` | Prototype ergonomique **séparé de LuXia** (`LuXia-Prototype.exe`) : ancrage Dock, dispositions, galerie, mesures, maquettes « Contrôle » ; captures sans écran | `ShellViewModel`, `Docking/PrototypeDockFactory`, `Docking/LayoutStore`, `Panels/*`, `Mockups/*`, `HeadlessCaptures` |
 | `tools/Luxia.Tools.Captures` | Rendu hors écran de la fenêtre principale en PNG (Avalonia.Headless), sur une copie du projet : vérifier une mise en page sans lancer LuXia | `Program.cs` |
 | `tools/fiche-exigences.py` | Crée / met à jour les fiches `docs/exigences/*.md` à partir d'une liste JSON (statut, historique en ajout seul) ; puis `tools/matrice-exigences.py` | en-tête du script |
 | `firmware/arduino-dmx` | Firmware Leonardo 1.0 (Enttec) | `arduino-dmx.ino` |
@@ -158,11 +210,14 @@ dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
 python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5
-PYTHONIOENCODING=utf-8 python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
+python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- valider "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- jouer "samples/Show de référence" --scene "Chenillard 4 couleurs" --duree 3
 dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence" "<dossier des images>"
+python tools/generer-demo-controle.py                  # samples/Démo Contrôle (essai de l'écran Contrôle)
+dotnet run --project tools/Luxia.Tools.Prototype                              # prototype ergonomique
+dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes # maquettes « Contrôle » en PNG
 ```
 
 - **Trames de référence P4 et P5** (`tests/assets/golden/P4-scenes.txt`, `P5-scenes.txt`) : après un changement **voulu et vérifié** du rendu des scènes,
@@ -213,3 +268,7 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-27 | P5 | Couches, Palettes, Live, MIDI développés sur `p5/couches-palettes-live` (questions Q28 à Q32 tranchées au démarrage, développement en autonomie, essais de l'utilisateur à la fin) : sûreté (D29), couches complètes, positions par lieu, zones interdites, écran Live, APC mini (`Luxia.Midi`, D30), fiabilité (D31), contenu et trames de référence P5, guide P5. 75 exigences P5 (43 Réalisé, 14 à valider sur matériel, 6 Partiel, 12 reportées). **En attente des essais de l'utilisateur**, puis proposition de l'analyse ergonomique avant `v1.004`. |
 | 2026-09-27 | P5 | Guide P5 déroulé pas à pas avec l'utilisateur au matériel (exemples 1 à 13). Corrigés au fil de l'eau, chacun avec sa fiche : trois courses écran / moteur, cellule des sélections automatiques, Problèmes du projet, fumée, clavier, MIDI rapide, fenêtre de démarrage ; parc réel corrigé (BUV463 8 canaux, WT05). 505 tests verts. **Validée, fusionnée dans `main`, étiquette `v1.004`.** Prochaine étape : analyse ergonomique. |
 | 2026-09-27 | Ergonomie | Documentation remise à jour après P5 (anciens noms `Dmx.*` corrigés, notes de modules, doc 03 §11). Analyse ergonomique menée dans la discussion de P5 : lecture Daslight 4 / 5, captures des écrans, doc 60 (charte, déclencheurs et looks, composants, modules) ; **validée par l'utilisateur** (E1-E8, F1-F10). Outil `tools/fiche-exigences.py` versé au dépôt. Suite dans une nouvelle discussion : prototype technique puis maquettes. |
+| 2026-09-27 | Ergonomie | Prototype technique (Dock, grille Pan/Tilt, sélecteur de couleur, galerie, disposition enregistrée) et maquettes « Contrôle » sur `ergo/analyse` (`v1.005.001`, `v1.005.002`), ERG-001 à ERG-007, Q35 ; reliquats du renommage corrigés. **En attente des essais et de la validation de l'utilisateur.** |
+| 2026-09-28 | Ergonomie | Nuit de développement par délégation sur `ergo/analyse` (`v1.005.003`, `v1.005.004`) : écran Contrôle dans LuXia (modes, panneaux ancrables, dispositions Contrôle / Spectacle, verrou soirée, looks, F1-F12), zone permise, 8e couche « Libre », identité visuelle, taille de l'interface, démo `samples/Démo Contrôle` et guide `docs/demos/ERG-controle.md`. ERG-008 à ERG-024. **En attente de l'essai de l'utilisateur ; choix C1-C11 à rediscuter à l'usage.** |
+| 2026-09-28 | Ergonomie | Essai de l'écran Contrôle au matériel avec l'utilisateur (guide §0 à §7, tout validé ; 1.005.192 → 1.005.226), corrections au fil de l'eau avec leurs fiches ; analyse de fin d'essai : scènes resserrées (ERG-025), Stop / Tout stopper (ERG-026), marges (ERG-027) ; C12-C14 ; compteur de compilation par version. |
+| 2026-09-28 | Ergonomie | Vérifications de fin d'essai (scènes resserrées, marges) conformes en 1.005.237. **Chantier ergonomique validé par l'utilisateur, `ergo/analyse` fusionnée dans `main`, étiquette `v1.005`.** Reste du chantier (doc 60 §7.4 : affectations MIDI / clavier E6, déclencheurs MIDI des looks, retrait de Live / Scènes après usage, Installation / Bibliothèque en panneaux) à reprendre plus tard. Prochaine étape proposée : P6 – Effets. |

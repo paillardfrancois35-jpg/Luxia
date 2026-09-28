@@ -16,8 +16,8 @@ La configuration de sortie n'est **pas** dans le show : elle est dans les préf�
 ### Comment rejouer / vérifier
 
 ```bash
-dmx-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1-180.dmxrec" --canaux 1-180
-dmx-headless lancer --test 1-180 --exclus 180 --valeur 50 --pas 1000 --une-fois
+luxia-headless relire "samples/Show de référence/Enregistrements/P0-chenillard-1-180.dmxrec" --canaux 1-180
+luxia-headless lancer --test 1-180 --exclus 180 --valeur 50 --pas 1000 --une-fois
 ```
 
 La seconde commande rejoue le chenillard **sur le matériel** (1 s par canal, ≈ 3 min) : chaque appareil branché au plan

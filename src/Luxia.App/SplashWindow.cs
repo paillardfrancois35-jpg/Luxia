@@ -20,7 +20,7 @@ internal sealed class SplashWindow : Window
     {
         Title = "LuXia";
         Width = 420;
-        Height = 150;
+        Height = 250;
         CanResize = false;
         WindowDecorations = Avalonia.Controls.WindowDecorations.None;
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -37,7 +37,13 @@ internal sealed class SplashWindow : Window
                 Spacing = 10,
                 Children =
                 {
-                    new TextBlock { Text = "LuXia", Foreground = Brushes.White, FontSize = 22, FontWeight = FontWeight.Bold },
+                    // ERG-009 : logo de l'identité visuelle (docs/identite) à la place du titre en texte.
+                    new Image
+                    {
+                        Source = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.AssetLoader.Open(new Uri("avares://LuXia/Assets/luxia-logo.png"))),
+                        Width = 360,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                    },
                     _step,
                     _bar,
                     _percent,

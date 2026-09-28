@@ -1,3 +1,5 @@
+![LuXia](docs/identite/sortie/luxia-logo-1200.png)
+
 # LuXia
 
 Application Windows (C# / .NET 10 / Avalonia) de pilotage d'éclairage DMX, alternative légère à Daslight 4,

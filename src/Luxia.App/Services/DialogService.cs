@@ -27,7 +27,21 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
         return await dialog.ShowDialog<bool>(window).ConfigureAwait(true);
     }
 
-    public async Task ShowInfoAsync(string title, string message)
+    public Task ShowInfoAsync(string title, string message) => ShowInfoCoreAsync(title, message, null);
+
+    /// <summary>ERG-009 : logo de LuXia à gauche du nom et de la version (identité visuelle, docs/identite).</summary>
+    public Task ShowAboutAsync(string message) => ShowInfoCoreAsync(
+        "À propos de LuXia",
+        message,
+        new Avalonia.Controls.Image
+        {
+            Source = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.AssetLoader.Open(new Uri("avares://LuXia/Assets/luxia-logo.png"))),
+            Width = 300,
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            Margin = new Thickness(0, 0, 0, 8),
+        });
+
+    private async Task ShowInfoCoreAsync(string title, string message, Control? header)
     {
         var window = Owner();
         if (window is null)
@@ -58,7 +72,13 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
             }
         };
         close.Click += (_, _) => dialog.Close();
-        var layout = Layout(new ScrollViewer { Content = box }, copy, close);
+        Control body = new ScrollViewer { Content = box };
+        if (header is not null)
+        {
+            body = new StackPanel { Children = { header, body } };
+        }
+
+        var layout = Layout(body, copy, close);
         layout.MaxWidth = 800;
         dialog.Content = layout;
         await dialog.ShowDialog(window).ConfigureAwait(true);

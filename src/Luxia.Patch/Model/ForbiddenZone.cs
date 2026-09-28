@@ -24,4 +24,10 @@ public sealed record ForbiddenZone
 
     /// <summary>Tilt maximal (0-1).</summary>
     public double TiltMax { get; init; } = 1;
+
+    /// <summary>
+    /// Zone <b>permise</b> au lieu d'interdite (F7, ERG-017) : les limites de l'appareil dans ce lieu ; le faisceau ne
+    /// sort jamais de ce rectangle. Plusieurs zones permises d'un même appareil : leur intersection.
+    /// </summary>
+    public bool Allowed { get; init; }
 }

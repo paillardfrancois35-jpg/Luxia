@@ -43,4 +43,19 @@ public sealed record EngineSnapshot
 
     /// <summary>Limites de sûreté en train d'agir (GEN-086, LIVE-008).</summary>
     public IReadOnlyList<ActiveLimit> ActiveLimits { get; init; } = [];
+
+    /// <summary>Dernière lecture active d'une scène (ni en fondu de sortie, ni terminée), ou nulle.</summary>
+    public PlaybackInfo? ActivePlayback(Guid sceneId)
+    {
+        PlaybackInfo? found = null;
+        foreach (var playback in Playbacks)
+        {
+            if (playback.SceneId == sceneId && playback.State is not (Model.PlaybackState.FadingOut or Model.PlaybackState.Done))
+            {
+                found = playback;
+            }
+        }
+
+        return found;
+    }
 }

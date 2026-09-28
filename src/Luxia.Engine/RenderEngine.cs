@@ -982,7 +982,7 @@ public sealed class RenderEngine : ICommandSink
         for (var i = 0; i < show.Layers.Count; i++)
         {
             var old = previous.Layer(show.Layers[i].Id);
-            masters[i] = old is not null ? _layerMasters[IndexOfLayer(previous, old.Id)] : Math.Clamp(show.Layers[i].Master, 0, 1);
+            masters[i] = old is not null ? _layerMasters[previous.IndexOfLayer(old.Id)] : Math.Clamp(show.Layers[i].Master, 0, 1);
         }
 
         var frozen = new double[count];
@@ -1044,19 +1044,6 @@ public sealed class RenderEngine : ICommandSink
             count,
             show.Layers.Count,
             show.Scenes.Count);
-    }
-
-    private static int IndexOfLayer(ShowModel show, Guid id)
-    {
-        for (var i = 0; i < show.Layers.Count; i++)
-        {
-            if (show.Layers[i].Id == id)
-            {
-                return i;
-            }
-        }
-
-        return -1;
     }
 
     private void BuildOutputs(ShowModel show)

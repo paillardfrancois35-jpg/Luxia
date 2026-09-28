@@ -77,6 +77,82 @@ foreach (var page in vm.Pages)
     Capture(page.Title);
 }
 
+// Écran Contrôle (doc 60, E2) en situation : LIVE, ÉDITION, AVEUGLE, zones.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewModel) is { Page: Luxia.UI.Modules.Control.ControlViewModel control } controlPage)
+{
+    vm.SelectedPage = controlPage;
+    var fixtures = runtime.Project.Installation.Fixtures;
+    Guid Id(string name) => fixtures.First(f => f.Name == name).Id;
+    Luxia.Scenes.Model.Scene SceneNamed(string name) => runtime.Project.Scenes.Scenes.First(s => s.Name == name);
+
+    // LIVE : deux scènes jouent, les 4 PAR sont retouchés en bleu.
+    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchSceneCommand(Luxia.Messaging.Commands.CommandOrigin.User, SceneNamed("Plein feu").Id));
+    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchSceneCommand(Luxia.Messaging.Commands.CommandOrigin.User, SceneNamed("Lyres sur 3 positions").Id));
+    control.Session.Select([Id("PAR 1"), Id("PAR 2"), Id("PAR 3"), Id("PAR 4")]);
+    Tick(40);
+    control.Settings.SelectedTab = 1;
+    control.Settings.RequestColor(new LightColor(215, 1, 1));
+    Tick(40);
+    Capture("Contrôle - LIVE surcharge");
+
+    // Boutons de scène resserrés (essai 1.005.226).
+    control.Columns.IsCompact = true;
+    Tick(5);
+    Capture("Contrôle - scènes resserrées");
+    control.Columns.IsCompact = false;
+
+    // ÉDITION : étape 2 du chenillard, PAR sélectionnés.
+    control.Session.ReleaseAll();
+    control.Session.ChooseScene(SceneNamed("Chenillard 4 couleurs").Id);
+    control.Session.ChooseStep(1);
+    control.SetModeCommand.Execute("edition");
+    Tick(10);
+    Capture("Contrôle - ÉDITION");
+
+    // AVEUGLE : les lyres, onglet Position.
+    control.Session.ChooseScene(SceneNamed("Lyres sur 3 positions").Id);
+    control.SetModeCommand.Execute("aveugle");
+    control.Session.Select([Id("Lyre 1"), Id("Lyre 2")]);
+    Tick(10);
+    control.Settings.SelectedTab = 2;
+    Tick(10);
+    Capture("Contrôle - AVEUGLE lyres");
+
+    // Zones de la lyre 1 (lieu).
+    control.SetModeCommand.Execute("live");
+    control.Session.Select([Id("Lyre 1")]);
+    Tick(5);
+    control.Settings.SelectedTab = 2;
+    control.Settings.IsZoneEditing = true;
+    control.Settings.NewZoneAllowed = true;
+    control.Settings.RequestZone(new PanTiltZoneRequest(null, new PanTiltRect(0.1, 0.9, 0.15, 0.95)));
+    control.Settings.NewZoneAllowed = false;
+    control.Settings.RequestZone(new PanTiltZoneRequest(null, new PanTiltRect(0.35, 0.65, 0.05, 0.3)));
+    Tick(5);
+    Capture("Contrôle - zones");
+    control.Settings.IsZoneEditing = false;
+    control.Flush();
+
+    // Disposition Spectacle (F10) avec deux looks.
+    runtime.Project.SaveLooks(new Luxia.Scenes.Model.LookSet
+    {
+        Looks =
+        [
+            new() { Name = "Temps mort", Color = "#FFB000", Actions = [new() { Kind = Luxia.Scenes.Model.LookActionKind.StopAll }, new() { Kind = Luxia.Scenes.Model.LookActionKind.LaunchScene, SceneId = SceneNamed("Ambre – couleur seule").Id }] },
+            new() { Name = "Retour de piste", Color = "#DB61A2", Actions = [new() { Kind = Luxia.Scenes.Model.LookActionKind.StopAll }, new() { Kind = Luxia.Scenes.Model.LookActionKind.LaunchScene, SceneId = SceneNamed("Chenillard 4 couleurs").Id }] },
+        ],
+    });
+    control.SetLayoutCommand.Execute("spectacle");
+    Tick(5);
+    Capture("Contrôle - disposition Spectacle");
+    control.SetLayoutCommand.Execute("controle");
+
+    // F8 : la même chose à 125 %.
+    vm.SetUiScaleCommand.Execute("1.25");
+    Capture("Contrôle - taille 125 %");
+    vm.SetUiScaleCommand.Execute("1");
+}
+
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.
 if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Live.LiveViewModel) is { Page: Luxia.UI.Modules.Live.LiveViewModel live } livePage)
 {

@@ -47,12 +47,16 @@ public sealed class DependencyRulesTests
     [InlineData("Luxia.UI.Modules.Simulator")]
     [InlineData("Luxia.UI.Modules.Scenes")]
     [InlineData("Luxia.UI.Modules.Live")]
+    [InlineData("Luxia.UI.Modules.Control")]
     [Trait("Exigence", "GEN-003")]
     public void UserInterfaceModules_DoNotReferenceApplication(string project)
     {
         var assembly = Assembly.Load(project);
 
-        assembly.GetReferencedAssemblies().Select(a => a.Name!).ShouldNotContain("DMX");
+        // L'exécutable s'appelle « LuXia » depuis le renommage (il s'appelait « DMX » : ce test ne vérifiait plus rien).
+        var references = assembly.GetReferencedAssemblies().Select(a => a.Name!).ToList();
+        references.ShouldNotContain("LuXia");
+        references.ShouldNotContain("Luxia.App");
     }
 
     [Theory]

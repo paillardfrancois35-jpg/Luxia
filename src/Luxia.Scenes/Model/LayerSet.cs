@@ -31,6 +31,12 @@ public sealed record LayerSet
     /// <summary>Couche « Ambiance » du modèle par défaut.</summary>
     public static readonly Guid AtmosphereLayerId = new("7c1a0001-0000-4000-8000-000000000006");
 
+    /// <summary>
+    /// Couche « Libre » du modèle par défaut (ERG-008) : sans famille attendue, pour ce qui n'entre dans aucune autre
+    /// couche (un appareil piloté à part, un essai) ; elle donne aussi un rôle au 8e fader de l'APC mini.
+    /// </summary>
+    public static readonly Guid FreeLayerId = new("7c1a0001-0000-4000-8000-000000000007");
+
     /// <summary>Couche « Flashs » du modèle par défaut.</summary>
     public static readonly Guid FlashLayerId = new("7c1a0001-0000-4000-8000-000000000099");
 
@@ -65,6 +71,7 @@ public sealed record LayerSet
             KeepOnStopAll = true,
             Families = [AttributeFamily.Atmosphere, AttributeFamily.Color, AttributeFamily.Intensity],
         },
+        new Layer { Id = FreeLayerId, Name = "Libre", Priority = 7, Color = "#3FB950", Icon = "★" },
         new Layer
         {
             Id = FlashLayerId,

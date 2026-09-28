@@ -24,3 +24,5 @@ logs/
 
 # Copie de travail du show de référence pour les essais manuels (jamais l'original) — doc 32
 samples/Show de travail/
+# Copie de démonstration de l'écran Contrôle (tools/generer-demo-controle.py) — doc 32
+samples/Démo Contrôle/
