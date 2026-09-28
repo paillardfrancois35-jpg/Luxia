@@ -37,6 +37,10 @@ public partial class ControlView : UserControl
             menu.ShowAt(panelsButton);
         };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
+
+        // Maj + clic sur « Tout arrêter » : l'Ambiance aussi (le paramètre de la commande est choisi à l'appui).
+        var stopAll = this.FindControl<Button>("StopAllButton")!;
+        stopAll.AddHandler(PointerPressedEvent, (_, e) => stopAll.CommandParameter = (e.KeyModifiers & KeyModifiers.Shift) != 0 ? "tout" : "sauf-ambiance", Avalonia.Interactivity.RoutingStrategies.Tunnel);
         _autosave = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Background, (_, _) => SaveLayout());
 
         // Au niveau de l'application : un panneau détaché vit dans une autre fenêtre et doit y retrouver son contenu.

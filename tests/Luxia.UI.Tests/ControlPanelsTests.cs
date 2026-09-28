@@ -589,6 +589,7 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         look.Actions[0].Kind.ShouldBe(LookActionKind.StopAll);
         look.Actions.Where(a => a.Kind == LookActionKind.LaunchScene).Select(a => a.SceneId).ShouldBe([Scene("Plein feu").Id, Scene("Bleu sur tout le parc").Id], ignoreOrder: true);
         look.Actions.ShouldContain(a => a.Kind == LookActionKind.LayerMaster && a.LayerId == LayerSet.ColorsLayerId && a.Level == 0.5);
+        look.Actions.ShouldContain(a => a.Kind == LookActionKind.LayerMaster && a.LayerId == LayerSet.IntensityLayerId && a.Level == 1, "couche d'une scène relancée : remise à son niveau, même à 100 %");
         _vm.Looks.Looks.ShouldHaveSingleItem().Lines.ShouldContain("▶ lancer « Plein feu »");
 
         // Autre état, puis le look le refait.
@@ -607,6 +608,41 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         playing.ShouldNotContain(Scene("Rouge – couleur seule").Id);
         _host.Runtime.Engine.Snapshot.LayerMasters[IndexOf(LayerSet.ColorsLayerId)].ShouldBe(0.5, 1e-9);
         _vm.Journal.Lines.ShouldContain(l => l.Contains("look « Bleu calme »"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-018")]
+    [Trait("Exigence", "CMD-012")]
+    public void StopAll_SparesTheAtmosphere_UnlessEverything_EvenLocked()
+    {
+        _vm.ToggleLockCommand.Execute(null);
+        _vm.Columns.Press(Button("Plein feu"));
+        _vm.Columns.Press(Button("UV plein"));
+        Ticks(3);
+
+        _vm.StopAllCommand.Execute("sauf-ambiance");
+        Ticks(60);
+        Playing().ShouldBe([Scene("UV plein").Id], "l'Ambiance est protégée");
+
+        _vm.StopAllCommand.Execute("tout");
+        Ticks(60);
+        Playing().ShouldBeEmpty();
+    }
+
+    private List<Guid> Playing() => [.. _host.Runtime.Engine.Snapshot.Playbacks.Where(p => p.State != Engine.Model.PlaybackState.FadingOut).Select(p => p.SceneId)];
+
+    [Fact]
+    [Trait("Exigence", "ERG-023")]
+    public async Task Looks_Capture_LeavesTheGrandMasterToTheOperator()
+    {
+        _vm.Columns.Press(Button("Plein feu"));
+        _host.Runtime.Engine.Send(new SetGrandMasterCommand(CommandOrigin.User, 0.4));
+        Ticks(40);
+        _host.Dialogs.TextAnswers.Enqueue("Sombre");
+
+        await _vm.Looks.CaptureCommand.ExecuteAsync(null);
+
+        _host.Runtime.Project.Looks.Looks.ShouldHaveSingleItem().Actions.ShouldNotContain(a => a.Kind == LookActionKind.GrandMaster);
     }
 
     [Fact]

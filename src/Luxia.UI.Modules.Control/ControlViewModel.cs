@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Luxia.Hosting;
+using Luxia.Messaging.Commands;
 using Luxia.UI.Controls;
 
 namespace Luxia.UI.Modules.Control;
@@ -185,6 +186,19 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Message = null;
         Journal.Log(Session.IsLocked ? "🔒 Verrou soirée posé : jouer seulement" : "🔓 Verrou soirée levé");
         _runtime.TraceUi("Contrôle", Session.IsLocked ? "verrou posé" : "verrou levé");
+    }
+
+    /// <summary>
+    /// « ■ Tout arrêter » (CMD-012) : arrête toutes les scènes, sauf les couches protégées (Ambiance) ; Maj + clic les
+    /// arrête aussi. Toujours permis, verrou compris : c'est jouer (essai 1.005.222 : aucun bouton pour tout arrêter).
+    /// </summary>
+    [RelayCommand]
+    private void StopAll(string? everything)
+    {
+        var all = everything == "tout";
+        _runtime.Engine.Send(new StopLayerCommand(CommandOrigin.User, Everything: all));
+        Journal.Log(all ? "■ tout arrêté, Ambiance comprise" : "■ tout arrêté (sauf Ambiance)");
+        _runtime.TraceUi("Contrôle", all ? "tout arrêter (ambiance comprise)" : "tout arrêter");
     }
 
     /// <summary>Action du bandeau : « Libérer tout » (LIVE), « Revenir en LIVE », « Terminer les zones ».</summary>

@@ -131,16 +131,23 @@ def main():
     def launch(name):
         return {"kind": "launchScene", "sceneId": by_name[name]}
 
+    INTENSITY = "7c1a0001-0000-4000-8000-000000000001"
+    ATMOSPHERE = "7c1a0001-0000-4000-8000-000000000006"
+
+    def master(layer, level):
+        return {"kind": "layerMaster", "layerId": layer, "level": level}
+
+    # Les looks ne touchent pas au Grand Master (il reste à l'opérateur) : ils règlent les masters de couche.
     looks = {"formatVersion": 1, "looks": [
         {"id": sid("look Temps mort"), "name": "Temps mort", "color": "#FFB000",
          "notes": "Pause, discours : tout s'arrête, lumière ambre douce à 40 %.",
-         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Ambre – couleur seule"), {"kind": "grandMaster", "level": 0.4}]},
+         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Ambre – couleur seule"), master(INTENSITY, 0.4)]},
         {"id": sid("look Retour de piste"), "name": "Retour de piste", "color": "#DB61A2",
          "notes": "La musique repart : chenillard, lyres en mouvement, pleine intensité.",
-         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Chenillard 4 couleurs"), launch("Lyres sur 3 positions"), {"kind": "grandMaster", "level": 1.0}]},
+         "actions": [{"kind": "stopAll"}, launch("Plein feu"), launch("Chenillard 4 couleurs"), launch("Lyres sur 3 positions"), master(INTENSITY, 1.0)]},
         {"id": sid("look Ambiance UV"), "name": "Ambiance UV", "color": "#8957E5",
          "notes": "Tout s'arrête sauf l'ambiance ; UV seuls.",
-         "actions": [{"kind": "stopAll"}, launch("UV plein"), {"kind": "grandMaster", "level": 1.0}]},
+         "actions": [{"kind": "stopAll"}, launch("UV plein"), master(ATMOSPHERE, 1.0)]},
     ]}
     json.dump(looks, open(os.path.join(TARGET, "looks.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 

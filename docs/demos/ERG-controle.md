@@ -92,7 +92,8 @@ panneau a un **?** qui explique à quoi il sert.
 | # | Faire | Attendu |
 |---|---|---|
 | 1 | Panneau **Looks** (onglet sous Propriétés) : la démo en a trois, **F1** « Temps mort », **F2** « Retour de piste », **F3** « Ambiance UV » | Clic (ou touche F1…) : tout s'arrête et le look rejoue ses scènes et ses masters ; le Journal note « ✦ look ». Survol : la liste des actions. |
-| 2 | Lancer deux ou trois scènes, régler un master, **+ Capturer ce qui joue**, nommer | Nouveau look qui refait cet état ; clic droit : Mettre à jour, Renommer, Couleur, Supprimer. |
+| 2 | Lancer deux ou trois scènes, régler un master, **+ Capturer ce qui joue**, nommer | Nouveau look qui refait cet état (scènes et masters de couche ; jamais le Grand Master, qui reste à l'opérateur) ; clic droit : Mettre à jour, Renommer, Couleur, Supprimer. |
+| 2 bis | **■ Tout arrêter** (en haut) ; **Maj + clic** | Tout s'arrête sauf l'Ambiance (couche protégée) ; avec Maj, l'Ambiance aussi. Permis sous le verrou. |
 | 3 | En haut : **Spectacle** | Colonnes en grand, panneau **Pilote automatique** (place réservée pour P10) avec les looks en gros boutons, Journal. **Contrôle** : on retrouve sa disposition. |
 | 4 | **🔒 Verrou soirée** | Retour en LIVE ; ÉDITION, AVEUGLE, ✎, « + scène », propriétés, zones, Ctrl + Z : refusés avec la raison ; jouer, retoucher en direct et les looks marchent. Re-clic : déverrouillé. |
 | 5 | Menu **Affichage → Taille de l'interface : 125 %** (ou 150 %) | Tout grossit ; gardé au prochain lancement. |

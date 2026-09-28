@@ -37,7 +37,10 @@ public static class LookRules
 
     /// <summary>
     /// « Capturer » : un look qui refait l'état joué — tout arrêter, relancer les scènes qui jouent (sauf les flashs,
-    /// qui ne tiennent que maintenus), remettre les masters de couche qui ne sont pas à 100 % et le Grand Master.
+    /// qui ne tiennent que maintenus), remettre le master des couches où il relance une scène (même à 100 %, sinon un
+    /// look précédent qui l'a baissé la laisserait basse) et de celles qui ne sont pas à 100 %.
+    /// Le Grand Master n'est pas capturé : il reste à l'opérateur, comme le fader de l'APC (essai 1.005.222 : un look à
+    /// 40 % assombrissait les UV de l'ambiance, et un look capturé à 100 % ne le remontait pas).
     /// </summary>
     public static Look Capture(string name, EngineSnapshot snapshot)
     {
@@ -53,17 +56,16 @@ public static class LookRules
         }
 
         var layers = snapshot.Show.Layers;
+        var launchedLayers = snapshot.Playbacks
+            .Where(p => actions.Any(a => a.SceneId == p.SceneId))
+            .Select(p => p.LayerId)
+            .ToHashSet();
         for (var i = 0; i < layers.Count && i < snapshot.LayerMasters.Length; i++)
         {
-            if (Math.Abs(snapshot.LayerMasters[i] - 1) > 0.005)
+            if (launchedLayers.Contains(layers[i].Id) || Math.Abs(snapshot.LayerMasters[i] - 1) > 0.005)
             {
                 actions.Add(new LookAction { Kind = LookActionKind.LayerMaster, LayerId = layers[i].Id, Level = Math.Round(snapshot.LayerMasters[i], 2) });
             }
-        }
-
-        if (Math.Abs(snapshot.GrandMaster - 1) > 0.005)
-        {
-            actions.Add(new LookAction { Kind = LookActionKind.GrandMaster, Level = Math.Round(snapshot.GrandMaster, 2) });
         }
 
         return new Look { Name = name, Actions = actions };
