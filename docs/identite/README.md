@@ -40,6 +40,7 @@ du dépôt. À intégrer dans le projet par la discussion de développement (voi
 | `sortie/luxia-logo.png` | **Logo** 2400 × 800, fond sombre ; `luxia-logo-1200.png` : 1200 × 400 |
 | `sortie/luxia-logo-transparent.png` | Logo sur fond transparent (à poser sur un fond sombre) |
 | `sortie/luxia-logo.svg`, `luxia-logo-transparent.svg` | Logo vectoriel autonome (texte converti en tracés) : pour l'impression, tout agrandissement |
+| `themes/` | **Identités thématiques** (Halloween, Noël, mariage, anniversaire), 2026-09-28 : voir [themes/README.md](themes/README.md) ; non appliquées à l'exécutable |
 | `apercu-tailles.png` | Contrôle visuel de l'icône à 16, 24, 32, 48, 64 et 256 px sur fond clair et foncé |
 | `generer.py` | Génère tout (voir §4) |
 | `ancien/generer-pillow.py` | Premier jet (dessin direct en pixels), conservé pour mémoire |

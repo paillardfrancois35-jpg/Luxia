@@ -4,6 +4,7 @@
 
 | Date | Idée | Module concerné | Statut |
 |---|---|---|---|
+| 2026-09-28 | **Habillage saisonnier** : un réglage (automatique selon la date, ou choisi pour la soirée) qui prend le logo d'une identité thématique (`docs/identite/themes` : Halloween, Noël, mariage, anniversaire) pour la fenêtre de démarrage, « À propos » et la navigation ; l'icône de la fenêtre peut suivre, pas celle du fichier `LuXia.exe` (figée à la compilation) | Interface | Idée (identités prêtes) |
 | 2026-09-28 | **Découper `RenderEngine.cs`** (1 195 lignes) : traitement des commandes, calcul du tick, sorties et instantanés dans des fichiers `partial` ou des classes dédiées. Analyse de code du 2026-09-28 : trop lourd pour un nettoyage (moteur temps réel validé, règle « pas d'allocation par tick ») ; à faire avec une série de tests de non-régression dédiée | Moteur | En attente |
 | 2026-09-28 | **Retirer les écrans Live et Scènes** (et `ProgrammerViewModel`, `SceneEditorViewModel`, le programmeur-brouillon) quand l'écran Contrôle aura été validé à l'usage (C5) ; les tests de ces écrans partent avec eux | Interface | En attente de validation du Contrôle |
 | 2026-09-28 | **Retirer `tools/Luxia.Tools.Prototype`** (prototype et maquettes du chantier ergonomique) une fois le Contrôle validé : les images restent dans `docs/maquettes` | Outils | En attente |
