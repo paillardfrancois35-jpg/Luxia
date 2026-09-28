@@ -212,6 +212,7 @@
 | [ERG-027](ERG-027.md) | Marges | ERG | M | Validé |
 | [ERG-028](ERG-028.md) | Molette | P6 | M | Réalisé |
 | [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Réalisé |
+| [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

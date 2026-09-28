@@ -393,9 +393,9 @@
 | [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
-## P6 – 15 exigences, 15 couvertes par des tests automatiques
+## P6 – 16 exigences, 15 couvertes par des tests automatiques
 
-> Réalisé : 13 · Validé : 2
+> Réalisé : 14 · Validé : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -410,6 +410,7 @@
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
 | [ERG-028](exigences/ERG-028.md) | M | Molette | Réalisé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
 | [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Réalisé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
+| [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Réalisé |  |
 | [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Réalisé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
 | [MOT-061](exigences/MOT-061.md) | I | Effet relatif | Réalisé | EffectTests.AbsoluteEffect_ReplacesStepValue<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectTests.RelativeEffect_WithoutStepValue_AddsToUnderlyingLayer |
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |

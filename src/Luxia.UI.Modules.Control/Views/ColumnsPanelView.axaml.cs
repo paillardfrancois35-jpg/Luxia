@@ -15,9 +15,10 @@ public partial class ColumnsPanelView : UserControl
 
         // Largeur des colonnes = largeur visible (partagée), au moins la largeur minimale : sans cela, dans une zone qui
         // défile, chaque colonne prend la largeur de son plus long nom de scène.
+        // En-têtes et scènes partagent cette largeur : leurs colonnes restent alignées (ERG-030).
         var scroll = this.FindControl<ScrollViewer>("Scroll")!;
-        var list = this.FindControl<ItemsControl>("ColumnsList")!;
-        scroll.SizeChanged += (_, e) => list.Width = Math.Max(e.NewSize.Width - 4, list.MinWidth);
+        var board = this.FindControl<DockPanel>("Board")!;
+        scroll.SizeChanged += (_, e) => board.Width = Math.Max(e.NewSize.Width - 4, board.MinWidth);
     }
 
     private ColumnsPanelViewModel? ViewModel => DataContext as ColumnsPanelViewModel;
