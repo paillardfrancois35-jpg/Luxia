@@ -30,6 +30,7 @@ Pas de paquet payant ni de licence restrictive (ex. FluentAssertions ≥ 8 exclu
 | Commentaires, documentation XML | Français |
 | Messages de journal, messages d'erreur, interface | Français |
 | Messages de commit, documentation `docs/` | Français |
+| **Échanges avec l'utilisateur** (discussion, diagnostics, consignes d'essai) | **Toujours en français**, sans exception (une réponse partie en anglais pendant l'essai P6, le 2026-09-28, relevée par l'utilisateur) |
 | Noms des commandes / événements dans la doc | Français (`TesterSortie`) ; en code, l'équivalent anglais (`TestOutputCommand`) documenté par un commentaire citant l'identifiant (`CMD-024`) |
 
 Lorsqu'un terme du glossaire n'a pas d'équivalent anglais établi, on en choisit un et **on l'ajoute au glossaire**.
@@ -184,6 +185,7 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
 
 | Date | Modification |
 |---|---|
+| 2026-09-28 | §2 : échanges avec l'utilisateur toujours en français. |
 | 2026-09-28 | §11 : numéro de compilation partagé avec le prototype (lire la version de `LuXia.dll`). |
 | 2026-09-28 | §11 : test « instable » à cause déterministe (tampon de test qui grossit pendant la mesure d'allocation ; délais réels remplacés par une barrière). |
 | 2026-09-28 | §11 : surcharge par span choisie pour un tableau (C# 14) ; espace de noms `…Control` qui masque `Avalonia.Controls.Control`. |
