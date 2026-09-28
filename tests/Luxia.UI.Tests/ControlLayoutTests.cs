@@ -107,7 +107,9 @@ public sealed class ControlLayoutTests : IDisposable
         var home = DockTree.FindOwner(layout, ControlPanels.Plan)!.Id;
 
         // Fenêtre détachée telle que Dock l'enregistre : une racine, un groupe d'onglets, le panneau.
-        ((Dock.Model.Core.IDock)plan.Owner!).VisibleDockables!.Remove(plan);
+        // Comme Dock en détachant : le groupe devenu vide disparaît de la fenêtre principale (cause vue en 1.005.214).
+        factory.RemoveDockable(plan, collapse: true);
+        DockTree.FindDock(layout, home!).ShouldBeNull("le groupe d'origine a disparu");
         var tools = new Dock.Model.Mvvm.Controls.ToolDock { Id = "flottant", VisibleDockables = factory.CreateList<Dock.Model.Core.IDockable>(plan), ActiveDockable = plan };
         var windowRoot = factory.CreateRootDock();
         windowRoot.VisibleDockables = factory.CreateList<Dock.Model.Core.IDockable>(tools);
@@ -129,6 +131,11 @@ public sealed class ControlLayoutTests : IDisposable
 
         DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Visible, "remis dans la fenêtre principale");
         DockTree.FindOwner(layout, ControlPanels.Plan)!.Id.ShouldBe(home, "à sa place livrée");
+        var group = DockTree.FindOwner(layout, ControlPanels.Plan)!;
+        var settings = DockTree.FindOwner(layout, ControlPanels.Settings)!;
+        var split = DockTree.ParentOf(layout, group)!;
+        split.ShouldBeSameAs(DockTree.ParentOf(layout, settings), "à côté des Réglages, comme livré");
+        split.VisibleDockables!.IndexOf(group).ShouldBeLessThan(split.VisibleDockables.IndexOf(settings), "à leur gauche");
         layout.Windows.ShouldBeEmpty("la fenêtre vide est fermée");
     }
 

@@ -148,6 +148,26 @@ public static class DockTree
         return null;
     }
 
+    /// <summary>Groupe qui contient directement <paramref name="child"/> (par référence), ou nul.</summary>
+    public static IDock? ParentOf(IDock dock, IDockable child)
+    {
+        ArgumentNullException.ThrowIfNull(dock);
+        foreach (var inner in dock.VisibleDockables ?? [])
+        {
+            if (ReferenceEquals(inner, child))
+            {
+                return dock;
+            }
+
+            if (inner is IDock nested && ParentOf(nested, child) is { } found)
+            {
+                return found;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>Groupe qui contient directement le panneau d'identifiant donné (sans recourir à <c>Owner</c>).</summary>
     public static IDock? FindOwner(IDock dock, string id)
     {

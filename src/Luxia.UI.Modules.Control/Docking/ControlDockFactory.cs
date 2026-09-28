@@ -117,12 +117,15 @@ public sealed class ControlDockFactory : Factory
         return dockable;
     }
 
-    // Dans le groupe qui l'accueille dans la disposition livrée (ou le premier groupe de panneaux).
+    // Dans le groupe qui l'accueille dans la disposition livrée ; s'il a disparu (Dock retire un groupe vidé, par exemple
+    // quand on détache son seul panneau), il est recréé à côté de son voisin livré ; à défaut, le premier groupe.
     private IDockable? DockHome(IRootDock root, string id, IDockable dockable)
     {
-        var home = DockTree.FindOwner(CreateLayout(), id) is { Id: { } homeId } && DockTree.FindDock(root, homeId) is IToolDock found
-            ? found
-            : DockTree.FirstToolDock(root);
+        var reference = CreateLayout();
+        var home = DockTree.FindOwner(reference, id) is { Id: { } homeId } homeRef
+            ? DockTree.FindDock(root, homeId) as IToolDock ?? RecreateGroup(root, reference, homeRef)
+            : null;
+        home ??= DockTree.FirstToolDock(root);
         if (home is null)
         {
             return null;
@@ -132,6 +135,38 @@ public sealed class ControlDockFactory : Factory
         InitDockable(dockable, home);
         SetActiveDockable(dockable);
         return dockable;
+    }
+
+    // Recrée un groupe livré disparu : même identifiant, placé contre le groupe voisin (du même partage) encore présent,
+    // du même côté que dans la disposition livrée.
+    private ToolDock? RecreateGroup(IRootDock root, IRootDock reference, IDock homeRef)
+    {
+        if (DockTree.ParentOf(reference, homeRef) is not IProportionalDock parent || parent.VisibleDockables is not { } siblings)
+        {
+            return null;
+        }
+
+        var parts = siblings.Where(d => d is not IProportionalDockSplitter).ToList();
+        var index = parts.IndexOf(homeRef);
+        foreach (var neighbour in parts.Where(d => !ReferenceEquals(d, homeRef)).OrderBy(d => Math.Abs(parts.IndexOf(d) - index)))
+        {
+            var target = neighbour is IToolDock { Id: { } neighbourId } ? DockTree.FindDock(root, neighbourId) : null;
+            target ??= neighbour is IDock inner && DockTree.FirstToolDock(inner) is { Id: { } innerId } ? DockTree.FindDock(root, innerId) : null;
+            if (target is null)
+            {
+                continue;
+            }
+
+            var before = index < parts.IndexOf(neighbour);
+            var operation = parent.Orientation == Orientation.Horizontal
+                ? before ? DockOperation.Left : DockOperation.Right
+                : before ? DockOperation.Top : DockOperation.Bottom;
+            var group = new ToolDock { Id = homeRef.Id, Proportion = homeRef.Proportion, VisibleDockables = CreateList<IDockable>() };
+            SplitToDock(target, group, operation);
+            return group;
+        }
+
+        return null;
     }
 
     private void TakeOutOfWindow(IRootDock root, IDockWindow window, IDockable dockable, PanelPlace place)
