@@ -65,6 +65,7 @@ panneau a un **?** qui explique à quoi il sert.
 
 | # | Faire | Attendu |
 |---|---|---|
+| 0 | En LIVE, mettre en condition : **Plein feu**, **Bleu sur tout le parc**, **Lyres : piste centre** | Tout est allumé en bleu, les lyres visent le centre : c'est ce que le public voit, et qui ne doit plus bouger. |
 | 1 | ✎ sur **Balayage doux des lyres**, puis **👁 AVEUGLE** | Bandeau **bleu clair** ; le plan affiche « APERÇU 👁 — la sortie ne change pas ». |
 | 2 | Sélectionner Lyre 1 et Lyre 2, onglet **Position**, cliquer dans la grille | Les deux points se déplacent **en gardant leur écart** ; sur le plan (aperçu) les lyres bougent ; **les vraies lyres ne bougent pas**. |
 | 3 | Revenir en LIVE, lancer la scène | Les lyres jouent la position réglée. |
