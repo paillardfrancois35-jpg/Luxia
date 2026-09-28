@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Luxia.Core.Dmx;
 using Luxia.Messaging.Events;
 using Luxia.Output.Drivers;
@@ -44,29 +45,50 @@ public sealed class OutputRouterTests
     [Trait("Exigence", "SORT-003")]
     public async Task SlowDriver_DoesNotDelayOthers_AndKeepsOnlyLatestFrame()
     {
+        // Le pilote lent reste bloqué dans sa première écriture tant que le test ne le libère pas : pas de délai réel, donc
+        // aucune dépendance à la charge de la machine (l'ancienne version, à 200 ms d'écriture et 25 ms entre trames,
+        // comptait des trames sur une fenêtre de temps réel et échouait parfois pendant la série complète, docs/03 §11).
+        using var gate = new ManualResetEventSlim(false);
         using var router = new OutputRouter();
-        var slow = new CollectingDriver("lent", writeDelay: TimeSpan.FromMilliseconds(200));
+        var slow = new CollectingDriver("lent", gate);
         var fast = new CollectingDriver("rapide");
         router.Attach(1, slow);
         router.Attach(1, fast);
-        await Eventually(() => slow.Status.State == OutputConnectionState.Connected && fast.Status.State == OutputConnectionState.Connected);
 
-        var frame = new DmxFrame();
-        var started = DateTime.UtcNow;
-        for (var i = 1; i <= 40; i++)
+        // Libéré quoi qu'il arrive : sinon l'arrêt du routeur attendrait indéfiniment le pilote bloqué.
+        try
         {
-            frame[1] = (byte)i;
-            router.Submit(1, frame, TimeSpan.FromMilliseconds(25 * i));
-            await Task.Delay(25);
+            await Eventually(() => slow.Status.State == OutputConnectionState.Connected && fast.Status.State == OutputConnectionState.Connected);
+
+            var frame = new DmxFrame { [1] = 1 };
+            router.Submit(1, frame, TimeSpan.Zero);
+            await Eventually(() => slow.IsBlocked && fast.Last[0] == 1);
+
+            // Pendant que le lent est bloqué : chaque dépôt rend la main aussitôt et le rapide reçoit chaque trame.
+            var submitting = new Stopwatch();
+            for (var i = 2; i <= 40; i++)
+            {
+                frame[1] = (byte)i;
+                submitting.Start();
+                router.Submit(1, frame, TimeSpan.FromMilliseconds(25 * i));
+                submitting.Stop();
+                await Eventually(() => fast.Last[0] == i);
+            }
+
+            fast.Count.ShouldBe(40);
+            slow.Count.ShouldBe(0);
+            submitting.Elapsed.ShouldBeLessThan(TimeSpan.FromSeconds(1), "Submit ne doit jamais attendre un pilote");
+
+            // Libéré, le lent termine la trame 1 puis n'écrit que la plus récente (40), sans file d'attente.
+            gate.Set();
+            await Eventually(() => slow.Last[0] == 40);
+            slow.Count.ShouldBe(2);
+            slow.Received.ShouldBe([(byte)1, (byte)40]);
         }
-
-        var submitDuration = DateTime.UtcNow - started;
-
-        // Le pilote rapide a reçu (presque) toutes les trames ; le lent en a sauté, sans file d'attente.
-        await Eventually(() => fast.Last[0] == 40 && slow.Last[0] == 40);
-        fast.Count.ShouldBeGreaterThan(30);
-        slow.Count.ShouldBeLessThan(15);
-        submitDuration.ShouldBeLessThan(TimeSpan.FromSeconds(2));
+        finally
+        {
+            gate.Set();
+        }
     }
 
     [Fact]
@@ -126,12 +148,28 @@ public sealed class OutputRouterTests
         }
     }
 
-    private sealed class CollectingDriver(string id, TimeSpan writeDelay = default) : OutputDriver(id, id, null)
+    private sealed class CollectingDriver(string id, ManualResetEventSlim? gate = null) : OutputDriver(id, id, null)
     {
         private readonly Lock _lock = new();
         private readonly List<byte[]> _frames = [];
+        private bool _blocked;
 
         public bool FailNextWrite { get; set; }
+
+        /// <summary>Vrai quand le pilote attend, dans une écriture, l'ouverture de sa barrière.</summary>
+        public bool IsBlocked => Volatile.Read(ref _blocked);
+
+        /// <summary>Canal 1 de chaque trame reçue, dans l'ordre.</summary>
+        public byte[] Received
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return [.. _frames.Select(f => f[0])];
+                }
+            }
+        }
 
         public int Count
         {
@@ -165,9 +203,11 @@ public sealed class OutputRouterTests
                 throw new IOException("échec simulé");
             }
 
-            if (writeDelay > TimeSpan.Zero)
+            if (gate is not null && !gate.IsSet)
             {
-                Thread.Sleep(writeDelay);
+                Volatile.Write(ref _blocked, true);
+                gate.Wait();
+                Volatile.Write(ref _blocked, false);
             }
 
             lock (_lock)

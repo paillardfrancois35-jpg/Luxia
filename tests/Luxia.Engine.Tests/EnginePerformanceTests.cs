@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Luxia.Core.Dmx;
 using Luxia.Engine.Model;
 using Luxia.Messaging.Events;
 using static Luxia.Engine.Tests.ShowBuilder;
@@ -23,11 +24,17 @@ public sealed class EnginePerformanceTests
         engine.Run(2);
 
         // Seuil strict, série recommencée jusqu'à trois fois (docs/03 §11) ; l'allocation est comptée sur la dernière série.
+        // Le capteur de test copie chaque trame (un byte[512] par tick, part mesurée ci-dessous) dans une liste : on la
+        // vide et on la dimensionne avant chaque série, sinon son agrandissement (doublement de capacité) tombe dans la
+        // mesure selon le nombre d'essais — cause de l'échec intermittent sous charge (23 576 octets au 3e essai).
         const int Ticks = 400;
+        var sinkBytesPerTick = AllocatedBy(() => _ = new byte[DmxConstants.ChannelCount]);
         var watch = new Stopwatch();
         long allocated = 0;
         for (var attempt = 0; attempt < 3 && (attempt == 0 || watch.Elapsed.TotalMilliseconds / Ticks >= 5); attempt++)
         {
+            engine.Sink.Frames.Clear();
+            engine.Sink.Frames.Capacity = Ticks;
             var before = GC.GetAllocatedBytesForCurrentThread();
             watch.Restart();
             for (var i = 0; i < Ticks; i++)
@@ -43,8 +50,10 @@ public sealed class EnginePerformanceTests
         engine.Engine.Snapshot.Playbacks.Count.ShouldBe(40);
         (watch.Elapsed.TotalMilliseconds / Ticks).ShouldBeLessThan(5);
 
-        // Le capteur de test copie chaque trame : on retire sa part (≈ 512 octets + en-tête par tick).
-        (allocated - (Ticks * 600L)).ShouldBeLessThan(20_000);
+        // Mesure par fil (celui du tick) : exacte, insensible aux autres tests. Le moteur seul n'alloue rien (0 octet
+        // mesuré) ; la marge de 1 Kio sur 400 ticks refuse toute allocation par tick (un seul objet par tick dépasserait
+        // 9 Kio), là où l'ancienne marge de 20 000 octets en laissait passer ≈ 50 par tick.
+        (allocated - (Ticks * sinkBytesPerTick)).ShouldBeLessThan(1024);
     }
 
     [Fact]
@@ -78,6 +87,14 @@ public sealed class EnginePerformanceTests
         }
 
         worst.TotalMilliseconds.ShouldBeLessThan(25);
+    }
+
+    private static long AllocatedBy(Action action)
+    {
+        action();
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        action();
+        return GC.GetAllocatedBytesForCurrentThread() - before;
     }
 
     private static (ShowModel Model, IReadOnlyList<EngineScene> Scenes) BigShow()
