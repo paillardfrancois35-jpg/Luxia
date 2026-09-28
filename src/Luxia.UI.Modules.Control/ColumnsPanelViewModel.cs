@@ -74,6 +74,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
 
                 playing |= button.IsActive;
                 button.Progress = playback?.StepProgress ?? 0;
+                button.ShowsProgress = playback is { StepCount: > 1 };
                 button.State = playback is { StepCount: > 1 } p
                     ? string.Create(CultureInfo.CurrentCulture, $"étape {p.StepIndex + 1} / {p.StepCount}")
                     : playback is not null ? "joue" : string.Empty;

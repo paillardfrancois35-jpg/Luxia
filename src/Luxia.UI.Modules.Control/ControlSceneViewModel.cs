@@ -20,6 +20,10 @@ public sealed partial class ControlSceneViewModel : ViewModelBase
     [ObservableProperty]
     private double _progress;
 
+    /// <summary>Vrai quand la scène joue et a plusieurs étapes : la barre montre alors l'avancement de l'étape.</summary>
+    [ObservableProperty]
+    private bool _showsProgress;
+
     [ObservableProperty]
     private string _state = string.Empty;
 

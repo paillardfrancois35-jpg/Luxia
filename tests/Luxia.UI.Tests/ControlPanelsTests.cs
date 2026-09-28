@@ -62,6 +62,24 @@ public sealed class ControlPanelsTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-018")]
+    [Trait("Exigence", "CMD-015")]
+    public void StepButtons_MoveThePlayingScene()
+    {
+        var button = Button("Chenillard 4 couleurs");
+        var column = _vm.Columns.Columns.Single(c => c.Scenes.Contains(button));
+        _vm.Columns.Press(button);
+        Ticks(3);
+        _vm.Refresh();
+        var before = _host.Runtime.Engine.Snapshot.ActivePlayback(button.Scene.Id)!.Value.StepIndex;
+
+        _vm.Columns.NextStepCommand.Execute(column);
+        Ticks(2);
+
+        _host.Runtime.Engine.Snapshot.ActivePlayback(button.Scene.Id)!.Value.StepIndex.ShouldBe((before + 1) % button.Scene.Steps.Count);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-018")]
     [Trait("Exigence", "COU-005")]
     public void FlashLayer_PlaysOnlyWhileHeld()
     {
