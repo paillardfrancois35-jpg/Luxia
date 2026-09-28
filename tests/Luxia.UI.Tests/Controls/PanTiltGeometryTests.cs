@@ -134,4 +134,19 @@ public sealed class PanTiltGeometryTests
         PanTiltGeometry.ZoneAt([allowed, inner], Area, PanTiltGeometry.ToScreen(0.2, 0.2, Area))!.Id.ShouldBe("0", "hors de la petite : la grande");
         PanTiltGeometry.ZoneAt([allowed, inner], Area, PanTiltGeometry.ToScreen(0.95, 0.95, Area)).ShouldBeNull();
     }
+
+    [Fact]
+    [Trait("Exigence", "ERG-017")]
+    public void PickZone_BigSelected_ClickInTheSmall_TakesTheSmall_ButItsHandlesStillWin()
+    {
+        var big = new PanTiltZoneMarker("0", "Limites", new PanTiltRect(0.1, 0.9, 0.1, 0.9), PanTiltZoneKind.Allowed);
+        var small = new PanTiltZoneMarker("1", "Zone 2", new PanTiltRect(0.4, 0.6, 0.4, 0.6), PanTiltZoneKind.Forbidden);
+        var zones = new[] { big, small };
+
+        PanTiltGeometry.PickZone(zones, "0", Area, PanTiltGeometry.ToScreen(0.5, 0.5, Area), 8)!.Value.Zone.Id.ShouldBe("1");
+        var corner = PanTiltGeometry.PickZone(zones, "0", Area, PanTiltGeometry.ToScreen(0.1, 0.9, Area), 8)!.Value;
+        corner.Zone.Id.ShouldBe("0");
+        corner.Handle.ShouldBe(PanTiltHandle.TopLeft);
+        PanTiltGeometry.PickZone(zones, "0", Area, PanTiltGeometry.ToScreen(0.97, 0.03, Area), 8).ShouldBeNull();
+    }
 }

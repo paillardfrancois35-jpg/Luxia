@@ -316,24 +316,15 @@ public sealed class PanTiltGrid : Control
         var zones = Zones ?? [];
         _dragStart = point;
 
-        // D'abord les poignées de la zone sélectionnée, puis le corps des zones (la plus petite sous le curseur).
-        var selected = zones.FirstOrDefault(z => z.Id == SelectedZoneId);
-        if (selected is not null)
+        if (PanTiltGeometry.PickZone(zones, SelectedZoneId, area, point, HandleSize) is { } picked)
         {
-            var hit = PanTiltGeometry.HitTest(selected.Area, area, point, HandleSize);
-            if (hit != PanTiltHandle.None)
+            _zoneOrigin = picked.Zone;
+            _zoneHandle = picked.Handle;
+            if (picked.Handle == PanTiltHandle.Body)
             {
-                _zoneOrigin = selected;
-                _zoneHandle = hit;
-                return;
+                ZoneSelected?.Invoke(this, picked.Zone.Id);
             }
-        }
 
-        if (PanTiltGeometry.ZoneAt(zones, area, point) is { } hitZone)
-        {
-            _zoneOrigin = hitZone;
-            _zoneHandle = PanTiltHandle.Body;
-            ZoneSelected?.Invoke(this, hitZone.Id);
             return;
         }
 

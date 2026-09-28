@@ -160,6 +160,24 @@ public static class PanTiltGeometry
         .OrderBy(z => z.Area.PanSize * z.Area.TiltSize)
         .FirstOrDefault();
 
+    /// <summary>
+    /// Ce qu'attrape un clic en édition des zones : d'abord une poignée de la zone sélectionnée, puis le corps de la plus
+    /// petite zone sous le curseur. Le corps de la zone sélectionnée n'a pas la priorité : sinon, la grande sélectionnée,
+    /// on ne pouvait plus prendre une petite dessinée dedans (essai 1.005.206). Nul : clic dans le vide.
+    /// </summary>
+    public static (PanTiltZoneMarker Zone, PanTiltHandle Handle)? PickZone(
+        IReadOnlyList<PanTiltZoneMarker> zones, string? selectedId, Rect area, Point point, double handleSize)
+    {
+        ArgumentNullException.ThrowIfNull(zones);
+        if (zones.FirstOrDefault(z => z.Id == selectedId) is { } selected
+            && HitTest(selected.Area, area, point, handleSize) is var handle and not PanTiltHandle.None and not PanTiltHandle.Body)
+        {
+            return (selected, handle);
+        }
+
+        return ZoneAt(zones, area, point) is { } zone ? (zone, PanTiltHandle.Body) : null;
+    }
+
     /// <summary>Partie d'une zone sous un point de l'écran : poignée (à <paramref name="tolerance"/> près), corps ou rien.</summary>
     public static PanTiltHandle HitTest(PanTiltRect zone, Rect area, Point point, double tolerance)
     {
