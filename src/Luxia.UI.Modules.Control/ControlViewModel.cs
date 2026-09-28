@@ -189,16 +189,16 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
     }
 
     /// <summary>
-    /// « ■ Tout arrêter » (CMD-012) : arrête toutes les scènes, sauf les couches protégées (Ambiance) ; Maj + clic les
-    /// arrête aussi. Toujours permis, verrou compris : c'est jouer (essai 1.005.222 : aucun bouton pour tout arrêter).
+    /// « ■ Stop » et « ■ Tout stopper » (CMD-012, paramètre « tout ») : toutes les scènes, sauf ou avec les couches
+    /// protégées (Ambiance par défaut, COU-007). Toujours permis, verrou compris : c'est jouer (essai 1.005.222).
     /// </summary>
     [RelayCommand]
     private void StopAll(string? everything)
     {
         var all = everything == "tout";
         _runtime.Engine.Send(new StopLayerCommand(CommandOrigin.User, Everything: all));
-        Journal.Log(all ? "■ tout arrêté, Ambiance comprise" : "■ tout arrêté (sauf Ambiance)");
-        _runtime.TraceUi("Contrôle", all ? "tout arrêter (ambiance comprise)" : "tout arrêter");
+        Journal.Log(all ? "■ tout stoppé, couches protégées comprises" : "■ stop (sauf couches protégées)");
+        _runtime.TraceUi("Contrôle", all ? "tout stopper" : "stop");
     }
 
     /// <summary>Action du bandeau : « Libérer tout » (LIVE), « Revenir en LIVE », « Terminer les zones ».</summary>

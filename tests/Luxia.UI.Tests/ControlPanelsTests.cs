@@ -620,7 +620,7 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         _vm.Columns.Press(Button("UV plein"));
         Ticks(3);
 
-        _vm.StopAllCommand.Execute("sauf-ambiance");
+        _vm.StopAllCommand.Execute("sauf-protegees");
         Ticks(60);
         Playing().ShouldBe([Scene("UV plein").Id], "l'Ambiance est protégée");
 

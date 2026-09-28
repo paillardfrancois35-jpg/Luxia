@@ -43,9 +43,12 @@
                   Command="{Binding SetLayoutCommand}" CommandParameter="controle" ToolTip.Tip="Disposition Contrôle : jouer et corriger (colonnes, propriétés, plan, réglages)" />
           <Button Classes="mode layout" Classes.active="{Binding IsShowLayout}" Content="Spectacle" CornerRadius="0,6,6,0" Padding="10,4" Margin="0,0,10,0"
                   Command="{Binding SetLayoutCommand}" CommandParameter="spectacle" ToolTip.Tip="Disposition Spectacle : les colonnes en grand, le pilote automatique et ses interventions (looks)" />
-          <Button x:Name="StopAllButton" Content="■ Tout arrêter" Foreground="#F85149" Margin="0,0,10,0"
-                  Command="{Binding StopAllCommand}" CommandParameter="sauf-ambiance"
-                  ToolTip.Tip="Arrêter toutes les scènes, sauf l'Ambiance (couche protégée) · Maj + clic : l'Ambiance aussi" />
+          <Button Content="■ Stop" Foreground="#F85149" Margin="0,0,4,0"
+                  Command="{Binding StopAllCommand}" CommandParameter="sauf-protegees"
+                  ToolTip.Tip="Arrêter toutes les scènes, sauf les couches protégées (Ambiance par défaut : fumée, UV…). Réglage : écran Scènes → Couches…, colonne « Protégée »." />
+          <Button Content="■ Tout stopper" Foreground="#F85149" Margin="0,0,10,0"
+                  Command="{Binding StopAllCommand}" CommandParameter="tout"
+                  ToolTip.Tip="Arrêter absolument toutes les scènes, couches protégées comprises (fin de soirée)" />
           <ToggleButton Content="🔒 Verrou soirée" IsChecked="{Binding IsLocked, Mode=OneWay}" Command="{Binding ToggleLockCommand}" Margin="0,0,10,0"
                         ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'édition des scènes et des zones est bloquée (anti-fausse manipulation)." />
           <Button Content="↶" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />
