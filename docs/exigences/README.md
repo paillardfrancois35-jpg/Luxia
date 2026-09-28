@@ -176,7 +176,7 @@
 | [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
 | [EFF-001](EFF-001.md) | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | P6 | I | Réalisé |
 | [EFF-002](EFF-002.md) | Formes d'intensité | P6 | I | Réalisé |
-| [EFF-003](EFF-003.md) | Formes de position | P6 | I | Réalisé |
+| [EFF-003](EFF-003.md) | Formes de position | P6 | I | Validé |
 | [EFF-004](EFF-004.md) | Formes de couleur | P6 | I | Réalisé |
 | [EFF-005](EFF-005.md) | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | P6 | I | Validé |
 | [EFF-006](EFF-006.md) | Aperçu en direct au simulateur pendant le réglage des paramètres | P6 | I | Réalisé |
