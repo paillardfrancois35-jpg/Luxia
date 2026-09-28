@@ -156,6 +156,21 @@ public sealed class ControlSession
         Notify();
     }
 
+    /// <summary>
+    /// Appareils sélectionnés au plan, de gauche à droite par colonnes d'un mètre, puis dans l'ordre du patch au sein d'une
+    /// colonne (appareils empilés sur un même pied) : l'ordre naturel d'une vague.
+    /// </summary>
+    public List<ValueTarget> OrderedSelection()
+    {
+        var venue = Venues.Active;
+        var patch = _runtime.Project.Installation.Fixtures.Select((f, i) => (f.Id, i)).ToDictionary(x => x.Id, x => x.i);
+        return [.. _selection
+            .Select(id => (id, place: venue.PlacementOf(id)))
+            .OrderBy(x => x.place is { } p ? Math.Floor(p.X) : double.MaxValue)
+            .ThenBy(x => patch.GetValueOrDefault(x.id, int.MaxValue))
+            .Select(x => ValueTarget.Fixture(x.id))];
+    }
+
     /// <summary>Choisit la scène à éditer (nulle : aucune ; le mode revient alors en LIVE).</summary>
     public void ChooseScene(Guid? sceneId)
     {

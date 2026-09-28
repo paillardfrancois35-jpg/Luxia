@@ -10,6 +10,7 @@ namespace Luxia.UI.Tests;
 public sealed class EffectsPanelTests : IAsyncLifetime
 {
     private static readonly string[] ParNames = ["PAR 1", "PAR 2", "PAR 3", "PAR 4"];
+    private static readonly string[] ChaseColors = ["Rouge", "Vert", "Bleu"];
     private readonly TestHost _host = new();
     private ControlViewModel _vm = null!;
 
@@ -210,6 +211,39 @@ public sealed class EffectsPanelTests : IAsyncLifetime
         var layout = factory.CreateLayout();
         DockTree.Find(layout, ControlPanels.Effects).Place.ShouldBe(PanelPlace.Visible);
         DockTree.FindOwner(layout, ControlPanels.Effects)!.Id.ShouldBe(DockTree.FindOwner(layout, ControlPanels.Settings)!.Id);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-054")]
+    public void StepHueFade_WrittenFromProperties()
+    {
+        var scene = Scene("Chenillard 4 couleurs");
+        Session.ChooseScene(scene.Id);
+        _vm.Properties.StepHueFade.ShouldBeFalse();
+        _vm.Properties.StepHueFade = true;
+        Session.Commit();
+        Stored(scene.Id).Steps[0].HueFade.ShouldBeTrue();
+    }
+
+    [Fact]
+    [Trait("Exigence", "SCN-014")]
+    public void Wizard_ColorChase_ReplacesSteps_Undoable()
+    {
+        var scene = Scene("Plein feu");
+        Session.ChooseScene(scene.Id);
+        SelectPars();
+        var properties = _vm.Properties;
+        properties.Wizard = PropertiesPanelViewModel.Wizards.Single(w => w.Value == "chase");
+        foreach (var name in ChaseColors)
+        {
+            properties.WizardPalettes.Single(p => p.Name == name).IsChecked = true;
+        }
+
+        properties.GenerateStepsCommand.Execute(null);
+        Stored(scene.Id).Steps.Count.ShouldBe(3);
+        Stored(scene.Id).Steps[0].Values.First(v => v.PaletteId is not null).Target.FixtureId.ShouldBe(Pars()[0]);
+        Session.Undo();
+        Stored(scene.Id).Steps.Count.ShouldBe(1);
     }
 
     [Theory]

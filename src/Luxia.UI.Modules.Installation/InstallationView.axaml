@@ -149,7 +149,7 @@
           <Border Grid.Row="1" Classes="panel">
             <DockPanel>
               <TextBlock DockPanel.Dock="Top" Classes="section" Text="Sélections manuelles" Margin="0,0,0,6" />
-              <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="4" Margin="0,6,0,0">
+              <WrapPanel DockPanel.Dock="Bottom" Margin="0,6,0,0" ItemSpacing="4" LineSpacing="4">
                 <Button Content="Inverser" Command="{Binding ReorderSelectionCommand}" CommandParameter="reverse" />
                 <Button Content="Pairs" Command="{Binding ReorderSelectionCommand}" CommandParameter="even" />
                 <Button Content="Impairs" Command="{Binding ReorderSelectionCommand}" CommandParameter="odd" />
@@ -159,8 +159,12 @@
                         ToolTip.Tip="Selon la position au plan du lieu actif" />
                 <Button Content="Avant→arrière" Command="{Binding ReorderSelectionCommand}" CommandParameter="front-back" />
                 <Button Content="Centre→extérieur" Command="{Binding ReorderSelectionCommand}" CommandParameter="center-out" />
+                <Button Content="En cellules" Command="{Binding ReorderSelectionCommand}" CommandParameter="cells"
+                        ToolTip.Tip="Chaque barre devient ses sections, chaque effet multi-têtes ses têtes, dans l'ordre (INST-034, effets par cellule)" />
+                <Button Content="Par appareil" Command="{Binding ReorderSelectionCommand}" CommandParameter="fixtures"
+                        ToolTip.Tip="Regroupe les cellules en appareils entiers" />
                 <Button Content="Supprimer…" Command="{Binding DeleteSelectionCommand}" Classes="danger" />
-              </StackPanel>
+              </WrapPanel>
               <ListBox ItemsSource="{Binding Selections}" SelectedItem="{Binding SelectedSelection}">
                 <ListBox.ItemTemplate>
                   <DataTemplate x:DataType="vm:SelectionRowViewModel">

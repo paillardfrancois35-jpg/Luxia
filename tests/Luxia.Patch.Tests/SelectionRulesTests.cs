@@ -59,4 +59,21 @@ public sealed class SelectionRulesTests
 
         ordered.ShouldBe([A, B]);
     }
+
+    [Fact]
+    [Trait("Exigence", "INST-034")]
+    public void ExpandCells_BarsBecomeOrderedSections_CollapseGoesBack()
+    {
+        // A et B : deux barres de 4 sections ; C : un appareil sans cellule ; B #2 déjà précisée n'est pas doublée.
+        IReadOnlyList<int> Cells(Guid id) => id == C.FixtureId ? [] : [1, 2, 3, 4];
+        var expanded = SelectionRules.ExpandCells([A, C, new SelectionItem(B.FixtureId, 2), B], Cells);
+
+        expanded.Count.ShouldBe(4 + 1 + 4);
+        expanded.Take(4).ShouldAllBe(i => i.FixtureId == A.FixtureId);
+        expanded.Take(4).Select(i => i.Cell).ShouldBe([1, 2, 3, 4]);
+        expanded[4].ShouldBe(C);
+        expanded.Skip(5).Select(i => i.Cell).ShouldBe([2, 1, 3, 4]);
+
+        SelectionRules.CollapseCells(expanded).ShouldBe([A, C, B]);
+    }
 }

@@ -264,7 +264,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
             return;
         }
 
-        var targets = OrderedSelection();
+        var targets = _session.OrderedSelection();
         if (targets.Count == 0)
         {
             Message = "Sélectionnez d'abord les appareils sur le plan (clic, Ctrl + clic, rectangle), dans l'ordre voulu.";
@@ -314,7 +314,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
     [RelayCommand]
     private void TakeSelection()
     {
-        var targets = OrderedSelection();
+        var targets = _session.OrderedSelection();
         if (targets.Count == 0)
         {
             Message = "Sélectionnez d'abord les appareils sur le plan.";
@@ -525,21 +525,6 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
         }
 
         Message = _session.EditEffects(effects => [.. effects.Select(e => e.Id == effect.Id ? change(e) : e)], description);
-    }
-
-    /// <summary>
-    /// Appareils sélectionnés au plan, de gauche à droite par colonnes d'un mètre, puis dans l'ordre du patch au sein d'une
-    /// colonne (appareils empilés sur un même pied) : l'ordre naturel d'une vague.
-    /// </summary>
-    private List<ValueTarget> OrderedSelection()
-    {
-        var venue = _session.Venues.Active;
-        var patch = _runtime.Project.Installation.Fixtures.Select((f, i) => (f.Id, i)).ToDictionary(x => x.Id, x => x.i);
-        return [.. _session.Selection
-            .Select(id => (id, place: venue.PlacementOf(id)))
-            .OrderBy(x => x.place is { } p ? Math.Floor(p.X) : double.MaxValue)
-            .ThenBy(x => patch.GetValueOrDefault(x.id, int.MaxValue))
-            .Select(x => ValueTarget.Fixture(x.id))];
     }
 
     private void LoadLibrary()

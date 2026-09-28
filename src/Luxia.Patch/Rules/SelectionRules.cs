@@ -17,6 +17,31 @@ public static class SelectionRules
     public static IReadOnlyList<SelectionItem> Odd(IReadOnlyList<SelectionItem> items) =>
         [.. items.Where((_, i) => (i + 1) % 2 != 0)];
 
+    /// <summary>
+    /// Détaille chaque appareil entier en ses cellules, dans l'ordre (INST-034 : les 4 sections de deux barres = 8 cellules
+    /// ordonnées) ; une cellule déjà précisée et un appareil sans cellule restent tels quels.
+    /// </summary>
+    /// <param name="items">Éléments.</param>
+    /// <param name="cellsOf">Cellules (numéros ≥ 1) d'un appareil, dans l'ordre de son modèle.</param>
+    public static IReadOnlyList<SelectionItem> ExpandCells(IReadOnlyList<SelectionItem> items, Func<Guid, IReadOnlyList<int>> cellsOf)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(cellsOf);
+        var result = new List<SelectionItem>();
+        foreach (var item in items)
+        {
+            var cells = item.Cell > 0 ? [] : cellsOf(item.FixtureId);
+            var expanded = cells.Count == 0 ? [item] : cells.Select(c => new SelectionItem(item.FixtureId, c));
+            result.AddRange(expanded.Where(e => !result.Contains(e)));
+        }
+
+        return result;
+    }
+
+    /// <summary>Regroupe les cellules en appareils entiers, dans l'ordre de première apparition (inverse de <see cref="ExpandCells"/>).</summary>
+    public static IReadOnlyList<SelectionItem> CollapseCells(IReadOnlyList<SelectionItem> items) =>
+        [.. items.Select(i => i.FixtureId).Distinct().Select(id => new SelectionItem(id))];
+
     /// <summary>Première moitié (arrondie au-dessus) de la sélection.</summary>
     public static IReadOnlyList<SelectionItem> FirstHalf(IReadOnlyList<SelectionItem> items) =>
         [.. items.Take((items.Count + 1) / 2)];

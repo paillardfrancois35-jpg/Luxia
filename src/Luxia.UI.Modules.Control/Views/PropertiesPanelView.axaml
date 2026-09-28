@@ -83,16 +83,49 @@
           </StackPanel>
         </Expander>
 
+        <!-- Assistants (SCN-014) -->
+        <Expander Header="Assistant : générer les étapes" IsExpanded="False">
+          <StackPanel Spacing="6">
+            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#8B949E"
+                       Text="Choisissez les appareils sur le plan (ils sont pris de gauche à droite), cochez les couleurs ou positions dans l'ordre voulu, puis « Générer ». Les étapes de la scène sont remplacées ; Ctrl+Z pour revenir." />
+            <ComboBox ItemsSource="{x:Static vm:PropertiesPanelViewModel.Wizards}" SelectedItem="{Binding Wizard}" HorizontalAlignment="Stretch" />
+            <ItemsControl ItemsSource="{Binding WizardPalettes}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:WizardPaletteChip">
+                  <ToggleButton IsChecked="{Binding IsChecked}" Margin="0,0,4,4" Padding="6,2" ToolTip.Tip="{Binding Name}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                      <Border Width="12" Height="12" CornerRadius="2" Background="{Binding Color}" />
+                      <TextBlock Text="{Binding Name}" FontSize="11" />
+                    </StackPanel>
+                  </ToggleButton>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+              <TextBlock Classes="label" Text="Maintien (s)" />
+              <NumericUpDown Grid.Column="1" Value="{Binding WizardHoldSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+              <TextBlock Grid.Row="1" Classes="label" Text="Fondu (s)" />
+              <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding WizardFadeSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+            </Grid>
+            <Button Content="Générer les étapes" Command="{Binding GenerateStepsCommand}" />
+            <TextBlock Text="{Binding WizardMessage}" TextWrapping="Wrap" FontSize="11" Foreground="#F0883E"
+                       IsVisible="{Binding WizardMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+          </StackPanel>
+        </Expander>
+
         <!-- Étape choisie -->
         <Expander Header="{Binding StepTitle}" IsExpanded="True">
           <StackPanel Spacing="6">
-            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
               <TextBlock Classes="label" Text="Nom de l'étape" />
               <TextBox Grid.Column="1" Text="{Binding StepName}" PlaceholderText="(sans nom)" />
               <TextBlock Grid.Row="1" Classes="label" Text="Fondu (s)" />
               <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding StepFadeSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
               <TextBlock Grid.Row="2" Classes="label" Text="Maintien (s)" />
               <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StepHoldSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+              <CheckBox Grid.Row="3" Grid.Column="1" Content="Fondu par la teinte" IsChecked="{Binding StepHueFade}"
+                        ToolTip.Tip="Pendant le fondu d'entrée de l'étape, les couleurs passent par la roue des teintes : rouge → vert passe par le jaune au lieu d'un brun terne (MOT-054)" />
             </Grid>
             <TextBlock Text="Contenu (réglé dans « Réglages des appareils », en ÉDITION ou AVEUGLE)" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap" />
             <ItemsControl ItemsSource="{Binding StepValues}">

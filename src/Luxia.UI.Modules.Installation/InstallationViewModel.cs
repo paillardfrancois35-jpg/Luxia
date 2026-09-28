@@ -463,6 +463,8 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         var reordered = operation switch
         {
             "reverse" => SelectionRules.Reverse(items),
+            "cells" => SelectionRules.ExpandCells(items, CellsOf),
+            "fixtures" => SelectionRules.CollapseCells(items),
             "odd" => SelectionRules.Odd(items),
             "even" => SelectionRules.Even(items),
             "first-half" => SelectionRules.FirstHalf(items),
@@ -587,6 +589,17 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         TypeOf(fixture)?.Modes.FirstOrDefault(m => m.Name == fixture.ModeName)?.ChannelCount ?? 0;
 
     private FixtureType? TypeOf(PatchedFixture fixture) => _runtime.Project.FixtureLibrary?.Find(fixture.FixtureTypeId);
+
+    // INST-034 : cellules (≥ 1) d'un appareil patché, dans l'ordre de son mode.
+    private List<int> CellsOf(Guid fixtureId)
+    {
+        var fixture = _runtime.Project.Installation.Fixtures.FirstOrDefault(f => f.Id == fixtureId);
+        var type = fixture is null ? null : TypeOf(fixture);
+        var mode = type?.Modes.FirstOrDefault(m => m.Name == fixture!.ModeName);
+        return type is null || mode is null
+            ? []
+            : [.. Luxia.Fixtures.Rules.FixtureRules.ChannelsOf(type, mode).Select(c => c.Cell).Where(c => c > 0).Distinct()];
+    }
 
     private void LoadAll()
     {
