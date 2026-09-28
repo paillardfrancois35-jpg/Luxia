@@ -13,6 +13,10 @@ import os
 import random
 import sys
 
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 import generer as base  # noqa: E402  (géométrie et rendu de l'identité de référence)

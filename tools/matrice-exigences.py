@@ -6,6 +6,10 @@
 import os
 import re
 import sys
+
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -1,7 +1,7 @@
 """Création / mise à jour des fiches d'exigences (docs/exigences).
 
 Usage (depuis la racine du dépôt), puis régénérer la matrice (tools/matrice-exigences.py) :
-  PYTHONIOENCODING=utf-8 python tools/fiche-exigences.py spec.json
+  python tools/fiche-exigences.py spec.json
 L'historique d'une fiche est en ajout seul ; « statut » remplace le statut courant.
 spec.json : liste d'objets
   {"id": "MOT-080", "statut": "Réalisé", "remarque": "...", "liens": "...",
@@ -13,6 +13,10 @@ import json
 import os
 import re
 import sys
+
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = os.getcwd()
 DOCS = os.path.join(ROOT, "docs")

@@ -199,12 +199,12 @@ dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
 python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5
-PYTHONIOENCODING=utf-8 python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
+python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- valider "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- jouer "samples/Show de référence" --scene "Chenillard 4 couleurs" --duree 3
 dotnet run --project tools/Luxia.Tools.Captures -- "samples/Show de référence" "<dossier des images>"
-PYTHONIOENCODING=utf-8 python tools/generer-demo-controle.py                  # samples/Démo Contrôle (essai de l'écran Contrôle)
+python tools/generer-demo-controle.py                  # samples/Démo Contrôle (essai de l'écran Contrôle)
 dotnet run --project tools/Luxia.Tools.Prototype                              # prototype ergonomique
 dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes # maquettes « Contrôle » en PNG
 ```

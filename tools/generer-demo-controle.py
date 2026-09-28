@@ -1,7 +1,7 @@
 """Fabrique « samples/Démo Contrôle » : le show de référence, plus de quoi essayer l'écran Contrôle (doc 60, ERG-020).
 
 Usage (depuis la racine du dépôt) :
-  PYTHONIOENCODING=utf-8 python tools/generer-demo-controle.py
+  python tools/generer-demo-controle.py
 
 Le dossier produit est une copie de travail (ignorée par Git, comme « Show de travail ») : on peut y écrire sans
 risque, et le régénérer quand on veut. Le show de référence n'est jamais modifié.
@@ -16,7 +16,12 @@ Ajouts par rapport au show de référence :
 import json
 import os
 import shutil
+import sys
 import uuid
+
+# Sortie en UTF-8 quelle que soit la console (PowerShell, cmd) : plus besoin de PYTHONIOENCODING.
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = os.getcwd()
 SOURCE = os.path.join(ROOT, "samples", "Show de référence")

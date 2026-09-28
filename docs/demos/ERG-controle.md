@@ -10,7 +10,7 @@
 2. Fabriquer la démo (copie du show de référence + contenu d'essai ; régénérable à volonté, jamais l'original) :
 
    ```bash
-   PYTHONIOENCODING=utf-8 python tools/generer-demo-controle.py
+   python tools/generer-demo-controle.py
    ```
 
 3. Lancer LuXia et ouvrir `samples/Démo Contrôle` (menu **Projet → Ouvrir…**) :
