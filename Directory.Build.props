@@ -21,7 +21,7 @@
       NNN augmentant à chaque compilation (cible LuxiaBuildNumber de Luxia.App), comme les étiquettes v1.0NN.MMM (doc 03 §7).
       À la validation : Version = cette valeur, LuxiaDevVersion vidé.
     -->
-    <LuxiaDevVersion></LuxiaDevVersion>
+    <LuxiaDevVersion>1.006</LuxiaDevVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 

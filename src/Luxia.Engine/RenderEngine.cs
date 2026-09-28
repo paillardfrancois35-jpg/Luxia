@@ -511,7 +511,7 @@ public sealed class RenderEngine : ICommandSink
     private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now, bool flash = false)
     {
         var layer = _show.Layers[layerIndex];
-        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash };
+        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed) };
         playback.Bind(scene, _show);
 
         // Lectures remplacées : toute la couche si elle est exclusive (MOT-030), sinon une lecture de la même scène.
@@ -796,6 +796,7 @@ public sealed class RenderEngine : ICommandSink
             var source = new ParameterSource(SourceKind.Scene, playback.Scene.Id, layer.Id);
             var parameters = playback.Parameters;
             var fadingOut = playback.State == PlaybackState.FadingOut;
+            var effects = playback.HasEffects;
             for (var i = 0; i < parameters.Length; i++)
             {
                 if (playback.Masked[i])
@@ -805,15 +806,21 @@ public sealed class RenderEngine : ICommandSink
 
                 var p = parameters[i];
                 var discrete = playback.Discrete[i];
+                var value = playback.Value[i];
+                var own = playback.Weight[i];
+                if (effects)
+                {
+                    // MOT-061 : effets de l'étape, sur la valeur de la scène ou, en relatif, sur la valeur sous-jacente.
+                    playback.ApplyEffects(i, _result[p], ref value, ref own);
+                }
 
                 // Un attribut discret revient à la valeur sous-jacente dès le début du fondu de sortie (MOT-012).
-                var weight = discrete && fadingOut ? 0 : playback.Weight[i] * playback.ExitWeight;
+                var weight = discrete && fadingOut ? 0 : own * playback.ExitWeight;
                 if (weight <= 0)
                 {
                     continue;
                 }
 
-                var value = playback.Value[i];
                 if (_roles[p] == ParameterRole.Intensity)
                 {
                     MergeIntensity(p, value, weight, master, intensityMode, source);

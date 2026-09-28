@@ -120,7 +120,19 @@ public sealed class EnginePerformanceTests
                     .SelectMany(f => f.Parameters.Values.Take(4))
                     .Select(p => new StepValue(p, random.NextDouble()))
                     .ToArray();
-                steps.Add(Step(0.3, 0.2, values));
+                // Une scène sur deux porte aussi un effet (MOT-060) : les effets n'allouent pas non plus.
+                var shape = (EffectShape)(s % 13);
+                var effect = new EngineEffect
+                {
+                    Id = Guid.NewGuid(),
+                    Shape = shape,
+                    Relative = s % 4 == 0,
+                    Direction = (EffectDirection)(s % 3),
+                    Channels = [.. fixtures
+                        .Where((_, i) => (i + s) % 5 == 0)
+                        .Select((f, m) => new EffectChannel(f.Parameters.Values.Last(), m, m * 0.1, 0.5, 0.8, (EffectAxis)(m % 2), shape == EffectShape.Table ? [0.0, 0.5, 1.0] : null))],
+                };
+                steps.Add(Step(0.3, 0.2, values) with { Effects = s % 2 == 0 ? [effect] : [], HueFade = s % 3 == 0 });
             }
 
             scenes.Add(show.Scene($"Scène {s}", layers[s % 20], [.. steps]));

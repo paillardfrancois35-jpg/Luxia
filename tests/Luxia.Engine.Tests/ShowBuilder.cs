@@ -128,7 +128,10 @@ internal sealed class ShowBuilder
     /// <summary>Limites de sûreté du modèle (aucune par défaut).</summary>
     public SafetyModel Safety { get; set; } = SafetyModel.None;
 
-    public ShowModel Build() => new([.. _parameters], [.. _layers], [.. _scenes], new Dictionary<Guid, Guid>(_aliases), Safety);
+    /// <summary>Triplets rouge / vert / bleu (fondu par la teinte, MOT-054).</summary>
+    public List<ColorGroup> ColorGroups { get; } = [];
+
+    public ShowModel Build() => new([.. _parameters], [.. _layers], [.. _scenes], new Dictionary<Guid, Guid>(_aliases), Safety, [.. ColorGroups]);
 
     public static EngineStep Step(double fade, double hold, params StepValue[] values) =>
         new() { Fade = Duration.FromSeconds(fade), Hold = Duration.FromSeconds(hold), Values = values };
