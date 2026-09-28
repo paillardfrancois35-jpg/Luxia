@@ -19,6 +19,10 @@ public sealed partial class ControlColumnViewModel : ViewModelBase
     [ObservableProperty]
     private bool _isPlaying;
 
+    /// <summary>Vrai quand la scène qui joue a plusieurs étapes : ◀ ▶ ont alors un effet.</summary>
+    [ObservableProperty]
+    private bool _canStep;
+
     /// <summary>Crée la colonne.</summary>
     public ControlColumnViewModel(Layer layer, Action<ControlColumnViewModel, double> masterChanged)
     {

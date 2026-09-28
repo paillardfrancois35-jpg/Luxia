@@ -37,11 +37,13 @@
                 <StackPanel Spacing="6">
                   <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
                   <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
-                    <Button Classes="mini" Content="◀" ToolTip.Tip="Étape précédente de la scène qui joue"
+                    <Button Classes="mini" Content="◀" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
+                            ToolTip.Tip="Étape précédente de la scène qui joue (seulement pour une scène à plusieurs étapes)"
                             Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).PreviousStepCommand}" CommandParameter="{Binding}" />
-                    <Button Classes="mini" Content="▶" ToolTip.Tip="Étape suivante de la scène qui joue"
+                    <Button Classes="mini" Content="▶" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
+                            ToolTip.Tip="Étape suivante de la scène qui joue (seulement pour une scène à plusieurs étapes)"
                             Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NextStepCommand}" CommandParameter="{Binding}" />
-                    <Button Classes="mini" Content="■" Foreground="#F85149" ToolTip.Tip="Arrêter la couche (avec le fondu de sortie de la scène ; immédiat si elle n'en a pas)"
+                    <Button Classes="mini" Content="■" Foreground="#F85149" ToolTip.Tip="Arrêter la couche : net, sauf si la scène qui joue porte un fondu de sortie"
                             Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).StopLayerCommand}" CommandParameter="{Binding}" />
                   </StackPanel>
                   <Grid ColumnDefinitions="Auto,*,40" ToolTip.Tip="Master de la couche : baisse les intensités qu'elle envoie (faders 1 à 8 de l'APC). Sans effet sur une couleur seule, ni si une autre couche envoie plus fort (la plus forte intensité l'emporte)">

@@ -9,7 +9,6 @@ risque, et le régénérer quand on veut. Le show de référence n'est jamais mo
 Ajouts par rapport au show de référence :
   - couche « Libre » (8e couche par défaut, ERG-008) : « Effet multi-têtes seul », « Barre 1 : arc-en-ciel » ;
   - couche Couleurs : « Accueil ambre / bleu », deux étapes nommées de 9 s (◀ ▶ pour avancer à la main) ;
-  - fondu de sortie de 2 s sur toutes les scènes qui n'en ont pas (hors flashs) : ■ arrête en fondu ;
   - couche Mouvements : « Balayage doux des lyres », quatre étapes nommées réglées en Pan / Tilt ;
   - lieu Générique : une zone **permise** « Limites » sur chaque lyre (F7), en plus de la zone interdite « Public » ;
   - looks (ERG-023) : « Temps mort », « Retour de piste », « Ambiance UV ».
@@ -32,7 +31,6 @@ NS = uuid.UUID("7c1a0001-0000-4000-8000-00000000d3e0")
 FREE = "7c1a0001-0000-4000-8000-000000000007"
 COLORS = "7c1a0001-0000-4000-8000-000000000002"
 MOVEMENTS = "7c1a0001-0000-4000-8000-000000000003"
-FLASHES = "7c1a0001-0000-4000-8000-000000000099"
 PAL = {"Ambre": "9a1e0001-0000-4000-8000-000000000005", "Bleu": "9a1e0001-0000-4000-8000-000000000009"}
 FX = {
     "PAR 1": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
@@ -118,10 +116,6 @@ def main():
                   for n, p1, p2, t in (("Gauche", 0.35, 0.45, 0.55), ("Centre", 0.45, 0.55, 0.6), ("Droite", 0.55, 0.65, 0.55), ("Haut", 0.45, 0.55, 0.75))
               ]),
     ]
-    # Fondu de sortie de 2 s partout où il manque (sauf flashs) : ■ d'une colonne arrête alors en fondu, visible sur le plan.
-    for s in scenes["scenes"]:
-        if s.get("layerId") != FLASHES and not s.get("fadeOut"):
-            s["fadeOut"] = dur(2)
     json.dump(scenes, open(scenes_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 
     venues_path = os.path.join(TARGET, "lieux.json")

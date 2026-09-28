@@ -33,11 +33,11 @@ panneau a un **?** qui explique à quoi il sert.
 |---|---|---|
 | 1 | Clic sur **Plein feu** (colonne Intensité) | La scène joue : bouton à sa couleur ; le plan s'allume ; le Journal note « ▶ Plein feu ». |
 | 2 | Clic sur **Accueil ambre / bleu** (Couleurs) | Les PAR alternent ambre / bleu ; « étape 1 / 2 » puis « 2 / 2 » sous le nom. |
-| 3 | Boutons **◀ ▶** de la colonne Couleurs | Étape précédente / suivante tout de suite (chaque étape dure sinon 9 s). |
+| 3 | Boutons **◀ ▶** de la colonne Couleurs | Grisés tant que la scène qui joue n'a qu'une étape ; avec **Accueil ambre / bleu** ou **Chenillard 4 couleurs**, étape précédente / suivante tout de suite. |
 | 4 | **■** de la colonne Intensité (Plein feu), puis master de la colonne Couleurs à 40 % | Les PAR baissent ; le fader 2 de l'APC fait la même chose. Tant que Plein feu joue, rien ne bouge : la plus forte intensité l'emporte (HTP), et Plein feu envoie 100 %. |
 | 5 | Maintenir **Flash blanc** (Flashs) | Flash (fixe) tant qu'on appuie. |
 | 6 | Colonne **★ Libre** : **Effet multi-têtes seul**, **Barre 1 : arc-en-ciel** | La 8e couche pilote un appareil à part (ton idée), fader 8 de l'APC. |
-| 7 | **■** d'une colonne | La couche s'arrête en fondu de 2 s (fondu de sortie des scènes de la démo ; une scène sans fondu de sortie s'arrête net). |
+| 7 | **■** d'une colonne | Arrêt net ; seule une scène qui porte un fondu de sortie s'éteint en fondu (**Fondu lent (4 s)**, colonne Couleurs). |
 
 ## 2. Retoucher en direct (LIVE)
 

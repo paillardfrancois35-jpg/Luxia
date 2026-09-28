@@ -67,9 +67,15 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     {
         var button = Button("Chenillard 4 couleurs");
         var column = _vm.Columns.Columns.Single(c => c.Scenes.Contains(button));
+        _vm.Columns.Press(Button("Blanc chaud sur les 4 PAR"));
+        Ticks(3);
+        _vm.Refresh();
+        column.CanStep.ShouldBeFalse("une seule étape : ◀ ▶ grisés");
+
         _vm.Columns.Press(button);
         Ticks(3);
         _vm.Refresh();
+        column.CanStep.ShouldBeTrue();
         var before = _host.Runtime.Engine.Snapshot.ActivePlayback(button.Scene.Id)!.Value.StepIndex;
 
         _vm.Columns.NextStepCommand.Execute(column);

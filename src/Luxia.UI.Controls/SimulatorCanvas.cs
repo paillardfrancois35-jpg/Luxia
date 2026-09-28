@@ -66,8 +66,9 @@ public sealed class SimulatorCanvas : Control
 
     private const double BeamLengthM = 1.6;
     private const double HitRadiusPx = 16;
-    private const double MinCellSpacingPx = 13;
-    private static readonly IPen BarPen = new Pen(new SolidColorBrush(Color.Parse("#21262D")), 14, lineCap: PenLineCap.Round);
+    private const double MinCellSpacingPx = 9;
+    private const double CellRadiusPx = 4;
+    private static readonly IPen BarPen = new Pen(new SolidColorBrush(Color.Parse("#21262D")), 10, lineCap: PenLineCap.Round);
     private static readonly IPen RoomPen = new Pen(new SolidColorBrush(Color.Parse("#30363D")), 1);
     private static readonly IPen ErrorPen = new Pen(new SolidColorBrush(Color.Parse("#F85149")), 2, dashStyle: DashStyle.Dash);
     private static readonly SolidColorBrush RoomBrush = new(Color.Parse("#0D1117"));
@@ -170,7 +171,7 @@ public sealed class SimulatorCanvas : Control
                 var angle = fixture.OrientationDeg * Math.PI / 180;
                 var direction = new Point(Math.Sin(angle), -Math.Cos(angle));
 
-                // Cellules espacées d'au moins MinCellSpacingPx, quelle que soit l'échelle (sinon elles se chevauchent sur un petit plan).
+                // Cellules espacées d'au moins MinCellSpacingPx (sans trop allonger la barre), quelle que soit l'échelle (sinon elles se chevauchent sur un petit plan).
                 var gapM = Math.Abs(fixture.Cells[1].OffsetM - fixture.Cells[0].OffsetM);
                 var cellScale = gapM > 0 ? Math.Max(scale, MinCellSpacingPx / gapM) : scale;
                 var first = center + new Point(direction.X * fixture.Cells[0].OffsetM * cellScale, direction.Y * fixture.Cells[0].OffsetM * cellScale);
@@ -181,10 +182,10 @@ public sealed class SimulatorCanvas : Control
                     var p = center + new Point(direction.X * cell.OffsetM * cellScale, direction.Y * cell.OffsetM * cellScale);
 
                     // Corps toujours visible (SIM-001 : l'appareil se voit au plan même éteint), halo de couleur par-dessus si allumé.
-                    context.DrawEllipse(BodyBrush, RoomPen, p, 5, 5);
+                    context.DrawEllipse(BodyBrush, RoomPen, p, CellRadiusPx, CellRadiusPx);
                     if (cell.Intensity > 0)
                     {
-                        context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.4, cell.Intensity)), null, p, 5, 5);
+                        context.DrawEllipse(new SolidColorBrush(ParseOrDefault(cell.Color), Math.Max(0.4, cell.Intensity)), null, p, CellRadiusPx, CellRadiusPx);
                     }
                 }
             }

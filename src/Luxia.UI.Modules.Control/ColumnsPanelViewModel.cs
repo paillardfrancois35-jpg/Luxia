@@ -64,6 +64,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         foreach (var column in Columns)
         {
             var playing = false;
+            var canStep = false;
             foreach (var button in column.Scenes)
             {
                 var playback = snapshot.ActivePlayback(button.Scene.Id);
@@ -75,12 +76,14 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
                 playing |= button.IsActive;
                 button.Progress = playback?.StepProgress ?? 0;
                 button.ShowsProgress = playback is { StepCount: > 1 };
+                canStep |= button.ShowsProgress;
                 button.State = playback is { StepCount: > 1 } p
                     ? string.Create(CultureInfo.CurrentCulture, $"étape {p.StepIndex + 1} / {p.StepCount}")
                     : playback is not null ? "joue" : string.Empty;
             }
 
             column.IsPlaying = playing;
+            column.CanStep = canStep;
             var index = snapshot.Show.IndexOfLayer(column.Layer.Id);
             if (index >= 0 && index < snapshot.LayerMasters.Length)
             {
