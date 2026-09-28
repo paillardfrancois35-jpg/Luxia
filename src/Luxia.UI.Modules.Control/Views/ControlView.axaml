@@ -47,11 +47,7 @@
                         ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'édition des scènes et des zones est bloquée (anti-fausse manipulation)." />
           <Button Content="↶" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />
           <Button Content="↷" FontSize="16" Padding="10,2" ToolTip.Tip="{Binding RedoText}" Command="{Binding RedoCommand}" />
-          <Button x:Name="PanelsButton" Content="Panneaux ▾" Margin="10,0,0,0" ToolTip.Tip="Réafficher un panneau fermé, ou le mettre au premier plan">
-            <Button.Flyout>
-              <MenuFlyout Placement="BottomEdgeAlignedRight" />
-            </Button.Flyout>
-          </Button>
+          <Button x:Name="PanelsButton" Content="Panneaux ▾" Margin="10,0,0,0" ToolTip.Tip="Réafficher un panneau fermé, ou le mettre au premier plan" />
           <Button x:Name="ResetLayoutButton" Content="Rétablir la disposition" ToolTip.Tip="Oublier la disposition enregistrée et revenir à celle livrée" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="0" VerticalAlignment="Center">

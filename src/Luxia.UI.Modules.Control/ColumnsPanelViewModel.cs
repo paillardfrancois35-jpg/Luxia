@@ -57,6 +57,9 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     /// <summary>Dernier message (clic refusé…), ou nul.</summary>
     public string? Message { get; private set; }
 
+    /// <summary>Une scène vient d'être choisie pour l'édition (la vue rouvre alors le panneau Propriétés s'il est fermé).</summary>
+    public event EventHandler? EditChosen;
+
     /// <summary>Met à jour l'état de lecture depuis le moteur de sortie.</summary>
     public void Refresh()
     {
@@ -129,7 +132,12 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         }
 
         _runtime.TraceUi("Contrôle", $"édition de « {scene.Name} »");
-        _session.ChooseScene(_session.EditScene?.Id == scene.Scene.Id ? null : scene.Scene.Id);
+        var chosen = _session.EditScene?.Id == scene.Scene.Id ? null : (Guid?)scene.Scene.Id;
+        _session.ChooseScene(chosen);
+        if (chosen is not null)
+        {
+            EditChosen?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     /// <summary>Arrête la couche (CMD-012).</summary>

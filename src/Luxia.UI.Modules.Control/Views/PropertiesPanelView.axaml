@@ -32,6 +32,10 @@
           <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" ToolTip.Tip="Nom de la scène (enregistré à la frappe, Ctrl+Z pour annuler)" />
         </Grid>
         <TextBlock Text="{Binding Summary}" FontSize="12" Foreground="#8B949E" Margin="0,0,0,8" />
+        <Border IsVisible="{Binding ShowsModeHint}" Background="#1F58A6FF" BorderBrush="#58A6FF" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,0,8">
+          <TextBlock TextWrapping="Wrap" FontSize="12"
+                     Text="Scène choisie : vous pouvez déjà la renommer, changer ses étapes, sa vitesse… ci-dessous. Pour modifier ses couleurs, positions, intensités : ÉDITION (on la voit sur la sortie) ou 👁 AVEUGLE (sans toucher la sortie). En LIVE, les Réglages restent des retouches temporaires." />
+        </Border>
         <ItemsControl ItemsSource="{x:Static vm:PropertiesPanelViewModel.Colors}" Margin="0,0,0,8">
           <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>

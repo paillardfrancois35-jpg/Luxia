@@ -248,6 +248,22 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     // ——— Réglages des appareils ———
 
     [Fact]
+    [Trait("Exigence", "ERG-018")]
+    public void EditBand_AsksForTheProperties_AndExplainsHowToWrite()
+    {
+        var raised = 0;
+        _vm.Columns.EditChosen += (_, _) => raised++;
+        var button = Button("Plein feu");
+
+        _vm.Columns.ChooseForEdit(button);
+        raised.ShouldBe(1, "la vue rouvre Propriétés si le panneau est fermé");
+        _vm.Properties.ShowsModeHint.ShouldBeTrue("en LIVE : rappel ÉDITION / AVEUGLE");
+
+        _vm.Columns.ChooseForEdit(button);
+        raised.ShouldBe(1, "second clic : la scène est libérée, rien à rouvrir");
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-019")]
     public void Settings_WarnWhenIntensityIsZero_ColorWouldNotShow()
     {

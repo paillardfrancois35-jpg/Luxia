@@ -96,6 +96,12 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     /// <summary>Les champs sont modifiables (pas de verrou soirée).</summary>
     public bool IsEditable => !_session.IsLocked;
 
+    /// <summary>
+    /// En LIVE, la scène est seulement choisie (✎) : les réglages restent des retouches temporaires. On rappelle comment
+    /// écrire dedans (question de l'utilisateur, essai 1.005.198).
+    /// </summary>
+    public bool ShowsModeHint => _session.Mode == EditMode.Live && !_session.IsLocked;
+
     /// <summary>Couches proposées.</summary>
     public ObservableCollection<Choice<Guid>> Layers { get; } = [];
 
@@ -278,6 +284,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             HasScene = scene is not null;
             Accent = _session.Mode == EditMode.Live ? ControlColors.Accent : ControlColors.Of(_session.Mode);
             OnPropertyChanged(nameof(IsEditable));
+            OnPropertyChanged(nameof(ShowsModeHint));
             if (scene is null)
             {
                 Steps = [];

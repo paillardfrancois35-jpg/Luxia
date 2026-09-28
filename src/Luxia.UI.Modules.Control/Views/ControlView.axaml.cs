@@ -28,8 +28,14 @@ public partial class ControlView : UserControl
     {
         AvaloniaXamlLoader.Load(this);
         _dock = this.FindControl<DockControl>("DockHost")!;
-        var panels = (MenuFlyout)this.FindControl<Button>("PanelsButton")!.Flyout!;
-        panels.Opening += (_, _) => FillPanelsMenu(panels);
+        // Menu construit à chaque clic puis ouvert : rempli pendant « Opening », il s'ouvrait vide (essai 1.005.198).
+        var panelsButton = this.FindControl<Button>("PanelsButton")!;
+        panelsButton.Click += (_, _) =>
+        {
+            var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+            FillPanelsMenu(menu);
+            menu.ShowAt(panelsButton);
+        };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
         _autosave = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Background, (_, _) => SaveLayout());
 
@@ -49,6 +55,9 @@ public partial class ControlView : UserControl
         if (ViewModel is { } vm && _factory is null)
         {
             BuildLayout(vm);
+
+            // Bande ✎ avec le panneau Propriétés fermé : on le rouvre, sinon le clic semblait sans effet (essai 1.005.198).
+            vm.Columns.EditChosen += (_, _) => ShowPanelIfHidden(ControlPanels.Properties);
             vm.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(ControlViewModel.LayoutPreset))
@@ -255,6 +264,18 @@ public partial class ControlView : UserControl
         _store.Delete();
         _saved = null;
         SetLayout(_factory.CreateLayout());
+        SaveLayout();
+    }
+
+    private void ShowPanelIfHidden(string id)
+    {
+        if (_layout is null || _factory is null || DockTree.Find(_layout, id).Place == PanelPlace.Visible)
+        {
+            return;
+        }
+
+        _factory.ShowPanel(_layout, id);
+        AssignContexts(_layout);
         SaveLayout();
     }
 

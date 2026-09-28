@@ -12,6 +12,13 @@
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
+    <!-- Bande ✎ : le survol garde sa couleur (verte en ÉDITION) et s'éclaircit, au lieu du gris du thème (essai 1.005.198). -->
+    <Style Selector="Button.editband:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{TemplateBinding Background}" />
+    </Style>
+    <Style Selector="Button.editband:pointerover">
+      <Setter Property="Opacity" Value="0.75" />
+    </Style>
     <Style Selector="Border.play">
       <Setter Property="Cursor" Value="Hand" />
     </Style>
@@ -78,7 +85,7 @@
                             <TextBlock Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                           </DockPanel>
                         </Border>
-                        <Button Grid.Column="1" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                        <Button Grid.Column="1" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                 ToolTip.Tip="Choisir cette scène pour l'éditer (un second clic la libère)"
                                 Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
