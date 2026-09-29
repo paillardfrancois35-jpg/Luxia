@@ -361,11 +361,11 @@
 
 ## ERG – 27 exigences, 19 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 2 · Validé : 24
+> Abandonné : 1 · En cours : 1 · Réalisé : 2 · Validé : 23
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Validé | ControlLayoutTests.DefaultLayout_HasEveryPanelOnce<br>ControlLayoutTests.Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
+| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Validé | ControlLayoutTests.DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel<br>ControlLayoutTests.Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
 | [ERG-002](exigences/ERG-002.md) | I | Enregistrement de la disposition | Validé | ControlLayoutTests.Load_Missing_IsNullWithoutMessage_Unreadable_IsSetAside<br>ControlLayoutTests.SaveThenLoad_ClosedPanel_StaysClosed_AndComesBackHome<br>LayoutStoreTests.Delete_ThenLoad_GivesNothing<br>LayoutStoreTests.Load_MissingFile_GivesNothingAndNoMessage<br>(+5) |
 | [ERG-003](exigences/ERG-003.md) | I | Grille Pan / Tilt | Validé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>PanTiltGeometryTests.FromCorners_AnyOrder_GivesOrderedRect<br>PanTiltGeometryTests.FromScreen_OutsideGrid_IsClamped<br>PanTiltGeometryTests.HitTest_HandlesBodyAndOutside<br>(+7) |
 | [ERG-004](exigences/ERG-004.md) | I | Sélecteur de couleur | Validé | ColorPickerLayoutTests.BrightnessAt_BarTopAndBottom_IsFullAndBlack<br>ColorPickerLayoutTests.For_Size_SquareBarAndSwatchesDoNotOverlap<br>ColorPickerLayoutTests.HueSaturationAt_Corners_GivesHueAcrossAndSaturationDown<br>ColorPickerLayoutTests.SquarePoint_IsInverseOfHueSaturationAt<br>(+4) |
@@ -385,12 +385,12 @@
 | [ERG-018](exigences/ERG-018.md) | I | Colonnes de l'écran Contrôle | Validé | ControlPanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>ControlPanelsTests.Compact_IsKeptOnThisComputer<br>ControlPanelsTests.ContextMenu_RenameDuplicateColorLayerHideDelete<br>ControlPanelsTests.EditBand_AsksForTheProperties_AndExplainsHowToWrite<br>(+8) |
 | [ERG-019](exigences/ERG-019.md) | I | Réglages des appareils | Validé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>ControlPanelsTests.Settings_ColorInLive_OverridesOutput_AndKeepsTheRequestedColorShown<br>ControlPanelsTests.Settings_HeaderSaysWhereSettingsGo<br>ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>(+4) |
 | [ERG-020](exigences/ERG-020.md) | I | Démonstration | Validé |  |
-| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused |
+| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays |
 | [ERG-022](exigences/ERG-022.md) | M | Taille de l'interface | Validé | PreferencesAndProjectTests.UiScale_DefaultsTo100Percent_AndRoundTrips |
 | [ERG-023](exigences/ERG-023.md) | I | Looks | Validé | ControlPanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>ControlPanelsTests.Looks_Capture_LeavesTheGrandMasterToTheOperator<br>ControlPanelsTests.Looks_FunctionKeys_PlayByRank<br>ControlPanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>(+3) |
-| [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Validé | ControlLayoutTests.ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately<br>ControlPanelsTests.LayoutPreset_SwitchesBetweenControlAndShow |
+| [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Abandonné |  |
 | [ERG-025](exigences/ERG-025.md) | M | Scènes resserrées | Validé |  |
-| [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
+| [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé | GameViewModelTests.StopAndStopAll_StayAvailable_LockComprised |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
 ## P6 – 18 exigences, 17 couvertes par des tests automatiques
@@ -399,7 +399,7 @@
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+5) |
+| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+4) |
 | [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Validé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+2) |
 | [EFF-003](exigences/EFF-003.md) | I | Formes de position | Validé | EffectCompilerTests.Circle_AroundPositionPalette_CenterFromPalette_SizeInDegrees<br>EffectTests.PositionShapes_CircleAndEight<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees<br>(+1) |
 | [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Validé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
@@ -410,7 +410,7 @@
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
 | [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Validé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
 | [ERG-028](exigences/ERG-028.md) | M | Molette | Validé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
-| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
+| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
 | [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Validé |  |
 | [ERG-031](exigences/ERG-031.md) | M | Éditeur de thèmes | Validé | EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked |
 | [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Validé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
@@ -418,17 +418,17 @@
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
 
-## ERG2 – 8 exigences, 3 couvertes par des tests automatiques
+## ERG2 – 8 exigences, 5 couvertes par des tests automatiques
 
-> Réalisé : 2 · Réalisé, à valider sur matériel : 1 · À faire : 5
+> Partiel : 1 · Réalisé : 4 · Réalisé, à valider sur matériel : 1 · À faire : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [ERG-032](exigences/ERG-032.md) | I | Écran de jeu | À faire |  |
-| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire |  |
+| [ERG-032](exigences/ERG-032.md) | I | Écran de jeu | Réalisé | ControlLayoutTests.DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel<br>ControlLayoutTests.Store_KeepsTheGameLayoutInItsOwnFile_TheOldOnesAreIgnored<br>GameViewModelTests.EditBand_AsksForTheEditWindow_WithTheSceneId_AndChangesNothingElse<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays<br>(+3) |
+| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire | GameViewModelTests.TheSceneOpenInTheEditor_IsOutlined_AndCannotBeRenamedOrDeletedFromTheGameScreen |
 | [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
-| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
+| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | Partiel |  |
 | [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | Réalisé | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>DimmerGroupsViewModelTests.AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack<br>(+18) |
-| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Réalisé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+10) |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Réalisé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+11) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Réalisé, à valider sur matériel | DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>MidiDimmerTests.DimmerFader_TakesOverOnlyAfterCrossingTheCurrentLevel<br>MidiDimmerTests.Faders1To8_DriveTheFirstEightDimmers_AndFader9DoesNothing<br>MidiDimmerTests.LayersPlatine_IsUnchanged_EvenWhenTheProjectHasDimmers<br>(+6) |
-| [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |
+| [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | Réalisé |  |

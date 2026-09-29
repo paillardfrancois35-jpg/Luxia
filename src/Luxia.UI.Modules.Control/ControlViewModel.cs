@@ -66,6 +66,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Journal = new JournalPanelViewModel(runtime);
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Effects = new EffectsPanelViewModel(runtime, Session, dialogs);
+        Columns.EditRequested += (_, id) => ChooseSceneForEdit(id);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
         Session.Changed += (_, _) =>
         {
@@ -76,6 +77,20 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         runtime.Project.Changed += (_, _) => HasProject = runtime.Project.Folder is not null;
         HasProject = runtime.Project.Folder is not null;
         UpdateBand();
+    }
+
+    /// <summary>Une scène vient d'être choisie pour l'édition (un second clic la libère).</summary>
+    public event EventHandler? EditChosen;
+
+    // ✎ dans l'établi d'origine : choisit la scène dans la session (un second clic la libère).
+    private void ChooseSceneForEdit(Guid sceneId)
+    {
+        var chosen = Session.EditScene?.Id == sceneId ? null : (Guid?)sceneId;
+        Session.ChooseScene(chosen);
+        if (chosen is not null)
+        {
+            EditChosen?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     /// <summary>Session d'édition (sélection, mode, scène éditée).</summary>
@@ -110,25 +125,6 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Amène un panneau au premier plan (identifiant de <see cref="Docking.ControlPanels"/>).</summary>
     public void RequestPanel(string id) => PanelRequested?.Invoke(this, id);
-
-    /// <summary>Disposition affichée : Contrôle ou Spectacle (doc 60 §6).</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsControlLayout), nameof(IsShowLayout))]
-    private Docking.ControlLayoutPreset _layoutPreset;
-
-    /// <summary>Disposition Contrôle affichée.</summary>
-    public bool IsControlLayout => LayoutPreset == Docking.ControlLayoutPreset.Control;
-
-    /// <summary>Disposition Spectacle affichée.</summary>
-    public bool IsShowLayout => LayoutPreset == Docking.ControlLayoutPreset.Show;
-
-    /// <summary>Choisit la disposition (paramètre : controle, spectacle).</summary>
-    [RelayCommand]
-    private void SetLayout(string? preset)
-    {
-        LayoutPreset = preset == "spectacle" ? Docking.ControlLayoutPreset.Show : Docking.ControlLayoutPreset.Control;
-        _runtime.TraceUi("Contrôle", $"disposition {preset}");
-    }
 
     /// <summary>Dossier des dispositions de panneaux (sur le poste, C10).</summary>
     public string LayoutFolder => Path.Combine(_runtime.Paths.AppDataRoot, "dispositions");

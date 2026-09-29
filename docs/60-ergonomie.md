@@ -133,6 +133,10 @@ accent (sélection) bleu, joue = couleur de la scène, surcharge live jaune, éd
 danger / blackout / enregistrement rouge, texte secondaire gris. Deux tailles de texte dans les panneaux (normal, secondaire),
 une pour les titres ; espacement sur une grille de 4 px ; largeurs de champs selon doc 03 §11.
 
+**Tailles minimales des cibles** (ERG-035, demande de l'utilisateur : « éléments trop petits »), à vérifier en 1366 × 768 :
+boutons de scène ≥ 44 px de haut (hors mode « resserré », choix de l'utilisateur), boutons ≥ 32 px, bande ✎ et boutons de
+couche ≥ 32 px, molettes ≥ 70 px, glisseurs et faders : cible de saisie ≥ 32 px de large.
+
 ### 4.6 Verrou et Live
 
 « Verrou soirée » : en LIVE, l'édition, l'installation et les suppressions sont bloquées (mot de passe facultatif). Le
@@ -166,6 +170,24 @@ calme »).
 
 La disposition par défaut de l'APC (grille = colonnes) reste proposée, mais comme **un ensemble de déclencheurs parmi
 d'autres**, modifiable par la surcouche « Affecter » (§4.7). `midi.json` devient `declencheurs.json` (toutes les entrées).
+
+### 4.9 Écran de jeu et fenêtre d'édition (chantier « Contrôle 2 », ERG-032 à ERG-039)
+
+**Remplace le modèle à trois modes du §4.1** (décision de l'utilisateur, 2026-09-29, Q38 ; maquettes 5 à 8 validées). Deux
+lieux évidents au lieu d'un sélecteur de modes :
+
+| Lieu | Ce qu'on y fait | Ce qu'il contient |
+|---|---|---|
+| **Écran de jeu** (Contrôle) | Jouer. Aucun mode à garder en tête. | Colonnes (grandes cibles), **Groupes dimmer**, Looks, Pilote automatique, Journal ; Stop / Tout stopper, Verrou soirée. Panneaux ancrables (une seule disposition, `jeu.json`). |
+| **Fenêtre d'édition d'une scène** | Concevoir. Ouverte par la bande ✎, jamais toute seule ; non bloquante ; sur un second écran si on veut. | Plan, Réglages, Effets, Propriétés et étapes en disposition fixe ; brouillon ; Appliquer / Valider / Annuler ; case Aveugle. |
+| Configuration | Installer. | Installation (dont « Gestion des dimmers »), Bibliothèque, Sorties. |
+
+- **LIVE** n'est plus un mode : c'est l'état normal de l'écran de jeu. Les seules retouches en direct sont les **dimmers de groupe**
+  (et les niveaux de couches), temporaires, jamais enregistrées ; un bandeau jaune les rappelle avec « Libérer tout » (Échap).
+- **ÉDITION** = « la fenêtre d'édition est ouverte ». **AVEUGLE** = case à cocher de la fenêtre (aperçu au plan seulement).
+- **Fader de couche** = **niveau** de la couche (multiplie ce qu'elle envoie) ; pas de réglage de couche propre à la scène (Q38 point 4).
+- **Dimmers de groupe** : arbre de groupes (Installation › Gestion des dimmers), règle proportionnelle, seconde platine MIDI (doc 18b).
+- Verrou soirée : la fenêtre d'édition ne s'ouvre pas ; jouer, arrêter et retoucher les dimmers restent permis.
 
 ## 5. Composants communs (catalogue)
 
@@ -338,6 +360,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-09-29 | §4.9 : écran de jeu et fenêtre d'édition (chantier « Contrôle 2 »), qui remplace le modèle à trois modes du §4.1 ; tailles minimales des cibles (§4.5). |
 | 2026-09-28 | **Chantier validé** par l'utilisateur (1.005.237), fusionné dans `main`, étiquette `v1.005`. |
 | 2026-09-28 | Essai de l'écran Contrôle par l'utilisateur, au matériel (guide §0 à §7, 1.005.192 → 1.005.226) : corrections au fil de l'eau (ERG-001, 013, 014, 016, 017, 018, 019, 023) ; ERG-025 scènes resserrées, ERG-026 Stop / Tout stopper, ERG-027 marges ; choix C12 à C14. |
 | 2026-09-28 | Nuit de développement par délégation : écran Contrôle dans LuXia, zone permise, identité visuelle, démo ; ERG-009 à ERG-020. |

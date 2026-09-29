@@ -112,8 +112,8 @@
         <DataTemplate DataType="simulator:SimulatorViewModel">
           <simulator:SimulatorView />
         </DataTemplate>
-        <DataTemplate DataType="control:ControlViewModel">
-          <controlviews:ControlView />
+        <DataTemplate DataType="control:GameViewModel">
+          <controlviews:GameView />
         </DataTemplate>
         <DataTemplate DataType="live:LiveViewModel">
           <live:LiveView />

@@ -69,8 +69,20 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         _runtime.TraceUi("Contrôle", value ? "scènes resserrées" : "scènes normales");
     }
 
-    /// <summary>Une scène vient d'être choisie pour l'édition (la vue rouvre alors le panneau Propriétés s'il est fermé).</summary>
-    public event EventHandler? EditChosen;
+    /// <summary>
+    /// La bande ✎ d'une scène est cliquée : l'écran ouvre la fenêtre d'édition de cette scène (ERG-033). Le panneau ne
+    /// décide pas : refus du verrou soirée, scène déjà ouverte ailleurs, brouillon en cours sont l'affaire de l'écran.
+    /// </summary>
+    public event EventHandler<Guid>? EditRequested;
+
+    /// <summary>Scène ouverte dans la fenêtre d'édition (marquée d'un contour) ; par défaut, la scène choisie dans la session.</summary>
+    public Func<Guid?>? EditedScene { get; set; }
+
+    /// <summary>Demande la fenêtre d'édition d'une scène (menu contextuel, bande ✎).</summary>
+    public void RequestEdit(Guid sceneId) => EditRequested?.Invoke(this, sceneId);
+
+    /// <summary>Redessine le contour de la scène en cours d'édition (l'éditeur s'ouvre, se ferme ou change de scène).</summary>
+    public void RefreshEditTarget() => MarkEditTarget();
 
     /// <summary>Met à jour l'état de lecture depuis le moteur de sortie.</summary>
     public void Refresh()
@@ -134,7 +146,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         }
     }
 
-    /// <summary>Bande ✎ : choisit la scène à éditer (un second clic la libère).</summary>
+    /// <summary>Bande ✎ : demande la fenêtre d'édition de la scène (ERG-033).</summary>
     [RelayCommand]
     public void ChooseForEdit(ControlSceneViewModel? scene)
     {
@@ -144,12 +156,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         }
 
         _runtime.TraceUi("Contrôle", $"édition de « {scene.Name} »");
-        var chosen = _session.EditScene?.Id == scene.Scene.Id ? null : (Guid?)scene.Scene.Id;
-        _session.ChooseScene(chosen);
-        if (chosen is not null)
-        {
-            EditChosen?.Invoke(this, EventArgs.Empty);
-        }
+        RequestEdit(scene.Scene.Id);
     }
 
     /// <summary>Arrête la couche (CMD-012).</summary>
@@ -195,6 +202,11 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     private async Task RenameAsync(ControlSceneViewModel? scene)
     {
         if (scene is null)
+        {
+            return;
+        }
+
+        if (IsBeingEdited(scene.Scene.Id))
         {
             return;
         }
@@ -265,6 +277,11 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             return;
         }
 
+        if (IsBeingEdited(scene.Scene.Id))
+        {
+            return;
+        }
+
         var usages = SceneUsage.SceneUsages(_runtime.Project.Scenes, scene.Scene.Id);
         var text = usages.Count == 0
             ? $"Supprimer la scène « {scene.Name} » ? (Ctrl+Z pour la retrouver)"
@@ -281,8 +298,29 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     /// <summary>Couches proposées pour « Changer de couche ».</summary>
     public IReadOnlyList<Layer> Layers => [.. _runtime.Project.Layers.Layers.OrderBy(l => l.Priority)];
 
+    // Une scène ouverte dans la fenêtre d'édition se modifie là-bas : deux endroits qui la changent se marcheraient dessus.
+    private bool IsBeingEdited(Guid sceneId)
+    {
+        if (EditedScene?.Invoke() != sceneId)
+        {
+            return false;
+        }
+
+        Message = "Cette scène est ouverte dans la fenêtre d'édition : validez ou annulez-la d'abord.";
+        MessageChanged?.Invoke(this, EventArgs.Empty);
+        return true;
+    }
+
+    /// <summary>Le panneau a un nouveau message à montrer (opération refusée).</summary>
+    public event EventHandler? MessageChanged;
+
     private void Change(Guid sceneId, Func<Scene, Scene> change, string description)
     {
+        if (IsBeingEdited(sceneId))
+        {
+            return;
+        }
+
         // La scène éditée passe par la session (geste en cours compris) ; les autres, par l'ensemble des scènes.
         if (_session.EditScene?.Id == sceneId)
         {
@@ -326,13 +364,15 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
 
     private void MarkEditTarget()
     {
-        var edited = _session.EditScene?.Id;
-        var color = _session.Mode switch
-        {
-            EditMode.Edit => ControlColors.Edit,
-            EditMode.Blind => ControlColors.Blind,
-            _ => ControlColors.Accent,
-        };
+        var edited = EditedScene is { } provider ? provider() : _session.EditScene?.Id;
+        var color = EditedScene is not null
+            ? ControlColors.Edit
+            : _session.Mode switch
+            {
+                EditMode.Edit => ControlColors.Edit,
+                EditMode.Blind => ControlColors.Blind,
+                _ => ControlColors.Accent,
+            };
         foreach (var button in Columns.SelectMany(c => c.Scenes))
         {
             button.IsEditTarget = button.Scene.Id == edited;

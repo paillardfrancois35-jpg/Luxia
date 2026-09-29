@@ -21,12 +21,12 @@ public sealed record ControlLayoutFile
 /// Un fichier illisible est mis de côté et la disposition livrée reprend, avec un message : jamais d'échec au
 /// démarrage à cause de la disposition.
 /// </summary>
-public sealed class ControlLayoutStore(string folder, ControlLayoutPreset preset = ControlLayoutPreset.Control)
+public sealed class ControlLayoutStore(string folder)
 {
     private readonly DockSerializer _serializer = new(typeof(ObservableCollection<>));
 
     /// <summary>Fichier de la disposition.</summary>
-    public string Path => System.IO.Path.Combine(folder, preset == ControlLayoutPreset.Show ? "spectacle.json" : "controle.json");
+    public string Path => System.IO.Path.Combine(folder, "jeu.json");
 
     /// <summary>Texte de la disposition tel que Dock l'écrit (sert aussi à savoir si elle a changé).</summary>
     public string Serialize(IRootDock layout) => _serializer.Serialize(layout);

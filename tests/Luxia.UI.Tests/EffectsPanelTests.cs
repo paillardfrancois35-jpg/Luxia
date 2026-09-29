@@ -316,17 +316,6 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     }
 
     [Fact]
-    [Trait("Exigence", "EFF-001")]
-    [Trait("Exigence", "ERG-029")]
-    public void DefaultLayout_HasEffectsPanel_NextToSettings()
-    {
-        var factory = new ControlDockFactory(ControlPanels.All.ToDictionary(p => p.Id, p => (Func<object?>)(() => null)));
-        var layout = factory.CreateLayout();
-        DockTree.Find(layout, ControlPanels.Effects).Place.ShouldBe(PanelPlace.Visible);
-        DockTree.FindOwner(layout, ControlPanels.Effects)!.Id.ShouldBe(DockTree.FindOwner(layout, ControlPanels.Settings)!.Id);
-    }
-
-    [Fact]
     [Trait("Exigence", "MOT-054")]
     public void StepHueFade_WrittenFromProperties()
     {

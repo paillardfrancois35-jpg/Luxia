@@ -1,0 +1,211 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Luxia.Hosting;
+using Luxia.Messaging.Commands;
+using Luxia.UI.Controls;
+
+namespace Luxia.UI.Modules.Control;
+
+/// <summary>
+/// Écran de jeu (chantier « Contrôle 2 », ERG-032, maquette 5) : ce qu'il faut pour jouer, sans mode à garder en tête.
+/// Colonnes (grandes cibles), groupes dimmer, looks, pilote automatique, journal, Stop / Tout stopper, verrou soirée.
+/// Les seules retouches en direct sont les dimmers de groupe (temporaires, jamais enregistrées) ; concevoir une scène se
+/// fait dans la fenêtre d'édition, ouverte par la bande ✎ (<see cref="EditRequested"/>, ERG-033).
+/// </summary>
+public sealed partial class GameViewModel : ViewModelBase, IRefreshable
+{
+    private readonly LuxiaRuntime _runtime;
+
+    [ObservableProperty]
+    private string? _message;
+
+    [ObservableProperty]
+    private bool _hasProject;
+
+    [ObservableProperty]
+    private bool _isLocked;
+
+    [ObservableProperty]
+    private string _undoText = "Rien à annuler";
+
+    [ObservableProperty]
+    private string _redoText = "Rien à rétablir";
+
+    [ObservableProperty]
+    private bool _hasRetouches;
+
+    [ObservableProperty]
+    private string _retouchText = string.Empty;
+
+    private Guid? _editedSceneId;
+
+    /// <summary>Crée l'écran de jeu.</summary>
+    public GameViewModel(LuxiaRuntime runtime, IDialogService dialogs)
+    {
+        ArgumentNullException.ThrowIfNull(runtime);
+        ArgumentNullException.ThrowIfNull(dialogs);
+        _runtime = runtime;
+
+        // La session sert ici au verrou soirée et à l'annulation des opérations sur les scènes (nouvelle, dupliquer,
+        // supprimer…) : elle reste en LIVE, l'édition d'une scène a sa propre session (fenêtre d'édition).
+        Session = new ControlSession(runtime);
+        Journal = new JournalPanelViewModel(runtime);
+        Columns = new ColumnsPanelViewModel(runtime, Session, dialogs) { EditedScene = () => _editedSceneId };
+        Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
+        Dimmers = new DimmersPanelViewModel(runtime, Journal);
+        Columns.EditRequested += (_, id) => Edit(id);
+        Columns.MessageChanged += (_, _) => Message = Columns.Message;
+        Session.Changed += (_, _) => UpdateState();
+        runtime.Project.Changed += (_, _) => HasProject = runtime.Project.Folder is not null;
+        HasProject = runtime.Project.Folder is not null;
+        UpdateState();
+    }
+
+    /// <summary>Session (verrou soirée, annulation des opérations sur les scènes) : toujours en LIVE.</summary>
+    public ControlSession Session { get; }
+
+    /// <summary>Panneau Colonnes.</summary>
+    public ColumnsPanelViewModel Columns { get; }
+
+    /// <summary>Panneau Groupes dimmer.</summary>
+    public DimmersPanelViewModel Dimmers { get; }
+
+    /// <summary>Panneau Looks (et panneau Pilote automatique, qui montre les mêmes looks).</summary>
+    public LooksPanelViewModel Looks { get; }
+
+    /// <summary>Panneau Journal.</summary>
+    public JournalPanelViewModel Journal { get; }
+
+    /// <summary>
+    /// La bande ✎ d'une scène est cliquée (ERG-033) : l'hôte ouvre la fenêtre d'édition. Le verrou soirée est déjà
+    /// contrôlé ici : rien n'est levé si l'édition est bloquée.
+    /// </summary>
+    public event EventHandler<Guid>? EditRequested;
+
+    /// <summary>Levé pour amener un panneau au premier plan (réaffiché s'il était fermé).</summary>
+    public event EventHandler<string>? PanelRequested;
+
+    /// <summary>Scène ouverte dans la fenêtre d'édition (contour vert dans les colonnes), ou <c>null</c>.</summary>
+    public Guid? EditedSceneId
+    {
+        get => _editedSceneId;
+        set
+        {
+            if (_editedSceneId == value)
+            {
+                return;
+            }
+
+            _editedSceneId = value;
+            Columns.RefreshEditTarget();
+        }
+    }
+
+    /// <summary>Dossier des dispositions de panneaux (sur le poste, C10).</summary>
+    public string LayoutFolder => Path.Combine(_runtime.Paths.AppDataRoot, "dispositions");
+
+    /// <inheritdoc />
+    public bool NeedsBackgroundRefresh => false;
+
+    /// <summary>Amène un panneau au premier plan (identifiant de <see cref="Docking.ControlPanels"/>).</summary>
+    public void RequestPanel(string id) => PanelRequested?.Invoke(this, id);
+
+    /// <inheritdoc />
+    public void Refresh()
+    {
+        Columns.Refresh();
+        Dimmers.Refresh();
+        Journal.Refresh();
+        UpdateState();
+    }
+
+    /// <summary>Écrit ce qui attend encore (changement d'écran, fermeture) : rien ici, tout est écrit tout de suite.</summary>
+    public void Flush() => Session.Commit();
+
+    /// <summary>
+    /// Demande l'édition d'une scène : refusée sous le verrou soirée (on ne fait que jouer), sinon l'hôte ouvre la fenêtre.
+    /// </summary>
+    public void Edit(Guid sceneId)
+    {
+        if (Session.IsLocked)
+        {
+            Message = ControlSession.LockedReason;
+            return;
+        }
+
+        Message = null;
+        EditRequested?.Invoke(this, sceneId);
+    }
+
+    /// <summary>Verrou soirée (E7, §4.6) : jouer seulement ; l'édition des scènes est bloquée.</summary>
+    [RelayCommand]
+    private void ToggleLock()
+    {
+        Session.SetLocked(!Session.IsLocked);
+        Message = null;
+        Journal.Log(Session.IsLocked ? "🔒 Verrou soirée posé : jouer seulement" : "🔓 Verrou soirée levé");
+        _runtime.TraceUi("Contrôle", Session.IsLocked ? "verrou posé" : "verrou levé");
+    }
+
+    /// <summary>
+    /// « ■ Stop » et « ■ Tout stopper » (CMD-012, paramètre « tout ») : toutes les scènes, sauf ou avec les couches
+    /// protégées (Ambiance par défaut, COU-007). Toujours permis, verrou compris : c'est jouer.
+    /// </summary>
+    [RelayCommand]
+    private void StopAll(string? everything)
+    {
+        var all = everything == "tout";
+        _runtime.Engine.Send(new StopLayerCommand(CommandOrigin.User, Everything: all));
+        Journal.Log(all ? "■ tout stoppé, couches protégées comprises" : "■ stop (sauf couches protégées)");
+        _runtime.TraceUi("Contrôle", all ? "tout stopper" : "stop");
+    }
+
+    /// <summary>« Libérer tout » (Échap) : remet les dimmers de groupe à 100 % (les retouches en direct).</summary>
+    [RelayCommand]
+    private void ReleaseAll()
+    {
+        Dimmers.ResetAllCommand.Execute(null);
+        Session.ReleaseAll();
+        Journal.Log("Libérer tout : plus aucune retouche en direct");
+    }
+
+    /// <summary>Annuler (Ctrl+Z) : la dernière opération sur les scènes (nouvelle, dupliquer, supprimer, renommer…).</summary>
+    [RelayCommand]
+    public void Undo()
+    {
+        var description = Session.UndoDescription;
+        Session.Undo();
+        if (description is not null)
+        {
+            Journal.Log($"↶ annulé : {description}");
+        }
+    }
+
+    /// <summary>Rétablir (Ctrl+Y).</summary>
+    [RelayCommand]
+    public void Redo()
+    {
+        var description = Session.RedoDescription;
+        Session.Redo();
+        if (description is not null)
+        {
+            Journal.Log($"↷ rétabli : {description}");
+        }
+    }
+
+    private void UpdateState()
+    {
+        IsLocked = Session.IsLocked;
+        UndoText = Session.UndoDescription is { } undo ? $"Annuler : {undo} (Ctrl+Z)" : "Rien à annuler";
+        RedoText = Session.RedoDescription is { } redo ? $"Rétablir : {redo} (Ctrl+Y)" : "Rien à rétablir";
+        var retouched = Dimmers.Faders.Where(f => f.IsRetouched).Select(f => $"{f.Name} — dimmer {f.Percent:0} %").ToList();
+        HasRetouches = retouched.Count > 0;
+        RetouchText = HasRetouches
+            ? "Retouches en direct (temporaires, rien n'est enregistré) :  " + string.Join(" · ", retouched)
+            : string.Empty;
+        if (Session.Message is { } message)
+        {
+            Message = message;
+        }
+    }
+}

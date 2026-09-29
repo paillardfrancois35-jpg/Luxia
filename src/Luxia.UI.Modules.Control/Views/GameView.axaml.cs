@@ -11,10 +11,10 @@ using Luxia.UI.Modules.Control.Docking;
 namespace Luxia.UI.Modules.Control.Views;
 
 /// <summary>
-/// Vue de l'écran Contrôle : ancrage des panneaux (Dock), disposition enregistrée sur le poste dès qu'elle change
-/// (vérification toutes les 2 s, et en quittant l'écran), menu Panneaux, raccourcis Ctrl+Z / Ctrl+Y / Échap.
+/// Vue de l'écran de jeu : ancrage des panneaux (Dock), disposition enregistrée sur le poste dès qu'elle change
+/// (vérification toutes les 2 s, et en quittant l'écran), menu Panneaux, raccourcis Ctrl+Z / Ctrl+Y / Échap / F1 à F12.
 /// </summary>
-public partial class ControlView : UserControl
+public partial class GameView : UserControl
 {
     private readonly DockControl _dock;
     private readonly DispatcherTimer _autosave;
@@ -24,7 +24,7 @@ public partial class ControlView : UserControl
     private string? _saved;
 
     /// <summary>Crée la vue.</summary>
-    public ControlView()
+    public GameView()
     {
         AvaloniaXamlLoader.Load(this);
         _dock = this.FindControl<DockControl>("DockHost")!;
@@ -46,7 +46,7 @@ public partial class ControlView : UserControl
         }
     }
 
-    private ControlViewModel? ViewModel => DataContext as ControlViewModel;
+    private GameViewModel? ViewModel => DataContext as GameViewModel;
 
     /// <inheritdoc />
     protected override void OnDataContextChanged(EventArgs e)
@@ -56,8 +56,6 @@ public partial class ControlView : UserControl
         {
             BuildLayout(vm);
 
-            // Bande ✎ avec le panneau Propriétés fermé : on le rouvre, sinon le clic semblait sans effet (essai 1.005.198).
-            vm.Columns.EditChosen += (_, _) => ShowPanelIfHidden(ControlPanels.Properties);
             vm.PanelRequested += (_, id) =>
             {
                 if (_layout is not null && _factory is not null)
@@ -65,13 +63,6 @@ public partial class ControlView : UserControl
                     _factory.ShowPanel(_layout, id);
                     AssignContexts(_layout);
                     SaveLayout();
-                }
-            };
-            vm.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(ControlViewModel.LayoutPreset))
-                {
-                    SwitchLayout(vm);
                 }
             };
         }
@@ -129,9 +120,9 @@ public partial class ControlView : UserControl
                 return;
             }
 
-            if (e.Key == Key.Escape && vm.HasModeAction)
+            if (e.Key == Key.Escape && vm.HasRetouches)
             {
-                vm.ModeActionCommand.Execute(null);
+                vm.ReleaseAllCommand.Execute(null);
                 e.Handled = true;
                 return;
             }
@@ -140,22 +131,18 @@ public partial class ControlView : UserControl
         base.OnKeyDown(e);
     }
 
-    private void BuildLayout(ControlViewModel vm)
+    private void BuildLayout(GameViewModel vm)
     {
         var contexts = new Dictionary<string, Func<object?>>
         {
             [ControlPanels.Columns] = () => vm.Columns,
-            [ControlPanels.Properties] = () => vm.Properties,
-            [ControlPanels.Plan] = () => vm.Plan,
-            [ControlPanels.Settings] = () => vm.Settings,
-            [ControlPanels.Effects] = () => vm.Effects,
             [ControlPanels.Journal] = () => vm.Journal,
             [ControlPanels.Looks] = () => vm.Looks,
             [ControlPanels.Pilot] = () => vm.Looks,
             [ControlPanels.Dimmers] = () => vm.Dimmers,
         };
-        _factory = new ControlDockFactory(contexts) { Preset = vm.LayoutPreset };
-        _store = new ControlLayoutStore(vm.LayoutFolder, vm.LayoutPreset);
+        _factory = new ControlDockFactory(contexts);
+        _store = new ControlLayoutStore(vm.LayoutFolder);
         var loaded = _store.Load(out var message);
         if (message is not null)
         {
@@ -164,65 +151,6 @@ public partial class ControlView : UserControl
 
         SetLayout(loaded ?? _factory.CreateLayout());
         _saved = loaded is null ? null : _store.Serialize(_layout!);
-        AddNewPanels(vm);
-    }
-
-    // Disposition enregistrée par une version antérieure : un panneau apparu depuis (Effets, P6 ; Groupes dimmer, Contrôle 2)
-    // y est ajouté à sa place livrée, sans prendre le premier plan ; ensuite, le fermer reste possible (il ne revient plus tout seul).
-    private void AddNewPanels(ControlViewModel vm)
-    {
-        if (_layout is null || _factory is null)
-        {
-            return;
-        }
-
-        var added = false;
-        var active = DockTree.Find(_layout, ControlPanels.Settings).Dockable;
-        foreach (var id in vm.LayoutPreset == ControlLayoutPreset.Control ? new[] { ControlPanels.Effects, ControlPanels.Dimmers } : [ControlPanels.Dimmers])
-        {
-            if (DockTree.Find(_layout, id).Place != PanelPlace.Absent)
-            {
-                continue;
-            }
-
-            _factory.ShowPanel(_layout, id);
-            added = true;
-        }
-
-        if (!added)
-        {
-            return;
-        }
-
-        if (active is not null)
-        {
-            _factory.SetActiveDockable(active);
-        }
-
-        AssignContexts(_layout);
-        SaveLayout();
-    }
-
-    // Contrôle ↔ Spectacle : la disposition quittée est enregistrée, l'autre reprise telle qu'on l'avait laissée.
-    private void SwitchLayout(ControlViewModel vm)
-    {
-        SaveLayout();
-        foreach (var window in _layout?.Windows?.ToList() ?? [])
-        {
-            window.Host?.Exit();
-        }
-
-        _factory!.Preset = vm.LayoutPreset;
-        _store = new ControlLayoutStore(vm.LayoutFolder, vm.LayoutPreset);
-        var loaded = _store.Load(out var message);
-        if (message is not null)
-        {
-            vm.Message = message;
-        }
-
-        SetLayout(loaded ?? _factory.CreateLayout());
-        _saved = loaded is null ? null : _store.Serialize(_layout!);
-        AddNewPanels(vm);
     }
 
     private void SetLayout(IRootDock layout)
@@ -263,11 +191,7 @@ public partial class ControlView : UserControl
                 dockable.Context = panel.Id switch
                 {
                     ControlPanels.Columns => vm.Columns,
-                    ControlPanels.Properties => vm.Properties,
-                    ControlPanels.Plan => vm.Plan,
-                    ControlPanels.Settings => vm.Settings,
                     ControlPanels.Looks or ControlPanels.Pilot => vm.Looks,
-                    ControlPanels.Effects => vm.Effects,
                     ControlPanels.Dimmers => vm.Dimmers,
                     _ => vm.Journal,
                 };
@@ -318,18 +242,6 @@ public partial class ControlView : UserControl
         SaveLayout();
     }
 
-    private void ShowPanelIfHidden(string id)
-    {
-        if (_layout is null || _factory is null || DockTree.Find(_layout, id).Place is PanelPlace.Visible or PanelPlace.Floating)
-        {
-            return;
-        }
-
-        _factory.ShowPanel(_layout, id);
-        AssignContexts(_layout);
-        SaveLayout();
-    }
-
     private void FillPanelsMenu(MenuFlyout menu)
     {
         menu.Items.Clear();
@@ -338,7 +250,7 @@ public partial class ControlView : UserControl
             return;
         }
 
-        foreach (var panel in ControlPanels.All)
+        foreach (var panel in ControlPanels.Game)
         {
             var place = DockTree.Find(_layout, panel.Id).Place;
             var item = new MenuItem

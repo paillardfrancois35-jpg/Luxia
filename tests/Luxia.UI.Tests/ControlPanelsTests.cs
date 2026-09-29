@@ -252,7 +252,7 @@ public sealed class ControlPanelsTests : IAsyncLifetime
     public void EditBand_AsksForTheProperties_AndExplainsHowToWrite()
     {
         var raised = 0;
-        _vm.Columns.EditChosen += (_, _) => raised++;
+        _vm.EditChosen += (_, _) => raised++;
         var button = Button("Plein feu");
 
         _vm.Columns.ChooseForEdit(button);
@@ -698,17 +698,6 @@ public sealed class ControlPanelsTests : IAsyncLifetime
         _vm.Looks.PlayAt(5).ShouldBeFalse("pas de 6e look");
         _vm.Refresh();
         _vm.Journal.Lines.ShouldContain(l => l.Contains("look « Second »"));
-    }
-
-    [Fact]
-    [Trait("Exigence", "ERG-024")]
-    public void LayoutPreset_SwitchesBetweenControlAndShow()
-    {
-        _vm.IsControlLayout.ShouldBeTrue();
-        _vm.SetLayoutCommand.Execute("spectacle");
-        _vm.IsShowLayout.ShouldBeTrue();
-        _vm.SetLayoutCommand.Execute("controle");
-        _vm.IsControlLayout.ShouldBeTrue();
     }
 
     private ControlSceneViewModel Button(string name) => _vm.Columns.Columns.SelectMany(c => c.Scenes).Single(s => s.Name == name);
