@@ -12,6 +12,7 @@ public sealed class ShowModel
     private readonly FrozenDictionary<(Guid, string), int> _parameterIndex;
     private readonly FrozenDictionary<Guid, int> _sceneIndex;
     private readonly FrozenDictionary<Guid, int> _layerIndex;
+    private readonly FrozenDictionary<Guid, int> _groupIndex;
 
     /// <summary>Crée un modèle.</summary>
     /// <param name="parameters">Paramètres (un par attribut d'appareil).</param>
@@ -20,13 +21,17 @@ public sealed class ShowModel
     /// <param name="aliases">Autres appareils qui partagent les paramètres d'un appareil (jumeaux, MOT-092) : alias → appareil de référence.</param>
     /// <param name="safety">Limites de sûreté (doc 15 §9) ; aucune par défaut.</param>
     /// <param name="colorGroups">Triplets rouge / vert / bleu d'une même cellule, pour le fondu par la teinte (MOT-054).</param>
+    /// <param name="dimmerGroups">Arbre des groupes de dimmers (ERG-037) ; un parent précède toujours ses enfants.</param>
+    /// <param name="parameterGroups">Groupe de chaque paramètre (rang dans <paramref name="dimmerGroups"/>, -1 = aucun) ; vide = aucun.</param>
     public ShowModel(
         IReadOnlyList<RigParameter> parameters,
         IReadOnlyList<EngineLayer>? layers = null,
         IReadOnlyList<EngineScene>? scenes = null,
         IReadOnlyDictionary<Guid, Guid>? aliases = null,
         SafetyModel? safety = null,
-        IReadOnlyList<ColorGroup>? colorGroups = null)
+        IReadOnlyList<ColorGroup>? colorGroups = null,
+        IReadOnlyList<DimmerGroup>? dimmerGroups = null,
+        IReadOnlyList<int>? parameterGroups = null)
     {
         ArgumentNullException.ThrowIfNull(parameters);
         Parameters = parameters;
@@ -35,6 +40,25 @@ public sealed class ShowModel
         Aliases = aliases ?? new Dictionary<Guid, Guid>();
         Safety = safety ?? SafetyModel.None;
         ColorGroups = colorGroups ?? [];
+        DimmerGroups = dimmerGroups ?? [];
+        ParameterGroups = parameterGroups is { Count: > 0 } ? parameterGroups : [.. Enumerable.Repeat(-1, parameters.Count)];
+        if (ParameterGroups.Count != parameters.Count)
+        {
+            throw new ArgumentException("Un groupe (ou -1) est attendu pour chaque paramètre.", nameof(parameterGroups));
+        }
+
+        for (var i = 0; i < DimmerGroups.Count; i++)
+        {
+            if (DimmerGroups[i].Parent >= i || DimmerGroups[i].Parent < -1)
+            {
+                throw new ArgumentException($"Le parent du groupe « {DimmerGroups[i].Name} » doit le précéder dans l'arbre.", nameof(dimmerGroups));
+            }
+        }
+
+        if (ParameterGroups.Any(g => g < -1 || g >= DimmerGroups.Count))
+        {
+            throw new ArgumentException("Groupe de paramètre inconnu.", nameof(parameterGroups));
+        }
 
         var index = new Dictionary<(Guid, string), int>();
         for (var i = 0; i < parameters.Count; i++)
@@ -56,6 +80,7 @@ public sealed class ShowModel
         _parameterIndex = index.ToFrozenDictionary();
         _sceneIndex = Scenes.Select((s, i) => (s.Id, i)).ToFrozenDictionary(x => x.Id, x => x.i);
         _layerIndex = Layers.Select((l, i) => (l.Id, i)).ToFrozenDictionary(x => x.Id, x => x.i);
+        _groupIndex = DimmerGroups.Select((g, i) => (g.Id, i)).ToFrozenDictionary(x => x.Id, x => x.i);
     }
 
     /// <summary>Modèle vide : aucun appareil, aucune scène (projet non ouvert, P0-P3).</summary>
@@ -78,6 +103,15 @@ public sealed class ShowModel
 
     /// <summary>Triplets rouge / vert / bleu d'une même cellule (MOT-054).</summary>
     public IReadOnlyList<ColorGroup> ColorGroups { get; }
+
+    /// <summary>Arbre des groupes de dimmers (ERG-037) : un parent précède toujours ses enfants.</summary>
+    public IReadOnlyList<DimmerGroup> DimmerGroups { get; }
+
+    /// <summary>Groupe de chaque paramètre (rang dans <see cref="DimmerGroups"/>, -1 = aucun), aligné sur <see cref="Parameters"/>.</summary>
+    public IReadOnlyList<int> ParameterGroups { get; }
+
+    /// <summary>Rang d'un groupe de dimmers dans <see cref="DimmerGroups"/> (et dans les niveaux d'un instantané), ou -1.</summary>
+    public int IndexOfDimmerGroup(Guid id) => _groupIndex.TryGetValue(id, out var index) ? index : -1;
 
     /// <summary>Indice d'un paramètre, ou -1.</summary>
     public int IndexOf(Guid fixtureId, string channelKey) =>

@@ -233,7 +233,7 @@
 | [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Validé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
 | [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
-| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
+| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | GroupDimmerTests.VirtualIntensity_Rgb3Channels_FollowsTheGroupDimmer<br>ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
 | [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>EffectsPanelTests.ColorEffect_LightsTargetsWithoutIntensity<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>(+1) |
 | [MOT-050](exigences/MOT-050.md) | I | Couleur logique vers RVB | Réalisé | ColorConversionTests.Rgb_Par_TakesColorDirectly |
 | [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
@@ -241,7 +241,7 @@
 | [MOT-053](exigences/MOT-053.md) | M | UV et ambre en émetteurs indépendants | Réalisé | ColorConversionTests.Uv_Fixture_IgnoresColor_UnlessUvIsSpecified |
 | [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Validé | EffectCompilerTests.ColorGroups_OnePerRgbCell<br>EffectTests.HueFade_RedToGreen_PassesThroughYellow<br>EffectsPanelTests.StepHueFade_WrittenFromProperties |
 | [MOT-070](exigences/MOT-070.md) | I | Blackout | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
-| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
+| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
 | [MOT-090](exigences/MOT-090.md) | I | Conversion des attributs en octets selon le patch | Réalisé | RenderChainTests.Scene_Values_AreConvertedTo8And16Bits_WithInversion<br>ShowCompilerTests.Parameters_OfReferenceRig_HaveRolesAddressesAnd16Bits |
 | [MOT-091](exigences/MOT-091.md) | I | Appareils absents émis à 0 | Réalisé | RenderChainTests.AbsentFixture_IsEmittedAtZero<br>ShowCompilerTests.AbsentFixture_InActiveVenue_IsMarkedAbsent |
 | [MOT-092](exigences/MOT-092.md) | I | Jumeaux : mêmes valeurs | Réalisé | RenderChainTests.Twins_ShareParameters_AndReceiveSameValues<br>ShowCompilerTests.Twins_ShareParametersOfFirstFixture |
@@ -418,9 +418,9 @@
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
 
-## ERG2 – 8 exigences, 0 couvertes par des tests automatiques
+## ERG2 – 8 exigences, 2 couvertes par des tests automatiques
 
-> À faire : 8
+> En cours : 2 · À faire : 6
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -428,7 +428,7 @@
 | [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire |  |
 | [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
 | [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
-| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | À faire |  |
-| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | À faire |  |
+| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | En cours | GroupDimmerTests.ShowModel_ParentAfterChild_IsRefused |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>GroupDimmerTests.GroupDimmer_HalvesIntensity_NotColors<br>GroupDimmerTests.Proportional_KeepsTheShapeOfAnEffect_NotACeiling<br>(+2) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | À faire |  |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |

@@ -140,6 +140,7 @@
 | [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
+| [CMD-031](CMD-031.md) | Commande RéglerDimmerGroupe | ERG2 | I | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -219,8 +220,8 @@
 | [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | À faire |
 | [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | À faire |
 | [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | À faire |
-| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | À faire |
-| [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | À faire |
+| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | En cours |
+| [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | En cours |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | À faire |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | À faire |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |

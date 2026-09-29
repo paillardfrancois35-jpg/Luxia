@@ -218,6 +218,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-023 | `IdentifierAppareil` | appareil, actif / inactif | Moteur | P3 |
 | CMD-024 | `TesterSortie` | actif / inactif, univers, plage de canaux, canaux exclus, valeur de test, durée par canal, une passe / en boucle, forme (chenillard / rampe) | Moteur (écran Sorties) | P0 |
 | CMD-030 | `Fumée` | appui / relâche, ou rafale (durée) | Moteur | P5 |
+| CMD-031 | `RéglerDimmerGroupe` | groupe, niveau 0-1 | Moteur | ERG2 |
 | CMD-040 | `TapTempo` | — | Audio / Horloge | P7 |
 | CMD-041 | `ChoisirSourceTempo` | audio / tap / fixe (+ BPM) | Horloge | P7 |
 | CMD-042 | `AjusterTempo` | ×2, ÷2, ±1 BPM, recaler la phase | Horloge | P7 |

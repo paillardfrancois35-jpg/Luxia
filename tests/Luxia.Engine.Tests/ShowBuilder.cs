@@ -15,6 +15,8 @@ internal sealed class ShowBuilder
     private readonly List<EngineLayer> _layers = [];
     private readonly List<EngineScene> _scenes = [];
     private readonly Dictionary<Guid, Guid> _aliases = [];
+    private readonly List<DimmerGroup> _groups = [];
+    private readonly Dictionary<Guid, int> _fixtureGroup = [];
 
     public int Add(RigParameter parameter)
     {
@@ -131,7 +133,26 @@ internal sealed class ShowBuilder
     /// <summary>Triplets rouge / vert / bleu (fondu par la teinte, MOT-054).</summary>
     public List<ColorGroup> ColorGroups { get; } = [];
 
-    public ShowModel Build() => new([.. _parameters], [.. _layers], [.. _scenes], new Dictionary<Guid, Guid>(_aliases), Safety, [.. ColorGroups]);
+    /// <summary>Ajoute un groupe à l'arbre des dimmers (le parent doit déjà exister, ERG-037).</summary>
+    public DimmerGroup Group(string name, DimmerGroup? parent = null, bool dimmer = true)
+    {
+        var group = new DimmerGroup(Guid.NewGuid(), name, parent is null ? -1 : _groups.IndexOf(parent), dimmer);
+        _groups.Add(group);
+        return group;
+    }
+
+    /// <summary>Range un appareil dans un groupe.</summary>
+    public void Assign(TestFixture fixture, DimmerGroup group) => _fixtureGroup[fixture.Id] = _groups.IndexOf(group);
+
+    public ShowModel Build() => new(
+        [.. _parameters],
+        [.. _layers],
+        [.. _scenes],
+        new Dictionary<Guid, Guid>(_aliases),
+        Safety,
+        [.. ColorGroups],
+        [.. _groups],
+        [.. _parameters.Select(p => _fixtureGroup.GetValueOrDefault(p.FixtureId, -1))]);
 
     public static EngineStep Step(double fade, double hold, params StepValue[] values) =>
         new() { Fade = Duration.FromSeconds(fade), Hold = Duration.FromSeconds(hold), Values = values };
