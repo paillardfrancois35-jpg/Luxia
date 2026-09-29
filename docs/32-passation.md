@@ -1,11 +1,11 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-28, **chantier ergonomique validé**
-> (`main`, étiquette **`v1.005`**) ; **P6 – Effets développée** sur `p6/effets` (version de développement **1.006**,
-> étiquettes `v1.006.NNN`), en autonomie par délégation de l'utilisateur (Q36). **En attente de l'essai de l'utilisateur** :
-> guide [demos/P6-effets.md](demos/P6-effets.md) ; au matériel, l'effet multi-têtes doit être réglé en **64 canaux à
-> l'adresse 181** (seul changement d'adresse).
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-29, **P6 – Effets validée**
+> (`main`, étiquette **`v1.006`**). **Prochaine étape : chantier « Contrôle 2 »** (avant P7) : écran de jeu + fenêtre
+> d'édition de scène ([chantiers/ergonomie-sujet-2.md](chantiers/ergonomie-sujet-2.md)) réunis avec les groupes et
+> dimmers (Q37, règle proportionnelle) ; analyse et recommandations :
+> [chantiers/analyse-ergonomique-fin-P6.md](chantiers/analyse-ergonomique-fin-P6.md). Essais : discussion test (doc 33).
 
 ## 1. Où en est-on
 
@@ -18,7 +18,7 @@
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
 | P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
 | Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
-| P6 – Effets | Développée | `p6/effets` (depuis `main` `v1.005` + `e1dfa56`) | [demos/P6-effets.md](demos/P6-effets.md) | ⏳ essai de l'utilisateur (exemples 1 à 13) |
+| P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -198,6 +198,18 @@
     de travail ; faire régler l'effet multi-têtes en 64 canaux, adresse 181 ; vérifier la vitesse du canal 2, Q25) ; puis
     proposer l'analyse ergonomique de fin de phase (§5.6) avant la fusion dans `main` et l'étiquette `v1.006`.
 
+- **P6 validée par l'utilisateur le 2026-09-29** : essai mené dans une discussion test séparée (doc 33, nouvelle
+  procédure), correctifs dans la discussion dev (1.006.053 → 1.006.065) : effet d'intensité qui donne le blanc (EFF-011),
+  molettes révisées, scintillement UV sur les rangées, canal 2 du WZYBUTA mesuré (Q25 close), éditeur de thèmes et
+  bibliothèque (ERG-031), ascenseur par colonne, texte complet dans la Console (CONS-007). P6 : 16 exigences validées,
+  2 réalisées (MOT-063, EFF-009, couvertes par les tests). Tests : 684, tous verts. **Fusionnée dans `main`, `v1.006`.**
+- **Chantier suivant « Contrôle 2 »** (décision de l'utilisateur, 2026-09-29) : cadrage, **maquettes validées avant tout
+  code**, développement, essai en discussion test, puis P7. Points déjà tranchés : règle **proportionnelle** des dimmers
+  de groupe (Q37) ; arbre de groupes, un appareil dans un seul groupe ; « réglage de couche » à la place du master
+  d'intensité ; ancrage gardé sur l'écran de jeu (peu de panneaux, grands), disposition fixe dans la fenêtre d'édition ;
+  fenêtre d'édition non bloquante, brouillon avec Appliquer / Valider / Annuler, case Aveugle ; deux platines MIDI
+  (couches / contrôles fins).
+
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -310,3 +322,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-28 | Ergonomie | Essai de l'écran Contrôle au matériel avec l'utilisateur (guide §0 à §7, tout validé ; 1.005.192 → 1.005.226), corrections au fil de l'eau avec leurs fiches ; analyse de fin d'essai : scènes resserrées (ERG-025), Stop / Tout stopper (ERG-026), marges (ERG-027) ; C12-C14 ; compteur de compilation par version. |
 | 2026-09-28 | Ergonomie | Vérifications de fin d'essai (scènes resserrées, marges) conformes en 1.005.237. **Chantier ergonomique validé par l'utilisateur, `ergo/analyse` fusionnée dans `main`, étiquette `v1.005`.** Reste du chantier (doc 60 §7.4 : affectations MIDI / clavier E6, déclencheurs MIDI des looks, retrait de Live / Scènes après usage, Installation / Bibliothèque en panneaux) à reprendre plus tard. Prochaine étape proposée : P6 – Effets. |
 | 2026-09-28 | P6 | Effets développés sur `p6/effets` (1.006) en autonomie (Q36, Q25) : moteur d'effets, données et compilation, panneau Effets de l'écran Contrôle (molettes, dessin, aperçu CMD-017), thèmes, bibliothèque, assistants, sélections en cellules, fondu par la teinte ; WZYBUTA en 64 canaux à 181 ; 10 scènes « Phase P6 », guide P6. **En attente de l'essai de l'utilisateur.** |
+| 2026-09-29 | P6 | Essai en discussion test (doc 33), correctifs 1.006.053 → 1.006.065, analyse ergonomique de fin de phase acceptée (chantier « Contrôle 2 » avant P7, Q37 règle proportionnelle). **Validée, fusionnée dans `main`, étiquette `v1.006`.** |

@@ -395,24 +395,24 @@
 
 ## P6 – 18 exigences, 17 couvertes par des tests automatiques
 
-> Réalisé : 8 · Validé : 10
+> Réalisé : 2 · Validé : 16
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+5) |
-| [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Réalisé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+2) |
+| [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Validé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+2) |
 | [EFF-003](exigences/EFF-003.md) | I | Formes de position | Validé | EffectCompilerTests.Circle_AroundPositionPalette_CenterFromPalette_SizeInDegrees<br>EffectTests.PositionShapes_CircleAndEight<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees<br>(+1) |
 | [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Validé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
 | [EFF-005](exigences/EFF-005.md) | I | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | Validé | EffectCompilerTests.Lag_Mirror_OddCount_CenterLeads<br>EffectCompilerTests.Lag_PhaseModes<br>EffectCompilerTests.Lag_Random_SameEffect_SameOrder_AllDistinct<br>EffectTests.Directions_BackwardAndPingPong<br>(+2) |
 | [EFF-006](exigences/EFF-006.md) | I | Aperçu en direct au simulateur pendant le réglage des paramètres | Validé | EffectTests.ShowStep_PinsStepWithEffects_AboveLayers_NotListedAsPlaying<br>EffectsPanelTests.Blind_EffectPlaysOnPreviewOnly<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt |
-| [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Réalisé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.Library_TemplateRemovedByMistake_ComesBackWithRestore<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
+| [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Validé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.Library_TemplateRemovedByMistake_ComesBackWithRestore<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
 | [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Validé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime<br>(+1) |
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
 | [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Validé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
-| [ERG-028](exigences/ERG-028.md) | M | Molette | Réalisé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
-| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Réalisé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
-| [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Réalisé |  |
-| [ERG-031](exigences/ERG-031.md) | M | Éditeur de thèmes | Réalisé | EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked |
+| [ERG-028](exigences/ERG-028.md) | M | Molette | Validé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
+| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
+| [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Validé |  |
+| [ERG-031](exigences/ERG-031.md) | M | Éditeur de thèmes | Validé | EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked |
 | [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Validé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
 | [MOT-061](exigences/MOT-061.md) | I | Effet relatif | Validé | EffectTests.AbsoluteEffect_ReplacesStepValue<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectTests.RelativeEffect_WithoutStepValue_AddsToUnderlyingLayer |
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |

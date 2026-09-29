@@ -175,12 +175,12 @@
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Validé |
 | [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
 | [EFF-001](EFF-001.md) | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | P6 | I | Validé |
-| [EFF-002](EFF-002.md) | Formes d'intensité | P6 | I | Réalisé |
+| [EFF-002](EFF-002.md) | Formes d'intensité | P6 | I | Validé |
 | [EFF-003](EFF-003.md) | Formes de position | P6 | I | Validé |
 | [EFF-004](EFF-004.md) | Formes de couleur | P6 | I | Validé |
 | [EFF-005](EFF-005.md) | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | P6 | I | Validé |
 | [EFF-006](EFF-006.md) | Aperçu en direct au simulateur pendant le réglage des paramètres | P6 | I | Validé |
-| [EFF-007](EFF-007.md) | Bibliothèque d'effets prédéfinis | P6 | M | Réalisé |
+| [EFF-007](EFF-007.md) | Bibliothèque d'effets prédéfinis | P6 | M | Validé |
 | [EFF-008](EFF-008.md) | Effets sur cellules | P6 | M | Validé |
 | [EFF-009](EFF-009.md) | Combinaison de deux effets sur un même attribut | P6 | S | Réalisé |
 | [EFF-011](EFF-011.md) | Effet d'intensité visible | P6 | I | Validé |
@@ -211,10 +211,10 @@
 | [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Validé |
 | [ERG-026](ERG-026.md) | Stop et Tout stopper | ERG | I | Validé |
 | [ERG-027](ERG-027.md) | Marges | ERG | M | Validé |
-| [ERG-028](ERG-028.md) | Molette | P6 | M | Réalisé |
-| [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Réalisé |
-| [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Réalisé |
-| [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Réalisé |
+| [ERG-028](ERG-028.md) | Molette | P6 | M | Validé |
+| [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Validé |
+| [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Validé |
+| [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
