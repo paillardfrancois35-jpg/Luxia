@@ -75,8 +75,8 @@
             <WrapPanel>
               <Button Content="+ étape" Margin="0,0,4,4" Command="{Binding AddStepCommand}" ToolTip.Tip="Nouvelle étape vide après l'étape choisie" />
               <Button Content="Dupliquer" Margin="0,0,4,4" Command="{Binding DuplicateStepCommand}" />
-              <Button Content="◀" Margin="0,0,4,4" Command="{Binding MoveStepLeftCommand}" ToolTip.Tip="Déplacer l'étape vers la gauche (plus tôt)" />
-              <Button Content="▶" Margin="0,0,4,4" Command="{Binding MoveStepRightCommand}" ToolTip.Tip="Déplacer l'étape vers la droite (plus tard)" />
+              <Button Content="⇠ Déplacer" Margin="0,0,4,4" Command="{Binding MoveStepLeftCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la gauche (plus tôt dans la scène). Pour choisir une autre étape : clic dans la bande ou flèches ← →" />
+              <Button Content="Déplacer ⇢" Margin="0,0,4,4" Command="{Binding MoveStepRightCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la droite (plus tard dans la scène)" />
               <Button Content="Supprimer" Margin="0,0,4,4" Foreground="#F85149" Command="{Binding DeleteStepCommand}" ToolTip.Tip="Il reste toujours une étape (Ctrl+Z pour annuler)" />
             </WrapPanel>
             <TextBlock Text="Choisir une étape : clic dans la bande, ou flèches ← →." FontSize="11" Foreground="#8B949E" />
@@ -144,7 +144,7 @@
 
         <!-- Essai et notes -->
         <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,0,8">
-          <Button Content="▶ Lancer" Command="{Binding TestCommand}" ToolTip.Tip="Lancer la scène dans son contexte (les autres couches continuent)" />
+          <Button Content="▶ Lancer" Command="{Binding TestCommand}" ToolTip.Tip="Lancer la scène dans son contexte (les autres couches continuent). En ÉDITION, repasse d'abord en LIVE : sinon l'étape éditée, montrée par-dessus, cacherait la scène qui joue" />
           <Button Content="■ Arrêter" Command="{Binding StopTestCommand}" />
         </StackPanel>
         <Expander Header="Notes" IsExpanded="False">

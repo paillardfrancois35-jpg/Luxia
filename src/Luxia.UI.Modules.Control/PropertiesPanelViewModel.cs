@@ -275,6 +275,13 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         if (_session.EditScene is { } scene)
         {
             _session.Commit();
+
+            // Essai P6 : en ÉDITION, l'étape éditée est montrée par-dessus les scènes et cachait celle qu'on lance.
+            if (_session.Mode == EditMode.Edit)
+            {
+                _session.SetMode(EditMode.Live);
+            }
+
             _runtime.Engine.Send(new LaunchSceneCommand(CommandOrigin.User, scene.Id));
         }
     }

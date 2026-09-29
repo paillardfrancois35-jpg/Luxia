@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | M |
 | **Phase** | P3 |
 | **Source** | [doc 13 – 4. Sélections](../13-installation-et-lieux.md) |
@@ -32,3 +32,5 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 13, §4). |
 | 2026-09-26 | Claude | Décision | Reporté : la case à cocher du patch (onglet « Univers et patch ») ne coche que l'appareil entier ; sélectionner un segment précis d'une barre demande une petite UI par cellule (liste dépliable ou clic sur le plan). Peu utile avant les effets par cellule (phase, doc 16 §6, P6) : reporté à ce moment, sans bloquer P3 (barres pilotables en entier dès maintenant). |
 | 2026-09-28 | Claude | Développement | Repris en P6 comme prévu : sélections de cellules par transformation d'une sélection existante (pas de case par cellule dans le patch). |
+| 2026-09-29 | Utilisateur | Test | Exemple 12 : « Tout ok » (Barre 1 #1 → #4 → Barre 2 #1 → #4). |
+| 2026-09-29 | Utilisateur | Validation | Validé. |

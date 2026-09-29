@@ -1,5 +1,6 @@
 using Luxia.Engine.Model;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
 using Luxia.UI.Modules.Control;
 using Luxia.UI.Modules.Control.Docking;
@@ -202,21 +203,97 @@ public sealed class EffectsPanelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "PAL-010")]
-    public void Colors_SavedAsTheme_UsedByTheEffect()
+    [Trait("Exigence", "ERG-031")]
+    public void ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked()
     {
         AddInEdit("Alternance Latino");
         Panel.UsesColorList.ShouldBeTrue();
-        Panel.ColorChips.Single(c => c.Name == "Rouge").IsChecked = true;
-        Panel.ColorChips.Single(c => c.Name == "Bleu").IsChecked = true;
-        Session.StepEffects[0].ThemeId.ShouldBeNull("cocher des couleurs remplace le thème");
-        _host.Dialogs.TextAnswers.Enqueue("Rouge et bleu");
-        Panel.SaveColorsAsThemeCommand.Execute(null);
+        Panel.Themes[0].Label.ShouldBe("Aucun");
+        Panel.CanEditTheme.ShouldBeFalse("Latino est un thème livré : ni modifié, ni retiré");
 
-        var theme = _host.Runtime.Project.Palettes.Palettes.Single(p => p.Name == "Rouge et bleu");
+        ThemeEditorViewModel? editor = null;
+        Panel.ThemeEditorRequested += (_, e) => editor = e;
+        Panel.NewThemeCommand.Execute(null);
+        editor.ShouldNotBeNull();
+        editor.Steps.Count.ShouldBe(3, "part des couleurs du thème de l'effet");
+
+        // Crans : ajouter, saisie libre, déplacer, retirer (jamais sous deux).
+        editor.AddStepCommand.Execute(null);
+        editor.HexText = "#12ab34";
+        editor.Steps[1].Hex.ShouldBe("#12AB34");
+        editor.MoveUpCommand.Execute(null);
+        editor.Steps[0].Hex.ShouldBe("#12AB34");
+        editor.RemoveStepCommand.Execute(null);
+        editor.RemoveStepCommand.Execute(null);
+        editor.Steps.Count.ShouldBe(2);
+        editor.RemoveStepCommand.Execute(null);
+        editor.Steps.Count.ShouldBe(2);
+        editor.Message.ShouldNotBeNull();
+        editor.Name = "Duo";
+        editor.SaveCommand.Execute(null);
+        Panel.CompleteTheme(editor);
+
+        var theme = _host.Runtime.Project.Palettes.Palettes.Single(p => p.Name == "Duo");
         theme.Kind.ShouldBe(PaletteKind.Theme);
         theme.Colors.Count.ShouldBe(2);
         Session.StepEffects[0].ThemeId.ShouldBe(theme.Id);
+        Panel.CanEditTheme.ShouldBeTrue("un thème du projet se modifie");
+
+        // Modifier : même thème, nouveau nom.
+        Panel.EditThemeCommand.Execute(null);
+        editor.Title.ShouldBe("Modifier le thème");
+        editor.Name = "Duo chaud";
+        editor.SaveCommand.Execute(null);
+        Panel.CompleteTheme(editor);
+        _host.Runtime.Project.Palettes.Palettes.Single(p => p.Id == theme.Id).Name.ShouldBe("Duo chaud");
+
+        // Annuler ne change rien.
+        Panel.NewThemeCommand.Execute(null);
+        editor.CancelCommand.Execute(null);
+        Panel.CompleteTheme(editor);
+        _host.Runtime.Project.Palettes.Palettes.Count(p => p.Kind == PaletteKind.Theme).ShouldBe(7);
+
+        // Retirer : confirmé, l'effet perd son thème.
+        Panel.DeleteThemeCommand.Execute(null);
+        _host.Runtime.Project.Palettes.Palettes.ShouldNotContain(p => p.Id == theme.Id);
+        Session.StepEffects[0].ThemeId.ShouldBeNull();
+        Panel.UsesOwnColors.ShouldBeTrue("sans thème, les pastilles apparaissent");
     }
+
+    [Fact]
+    [Trait("Exigence", "EFF-007")]
+    public void Library_TemplateRemovedByMistake_ComesBackWithRestore()
+    {
+        AddInEdit("Vague douce");
+        Panel.SelectedTemplate = Panel.Templates.Single(t => t.Template.Name == "Scintillement");
+        Panel.DeleteTemplateCommand.Execute(null);
+        Panel.Templates.ShouldNotContain(t => t.Template.Name == "Scintillement");
+        _host.Dialogs.Confirmations.ShouldNotBeEmpty();
+
+        Panel.RestoreDefaultTemplatesCommand.Execute(null);
+        Panel.Templates.Select(t => t.Template.Name).ShouldBe(Scenes.Rules.DefaultEffects.Templates.Select(t => t.Name), "remis à sa place");
+    }
+
+    [Fact]
+    [Trait("Exigence", "SCN-034")]
+    public void Launch_InEdit_SwitchesToLive_SoTheSceneIsSeen()
+    {
+        Session.ChooseScene(Scene("Chenillard 4 couleurs").Id);
+        Session.SetMode(EditMode.Edit).ShouldBeNull();
+        _vm.Properties.TestCommand.Execute(null);
+        Session.Mode.ShouldBe(EditMode.Live);
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Playbacks.ShouldContain(p => p.SceneId == Scene("Chenillard 4 couleurs").Id);
+    }
+
+    [Theory]
+    [InlineData("12", 12.0)]
+    [InlineData("0,5", 0.5)]
+    [InlineData("2.5 s", 2.5)]
+    [InlineData("25 %", 25.0)]
+    [InlineData("abc", null)]
+    [Trait("Exigence", "ERG-028")]
+    public void Dial_Parse_TypedValues(string text, double? expected) => Dial.Parse(text).ShouldBe(expected);
 
     [Fact]
     [Trait("Exigence", "EFF-003")]

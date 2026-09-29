@@ -111,6 +111,23 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
     [ObservableProperty]
     private string _membersText = string.Empty;
 
+    // Valeurs par défaut des molettes (clic droit) : celles du modèle d'où vient l'effet, sinon des valeurs neutres
+    // (essai P6 : « Allumé % » valait 25 % à l'ajout du chenillard mais 50 % au double-clic).
+    [ObservableProperty]
+    private double _defaultPeriod = 2;
+
+    [ObservableProperty]
+    private double _defaultSize = 100;
+
+    [ObservableProperty]
+    private double _defaultCenter = 50;
+
+    [ObservableProperty]
+    private double _defaultSpread = 360;
+
+    [ObservableProperty]
+    private double _defaultDuty = 50;
+
     [ObservableProperty]
     private string _problems = string.Empty;
 
@@ -130,7 +147,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
     private bool _previewStepped;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsIntensityShape), nameof(IsPositionShape), nameof(IsColorShape), nameof(UsesDuty), nameof(UsesGroups), nameof(UsesCenter), nameof(UsesColorList), nameof(SizeMaximum), nameof(SizeStep), nameof(SizeLabel))]
+    [NotifyPropertyChangedFor(nameof(IsIntensityShape), nameof(IsPositionShape), nameof(IsColorShape), nameof(UsesDuty), nameof(UsesGroups), nameof(UsesCenter), nameof(UsesColorList), nameof(UsesOwnColors), nameof(SizeMaximum), nameof(SizeStep), nameof(SizeLabel))]
     private SceneEffectShape _kind;
 
     /// <summary>Crée le panneau.</summary>
@@ -360,31 +377,126 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
         }
     }
 
-    /// <summary>Range les couleurs cochées dans un nouveau thème (PAL-010), réutilisable par d'autres effets et par le pilote automatique.</summary>
+    /// <summary>Levé pour ouvrir la fenêtre « Thème de couleurs » ; la vue rappelle <see cref="CompleteTheme"/> à sa fermeture.</summary>
+    public event EventHandler<ThemeEditorViewModel>? ThemeEditorRequested;
+
+    /// <summary>Le thème choisi est un thème du projet (les thèmes livrés ne se modifient ni ne se retirent).</summary>
+    public bool CanEditTheme => Theme?.Value is { } id && !DefaultPalettes.Themes.Any(t => t.Id == id);
+
+    /// <summary>La forme de couleur n'a pas de thème : ses couleurs sont les pastilles cochées.</summary>
+    public bool UsesOwnColors => UsesColorList && Theme?.Value is null;
+
+    private Guid? _editedTheme;
+
+    /// <summary>« + » : nouveau thème, à partir des couleurs de l'effet (thème choisi ou pastilles cochées).</summary>
     [RelayCommand]
-    private async Task SaveColorsAsTheme()
+    private void NewTheme()
     {
-        var colors = ColorChips.Where(c => c.IsChecked).ToList();
-        if (colors.Count < 2)
+        var start = _effect is { } effect ? ThemeOrColors(effect) : [];
+        _editedTheme = null;
+        ThemeEditorRequested?.Invoke(this, new ThemeEditorViewModel("Nouveau thème de couleurs", "Mon thème", start));
+    }
+
+    /// <summary>« ✎ » : modifier le thème choisi (thèmes du projet seulement).</summary>
+    [RelayCommand]
+    private void EditTheme()
+    {
+        if (!CanEditTheme || _runtime.Project.Palettes.Palettes.FirstOrDefault(p => p.Id == Theme!.Value) is not { } theme)
         {
-            Message = "Cochez au moins deux couleurs pour faire un thème.";
+            Message = "Les thèmes livrés ne se modifient pas : « + » en crée un nouveau à partir de celui-ci.";
             return;
         }
 
-        var name = await _dialogs.AskTextAsync("Nouveau thème de couleurs", "Nom du thème (« Latino », « Froid »…) :").ConfigureAwait(true);
-        if (string.IsNullOrWhiteSpace(name))
+        _editedTheme = theme.Id;
+        ThemeEditorRequested?.Invoke(this, new ThemeEditorViewModel("Modifier le thème", theme.Name, theme.Colors));
+    }
+
+    /// <summary>Enregistre le thème saisi dans la fenêtre et le donne à l'effet choisi.</summary>
+    public void CompleteTheme(ThemeEditorViewModel editor)
+    {
+        ArgumentNullException.ThrowIfNull(editor);
+        if (!editor.Saved)
         {
             return;
         }
 
         var palettes = _runtime.Project.Palettes;
-        var lights = colors.Select(c => palettes.Palettes.FirstOrDefault(p => p.Id == c.PaletteId)?.Light).OfType<LogicalColor>().ToList();
-        var theme = new Palette { Name = name.Trim(), Kind = PaletteKind.Theme, Colors = lights };
+        var theme = _editedTheme is { } id && palettes.Palettes.FirstOrDefault(p => p.Id == id) is { } existing
+            ? existing with { Name = editor.Name.Trim(), Colors = editor.Colors }
+            : new Palette { Name = editor.Name.Trim(), Kind = PaletteKind.Theme, Colors = editor.Colors };
         try
         {
-            _runtime.Project.SavePalettes(palettes with { Palettes = [.. palettes.Palettes, theme] });
+            _runtime.Project.SavePalettes(palettes with
+            {
+                Palettes = palettes.Palettes.Any(p => p.Id == theme.Id)
+                    ? [.. palettes.Palettes.Select(p => p.Id == theme.Id ? theme : p)]
+                    : [.. palettes.Palettes, theme],
+            });
+            Load();
             UpdateEffect(e => e with { ThemeId = theme.Id, Colors = [] }, "Thème de couleurs");
-            Message = $"Thème « {theme.Name} » créé ; l'effet l'utilise.";
+            Message = $"Thème « {theme.Name} » enregistré ; l'effet l'utilise.";
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Message = $"Enregistrement impossible pour l'instant ({ex.Message}).";
+        }
+    }
+
+    /// <summary>« 🗑 » : retire un thème du projet (jamais un thème livré), après confirmation.</summary>
+    [RelayCommand]
+    private async Task DeleteTheme()
+    {
+        if (!CanEditTheme || _runtime.Project.Palettes.Palettes.FirstOrDefault(p => p.Id == Theme!.Value) is not { } theme)
+        {
+            Message = "Les thèmes livrés ne se retirent pas.";
+            return;
+        }
+
+        var users = _runtime.Project.Scenes.Scenes.Count(sc => sc.Steps.Any(st => st.Effects.Any(e => e.ThemeId == theme.Id)));
+        var warning = users > 0 ? $" {users} scène(s) l'utilisent : leurs effets n'auront plus de couleurs." : string.Empty;
+        if (!await _dialogs.ConfirmAsync("Retirer le thème", $"Retirer le thème « {theme.Name} » du projet ?{warning}").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        try
+        {
+            UpdateEffect(e => e with { ThemeId = null }, "Thème de couleurs");
+            var palettes = _runtime.Project.Palettes;
+            _runtime.Project.SavePalettes(palettes with { Palettes = [.. palettes.Palettes.Where(p => p.Id != theme.Id)] });
+            Load();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Message = $"Enregistrement impossible pour l'instant ({ex.Message}).";
+        }
+    }
+
+    /// <summary>
+    /// Remet dans la bibliothèque les modèles livrés qui en ont été retirés (essai P6 : un modèle retiré par erreur ne
+    /// pouvait plus revenir) ; les modèles du projet sont gardés.
+    /// </summary>
+    [RelayCommand]
+    private void RestoreDefaultTemplates()
+    {
+        var library = _runtime.Project.Effects;
+        var missing = DefaultEffects.Templates.Where(t => library.Templates.All(x => x.Id != t.Id)).ToList();
+        if (missing.Count == 0)
+        {
+            Message = "Tous les modèles livrés sont déjà dans la bibliothèque.";
+            return;
+        }
+
+        try
+        {
+            // Dans l'ordre livré, les modèles du projet à la suite.
+            var order = DefaultEffects.Templates.Select(t => t.Id).ToList();
+            var restored = library.Templates.Concat(missing)
+                .OrderBy(t => order.IndexOf(t.Id) is var i && i >= 0 ? i : int.MaxValue)
+                .ToList();
+            _runtime.Project.SaveEffects(library with { Templates = restored });
+            LoadLibrary();
+            Message = $"{missing.Count} modèle(s) livré(s) remis dans la bibliothèque.";
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
@@ -401,7 +513,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
             return;
         }
 
-        if (!await _dialogs.ConfirmAsync("Retirer le modèle", $"Retirer « {row.Template.Name} » de la bibliothèque ? Les scènes qui l'utilisent gardent leur effet.").ConfigureAwait(true))
+        if (!await _dialogs.ConfirmAsync("Retirer le modèle de la bibliothèque", $"Retirer le modèle « {row.Template.Name} » de la bibliothèque du projet ?\n\nCe n'est pas l'effet de la scène : les scènes gardent leurs effets. Un modèle livré retiré revient avec « Rétablir les modèles livrés ».").ConfigureAwait(true))
         {
             return;
         }
@@ -509,6 +621,8 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
 
     partial void OnThemeChanged(Choice<Guid?>? value)
     {
+        OnPropertyChanged(nameof(CanEditTheme));
+        OnPropertyChanged(nameof(UsesOwnColors));
         if (value is not null)
         {
             UpdateEffect(e => e with { ThemeId = value.Value }, "Thème de couleurs");
@@ -560,7 +674,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
 
             var palettes = _runtime.Project.Palettes.Palettes;
             SyncChoices(PositionPalettes, [new(null, "(aucune : autour de la position de l'étape)"), .. palettes.Where(p => p.Kind == PaletteKind.Position).Select(p => new Choice<Guid?>(p.Id, p.Name))]);
-            SyncChoices(Themes, [new(null, "(aucun : couleurs cochées)"), .. palettes.Where(p => p.Kind == PaletteKind.Theme).Select(p => new Choice<Guid?>(p.Id, p.Name))]);
+            SyncChoices(Themes, [new(null, "Aucun"), .. palettes.Where(p => p.Kind == PaletteKind.Theme).Select(p => new Choice<Guid?>(p.Id, p.Name))]);
             var colorPalettes = palettes.Where(p => p.Kind == PaletteKind.Color && p.Light is not null).ToList();
             if (ColorChips.Count != colorPalettes.Count || !ColorChips.Select(c => c.PaletteId).SequenceEqual(colorPalettes.Select(p => p.Id)))
             {
@@ -610,6 +724,14 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
             }
 
             Kind = effect.Shape;
+            var model = _runtime.Project.Effects.Templates.FirstOrDefault(t => t.Name == effect.Name)?.Effect
+                ?? DefaultEffects.Templates.FirstOrDefault(t => t.Name == effect.Name)?.Effect
+                ?? new SceneEffect { Shape = effect.Shape, Size = effect.IsPosition ? 60 : 1 };
+            DefaultPeriod = model.Period.Unit == DurationUnit.Bars ? model.Period.Value * Duration.BeatsPerBar : model.Period.Value;
+            DefaultSize = model.IsPosition ? model.Size : Math.Round(model.Size * 100);
+            DefaultCenter = Math.Round(model.Center * 100);
+            DefaultSpread = model.Spread;
+            DefaultDuty = Math.Round(model.DutyCycle * 100);
             if (Name?.Trim() != effect.Name)
             {
                 Name = effect.Name;

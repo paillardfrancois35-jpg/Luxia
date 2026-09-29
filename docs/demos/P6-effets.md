@@ -91,20 +91,25 @@ Dans l'écran **Contrôle**, l'onglet **Effets** apparaît de lui-même en bas, 
 1. Colonne **Effets** : **+ scène**, nommez-la « Mon effet » ; choisissez-la avec la bande **✎**, passez en **ÉDITION**.
 2. Sur le plan, sélectionnez PAR 1 à PAR 4 (clic sur le premier, puis Ctrl + clic sur les autres ; l'ordre de l'effet sera celui du plan, de gauche à droite).
 3. Onglet **Effets** : choisissez le modèle **Chenillard on/off**, **+ Ajouter à la sélection**. **Observez** : l'effet tourne tout de suite, sur la sortie ; le dessin montre la forme et un point par PAR (le blanc est le premier).
-4. Tournez les molettes : **Cycle** (glisser vers le haut = plus lent), **Allumé %**, **Décalage** (0 = tous ensemble). Double-clic sur une molette = valeur par défaut. Le changement se voit ~0,5 s après le dernier mouvement.
-5. **Forme** : essayez « Scintillement », puis « Sinus » ; **Répartition** : « Miroir », « Par groupes » (2 = pairs / impairs).
-6. **Ctrl+Z** : annule le dernier réglage. **Enregistrer comme modèle** : il rejoint la bibliothèque du projet.
-7. **👁 AVEUGLE** : même chose, mais la sortie ne bouge pas ; seul le plan (aperçu) montre l'effet.
+4. Réglez avec les **molettes** : cliquez **n'importe où** sur une molette puis glissez vers le **haut** (augmente) ou le **bas** ; la molette de la souris marche aussi. **Double-clic** (ou un chiffre tapé) : saisie de la valeur au clavier, **Entrée** pour valider. **Clic droit** : « Valeur par défaut » (celle du modèle : 25 % d'allumé pour le chenillard). Essayez **Cycle** (plus grand = plus lent), **Allumé %**, **Décalage** (0 = tous ensemble). Le changement se voit ~0,5 s après le dernier mouvement.
+5. Sur **cet effet déjà ajouté** (il est choisi dans la liste de gauche), changez la **Forme** dans la liste déroulante de droite : « Scintillement (au hasard) », puis « Sinus (vague douce) » ; changez la **Répartition** : « Miroir », puis « Par groupes » (2 = pairs / impairs).
+6. **Ctrl+Z** annule le dernier réglage (répétez pour remonter). Donnez un nom à l'effet (champ en haut à droite, par exemple « Ma vague »), puis **Enregistrer comme modèle** : le modèle « Ma vague » apparaît dans la liste déroulante des modèles (à gauche), prêt à être ajouté à d'autres appareils.
+7. Cliquez **👁 AVEUGLE** (en haut) : les réglages s'écrivent toujours dans l'étape, mais les vrais PAR ne bougent plus ; seul le **plan** (aperçu) montre l'effet. Revenez en **ÉDITION** pour le revoir sur la sortie.
+8. Un modèle se retire (ou revient) par **Bibliothèque ▾** sous « + Ajouter à la sélection » : « Retirer ce modèle de la bibliothèque… » (avec confirmation ; les scènes gardent leurs effets) et « Rétablir les modèles livrés ».
 
 ## Exemple 8 – Thèmes de couleurs (PAL-010)
 
 1. Lancez **Plein feu**, puis **Alternance Latino (pairs / impairs)** : jaune, orange, rouge, un PAR sur deux.
-2. Dans « Mon effet » (ÉDITION), forme **Alternance de couleurs** : thème « Latino » ; ou cochez vos couleurs (dans l'ordre des pastilles), puis **Enregistrer ces couleurs comme thème**.
+2. Dans « Mon effet » (ÉDITION), forme **Alternance de couleurs** : liste **Thème** = « Latino ». « Aucun » : cochez vous-même les couleurs de l'effet (pastilles, dans leur ordre).
+3. **+** à droite de la liste Thème : fenêtre **Nouveau thème de couleurs** : nom, crans à gauche (**+ Cran**, **▲ ▼** pour l'ordre, **Retirer**), couleur du cran choisi au sélecteur ou en tapant son code (« #FF8000 »). **Enregistrer** : l'effet prend ce thème.
+4. **✎** modifie un thème que vous avez créé, **🗑** le retire ; les six thèmes livrés (Latino, Froid…) ne se modifient ni ne se retirent (partez de l'un d'eux avec **+**).
 
 ## Exemple 9 – Scintillement UV (EFF-002, MOT-004)
 
-1. Lancez **Scintillement UV** : l'intensité des deux UV varie au hasard, différemment pour chacun.
-2. **Ce que ça illustre** : le hasard est **reproductible** (même graine de session, mêmes trames) : un enregistrement se rejoue à l'identique.
+1. Lancez **Plein feu** (colonne Intensité) : il règle le **Maître** des UV ; l'effet, lui, n'y touche pas.
+2. Lancez **Scintillement UV** (colonne Effets) : les **4 rangées de LED** de chaque UV varient au hasard, chacune de son côté (8 rangées en tout), 6 fois par seconde. Écran **Console** : les canaux 162 à 165 (UV 1) et 170 à 173 (UV 2) bougent, le Maître (161, 169) reste fixe.
+3. **À savoir** : « UV plein » (Ambiance) passe **au-dessus** de la couche Effets et fixe les rangées : arrêtez-le pour voir le scintillement.
+4. **Ce que ça illustre** : un effet anime les émetteurs, pas le Maître ; le hasard est **reproductible** (même graine de session, mêmes trames).
 
 ## Exemple 10 – Fondu par la teinte (MOT-054)
 
@@ -115,7 +120,8 @@ Dans l'écran **Contrôle**, l'onglet **Effets** apparaît de lui-même en bas, 
 
 1. Nouvelle scène « Chenillard généré » (colonne Couleurs), ✎, sélectionnez les 4 PAR au plan.
 2. Propriétés → **Assistant : générer les étapes** : « Chenillard de couleurs », cochez Rouge, Vert, Bleu, Jaune, maintien 0,5 s → **Générer les étapes** : 4 étapes, les couleurs tournent d'un PAR à l'autre. Ctrl+Z revient.
-3. Essayez « Balayage de positions » sur les lyres avec deux ou trois palettes de position.
+3. Pour **voir** le chenillard sur les PAR : **▶ Lancer** (Propriétés). En ÉDITION, il repasse d'abord en **LIVE** (sinon l'étape éditée, montrée par-dessus, cacherait la scène qui joue).
+4. Essayez « Balayage de positions » sur les lyres avec deux ou trois palettes de position.
 
 ## Exemple 12 – Sélection en cellules (INST-034)
 

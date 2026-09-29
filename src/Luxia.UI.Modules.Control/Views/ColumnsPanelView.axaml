@@ -58,7 +58,7 @@
       <ToggleButton Content="☰ Resserré" IsChecked="{Binding IsCompact}" Padding="8,0" FontSize="12" VerticalContentAlignment="Center"
                     ToolTip.Tip="Boutons de scène sur une ligne, environ moitié moins hauts (nom complet en infobulle) ; gardé sur ce poste" />
     </StackPanel>
-  <!-- ERG-030 (essai P6) : les en-têtes de couche restent en haut quand on fait défiler les scènes ; le défilement
+  <!-- ERG-030 (essai P6) : les en-têtes de couche restent en haut, chaque colonne fait défiler ses scènes ; le défilement
        horizontal (colonnes trop nombreuses) déplace en-têtes et scènes ensemble. -->
   <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
     <DockPanel x:Name="Board" HorizontalAlignment="Left" MinWidth="{Binding MinWidth}">
@@ -96,7 +96,7 @@
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
-      <ScrollViewer x:Name="ScenesScroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+      <!-- Un ascenseur par colonne (idée de l'utilisateur, essai P6) : chaque couche fait défiler ses propres scènes. -->
         <ItemsControl x:Name="ColumnsList" ItemsSource="{Binding Columns}" Classes.compact="{Binding IsCompact}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -105,7 +105,8 @@
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:ControlColumnViewModel">
-              <Border Background="#161B22" CornerRadius="0,0,8,8" Padding="6" Margin="0,0,6,0">
+              <Border Background="#161B22" CornerRadius="0,0,8,8" Padding="6,6,2,6" Margin="0,0,6,0">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
                 <StackPanel Spacing="6">
                   <!-- Boutons de scène à deux zones -->
                   <ItemsControl ItemsSource="{Binding Scenes}">
@@ -152,11 +153,11 @@
                           ToolTip.Tip="Nouvelle scène dans cette couche, choisie aussitôt pour l'édition"
                           Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
                 </StackPanel>
+                </ScrollViewer>
               </Border>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-      </ScrollViewer>
     </DockPanel>
   </ScrollViewer>
   </DockPanel>

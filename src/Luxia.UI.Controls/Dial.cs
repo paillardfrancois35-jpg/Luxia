@@ -1,6 +1,7 @@
 using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -9,8 +10,10 @@ namespace Luxia.UI.Controls;
 
 /// <summary>
 /// Molette (doc 60 §5, composant commun) : un réglage continu (vitesse, taille, décalage…) tourné à la souris.
-/// Glisser vers le haut ou la droite augmente (toute la course en 200 pixels), molette de la souris ± un pas
-/// (Maj : × 10), flèches ± un pas, double-clic : valeur par défaut. La valeur est liée dans les deux sens.
+/// Toute la surface répond (essai P6 : seul le dessin recevait le clic) : cliquer n'importe où puis glisser vers le haut
+/// augmente (toute la course en 200 pixels) ; molette de la souris ± un pas (Maj : × 10), flèches ± un pas ;
+/// **double-clic ou chiffre tapé : saisie au clavier** (comme les faders) ; clic droit : saisie ou valeur par défaut.
+/// La valeur est liée dans les deux sens.
 /// </summary>
 public sealed class Dial : Control
 {
@@ -55,14 +58,15 @@ public sealed class Dial : Control
     private static readonly IPen TrackPen = new Pen(new SolidColorBrush(Color.Parse("#30363D")), 5, lineCap: PenLineCap.Round);
     private static readonly IBrush DefaultAccent = new SolidColorBrush(Color.Parse("#58A6FF"));
     private static readonly IBrush LabelBrush = new SolidColorBrush(Color.Parse("#8B949E"));
-    private static readonly IPen FocusPen = new Pen(new SolidColorBrush(Color.Parse("#C9D1D9")), 1, new DashStyle([2, 2], 0));
+    private static readonly IPen FocusPen = new Pen(new SolidColorBrush(Color.Parse("#484F58")), 1);
 
     private Point? _dragStart;
     private double _dragStartValue;
 
     static Dial()
     {
-        AffectsRender<Dial>(ValueProperty, MinimumProperty, MaximumProperty, LabelProperty, ValueTextProperty, AccentProperty);
+        // IsFocused compris : sans lui, le cadre de focus restait dessiné après le passage à une autre molette (essai P6).
+        AffectsRender<Dial>(ValueProperty, MinimumProperty, MaximumProperty, LabelProperty, ValueTextProperty, AccentProperty, IsFocusedProperty);
         FocusableProperty.OverrideDefaultValue<Dial>(true);
     }
 
@@ -134,12 +138,29 @@ public sealed class Dial : Control
         maximum <= minimum ? 0 : Math.Clamp((value - minimum) / (maximum - minimum), 0, 1);
 
     /// <inheritdoc />
-    protected override Size MeasureOverride(Size availableSize) => new(64, 74);
+    protected override Size MeasureOverride(Size availableSize) => new(70, 78);
+
+    /// <summary>
+    /// Lit une valeur tapée (virgule ou point décimal, unité ou « % » tolérés) ; nulle si ce n'est pas un nombre.
+    /// </summary>
+    public static double? Parse(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        var cleaned = new string([.. text.Trim().Replace(',', '.').TakeWhile(c => char.IsDigit(c) || c is '.' or '-' or '+')]);
+        return double.TryParse(cleaned, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) ? value : null;
+    }
 
     /// <inheritdoc />
     public override void Render(DrawingContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
+
+        // Fond transparent : toute la surface reçoit le clic, pas seulement les pixels dessinés.
+        context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
         var size = Math.Min(Bounds.Width, Bounds.Height - 16);
         var center = new Point(Bounds.Width / 2, (size / 2) + 2);
         var radius = Math.Max(4, (size / 2) - 6);
@@ -164,7 +185,7 @@ public sealed class Dial : Control
 
         if (IsFocused)
         {
-            context.DrawRectangle(FocusPen, new Rect(Bounds.Size).Deflate(1), 4);
+            context.DrawRectangle(FocusPen, new Rect(Bounds.Size).Deflate(0.5), 6);
         }
     }
 
@@ -181,7 +202,8 @@ public sealed class Dial : Control
         Focus();
         if (e.ClickCount == 2)
         {
-            Set(DefaultValue);
+            _dragStart = null;
+            OpenEntry(null);
             e.Handled = true;
             return;
         }
@@ -202,20 +224,11 @@ public sealed class Dial : Control
             return;
         }
 
-        // Glisser relatif : vers le haut ou vers la droite augmente ; 200 pixels = toute la course.
+        // Glisser relatif, vers le haut pour augmenter ; 200 pixels = toute la course.
         var position = e.GetPosition(this);
-        var moved = (start.Y - position.Y) + (position.X - start.X);
+        var moved = start.Y - position.Y;
         var value = _dragStartValue + (moved / 200 * (Maximum - Minimum));
         Set(Step > 0 ? Math.Round(value / Step) * Step : value);
-    }
-
-    /// <inheritdoc />
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
-    {
-        ArgumentNullException.ThrowIfNull(e);
-        base.OnPointerReleased(e);
-        _dragStart = null;
-        e.Pointer.Capture(null);
     }
 
     /// <inheritdoc />
@@ -227,6 +240,81 @@ public sealed class Dial : Control
         var delta = e.Delta.Y != 0 ? e.Delta.Y : e.Delta.X;
         Set(Value + (Math.Sign(delta) * step));
         e.Handled = true;
+    }
+
+    /// <inheritdoc />
+    protected override void OnTextInput(TextInputEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+        base.OnTextInput(e);
+
+        // Un chiffre tapé sur la molette ouvre la saisie, déjà commencée.
+        if (e.Text is { Length: > 0 } text && (char.IsDigit(text[0]) || text[0] is ',' or '.' or '-'))
+        {
+            OpenEntry(text);
+            e.Handled = true;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override void OnPointerReleased(PointerReleasedEventArgs e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+        base.OnPointerReleased(e);
+        _dragStart = null;
+        e.Pointer.Capture(null);
+        if (e.InitialPressMouseButton == MouseButton.Right)
+        {
+            var enter = new MenuItem { Header = "Saisir une valeur…" };
+            enter.Click += (_, _) => OpenEntry(null);
+            var reset = new MenuItem { Header = string.Create(CultureInfo.CurrentCulture, $"Valeur par défaut ({DefaultValue.ToString(Format, CultureInfo.CurrentCulture)})") };
+            reset.Click += (_, _) => Set(DefaultValue);
+            new ContextMenu { Items = { enter, reset } }.Open(this);
+            e.Handled = true;
+        }
+    }
+
+    /// <summary>Ouvre le champ de saisie sous la molette (Entrée valide, Échap annule).</summary>
+    private void OpenEntry(string? start)
+    {
+        var box = new TextBox
+        {
+            Text = start ?? Value.ToString(Format, CultureInfo.CurrentCulture),
+            Width = 90,
+            HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Right,
+        };
+        var flyout = new Flyout { Content = box, Placement = PlacementMode.Bottom };
+        box.KeyDown += (_, k) =>
+        {
+            if (k.Key == Key.Enter)
+            {
+                if (Parse(box.Text) is { } value)
+                {
+                    Set(value);
+                }
+
+                flyout.Hide();
+                k.Handled = true;
+            }
+            else if (k.Key == Key.Escape)
+            {
+                flyout.Hide();
+                k.Handled = true;
+            }
+        };
+        flyout.Opened += (_, _) =>
+        {
+            box.Focus();
+            if (start is null)
+            {
+                box.SelectAll();
+            }
+            else
+            {
+                box.CaretIndex = box.Text?.Length ?? 0;
+            }
+        };
+        flyout.ShowAt(this);
     }
 
     /// <inheritdoc />

@@ -2031,7 +2031,7 @@
       "name": "Scintillement UV",
       "color": "#A371F7",
       "category": "Phase P6",
-      "notes": "Intensité des UV tirée au hasard 6 fois par seconde, différente pour chaque UV, reproductible (EFF-002 aléatoire, MOT-004).",
+      "notes": "Les 4 rangées de LED de chaque UV varient au hasard, 6 fois par seconde, chacune de son côté (8 rangées en tout), sans toucher au Maître des UV : lancer d'abord « Plein feu » (couche Intensité). Hasard reproductible (EFF-002 aléatoire, EFF-008, MOT-004).",
       "visibleInLive": true,
       "layerId": "7c1a0001-0000-4000-8000-000000000005",
       "loop": "infinite",
@@ -2071,7 +2071,9 @@
               },
               "spread": 0,
               "size": 0.6,
-              "center": 0.7
+              "center": 0.7,
+              "attribute": "uv",
+              "perCell": true
             }
           ]
         }

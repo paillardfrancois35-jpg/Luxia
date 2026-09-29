@@ -80,6 +80,23 @@ public sealed class ReferenceShowP6Tests
     }
 
     [Fact]
+    [Trait("Exigence", "EFF-002")]
+    [Trait("Exigence", "EFF-008")]
+    public void UvFlicker_VariesTheFourRows_LeavesTheMasterAlone()
+    {
+        var frames = Run("0 lancer \"Scintillement UV\"", 2);
+
+        // UV 1 (161) : Maître au canal 161, rangées UV aux canaux 162 à 165 (essai P6 : « laisser le Maître tranquille »).
+        frames.Select(f => f[160]).Distinct().Count().ShouldBe(1, "le Maître ne bouge pas");
+        for (var row = 0; row < 4; row++)
+        {
+            frames.Select(f => f[161 + row]).Distinct().Count().ShouldBeGreaterThan(3, $"rangée {row + 1} varie");
+        }
+
+        frames.Count(f => f[161] != f[162]).ShouldBeGreaterThan(frames.Count / 2, "les rangées varient chacune de leur côté");
+    }
+
+    [Fact]
     [Trait("Exigence", "EFF-003")]
     public void Circle_AroundTrackCenter_SpansSixtyDegreesOfPan()
     {

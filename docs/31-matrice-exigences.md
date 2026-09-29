@@ -129,7 +129,7 @@
 
 ## P3 – 51 exigences, 33 couvertes par des tests automatiques
 
-> Non réalisé : 5 · Partiel : 5 · Réalisé : 39 · Validé : 2
+> Non réalisé : 5 · Partiel : 5 · Réalisé : 38 · Validé : 3
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -163,7 +163,7 @@
 | [INST-031](exigences/INST-031.md) | I | Sélections automatiques | Réalisé | AutoSelectionsTests.Build_AllFixtures_IsOrderedByAddress<br>AutoSelectionsTests.Build_GroupsByCategoryAndByModel<br>AutoSelectionsTests.Build_NewFixtureAdded_AppearsWithoutAnyStoredState<br>InstallationViewModelTests.AutoSelections_IncludeAllAndByCategory |
 | [INST-032](exigences/INST-032.md) | I | Sélections manuelles créées et réordonnées | Partiel |  |
 | [INST-033](exigences/INST-033.md) | M | Opérations d'ordre sur une sélection | Réalisé | InstallationViewModelTests.CreateSelection_FromCheckedFixtures_ThenReverse<br>InstallationViewModelTests.ReorderSelection_ByPosition_UsesActiveVenuePlacements<br>SelectionRulesTests.FirstAndSecondHalf_SplitInTheMiddle<br>SelectionRulesTests.OddAndEven_SplitByRank<br>(+3) |
-| [INST-034](exigences/INST-034.md) | M | Sélection de cellules | Réalisé | SelectionRulesTests.ExpandCells_BarsBecomeOrderedSections_CollapseGoesBack |
+| [INST-034](exigences/INST-034.md) | M | Sélection de cellules | Validé | SelectionRulesTests.ExpandCells_BarsBecomeOrderedSections_CollapseGoesBack |
 | [INST-050](exigences/INST-050.md) | I | Créer, dupliquer, activer un lieu | Réalisé | InstallationViewModelTests.CreateVenue_ThenActivate_ChangesActiveVenue<br>InstallationViewModelTests.Venues_HaveAGenericVenueByDefault<br>ReferenceShowP3Tests.ReferenceShow_Venue_PlacesEveryFixture_NoneAbsent<br>StoresTests.VenueStore_Missing_ReturnsDefaultGenericVenue<br>(+1) |
 | [INST-051](exigences/INST-051.md) | I | Éditeur de plan | Partiel | InstallationViewModelTests.SavePlacements_PersistsPositionAndAbsence |
 | [INST-052](exigences/INST-052.md) | I | Appareil absent | Réalisé | InstallationViewModelTests.SavePlacements_PersistsPositionAndAbsence<br>RenderChainTests.AbsentFixture_IsEmittedAtZero<br>SimulatorViewModelTests.Refresh_AbsentFixture_IsHidden |
@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 71 couvertes par des tests automatiques
 
-> Partiel : 5 · Réalisé : 48 · Validé : 34
+> Partiel : 5 · Réalisé : 47 · Validé : 35
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -239,7 +239,7 @@
 | [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
 | [MOT-052](exigences/MOT-052.md) | I | Couleur logique vers roue de couleur | Validé | ColorConversionTests.ColorWheel_NeverPicksHalfColors<br>ColorConversionTests.ColorWheel_Red_PicksRedSlot_AtItsMedian<br>ColorConversionTests.ColorWheel_WhiteLogical_PicksOpenPosition |
 | [MOT-053](exigences/MOT-053.md) | M | UV et ambre en émetteurs indépendants | Réalisé | ColorConversionTests.Uv_Fixture_IgnoresColor_UnlessUvIsSpecified |
-| [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Réalisé | EffectCompilerTests.ColorGroups_OnePerRgbCell<br>EffectTests.HueFade_RedToGreen_PassesThroughYellow<br>EffectsPanelTests.StepHueFade_WrittenFromProperties |
+| [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Validé | EffectCompilerTests.ColorGroups_OnePerRgbCell<br>EffectTests.HueFade_RedToGreen_PassesThroughYellow<br>EffectsPanelTests.StepHueFade_WrittenFromProperties |
 | [MOT-070](exigences/MOT-070.md) | I | Blackout | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
 | [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
 | [MOT-090](exigences/MOT-090.md) | I | Conversion des attributs en octets selon le patch | Réalisé | RenderChainTests.Scene_Values_AreConvertedTo8And16Bits_WithInversion<br>ShowCompilerTests.Parameters_OfReferenceRig_HaveRolesAddressesAnd16Bits |
@@ -272,7 +272,7 @@
 | [SCN-031](exigences/SCN-031.md) | I | Outils d'attributs adaptés à la sélection | Partiel | ScenesViewModelTests.Programmer_SelectionShortcut_ThenColor_OverridesAttributesLive |
 | [SCN-032](exigences/SCN-032.md) | I | Seuls les attributs modifiés sont enregistrés | Validé | ScenesViewModelTests.OnlyTouchedAttributes_AreRecorded_AndRemoveTakesOneOut |
 | [SCN-033](exigences/SCN-033.md) | I | Enregistrer : remplacer, fusionner, nouvelle étape | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
-| [SCN-034](exigences/SCN-034.md) | I | Tester : seule ou dans son contexte | Validé | LayerMergeTests.Solo_MasksOtherPlaybacks_UntilStopped |
+| [SCN-034](exigences/SCN-034.md) | I | Tester : seule ou dans son contexte | Validé | EffectsPanelTests.Launch_InEdit_SwitchesToLive_SoTheSceneIsSeen<br>LayerMergeTests.Solo_MasksOtherPlaybacks_UntilStopped |
 | [SCN-035](exigences/SCN-035.md) | I | Aveugle | Validé | ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly |
 | [SCN-036](exigences/SCN-036.md) | I | Option « allumer en coloriant » | Validé | ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
 | [SCN-037](exigences/SCN-037.md) | M | Enregistrer depuis la sortie | Réalisé | ScenesViewModelTests.CaptureOutput_ThenCopyPasteMirror |
@@ -281,7 +281,7 @@
 
 ## P5 – 73 exigences, 51 couvertes par des tests automatiques
 
-> Partiel : 5 · Reporté (chantier ergonomie) : 10 · Réalisé : 22 · Validé : 36
+> Partiel : 5 · Reporté (chantier ergonomie) : 10 · Réalisé : 21 · Validé : 37
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -355,7 +355,7 @@
 | [MOT-102](exigences/MOT-102.md) | M | Instantané de reprise | Réalisé | ReliabilityTests.AbruptStop_ThenRestart_OffersToResumeTheSameScenes |
 | [PAL-004](exigences/PAL-004.md) | I | Palettes de position par lieu | Validé | VenuePaletteTests.GenericVenue_HasNoKey<br>VenuePaletteTests.Merge_ReplacesOnlyTheCapturedFixtures_InTheActiveVenue_AndAddsAFallback<br>VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
 | [PAL-008](exigences/PAL-008.md) | M | Palettes de position manquantes dans un lieu | Validé | VenuePaletteTests.SameScene_TwoVenues_DifferentPositions_WithGenericFallbackSignalled |
-| [PAL-010](exigences/PAL-010.md) | S | Palettes de combinaisons de couleurs | Réalisé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Themes_AddedToProjectsWithoutAny_NotReAddedWhenOneExists<br>EffectsPanelTests.Colors_SavedAsTheme_UsedByTheEffect<br>ReferenceShowP6Tests.ReferenceShow_P6_ContentIsThere_AndValid |
+| [PAL-010](exigences/PAL-010.md) | S | Palettes de combinaisons de couleurs | Validé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Themes_AddedToProjectsWithoutAny_NotReAddedWhenOneExists<br>EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked<br>ReferenceShowP6Tests.ReferenceShow_P6_ContentIsThere_AndValid |
 | [SORT-065](exigences/SORT-065.md) | M | Enregistrement des trames visible, chemin copiable | Réalisé |  |
 | [SORT-066](exigences/SORT-066.md) | M | Journal de l'enregistrement : actions, commandes et canaux entrelacés | Réalisé | LiveUvRepeatTests.Recording_JournalInterleavesClicksCommandsAndChannelChanges |
 
@@ -393,26 +393,27 @@
 | [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
-## P6 – 17 exigences, 16 couvertes par des tests automatiques
+## P6 – 18 exigences, 17 couvertes par des tests automatiques
 
-> Réalisé : 15 · Validé : 2
+> Réalisé : 8 · Validé : 10
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Réalisé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+5) |
-| [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Réalisé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+1) |
+| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+5) |
+| [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Réalisé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+2) |
 | [EFF-003](exigences/EFF-003.md) | I | Formes de position | Validé | EffectCompilerTests.Circle_AroundPositionPalette_CenterFromPalette_SizeInDegrees<br>EffectTests.PositionShapes_CircleAndEight<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees<br>(+1) |
-| [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Réalisé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
+| [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Validé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
 | [EFF-005](exigences/EFF-005.md) | I | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | Validé | EffectCompilerTests.Lag_Mirror_OddCount_CenterLeads<br>EffectCompilerTests.Lag_PhaseModes<br>EffectCompilerTests.Lag_Random_SameEffect_SameOrder_AllDistinct<br>EffectTests.Directions_BackwardAndPingPong<br>(+2) |
-| [EFF-006](exigences/EFF-006.md) | I | Aperçu en direct au simulateur pendant le réglage des paramètres | Réalisé | EffectTests.ShowStep_PinsStepWithEffects_AboveLayers_NotListedAsPlaying<br>EffectsPanelTests.Blind_EffectPlaysOnPreviewOnly<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt |
-| [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Réalisé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
-| [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Réalisé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime |
+| [EFF-006](exigences/EFF-006.md) | I | Aperçu en direct au simulateur pendant le réglage des paramètres | Validé | EffectTests.ShowStep_PinsStepWithEffects_AboveLayers_NotListedAsPlaying<br>EffectsPanelTests.Blind_EffectPlaysOnPreviewOnly<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt |
+| [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Réalisé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.Library_TemplateRemovedByMistake_ComesBackWithRestore<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
+| [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Validé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime<br>(+1) |
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
-| [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Réalisé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
-| [ERG-028](exigences/ERG-028.md) | M | Molette | Réalisé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
+| [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Validé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
+| [ERG-028](exigences/ERG-028.md) | M | Molette | Réalisé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
 | [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Réalisé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
 | [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Réalisé |  |
-| [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Réalisé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
-| [MOT-061](exigences/MOT-061.md) | I | Effet relatif | Réalisé | EffectTests.AbsoluteEffect_ReplacesStepValue<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectTests.RelativeEffect_WithoutStepValue_AddsToUnderlyingLayer |
+| [ERG-031](exigences/ERG-031.md) | M | Éditeur de thèmes | Réalisé | EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked |
+| [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Validé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
+| [MOT-061](exigences/MOT-061.md) | I | Effet relatif | Validé | EffectTests.AbsoluteEffect_ReplacesStepValue<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectTests.RelativeEffect_WithoutStepValue_AddsToUnderlyingLayer |
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
-| [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Réalisé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
+| [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |

@@ -24,31 +24,31 @@
       "key": "panmotor",
       "name": "Rotation continue du plateau",
       "attribute": "panContinuous",
-      "notes": "ScanLibrary : « Rotation of X Motor 1 / 2 ». Sens de variation de la vitesse à vérifier.",
+      "notes": "Mesuré sur l'appareil (essai P6, 2026-09-29, Q25) : 0 = arrêt ; 1-127 = sens 1 (horaire), de rapide à lent ; 128-255 = sens 2 (anti-horaire, déduit), de lent à rapide.",
       "capabilities": [
         {
           "min": 0,
-          "max": 85,
+          "max": 0,
           "kind": "noFunction",
-          "label": "Sans rotation"
+          "label": "Arrêt"
         },
         {
-          "min": 86,
-          "max": 171,
+          "min": 1,
+          "max": 127,
           "kind": "progressive",
-          "label": "Rotation sens 1, vitesse variable",
+          "label": "Rotation horaire, de rapide à lente",
           "parameter": {
             "nature": "vitesse",
-            "start": 0,
-            "end": 100,
+            "start": 100,
+            "end": 0,
             "unit": "%"
           }
         },
         {
-          "min": 172,
+          "min": 128,
           "max": 255,
           "kind": "progressive",
-          "label": "Rotation sens 2, vitesse variable",
+          "label": "Rotation anti-horaire, de lente à rapide",
           "parameter": {
             "nature": "vitesse",
             "start": 0,
