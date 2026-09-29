@@ -32,6 +32,8 @@ public sealed class ControlSession
     private Dictionary<(Guid Fixture, string Key), double> _stepMap = [];
     private List<Guid> _selection = [];
     private Scene? _working;
+    private SceneSet? _draftScenes;
+    private bool _showSuspended;
     private VenueSet? _workingVenues;
     private ControlSnapshot? _pendingBefore;
     private string _pendingDescription = string.Empty;
@@ -61,6 +63,18 @@ public sealed class ControlSession
 
     /// <summary>Raison donnée quand le verrou refuse une action.</summary>
     public const string LockedReason = "Verrou soirée : l'édition est bloquée (on joue seulement). Déverrouillez pour modifier.";
+
+    /// <summary>
+    /// Session d'édition d'un brouillon (fenêtre d'édition, ERG-033) : les scènes modifiées restent en mémoire et ne sont
+    /// écrites dans le projet que par <see cref="ApplyDraft"/> ; le moteur joue le brouillon (ERG-034).
+    /// </summary>
+    public bool IsDraft { get; private set; }
+
+    /// <summary>Le brouillon diffère des scènes enregistrées, ou un geste attend d'être écrit.</summary>
+    public bool HasDraftChanges => IsDraft && (_draftScenes is not null || HasPendingCommit);
+
+    /// <summary>Scènes telles que la session les voit : le brouillon s'il y en a un, sinon celles du projet.</summary>
+    private SceneSet Scenes => _draftScenes ?? _runtime.Project.Scenes;
 
     /// <summary>Appareils sélectionnés (identifiants du patch), dans l'ordre de sélection.</summary>
     public IReadOnlyList<Guid> Selection => _selection;
@@ -126,6 +140,12 @@ public sealed class ControlSession
 
         Commit();
         Mode = mode;
+        _showSuspended = false;
+        if (IsDraft && _draftScenes is not null)
+        {
+            PublishDraft();
+        }
+
         Push();
         return null;
     }
@@ -175,7 +195,7 @@ public sealed class ControlSession
     public void ChooseScene(Guid? sceneId)
     {
         Commit();
-        _working = sceneId is { } id ? _runtime.Project.Scenes.Scenes.FirstOrDefault(s => s.Id == id) : null;
+        _working = sceneId is { } id ? Scenes.Scenes.FirstOrDefault(s => s.Id == id) : null;
         EditStep = 0;
         if (_working is null)
         {
@@ -194,6 +214,7 @@ public sealed class ControlSession
         }
 
         Commit();
+        _showSuspended = false;
         EditStep = Math.Clamp(index, 0, scene.Steps.Count - 1);
         Push();
     }
@@ -408,7 +429,7 @@ public sealed class ControlSession
 
         Commit();
         var before = Snapshot();
-        if (Save(change(_runtime.Project.Scenes), null))
+        if (Save(change(Scenes), null))
         {
             _history.Record(before, description);
         }
@@ -441,7 +462,7 @@ public sealed class ControlSession
 
         var project = _runtime.Project;
         var scenes = _working is { } working && !ReferenceEquals(StoredScene(working.Id), working)
-            ? project.Scenes with { Scenes = [.. project.Scenes.Scenes.Select(s => s.Id == working.Id ? working : s)] }
+            ? Scenes with { Scenes = [.. Scenes.Scenes.Select(s => s.Id == working.Id ? working : s)] }
             : null;
         if (Save(scenes, _workingVenues))
         {
@@ -451,6 +472,114 @@ public sealed class ControlSession
         _pendingBefore = null;
         _workingVenues = null;
         Notify();
+    }
+
+    /// <summary>
+    /// Ouvre un brouillon de la scène (fenêtre d'édition, ERG-033) : la scène est choisie, en ÉDITION, et rien n'est écrit dans
+    /// le projet avant <see cref="ApplyDraft"/>. Renvoie la raison d'un refus (scène introuvable, verrou soirée).
+    /// </summary>
+    public string? BeginDraft(Guid sceneId)
+    {
+        if (IsLocked)
+        {
+            return LockedReason;
+        }
+
+        if (_runtime.Project.Scenes.Scenes.All(s => s.Id != sceneId))
+        {
+            return "Scène introuvable.";
+        }
+
+        EndDraft();
+        IsDraft = true;
+        _history.Clear();
+        ChooseScene(sceneId);
+        return SetMode(EditMode.Edit);
+    }
+
+    /// <summary>
+    /// <b>Appliquer</b> : écrit le brouillon dans la scène du projet (la sortie la joue désormais), sans fermer ; le brouillon
+    /// continue à partir de cet état.
+    /// </summary>
+    public void ApplyDraft()
+    {
+        if (!IsDraft)
+        {
+            return;
+        }
+
+        Commit();
+        if (_draftScenes is not { } draft)
+        {
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            _runtime.Project.SaveScenes(draft);
+            _draftScenes = null;
+            Message = null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Message = $"Enregistrement impossible pour l'instant ({ex.Message}). Réessayez dans un instant.";
+        }
+        finally
+        {
+            _saving = false;
+        }
+
+        _runtime.Show.SetWorkingCopy(null);
+        ReloadWorking();
+        Push();
+    }
+
+    /// <summary>
+    /// <b>Annuler</b> : retour à l'état d'origine de la scène, sans question ; les scènes déjà appliquées avec
+    /// <see cref="ApplyDraft"/> restent appliquées.
+    /// </summary>
+    public void DiscardDraft()
+    {
+        if (!IsDraft)
+        {
+            return;
+        }
+
+        _pendingBefore = null;
+        _workingVenues = null;
+        _draftScenes = null;
+        _history.Clear();
+        _runtime.Show.SetWorkingCopy(null);
+        ReloadWorking();
+        Push();
+    }
+
+    /// <summary>Ferme le brouillon (après Valider ou Annuler) : plus de scène éditée, plus rien envoyé aux moteurs.</summary>
+    public void EndDraft()
+    {
+        if (!IsDraft)
+        {
+            return;
+        }
+
+        DiscardDraft();
+        ChooseScene(null);
+        ReleasePushed();
+        IsDraft = false;
+        _runtime.PreviewActive = false;
+        Notify();
+    }
+
+    /// <summary>
+    /// ▶ Lancer dans la fenêtre d'édition : la scène jouée par le moteur (le brouillon) n'est plus recouverte par l'étape montrée
+    /// par-dessus ; le montre reprend au premier réglage ou au choix d'une autre étape.
+    /// </summary>
+    public void SuspendShow()
+    {
+        Commit();
+        _showSuspended = true;
+        Push();
     }
 
     /// <summary>Annule le dernier geste (Ctrl+Z).</summary>
@@ -568,6 +697,9 @@ public sealed class ControlSession
         _working = null;
         _workingVenues = null;
         _pendingBefore = null;
+        _draftScenes = null;
+        IsDraft = false;
+        _showSuspended = false;
         _selection = [];
         EditStep = 0;
         Mode = EditMode.Live;
@@ -604,6 +736,7 @@ public sealed class ControlSession
 
     private void BeginGesture(string description)
     {
+        _showSuspended = false;
         if (_pendingBefore is null)
         {
             _pendingBefore = Snapshot();
@@ -639,15 +772,15 @@ public sealed class ControlSession
         return result;
     }
 
-    private ControlSnapshot Snapshot() => new(_runtime.Project.Scenes, _runtime.Project.Venues);
+    private ControlSnapshot Snapshot() => new(Scenes, _runtime.Project.Venues);
 
-    private Scene? StoredScene(Guid id) => _runtime.Project.Scenes.Scenes.FirstOrDefault(s => s.Id == id);
+    private Scene? StoredScene(Guid id) => Scenes.Scenes.FirstOrDefault(s => s.Id == id);
 
     private void Restore(ControlSnapshot snapshot)
     {
         var project = _runtime.Project;
         Save(
-            ReferenceEquals(snapshot.Scenes, project.Scenes) ? null : snapshot.Scenes,
+            ReferenceEquals(snapshot.Scenes, Scenes) ? null : snapshot.Scenes,
             ReferenceEquals(snapshot.Venues, project.Venues) ? null : snapshot.Venues);
         ReloadWorking();
         Push();
@@ -666,13 +799,30 @@ public sealed class ControlSession
         }
     }
 
+    // Le brouillon n'est écrit nulle part : le moteur (la sortie, ou seulement l'aperçu en AVEUGLE) joue la scène éditée.
+    private void SetDraft(SceneSet scenes)
+    {
+        _draftScenes = ReferenceEquals(scenes, _runtime.Project.Scenes) ? null : scenes;
+        PublishDraft();
+    }
+
+    private void PublishDraft()
+    {
+        var edited = _working is { } working && _draftScenes?.Scenes.FirstOrDefault(s => s.Id == working.Id) is { } copy ? copy : null;
+        _runtime.Show.SetWorkingCopy(edited, previewOnly: Mode == EditMode.Blind);
+    }
+
     /// <summary>Écrit dans le projet ; un refus passager du disque est dit en clair (doc 03 §11), pas levé.</summary>
     private bool Save(SceneSet? scenes, VenueSet? venues)
     {
         _saving = true;
         try
         {
-            if (scenes is not null)
+            if (scenes is not null && IsDraft)
+            {
+                SetDraft(scenes);
+            }
+            else if (scenes is not null)
             {
                 _runtime.Project.SaveScenes(scenes);
             }
@@ -702,6 +852,7 @@ public sealed class ControlSession
         var resolver = new ValueResolver(_runtime.Show.Patch, _runtime.Project.Palettes);
         _liveMap = Resolve(resolver, _live);
         _stepMap = Mode == EditMode.Live ? [] : Resolve(resolver, StepValues);
+        var showing = Mode != EditMode.Live && !_showSuspended;
         var output = new Dictionary<(Guid, string), double>(_liveMap);
         var preview = new Dictionary<(Guid, string), double>();
 
@@ -710,7 +861,7 @@ public sealed class ControlSession
         var animated = Mode == EditMode.Live ? [] : AnimatedKeys(resolver);
         foreach (var (key, level) in _stepMap)
         {
-            if (animated.Contains(key))
+            if (!showing || animated.Contains(key))
             {
                 continue;
             }
@@ -725,7 +876,7 @@ public sealed class ControlSession
             }
         }
 
-        (Guid, int)? shown = _working is { } scene && Mode != EditMode.Live && StepEffects.Count > 0 ? (scene.Id, EditStep) : null;
+        (Guid, int)? shown = _working is { } scene && showing && StepEffects.Count > 0 ? (scene.Id, EditStep) : null;
         ShowStepOn(_runtime.Engine, Mode == EditMode.Edit ? shown : null);
         ShowStepOn(_runtime.Preview, Mode == EditMode.Blind ? shown : null);
         PushTo(_runtime.Engine, output);

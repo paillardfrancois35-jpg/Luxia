@@ -108,6 +108,31 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     vm.SetUiScaleCommand.Execute("1.25");
     Capture("Contrôle - écran de jeu 125 %");
     vm.SetUiScaleCommand.Execute("1");
+
+    // Fenêtre d'édition (ERG-033, ERG-034) : brouillon du chenillard, puis aveugle sur les lyres.
+    var editor = new Luxia.UI.Modules.Control.Views.EditorWindow { Width = 1440, Height = 860 };
+    editor.Attach(game.Editor);
+    editor.Show();
+    Guid FixtureId(string name) => runtime.Project.Installation.Fixtures.First(f => f.Name == name).Id;
+    var work = game.Editor.Workbench;
+    game.Editor.Open(SceneNamed("Chenillard 4 couleurs").Id);
+    work.Session.ChooseStep(1);
+    work.Session.Select([FixtureId("PAR 1"), FixtureId("PAR 2"), FixtureId("PAR 3"), FixtureId("PAR 4")]);
+    work.Settings.SelectedTab = 1;
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - brouillon", editor);
+    game.Editor.Cancel();
+    game.Editor.Open(SceneNamed("Lyres sur 3 positions").Id);
+    editor.Present(null);
+    game.Editor.IsBlind = true;
+    work.Session.ChooseStep(2);
+    work.Session.Select([FixtureId("Lyre 1"), FixtureId("Lyre 2")]);
+    work.Settings.SelectedTab = 2;
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - aveugle", editor);
+    game.Editor.Cancel();
 }
 
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.

@@ -276,6 +276,14 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         {
             _session.Commit();
 
+            // Fenêtre d'édition : on joue le brouillon là où on le voit (sortie en ÉDITION, aperçu en AVEUGLE), sans changer de mode.
+            if (_session.IsDraft)
+            {
+                _session.SuspendShow();
+                _session.DisplayEngine.Send(new LaunchSceneCommand(CommandOrigin.User, scene.Id));
+                return;
+            }
+
             // Essai P6 : en ÉDITION, l'étape éditée est montrée par-dessus les scènes et cachait celle qu'on lance.
             if (_session.Mode == EditMode.Edit)
             {
@@ -293,6 +301,10 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         if (_session.EditScene is { } scene)
         {
             _runtime.Engine.Send(new StopSceneCommand(CommandOrigin.User, scene.Id));
+            if (_session.IsDraft)
+            {
+                _runtime.Preview.Send(new StopSceneCommand(CommandOrigin.User, scene.Id));
+            }
         }
     }
 

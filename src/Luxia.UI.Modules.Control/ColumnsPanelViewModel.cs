@@ -194,7 +194,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
 
         var scene = new Scene { Name = name.Trim(), LayerId = column.Layer.Id, Color = column.Layer.Color };
         _session.ChangeScenes(set => set with { Scenes = [.. set.Scenes, scene] }, "Nouvelle scène");
-        _session.ChooseScene(scene.Id);
+        RequestEdit(scene.Id);
     }
 
     /// <summary>Renomme une scène.</summary>

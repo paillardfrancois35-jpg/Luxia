@@ -1,0 +1,98 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Luxia.UI.Modules.Control"
+        x:Class="Luxia.UI.Modules.Control.Views.EditorWindow"
+        x:DataType="vm:EditorViewModel"
+        Title="{Binding WindowTitle}"
+        Width="1440" Height="860" MinWidth="1000" MinHeight="620"
+        WindowStartupLocation="CenterOwner" Background="#0D1117">
+  <Window.Styles>
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="#161B22" />
+      <Setter Property="BorderBrush" Value="#30363D" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Margin" Value="4" />
+      <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+    <Style Selector="TextBlock.cardtitle">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="12,8,40,2" />
+    </Style>
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="14" />
+    </Style>
+    <Style Selector="Button.action">
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="MinWidth" Value="110" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+    <!-- Titre : rappel que l'on travaille sur un brouillon -->
+    <Panel DockPanel.Dock="Top">
+      <Border Background="{Binding ModeColor}" Opacity="0.16" />
+      <Border BorderBrush="{Binding ModeColor}" BorderThickness="0,0,0,2" Padding="14,8">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Border Background="{Binding ModeColor}" CornerRadius="4" Padding="8,2" VerticalAlignment="Center">
+            <TextBlock Text="BROUILLON" FontWeight="Bold" FontSize="12" Foreground="#0D1117" />
+          </Border>
+          <Border Width="22" Height="22" CornerRadius="4" Background="{Binding SceneColor}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding SceneName}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <TextBlock VerticalAlignment="Center" Foreground="#8B949E" FontSize="13"
+                     Text="— Appliquer l'écrit dans la scène sans fermer ; Annuler revient à l'état d'origine." />
+          <Border Background="#D29922" CornerRadius="4" Padding="8,2" VerticalAlignment="Center" IsVisible="{Binding HasChanges}">
+            <TextBlock Text="modifié" FontWeight="Bold" FontSize="12" Foreground="#0D1117" />
+          </Border>
+        </StackPanel>
+      </Border>
+    </Panel>
+
+    <!-- Pied : aveugle, état de la sortie, Appliquer / Annuler / Valider -->
+    <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="14,8">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="Ctrl+Z / Ctrl+Y dans le brouillon" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0" />
+          <Button Classes="action" Content="Appliquer" Command="{Binding ApplyCommand}"
+                  ToolTip.Tip="Écrit la scène dans le projet (elle jouera ainsi partout) sans fermer la fenêtre" />
+          <Button Classes="action" Content="Annuler" Command="{Binding CancelCommand}"
+                  ToolTip.Tip="Revient à l'état d'origine de la scène et ferme, sans question" />
+          <Button Classes="action" Content="Valider" FontWeight="Bold" Background="{Binding ModeColor}" Foreground="#0D1117" Command="{Binding ValidateCommand}"
+                  MinWidth="130" ToolTip.Tip="Écrit la scène dans le projet et ferme" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <CheckBox IsChecked="{Binding IsBlind}" Content="👁 Aveugle" FontWeight="SemiBold" FontSize="14" MinHeight="32"
+                    ToolTip.Tip="Aveugle : le brouillon n'est montré qu'à l'aperçu du plan, la sortie sur scène ne change pas" />
+          <TextBlock Text="{Binding SafetyText}" Foreground="#8B949E" FontSize="13" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding Message}" Foreground="#D29922" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="520" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <!-- Disposition fixe : plan à gauche, réglages et effets au centre, propriétés et étapes à droite -->
+    <Grid ColumnDefinitions="1*,2*,1.1*" Margin="4">
+      <Border Grid.Column="0" Classes="card">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Classes="cardtitle" Text="Plan des appareils" />
+          <ContentControl x:Name="PlanHost" />
+        </DockPanel>
+      </Border>
+      <Border Grid.Column="1" Classes="card">
+        <TabControl x:Name="MiddleTabs" Margin="0" Padding="0">
+          <TabItem Header="Réglages des appareils"><ContentControl x:Name="SettingsHost" /></TabItem>
+          <TabItem Header="Effets"><ContentControl x:Name="EffectsHost" /></TabItem>
+        </TabControl>
+      </Border>
+      <Border Grid.Column="2" Classes="card">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Classes="cardtitle" Text="Propriétés et étapes" />
+          <ContentControl x:Name="PropertiesHost" />
+        </DockPanel>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

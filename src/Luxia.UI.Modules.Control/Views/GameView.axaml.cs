@@ -56,6 +56,8 @@ public partial class GameView : UserControl
         {
             BuildLayout(vm);
 
+            // ✎ : la fenêtre d'édition (ERG-033), non bloquante, sur un second écran si on veut.
+            vm.EditRequested += (_, _) => ShowEditor(vm);
             vm.PanelRequested += (_, id) =>
             {
                 if (_layout is not null && _factory is not null)
@@ -66,6 +68,19 @@ public partial class GameView : UserControl
                 }
             };
         }
+    }
+
+    private EditorWindow? _editor;
+
+    private void ShowEditor(GameViewModel vm)
+    {
+        if (_editor is null)
+        {
+            _editor = new EditorWindow();
+            _editor.Attach(vm.Editor);
+        }
+
+        _editor.Present(TopLevel.GetTopLevel(this) as Window);
     }
 
     /// <inheritdoc />

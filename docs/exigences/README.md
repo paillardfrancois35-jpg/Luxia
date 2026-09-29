@@ -194,9 +194,9 @@
 | [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | Réalisé |
 | [ERG-008](ERG-008.md) | 8e couche par défaut « Libre » | ERG | I | Validé |
 | [ERG-009](ERG-009.md) | Identité visuelle | ERG | I | Validé |
-| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Validé |
-| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Validé |
-| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Validé |
+| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Abandonné |
+| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Abandonné |
+| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Abandonné |
 | [ERG-013](ERG-013.md) | Zones du lieu dans l'écran Contrôle | ERG | I | Validé |
 | [ERG-014](ERG-014.md) | Plan des appareils = la sélection | ERG | I | Validé |
 | [ERG-015](ERG-015.md) | Bande d'étapes | ERG | M | Validé |
@@ -217,9 +217,9 @@
 | [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Validé |
 | [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Validé |
 | [ERG-032](ERG-032.md) | Écran de jeu | ERG2 | I | Réalisé |
-| [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | À faire |
-| [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | À faire |
-| [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Partiel |
+| [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | Réalisé, à valider sur matériel |
+| [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | Réalisé, à valider sur matériel |
+| [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Réalisé |
 | [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Réalisé |
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Réalisé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Réalisé, à valider sur matériel |

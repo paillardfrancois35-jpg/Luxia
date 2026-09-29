@@ -53,6 +53,8 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Columns = new ColumnsPanelViewModel(runtime, Session, dialogs) { EditedScene = () => _editedSceneId };
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
+        Editor = new EditorViewModel(runtime, dialogs);
+        Editor.Closed += (_, _) => EditedSceneId = null;
         Columns.EditRequested += (_, id) => Edit(id);
         Columns.MessageChanged += (_, _) => Message = Columns.Message;
         Session.Changed += (_, _) => UpdateState();
@@ -76,9 +78,12 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     /// <summary>Panneau Journal.</summary>
     public JournalPanelViewModel Journal { get; }
 
+    /// <summary>Fenêtre d'édition d'une scène (brouillon, ERG-033) : ouverte par la bande ✎.</summary>
+    public EditorViewModel Editor { get; }
+
     /// <summary>
-    /// La bande ✎ d'une scène est cliquée (ERG-033) : l'hôte ouvre la fenêtre d'édition. Le verrou soirée est déjà
-    /// contrôlé ici : rien n'est levé si l'édition est bloquée.
+    /// La fenêtre d'édition doit être montrée (ou ramenée au premier plan) pour cette scène. Le verrou soirée et les autres
+    /// refus sont déjà traités ici : rien n'est levé si l'édition n'est pas permise.
     /// </summary>
     public event EventHandler<Guid>? EditRequested;
 
@@ -133,7 +138,20 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        if (Editor.Open(sceneId) is { } reason)
+        {
+            // Une autre scène a des modifications : la fenêtre passe au premier plan pour qu'on la valide ou l'annule.
+            Message = reason;
+            if (Editor.SceneId is { } open)
+            {
+                EditRequested?.Invoke(this, open);
+            }
+
+            return;
+        }
+
         Message = null;
+        EditedSceneId = sceneId;
         EditRequested?.Invoke(this, sceneId);
     }
 
@@ -141,6 +159,12 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ToggleLock()
     {
+        if (!Session.IsLocked && Editor.IsOpen)
+        {
+            Message = "Fermez d'abord la fenêtre d'édition (Valider ou Annuler) avant de poser le verrou soirée.";
+            return;
+        }
+
         Session.SetLocked(!Session.IsLocked);
         Message = null;
         Journal.Log(Session.IsLocked ? "🔒 Verrou soirée posé : jouer seulement" : "🔓 Verrou soirée levé");

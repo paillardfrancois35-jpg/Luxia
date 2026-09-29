@@ -361,7 +361,7 @@
 
 ## ERG – 27 exigences, 19 couvertes par des tests automatiques
 
-> Abandonné : 1 · En cours : 1 · Réalisé : 2 · Validé : 23
+> Abandonné : 4 · En cours : 1 · Réalisé : 2 · Validé : 20
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -374,9 +374,9 @@
 | [ERG-007](exigences/ERG-007.md) | I | Maquettes de la disposition Contrôle | Réalisé |  |
 | [ERG-008](exigences/ERG-008.md) | I | 8e couche par défaut « Libre » | Validé | SceneUsageAndStoreTests.DefaultLayers_HaveEightNonFlashAndFlash_WithFreeLayerWithoutFamilies |
 | [ERG-009](exigences/ERG-009.md) | I | Identité visuelle | Validé |  |
-| [ERG-010](exigences/ERG-010.md) | I | Mode LIVE de l'écran Contrôle | Validé | ControlSessionTests.EditAndBlind_WithoutScene_AreRefusedWithAReason<br>ControlSessionTests.Live_OverrideStays_WhenASceneOnTheSameChannelIsLaunched<br>ControlSessionTests.Live_SettingIsTemporaryOverride_ReleasedByReleaseAll<br>ControlSessionTests.ProjectReopened_BackToLive_WithNothingPushed |
-| [ERG-011](exigences/ERG-011.md) | I | Mode ÉDITION | Validé | ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>ControlSessionTests.Edit_ShowsTheStepOnOutput_UntilBackToLive<br>ControlSessionTests.Edit_WritesIntoStep_OneUndoEntryPerGesture<br>(+1) |
-| [ERG-012](exigences/ERG-012.md) | I | Mode AVEUGLE | Validé | ControlSessionTests.Blind_WritesStep_WithoutChangingTheOutput |
+| [ERG-010](exigences/ERG-010.md) | I | Mode LIVE de l'écran Contrôle | Abandonné | ControlSessionTests.EditAndBlind_WithoutScene_AreRefusedWithAReason<br>ControlSessionTests.Live_OverrideStays_WhenASceneOnTheSameChannelIsLaunched<br>ControlSessionTests.Live_SettingIsTemporaryOverride_ReleasedByReleaseAll<br>ControlSessionTests.ProjectReopened_BackToLive_WithNothingPushed |
+| [ERG-011](exigences/ERG-011.md) | I | Mode ÉDITION | Abandonné | ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>ControlSessionTests.Edit_ShowsTheStepOnOutput_UntilBackToLive<br>ControlSessionTests.Edit_WritesIntoStep_OneUndoEntryPerGesture<br>(+1) |
+| [ERG-012](exigences/ERG-012.md) | I | Mode AVEUGLE | Abandonné | ControlSessionTests.Blind_WritesStep_WithoutChangingTheOutput |
 | [ERG-013](exigences/ERG-013.md) | I | Zones du lieu dans l'écran Contrôle | Validé | ControlPanelsTests.Settings_Zones_DrawAllowedAndForbidden_Modify_Delete<br>ControlSessionTests.EditVenues_IsOneUndoableGesture |
 | [ERG-014](exigences/ERG-014.md) | I | Plan des appareils = la sélection | Validé | ControlPanelsTests.Plan_ClickCtrlClickRectangle_BuildTheSharedSelection<br>ControlPanelsTests.Plan_QuickSelections_EveryOther_Invert_None<br>ControlPanelsTests.Plan_ShowsOutput_OrPreviewInBlind<br>PlanAndStepStripTests.FixturesIn_Rectangle_KeepsOnlyFixturesInside |
 | [ERG-015](exigences/ERG-015.md) | M | Bande d'étapes | Validé | PlanAndStepStripTests.Widths_AreProportionalToDurations_AndFill<br>PlanAndStepStripTests.Widths_ShortOrZeroStep_KeepsMinimumWidth<br>PlanAndStepStripTests.Widths_TooNarrow_EveryCellAtMinimum |
@@ -385,7 +385,7 @@
 | [ERG-018](exigences/ERG-018.md) | I | Colonnes de l'écran Contrôle | Validé | ControlPanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>ControlPanelsTests.Compact_IsKeptOnThisComputer<br>ControlPanelsTests.ContextMenu_RenameDuplicateColorLayerHideDelete<br>ControlPanelsTests.EditBand_AsksForTheProperties_AndExplainsHowToWrite<br>(+8) |
 | [ERG-019](exigences/ERG-019.md) | I | Réglages des appareils | Validé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>ControlPanelsTests.Settings_ColorInLive_OverridesOutput_AndKeepsTheRequestedColorShown<br>ControlPanelsTests.Settings_HeaderSaysWhereSettingsGo<br>ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>(+4) |
 | [ERG-020](exigences/ERG-020.md) | I | Démonstration | Validé |  |
-| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays |
+| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused<br>DraftSessionTests.BeginDraft_IsRefusedUnderTheEveningLock_OrForAnUnknownScene<br>EditorViewModelTests.EveningLock_RefusesToOpen<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays<br>(+1) |
 | [ERG-022](exigences/ERG-022.md) | M | Taille de l'interface | Validé | PreferencesAndProjectTests.UiScale_DefaultsTo100Percent_AndRoundTrips |
 | [ERG-023](exigences/ERG-023.md) | I | Looks | Validé | ControlPanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>ControlPanelsTests.Looks_Capture_LeavesTheGrandMasterToTheOperator<br>ControlPanelsTests.Looks_FunctionKeys_PlayByRank<br>ControlPanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>(+3) |
 | [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Abandonné |  |
@@ -418,16 +418,16 @@
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
 
-## ERG2 – 8 exigences, 5 couvertes par des tests automatiques
+## ERG2 – 8 exigences, 6 couvertes par des tests automatiques
 
-> Partiel : 1 · Réalisé : 4 · Réalisé, à valider sur matériel : 1 · À faire : 2
+> Réalisé : 5 · Réalisé, à valider sur matériel : 3
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [ERG-032](exigences/ERG-032.md) | I | Écran de jeu | Réalisé | ControlLayoutTests.DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel<br>ControlLayoutTests.Store_KeepsTheGameLayoutInItsOwnFile_TheOldOnesAreIgnored<br>GameViewModelTests.EditBand_AsksForTheEditWindow_WithTheSceneId_AndChangesNothingElse<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays<br>(+3) |
-| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire | GameViewModelTests.TheSceneOpenInTheEditor_IsOutlined_AndCannotBeRenamedOrDeletedFromTheGameScreen |
-| [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
-| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | Partiel |  |
+| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | Réalisé, à valider sur matériel | DraftSessionTests.BeginDraft_ChoosesTheSceneInEdit_WithoutWritingAnything<br>DraftSessionTests.BeginDraft_IsRefusedUnderTheEveningLock_OrForAnUnknownScene<br>DraftSessionTests.Editing_KeepsTheDraftInMemory_TheProjectSceneStaysAsItWas_TheEngineGetsTheDraft<br>DraftSessionTests.EndDraft_LeavesNoSceneEdited_NoOutputChange_AndTheDraftIsGone<br>(+16) |
+| [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | Réalisé, à valider sur matériel | DraftSessionTests.ApplyDraft_WritesTheSceneIntoTheProject_AndTheDraftGoesOn<br>DraftSessionTests.Blind_TheOutputKeepsTheSavedScene_OnlyThePreviewSeesTheDraft<br>DraftSessionTests.DiscardDraft_GoesBackToTheOriginalScene_KeepingWhatWasApplied<br>DraftSessionTests.SuspendShow_LetsTheDraftSceneBePlayedWithoutTheEditedStepOnTop<br>(+2) |
+| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | Réalisé |  |
 | [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | Réalisé | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>DimmerGroupsViewModelTests.AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack<br>(+18) |
 | [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Réalisé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+11) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Réalisé, à valider sur matériel | DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>MidiDimmerTests.DimmerFader_TakesOverOnlyAfterCrossingTheCurrentLevel<br>MidiDimmerTests.Faders1To8_DriveTheFirstEightDimmers_AndFader9DoesNothing<br>MidiDimmerTests.LayersPlatine_IsUnchanged_EvenWhenTheProjectHasDimmers<br>(+6) |

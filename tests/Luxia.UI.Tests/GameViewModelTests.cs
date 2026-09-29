@@ -46,6 +46,58 @@ public sealed class GameViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-033")]
+    public void EditBand_OpensTheEditorOnThatScene_OutlinesIt_AndTheOutlineGoesWhenTheEditorCloses()
+    {
+        var button = Button("Chenillard 4 couleurs");
+
+        _vm.Columns.ChooseForEditCommand.Execute(button);
+
+        _vm.Editor.IsOpen.ShouldBeTrue();
+        _vm.Editor.SceneId.ShouldBe(button.Scene.Id);
+        _vm.EditedSceneId.ShouldBe(button.Scene.Id);
+        Button("Chenillard 4 couleurs").IsEditTarget.ShouldBeTrue();
+
+        _vm.Editor.CancelCommand.Execute(null);
+
+        _vm.EditedSceneId.ShouldBeNull();
+        Button("Chenillard 4 couleurs").IsEditTarget.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-033")]
+    public void AnotherScene_WhileTheEditorHasChanges_IsRefused_AndTheEditorIsBroughtForward()
+    {
+        var asked = new List<Guid>();
+        _vm.EditRequested += (_, id) => asked.Add(id);
+        _vm.Columns.ChooseForEditCommand.Execute(Button("Chenillard 4 couleurs"));
+        _vm.Editor.Session.UpdateScene(s => s with { Name = "Modifiée" }, "Nom");
+        _vm.Editor.Session.Commit();
+        _vm.Editor.Refresh();
+        asked.Clear();
+
+        _vm.Columns.ChooseForEditCommand.Execute(Button("Plein feu"));
+
+        _vm.Editor.SceneId.ShouldBe(Button("Chenillard 4 couleurs").Scene.Id);
+        _vm.Message.ShouldNotBeNull();
+        asked.ShouldBe([Button("Chenillard 4 couleurs").Scene.Id], "la fenêtre passe au premier plan");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-021")]
+    [Trait("Exigence", "ERG-033")]
+    public void TheEveningLock_CannotBeSetWhileTheEditorIsOpen()
+    {
+        _vm.Columns.ChooseForEditCommand.Execute(Button("Plein feu"));
+
+        _vm.ToggleLockCommand.Execute(null);
+
+        _vm.IsLocked.ShouldBeFalse();
+        _vm.Message.ShouldNotBeNull();
+        _vm.Message.ShouldContain("fenêtre d'édition");
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-032")]
     [Trait("Exigence", "ERG-021")]
     public void LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays()

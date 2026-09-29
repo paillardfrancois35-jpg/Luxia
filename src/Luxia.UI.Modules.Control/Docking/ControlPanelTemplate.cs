@@ -43,7 +43,8 @@ public sealed class ControlPanelTemplate : IDataTemplate
         return WithHelp(view, ControlPanels.Get(tool.Id));
     }
 
-    private static Panel WithHelp(Avalonia.Controls.Control content, ControlPanel info)
+    /// <summary>Le contenu d'un panneau avec son bouton « ? » (aide en trois lignes) : aussi dans la fenêtre d'édition.</summary>
+    public static Panel WithHelp(Avalonia.Controls.Control content, ControlPanel info)
     {
         var help = new Button
         {
