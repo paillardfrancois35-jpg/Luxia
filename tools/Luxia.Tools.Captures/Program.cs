@@ -260,6 +260,15 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Installation.Install
     var tabs = window.GetVisualDescendants().OfType<TabControl>().First();
     tabs.SelectedItem = tabs.Items.OfType<TabItem>().First(t => (t.Header as string) == "Gestion des dimmers");
     Capture("Installation - Gestion des dimmers");
+
+    // Panneau « Groupes dimmer » de l'écran Contrôle (ERG-037) : mêmes groupes, mêmes niveaux.
+    if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewModel) is { Page: Luxia.UI.Modules.Control.ControlViewModel dimmersControl } dimmersControlPage)
+    {
+        vm.SelectedPage = dimmersControlPage;
+        dimmersControl.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Dimmers);
+        Tick(5);
+        Capture("Contrôle - Groupes dimmer");
+    }
 }
 
 // Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.

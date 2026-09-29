@@ -36,6 +36,7 @@ public sealed class ControlPanelTemplate : IDataTemplate
             ControlPanels.Journal => new JournalPanelView(),
             ControlPanels.Looks => new LooksPanelView(),
             ControlPanels.Pilot => new PilotPanelView(),
+            ControlPanels.Dimmers => new DimmersPanelView(),
             _ => new TextBlock { Text = ControlPanels.Get(tool.Id).Help, Margin = new Thickness(12, 36) },
         };
         view.DataContext = tool.Context;

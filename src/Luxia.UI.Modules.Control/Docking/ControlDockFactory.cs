@@ -40,7 +40,7 @@ public sealed class ControlDockFactory : Factory
     {
         var bottom = Split(0.46, Orientation.Horizontal, Tools(0.34, ControlPanels.Plan), Tools(0.66, ControlPanels.Settings, ControlPanels.Effects, ControlPanels.Journal));
         var left = Split(0.78, Orientation.Vertical, Tools(0.58, ControlPanels.Columns), bottom);
-        var right = Split(0.24, Orientation.Vertical, Tools(0.66, ControlPanels.Properties), Tools(0.34, ControlPanels.Looks));
+        var right = Split(0.24, Orientation.Vertical, Tools(0.66, ControlPanels.Properties), Tools(0.34, ControlPanels.Looks, ControlPanels.Dimmers));
         var main = Split(double.NaN, Orientation.Horizontal, left, right);
         main.Id = "controle";
         return Root(main);
@@ -49,7 +49,8 @@ public sealed class ControlDockFactory : Factory
     // Spectacle (doc 60 §6, F10) : les colonnes en grand, le pilote automatique et ses interventions, le journal.
     private IRootDock CreateShow()
     {
-        var right = Split(0.28, Orientation.Vertical, Tools(0.62, ControlPanels.Pilot, ControlPanels.Looks), Tools(0.38, ControlPanels.Journal));
+        var top = Split(0.62, Orientation.Vertical, Tools(0.55, ControlPanels.Dimmers), Tools(0.45, ControlPanels.Pilot, ControlPanels.Looks));
+        var right = Split(0.28, Orientation.Vertical, top, Tools(0.38, ControlPanels.Journal));
         var main = Split(double.NaN, Orientation.Horizontal, Tools(0.72, ControlPanels.Columns), right);
         main.Id = "spectacle";
         return Root(main);

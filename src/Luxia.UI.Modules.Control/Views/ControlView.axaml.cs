@@ -152,6 +152,7 @@ public partial class ControlView : UserControl
             [ControlPanels.Journal] = () => vm.Journal,
             [ControlPanels.Looks] = () => vm.Looks,
             [ControlPanels.Pilot] = () => vm.Looks,
+            [ControlPanels.Dimmers] = () => vm.Dimmers,
         };
         _factory = new ControlDockFactory(contexts) { Preset = vm.LayoutPreset };
         _store = new ControlLayoutStore(vm.LayoutFolder, vm.LayoutPreset);
@@ -166,18 +167,33 @@ public partial class ControlView : UserControl
         AddNewPanels(vm);
     }
 
-    // Disposition enregistrée par une version antérieure : un panneau apparu depuis (Effets, P6) y est ajouté à sa place
-    // livrée, sans prendre le premier plan ; ensuite, le fermer reste possible (il ne revient plus tout seul).
+    // Disposition enregistrée par une version antérieure : un panneau apparu depuis (Effets, P6 ; Groupes dimmer, Contrôle 2)
+    // y est ajouté à sa place livrée, sans prendre le premier plan ; ensuite, le fermer reste possible (il ne revient plus tout seul).
     private void AddNewPanels(ControlViewModel vm)
     {
-        if (_layout is null || _factory is null || vm.LayoutPreset != ControlLayoutPreset.Control
-            || DockTree.Find(_layout, ControlPanels.Effects).Place != PanelPlace.Absent)
+        if (_layout is null || _factory is null)
         {
             return;
         }
 
-        var (active, _) = DockTree.Find(_layout, ControlPanels.Settings);
-        _factory.ShowPanel(_layout, ControlPanels.Effects);
+        var added = false;
+        var active = DockTree.Find(_layout, ControlPanels.Settings).Dockable;
+        foreach (var id in vm.LayoutPreset == ControlLayoutPreset.Control ? new[] { ControlPanels.Effects, ControlPanels.Dimmers } : [ControlPanels.Dimmers])
+        {
+            if (DockTree.Find(_layout, id).Place != PanelPlace.Absent)
+            {
+                continue;
+            }
+
+            _factory.ShowPanel(_layout, id);
+            added = true;
+        }
+
+        if (!added)
+        {
+            return;
+        }
+
         if (active is not null)
         {
             _factory.SetActiveDockable(active);
@@ -252,6 +268,7 @@ public partial class ControlView : UserControl
                     ControlPanels.Settings => vm.Settings,
                     ControlPanels.Looks or ControlPanels.Pilot => vm.Looks,
                     ControlPanels.Effects => vm.Effects,
+                    ControlPanels.Dimmers => vm.Dimmers,
                     _ => vm.Journal,
                 };
             }

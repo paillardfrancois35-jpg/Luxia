@@ -33,6 +33,9 @@ public static class ControlPanels
     /// <summary>Pilote automatique (F10, réservé jusqu'à P10).</summary>
     public const string Pilot = "pilote";
 
+    /// <summary>Groupes dimmer (ERG-037) : un fader par groupe d'appareils qui a un dimmer.</summary>
+    public const string Dimmers = "dimmers";
+
     /// <summary>Tous les panneaux.</summary>
     public static IReadOnlyList<ControlPanel> All { get; } =
     [
@@ -43,6 +46,7 @@ public static class ControlPanels
         new(Effects, "Effets", "Les effets de l'étape éditée : une forme (vague, cercle, arc-en-ciel…) qui tourne en boucle sur les appareils choisis, décalée d'un appareil à l'autre. Choisissez les appareils au plan, un modèle de la bibliothèque, « + Ajouter », puis réglez avec les molettes (glisser, molette de la souris, double-clic = valeur par défaut). En ÉDITION on le voit sur la sortie, en AVEUGLE sur l'aperçu."),
         new(Journal, "Journal", "Ce qui vient de se passer, le plus récent en haut : scènes, sûreté, enregistrements, annulations."),
         new(Looks, "Looks", "Un look est une liste d'actions appelée d'un clic : « Temps mort » = tout arrêter, lancer l'ambre, master Intensité à 40 %. On le crée en capturant ce qui joue. Le pilote automatique s'en servira pour réagir à la musique."),
+        new(Dimmers, "Groupes dimmer", "Un fader par groupe d'appareils qui a un dimmer (PAR, UV, lyres…), rangé dans l'arbre de Installation › Gestion des dimmers. Il multiplie l'intensité de ses appareils, après les couches : 50 % sur un groupe, moitié moins de lumière. Les niveaux se multiplient le long de l'arbre. C'est une retouche en direct, jamais enregistrée ; les 8 premiers faders sont ceux de la seconde platine MIDI. Double-clic sur un fader : retour à 100 %."),
         new(Pilot, "Pilote automatique", "Ce que joue le mode automatique, pourquoi, et les boutons d'intervention (les looks). Le pilote lui-même arrive en P10."),
     ];
 

@@ -26,4 +26,10 @@ public sealed record MidiLayout
 
     /// <summary>Affectations modifiées (<c>midi.json</c>, MIDI-007) : elles remplacent l'affectation par défaut du contrôle.</summary>
     public IReadOnlyList<MidiBinding> Bindings { get; init; } = [];
+
+    /// <summary>Dimmers de groupe, dans l'ordre de l'arbre (ERG-037) : faders 1 à 8 de la platine des dimmers, puis page suivante.</summary>
+    public IReadOnlyList<MidiDimmerSlot> Dimmers { get; init; } = [];
+
+    /// <summary>Platine des dimmers désignée dans <c>midi.json</c> (<see cref="MidiSettings.DimmerController"/>), ou <c>null</c>.</summary>
+    public string? DimmerController { get; init; }
 }

@@ -484,6 +484,7 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 ```json
 {
   "formatVersion": 1,
+  "dimmerController": "MK1",
   "bindings": [
     { "model": "MK1", "control": "pad 1 1", "action": "launchScene", "sceneId": "…" },
     { "control": "droite 5", "action": "smokeBurst" },
@@ -495,7 +496,14 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 | Propriété | Rôle |
 |---|---|
 | `control` | `pad <colonne 1-8> <ligne 1-8>` (ligne 1 en haut), `bas <1-8>`, `droite <1-8>` (de haut en bas), `fader <1-9>` (9 = master) |
-| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `none` |
+| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `groupDimmer` (fader, avec `layerId` = identifiant du groupe), `groupDimmerReset`, `none` |
+
+| `dimmerController` | Platine des dimmers de groupe (ERG-038) : morceau du nom du port ou du modèle (`"MK1"`). Absent = la **deuxième platine branchée** (ordre alphabétique des ports) quand le projet a des dimmers de groupe ; une seule platine, ou aucun dimmer : toutes gardent les couches |
+
+**Platine des dimmers** (ERG-038) : faders 1 à 8 = les 8 premiers dimmers de groupe dans l'ordre de l'arbre (reprise douce), boutons
+du bas 1 à 8 = remettre le dimmer à 100 % (LED allumée tant que le dimmer est retouché), Maj + bas 3 / 4 = dimmers précédents /
+suivants (8 par page) ; pads éteints et fader 9 sans effet ; boutons de droite (Blackout, Flash…) inchangés. La platine des
+couches ne change pas. Une affectation `bindings` prime toujours sur ce rôle.
 
 Profils des modèles (notes, LED) : fichiers de données du module (`src/Luxia.Midi/Profiles/*.json`).
 

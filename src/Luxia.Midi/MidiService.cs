@@ -50,14 +50,15 @@ public sealed class MidiService : IDisposable
         _worker = new Thread(Work) { IsBackground = true, Name = "MIDI" };
     }
 
-    /// <summary>Contrôleurs branchés (nom court et port), pour l'affichage.</summary>
+    /// <summary>Contrôleurs branchés (nom court, port et rôle), pour l'affichage.</summary>
     public IReadOnlyList<string> Connected
     {
         get
         {
+            ApplyRoles(_layout());
             lock (_lock)
             {
-                return [.. _devices.Select(d => $"{d.Controller.Profile.ShortName} ({d.Controller.PortName})")];
+                return [.. _devices.Select(d => $"{d.Controller.Profile.ShortName} ({d.Controller.PortName}){(d.Controller.Role == MidiRole.Dimmers ? " – dimmers de groupe" : string.Empty)}")];
             }
         }
     }
@@ -112,6 +113,7 @@ public sealed class MidiService : IDisposable
     {
         var snapshot = _snapshot();
         var layout = _layout();
+        ApplyRoles(layout);
         lock (_lock)
         {
             foreach (var device in _devices)
@@ -163,6 +165,28 @@ public sealed class MidiService : IDisposable
         _incoming.Dispose();
     }
 
+    // ERG-038 : rôle de chaque platine d'après le projet (dimmers de groupe) et le réglage de midi.json.
+    private void ApplyRoles(MidiLayout layout)
+    {
+        lock (_lock)
+        {
+            var roles = MidiRoles.Assign([.. _devices.Select(d => (d.Controller.Profile, d.Controller.PortName))], layout);
+            for (var i = 0; i < _devices.Count; i++)
+            {
+                var controller = _devices[i].Controller;
+                lock (controller)
+                {
+                    if (controller.Role != roles[i])
+                    {
+                        controller.Role = roles[i];
+                        controller.ResetLeds();
+                        _logger.LogInformation("MIDI : {Controleur} ({Port}) sert maintenant aux {Role}", controller.Profile.ShortName, controller.PortName, roles[i] == MidiRole.Dimmers ? "dimmers de groupe" : "couches");
+                    }
+                }
+            }
+        }
+    }
+
     private void Open(string input, ControllerProfile profile, IReadOnlyList<string> outputs)
     {
         var controller = new MidiController(profile, input);
@@ -212,9 +236,11 @@ public sealed class MidiService : IDisposable
     private void Process(Device device, MidiMessage message)
     {
         IReadOnlyList<Command> commands;
+        var layout = _layout();
+        ApplyRoles(layout);
         lock (device.Controller)
         {
-            commands = device.Controller.Handle(message, _layout(), _snapshot());
+            commands = device.Controller.Handle(message, layout, _snapshot());
         }
 
         foreach (var command in commands)

@@ -338,7 +338,7 @@
 | [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Validé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
 | [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Validé | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
 | [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Validé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
-| [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine<br>MidiServiceTests.WithDimmers_TheSecondPlatineServesThemWhileTheFirstKeepsTheScenes |
 | [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Validé | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
 | [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
@@ -418,9 +418,9 @@
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
 
-## ERG2 – 8 exigences, 2 couvertes par des tests automatiques
+## ERG2 – 8 exigences, 3 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 1 · À faire : 6
+> Réalisé : 2 · Réalisé, à valider sur matériel : 1 · À faire : 5
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -429,6 +429,6 @@
 | [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
 | [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
 | [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | Réalisé | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>DimmerGroupsViewModelTests.AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack<br>(+18) |
-| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>(+4) |
-| [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | À faire |  |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Réalisé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+10) |
+| [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Réalisé, à valider sur matériel | DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>MidiDimmerTests.DimmerFader_TakesOverOnlyAfterCrossingTheCurrentLevel<br>MidiDimmerTests.Faders1To8_DriveTheFirstEightDimmers_AndFader9DoesNothing<br>MidiDimmerTests.LayersPlatine_IsUnchanged_EvenWhenTheProjectHasDimmers<br>(+6) |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |

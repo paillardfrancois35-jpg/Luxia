@@ -11,6 +11,13 @@
     "formatVersion": {
       "const": 1
     },
+    "dimmerController": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "platine des dimmers de groupe (ERG-038) : morceau du nom du port ou du modèle (« MK1 ») ; absent = la deuxième platine branchée quand le projet a des groupes à dimmer"
+    },
     "bindings": {
       "type": "array",
       "items": {
@@ -46,7 +53,9 @@
               "smoke",
               "smokeBurst",
               "freeze",
-              "stopAll"
+              "stopAll",
+              "groupDimmer",
+              "groupDimmerReset"
             ]
           },
           "sceneId": {

@@ -66,6 +66,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Journal = new JournalPanelViewModel(runtime);
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Effects = new EffectsPanelViewModel(runtime, Session, dialogs);
+        Dimmers = new DimmersPanelViewModel(runtime, Journal);
         Session.Changed += (_, _) =>
         {
             _changes++;
@@ -94,6 +95,9 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Panneau Effets (doc 16 §6).</summary>
     public EffectsPanelViewModel Effects { get; }
+
+    /// <summary>Panneau Groupes dimmer (ERG-037).</summary>
+    public DimmersPanelViewModel Dimmers { get; }
 
     /// <summary>Panneau Journal.</summary>
     public JournalPanelViewModel Journal { get; }
@@ -149,6 +153,7 @@ public sealed partial class ControlViewModel : ViewModelBase, IRefreshable
         Settings.Refresh();
         Properties.Refresh();
         Effects.Refresh();
+        Dimmers.Refresh();
         CountDownCommit();
         Journal.Refresh();
     }

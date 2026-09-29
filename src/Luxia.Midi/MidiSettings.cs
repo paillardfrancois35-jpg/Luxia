@@ -11,4 +11,10 @@ public sealed record MidiSettings
 
     /// <summary>Affectations modifiées.</summary>
     public IReadOnlyList<MidiBinding> Bindings { get; init; } = [];
+
+    /// <summary>
+    /// Platine des dimmers de groupe (ERG-038) : morceau du nom du port ou du modèle (« MK1 »). Absent = la deuxième platine
+    /// branchée (ordre alphabétique des ports), quand le projet a des dimmers de groupe.
+    /// </summary>
+    public string? DimmerController { get; init; }
 }

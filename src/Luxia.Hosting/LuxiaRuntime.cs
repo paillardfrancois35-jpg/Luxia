@@ -603,6 +603,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             SmokeBurstSeconds = live.SmokeBurstSeconds,
             ActiveClickRestarts = live.ActiveSceneClick == Scenes.Model.ActiveSceneClick.Restart,
             Bindings = project.Midi.Bindings,
+            Dimmers = [.. Patch.Rules.GroupRules.Layout(project.Groups).Where(n => n.Group.HasDimmer).Select(n => new MidiDimmerSlot(n.Group.Id, n.Group.Name))],
+            DimmerController = project.Midi.DimmerController,
         };
     }
 
