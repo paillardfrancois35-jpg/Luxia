@@ -19,6 +19,7 @@ public static class ProjectFiles
             LayerStore.Load(folder).Value,
             SceneStore.Load(folder).Value,
             PaletteStore.Load(folder).Value,
-            SafetyStore.Load(folder).Value);
+            SafetyStore.Load(folder).Value,
+            GroupStore.Load(folder).Value);
     }
 }

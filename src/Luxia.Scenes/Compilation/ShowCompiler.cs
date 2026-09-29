@@ -74,7 +74,8 @@ public static class ShowCompiler
         }
 
         var safety = SafetyCompiler.Build(patch, provisional, content.Safety ?? new SafetySettings(), content.Venues.Active, issues);
-        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety, ColorGroups(patch, provisional)), issues);
+        var (dimmerGroups, parameterGroups) = DimmerCompiler.Build(patch, content.Installation, content.Groups, parameters, issues);
+        return new CompileResult(new ShowModel(parameters, layers, scenes, aliases, safety, ColorGroups(patch, provisional), dimmerGroups, parameterGroups), issues);
     }
 
     /// <summary>Paramètres des appareils patchés (jumeaux regroupés sur l'appareil de référence).</summary>

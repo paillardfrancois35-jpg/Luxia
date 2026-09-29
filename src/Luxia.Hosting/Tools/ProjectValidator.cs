@@ -39,6 +39,8 @@ public static class ProjectValidator
         var (midi, midiMessage) = Midi.MidiStore.Load(folder);
         var (looks, looksMessage) = LookStore.Load(folder);
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
+        var (groups, groupsMessage) = GroupStore.Load(folder);
+        AddLoadMessage(issues, GroupStore.FileName, groupsMessage);
         AddLoadMessage(issues, LookStore.FileName, looksMessage);
         AddLoadMessage(issues, EffectLibraryStore.FileName, effectsMessage);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
@@ -51,7 +53,7 @@ public static class ProjectValidator
         AddLoadMessage(issues, Midi.MidiStore.FileName, midiMessage);
 
         var library = new ProjectFixtureLibrary(folder);
-        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety);
+        var content = new ProjectContent(installation, venues, library.Find, layers, scenes, palettes, safety, groups);
         issues.AddRange(ShowCompiler.Compile(content).Issues);
         issues.AddRange(CheckScenes(scenes));
         issues.AddRange(CheckLayers(scenes, layers, palettes));

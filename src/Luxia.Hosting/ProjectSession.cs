@@ -146,6 +146,12 @@ public sealed class ProjectSession
             messages.Add(looksMessage);
         }
 
+        var (groups, groupsMessage) = GroupStore.Load(folder);
+        if (groupsMessage is not null)
+        {
+            messages.Add(groupsMessage);
+        }
+
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         if (effectsMessage is not null)
         {
@@ -164,6 +170,7 @@ public sealed class ProjectSession
         Live = live;
         Midi = midi;
         Looks = looks;
+        Groups = groups;
         Effects = effects;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
@@ -259,6 +266,20 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>Arbre des groupes d'appareils et de leurs dimmers (<c>groupes.json</c>, ERG-036).</summary>
+    public FixtureGroupSet Groups { get; private set; } = new();
+
+    /// <summary>Remplace l'arbre des groupes, l'enregistre (<c>groupes.json</c>) et recompile le moteur (ERG-036, ERG-037).</summary>
+    public void SaveGroups(FixtureGroupSet groups)
+    {
+        ArgumentNullException.ThrowIfNull(groups);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        GroupStore.Save(folder, groups);
+        Groups = groups;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Bibliothèque d'effets (<c>effets.json</c>, EFF-007) ; modèles livrés si absente.</summary>
     public EffectLibrary Effects { get; private set; } = DefaultEffects.Create();
 
@@ -307,12 +328,14 @@ public sealed class ProjectSession
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
         var (looks, looksMessage) = LookStore.Load(folder);
+        var (groups, groupsMessage) = GroupStore.Load(folder);
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         Live = live;
         Midi = midi;
         Looks = looks;
+        Groups = groups;
         Effects = effects;
-        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, effectsMessage }.OfType<string>());
+        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, groupsMessage, effectsMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

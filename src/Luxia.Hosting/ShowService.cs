@@ -74,7 +74,8 @@ public sealed class ShowService
             _project.Layers,
             scenes,
             _project.Palettes,
-            _project.Safety);
+            _project.Safety,
+            _project.Groups);
     }
 
     /// <summary>Compile le projet et charge le résultat dans le moteur.</summary>

@@ -15,7 +15,7 @@
 | [GEN-003](exigences/GEN-003.md) | I | Atelier et Live indépendants | Réalisé | DependencyRulesTests.UserInterfaceModules_DoNotReferenceApplication |
 | [GEN-030](exigences/GEN-030.md) | I | Tick à 40 Hz (25-44 Hz) | Réalisé, à valider sur matériel | TickLoopTests.RateHz_IsClampedTo25To44<br>TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
 | [GEN-031](exigences/GEN-031.md) | I | Gigue du tick < 5 ms | Réalisé, à valider sur matériel | TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
-| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
+| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | GroupRulesTests.GroupStore_Missing_ReturnsNoGroup_ThenSaveAndLoadRoundTrips<br>SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>(+1) |
 | [GEN-051](exigences/GEN-051.md) | I | Version de format et migrations | Réalisé | VersionedJsonFileTests.Load_OldVersion_MigratesAndKeepsBackup |
 | [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid<br>(+1) |
 | [GEN-060](exigences/GEN-060.md) | I | Blackout au démarrage | Réalisé | RenderEngineTests.Tick_WithoutAnything_ProducesBlackoutFrame |
@@ -428,7 +428,7 @@
 | [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire |  |
 | [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
 | [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
-| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | En cours | GroupDimmerTests.ShowModel_ParentAfterChild_IsRefused |
-| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>GroupDimmerTests.GroupDimmer_HalvesIntensity_NotColors<br>GroupDimmerTests.Proportional_KeepsTheShapeOfAnEffect_NotACeiling<br>(+2) |
+| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | En cours | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>GroupDimmerTests.ShowModel_ParentAfterChild_IsRefused<br>(+5) |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>GroupDimmerTests.GroupDimmer_HalvesIntensity_NotColors<br>(+3) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | À faire |  |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |
