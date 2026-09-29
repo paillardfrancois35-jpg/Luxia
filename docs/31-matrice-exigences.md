@@ -418,9 +418,17 @@
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
 
-## ERG2 – 0 exigences, 0 couvertes par des tests automatiques
+## ERG2 – 8 exigences, 0 couvertes par des tests automatiques
 
-> 
+> À faire : 8
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
+| [ERG-032](exigences/ERG-032.md) | I | Écran de jeu | À faire |  |
+| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire |  |
+| [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
+| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
+| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | À faire |  |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | À faire |  |
+| [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | À faire |  |
+| [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |
