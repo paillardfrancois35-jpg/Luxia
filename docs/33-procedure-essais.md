@@ -14,6 +14,11 @@
 | Lecture | Tout | Tout (guide, docs, code pour comprendre un comportement) |
 | LuXia | Peut le fermer pour compiler ; annonce la version à vérifier | Demande à l'utilisateur ce qu'il voit ; ne lance ni ne ferme LuXia |
 
+**Modèle** (décision de l'utilisateur, 2026-09-29, chantier « Contrôle 2 ») : la discussion test peut tourner avec un
+modèle plus léger (Sonnet 5) : elle ne fait que suivre le guide et noter des résultats. La discussion dev garde le modèle
+le plus solide pour les lots d'architecture. À la fin du développement, la discussion dev **rédige** le guide d'essai
+(`docs/demos/…`) et le fichier de résultats amorcé (`docs/essais/…-resultats.md`), puis donne le message du §4 rempli.
+
 ## 2. Déroulement
 
 1. La discussion **dev** livre la phase : guide `docs/demos/Pn-*.md`, version à vérifier (lue dans la version du produit de
