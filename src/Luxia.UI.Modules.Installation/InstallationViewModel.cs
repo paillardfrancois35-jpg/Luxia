@@ -84,9 +84,13 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
         _runtime = runtime;
         _dialogs = dialogs;
         _logger = runtime.Loggers.CreateLogger<InstallationViewModel>();
+        Dimmers = new DimmerGroupsViewModel(runtime, dialogs);
         _runtime.Project.Changed += (_, _) => LoadAll();
         LoadAll();
     }
+
+    /// <summary>Onglet « Gestion des dimmers » (ERG-036).</summary>
+    public DimmerGroupsViewModel Dimmers { get; }
 
     /// <summary>Univers de l'installation (INST-001).</summary>
     public ObservableCollection<int> Universes { get; } = [];
@@ -118,6 +122,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     /// <inheritdoc />
     public void Refresh()
     {
+        Dimmers.RefreshLevels();
         if (_identifyingFixtureId is null)
         {
             return;
@@ -617,6 +622,7 @@ public sealed partial class InstallationViewModel : ViewModelBase, IRefreshable
     private void LoadAllCore()
     {
         HasProject = _runtime.Project.Folder is not null;
+        Dimmers.Reload();
         LibraryModels.Clear();
         foreach (var entry in _runtime.Library.Entries)
         {

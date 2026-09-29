@@ -220,7 +220,7 @@
 | [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | À faire |
 | [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | À faire |
 | [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | À faire |
-| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | En cours |
+| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Réalisé |
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | En cours |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | À faire |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | À faire |

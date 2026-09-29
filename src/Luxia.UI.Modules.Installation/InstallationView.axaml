@@ -198,6 +198,152 @@
         </Grid>
       </TabItem>
 
+      <!-- Gestion des dimmers (ERG-036, ERG-037) : arbre des groupes d'appareils -->
+      <TabItem Header="Gestion des dimmers">
+        <Grid DataContext="{Binding Dimmers}" x:DataType="vm:DimmerGroupsViewModel" ColumnDefinitions="1.3*,1.2*,1*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+          <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Message}" Foreground="#58A6FF" Margin="0,0,0,6"
+                     IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+          <!-- Arbre des groupes -->
+          <Border Grid.Row="1" Grid.Column="0" Classes="panel" Margin="0,0,8,0">
+            <DockPanel>
+              <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
+                <TextBlock Classes="section" Text="Arbre des groupes" VerticalAlignment="Center" />
+                <TextBlock Text="un appareil dans un seul groupe" Opacity="0.6" FontSize="11" VerticalAlignment="Center" />
+              </StackPanel>
+              <WrapPanel DockPanel.Dock="Bottom" Margin="0,6,0,0" ItemSpacing="6" LineSpacing="6">
+                <Button Content="+ Groupe" MinHeight="32" Command="{Binding AddGroupCommand}" />
+                <Button Content="+ Sous-groupe" MinHeight="32" Command="{Binding AddSubGroupCommand}"
+                        ToolTip.Tip="Ajoute un groupe dans le groupe choisi" />
+                <Button Content="▲" MinHeight="32" Command="{Binding ShiftGroupCommand}" CommandParameter="-1" ToolTip.Tip="Monter parmi ses frères" />
+                <Button Content="▼" MinHeight="32" Command="{Binding ShiftGroupCommand}" CommandParameter="1" ToolTip.Tip="Descendre parmi ses frères" />
+                <Button Content="Supprimer…" MinHeight="32" Command="{Binding DeleteGroupCommand}" Classes="danger" />
+              </WrapPanel>
+              <ListBox ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow}">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:GroupRowViewModel">
+                    <DockPanel Margin="{Binding Indent}" MinHeight="34">
+                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center"
+                                  IsVisible="{Binding HasDimmer}"
+                                  ToolTip.Tip="Niveau actuel du dimmer (lecture seule) : il se règle à l'écran de jeu ou sur la seconde platine MIDI.">
+                        <ProgressBar Value="{Binding LevelPercent}" Minimum="0" Maximum="100" MinWidth="0" Width="46" Height="10" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding LevelText}" FontWeight="SemiBold" Width="42" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding FaderText}" FontSize="11" Opacity="0.6" Width="30" VerticalAlignment="Center"
+                                   ToolTip.Tip="Fader de la seconde platine MIDI (les 8 premiers dimmers)" />
+                      </StackPanel>
+                      <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Summary}" FontSize="11" Opacity="0.6" TextTrimming="CharacterEllipsis" />
+                      </StackPanel>
+                    </DockPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </DockPanel>
+          </Border>
+
+          <!-- Détail du groupe choisi -->
+          <Border Grid.Row="1" Grid.Column="1" Classes="panel" Margin="0,0,8,0">
+            <ScrollViewer>
+              <StackPanel Spacing="10">
+                <TextBlock Classes="section" Text="{Binding DetailTitle}" />
+                <StackPanel Spacing="10" IsVisible="{Binding HasSelection}">
+                  <StackPanel Spacing="3">
+                    <TextBlock Text="Nom" Opacity="0.6" FontSize="12" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                      <TextBox Text="{Binding EditName}" Width="260" />
+                      <Button Content="Renommer" MinHeight="32" Command="{Binding ApplyNameCommand}" />
+                    </StackPanel>
+                    <TextBlock Text="Le groupe des appareils sans groupe existe toujours : vous pouvez le renommer, pas le supprimer."
+                               Opacity="0.6" FontSize="11" TextWrapping="Wrap" IsVisible="{Binding IsUnassignedSelected}" />
+                  </StackPanel>
+                  <StackPanel Spacing="3" IsVisible="{Binding IsGroupSelected}">
+                    <TextBlock Text="Groupe parent" Opacity="0.6" FontSize="12" />
+                    <ComboBox ItemsSource="{Binding ParentChoices}" SelectedItem="{Binding SelectedParent}" Width="260" />
+                  </StackPanel>
+                  <StackPanel IsVisible="{Binding IsGroupSelected}" Spacing="3">
+                    <CheckBox IsChecked="{Binding HasDimmer}" Content="Ce groupe a un dimmer" FontWeight="SemiBold" />
+                    <TextBlock Text="Un fader dans « Groupes dimmer » (écran de jeu) et sur la seconde platine MIDI, dans l'ordre de cet arbre."
+                               Opacity="0.6" FontSize="11" TextWrapping="Wrap" />
+                  </StackPanel>
+
+                  <TextBlock Text="Appareils du groupe" Opacity="0.6" FontSize="12" />
+                  <ItemsControl ItemsSource="{Binding Members}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:GroupFixtureRow">
+                        <DockPanel MinHeight="34">
+                          <Button DockPanel.Dock="Right" Content="Retirer" MinHeight="30"
+                                  Command="{Binding $parent[ItemsControl].((vm:DimmerGroupsViewModel)DataContext).RemoveFixtureCommand}"
+                                  CommandParameter="{Binding}" />
+                          <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding Kind}" FontSize="11" Opacity="0.6" />
+                          </StackPanel>
+                        </DockPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <Border Classes="panel" IsVisible="{Binding IsGroupSelected}">
+                    <StackPanel Spacing="6">
+                      <TextBlock Text="{Binding FlowTitle}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                      <ItemsControl ItemsSource="{Binding Flow}">
+                        <ItemsControl.ItemsPanel>
+                          <ItemsPanelTemplate>
+                            <WrapPanel />
+                          </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="vm:FlowStep">
+                            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,6,4">
+                              <Border Padding="10,4" CornerRadius="6" Background="#21262D">
+                                <StackPanel>
+                                  <TextBlock Text="{Binding Label}" FontSize="11" Opacity="0.6" />
+                                  <TextBlock Text="{Binding Value}" FontSize="15" FontWeight="SemiBold" />
+                                </StackPanel>
+                              </Border>
+                              <TextBlock Text="→" VerticalAlignment="Center" Opacity="0.6" />
+                            </StackPanel>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                      <TextBlock Text="Chaque étage multiplie le précédent : les formes des effets et les fondus restent intacts."
+                                 Opacity="0.6" FontSize="11" TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+                </StackPanel>
+              </StackPanel>
+            </ScrollViewer>
+          </Border>
+
+          <!-- Appareils à ranger dans le groupe choisi -->
+          <Border Grid.Row="1" Grid.Column="2" Classes="panel" IsVisible="{Binding IsGroupSelected}">
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Top" Classes="section" Text="Ajouter au groupe choisi" Margin="0,0,0,6" />
+              <TextBlock DockPanel.Dock="Top" Text="Un appareil déjà rangé ailleurs est déplacé (il n'est que dans un seul groupe)."
+                         Opacity="0.6" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6" />
+              <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding Candidates}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:GroupFixtureRow">
+                      <DockPanel MinHeight="38">
+                        <Button DockPanel.Dock="Right" Content="← Ajouter" MinHeight="30"
+                                Command="{Binding $parent[ItemsControl].((vm:DimmerGroupsViewModel)DataContext).AddFixtureCommand}"
+                                CommandParameter="{Binding}" />
+                        <StackPanel VerticalAlignment="Center">
+                          <TextBlock Text="{Binding Name}" />
+                          <TextBlock Text="{Binding Where}" FontSize="11" Opacity="0.6" />
+                        </StackPanel>
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </ScrollViewer>
+            </DockPanel>
+          </Border>
+        </Grid>
+      </TabItem>
+
       <!-- Lieux (doc 13 §5) -->
       <TabItem Header="Lieux">
         <Grid ColumnDefinitions="220,*" Margin="0,8,0,0">

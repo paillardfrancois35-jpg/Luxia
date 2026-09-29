@@ -420,7 +420,7 @@
 
 ## ERG2 – 8 exigences, 2 couvertes par des tests automatiques
 
-> En cours : 2 · À faire : 6
+> En cours : 1 · Réalisé : 1 · À faire : 6
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -428,7 +428,7 @@
 | [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | À faire |  |
 | [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | À faire |  |
 | [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | À faire |  |
-| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | En cours | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>GroupDimmerTests.ShowModel_ParentAfterChild_IsRefused<br>(+5) |
-| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>GroupDimmerTests.GroupDimmer_HalvesIntensity_NotColors<br>(+3) |
+| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | Réalisé | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>DimmerGroupsViewModelTests.AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack<br>(+18) |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | En cours | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>GroupDimmerTests.Blackout_StillWins_AndUngroupedFixturesAreUntouched<br>GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>(+4) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | À faire |  |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | À faire |  |

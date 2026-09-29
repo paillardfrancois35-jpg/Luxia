@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Luxia.App;
 using Luxia.App.ViewModels;
 using Luxia.Core.Time;
@@ -232,6 +234,32 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
         Capture("Zones interdites", zones);
         zones.Close();
     }
+}
+
+// Onglet « Gestion des dimmers » (ERG-036) : un arbre d'exemple sur le parc du projet, dimmers réglés pour voir les niveaux.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Installation.InstallationViewModel) is { Page: Luxia.UI.Modules.Installation.InstallationViewModel installation } installationPage)
+{
+    vm.SelectedPage = installationPage;
+    var all = runtime.Project.Installation.Fixtures;
+    Guid[] Named(params string[] names) => [.. all.Where(f => names.Contains(f.Name)).Select(f => f.Id)];
+    var parc = new Luxia.Patch.Model.FixtureGroup { Name = "Parc lumineux", HasDimmer = true };
+    var face = new Luxia.Patch.Model.FixtureGroup { Name = "Face (PAR)", ParentId = parc.Id, HasDimmer = true };
+    var pars = new Luxia.Patch.Model.FixtureGroup { Name = "PAR scène", ParentId = face.Id, HasDimmer = true, FixtureIds = Named("PAR 1", "PAR 2", "PAR 3", "PAR 4") };
+    var barres = new Luxia.Patch.Model.FixtureGroup { Name = "Barres", ParentId = parc.Id, HasDimmer = true, FixtureIds = Named("Barre 1", "Barre 2") };
+    var uv = new Luxia.Patch.Model.FixtureGroup { Name = "UV", HasDimmer = true, FixtureIds = Named("UV 1", "UV 2") };
+    runtime.Project.SaveGroups(new Luxia.Patch.Model.FixtureGroupSet { Groups = [parc, face, pars, barres, uv] });
+    Tick(3);
+    foreach (var (group, level) in new[] { (parc, 0.8), (face, 0.7), (pars, 0.5), (uv, 0.4) })
+    {
+        runtime.Engine.Send(new Luxia.Messaging.Commands.SetGroupDimmerCommand(Luxia.Messaging.Commands.CommandOrigin.User, group.Id, level));
+    }
+
+    Tick(3);
+    installation.Dimmers.Reload();
+    installation.Dimmers.SelectedRow = installation.Dimmers.Rows.First(r => r.Name == "PAR scène");
+    var tabs = window.GetVisualDescendants().OfType<TabControl>().First();
+    tabs.SelectedItem = tabs.Items.OfType<TabItem>().First(t => (t.Header as string) == "Gestion des dimmers");
+    Capture("Installation - Gestion des dimmers");
 }
 
 // Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.
