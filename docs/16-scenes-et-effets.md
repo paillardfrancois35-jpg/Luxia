@@ -127,6 +127,7 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | EFF-007 | M | P6 | **Bibliothèque d'effets prédéfinis** (modèles réutilisables : « Vague douce », « Cercle rapide », « Chenillard on/off »…), applicables à n'importe quelle sélection. | Appliquer « Vague douce » aux barres. |
 | EFF-008 | M | P6 | Effets sur **cellules** (segments de barre, têtes de l'effet multi-têtes). | Chenillard sur les 16 segments des 2 barres. |
 | EFF-009 | S | P6 | Combinaison de deux effets sur un même attribut (ex. cercle + balayage) par addition. | — |
+| EFF-011 | I | P6 | **Effet d'intensité visible** (essai P6) : ajouter un effet d'intensité à des appareils sans couleur dans l'étape leur donne le **blanc** (palette « Blanc »), modifiable ensuite ; inverse de MOT-041 (un PAR RVB aux émetteurs à 0 reste noir quelle que soit son intensité). | Nouvelle scène + chenillard sur les 4 PAR : ils s'allument. |
 
 ### 6.3 Précisions (P6)
 

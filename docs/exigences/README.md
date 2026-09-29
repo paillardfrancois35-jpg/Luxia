@@ -183,6 +183,7 @@
 | [EFF-007](EFF-007.md) | Bibliothèque d'effets prédéfinis | P6 | M | Réalisé |
 | [EFF-008](EFF-008.md) | Effets sur cellules | P6 | M | Réalisé |
 | [EFF-009](EFF-009.md) | Combinaison de deux effets sur un même attribut | P6 | S | Réalisé |
+| [EFF-011](EFF-011.md) | Effet d'intensité visible | P6 | I | Réalisé |
 | [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Validé |
 | [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Validé |
 | [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Validé |

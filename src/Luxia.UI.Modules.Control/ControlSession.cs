@@ -330,6 +330,45 @@ public sealed class ControlSession
         Push();
     }
 
+    /// <summary>
+    /// Inverse de MOT-041 pour un effet d'intensité (EFF-011, essai P6) : une cible sans couleur dans l'étape reçoit le
+    /// blanc (palette « Blanc ») ; sinon un PAR RVB, émetteurs à 0, resterait noir quelle que soit son intensité.
+    /// Geste en cours, comme <see cref="EditEffects"/> ; la couleur se change ensuite dans les Réglages.
+    /// </summary>
+    public void ColorTargets(IReadOnlyList<ValueTarget> targets, string description)
+    {
+        ArgumentNullException.ThrowIfNull(targets);
+        if (Mode == EditMode.Live || _working is null)
+        {
+            return;
+        }
+
+        var palettes = PaletteLookup();
+        var white = _runtime.Project.Palettes.Palettes.FirstOrDefault(p => p.Id == DefaultPalettes.Colors[0].Id);
+        EditStepValues(
+            step =>
+            {
+                // Appareils déjà colorés dans l'étape, quelle que soit la forme de la cible (sélection, appareil, cellule).
+                var patch = _runtime.Show.Patch;
+                var colored = step
+                    .Where(v => ProgrammerRules.Slot(v, palettes) == ProgrammerRules.ColorSlot)
+                    .SelectMany(v => patch.Members(v.Target, out _))
+                    .Select(m => m.Fixture.Fixture.Id)
+                    .ToHashSet();
+                var result = step.ToList();
+                foreach (var target in targets.Where(t => patch.Members(t, out _).Any(m => !colored.Contains(m.Fixture.Fixture.Id))))
+                {
+                    result.Add(white is not null
+                        ? new SceneValue { Target = target, PaletteId = white.Id }
+                        : new SceneValue { Target = target, Color = new LogicalColor { R = 1, G = 1, B = 1 } });
+                }
+
+                return result;
+            },
+            description);
+        Push();
+    }
+
     /// <summary>« Libérer tout » : retire toutes les surcharges LIVE.</summary>
     public void ReleaseAll()
     {

@@ -148,6 +148,7 @@ Le code exécuté à chaque tick (boucle moteur, routeur) :
 - Nouvelle idée : `docs/99-idees.md`. Question : `docs/01-questions-ouvertes.md`, reposée jusqu'à réponse.
 - Chaque étape se termine par : build + tests verts, ce qu'il faut vérifier, commit sur la branche d'étape.
 - Chaque phase se livre avec ses démonstrations (doc 40 §7, doc 41).
+- Essais de l'utilisateur : une discussion « test » séparée, sans correctif, qui note les résultats dans `docs/essais/Pn-resultats.md` ; la discussion « dev » corrige (doc 33).
 
 ## 11. Pièges déjà rencontrés
 

@@ -264,6 +264,13 @@ dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes #
   « Show de travail » (sinon le titre de l'appli affiche encore « Show de référence », vécu le 2026-09-26 — se fier au champ
   « Dossier du projet » de **Aide → À propos** en cas de doute, pas au nom affiché).
 
+## 4b. Essais : discussion « dev » et discussion « test »
+
+Depuis l'essai P6 (décision de l'utilisateur, 2026-09-29), les essais de l'utilisateur se mènent dans une **discussion
+test** séparée, qui n'accompagne que le guide et note les résultats dans `docs/essais/Pn-resultats.md`, sans aucun
+correctif ; la discussion **dev** lit ce fichier, corrige, tient les fiches et annonce les versions. Procédure et message
+d'ouverture : [33 – Procédure d'essai](33-procedure-essais.md).
+
 ## 5. Démarrer une phase dans une nouvelle discussion
 
 1. Vérifier que la phase précédente est **validée** (tableau §1) ; sinon, demander.

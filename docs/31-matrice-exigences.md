@@ -393,9 +393,9 @@
 | [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
-## P6 – 16 exigences, 15 couvertes par des tests automatiques
+## P6 – 17 exigences, 16 couvertes par des tests automatiques
 
-> Réalisé : 14 · Validé : 2
+> Réalisé : 15 · Validé : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -408,6 +408,7 @@
 | [EFF-007](exigences/EFF-007.md) | M | Bibliothèque d'effets prédéfinis | Réalisé | EffectCompilerTests.Library_Apply_CopiesWithNewIdAndTarget<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.SaveAsTemplate_AddsToProjectLibrary_WithoutTargets |
 | [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Réalisé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime |
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
+| [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Réalisé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
 | [ERG-028](exigences/ERG-028.md) | M | Molette | Réalisé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
 | [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Réalisé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
 | [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Réalisé |  |

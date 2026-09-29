@@ -278,6 +278,11 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
             // MOT-041 : la couleur d'un appareil éteint ne se verrait pas.
             _session.LightTargets(targets, $"Ajouter l'effet « {template.Name} »");
         }
+        else if (Message is null && !effect.IsPosition && effect.Attribute == AttributeKind.Intensity)
+        {
+            // EFF-011 : une intensité qui varie sur un PAR sans couleur ne se verrait pas (essai P6, exemple 7).
+            _session.ColorTargets(targets, $"Ajouter l'effet « {template.Name} »");
+        }
 
         if (Message is null)
         {

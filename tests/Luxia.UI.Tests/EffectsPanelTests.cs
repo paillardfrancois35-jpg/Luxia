@@ -89,6 +89,38 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "EFF-011")]
+    public void IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors()
+    {
+        // Essai P6, exemple 7 : nouvelle scène vide, chenillard d'intensité sur les 4 PAR → ils restaient noirs.
+        _host.Dialogs.TextAnswers.Enqueue("Mon effet");
+        _vm.Columns.NewSceneCommand.Execute(_vm.Columns.Columns.Single(c => c.Layer.Name == "Effets"));
+        Session.SetMode(EditMode.Edit).ShouldBeNull();
+        SelectPars();
+        Panel.SelectedTemplate = Panel.Templates.Single(t => t.Template.Name == "Chenillard on/off");
+        Panel.AddEffectCommand.Execute(null);
+        Session.StepValues.Count(v => v.PaletteId == Scenes.Rules.DefaultPalettes.Colors[0].Id).ShouldBe(4, "blanc sur les 4 PAR");
+        Session.Commit();
+
+        var levels = new HashSet<byte>();
+        for (var i = 0; i < 60; i++)
+        {
+            _host.Tick();
+            levels.Add(_host.Frame()[1]);
+        }
+
+        levels.ShouldContain((byte)255, "rouge du PAR 1 allumé (blanc) quand le chenillard passe");
+
+        // Une étape qui a déjà une couleur la garde : la « Vague sur les PAR » est en bleu.
+        Session.ChooseScene(Scene("Vague sur les PAR (gauche → droite)").Id);
+        Session.SetMode(EditMode.Edit).ShouldBeNull();
+        var before = Session.StepValues.Count;
+        SelectPars();
+        Panel.AddEffectCommand.Execute(null);
+        Session.StepValues.Count.ShouldBe(before);
+    }
+
+    [Fact]
     [Trait("Exigence", "EFF-001")]
     [Trait("Exigence", "ERG-028")]
     public void Dials_WriteIntoTheEffect_OneGesture()
