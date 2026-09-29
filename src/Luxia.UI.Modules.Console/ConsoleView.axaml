@@ -36,18 +36,22 @@
 
     <!-- Faders de la page (mode canaux, CONS-001) -->
     <Border Grid.Row="2" Grid.Column="0" Classes="panel" x:Name="FaderArea" Padding="6" IsVisible="{Binding !IsDeviceMode}">
-      <ItemsControl ItemsSource="{Binding Channels}">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="vm:ChannelViewModel">
-            <vm:ChannelStrip />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
+      <DockPanel>
+        <!-- CONS-007 : texte complet du canal survolé (la tranche, étroite, coupe les noms ; essai P6). -->
+        <TextBlock DockPanel.Dock="Bottom" Text="{Binding HoveredDetail}" FontSize="12" Margin="4,6,4,0" TextTrimming="CharacterEllipsis" Foreground="#C9D1D9" />
+        <ItemsControl ItemsSource="{Binding Channels}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ChannelViewModel">
+              <vm:ChannelStrip />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </DockPanel>
     </Border>
 
     <!-- Faders par appareil (mode appareils, CONS-020 à 024) -->

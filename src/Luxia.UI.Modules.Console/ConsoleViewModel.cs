@@ -136,6 +136,10 @@ public sealed partial class ConsoleViewModel : ViewModelBase, IRefreshable
         BuildPage();
     }
 
+    /// <summary>Texte complet du canal survolé (ligne sous les faders) : appareil, attribut, valeur, plage courante.</summary>
+    [ObservableProperty]
+    private string _hoveredDetail = "Survolez un fader pour lire en entier son appareil, son attribut et sa plage courante.";
+
     /// <inheritdoc />
     public bool NeedsBackgroundRefresh => IsDeviceMode && DeviceFixtures.Any(f => f.Identifying);
 

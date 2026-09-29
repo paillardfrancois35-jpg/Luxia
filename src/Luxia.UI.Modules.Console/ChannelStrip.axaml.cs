@@ -20,6 +20,9 @@ public partial class ChannelStrip : UserControl
             ValueBox.SelectAll();
         };
         ValueBox.KeyDown += OnValueBoxKeyDown;
+
+        // Survol : la ligne d'information de la Console montre la tranche en entier (noms coupés dans la tranche, essai P6).
+        PointerEntered += (_, _) => WithContext((console, channel) => console.HoveredDetail = channel.Detail);
         ValueBox.LostFocus += (_, _) => Commit();
     }
 

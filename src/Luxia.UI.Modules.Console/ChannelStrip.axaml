@@ -4,7 +4,8 @@
              xmlns:c="using:Luxia.UI.Controls"
              x:Class="Luxia.UI.Modules.Console.ChannelStrip"
              x:DataType="vm:ChannelViewModel"
-             Width="42">
+             Width="42"
+             ToolTip.Tip="{Binding Detail}">
   <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Margin="2,0">
     <TextBlock Grid.Row="0" Text="{Binding ChannelText}" HorizontalAlignment="Center" FontWeight="SemiBold" />
     <TextBlock Grid.Row="1" Text="{Binding Caption}" HorizontalAlignment="Center" FontSize="10" Opacity="0.6" TextTrimming="CharacterEllipsis" />
