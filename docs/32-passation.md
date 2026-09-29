@@ -193,6 +193,7 @@
     tous verts ; 0 avertissement.
   - **Essai en cours (2026-09-28)** : exemples 1 à 3 conformes (vague et miroir ramenés de 10 à 100 % à la demande de l'utilisateur) ; **exemple 4 (WZYBUTA 64 canaux, adresse 181, canal 182 / Q25) en attente** : appareil pas encore installé, à reprendre dès qu'il l'est.
   - **Essai de la 1.006.053 terminé (2026-09-29)** dans une discussion test (doc 33) : exemples 1 à 13 déroulés, WZYBUTA installé en 64 canaux (Q25 close) ; correctifs livrés en **1.006.059** (molettes, scintillement UV, canal 2 du WZYBUTA, éditeur de thèmes ERG-031, bibliothèque, ascenseur par colonne, « ▶ Lancer » en ÉDITION) ; question **Q37** (intensité par groupe d'appareils) ouverte. P6 : 10 exigences validées, 8 réalisées (à revérifier).
+  - **Après P6, avant P7** (décision de l'utilisateur, 2026-09-29) : chantier **« Groupes et dimmers »** (Q37, règle proportionnelle retenue ; doc 40 §2), conception validée avant tout code.
   - **À faire pour valider P6** : dérouler le guide P6 **un exemple à la fois** avec l'utilisateur (régénérer d'abord le show
     de travail ; faire régler l'effet multi-têtes en 64 canaux, adresse 181 ; vérifier la vitesse du canal 2, Q25) ; puis
     proposer l'analyse ergonomique de fin de phase (§5.6) avant la fusion dans `main` et l'étiquette `v1.006`.
