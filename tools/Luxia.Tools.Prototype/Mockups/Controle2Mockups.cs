@@ -77,6 +77,10 @@ internal static class Controle2Mockups
                 head.Children.Add(h);
             }
 
+            var help = new Border { Width = 20, Height = 20, CornerRadius = new CornerRadius(10), Background = Tokens.Brush(Tokens.Raised), Margin = new Thickness(0, 0, 8, 0), Child = T("?", 12, Tokens.Accent, FontWeight.Bold).WithCenter() };
+            ToolTip.SetTip(help, "Aide : ce que c'est, à quoi ça sert, un exemple.");
+            DockPanel.SetDock(help, Avalonia.Controls.Dock.Left);
+            head.Children.Add(help);
             head.Children.Add(T(title, 14, Tokens.Text, FontWeight.SemiBold));
             DockPanel.SetDock(head, Avalonia.Controls.Dock.Top);
             stack.Children.Add(head);
@@ -625,7 +629,7 @@ internal static class Controle2Mockups
         if (g.Level is { } level)
         {
             var badge = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 10, 0) };
-            badge.Children.Add(T("dimmer", 11, Tokens.Secondary));
+            badge.Children.Add(T("niveau actuel", 11, Tokens.Secondary));
             badge.Children.Add(Bar(level, Tokens.Accent, 70, 10));
             badge.Children.Add(T($"{level} %", 12, Tokens.Text, FontWeight.SemiBold));
             badge.Children.Add(new Border { Background = Tokens.Brush(Tokens.Raised), CornerRadius = new CornerRadius(8), Padding = new Thickness(6, 0), Child = T($"② {g.Fader}", 10, Tokens.Secondary) });
@@ -706,7 +710,7 @@ internal static class Controle2Mockups
                 Spacing = 6,
                 Children =
                 {
-                    T("Flux d'intensité jusqu'aux PAR 1 à 4", 13, Tokens.Text, FontWeight.SemiBold),
+                    T("Flux d'intensité jusqu'aux PAR 1 à 4 — exemple avec les niveaux actuels (lecture seule)", 13, Tokens.Text, FontWeight.SemiBold),
                     new WrapPanel
                     {
                         Children =
