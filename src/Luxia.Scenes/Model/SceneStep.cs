@@ -22,4 +22,10 @@ public sealed record SceneStep
 
     /// <summary>Valeurs, dans l'ordre : à cible égale, la dernière l'emporte ; une cible plus précise l'emporte toujours.</summary>
     public IReadOnlyList<SceneValue> Values { get; init; } = [];
+
+    /// <summary>Effets générés (EFF-001), joués pendant l'étape ; ils entrent et sortent avec son fondu (MOT-063).</summary>
+    public IReadOnlyList<SceneEffect> Effects { get; init; } = [];
+
+    /// <summary>Fondu des couleurs par la teinte (MOT-054) plutôt qu'en ligne droite.</summary>
+    public bool HueFade { get; init; }
 }

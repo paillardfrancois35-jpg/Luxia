@@ -73,6 +73,7 @@ public sealed class RenderEngine : ICommandSink
     private bool _frozenActive;
     private bool _freezeCapture;
     private bool _freezeSuspend;
+    private Playback? _shownStep;
 
     // État publié pour l'interface (MOT-100), recopié à la fin de chaque tick.
     private ShowModel _publishedShow = ShowModel.Empty;
@@ -368,6 +369,9 @@ public sealed class RenderEngine : ICommandSink
             case SetSceneSpeedCommand speed:
                 return SetSceneSpeed(speed);
 
+            case ShowStepCommand show:
+                return ShowStep(show);
+
             case TestOutputCommand test:
                 if (test.Universe < 1 || test.Universe > _frames.Length)
                 {
@@ -511,7 +515,7 @@ public sealed class RenderEngine : ICommandSink
     private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now, bool flash = false)
     {
         var layer = _show.Layers[layerIndex];
-        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash };
+        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed) };
         playback.Bind(scene, _show);
 
         // Lectures remplacées : toute la couche si elle est exclusive (MOT-030), sinon une lecture de la même scène.
@@ -659,6 +663,45 @@ public sealed class RenderEngine : ICommandSink
         return found ? null : "la scène ne joue pas";
     }
 
+    private string? ShowStep(ShowStepCommand command)
+    {
+        if (command.SceneId is not { } sceneId)
+        {
+            _shownStep = null;
+            return null;
+        }
+
+        var scene = _show.Scene(sceneId);
+        if (scene is null)
+        {
+            return "scène inconnue";
+        }
+
+        if (scene.Steps.Count == 0)
+        {
+            return $"la scène « {scene.Name} » n'a aucune étape";
+        }
+
+        var step = Math.Clamp(command.StepIndex, 0, scene.Steps.Count - 1);
+        if (_shownStep is { } shown && shown.Scene.Id == sceneId && shown.StepIndex == step)
+        {
+            // Même étape redemandée : les effets continuent sans repartir au début.
+            return null;
+        }
+
+        var layerIndex = LayerIndexFor(scene.LayerId);
+        if (layerIndex < 0)
+        {
+            return "aucune couche pour jouer la scène";
+        }
+
+        var playback = new Playback(scene, layerIndex, ++_sequence, command.Origin, false) { Flash = true, SessionSeed = unchecked((ulong)Seed) };
+        playback.Bind(scene, _show);
+        playback.Pin(step, Bpm);
+        _shownStep = playback;
+        return null;
+    }
+
     private string? SetSceneSpeed(SetSceneSpeedCommand command)
     {
         var found = false;
@@ -690,7 +733,7 @@ public sealed class RenderEngine : ICommandSink
 
     private void AdvancePlaybacks(double elapsed, TimeSpan now)
     {
-        if (_playbacks.Count == 0)
+        if (_playbacks.Count == 0 && _shownStep is null)
         {
             return;
         }
@@ -717,6 +760,9 @@ public sealed class RenderEngine : ICommandSink
                     break;
             }
         }
+
+        // L'étape montrée (CMD-017) ne change jamais d'étape ; ses effets tournent.
+        _shownStep?.Advance(_shownStep.Sequence > _sequenceAtTickStart ? 0 : elapsed, bpm, _random, out _);
 
         foreach (var playback in _chains)
         {
@@ -789,55 +835,75 @@ public sealed class RenderEngine : ICommandSink
             }
 
             var layer = _show.Layers[playback.LayerIndex];
-            var master = _layerMasters[playback.LayerIndex];
 
             // Étape 4 : un flash passe au-dessus de toutes les couches, intensité comprise (MOT-072).
-            var intensityMode = playback.Flash ? IntensityMode.Priority : layer.IntensityMode;
-            var source = new ParameterSource(SourceKind.Scene, playback.Scene.Id, layer.Id);
-            var parameters = playback.Parameters;
-            var fadingOut = playback.State == PlaybackState.FadingOut;
-            for (var i = 0; i < parameters.Length; i++)
+            MergePlayback(
+                playback,
+                _layerMasters[playback.LayerIndex],
+                layer.MasterOnAllAttributes,
+                playback.Flash ? IntensityMode.Priority : layer.IntensityMode,
+                new ParameterSource(SourceKind.Scene, playback.Scene.Id, layer.Id));
+        }
+
+        // CMD-017 : l'étape éditée, effets compris, au-dessus de toutes les couches (aperçu de l'édition, EFF-006).
+        if (_shownStep is { } shown)
+        {
+            MergePlayback(shown, 1, false, IntensityMode.Priority, new ParameterSource(SourceKind.Scene, shown.Scene.Id, _show.Layers[shown.LayerIndex].Id));
+        }
+    }
+
+    private void MergePlayback(Playback playback, double master, bool masterOnAll, IntensityMode intensityMode, ParameterSource source)
+    {
+        var parameters = playback.Parameters;
+        var fadingOut = playback.State == PlaybackState.FadingOut;
+        var effects = playback.HasEffects;
+        for (var i = 0; i < parameters.Length; i++)
+        {
+            if (playback.Masked[i])
             {
-                if (playback.Masked[i])
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                var p = parameters[i];
-                var discrete = playback.Discrete[i];
+            var p = parameters[i];
+            var discrete = playback.Discrete[i];
+            var value = playback.Value[i];
+            var own = playback.Weight[i];
+            if (effects)
+            {
+                // MOT-061 : effets de l'étape, sur la valeur de la scène ou, en relatif, sur la valeur sous-jacente.
+                playback.ApplyEffects(i, _result[p], ref value, ref own);
+            }
 
-                // Un attribut discret revient à la valeur sous-jacente dès le début du fondu de sortie (MOT-012).
-                var weight = discrete && fadingOut ? 0 : playback.Weight[i] * playback.ExitWeight;
-                if (weight <= 0)
-                {
-                    continue;
-                }
+            // Un attribut discret revient à la valeur sous-jacente dès le début du fondu de sortie (MOT-012).
+            var weight = discrete && fadingOut ? 0 : own * playback.ExitWeight;
+            if (weight <= 0)
+            {
+                continue;
+            }
 
-                var value = playback.Value[i];
-                if (_roles[p] == ParameterRole.Intensity)
-                {
-                    MergeIntensity(p, value, weight, master, intensityMode, source);
-                    continue;
-                }
+            if (_roles[p] == ParameterRole.Intensity)
+            {
+                MergeIntensity(p, value, weight, master, intensityMode, source);
+                continue;
+            }
 
-                // LTP par priorité : interpolation du résultat inférieur vers la valeur de la couche, selon le poids.
-                var ltpWeight = layer.MasterOnAllAttributes ? weight * master : weight;
-                if (discrete)
+            // LTP par priorité : interpolation du résultat inférieur vers la valeur de la couche, selon le poids.
+            var ltpWeight = masterOnAll ? weight * master : weight;
+            if (discrete)
+            {
+                if (ltpWeight >= 0.5)
                 {
-                    if (ltpWeight >= 0.5)
-                    {
-                        _result[p] = value;
-                        _sources[p] = source;
-                    }
-                }
-                else
-                {
-                    _result[p] += (value - _result[p]) * ltpWeight;
+                    _result[p] = value;
                     _sources[p] = source;
                 }
-
-                _touched[p] = true;
             }
+            else
+            {
+                _result[p] += (value - _result[p]) * ltpWeight;
+                _sources[p] = source;
+            }
+
+            _touched[p] = true;
         }
     }
 
@@ -1031,6 +1097,21 @@ public sealed class RenderEngine : ICommandSink
 
             playback.LayerIndex = layerIndex;
             playback.Bind(scene, show, previous);
+        }
+
+        if (_shownStep is { } shownStep)
+        {
+            var shownScene = show.Scene(shownStep.Scene.Id);
+            var shownLayer = shownScene is null ? -1 : LayerIndexFor(shownScene.LayerId);
+            if (shownScene is null || shownScene.Steps.Count == 0 || shownLayer < 0)
+            {
+                _shownStep = null;
+            }
+            else
+            {
+                shownStep.LayerIndex = shownLayer;
+                shownStep.Bind(shownScene, show, previous);
+            }
         }
 
         _playbacks.Sort((a, b) =>

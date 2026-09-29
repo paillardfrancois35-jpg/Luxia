@@ -84,6 +84,47 @@ internal sealed class Playback
 
     public bool[] Discrete { get; private set; }
 
+    /// <summary>Graine aléatoire de la session (MOT-004), combinée à celle de chaque effet.</summary>
+    public ulong SessionSeed { get; init; }
+
+    // Effets (EFF-001, MOT-060) : un par identifiant (un même effet dans deux étapes successives continue sans à-coup),
+    // avec sa phase et son poids ; chaque étape en fournit une définition (« instance »).
+    private Guid[] _effectIds = [];
+    private double[] _effectPhase = [];
+    private double[] _effectStartWeight = [];
+    private double[] _effectTargetWeight = [];
+    private double[] _effectWeight = [];
+    private int[] _effectCurrent = [];
+    private double _effectFade;
+
+    // Instances : effet unique, définition, et plage de ses canaux dans les tableaux aplatis.
+    private int[] _instanceEffect = [];
+    private EngineEffect[] _instanceDefinition = [];
+    private int[] _instanceFirst = [];
+    private int[] _instanceEnd = [];
+    private int[][] _stepInstances = [];
+    private EffectChannel[] _channels = [];
+    private int[] _channelSlot = [];
+
+    /// <summary>Contribution des effets absolus par paramètre, recalculée à chaque tick.</summary>
+    public double[] EffectValue { get; private set; } = [];
+
+    /// <summary>Poids combiné des effets absolus par paramètre (0 = aucun).</summary>
+    public double[] EffectWeight { get; private set; } = [];
+
+    /// <summary>Somme des écarts des effets relatifs par paramètre (MOT-061, EFF-009).</summary>
+    public double[] EffectOffset { get; private set; } = [];
+
+    /// <summary>Un effet relatif touche ce paramètre.</summary>
+    public bool[] EffectRelative { get; private set; } = [];
+
+    /// <summary>La scène a au moins un effet : la fusion doit lire les tableaux d'effets.</summary>
+    public bool HasEffects => _effectIds.Length > 0;
+
+    // Fondu par la teinte (MOT-054) : triplets de rangs (rouge, vert, bleu) dans Parameters.
+    private int[][] _hueGroups = [];
+    private double[] _progress = [];
+
     private double _stepElapsed;
     private double _stepLength;
     private double _transitionElapsed;
@@ -114,6 +155,20 @@ internal sealed class Playback
                 if (stepValue.Parameter >= 0 && stepValue.Parameter < model.Parameters.Count)
                 {
                     set.Add(stepValue.Parameter);
+                }
+            }
+        }
+
+        foreach (var step in scene.Steps)
+        {
+            foreach (var effect in step.Effects)
+            {
+                foreach (var channel in effect.Channels)
+                {
+                    if (channel.Parameter >= 0 && channel.Parameter < model.Parameters.Count)
+                    {
+                        set.Add(channel.Parameter);
+                    }
                 }
             }
         }
@@ -179,6 +234,9 @@ internal sealed class Playback
         DelaySeconds = delay;
         Masked = masked;
         Discrete = discrete;
+        _progress = new double[count];
+        BindEffects(scene, model);
+        BindHueGroups(model);
 
         _stepSlots = new int[scene.Steps.Count][];
         for (var s = 0; s < scene.Steps.Count; s++)
@@ -205,6 +263,126 @@ internal sealed class Playback
         }
     }
 
+    private void BindEffects(EngineScene scene, ShowModel model)
+    {
+        var ids = new List<Guid>();
+        var instanceEffect = new List<int>();
+        var definitions = new List<EngineEffect>();
+        var first = new List<int>();
+        var end = new List<int>();
+        var channels = new List<EffectChannel>();
+        var slots = new List<int>();
+        var stepInstances = new int[scene.Steps.Count][];
+        for (var s = 0; s < scene.Steps.Count; s++)
+        {
+            var list = new List<int>();
+            foreach (var effect in scene.Steps[s].Effects)
+            {
+                var e = ids.IndexOf(effect.Id);
+                if (e < 0)
+                {
+                    e = ids.Count;
+                    ids.Add(effect.Id);
+                }
+
+                if (list.Exists(i => instanceEffect[i] == e))
+                {
+                    continue;
+                }
+
+                list.Add(definitions.Count);
+                instanceEffect.Add(e);
+                definitions.Add(effect);
+                first.Add(channels.Count);
+                foreach (var channel in effect.Channels)
+                {
+                    var slot = channel.Parameter >= 0 && channel.Parameter < model.Parameters.Count
+                        ? Array.BinarySearch(Parameters, channel.Parameter)
+                        : -1;
+                    if (slot >= 0)
+                    {
+                        channels.Add(channel);
+                        slots.Add(slot);
+                    }
+                }
+
+                end.Add(channels.Count);
+            }
+
+            stepInstances[s] = [.. list];
+        }
+
+        // Rechargement : la phase et le poids de chaque effet sont retrouvés par son identifiant.
+        var effectCount = ids.Count;
+        var phase = new double[effectCount];
+        var startWeight = new double[effectCount];
+        var targetWeight = new double[effectCount];
+        var weight = new double[effectCount];
+        var current = new int[effectCount];
+        Array.Fill(current, -1);
+        for (var e = 0; e < effectCount; e++)
+        {
+            var old = Array.IndexOf(_effectIds, ids[e]);
+            if (old >= 0)
+            {
+                phase[e] = _effectPhase[old];
+                startWeight[e] = _effectStartWeight[old];
+                targetWeight[e] = _effectTargetWeight[old];
+                weight[e] = _effectWeight[old];
+            }
+        }
+
+        _effectIds = [.. ids];
+        _effectPhase = phase;
+        _effectStartWeight = startWeight;
+        _effectTargetWeight = targetWeight;
+        _effectWeight = weight;
+        _effectCurrent = current;
+        _instanceEffect = [.. instanceEffect];
+        _instanceDefinition = [.. definitions];
+        _instanceFirst = [.. first];
+        _instanceEnd = [.. end];
+        _stepInstances = stepInstances;
+        _channels = [.. channels];
+        _channelSlot = [.. slots];
+        var count = Parameters.Length;
+        EffectValue = new double[count];
+        EffectWeight = new double[count];
+        EffectOffset = new double[count];
+        EffectRelative = new bool[count];
+
+        // Chaque effet prend la définition de l'étape courante ; à défaut (effet qui sort), la plus récente avant elle.
+        var stepCount = scene.Steps.Count;
+        if (stepCount > 0)
+        {
+            var step = Math.Clamp(StepIndex, 0, stepCount - 1);
+            for (var s = 1; s <= stepCount; s++)
+            {
+                foreach (var instance in _stepInstances[(step + s) % stepCount])
+                {
+                    _effectCurrent[_instanceEffect[instance]] = instance;
+                }
+            }
+        }
+    }
+
+    private void BindHueGroups(ShowModel model)
+    {
+        var groups = new List<int[]>();
+        foreach (var group in model.ColorGroups)
+        {
+            var r = Array.BinarySearch(Parameters, group.Red);
+            var g = Array.BinarySearch(Parameters, group.Green);
+            var b = Array.BinarySearch(Parameters, group.Blue);
+            if (r >= 0 && g >= 0 && b >= 0)
+            {
+                groups.Add([r, g, b]);
+            }
+        }
+
+        _hueGroups = [.. groups];
+    }
+
     /// <summary>
     /// Après un rechargement (palette ou scène modifiée, PAL-005) : l'étape courante vise ses nouvelles valeurs.
     /// Une transition terminée prend la nouvelle valeur tout de suite ; une transition en cours continue vers elle.
@@ -212,6 +390,21 @@ internal sealed class Playback
     private void Retarget()
     {
         var done = _transitionElapsed + TimeEpsilon >= _transitionEnd;
+        for (var e = 0; e < _effectIds.Length; e++)
+        {
+            var present = false;
+            foreach (var instance in _stepInstances[StepIndex])
+            {
+                present |= _instanceEffect[instance] == e;
+            }
+
+            _effectTargetWeight[e] = present ? 1 : 0;
+            if (done)
+            {
+                _effectWeight[e] = _effectStartWeight[e] = _effectTargetWeight[e];
+            }
+        }
+
         var step = Scene.Steps[StepIndex];
         var slots = _stepSlots[StepIndex];
         for (var i = 0; i < Parameters.Length; i++)
@@ -281,6 +474,22 @@ internal sealed class Playback
         Holding = false;
         EnterStep(0, entryFade, bpm);
         UpdateContributions();
+        AdvanceEffects(0, bpm);
+    }
+
+    /// <summary>
+    /// Fige la lecture sur une étape, prise d'emblée (CMD-017, aperçu de l'édition) : l'étape ne change plus, ses effets
+    /// tournent.
+    /// </summary>
+    public void Pin(int index, double bpm)
+    {
+        State = PlaybackState.Running;
+        _direction = 1;
+        _passes = 0;
+        EnterStep(Math.Clamp(index, 0, Scene.Steps.Count - 1), 0, bpm);
+        Holding = true;
+        UpdateContributions();
+        AdvanceEffects(0, bpm);
     }
 
     /// <summary>Pas à pas manuel (CMD-015) : l'étape visée démarre avec son propre fondu.</summary>
@@ -296,6 +505,7 @@ internal sealed class Playback
         var next = direction == StepDirection.Next ? (StepIndex + 1) % count : (StepIndex - 1 + count) % count;
         EnterStep(next, null, bpm);
         UpdateContributions();
+        AdvanceEffects(0, bpm);
 
         // Commande appliquée à l'instant du tick : l'étape part de maintenant, elle n'avance pas encore.
         _stepStartsNow = true;
@@ -362,6 +572,7 @@ internal sealed class Playback
         _stepStartsNow = false;
         _transitionElapsed += scaled;
         UpdateContributions();
+        AdvanceEffects(scaled, bpm);
 
         if (State == PlaybackState.FadingIn && _transitionElapsed + TimeEpsilon >= _transitionEnd)
         {
@@ -409,6 +620,7 @@ internal sealed class Playback
         _stepElapsed = Math.Min(carry, _stepLength);
         _transitionElapsed = _stepElapsed;
         UpdateContributions();
+        AdvanceEffects(0, bpm);
         stepChanged = true;
         return result;
     }
@@ -506,6 +718,149 @@ internal sealed class Playback
 
             _transitionEnd = Math.Max(_transitionEnd, DelaySeconds[i] + FadeSeconds[i]);
         }
+
+        // MOT-063 : un effet entre et sort avec le fondu de l'étape (sa taille monte ou descend avec son poids).
+        _effectFade = stepFade;
+        for (var e = 0; e < _effectIds.Length; e++)
+        {
+            _effectStartWeight[e] = _effectWeight[e];
+            _effectTargetWeight[e] = 0;
+        }
+
+        foreach (var instance in _stepInstances[index])
+        {
+            var e = _instanceEffect[instance];
+            _effectTargetWeight[e] = 1;
+            _effectCurrent[e] = instance;
+            if (_effectWeight[e] <= 0)
+            {
+                // Un effet qui arrive commence au début de son cycle.
+                _effectPhase[e] = 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Fait tourner les effets (MOT-060) et calcule leur contribution par paramètre ; <paramref name="scaled"/> tient
+    /// compte de la vitesse de la scène (MOT-015). Sans allocation (doc 03 §4.1).
+    /// </summary>
+    private void AdvanceEffects(double scaled, double bpm)
+    {
+        if (_effectIds.Length == 0)
+        {
+            return;
+        }
+
+        Array.Clear(EffectWeight);
+        Array.Clear(EffectOffset);
+        Array.Clear(EffectRelative);
+        var progress = _effectFade <= 0 ? 1 : Math.Clamp(_transitionElapsed / _effectFade, 0, 1);
+        for (var e = 0; e < _effectIds.Length; e++)
+        {
+            var weight = _effectStartWeight[e] + ((_effectTargetWeight[e] - _effectStartWeight[e]) * progress);
+            _effectWeight[e] = weight;
+            var instance = _effectCurrent[e];
+            if (instance < 0)
+            {
+                continue;
+            }
+
+            var effect = _instanceDefinition[instance];
+            var period = Math.Max(0.02, effect.Period.ToSeconds(bpm));
+            _effectPhase[e] += scaled / period;
+            if (weight <= 0)
+            {
+                continue;
+            }
+
+            var seed = SessionSeed ^ effect.Seed;
+            for (var k = _instanceFirst[instance]; k < _instanceEnd[instance]; k++)
+            {
+                var channel = _channels[k];
+                var slot = _channelSlot[k];
+                var cycles = EffectShapes.Directed(effect.Direction, _effectPhase[e]) - channel.Lag;
+                if (effect.Shape == EffectShape.Table)
+                {
+                    var tableValue = channel.Table is { } table
+                        ? EffectShapes.Sample(table, cycles, effect.Stepped || Discrete[slot])
+                        : channel.Center;
+                    AddAbsolute(slot, tableValue, weight);
+                    continue;
+                }
+
+                var offset = channel.Size * EffectShapes.Offset(effect.Shape, cycles, channel.Axis, effect.DutyCycle, seed + (ulong)channel.Member);
+                if (effect.Relative)
+                {
+                    // EFF-009 : les effets relatifs d'un même attribut s'additionnent.
+                    EffectOffset[slot] += offset * weight;
+                    EffectRelative[slot] = true;
+                }
+                else
+                {
+                    AddAbsolute(slot, channel.Center + offset, weight);
+                }
+            }
+        }
+    }
+
+    private void AddAbsolute(int slot, double value, double weight)
+    {
+        var current = EffectWeight[slot];
+        if (current <= 0)
+        {
+            EffectValue[slot] = value;
+            EffectWeight[slot] = weight;
+            return;
+        }
+
+        // Deux effets absolus sur un même attribut : le suivant l'emporte selon son poids.
+        EffectValue[slot] += (value - EffectValue[slot]) * weight;
+        EffectWeight[slot] = current + ((1 - current) * weight);
+    }
+
+    /// <summary>
+    /// Valeur et poids d'un paramètre de la scène, effets compris (MOT-061) : un effet absolu remplace la valeur de
+    /// l'étape selon son poids ; un effet relatif s'ajoute à la valeur de l'étape, sinon à la valeur sous-jacente.
+    /// </summary>
+    /// <param name="slot">Rang du paramètre dans <see cref="Parameters"/>.</param>
+    /// <param name="underlying">Valeur sous-jacente (couches inférieures) au moment de la fusion.</param>
+    /// <param name="value">Valeur de la scène (entrée : sans effet).</param>
+    /// <param name="weight">Poids de la scène (entrée : sans effet).</param>
+    public void ApplyEffects(int slot, double underlying, ref double value, ref double weight)
+    {
+        var effectWeight = EffectWeight[slot];
+        if (effectWeight > 0)
+        {
+            var effectValue = EffectValue[slot];
+            if (weight <= 0)
+            {
+                value = effectValue;
+                weight = effectWeight;
+            }
+            else if (Discrete[slot])
+            {
+                value = effectWeight >= 0.5 ? effectValue : value;
+                weight = Math.Max(weight, effectWeight);
+            }
+            else
+            {
+                value += (effectValue - value) * effectWeight;
+                weight += (1 - weight) * effectWeight;
+            }
+        }
+
+        if (EffectRelative[slot])
+        {
+            if (weight <= 0)
+            {
+                value = underlying;
+                weight = 1;
+            }
+
+            value += EffectOffset[slot];
+        }
+
+        value = Math.Clamp(value, 0, 1);
     }
 
     private void UpdateContributions()
@@ -549,6 +904,97 @@ internal sealed class Playback
 
             Weight[i] = StartWeight[i] + ((TargetWeight[i] - StartWeight[i]) * progress);
             Value[i] = StartValue[i] + ((TargetValue[i] - StartValue[i]) * progress);
+            _progress[i] = progress;
         }
+
+        if (_hueGroups.Length > 0 && Scene.Steps.Count > 0 && Scene.Steps[StepIndex].HueFade)
+        {
+            FadeByHue();
+        }
+    }
+
+    /// <summary>
+    /// MOT-054 : pendant un fondu, les émetteurs rouge, vert et bleu d'une cellule suivent la roue des teintes
+    /// (plus court chemin) au lieu d'une ligne droite qui passe par des teintes « sales ».
+    /// </summary>
+    private void FadeByHue()
+    {
+        foreach (var group in _hueGroups)
+        {
+            int r = group[0], g = group[1], b = group[2];
+            var progress = _progress[r];
+            if (progress <= 0 || progress >= 1 || StartWeight[r] <= 0 || TargetWeight[r] <= 0)
+            {
+                continue;
+            }
+
+            var (h1, s1, v1) = ToHsv(StartValue[r], StartValue[g], StartValue[b]);
+            var (h2, s2, v2) = ToHsv(TargetValue[r], TargetValue[g], TargetValue[b]);
+
+            // Une couleur sans teinte (blanc, gris, noir) prend celle de l'autre extrémité.
+            if (s1 < 1e-3)
+            {
+                h1 = h2;
+            }
+            else if (s2 < 1e-3)
+            {
+                h2 = h1;
+            }
+
+            var delta = h2 - h1;
+            if (delta > 0.5)
+            {
+                delta -= 1;
+            }
+            else if (delta < -0.5)
+            {
+                delta += 1;
+            }
+
+            var h = h1 + (delta * progress);
+            h -= Math.Floor(h);
+            var (red, green, blue) = FromHsv(h, s1 + ((s2 - s1) * progress), v1 + ((v2 - v1) * progress));
+            Value[r] = red;
+            Value[g] = green;
+            Value[b] = blue;
+        }
+    }
+
+    private static (double H, double S, double V) ToHsv(double r, double g, double b)
+    {
+        var max = Math.Max(r, Math.Max(g, b));
+        var min = Math.Min(r, Math.Min(g, b));
+        var delta = max - min;
+        double h = 0;
+        if (delta > 1e-9)
+        {
+            h = max == r ? ((g - b) / delta) % 6 : max == g ? ((b - r) / delta) + 2 : ((r - g) / delta) + 4;
+            h /= 6;
+            if (h < 0)
+            {
+                h += 1;
+            }
+        }
+
+        return (h, max <= 0 ? 0 : delta / max, max);
+    }
+
+    private static (double R, double G, double B) FromHsv(double h, double s, double v)
+    {
+        var sector = h * 6;
+        var i = (int)Math.Floor(sector) % 6;
+        var f = sector - Math.Floor(sector);
+        var p = v * (1 - s);
+        var q = v * (1 - (s * f));
+        var t = v * (1 - (s * (1 - f)));
+        return i switch
+        {
+            0 => (v, t, p),
+            1 => (q, v, p),
+            2 => (p, v, t),
+            3 => (p, q, v),
+            4 => (t, p, v),
+            _ => (v, p, q),
+        };
     }
 }

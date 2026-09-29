@@ -37,8 +37,31 @@ public static class DefaultPalettes
         Intensity(104, "Veilleuse", 0.15),
     ];
 
+    /// <summary>Thèmes de couleurs par défaut (PAL-010), pour les effets d'alternance et de dégradé.</summary>
+    public static IReadOnlyList<Palette> Themes { get; } =
+    [
+        Theme(201, "Latino", "#FFE600", "#FF6600", "#FF0000"),
+        Theme(202, "Froid", "#0000FF", "#00FFFF", "#FFFFFF"),
+        Theme(203, "Chaud", "#FF0000", "#FF8000", "#FFB000"),
+        Theme(204, "Disco", "#FF00FF", "#00FFFF", "#FFE600", "#00FF00"),
+        Theme(205, "Club", "#0000FF", "#FF00FF", "#9966FF"),
+        Theme(206, "Tricolore", "#0000FF", "#FFFFFF", "#FF0000"),
+    ];
+
     /// <summary>Nouveau jeu de palettes par défaut.</summary>
-    public static PaletteSet Create() => new() { Palettes = [.. Colors, .. Intensities] };
+    public static PaletteSet Create() => new() { Palettes = [.. Colors, .. Intensities, .. Themes] };
+
+    /// <summary>
+    /// Ajoute les thèmes par défaut à un projet qui n'en a aucun (projet antérieur à P6) ; un projet qui a déjà
+    /// un thème est laissé tel quel (un thème supprimé ne revient pas).
+    /// </summary>
+    public static PaletteSet WithThemes(PaletteSet palettes)
+    {
+        ArgumentNullException.ThrowIfNull(palettes);
+        return palettes.Palettes.Any(p => p.Kind == PaletteKind.Theme)
+            ? palettes
+            : palettes with { Palettes = [.. palettes.Palettes, .. Themes] };
+    }
 
     private static Palette Color(int number, string name, LogicalColor light) => new()
     {
@@ -55,6 +78,14 @@ public static class DefaultPalettes
         Kind = PaletteKind.Intensity,
         Level = level,
         Color = "#E3B341",
+    };
+
+    private static Palette Theme(int number, string name, params string[] colors) => new()
+    {
+        Id = IdFor(number),
+        Name = name,
+        Kind = PaletteKind.Theme,
+        Colors = [.. colors.Select(LogicalColor.FromHex)],
     };
 
     private static Guid IdFor(int number) => new($"9a1e0001-0000-4000-8000-{number:D12}");

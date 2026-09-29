@@ -95,6 +95,39 @@
         { "required": ["paletteId"] }
       ]
     },
+    "effectColor": {
+      "type": "object",
+      "properties": {
+        "color": { "oneOf": [{ "$ref": "#/$defs/logicalColor" }, { "type": "null" }] },
+        "paletteId": { "oneOf": [{ "$ref": "#/$defs/guid" }, { "type": "null" }] }
+      },
+      "anyOf": [{ "required": ["color"] }, { "required": ["paletteId"] }]
+    },
+    "effect": {
+      "type": "object",
+      "description": "Effet généré (doc 16 §6, EFF-001). size / center : 0-1 pour une forme d'intensité ; size en degrés pour une forme de position.",
+      "required": ["targets"],
+      "properties": {
+        "id": { "$ref": "#/$defs/guid" },
+        "name": { "type": ["string", "null"] },
+        "targets": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/target" }, "description": "membres mis bout à bout, dans l'ordre (EFF-005)" },
+        "perCell": { "type": "boolean", "description": "chaque cellule de chaque membre devient un membre (EFF-008)" },
+        "shape": { "enum": ["sine", "triangle", "square", "sawUp", "sawDown", "pulse", "random", "circle", "eight", "sweepPan", "sweepTilt", "randomSlow", "rainbow", "alternate", "gradient"] },
+        "attribute": { "$ref": "#/$defs/attribute" },
+        "period": { "$ref": "#/$defs/duration" },
+        "size": { "type": "number", "minimum": 0 },
+        "center": { "$ref": "#/$defs/level" },
+        "positionPaletteId": { "oneOf": [{ "$ref": "#/$defs/guid" }, { "type": "null" }] },
+        "relative": { "type": "boolean" },
+        "spread": { "type": "number", "minimum": 0, "description": "décalage total entre le premier et le dernier membre, en degrés" },
+        "phaseMode": { "enum": ["linear", "mirror", "groups", "random"] },
+        "groupSize": { "type": "integer", "minimum": 1 },
+        "direction": { "enum": ["forward", "backward", "pingPong"] },
+        "dutyCycle": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "colors": { "type": "array", "items": { "$ref": "#/$defs/effectColor" } },
+        "themeId": { "oneOf": [{ "$ref": "#/$defs/guid" }, { "type": "null" }], "description": "thème de couleurs (PAL-010)" }
+      }
+    },
     "step": {
       "type": "object",
       "properties": {
@@ -103,7 +136,9 @@
         "hold": { "$ref": "#/$defs/duration" },
         "curve": { "enum": ["linear", "sCurve", "instant"] },
         "switch": { "enum": ["start", "middle", "end"] },
-        "values": { "type": "array", "items": { "$ref": "#/$defs/value" } }
+        "values": { "type": "array", "items": { "$ref": "#/$defs/value" } },
+        "effects": { "type": "array", "items": { "$ref": "#/$defs/effect" } },
+        "hueFade": { "type": "boolean", "description": "fondu des couleurs par la teinte (MOT-054)" }
       }
     },
     "scene": {

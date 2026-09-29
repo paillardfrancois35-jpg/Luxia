@@ -1,11 +1,11 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-27, **P5 validée** (`main`, étiquette
-> **`v1.004`**) ; **chantier ergonomique en cours** sur `ergo/analyse` (version de développement 1.005, dernière
-> étiquette **`v1.005.004`**) : l'**écran Contrôle** est dans LuXia, développé en autonomie la nuit du 2026-09-27 au
-> 28 par délégation de l'utilisateur (choix C1-C11 du doc 60 §11, à rediscuter à l'usage). **En attente de l'essai de
-> l'utilisateur** : guide [demos/ERG-controle.md](demos/ERG-controle.md) sur `samples/Démo Contrôle`.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-29, **P6 – Effets validée**
+> (`main`, étiquette **`v1.006`**). **Prochaine étape : chantier « Contrôle 2 »** (avant P7) : écran de jeu + fenêtre
+> d'édition de scène ([chantiers/ergonomie-sujet-2.md](chantiers/ergonomie-sujet-2.md)) réunis avec les groupes et
+> dimmers (Q37, règle proportionnelle) ; analyse et recommandations :
+> [chantiers/analyse-ergonomique-fin-P6.md](chantiers/analyse-ergonomique-fin-P6.md). Essais : discussion test (doc 33).
 
 ## 1. Où en est-on
 
@@ -18,6 +18,7 @@
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
 | P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
 | Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
+| P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
 - **P3 validée par l'utilisateur le 2026-09-26**, tour de test complet en direct (4 PAR + 1 lyre) mené pas à pas dans la discussion : crash (Univers affiché), Identifier (couleur puis fige d'écran), largeurs de champs, sélections, lieux (création/activation/mise en évidence), simulateur (corps toujours visible, roue de couleur sans couleur définie), Sorties/SORT-008, version en barre de titre. Tous corrigés au fil de l'eau, 297 tests verts. Fusionnée dans `main`, étiquette `v1.002`.
@@ -168,6 +169,47 @@
   réutilisées, Journal serré). Choix C12 à C14 (doc 60 §11). Compteur de compilation par version (repart de 1 après
   validation). Deux tests de temps (moteur, routeur de sorties) échouent parfois sous la charge de la série complète
   et passent seuls : à fiabiliser.
+- **P6 développée le 2026-09-28** (branche `p6/effets`, version **1.006**) en autonomie : l'utilisateur, amateur, a délégué
+  les choix (« je te laisse avancer avec tes décisions […] on testera ensemble une fois le travail réalisé ») : Q36 (cadrage,
+  retenu tel que proposé) et Q25 close (WZYBUTA en **64 canaux à l'adresse 181**, après la fumée : aucun autre appareil ne
+  bouge). Décisions **D32** (effets rangés dans l'étape, compilés en formes et tables ; bibliothèque copiée) et **D33**
+  (aperçu par CMD-017). Livré, dans l'ordre des commits :
+  - **moteur** : `EngineEffect` / `EffectChannel` sur les étapes, `EffectShapes` (formes pures, sans allocation), relatif /
+    absolu (relatif sur la valeur **sous-jacente** si l'étape ne règle pas l'attribut), entrée / sortie avec le fondu,
+    addition (EFF-009), aléatoire reproductible, **fondu par la teinte** (MOT-054), commande **CMD-017 `MontrerÉtape`** ;
+  - **données et compilation** : `SceneStep.Effects` (`SceneEffect`, **plusieurs cibles**, option par cellule),
+    `EffectCompiler` (phases linéaire / miroir / groupes / aléatoire, degrés → course du modèle, couleurs → tables par
+    canal), thèmes `PaletteKind.Theme` (6 livrés, ajoutés à un projet qui n'en a aucun), `effets.json` (19 modèles),
+    `valider` (effets, bibliothèque), schémas JSON ;
+  - **écran Contrôle** : panneau **Effets** (ERG-029 : bibliothèque, effets de l'étape, dessin animé `EffectPreview`,
+    **molettes** `Dial` ERG-028), aperçu en direct en ÉDITION / AVEUGLE (EFF-006), « Enregistrer comme modèle »,
+    « Enregistrer ces couleurs comme thème », case « Fondu par la teinte », **assistants** de génération d'étapes (SCN-014) ;
+    ordre des membres = plan de gauche à droite (colonnes d'un mètre), puis ordre du patch ;
+  - **Installation** : sélections « En cellules » / « Par appareil » (INST-034) ;
+  - **contenu** : 10 scènes « Phase P6 » (dont le piège du grand cercle), trames `P6-scenes.txt` ; trames P4 / P5
+    régénérées (scènes visant tout le parc : l'effet multi-têtes a changé de canaux) ; guide, docs 15, 16, 50, 41, 13, 17,
+    02, glossaire, doc 99 (4 idées).
+  - Bilan : **15 exigences P6 Réalisé** (+ PAL-010, INST-034, MOT-054 reportées et réalisées, CMD-017). Tests : 675,
+    tous verts ; 0 avertissement.
+  - **Essai en cours (2026-09-28)** : exemples 1 à 3 conformes (vague et miroir ramenés de 10 à 100 % à la demande de l'utilisateur) ; **exemple 4 (WZYBUTA 64 canaux, adresse 181, canal 182 / Q25) en attente** : appareil pas encore installé, à reprendre dès qu'il l'est.
+  - **Essai de la 1.006.053 terminé (2026-09-29)** dans une discussion test (doc 33) : exemples 1 à 13 déroulés, WZYBUTA installé en 64 canaux (Q25 close) ; correctifs livrés en **1.006.059** (molettes, scintillement UV, canal 2 du WZYBUTA, éditeur de thèmes ERG-031, bibliothèque, ascenseur par colonne, « ▶ Lancer » en ÉDITION) ; question **Q37** (intensité par groupe d'appareils) ouverte. P6 : 10 exigences validées, 8 réalisées (à revérifier).
+  - **Après P6, avant P7** (décision de l'utilisateur, 2026-09-29) : chantier **« Groupes et dimmers »** (Q37, règle proportionnelle retenue ; doc 40 §2), conception validée avant tout code.
+  - **À faire pour valider P6** : dérouler le guide P6 **un exemple à la fois** avec l'utilisateur (régénérer d'abord le show
+    de travail ; faire régler l'effet multi-têtes en 64 canaux, adresse 181 ; vérifier la vitesse du canal 2, Q25) ; puis
+    proposer l'analyse ergonomique de fin de phase (§5.6) avant la fusion dans `main` et l'étiquette `v1.006`.
+
+- **P6 validée par l'utilisateur le 2026-09-29** : essai mené dans une discussion test séparée (doc 33, nouvelle
+  procédure), correctifs dans la discussion dev (1.006.053 → 1.006.065) : effet d'intensité qui donne le blanc (EFF-011),
+  molettes révisées, scintillement UV sur les rangées, canal 2 du WZYBUTA mesuré (Q25 close), éditeur de thèmes et
+  bibliothèque (ERG-031), ascenseur par colonne, texte complet dans la Console (CONS-007). P6 : 16 exigences validées,
+  2 réalisées (MOT-063, EFF-009, couvertes par les tests). Tests : 684, tous verts. **Fusionnée dans `main`, `v1.006`.**
+- **Chantier suivant « Contrôle 2 »** (décision de l'utilisateur, 2026-09-29) : cadrage, **maquettes validées avant tout
+  code**, développement, essai en discussion test, puis P7. Points déjà tranchés : règle **proportionnelle** des dimmers
+  de groupe (Q37) ; arbre de groupes, un appareil dans un seul groupe ; « réglage de couche » à la place du master
+  d'intensité ; ancrage gardé sur l'écran de jeu (peu de panneaux, grands), disposition fixe dans la fenêtre d'édition ;
+  fenêtre d'édition non bloquante, brouillon avec Appliquer / Valider / Annuler, case Aveugle ; deux platines MIDI
+  (couches / contrôles fins).
+
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
@@ -183,17 +225,17 @@
 |---|---|---|
 | `Luxia.Core` | Trame, plages de canaux, horloges, préférences, projet, instantanés | `DmxFrame`, `IClock`, `Preferences` (namespace `Luxia.Core.Dmx` pour le protocole) |
 | `Luxia.Messaging` | Commandes (CMD-020, 022, 024) et bus d'événements | `Command`, `ICommandSink`, `EventBus` |
-| `Luxia.Engine` | Moteur : chaîne de rendu sur un modèle compilé (D26), lectures de scènes, fusion des couches, surcharges, masters, blackout, test de sortie ; boucle 40 Hz | `RenderEngine` (`Tick`, `LoadShow`, `Snapshot`, `CommandLog`), `Playback`, `Model/ShowModel`, `TickLoop` |
+| `Luxia.Engine` | Moteur : chaîne de rendu sur un modèle compilé (D26), lectures de scènes, **effets**, fusion des couches, surcharges, masters, blackout, étape montrée (CMD-017), test de sortie ; boucle 40 Hz | `RenderEngine` (`Tick`, `LoadShow`, `Snapshot`, `CommandLog`), `Playback`, `EffectShapes`, `Model/ShowModel`, `Model/EngineEffect`, `TickLoop` |
 | `Luxia.Output` | Routeur, pilotes Nul / Enregistreur / Arduino, protocole Enttec, `.dmxrec` | `OutputRouter`, `OutputDriver`, `ArduinoOutputDriver` |
 | `Luxia.Persistence` | JSON versionné, migrations, préférences, projet | `VersionedJsonFile`, `ProjectStore`, `DataPaths` |
 | `Luxia.Fixtures` | Modèles d'appareils, règles, validation, bibliothèque, imports, éditions | `FixtureType`, `FixtureRules`, `FixtureValidator`, `FixtureLibrary`, `FixtureEdits`, `DmxConversion` |
 | `Luxia.Patch` | Installation (patch, univers, sélections), lieux, copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `ProjectFixtureLibrary`, `FixtureDecoder` |
-| `Luxia.Scenes` | Scènes, palettes, couches (fichiers `scènes.json`, `palettes.json`, `couches.json`) ; compilation vers le moteur ; couleurs ; règles du programmeur ; rapports d'utilisation ; import | `ShowCompiler`, `ValueResolver`, `PatchContext`, `ColorConversion`, `ProgrammerRules`, `SceneUsage`, `SceneImport` |
+| `Luxia.Scenes` | Scènes (effets compris), palettes (thèmes compris), couches, bibliothèque d'effets (fichiers `scènes.json`, `palettes.json`, `couches.json`, `effets.json`) ; compilation vers le moteur ; couleurs ; règles du programmeur ; assistants ; rapports d'utilisation ; import | `ShowCompiler`, `EffectCompiler`, `ValueResolver`, `PatchContext`, `ColorConversion`, `ProgrammerRules`, `EffectRules`, `SceneWizards`, `DefaultEffects`, `SceneUsage`, `SceneImport` |
 | `Luxia.Midi` | Contrôleurs APC mini (D30) : profils en données, traduction en commandes, LED, reprise douce, ports `winmm`, branchement à chaud | `MidiService`, `MidiController`, `ControllerProfiles`, `WinMmMidiPorts`, `MidiSettings` (`midi.json`) |
 | `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface, versions du projet, reprise, MIDI | `LuxiaRuntime` (`Engine`, `Preview`, `Midi`, `PendingResume`), `ProjectSession`, `ShowService`, `ProjectVersions`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
-| `Luxia.UI.Controls` | Fader, moniteur, barre de plages, barre d'univers, simulateur 2D, historique annuler / rétablir, dialogues | `Fader`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
+| `Luxia.UI.Controls` | Fader, **molette**, dessin d'effet, moniteur, barre de plages, barre d'univers, simulateur 2D, grille Pan/Tilt, sélecteur de couleur, historique annuler / rétablir, dialogues | `Fader`, `Dial`, `EffectPreview`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
 | `Luxia.UI.Modules.*` | Un écran par projet : **Live** (premier écran), Console (+ faders d'appareil), Library, Outputs, Installation, Simulator, Scenes (+ fenêtres Couches…, Zones interdites…) | `LiveViewModel`, `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel`, `ScenesViewModel` (+ `ProgrammerViewModel`, `SceneEditorViewModel`, `PalettesViewModel`, `LayersEditorViewModel`, `ZonesEditorViewModel`) |
-| `Luxia.UI.Modules.Control` | Écran **Contrôle** (doc 60) : session d'édition LIVE / ÉDITION / AVEUGLE, panneaux ancrables Dock (Colonnes, Propriétés, Plan, Réglages, Journal, Looks, Pilote), dispositions Contrôle / Spectacle, verrou soirée | `ControlSession`, `ControlViewModel`, `*PanelViewModel`, `Docking/ControlDockFactory`, `Docking/ControlLayoutStore`, `Views/ControlView` |
+| `Luxia.UI.Modules.Control` | Écran **Contrôle** (doc 60) : session d'édition LIVE / ÉDITION / AVEUGLE, panneaux ancrables Dock (Colonnes, Propriétés, Plan, Réglages, **Effets**, Journal, Looks, Pilote), dispositions Contrôle / Spectacle, verrou soirée | `ControlSession`, `ControlViewModel`, `*PanelViewModel` (dont `EffectsPanelViewModel`), `Docking/ControlDockFactory`, `Docking/ControlLayoutStore`, `Views/ControlView` |
 | `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
 | `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, **midi**, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
 | `tools/Luxia.Tools.Prototype` | Prototype ergonomique **séparé de LuXia** (`LuXia-Prototype.exe`) : ancrage Dock, dispositions, galerie, mesures, maquettes « Contrôle » ; captures sans écran | `ShellViewModel`, `Docking/PrototypeDockFactory`, `Docking/LayoutStore`, `Panels/*`, `Mockups/*`, `HeadlessCaptures` |
@@ -209,7 +251,7 @@ Tests : un projet par module + `Luxia.Integration.Tests` (rejeu du show de réf�
 dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
-python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5
+python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6
 python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
 dotnet run --project tools/Luxia.Tools.Headless -- valider "samples/Show de référence"
@@ -220,7 +262,7 @@ dotnet run --project tools/Luxia.Tools.Prototype                              # 
 dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes # maquettes « Contrôle » en PNG
 ```
 
-- **Trames de référence P4 et P5** (`tests/assets/golden/P4-scenes.txt`, `P5-scenes.txt`) : après un changement **voulu et vérifié** du rendu des scènes,
+- **Trames de référence P4, P5 et P6** (`tests/assets/golden/P4-scenes.txt`, `P5-scenes.txt`, `P6-scenes.txt`) : après un changement **voulu et vérifié** du rendu des scènes,
   les régénérer avec `LUXIA_GOLDEN_UPDATE=1 dotnet test --project tests/Luxia.Integration.Tests`, puis relire le résumé de
   `luxia-headless jouer` avant de committer.
 - **Captures d'écran** : l'outil ne lance pas l'application (pas de conflit avec le verrou mono-instance, GEN-115) ; relire les PNG
@@ -235,6 +277,13 @@ dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes #
   (vécu le 2026-09-25, corrigé en `8d6284c`). Après une régénération, penser à renommer `"name"` dans son `projet.json` en
   « Show de travail » (sinon le titre de l'appli affiche encore « Show de référence », vécu le 2026-09-26 — se fier au champ
   « Dossier du projet » de **Aide → À propos** en cas de doute, pas au nom affiché).
+
+## 4b. Essais : discussion « dev » et discussion « test »
+
+Depuis l'essai P6 (décision de l'utilisateur, 2026-09-29), les essais de l'utilisateur se mènent dans une **discussion
+test** séparée, qui n'accompagne que le guide et note les résultats dans `docs/essais/Pn-resultats.md`, sans aucun
+correctif ; la discussion **dev** lit ce fichier, corrige, tient les fiches et annonce les versions. Procédure et message
+d'ouverture : [33 – Procédure d'essai](33-procedure-essais.md).
 
 ## 5. Démarrer une phase dans une nouvelle discussion
 
@@ -272,3 +321,5 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-28 | Ergonomie | Nuit de développement par délégation sur `ergo/analyse` (`v1.005.003`, `v1.005.004`) : écran Contrôle dans LuXia (modes, panneaux ancrables, dispositions Contrôle / Spectacle, verrou soirée, looks, F1-F12), zone permise, 8e couche « Libre », identité visuelle, taille de l'interface, démo `samples/Démo Contrôle` et guide `docs/demos/ERG-controle.md`. ERG-008 à ERG-024. **En attente de l'essai de l'utilisateur ; choix C1-C11 à rediscuter à l'usage.** |
 | 2026-09-28 | Ergonomie | Essai de l'écran Contrôle au matériel avec l'utilisateur (guide §0 à §7, tout validé ; 1.005.192 → 1.005.226), corrections au fil de l'eau avec leurs fiches ; analyse de fin d'essai : scènes resserrées (ERG-025), Stop / Tout stopper (ERG-026), marges (ERG-027) ; C12-C14 ; compteur de compilation par version. |
 | 2026-09-28 | Ergonomie | Vérifications de fin d'essai (scènes resserrées, marges) conformes en 1.005.237. **Chantier ergonomique validé par l'utilisateur, `ergo/analyse` fusionnée dans `main`, étiquette `v1.005`.** Reste du chantier (doc 60 §7.4 : affectations MIDI / clavier E6, déclencheurs MIDI des looks, retrait de Live / Scènes après usage, Installation / Bibliothèque en panneaux) à reprendre plus tard. Prochaine étape proposée : P6 – Effets. |
+| 2026-09-28 | P6 | Effets développés sur `p6/effets` (1.006) en autonomie (Q36, Q25) : moteur d'effets, données et compilation, panneau Effets de l'écran Contrôle (molettes, dessin, aperçu CMD-017), thèmes, bibliothèque, assistants, sélections en cellules, fondu par la teinte ; WZYBUTA en 64 canaux à 181 ; 10 scènes « Phase P6 », guide P6. **En attente de l'essai de l'utilisateur.** |
+| 2026-09-29 | P6 | Essai en discussion test (doc 33), correctifs 1.006.053 → 1.006.065, analyse ergonomique de fin de phase acceptée (chantier « Contrôle 2 » avant P7, Q37 règle proportionnelle). **Validée, fusionnée dans `main`, étiquette `v1.006`.** |

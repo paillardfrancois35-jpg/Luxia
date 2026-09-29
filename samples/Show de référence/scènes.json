@@ -1667,6 +1667,577 @@
           ]
         }
       ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000001",
+      "name": "Vague sur les PAR (gauche → droite)",
+      "color": "#58A6FF",
+      "category": "Phase P6",
+      "notes": "Sinus d'intensité de 2 s, de 10 à 100 % (les PAR ne s'éteignent pas), décalé d'un quart de cycle d'un PAR à l'autre, dans l'ordre de la sélection « PAR gauche → droite » (EFF-002, EFF-005 linéaire). PAR en bleu.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000001",
+              "name": "Vague",
+              "targets": [
+                {
+                  "cell": 0,
+                  "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+                }
+              ],
+              "shape": "sine",
+              "period": {
+                "value": 2,
+                "unit": "seconds"
+              },
+              "spread": 360,
+              "size": 0.9,
+              "center": 0.55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000002",
+      "name": "Miroir sur les PAR (du centre vers les bords)",
+      "color": "#E3B341",
+      "category": "Phase P6",
+      "notes": "Même vague, répartition « miroir » : PAR 2 et PAR 3 (au centre de la sélection) en tête, PAR 1 et PAR 4 ensuite (EFF-005). PAR en ambre.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000005"
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000002",
+              "name": "Miroir",
+              "targets": [
+                {
+                  "cell": 0,
+                  "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+                }
+              ],
+              "shape": "sine",
+              "period": {
+                "value": 2,
+                "unit": "seconds"
+              },
+              "spread": 360,
+              "phaseMode": "mirror",
+              "size": 0.9,
+              "center": 0.55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000003",
+      "name": "Arc-en-ciel sur les barres (cellules)",
+      "color": "#D2A8FF",
+      "category": "Phase P6",
+      "notes": "Tour de la roue des teintes en 4 s sur les 8 sections des deux barres, décalé d'une section à l'autre (EFF-004, EFF-008).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "BeamZ LCB803"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000003",
+              "name": "Arc-en-ciel",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byModel",
+                    "model": "BeamZ LCB803"
+                  }
+                }
+              ],
+              "shape": "rainbow",
+              "period": {
+                "value": 4,
+                "unit": "seconds"
+              },
+              "perCell": true,
+              "spread": 360
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000004",
+      "name": "Chenillard des segments (on/off)",
+      "color": "#F85149",
+      "category": "Phase P6",
+      "notes": "Une seule section allumée à la fois, qui parcourt les 8 sections des deux barres en rouge (EFF-002 carré, EFF-008).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "BeamZ LCB803"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000004",
+              "name": "Chenillard",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byModel",
+                    "model": "BeamZ LCB803"
+                  }
+                }
+              ],
+              "shape": "square",
+              "period": {
+                "value": 1.6,
+                "unit": "seconds"
+              },
+              "perCell": true,
+              "spread": 360,
+              "dutyCycle": 0.125
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000005",
+      "name": "Têtes décalées (effet multi-têtes)",
+      "color": "#DB61A2",
+      "category": "Phase P6",
+      "notes": "Thème « Disco » en alternance franche sur les 12 têtes de l'effet multi-têtes (64 canaux), chaque tête décalée (EFF-004, EFF-008, PAL-010).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000005",
+              "name": "Têtes Disco",
+              "targets": [
+                {
+                  "fixtureId": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
+                  "cell": 0
+                }
+              ],
+              "shape": "alternate",
+              "period": {
+                "value": 3,
+                "unit": "seconds"
+              },
+              "perCell": true,
+              "spread": 360,
+              "themeId": "9a1e0001-0000-4000-8000-000000000204"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000006",
+      "name": "Alternance Latino (pairs / impairs)",
+      "color": "#FF6600",
+      "category": "Phase P6",
+      "notes": "Thème « Latino » (jaune, orange, rouge) en alternance sur tous les PAR, un sur deux (EFF-005 par groupes, PAL-010).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000006",
+              "name": "Latino",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "par"
+                  }
+                }
+              ],
+              "shape": "alternate",
+              "period": {
+                "value": 3,
+                "unit": "seconds"
+              },
+              "spread": 360,
+              "phaseMode": "groups",
+              "groupSize": 2,
+              "themeId": "9a1e0001-0000-4000-8000-000000000201"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000007",
+      "name": "Scintillement UV",
+      "color": "#A371F7",
+      "category": "Phase P6",
+      "notes": "Les 4 rangées de LED de chaque UV varient au hasard, 6 fois par seconde, chacune de son côté (8 rangées en tout), sans toucher au Maître des UV : lancer d'abord « Plein feu » (couche Intensité). Hasard reproductible (EFF-002 aléatoire, EFF-008, MOT-004).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000007",
+              "name": "Scintillement",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "uv"
+                  }
+                }
+              ],
+              "shape": "random",
+              "period": {
+                "value": 0.16,
+                "unit": "seconds"
+              },
+              "spread": 0,
+              "size": 0.6,
+              "center": 0.7,
+              "attribute": "uv",
+              "perCell": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000008",
+      "name": "Cercle des lyres (autour de Piste centre)",
+      "color": "#79C0FF",
+      "category": "Phase P6",
+      "notes": "Les deux lyres tracent un cercle de 60° en 6 s autour de la palette « Piste centre » du lieu actif (EFF-003).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000008",
+              "name": "Cercle",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "movingHead"
+                  }
+                }
+              ],
+              "shape": "circle",
+              "period": {
+                "value": 6,
+                "unit": "seconds"
+              },
+              "size": 60,
+              "spread": 0,
+              "positionPaletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000009",
+      "name": "Huit des lyres (opposées)",
+      "color": "#1F6FEB",
+      "category": "Phase P6",
+      "notes": "Huit couché de 50° en 8 s autour de « Piste centre », en relatif ; les deux lyres à l'opposé l'une de l'autre (décalage 180° sur 2 = demi-cycle, EFF-003, MOT-061).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "movingHead"
+                }
+              },
+              "paletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000009",
+              "name": "Huit",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "movingHead"
+                  }
+                }
+              ],
+              "shape": "eight",
+              "period": {
+                "value": 8,
+                "unit": "seconds"
+              },
+              "size": 50,
+              "relative": true,
+              "spread": 360
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "6e6f0006-0000-4000-8000-000000000010",
+      "name": "Piège : grand cercle de la lyre 1 (zone interdite)",
+      "color": "#F0883E",
+      "category": "Phase P6",
+      "notes": "Cercle de 250° centré : il déborderait sur le public ; la zone interdite ramène la lyre au bord, à chaque tour (DEMO-4, MOT-082 : la sûreté passe après les effets).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000010",
+              "name": "Grand cercle",
+              "targets": [
+                {
+                  "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+                  "cell": 0
+                }
+              ],
+              "shape": "circle",
+              "period": {
+                "value": 6,
+                "unit": "seconds"
+              },
+              "size": 250,
+              "spread": 0
+            }
+          ]
+        }
+      ]
     }
   ]
 }

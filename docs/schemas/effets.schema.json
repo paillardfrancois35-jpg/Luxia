@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/effets.schema.json",
+  "title": "LuXia – effets.json (format 1)",
+  "description": "Bibliothèque d'effets d'un projet (EFF-007, doc 50). Un modèle = les réglages d'un effet de scène sans cible (voir scenes.schema.json#/$defs/effect). Appliquer un modèle en fait une copie dans l'étape.",
+  "type": "object",
+  "required": [
+    "formatVersion",
+    "templates"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 1
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "effect"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effect": {
+            "type": "object",
+            "description": "mêmes champs qu'un effet de scène ; la cible est ignorée"
+          }
+        }
+      }
+    }
+  }
+}

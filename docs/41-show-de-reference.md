@@ -37,7 +37,7 @@ Adresses « rondes » pour faciliter le réglage sur les appareils, avec des **r
 | Gros PAR 1 et 2 | 2 | Générique **WT05** (PAR 160 W, sans marque) – **7CH**, mêmes commandes que le LPC008S *(essai P5, 2026-09-27 ; ce n'étaient pas des LPC120)* | 31, 41 | 7 | 50 |
 | Barres 1 et 2 | 2 | BeamZ LCB803 – **24CH** (4 sections, menu `ChNd 24Ch`) *(proposé : 48CH ne tient pas dans la réserve)* | 51, 81 | 24 | 110 |
 | Lyres 1 et 2 | 2 | Tomshine – **11CH** (Pan/Tilt 16 bits) | 111, 126 | 11 | 140 |
-| Effet multi-têtes | 1 | WZYBUTA 150 W – **20CH** (mode 1, couleur commune) *(proposé : 64CH ne tient pas dans la réserve)* | 141 | 20 | 160 |
+| Effet multi-têtes | 1 | WZYBUTA 150 W – **64CH** (mode 2 : 12 cellules RVBW pilotables une à une, EFF-008) *(P6, 2026-09-28, Q25 : placé **après la fumée** pour ne réadresser aucun autre appareil ; 141-160 restent libres)* | **181** | 64 | 244 |
 | UV 1 et 2 | 2 | BeamZ BUV463 – **8CH** : les 7 canaux de la notice + un 8e **« lissage du gradateur »** non documenté (essai P5, 2026-09-27 ; à 255, ≈ 15 s de lissage) | 161, **169** | 8 | 177 |
 | Fumée | 1 | Générique « Machine à fumée » – 1CH | 180 | 1 | 180 |
 
@@ -136,7 +136,7 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 | P3 | Installation (§2), sélections (§4), lieux (§3), fiche d'installation | Adresses réglées sur les appareils, identification OK |
 | P4 | Palettes (§5, hors thèmes), scènes statiques et chenillards simples (§7) | Rendu simulateur puis matériel |
 | P5 | Couches (§6), flashs, ambiance, positions calibrées, disposition Live, affectation APC mini | **Jalon 1** : soirée manuelle avec ce show |
-| P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) | Rendu |
+| P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) — **fait le 2026-09-28** : 10 scènes « Phase P6 » (couches Effets et Mouvements), dont un piège (grand cercle ramené par la zone interdite) ; 6 thèmes dans `palettes.json` ; trames de référence `P6-scenes.txt` | Rendu |
 | P7 | Versions « au temps » / « sur kick » / « selon l'énergie » | Synchro sur morceaux au choix |
 | P8 | Séquences (§8), shows génériques et par style (§9) | Répétition au simulateur |
 | P9 | Base musicale d'amorçage (artistes par famille), thèmes par style | Styles détectés sur une playlist |

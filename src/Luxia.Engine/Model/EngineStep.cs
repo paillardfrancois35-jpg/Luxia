@@ -17,4 +17,13 @@ public sealed record EngineStep
 
     /// <summary>Valeurs de l'étape : un paramètre n'y figure qu'une fois.</summary>
     public IReadOnlyList<StepValue> Values { get; init; } = [];
+
+    /// <summary>Effets générés de l'étape (EFF-001) ; ils entrent et sortent avec le fondu de l'étape (MOT-063).</summary>
+    public IReadOnlyList<EngineEffect> Effects { get; init; } = [];
+
+    /// <summary>
+    /// Fondu des couleurs par la teinte (MOT-054) : rouge → vert passe par le jaune au lieu d'un brun terne.
+    /// Faux = interpolation directe des émetteurs.
+    /// </summary>
+    public bool HueFade { get; init; }
 }

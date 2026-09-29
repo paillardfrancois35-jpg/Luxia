@@ -75,6 +75,13 @@
 | **Fondu** | Fade | Transition progressive d'une valeur vers une autre. |
 | **Fondu croisé** | Crossfade | Transition simultanée sortie de l'ancienne scène / entrée de la nouvelle. |
 | **Effet (généré)** | Effect / FX | Modulation calculée (sinus, cercle, chenillard…) appliquée à une sélection avec décalage de phase. |
+| **Forme** (d'un effet) | Shape / Waveform | Ce que parcourt un effet pendant un cycle : sinus, carré, cercle, huit, arc-en-ciel… |
+| **Cycle** (d'un effet) | Period / Cycle | Un tour complet de la forme ; sa durée fixe la vitesse (Hz = 1 / durée). |
+| **Décalage** (phase) | Phase spread / Offset | Retard d'un membre à l'autre dans le cycle : 0 = tous ensemble, 360° = un cycle réparti. |
+| **Membre** (d'un effet) | Member | Appareil ou cellule qui reçoit l'effet, dans l'ordre de la cible. |
+| **Thème** (de couleurs) | Theme / Color set | Palette qui réunit plusieurs couleurs (« Latino », « Froid ») : alternances, dégradés, pilote automatique. |
+| **Bibliothèque d'effets** | Effect library / FX presets | Modèles d'effets du projet (`effets.json`), copiés dans une étape quand on les applique. |
+| **Molette** | Dial / Encoder | Réglage rotatif de l'interface (vitesse, taille, décalage), tourné en glissant ou à la molette de la souris. |
 | **Phase / Décalage** | Phase / Spread | Décalage temporel d'un effet entre les appareils d'une sélection. |
 | **Couche** | Layer / Playback group | Conteneur de scènes exclusives, avec priorité et master. *(anciennement « groupe de scènes »)* |
 | **Séquence** | Sequence | Enchaînement temporel de scènes sur des pistes, exprimé en mesures ou en secondes. *(anciennement « méga-scène »)* |

@@ -7,6 +7,7 @@ using Luxia.Fixtures.Model;
 using Luxia.Hosting;
 using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
+using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
 using Luxia.UI.Modules.Scenes;
 
@@ -77,6 +78,21 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private decimal _stepHoldSeconds = 1;
 
     [ObservableProperty]
+    private bool _stepHueFade;
+
+    [ObservableProperty]
+    private Choice<string> _wizard = Wizards[0];
+
+    [ObservableProperty]
+    private decimal _wizardHoldSeconds = 1;
+
+    [ObservableProperty]
+    private decimal _wizardFadeSeconds;
+
+    [ObservableProperty]
+    private string? _wizardMessage;
+
+    [ObservableProperty]
     private string _accent = ControlColors.Accent;
 
     [ObservableProperty]
@@ -113,6 +129,17 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     /// <summary>Choix de boucle.</summary>
     public static IReadOnlyList<Choice<LoopMode>> LoopOptions => SceneOptions.Loops;
+
+    /// <summary>Assistants de création (SCN-014).</summary>
+    public static IReadOnlyList<Choice<string>> Wizards { get; } =
+    [
+        new("chase", "Chenillard de couleurs"),
+        new("alternate", "Alternance de 2 couleurs"),
+        new("sweep", "Balayage de positions"),
+    ];
+
+    /// <summary>Palettes proposées à l'assistant choisi (couleurs, ou positions pour le balayage).</summary>
+    public ObservableCollection<WizardPaletteChip> WizardPalettes { get; } = [];
 
     /// <summary>Choix de fin.</summary>
     public static IReadOnlyList<Choice<EndMode>> EndOptions => SceneOptions.Ends;
@@ -183,6 +210,64 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         }
     }
 
+    /// <summary>
+    /// SCN-014 : remplace les étapes de la scène par celles de l'assistant, pour les appareils choisis au plan (de gauche à
+    /// droite) et les palettes cochées (dans l'ordre de la liste). Ctrl+Z annule.
+    /// </summary>
+    [RelayCommand]
+    private void GenerateSteps()
+    {
+        if (_session.EditScene is null)
+        {
+            return;
+        }
+
+        var members = _session.OrderedSelection();
+        if (members.Count == 0)
+        {
+            WizardMessage = "Sélectionnez d'abord les appareils sur le plan.";
+            return;
+        }
+
+        var palettes = WizardPalettes.Where(p => p.IsChecked).Select(p => p.PaletteId).ToList();
+        var hold = Duration.FromSeconds((double)Math.Max(0, WizardHoldSeconds));
+        var fade = Duration.FromSeconds((double)Math.Max(0, WizardFadeSeconds));
+        IReadOnlyList<SceneStep> steps = Wizard.Value switch
+        {
+            "alternate" when palettes.Count >= 2 => SceneWizards.Alternate(members, palettes[0], palettes[1], hold, fade),
+            "alternate" => [],
+            "sweep" => SceneWizards.PositionSweep(members, palettes, hold, fade),
+            _ => SceneWizards.ColorChase(members, palettes, hold, fade),
+        };
+        if (steps.Count == 0)
+        {
+            WizardMessage = Wizard.Value == "alternate" ? "Cochez deux couleurs." : "Cochez au moins une palette.";
+            return;
+        }
+
+        _session.UpdateScene(s => s with { Steps = steps }, $"Assistant : {Wizard.Label}", 0);
+        _session.Commit();
+        WizardMessage = string.Create(CultureInfo.CurrentCulture, $"{steps.Count} étape(s) générée(s) pour {members.Count} appareil(s). Ctrl+Z pour revenir en arrière.");
+    }
+
+    partial void OnWizardChanged(Choice<string> value) => FillWizardPalettes();
+
+    private void FillWizardPalettes()
+    {
+        var kind = Wizard.Value == "sweep" ? PaletteKind.Position : PaletteKind.Color;
+        var palettes = _runtime.Project.Palettes.Palettes.Where(p => p.Kind == kind).ToList();
+        if (WizardPalettes.Select(p => p.PaletteId).SequenceEqual(palettes.Select(p => p.Id)))
+        {
+            return;
+        }
+
+        WizardPalettes.Clear();
+        foreach (var palette in palettes)
+        {
+            WizardPalettes.Add(new WizardPaletteChip(palette.Id, palette.Name, palette.DisplayColor()));
+        }
+    }
+
     /// <summary>Lance la scène éditée (essai dans son contexte, SCN-034).</summary>
     [RelayCommand]
     private void Test()
@@ -190,6 +275,13 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         if (_session.EditScene is { } scene)
         {
             _session.Commit();
+
+            // Essai P6 : en ÉDITION, l'étape éditée est montrée par-dessus les scènes et cachait celle qu'on lance.
+            if (_session.Mode == EditMode.Edit)
+            {
+                _session.SetMode(EditMode.Live);
+            }
+
             _runtime.Engine.Send(new LaunchSceneCommand(CommandOrigin.User, scene.Id));
         }
     }
@@ -235,6 +327,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     partial void OnStepFadeSecondsChanged(decimal value) => UpdateStep(s => s with { Fade = Duration.FromSeconds((double)Math.Max(0, value)) }, "Fondu de l'étape");
 
     partial void OnStepHoldSecondsChanged(decimal value) => UpdateStep(s => s with { Hold = Duration.FromSeconds((double)Math.Max(0, value)) }, "Maintien de l'étape");
+
+    partial void OnStepHueFadeChanged(bool value) => UpdateStep(s => s with { HueFade = value }, value ? "Fondu par la teinte" : "Fondu direct des couleurs");
 
     private void Update(Func<Scene, Scene> change, string description)
     {
@@ -331,7 +425,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             StepName = step.Name;
             StepFadeSeconds = (decimal)step.Fade.ToSeconds(120);
             StepHoldSeconds = (decimal)step.Hold.ToSeconds(120);
+            StepHueFade = step.HueFade;
             FillStepValues(step);
+            FillWizardPalettes();
         }
         finally
         {

@@ -12,6 +12,18 @@
   "$defs": {
     "guid": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" },
     "level": { "type": "number", "minimum": 0, "maximum": 1 },
+    "logicalColor": {
+      "type": "object",
+      "required": ["r", "g", "b"],
+      "properties": {
+        "r": { "$ref": "#/$defs/level" },
+        "g": { "$ref": "#/$defs/level" },
+        "b": { "$ref": "#/$defs/level" },
+        "white": { "$ref": "#/$defs/level" },
+        "amber": { "$ref": "#/$defs/level" },
+        "uv": { "$ref": "#/$defs/level" }
+      }
+    },
     "paletteValue": {
       "type": "object",
       "required": ["level"],
@@ -31,7 +43,7 @@
       "properties": {
         "id": { "$ref": "#/$defs/guid" },
         "name": { "type": "string", "minLength": 1 },
-        "kind": { "enum": ["color", "position", "beam", "intensity"] },
+        "kind": { "enum": ["color", "position", "beam", "intensity", "theme"] },
         "color": { "type": ["string", "null"], "pattern": "^#[0-9a-fA-F]{6}$" },
         "icon": { "type": ["string", "null"] },
         "light": {
@@ -45,6 +57,11 @@
             "amber": { "$ref": "#/$defs/level" },
             "uv": { "$ref": "#/$defs/level" }
           }
+        },
+        "colors": {
+          "type": "array",
+          "description": "couleurs d'un thème (PAL-010), dans l'ordre de l'alternance",
+          "items": { "$ref": "#/$defs/logicalColor" }
         },
         "level": { "$ref": "#/$defs/level" },
         "values": { "type": "array", "items": { "$ref": "#/$defs/paletteValue" } }

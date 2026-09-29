@@ -58,88 +58,107 @@
       <ToggleButton Content="☰ Resserré" IsChecked="{Binding IsCompact}" Padding="8,0" FontSize="12" VerticalContentAlignment="Center"
                     ToolTip.Tip="Boutons de scène sur une ligne, environ moitié moins hauts (nom complet en infobulle) ; gardé sur ce poste" />
     </StackPanel>
-  <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-    <ItemsControl x:Name="ColumnsList" ItemsSource="{Binding Columns}" MinWidth="{Binding MinWidth}" HorizontalAlignment="Left" Classes.compact="{Binding IsCompact}">
-      <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-          <UniformGrid Rows="1" />
-        </ItemsPanelTemplate>
-      </ItemsControl.ItemsPanel>
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="vm:ControlColumnViewModel">
-          <Border Background="#161B22" CornerRadius="8" Padding="6" Margin="0,0,6,0">
-            <StackPanel Spacing="6">
-              <!-- En-tête de couche : nom, étape précédente / suivante, arrêt, master (doc 60 §5) -->
-              <Border BorderBrush="{Binding Color}" BorderThickness="0,3,0,0" Padding="2,6,2,2" ToolTip.Tip="{Binding Help}">
-                <StackPanel Spacing="6">
-                  <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                  <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
-                    <Button Classes="mini" Content="◀" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
-                            ToolTip.Tip="Étape précédente de la scène qui joue (seulement pour une scène à plusieurs étapes)"
-                            Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).PreviousStepCommand}" CommandParameter="{Binding}" />
-                    <Button Classes="mini" Content="▶" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
-                            ToolTip.Tip="Étape suivante de la scène qui joue (seulement pour une scène à plusieurs étapes)"
-                            Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NextStepCommand}" CommandParameter="{Binding}" />
-                    <Button Classes="mini" Content="■" Foreground="#F85149" ToolTip.Tip="Arrêter la couche : net, sauf si la scène qui joue porte un fondu de sortie"
-                            Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).StopLayerCommand}" CommandParameter="{Binding}" />
+  <!-- ERG-030 (essai P6) : les en-têtes de couche restent en haut, chaque colonne fait défiler ses scènes ; le défilement
+       horizontal (colonnes trop nombreuses) déplace en-têtes et scènes ensemble. -->
+  <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+    <DockPanel x:Name="Board" HorizontalAlignment="Left" MinWidth="{Binding MinWidth}">
+      <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Columns}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <UniformGrid Rows="1" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:ControlColumnViewModel">
+            <Border Background="#161B22" CornerRadius="8,8,0,0" Padding="6,6,6,0" Margin="0,0,6,0">
+                <!-- En-tête de couche : nom, étape précédente / suivante, arrêt, master (doc 60 §5) -->
+                <Border BorderBrush="{Binding Color}" BorderThickness="0,3,0,0" Padding="2,6,2,2" ToolTip.Tip="{Binding Help}">
+                  <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                      <Button Classes="mini" Content="◀" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
+                              ToolTip.Tip="Étape précédente de la scène qui joue (seulement pour une scène à plusieurs étapes)"
+                              Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).PreviousStepCommand}" CommandParameter="{Binding}" />
+                      <Button Classes="mini" Content="▶" IsEnabled="{Binding CanStep}" ToolTip.ShowOnDisabled="True"
+                              ToolTip.Tip="Étape suivante de la scène qui joue (seulement pour une scène à plusieurs étapes)"
+                              Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NextStepCommand}" CommandParameter="{Binding}" />
+                      <Button Classes="mini" Content="■" Foreground="#F85149" ToolTip.Tip="Arrêter la couche : net, sauf si la scène qui joue porte un fondu de sortie"
+                              Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).StopLayerCommand}" CommandParameter="{Binding}" />
+                    </StackPanel>
+                    <Grid ColumnDefinitions="Auto,*,40" ToolTip.Tip="Master de la couche : baisse les intensités qu'elle envoie (faders 1 à 8 de l'APC). Sans effet sur une couleur seule, ni si une autre couche envoie plus fort (la plus forte intensité l'emporte)">
+                      <TextBlock Text="Master" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" Margin="0,0,4,0" />
+                      <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Master}" VerticalAlignment="Center" Margin="0,-8" />
+                      <TextBlock Grid.Column="2" Text="{Binding Master, StringFormat='{}{0:0} %'}" FontSize="11" VerticalAlignment="Center" TextAlignment="Right" />
+                    </Grid>
                   </StackPanel>
-                  <Grid ColumnDefinitions="Auto,*,40" ToolTip.Tip="Master de la couche : baisse les intensités qu'elle envoie (faders 1 à 8 de l'APC). Sans effet sur une couleur seule, ni si une autre couche envoie plus fort (la plus forte intensité l'emporte)">
-                    <TextBlock Text="Master" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" Margin="0,0,4,0" />
-                    <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Master}" VerticalAlignment="Center" Margin="0,-8" />
-                    <TextBlock Grid.Column="2" Text="{Binding Master, StringFormat='{}{0:0} %'}" FontSize="11" VerticalAlignment="Center" TextAlignment="Right" />
-                  </Grid>
-                </StackPanel>
-              </Border>
-
-              <!-- Boutons de scène à deux zones -->
-              <ItemsControl ItemsSource="{Binding Scenes}">
-                <ItemsControl.ItemsPanel>
-                  <ItemsPanelTemplate>
-                    <StackPanel Classes="scenes" Spacing="6" />
-                  </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                  <DataTemplate x:DataType="vm:ControlSceneViewModel">
-                    <Border CornerRadius="7" BorderBrush="{Binding EditColor}" BorderThickness="{Binding OutlineThickness}"
-                            Opacity="{Binding HiddenInLive, Converter={x:Static vm:ControlConverters.DimIfTrue}}">
-                      <Grid ColumnDefinitions="*,24">
-                        <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0"
-                                CornerRadius="6,0,0,6"
-                                PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost" ContextRequested="OnSceneContext"
-                                ToolTip.ShowDelay="600">
-                          <ToolTip.Tip>
-                            <StackPanel Spacing="3" MaxWidth="320">
-                              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                              <TextBlock Text="{Binding State}" IsVisible="{Binding IsActive}" FontSize="12" />
-                              <TextBlock Text="Clic : lancer / arrêter (maintenir : flash) · clic droit : menu" FontSize="11" Foreground="#8B949E" />
-                            </StackPanel>
-                          </ToolTip.Tip>
-                          <DockPanel>
-                            <ProgressBar DockPanel.Dock="Bottom" Minimum="0" Maximum="1" Value="{Binding Progress}" Height="3" MinHeight="3"
-                                         Foreground="{Binding TextColor}" Background="Transparent" Opacity="0.45" IsVisible="{Binding ShowsProgress}"
-                                         ToolTip.Tip="Avancement de l'étape en cours" />
-                            <TextBlock Classes="state" DockPanel.Dock="Bottom" Text="{Binding State}" FontSize="11" Foreground="{Binding TextColor}" Opacity="0.8" />
-                            <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                          </DockPanel>
+                </Border>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+      <!-- Un ascenseur par colonne (idée de l'utilisateur, essai P6) : chaque couche fait défiler ses propres scènes. -->
+        <ItemsControl x:Name="ColumnsList" ItemsSource="{Binding Columns}" Classes.compact="{Binding IsCompact}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Rows="1" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ControlColumnViewModel">
+              <Border Background="#161B22" CornerRadius="0,0,8,8" Padding="6,6,2,6" Margin="0,0,6,0">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                <StackPanel Spacing="6">
+                  <!-- Boutons de scène à deux zones -->
+                  <ItemsControl ItemsSource="{Binding Scenes}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <StackPanel Classes="scenes" Spacing="6" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:ControlSceneViewModel">
+                        <Border CornerRadius="7" BorderBrush="{Binding EditColor}" BorderThickness="{Binding OutlineThickness}"
+                                Opacity="{Binding HiddenInLive, Converter={x:Static vm:ControlConverters.DimIfTrue}}">
+                          <Grid ColumnDefinitions="*,24">
+                            <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0"
+                                    CornerRadius="6,0,0,6"
+                                    PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost" ContextRequested="OnSceneContext"
+                                    ToolTip.ShowDelay="600">
+                              <ToolTip.Tip>
+                                <StackPanel Spacing="3" MaxWidth="320">
+                                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                  <TextBlock Text="{Binding State}" IsVisible="{Binding IsActive}" FontSize="12" />
+                                  <TextBlock Text="Clic : lancer / arrêter (maintenir : flash) · clic droit : menu" FontSize="11" Foreground="#8B949E" />
+                                </StackPanel>
+                              </ToolTip.Tip>
+                              <DockPanel>
+                                <ProgressBar DockPanel.Dock="Bottom" Minimum="0" Maximum="1" Value="{Binding Progress}" Height="3" MinHeight="3"
+                                             Foreground="{Binding TextColor}" Background="Transparent" Opacity="0.45" IsVisible="{Binding ShowsProgress}"
+                                             ToolTip.Tip="Avancement de l'étape en cours" />
+                                <TextBlock Classes="state" DockPanel.Dock="Bottom" Text="{Binding State}" FontSize="11" Foreground="{Binding TextColor}" Opacity="0.8" />
+                                <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                              </DockPanel>
+                            </Border>
+                            <Button Grid.Column="1" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    ToolTip.Tip="Choisir cette scène pour l'éditer (un second clic la libère)"
+                                    Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
+                          </Grid>
                         </Border>
-                        <Button Grid.Column="1" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                ToolTip.Tip="Choisir cette scène pour l'éditer (un second clic la libère)"
-                                Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
-                      </Grid>
-                    </Border>
-                  </DataTemplate>
-                </ItemsControl.ItemTemplate>
-              </ItemsControl>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
 
-              <Button Content="+ scène" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
-                      ToolTip.Tip="Nouvelle scène dans cette couche, choisie aussitôt pour l'édition"
-                      Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
-            </StackPanel>
-          </Border>
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                  <Button Content="+ scène" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
+                          ToolTip.Tip="Nouvelle scène dans cette couche, choisie aussitôt pour l'édition"
+                          Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
+                </StackPanel>
+                </ScrollViewer>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
   </ScrollViewer>
   </DockPanel>
 </UserControl>

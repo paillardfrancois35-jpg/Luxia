@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Luxia.UI.Modules.Control"
+        xmlns:c="using:Luxia.UI.Controls"
+        x:Class="Luxia.UI.Modules.Control.Views.ThemeEditorWindow"
+        x:DataType="vm:ThemeEditorViewModel"
+        Title="{Binding Title}"
+        Width="720" Height="440"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117">
+  <DockPanel Margin="14">
+    <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,10">
+      <TextBlock FontSize="12" Foreground="#8B949E" TextWrapping="Wrap"
+                 Text="Un thème est une suite de couleurs : l'alternance les montre dans cet ordre, le dégradé passe de l'une à l'autre. Choisissez un cran à gauche, puis sa couleur au sélecteur ou en tapant son code (#FF8000)." />
+      <Grid ColumnDefinitions="110,*">
+        <TextBlock Text="Nom du thème" VerticalAlignment="Center" Foreground="#8B949E" />
+        <TextBox Grid.Column="1" Text="{Binding Name}" MaxWidth="320" HorizontalAlignment="Left" Width="320" />
+      </Grid>
+    </StackPanel>
+
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
+      <TextBlock Text="{Binding Message}" Foreground="#F0883E" VerticalAlignment="Center" MinWidth="300" />
+      <Button Content="Enregistrer" Command="{Binding SaveCommand}" Classes="accent" />
+      <Button Content="Annuler" Command="{Binding CancelCommand}" />
+    </StackPanel>
+
+    <Grid ColumnDefinitions="220,16,*">
+      <DockPanel>
+        <WrapPanel DockPanel.Dock="Bottom" Margin="0,6,0,0" ItemSpacing="4" LineSpacing="4">
+          <Button Content="+ Cran" Command="{Binding AddStepCommand}" ToolTip.Tip="Ajoute une couleur après le cran choisi" />
+          <Button Content="▲" Command="{Binding MoveUpCommand}" ToolTip.Tip="Monter le cran choisi (plus tôt dans l'alternance)" />
+          <Button Content="▼" Command="{Binding MoveDownCommand}" ToolTip.Tip="Descendre le cran choisi" />
+          <Button Content="Retirer" Foreground="#F85149" Command="{Binding RemoveStepCommand}" ToolTip.Tip="Retire le cran choisi (il en reste toujours deux)" />
+        </WrapPanel>
+        <ListBox ItemsSource="{Binding Steps}" SelectedItem="{Binding SelectedStep}" Background="#161B22">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="vm:ThemeStepViewModel">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="{Binding Label}" Width="18" VerticalAlignment="Center" Foreground="#8B949E" />
+                <Border Width="56" Height="22" CornerRadius="4" Background="{Binding Hex}" />
+                <TextBlock Text="{Binding Hex}" VerticalAlignment="Center" FontFamily="Consolas" />
+              </StackPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+      <StackPanel Grid.Column="2" Spacing="8">
+        <c:ColorPicker x:Name="Picker" Width="330" Height="240" HorizontalAlignment="Left" SelectedColor="{Binding SelectedColor}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="Code de la couleur" VerticalAlignment="Center" Foreground="#8B949E" />
+          <TextBox Text="{Binding HexText}" Width="120" FontFamily="Consolas" ToolTip.Tip="#RRGGBB : appliqué dès que les 6 chiffres sont tapés" />
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</Window>

@@ -133,6 +133,7 @@
 | [CMD-014](CMD-014.md) | Commande FlashScène | P5 | I | Réalisé |
 | [CMD-015](CMD-015.md) | Commandes ÉtapeSuivante / ÉtapePrécédente | P4 | — | Réalisé |
 | [CMD-016](CMD-016.md) | Commande RéglerVitesseScène | P5 | — | Réalisé |
+| [CMD-017](CMD-017.md) | Commande MontrerÉtape | P6 | I | Validé |
 | [CMD-020](CMD-020.md) | Commande SurchargerCanal | P1 | — | Réalisé |
 | [CMD-021](CMD-021.md) | Commande SurchargerAttribut | P4 | — | Validé |
 | [CMD-022](CMD-022.md) | Commande LibérerSurcharges | P1 | — | Réalisé |
@@ -173,6 +174,16 @@
 | [COU-007](COU-007.md) | Arrêter la couche | P5 | M | Réalisé |
 | [COU-008](COU-008.md) | Avertissement | P5 | M | Validé |
 | [COU-009](COU-009.md) | Scène de repos par couche | P5 | S | Validé |
+| [EFF-001](EFF-001.md) | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | P6 | I | Validé |
+| [EFF-002](EFF-002.md) | Formes d'intensité | P6 | I | Validé |
+| [EFF-003](EFF-003.md) | Formes de position | P6 | I | Validé |
+| [EFF-004](EFF-004.md) | Formes de couleur | P6 | I | Validé |
+| [EFF-005](EFF-005.md) | Phase répartie selon l'ordre de la sélection, modes linéaire / miroir / groupes / aléatoir | P6 | I | Validé |
+| [EFF-006](EFF-006.md) | Aperçu en direct au simulateur pendant le réglage des paramètres | P6 | I | Validé |
+| [EFF-007](EFF-007.md) | Bibliothèque d'effets prédéfinis | P6 | M | Validé |
+| [EFF-008](EFF-008.md) | Effets sur cellules | P6 | M | Validé |
+| [EFF-009](EFF-009.md) | Combinaison de deux effets sur un même attribut | P6 | S | Réalisé |
+| [EFF-011](EFF-011.md) | Effet d'intensité visible | P6 | I | Validé |
 | [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Validé |
 | [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Validé |
 | [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Validé |
@@ -200,6 +211,10 @@
 | [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Validé |
 | [ERG-026](ERG-026.md) | Stop et Tout stopper | ERG | I | Validé |
 | [ERG-027](ERG-027.md) | Marges | ERG | M | Validé |
+| [ERG-028](ERG-028.md) | Molette | P6 | M | Validé |
+| [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Validé |
+| [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Validé |
+| [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -297,7 +312,7 @@
 | [INST-031](INST-031.md) | Sélections automatiques | P3 | I | Réalisé |
 | [INST-032](INST-032.md) | Sélections manuelles créées et réordonnées | P3 | I | Partiel |
 | [INST-033](INST-033.md) | Opérations d'ordre sur une sélection | P3 | M | Réalisé |
-| [INST-034](INST-034.md) | Sélection de cellules | P3 | M | Non réalisé |
+| [INST-034](INST-034.md) | Sélection de cellules | P3 | M | Validé |
 | [INST-050](INST-050.md) | Créer, dupliquer, activer un lieu | P3 | I | Réalisé |
 | [INST-051](INST-051.md) | Éditeur de plan | P3 | I | Partiel |
 | [INST-052](INST-052.md) | Appareil absent | P3 | I | Réalisé |
@@ -355,7 +370,10 @@
 | [MOT-051](MOT-051.md) | Couleur logique vers RVBW (extraction du blanc) | P4 | I | Réalisé |
 | [MOT-052](MOT-052.md) | Couleur logique vers roue de couleur | P4 | I | Validé |
 | [MOT-053](MOT-053.md) | UV et ambre en émetteurs indépendants | P4 | M | Réalisé |
-| [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Non réalisé |
+| [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Validé |
+| [MOT-060](MOT-060.md) | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | P6 | I | Validé |
+| [MOT-061](MOT-061.md) | Effet relatif | P6 | I | Validé |
+| [MOT-063](MOT-063.md) | Un effet entre et sort avec le poids de sa scène | P6 | M | Réalisé |
 | [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
 | [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
 | [MOT-072](MOT-072.md) | Flash | P5 | I | Validé |
@@ -383,7 +401,7 @@
 | [PAL-007](PAL-007.md) | Grilles de palettes | P4 | M | Partiel |
 | [PAL-008](PAL-008.md) | Palettes de position manquantes dans un lieu | P5 | M | Validé |
 | [PAL-009](PAL-009.md) | Jeu de palettes couleur par défaut | P4 | M | Réalisé |
-| [PAL-010](PAL-010.md) | Palettes de combinaisons de couleurs | P5 | S | Reporté (P6) |
+| [PAL-010](PAL-010.md) | Palettes de combinaisons de couleurs | P5 | S | Validé |
 | [SCN-001](SCN-001.md) | Créer, dupliquer, renommer, supprimer une scène | P4 | I | Validé |
 | [SCN-002](SCN-002.md) | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | P4 | I | Validé |
 | [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
@@ -396,6 +414,7 @@
 | [SCN-011](SCN-011.md) | Fondu propre à un attribut | P4 | M | Réalisé |
 | [SCN-012](SCN-012.md) | Catégories et filtre des scènes | P4 | M | Réalisé |
 | [SCN-013](SCN-013.md) | Rapport des utilisations d'une scène | P4 | M | Réalisé |
+| [SCN-014](SCN-014.md) | Assistants de création | P6 | S | Validé |
 | [SCN-030](SCN-030.md) | Sélection d'appareils dans le programmeur | P4 | I | Partiel |
 | [SCN-031](SCN-031.md) | Outils d'attributs adaptés à la sélection | P4 | I | Partiel |
 | [SCN-032](SCN-032.md) | Seuls les attributs modifiés sont enregistrés | P4 | I | Validé |

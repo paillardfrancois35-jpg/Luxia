@@ -170,9 +170,9 @@
     {
       "id": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
       "fixtureTypeId": "df9703ac-9b8e-5299-b255-52d18923f4ab",
-      "modeName": "20 canaux",
+      "modeName": "64 canaux",
       "universe": 1,
-      "address": 141,
+      "address": 181,
       "name": "Effet multi-têtes",
       "number": 11,
       "color": "#D29922",

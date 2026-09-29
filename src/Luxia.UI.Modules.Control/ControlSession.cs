@@ -36,6 +36,7 @@ public sealed class ControlSession
     private ControlSnapshot? _pendingBefore;
     private string _pendingDescription = string.Empty;
     private bool _saving;
+    private readonly Dictionary<RenderEngine, (Guid Scene, int Step)?> _shown = [];
 
     /// <summary>Branche la session sur le projet ; démarre en LIVE (C9).</summary>
     public ControlSession(LuxiaRuntime runtime)
@@ -73,6 +74,10 @@ public sealed class ControlSession
     /// <summary>Valeurs de l'étape éditée.</summary>
     public IReadOnlyList<SceneValue> StepValues =>
         _working is { } scene && EditStep < scene.Steps.Count ? scene.Steps[EditStep].Values : [];
+
+    /// <summary>Effets de l'étape éditée (EFF-001).</summary>
+    public IReadOnlyList<SceneEffect> StepEffects =>
+        _working is { } scene && EditStep < scene.Steps.Count ? scene.Steps[EditStep].Effects : [];
 
     /// <summary>Surcharges LIVE en cours.</summary>
     public IReadOnlyList<SceneValue> LiveValues => _live;
@@ -149,6 +154,21 @@ public sealed class ControlSession
         ArgumentNullException.ThrowIfNull(fixtures);
         _selection = [.. fixtures.Distinct()];
         Notify();
+    }
+
+    /// <summary>
+    /// Appareils sélectionnés au plan, de gauche à droite par colonnes d'un mètre, puis dans l'ordre du patch au sein d'une
+    /// colonne (appareils empilés sur un même pied) : l'ordre naturel d'une vague.
+    /// </summary>
+    public List<ValueTarget> OrderedSelection()
+    {
+        var venue = Venues.Active;
+        var patch = _runtime.Project.Installation.Fixtures.Select((f, i) => (f.Id, i)).ToDictionary(x => x.Id, x => x.i);
+        return [.. _selection
+            .Select(id => (id, place: venue.PlacementOf(id)))
+            .OrderBy(x => x.place is { } p ? Math.Floor(p.X) : double.MaxValue)
+            .ThenBy(x => patch.GetValueOrDefault(x.id, int.MaxValue))
+            .Select(x => ValueTarget.Fixture(x.id))];
     }
 
     /// <summary>Choisit la scène à éditer (nulle : aucune ; le mode revient alors en LIVE).</summary>
@@ -249,6 +269,103 @@ public sealed class ControlSession
             EditStepValues(Without, description);
         }
 
+        Push();
+    }
+
+    /// <summary>
+    /// Modifie les effets de l'étape éditée (EFF-001) : geste écrit par <see cref="Commit"/>, annulable. Refusé en LIVE
+    /// (on n'écrit dans une scène qu'en ÉDITION ou en AVEUGLE) ; renvoie alors la raison.
+    /// </summary>
+    public string? EditEffects(Func<IReadOnlyList<SceneEffect>, IReadOnlyList<SceneEffect>> change, string description)
+    {
+        ArgumentNullException.ThrowIfNull(change);
+        if (Refused())
+        {
+            return LockedReason;
+        }
+
+        if (_working is not { } scene || EditStep >= scene.Steps.Count)
+        {
+            return "Choisissez d'abord la scène à éditer : bande ✎ à droite d'un bouton de scène.";
+        }
+
+        if (Mode == EditMode.Live)
+        {
+            return "Passez en ÉDITION (ou 👁 AVEUGLE) pour écrire un effet dans l'étape.";
+        }
+
+        BeginGesture(description);
+        var index = EditStep;
+        _working = scene with { Steps = [.. scene.Steps.Select((s, i) => i == index ? s with { Effects = change(s.Effects) } : s)] };
+        Push();
+        return null;
+    }
+
+    /// <summary>
+    /// MOT-041 pour un effet de couleur : les cibles sans intensité dans l'étape reçoivent 100 %, sinon la couleur ne se
+    /// verrait pas. Geste en cours, comme <see cref="EditEffects"/>.
+    /// </summary>
+    public void LightTargets(IReadOnlyList<ValueTarget> targets, string description)
+    {
+        ArgumentNullException.ThrowIfNull(targets);
+        if (Mode == EditMode.Live || _working is null)
+        {
+            return;
+        }
+
+        var palettes = PaletteLookup();
+        EditStepValues(
+            step =>
+            {
+                var lit = step.Where(v => ProgrammerRules.Slot(v, palettes) == ProgrammerRules.IntensitySlot).Select(v => ProgrammerRules.TargetKey(v.Target)).ToHashSet();
+                var result = step.ToList();
+                foreach (var target in targets.Where(t => lit.Add(ProgrammerRules.TargetKey(t))))
+                {
+                    result.Add(new SceneValue { Target = target, Attribute = AttributeKind.Intensity, Level = 1 });
+                }
+
+                return result;
+            },
+            description);
+        Push();
+    }
+
+    /// <summary>
+    /// Inverse de MOT-041 pour un effet d'intensité (EFF-011, essai P6) : une cible sans couleur dans l'étape reçoit le
+    /// blanc (palette « Blanc ») ; sinon un PAR RVB, émetteurs à 0, resterait noir quelle que soit son intensité.
+    /// Geste en cours, comme <see cref="EditEffects"/> ; la couleur se change ensuite dans les Réglages.
+    /// </summary>
+    public void ColorTargets(IReadOnlyList<ValueTarget> targets, string description)
+    {
+        ArgumentNullException.ThrowIfNull(targets);
+        if (Mode == EditMode.Live || _working is null)
+        {
+            return;
+        }
+
+        var palettes = PaletteLookup();
+        var white = _runtime.Project.Palettes.Palettes.FirstOrDefault(p => p.Id == DefaultPalettes.Colors[0].Id);
+        EditStepValues(
+            step =>
+            {
+                // Appareils déjà colorés dans l'étape, quelle que soit la forme de la cible (sélection, appareil, cellule).
+                var patch = _runtime.Show.Patch;
+                var colored = step
+                    .Where(v => ProgrammerRules.Slot(v, palettes) == ProgrammerRules.ColorSlot)
+                    .SelectMany(v => patch.Members(v.Target, out _))
+                    .Select(m => m.Fixture.Fixture.Id)
+                    .ToHashSet();
+                var result = step.ToList();
+                foreach (var target in targets.Where(t => patch.Members(t, out _).Any(m => !colored.Contains(m.Fixture.Fixture.Id))))
+                {
+                    result.Add(white is not null
+                        ? new SceneValue { Target = target, PaletteId = white.Id }
+                        : new SceneValue { Target = target, Color = new LogicalColor { R = 1, G = 1, B = 1 } });
+                }
+
+                return result;
+            },
+            description);
         Push();
     }
 
@@ -424,6 +541,10 @@ public sealed class ControlSession
         }
 
         _pushed.Clear();
+        foreach (var engine in _shown.Keys.ToList())
+        {
+            ShowStepOn(engine, null);
+        }
     }
 
     private bool Refused()
@@ -583,8 +704,17 @@ public sealed class ControlSession
         _stepMap = Mode == EditMode.Live ? [] : Resolve(resolver, StepValues);
         var output = new Dictionary<(Guid, string), double>(_liveMap);
         var preview = new Dictionary<(Guid, string), double>();
+
+        // EFF-006 : l'étape éditée qui a des effets est jouée par le moteur (CMD-017), effets compris ; ses attributs animés
+        // ne sont pas figés par une surcharge, qui passerait par-dessus l'effet.
+        var animated = Mode == EditMode.Live ? [] : AnimatedKeys(resolver);
         foreach (var (key, level) in _stepMap)
         {
+            if (animated.Contains(key))
+            {
+                continue;
+            }
+
             if (Mode == EditMode.Edit)
             {
                 output[key] = level;
@@ -595,10 +725,47 @@ public sealed class ControlSession
             }
         }
 
+        (Guid, int)? shown = _working is { } scene && Mode != EditMode.Live && StepEffects.Count > 0 ? (scene.Id, EditStep) : null;
+        ShowStepOn(_runtime.Engine, Mode == EditMode.Edit ? shown : null);
+        ShowStepOn(_runtime.Preview, Mode == EditMode.Blind ? shown : null);
         PushTo(_runtime.Engine, output);
         PushTo(_runtime.Preview, preview);
         _runtime.PreviewActive = Mode == EditMode.Blind;
         Notify();
+    }
+
+    private void ShowStepOn(RenderEngine engine, (Guid Scene, int Step)? step)
+    {
+        if (_shown.GetValueOrDefault(engine) == step)
+        {
+            return;
+        }
+
+        engine.Send(new ShowStepCommand(CommandOrigin.User, step?.Scene, step?.Step ?? 0));
+        _shown[engine] = step;
+    }
+
+    /// <summary>Attributs (appareil, canal) animés par les effets de l'étape éditée.</summary>
+    private HashSet<(Guid Fixture, string Key)> AnimatedKeys(ValueResolver resolver)
+    {
+        var keys = new HashSet<(Guid, string)>();
+        if (StepEffects.Count == 0)
+        {
+            return keys;
+        }
+
+        var model = _runtime.Engine.Snapshot.Show;
+        var compiler = new EffectCompiler(_runtime.Show.Patch, resolver);
+        foreach (var effect in StepEffects)
+        {
+            foreach (var channel in compiler.Compile(effect, model, out _).Channels)
+            {
+                var parameter = model.Parameters[channel.Parameter];
+                keys.Add((parameter.FixtureId, parameter.ChannelKey));
+            }
+        }
+
+        return keys;
     }
 
     private void PushTo(RenderEngine engine, Dictionary<(Guid Fixture, string Key), double> next)

@@ -38,7 +38,7 @@ public sealed class ControlDockFactory : Factory
     // Contrôle (doc 60 §6) : colonnes au centre, propriétés et looks à droite, plan + réglages en bas, journal en onglet.
     private IRootDock CreateControl()
     {
-        var bottom = Split(0.46, Orientation.Horizontal, Tools(0.34, ControlPanels.Plan), Tools(0.66, ControlPanels.Settings, ControlPanels.Journal));
+        var bottom = Split(0.46, Orientation.Horizontal, Tools(0.34, ControlPanels.Plan), Tools(0.66, ControlPanels.Settings, ControlPanels.Effects, ControlPanels.Journal));
         var left = Split(0.78, Orientation.Vertical, Tools(0.58, ControlPanels.Columns), bottom);
         var right = Split(0.24, Orientation.Vertical, Tools(0.66, ControlPanels.Properties), Tools(0.34, ControlPanels.Looks));
         var main = Split(double.NaN, Orientation.Horizontal, left, right);

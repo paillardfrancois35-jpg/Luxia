@@ -208,3 +208,16 @@ Le paramétrage des effets est défini au doc 16. Le moteur les exécute ainsi :
 | Bascule (LIVE-003) | `LaunchSceneCommand.StopIfPlaying` : si la scène joue, elle est arrêtée au lieu d'être relancée ; tranché au traitement de la commande (l'écran et l'APC ne décident plus d'après un état en retard). |
 | Commandes P5 | `FlashScène` (CMD-014), `Figer` (CMD-003), `Fumée` (CMD-030, maintien ou rafale, refusée sans machine), `ArrêterCouche` avec `Everything` (COU-007). Scène de repos (COU-009) relancée dès qu'une couche est vide. |
 | Reprise (MOT-102) | Instantané toutes les 5 s par l'hôte (`reprise.json`), pas par le moteur : le moteur n'écrit jamais sur le disque (MOT-003). |
+
+## 15. Notes de réalisation (P6)
+
+| Sujet | Réalisation |
+|---|---|
+| Effets (MOT-060) | `EngineStep.Effects` : un `EngineEffect` = forme, durée d'un cycle, rapport cyclique, sens, relatif / absolu, et un `EffectChannel` par paramètre d'un membre (retard de phase, centre, taille, table). `EffectShapes` : formes pures, sans allocation (formes de couleur = tables compilées). La lecture fait tourner chaque effet (phase en cycles, vitesse de la scène comprise) et calcule par paramètre une contribution absolue (valeur, poids) et un écart relatif. |
+| Fusion (MOT-061) | Avant la fusion d'une lecture : un effet absolu remplace la valeur de l'étape selon son poids ; un effet relatif s'ajoute à la valeur de l'étape, sinon à la **valeur sous-jacente** (couches inférieures) ; deux relatifs s'additionnent (EFF-009). |
+| Entrée / sortie (MOT-063) | Le poids d'un effet suit le fondu de l'étape (entrée, changement d'étape) puis le fondu de sortie de la scène. Un même effet (même identifiant) dans deux étapes successives continue sans repartir ; un effet qui arrive part du début de son cycle. |
+| Aléatoire (MOT-004) | SplitMix64 sur (graine de session ⊕ graine de l'effet + rang du membre, numéro de cycle) : reproductible, sans état. |
+| Fondu par la teinte (MOT-054) | `EngineStep.HueFade` : les triplets R / V / B d'une cellule (`ShowModel.ColorGroups`) suivent la roue des teintes par le plus court chemin pendant le fondu. |
+| Étape montrée (CMD-017) | Lecture à part, figée sur une étape, fusionnée après toutes les couches (intensité prioritaire, master 1), absente de la liste des lectures : l'écran Contrôle s'en sert pour montrer l'étape éditée avec ses effets (EFF-006). |
+| Sûreté | Inchangée et toujours après : un effet qui vise une zone interdite est ramené au bord (exemple « Piège : grand cercle de la lyre 1 »). |
+| MOT-002 | Le test de charge porte des effets sur une scène sur deux : toujours 0 octet alloué par tick. |

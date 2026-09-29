@@ -26,9 +26,11 @@ public sealed partial class ChannelViewModel : ViewModelBase
     private string _valueText = "0";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Detail))]
     private string _percentText = "0 %";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Detail))]
     private string _caption = string.Empty;
 
     /// <summary>Crée la tranche.</summary>
@@ -36,6 +38,14 @@ public sealed partial class ChannelViewModel : ViewModelBase
 
     /// <summary>Numéro du canal (1 à 512).</summary>
     public int Channel { get; }
+
+    /// <summary>
+    /// Texte complet de la tranche (infobulle et ligne d'information de la Console) : la tranche, étroite, coupe le nom
+    /// de l'appareil et celui de la plage (essai P6).
+    /// </summary>
+    public string Detail => string.Create(
+        CultureInfo.CurrentCulture,
+        $"Canal {Channel}{(Caption.Length > 0 ? " · " + Caption : " · non patché")} · {Value} = {PercentText}");
 
     /// <summary>Numéro affiché.</summary>
     public string ChannelText => Channel.ToString(CultureInfo.CurrentCulture);
@@ -62,6 +72,7 @@ public sealed partial class ChannelViewModel : ViewModelBase
 
     partial void OnValueChanged(int value)
     {
+        OnPropertyChanged(nameof(Detail));
         ValueText = value.ToString(CultureInfo.CurrentCulture);
         PercentText = string.Create(CultureInfo.CurrentCulture, $"{Math.Round(value * 100 / 255.0)} %");
     }

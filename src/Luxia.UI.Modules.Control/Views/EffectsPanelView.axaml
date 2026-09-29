@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:c="using:Luxia.UI.Controls"
+             x:Class="Luxia.UI.Modules.Control.Views.EffectsPanelView"
+             x:DataType="vm:EffectsPanelViewModel">
+  <UserControl.Styles>
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Expander">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+    <Style Selector="ListBoxItem">
+      <Setter Property="Padding" Value="6,3" />
+      <Setter Property="MinHeight" Value="0" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="280,12,*" Margin="10,4,10,8">
+    <!-- Gauche : effets de l'étape et bibliothèque -->
+    <DockPanel>
+      <StackPanel DockPanel.Dock="Top" Spacing="4">
+        <TextBlock Text="{Binding Hint}" TextWrapping="Wrap" FontSize="12" Foreground="#8B949E" />
+        <TextBlock Text="{Binding Message}" IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   TextWrapping="Wrap" FontSize="12" Foreground="#F0883E" />
+        <StackPanel Spacing="4" IsVisible="{Binding HasScene}" IsEnabled="{Binding CanWrite}">
+          <ComboBox ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}" HorizontalAlignment="Stretch"
+                    ToolTip.Tip="Modèles de la bibliothèque du projet">
+            <ComboBox.SelectionBoxItemTemplate>
+              <DataTemplate x:DataType="vm:EffectTemplateRow">
+                <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+              </DataTemplate>
+            </ComboBox.SelectionBoxItemTemplate>
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:EffectTemplateRow">
+                <StackPanel>
+                  <TextBlock Text="{Binding Title}" />
+                  <TextBlock Text="{Binding Description}" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap" MaxWidth="300" />
+                </StackPanel>
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+            <Button Content="+ Ajouter à la sélection" Command="{Binding AddEffectCommand}" HorizontalAlignment="Stretch"
+                    ToolTip.Tip="Sur les appareils choisis au plan, de gauche à droite. Ctrl+Z pour annuler." />
+            <CheckBox Grid.Column="1" Content="Cellules" IsChecked="{Binding NewPerCell}"
+                      ToolTip.Tip="Chaque segment d'une barre, chaque tête de l'effet multi-têtes devient un membre de l'effet" />
+          </Grid>
+          <!-- Gestion de la bibliothèque à l'écart des boutons courants (essai P6 : ✕ cliqué par erreur, sans retour possible). -->
+          <Button Content="Bibliothèque ▾" FontSize="11" Padding="6,1" HorizontalAlignment="Right" Foreground="#8B949E"
+                  ToolTip.Tip="Gérer les modèles de la bibliothèque du projet">
+            <Button.Flyout>
+              <MenuFlyout>
+                <MenuItem Header="Retirer ce modèle de la bibliothèque…" Command="{Binding DeleteTemplateCommand}" />
+                <MenuItem Header="Rétablir les modèles livrés" Command="{Binding RestoreDefaultTemplatesCommand}" />
+              </MenuFlyout>
+            </Button.Flyout>
+          </Button>
+        </StackPanel>
+      </StackPanel>
+
+      <!-- Effets de l'étape -->
+      <ListBox ItemsSource="{Binding Effects}" SelectedItem="{Binding SelectedEffect}" IsVisible="{Binding HasScene}"
+               Background="Transparent" Margin="0,6,0,0">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:EffectRow">
+            <Grid ColumnDefinitions="14,*">
+              <Ellipse Width="9" Height="9" Fill="{Binding Color}" VerticalAlignment="Center" />
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="{Binding Title}" FontSize="13" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Detail}" FontSize="11" Foreground="#8B949E" TextTrimming="CharacterEllipsis" />
+              </StackPanel>
+            </Grid>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </DockPanel>
+
+    <!-- Droite : l'effet choisi -->
+    <ScrollViewer Grid.Column="2">
+    <StackPanel Spacing="4">
+      <!-- Effet choisi -->
+      <StackPanel IsVisible="{Binding HasEffect}" IsEnabled="{Binding CanWrite}" Spacing="6">
+        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4" Margin="0,0,30,0">
+          <TextBox Text="{Binding Name}" FontWeight="SemiBold" ToolTip.Tip="Nom de l'effet" />
+          <Button Grid.Column="1" Content="Dupliquer" Command="{Binding DuplicateEffectCommand}" />
+          <Button Grid.Column="2" Content="Retirer" Foreground="#F85149" Command="{Binding DeleteEffectCommand}" ToolTip.Tip="Retire l'effet de l'étape (Ctrl+Z pour annuler)" />
+        </Grid>
+
+        <c:EffectPreview Height="110" Curve="{Binding Curve}" Dots="{Binding Dots}" Colors="{Binding PreviewColors}"
+                         Stepped="{Binding PreviewStepped}" IsPlane="{Binding IsPositionShape}" Accent="{Binding Accent}"
+                         ToolTip.Tip="Forme d'un cycle ; chaque point est un appareil (le blanc est le premier)" />
+        <TextBlock Text="{Binding MembersText}" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Problems}" IsVisible="{Binding Problems, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                   FontSize="11" Foreground="#F85149" TextWrapping="Wrap" />
+
+        <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+          <TextBlock Classes="label" Text="Forme" />
+          <ComboBox Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.Shapes}" SelectedItem="{Binding Shape}" HorizontalAlignment="Stretch" />
+          <TextBlock Grid.Row="1" Classes="label" Text="Anime" IsVisible="{Binding IsIntensityShape}" />
+          <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.Attributes}" SelectedItem="{Binding Attribute}"
+                    HorizontalAlignment="Stretch" IsVisible="{Binding IsIntensityShape}" />
+        </Grid>
+
+        <!-- Molettes : vitesse, taille, centre, décalage, durée allumée -->
+        <WrapPanel>
+          <c:Dial Value="{Binding Period}" Minimum="0.1" Maximum="30" Step="0.1" DefaultValue="{Binding DefaultPeriod}" Format="0.0" Label="Cycle" Accent="{Binding Accent}"
+                  Margin="0,0,6,4" ToolTip.Tip="Durée d'un cycle : plus court = plus rapide. Glisser vers le haut / le bas, molette de la souris, double-clic ou chiffre tapé = saisie, clic droit = valeur par défaut" />
+          <c:Dial Value="{Binding Size}" Minimum="0" Maximum="{Binding SizeMaximum}" Step="{Binding SizeStep}" DefaultValue="{Binding DefaultSize}" Label="Taille"
+                  Accent="{Binding Accent}" Margin="0,0,6,4" IsVisible="{Binding !IsColorShape}"
+                  ToolTip.Tip="Amplitude : en % pour l'intensité, en degrés pour un mouvement" />
+          <c:Dial Value="{Binding Center}" Minimum="0" Maximum="100" Step="5" DefaultValue="{Binding DefaultCenter}" Label="Centre" Accent="{Binding Accent}"
+                  Margin="0,0,6,4" IsVisible="{Binding UsesCenter}" ToolTip.Tip="Niveau autour duquel l'effet oscille (%)" />
+          <c:Dial Value="{Binding Spread}" Minimum="0" Maximum="720" Step="15" DefaultValue="{Binding DefaultSpread}" Label="Décalage" Accent="{Binding Accent}"
+                  Margin="0,0,6,4" ToolTip.Tip="Décalage entre le premier et le dernier appareil, en degrés : 0 = tous ensemble, 360 = un cycle réparti" />
+          <c:Dial Value="{Binding DutyPercent}" Minimum="5" Maximum="100" Step="5" DefaultValue="{Binding DefaultDuty}" Label="Allumé %" Accent="{Binding Accent}"
+                  Margin="0,0,6,4" IsVisible="{Binding UsesDuty}" ToolTip.Tip="Part du cycle où c'est allumé (carré, impulsion)" />
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10">
+          <TextBlock Text="{Binding PeriodText}" FontSize="12" VerticalAlignment="Center" />
+          <CheckBox Content="En temps musicaux" IsChecked="{Binding InBeats}" FontSize="12"
+                    ToolTip.Tip="Le cycle se compte en temps (120 par minute jusqu'à la synchronisation sur la musique, P7)" />
+        </StackPanel>
+
+        <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+          <TextBlock Classes="label" Text="Répartition" />
+          <ComboBox Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.PhaseModes}" SelectedItem="{Binding PhaseMode}" HorizontalAlignment="Stretch" />
+          <TextBlock Grid.Row="1" Classes="label" Text="Groupes de" IsVisible="{Binding UsesGroups}" />
+          <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding GroupSize}" Minimum="1" Maximum="16" Increment="1" FormatString="0"
+                         Width="150" HorizontalAlignment="Left" IsVisible="{Binding UsesGroups}" />
+          <TextBlock Grid.Row="2" Classes="label" Text="Sens" />
+          <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.Directions}" SelectedItem="{Binding Direction}" HorizontalAlignment="Stretch" />
+          <TextBlock Grid.Row="3" Classes="label" Text="Autour de" IsVisible="{Binding IsPositionShape}" />
+          <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding PositionPalettes}" SelectedItem="{Binding PositionPalette}"
+                    HorizontalAlignment="Stretch" IsVisible="{Binding IsPositionShape}" />
+          <TextBlock Grid.Row="4" Classes="label" Text="Thème" IsVisible="{Binding UsesColorList}" />
+          <Grid Grid.Row="4" Grid.Column="1" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="4" IsVisible="{Binding UsesColorList}">
+            <ComboBox ItemsSource="{Binding Themes}" SelectedItem="{Binding Theme}" HorizontalAlignment="Stretch"
+                      ToolTip.Tip="Thème de couleurs (PAL-010) ; « Aucun » : les couleurs cochées ci-dessous" />
+            <Button Grid.Column="1" Content="+" Command="{Binding NewThemeCommand}" Padding="8,2" ToolTip.Tip="Nouveau thème de couleurs…" />
+            <Button Grid.Column="2" Content="✎" Command="{Binding EditThemeCommand}" IsEnabled="{Binding CanEditTheme}" Padding="8,2"
+                    ToolTip.Tip="Modifier ce thème (les thèmes livrés ne se modifient pas)" ToolTip.ShowOnDisabled="True" />
+            <Button Grid.Column="3" Content="🗑" Command="{Binding DeleteThemeCommand}" IsEnabled="{Binding CanEditTheme}" Padding="8,2"
+                    ToolTip.Tip="Retirer ce thème du projet (les thèmes livrés restent)" ToolTip.ShowOnDisabled="True" />
+          </Grid>
+        </Grid>
+
+        <TextBlock Text="Sans thème : cochez les couleurs de l'effet (dans l'ordre des pastilles)" FontSize="11" Foreground="#8B949E" IsVisible="{Binding UsesOwnColors}" />
+        <ItemsControl ItemsSource="{Binding ColorChips}" IsVisible="{Binding UsesOwnColors}">
+          <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:EffectColorChip">
+              <ToggleButton IsChecked="{Binding IsChecked}" Width="26" Height="26" Padding="0" Margin="0,0,4,4" CornerRadius="4"
+                            Background="{Binding Color}" ToolTip.Tip="{Binding Name}" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <WrapPanel>
+          <CheckBox Content="Relatif (autour de la valeur de l'étape)" IsChecked="{Binding Relative}" IsVisible="{Binding !IsColorShape}" Margin="0,0,10,4"
+                    ToolTip.Tip="Coché : s'ajoute à la position ou à l'intensité déjà réglée. Décoché : remplace, autour du centre" />
+          <CheckBox Content="Par cellule" IsChecked="{Binding PerCell}" Margin="0,0,10,4"
+                    ToolTip.Tip="Chaque segment d'une barre, chaque tête de l'effet multi-têtes devient un membre" />
+        </WrapPanel>
+        <WrapPanel>
+          <Button Content="Reprendre la sélection du plan" Command="{Binding TakeSelectionCommand}" Margin="0,0,6,4"
+                  ToolTip.Tip="L'effet s'applique aux appareils sélectionnés au plan, de gauche à droite" />
+          <Button Content="Enregistrer comme modèle" Command="{Binding SaveAsTemplateCommand}" Margin="0,0,6,4"
+                  ToolTip.Tip="Range ces réglages dans la bibliothèque du projet, pour les réutiliser sur d'autres appareils" />
+        </WrapPanel>
+      </StackPanel>
+    </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>
