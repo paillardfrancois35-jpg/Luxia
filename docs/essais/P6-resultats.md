@@ -15,3 +15,4 @@
 | 2026-09-28 | 1.006.040 | 6 Piège | ✅ | La lyre longe le bord, journal ok | — |
 | 2026-09-28 | 1.006.040 | — | 💡 | Colonnes : les commandes de couche disparaissent en faisant défiler | Réalisé : ERG-030 (en-têtes fixes), v1.006.049 |
 | 2026-09-29 | 1.006.049 | 7 Créer un effet | ❌ | Étapes 1 à 3 faites : l'effet tourne au panneau, mais les PAR réels ne s'allument pas | Cause : effet d'intensité sans couleur dans l'étape (PAR RVB à 0) ; correctif en cours côté dev (blanc ajouté automatiquement) |
+| 2026-09-29 | 1.006.053 | 7 Créer un effet | — | — | Correctif EFF-011 livré en 1.006.053 (blanc ajouté aux cibles sans couleur) : reprendre l'exemple 7 (retirer puis réajouter l'effet de « Mon effet ») |
