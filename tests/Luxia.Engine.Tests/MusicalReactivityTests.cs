@@ -1,0 +1,236 @@
+using Luxia.Engine.Model;
+using Luxia.Messaging.Commands;
+using static Luxia.Engine.Tests.ShowBuilder;
+
+namespace Luxia.Engine.Tests;
+
+/// <summary>T-AUD-04, T-MOT-06 : scènes au temps — avance à l'événement, quantification, horloge propre, effets calés.</summary>
+public sealed class MusicalReactivityTests
+{
+    private readonly ShowBuilder _show = new();
+    private readonly TestFixture _par;
+    private readonly EngineLayer _layer;
+
+    public MusicalReactivityTests()
+    {
+        _par = _show.Par7(1);
+        _layer = _show.Layer("Tout", 1);
+    }
+
+    private EngineScene TwoSteps(StepAdvanceMode advance = StepAdvanceMode.Beat, int every = 1, LaunchQuantize quantize = LaunchQuantize.None, double? ownBpm = null) =>
+        _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = "Au temps",
+            LayerId = _layer.Id,
+            Advance = advance,
+            AdvanceEvery = every,
+            Quantize = quantize,
+            OwnBpm = ownBpm,
+            Steps = [Step(0, 60, V(_par["r"], 1)), Step(0, 60, V(_par["g"], 1))],
+        });
+
+    private (EngineHarness Engine, EngineScene Scene) Play(EngineScene scene)
+    {
+        var engine = new EngineHarness(_show.Build());
+        engine.Launch(scene);
+        engine.Tick();
+        return (engine, scene);
+    }
+
+    [Theory]
+    [InlineData(StepAdvanceMode.Beat, 1, 0.5)]
+    [InlineData(StepAdvanceMode.Beat, 2, 1.0)]
+    [InlineData(StepAdvanceMode.Bar, 1, 2.0)]
+    [InlineData(StepAdvanceMode.BassPulse, 1, 0.5)]
+    [InlineData(StepAdvanceMode.TreblePulse, 1, 0.5)]
+    [Trait("Exigence", "MOT-017")]
+    [Trait("Exigence", "SCN-052")]
+    public void Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio(StepAdvanceMode mode, int every, double atSeconds)
+    {
+        var (engine, scene) = Play(TwoSteps(advance: mode, every: every));
+
+        // La scène démarre au tick du lancement (t = 25 ms) ; l'événement tombe à atSeconds sur l'horloge.
+        engine.Run(atSeconds - 0.05);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+        engine.Run(0.05);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-017")]
+    public void Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges()
+    {
+        var (engine, scene) = Play(TwoSteps());
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Fixed, 240));
+        engine.Run(0.4);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBeGreaterThan(0);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-020")]
+    public void OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster()
+    {
+        var (engine, scene) = Play(TwoSteps(ownBpm: 60));
+
+        // Main à 120 BPM : un temps toutes les 0,5 s ; la scène est à 60 BPM : un temps toutes les secondes.
+        engine.Run(0.9);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+        engine.Run(0.2);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-020")]
+    public void OwnClock_MusicalDurationsUseTheSceneTempo()
+    {
+        var scene = _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = "Lent",
+            LayerId = _layer.Id,
+            OwnBpm = 30,
+            Steps = [Step(0, 0, V(_par["r"], 1)) with { Hold = Duration.FromBeats(1) }, Step(0, 0, V(_par["g"], 1)) with { Hold = Duration.FromBeats(1) }],
+        });
+        var (engine, _) = Play(scene);
+
+        // 1 temps à 30 BPM = 2 s, alors que l'horloge principale est à 120 BPM.
+        engine.Run(1.9);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+        engine.Run(0.2);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting()
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Bar);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Launch(scene);
+        engine.Tick();
+
+        engine.Playback(scene).ShouldBeNull();
+        engine.Engine.Snapshot.PendingLaunches.Select(p => p.SceneId).ShouldBe([scene.Id]);
+        engine.Engine.Snapshot.PendingLaunches[0].BeatsRemaining.ShouldBeInRange(2.5, 3.5);
+
+        // 120 BPM : la mesure suivante commence à 2,0 s.
+        engine.Run(1.65);
+        engine.Playback(scene).ShouldBeNull();
+        engine.Tick();
+        engine.Playback(scene).ShouldNotBeNull();
+        engine.Engine.Snapshot.PendingLaunches.ShouldBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_Beat_OnTheBeat_StartsImmediately()
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Beat);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.475);
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Playback(scene).ShouldNotBeNull();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_Phrase4_WaitsSixteenBeats()
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Phrase4);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Run(7.5);
+        engine.Playback(scene).ShouldBeNull();
+        engine.Run(0.2);
+        engine.Playback(scene).ShouldNotBeNull();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt()
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Bar);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Send(new LaunchSceneCommand(CommandOrigin.User, scene.Id, StopIfPlaying: true));
+        engine.Tick();
+        engine.Engine.Snapshot.PendingLaunches.Count.ShouldBe(1);
+
+        engine.Send(new LaunchSceneCommand(CommandOrigin.User, scene.Id, StopIfPlaying: true));
+        engine.Tick();
+        engine.Engine.Snapshot.PendingLaunches.ShouldBeEmpty();
+
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Stop(scene);
+        engine.Run(3);
+        engine.Playback(scene).ShouldBeNull();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-062")]
+    public void MusicalEffect_CycleStartsOnTheClock_NotOnTheLaunch()
+    {
+        var effect = new EngineEffect
+        {
+            Id = Guid.NewGuid(),
+            Name = "Une mesure",
+            Shape = EffectShape.Sine,
+            Period = new Duration(1, DurationUnit.Bars),
+            Channels = [new EffectChannel(_par["dim"], 0, 0, 0.5, 1)],
+        };
+        var scene = _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = "Cercle",
+            LayerId = _layer.Id,
+            Steps = [new EngineStep { Fade = Duration.Zero, Hold = Duration.FromSeconds(60), Values = [], Effects = [effect] }],
+        });
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Launch(scene);
+        engine.Tick();
+
+        // Lancée en milieu de mesure : à la fin du 2e temps (t = 1,0 s, horloge à 2 temps sur 4) le sinus est à son sommet.
+        engine.Run(0.675);
+        engine.Value(_par["dim"]).ShouldBe(1, 1e-6);
+        // Une mesure (2 s) plus tard, il y est de nouveau : le cycle suit l'horloge.
+        engine.Run(2);
+        engine.Value(_par["dim"]).ShouldBe(1, 1e-6);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-062")]
+    public void MusicalEffect_FollowsTheClockWhenItIsResynchronised()
+    {
+        var effect = new EngineEffect
+        {
+            Id = Guid.NewGuid(),
+            Name = "Un temps",
+            Shape = EffectShape.Sine,
+            Period = Duration.FromBeats(4),
+            Channels = [new EffectChannel(_par["dim"], 0, 0, 0.5, 1)],
+        };
+        var scene = _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = "Cercle",
+            LayerId = _layer.Id,
+            Steps = [new EngineStep { Fade = Duration.Zero, Hold = Duration.FromSeconds(60), Values = [], Effects = [effect] }],
+        });
+        var engine = new EngineHarness(_show.Build());
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Run(0.7);
+
+        // « Le 1 est maintenant » : la position de l'horloge saute au début de mesure, le cycle saute avec elle.
+        engine.Send(new AdjustTempoCommand(CommandOrigin.User, TempoAdjustment.ResyncBar));
+        engine.Tick();
+        engine.Value(_par["dim"]).ShouldBe(0, 0.01);
+    }
+}

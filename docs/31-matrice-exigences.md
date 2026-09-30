@@ -434,9 +434,9 @@
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Validé | DimmerGroupsViewModelTests.DimmerPlatine_ChosenInTheInterface_IsWrittenToMidiJson<br>DimmerGroupsViewModelTests.FaderMarkers_PastEight_NameThePage<br>DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>DimmersPanelTests.WithMoreThanEightDimmers_TheMarkersFollowThePlatinePage_AndTheOtherPageIsDimmed<br>(+13) |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | Validé |  |
 
-## P7 – 46 exigences, 6 couvertes par des tests automatiques
+## P7 – 46 exigences, 11 couvertes par des tests automatiques
 
-> Partiel : 4 · Réalisé : 3 · Sans fiche : 39
+> Partiel : 6 · Réalisé : 7 · Sans fiche : 33
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -477,12 +477,12 @@
 | [LIVE-020](exigences/LIVE-020.md) | I | (fiche manquante) | Sans fiche |  |
 | [LIVE-021](exigences/LIVE-021.md) | I | (fiche manquante) | Sans fiche |  |
 | [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Réalisé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles |
-| [MOT-017](exigences/MOT-017.md) | I | (fiche manquante) | Sans fiche |  |
-| [MOT-018](exigences/MOT-018.md) | M | (fiche manquante) | Sans fiche |  |
-| [MOT-020](exigences/MOT-020.md) | M | (fiche manquante) | Sans fiche |  |
-| [MOT-062](exigences/MOT-062.md) | I | (fiche manquante) | Sans fiche |  |
+| [MOT-017](exigences/MOT-017.md) | I | Avance à l'événement | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio<br>MusicalReactivityTests.Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges |
+| [MOT-018](exigences/MOT-018.md) | M | Quantification du lancement | Réalisé | MusicalReactivityTests.Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting<br>MusicalReactivityTests.Quantize_Beat_OnTheBeat_StartsImmediately<br>MusicalReactivityTests.Quantize_Phrase4_WaitsSixteenBeats<br>MusicalReactivityTests.Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt |
+| [MOT-020](exigences/MOT-020.md) | M | Une scène peut suivre l'horloge principale ou une horloge fixe propre | Réalisé | MusicalReactivityTests.OwnClock_MusicalDurationsUseTheSceneTempo<br>MusicalReactivityTests.OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster |
+| [MOT-062](exigences/MOT-062.md) | I | Vitesse d'effet en Hz ou en temps musicaux | Réalisé | MusicalReactivityTests.MusicalEffect_CycleStartsOnTheClock_NotOnTheLaunch<br>MusicalReactivityTests.MusicalEffect_FollowsTheClockWhenItIsResynchronised |
 | [SCN-006](exigences/SCN-006.md) | I | (fiche manquante) | Sans fiche |  |
-| [SCN-050](exigences/SCN-050.md) | I | (fiche manquante) | Sans fiche |  |
+| [SCN-050](exigences/SCN-050.md) | I | Les paramètres ci-dessus sont réglables par scène | Partiel |  |
 | [SCN-051](exigences/SCN-051.md) | M | (fiche manquante) | Sans fiche |  |
-| [SCN-052](exigences/SCN-052.md) | M | (fiche manquante) | Sans fiche |  |
+| [SCN-052](exigences/SCN-052.md) | M | En l'absence de signal audio | Partiel | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio |
 | [SIM-011](exigences/SIM-011.md) | M | (fiche manquante) | Sans fiche |  |

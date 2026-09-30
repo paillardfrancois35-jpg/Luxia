@@ -103,9 +103,11 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
                 button.Progress = playback?.StepProgress ?? 0;
                 button.ShowsProgress = playback is { StepCount: > 1 };
                 canStep |= button.ShowsProgress;
+                var waiting = snapshot.PendingLaunches.Where(w => w.SceneId == button.Scene.Id).Select(w => (PendingSceneLaunch?)w).FirstOrDefault();
                 button.State = playback is { StepCount: > 1 } p
                     ? string.Create(CultureInfo.CurrentCulture, $"étape {p.StepIndex + 1} / {p.StepCount}")
-                    : playback is not null ? "joue" : string.Empty;
+                    : playback is not null ? "joue"
+                    : waiting is { } w ? string.Create(CultureInfo.CurrentCulture, $"⏳ dans {Math.Ceiling(w.BeatsRemaining)} t") : string.Empty;
             }
 
             column.IsPlaying = playing;

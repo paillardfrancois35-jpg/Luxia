@@ -312,7 +312,10 @@ Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
 | `end` | `stop`, `hold`, `chain` | Fin d'une scène jouée une ou N fois (MOT-014) ; `chainSceneId` pour `chain` |
 | `fadeIn` / `fadeOut` | durée ou `null` | Fondu d'entrée (défaut : celui de la 1ʳᵉ étape) ; de sortie (défaut : arrêt immédiat) |
 | `speed` | 0,1 à 10 | Vitesse (MOT-015) |
-| durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023) ; en P4, 120 BPM fixe |
+| `advance` / `advanceEvery` | `duration` (défaut), `beat`, `bar`, `bassPulse`, `treblePulse` ; entier 1 à 64 | Événement qui fait passer à l'étape suivante, tous les N (MOT-017) ; les impulsions avancent au temps sans signal audio (SCN-052) |
+| `quantize` | `none` (défaut), `beat`, `bar`, `phrase4`, `phrase8` | Instant musical attendu avant le démarrage de la scène (MOT-018) |
+| `ownBpm` | 20 à 400 ou `null` | Tempo propre de la scène (MOT-020) ; `null` = horloge principale |
+| durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023), convertis avec le tempo de l'horloge musicale (MOT-016) |
 | `steps[].curve` | `linear`, `sCurve`, `instant` | Courbe du fondu (MOT-011) |
 | `steps[].switch` | `start`, `middle`, `end` | Moment où bascule un attribut discret (roue, gobo, programme) (MOT-012) |
 | `values[].target` | **une seule** forme : `fixtureId` (+ `cell`, 0 = appareil entier) ; `selectionId` (sélection manuelle, dans son ordre) ; `auto` = `{ "kind": "allFixtures" }`, `{ "kind": "byCategory", "category": "par" }` ou `{ "kind": "byModel", "model": "Fabricant Modèle" }` | Cible (SCN-007) ; une sélection automatique suit le patch |

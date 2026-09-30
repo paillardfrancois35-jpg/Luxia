@@ -51,6 +51,21 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private Choice<EndMode> _end = SceneOptions.Ends[0];
 
     [ObservableProperty]
+    private Choice<StepAdvanceMode> _advance = SceneOptions.Advances[0];
+
+    [ObservableProperty]
+    private decimal _advanceEvery = 1;
+
+    [ObservableProperty]
+    private Choice<LaunchQuantize> _quantize = SceneOptions.Quantizes[0];
+
+    [ObservableProperty]
+    private bool _hasOwnClock;
+
+    [ObservableProperty]
+    private decimal _ownBpm = 120;
+
+    [ObservableProperty]
     private decimal? _fadeInSeconds;
 
     [ObservableProperty]
@@ -126,6 +141,12 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     /// <summary>Couleurs proposées pour la scène.</summary>
     public static IReadOnlyList<string> Colors => ColumnsPanelViewModel.SceneColors;
+
+    /// <summary>Choix de l'événement qui fait avancer d'étape (MOT-017).</summary>
+    public static IReadOnlyList<Choice<StepAdvanceMode>> AdvanceOptions => SceneOptions.Advances;
+
+    /// <summary>Choix de la quantification du lancement (MOT-018).</summary>
+    public static IReadOnlyList<Choice<LaunchQuantize>> QuantizeOptions => SceneOptions.Quantizes;
 
     /// <summary>Choix de boucle.</summary>
     public static IReadOnlyList<Choice<LoopMode>> LoopOptions => SceneOptions.Loops;
@@ -328,6 +349,22 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     partial void OnEndChanged(Choice<EndMode> value) => Update(s => s with { End = value.Value }, "Fin de scène");
 
+    partial void OnAdvanceChanged(Choice<StepAdvanceMode> value) => Update(s => s with { Advance = value.Value }, "Étape suivante au rythme");
+
+    partial void OnAdvanceEveryChanged(decimal value) => Update(s => s with { AdvanceEvery = (int)Math.Clamp(value, 1, 64) }, "Nombre d'événements entre deux étapes");
+
+    partial void OnQuantizeChanged(Choice<LaunchQuantize> value) => Update(s => s with { Quantize = value.Value }, "Démarrage au rythme");
+
+    partial void OnHasOwnClockChanged(bool value) => Update(s => s with { OwnBpm = value ? (double)Math.Clamp(OwnBpm, 20, 400) : null }, "Horloge propre de la scène");
+
+    partial void OnOwnBpmChanged(decimal value)
+    {
+        if (HasOwnClock)
+        {
+            Update(s => s with { OwnBpm = (double)Math.Clamp(value, 20, 400) }, "Tempo propre de la scène");
+        }
+    }
+
     partial void OnFadeInSecondsChanged(decimal? value) => Update(s => s with { FadeIn = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu d'entrée");
 
     partial void OnFadeOutSecondsChanged(decimal? value) => Update(s => s with { FadeOut = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu de sortie");
@@ -419,6 +456,11 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             SpeedPercent = (decimal)Math.Round(scene.Speed * 100);
             Loop = SceneOptions.Loops.FirstOrDefault(l => l.Value == scene.Loop) ?? SceneOptions.Loops[0];
             End = SceneOptions.Ends.FirstOrDefault(e => e.Value == scene.End) ?? SceneOptions.Ends[0];
+            Advance = SceneOptions.Advances.FirstOrDefault(a => a.Value == scene.Advance) ?? SceneOptions.Advances[0];
+            AdvanceEvery = scene.AdvanceEvery;
+            Quantize = SceneOptions.Quantizes.FirstOrDefault(q => q.Value == scene.Quantize) ?? SceneOptions.Quantizes[0];
+            HasOwnClock = scene.OwnBpm is not null;
+            OwnBpm = scene.OwnBpm is { } own ? (decimal)own : 120;
             FadeInSeconds = scene.FadeIn is { } fadeIn ? (decimal)fadeIn.ToSeconds(120) : null;
             FadeOutSeconds = scene.FadeOut is { } fadeOut ? (decimal)fadeOut.ToSeconds(120) : null;
             Notes = scene.Notes;

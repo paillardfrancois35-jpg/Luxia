@@ -1,5 +1,6 @@
 using System.Globalization;
 using Luxia.Engine.Model;
+using Luxia.Engine.Timing;
 using Luxia.Fixtures.Model;
 using Luxia.Fixtures.Rules;
 using Luxia.Scenes.Model;
@@ -271,6 +272,10 @@ public static class ShowCompiler
             FadeIn = scene.FadeIn,
             FadeOut = scene.FadeOut,
             Speed = Math.Clamp(scene.Speed, 0.1, 10),
+            Advance = scene.Advance,
+            AdvanceEvery = Math.Clamp(scene.AdvanceEvery, 1, 64),
+            Quantize = scene.Quantize,
+            OwnBpm = scene.OwnBpm is { } own ? Math.Clamp(own, MusicalClock.MinBpm, MusicalClock.MaxBpm) : null,
             Steps = steps,
         };
     }

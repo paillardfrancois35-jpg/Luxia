@@ -31,6 +31,7 @@ public sealed class MusicalClock
     private double _confidence = 1;
     private double _position;
     private double _latency;
+    private double _shift;
 
     /// <summary>Tempo courant en temps par minute.</summary>
     public double Bpm => Volatile.Read(ref _bpm);
@@ -69,12 +70,35 @@ public sealed class MusicalClock
     /// <summary>Numéro de mesure depuis l'origine, à partir de 1.</summary>
     public long Bar => (long)Math.Floor((double)BeatIndex / Duration.BeatsPerBar) + 1;
 
+    /// <summary>Temps franchis pendant le dernier <see cref="Advance"/> (0, 1 ou plus si le tick a duré).</summary>
+    public int BeatsCrossed { get; private set; }
+
+    /// <summary>Débuts de mesure franchis pendant le dernier <see cref="Advance"/>.</summary>
+    public int BarsCrossed { get; private set; }
+
+    /// <summary>
+    /// Somme des sauts de phase (en temps) dus aux recalages : frappe de tap, « 1 ici », latence. Les effets calés sur
+    /// l'horloge (MOT-062) suivent ces sauts pour rester sur le temps.
+    /// </summary>
+    public double ShiftTotal => _shift;
+
     /// <summary>Fait avancer l'horloge de <paramref name="elapsed"/> secondes réelles.</summary>
     public void Advance(double elapsed)
     {
-        if (elapsed > 0)
+        BeatsCrossed = 0;
+        BarsCrossed = 0;
+        if (elapsed <= 0)
         {
-            _position += elapsed * Bpm / 60.0;
+            return;
+        }
+
+        var before = BeatIndex;
+        _position += elapsed * Bpm / 60.0;
+        var after = BeatIndex;
+        if (after > before)
+        {
+            BeatsCrossed = (int)Math.Min(after - before, int.MaxValue);
+            BarsCrossed = (int)Math.Max(0, (after / Duration.BeatsPerBar) - (before / Duration.BeatsPerBar));
         }
     }
 
@@ -127,7 +151,9 @@ public sealed class MusicalClock
         // La frappe est un temps : on recale sur le temps entier le plus proche, tel qu'il était à l'instant de la frappe.
         var beatsAgo = secondsAgo * Bpm / 60.0;
         var atTap = _position - beatsAgo;
-        _position = Math.Round(atTap) + beatsAgo;
+        var snapped = Math.Round(atTap) + beatsAgo;
+        _shift += snapped - _position;
+        _position = snapped;
     }
 
     /// <summary>×2 ou ÷2 (AUD-023, CMD-042).</summary>
@@ -148,9 +174,16 @@ public sealed class MusicalClock
     public void ResyncBar()
     {
         var beats = Duration.BeatsPerBar;
-        _position = Math.Round(_position / beats) * beats;
+        var snapped = Math.Round(_position / beats) * beats;
+        _shift += snapped - _position;
+        _position = snapped;
     }
 
     /// <summary>Décalage de latence global (GEN-035), borné à ±250 ms.</summary>
-    public void SetLatency(double seconds) => Volatile.Write(ref _latency, Math.Clamp(seconds, -0.25, 0.25));
+    public void SetLatency(double seconds)
+    {
+        var before = EffectivePosition;
+        Volatile.Write(ref _latency, Math.Clamp(seconds, -0.25, 0.25));
+        _shift += EffectivePosition - before;
+    }
 }

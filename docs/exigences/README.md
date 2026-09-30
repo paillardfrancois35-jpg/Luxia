@@ -377,7 +377,10 @@
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
 | [MOT-016](MOT-016.md) | Durées musicales | P7 | I | Réalisé |
+| [MOT-017](MOT-017.md) | Avance à l'événement | P7 | I | Réalisé |
+| [MOT-018](MOT-018.md) | Quantification du lancement | P7 | M | Réalisé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
+| [MOT-020](MOT-020.md) | Une scène peut suivre l'horloge principale ou une horloge fixe propre | P7 | M | Réalisé |
 | [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Validé |
 | [MOT-031](MOT-031.md) | Fusion entre couches et modes d'intensité | P4 | I | Réalisé |
 | [MOT-032](MOT-032.md) | Attribut non touché = valeur par défaut | P4 | I | Validé |
@@ -393,6 +396,7 @@
 | [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Validé |
 | [MOT-060](MOT-060.md) | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | P6 | I | Validé |
 | [MOT-061](MOT-061.md) | Effet relatif | P6 | I | Validé |
+| [MOT-062](MOT-062.md) | Vitesse d'effet en Hz ou en temps musicaux | P7 | I | Réalisé |
 | [MOT-063](MOT-063.md) | Un effet entre et sort avec le poids de sa scène | P6 | M | Réalisé |
 | [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
 | [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
@@ -445,6 +449,8 @@
 | [SCN-037](SCN-037.md) | Enregistrer depuis la sortie | P4 | M | Réalisé |
 | [SCN-038](SCN-038.md) | Copier / coller, miroir | P4 | M | Réalisé |
 | [SCN-039](SCN-039.md) | Annuler / rétablir dans l'éditeur de scènes | P4 | I | Validé |
+| [SCN-050](SCN-050.md) | Les paramètres ci-dessus sont réglables par scène | P7 | I | Partiel |
+| [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Partiel |
 | [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
 | [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
 | [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |

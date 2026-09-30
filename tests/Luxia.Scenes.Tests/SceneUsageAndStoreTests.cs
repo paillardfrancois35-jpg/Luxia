@@ -112,6 +112,10 @@ public sealed class SceneUsageAndStoreTests : IDisposable
             Loop = LoopMode.Count,
             LoopCount = 3,
             FadeOut = Duration.FromBeats(2),
+            Advance = StepAdvanceMode.Bar,
+            AdvanceEvery = 2,
+            Quantize = LaunchQuantize.Phrase4,
+            OwnBpm = 90,
             Steps =
             [
                 new SceneStep
@@ -141,6 +145,9 @@ public sealed class SceneUsageAndStoreTests : IDisposable
         back.Steps[0].Hold.ShouldBe(scene.Steps[0].Hold);
         var text = File.ReadAllText(Path.Combine(_folder, SceneStore.FileName));
         text.ShouldContain("\"loop\": \"count\"");
+        text.ShouldContain("\"advance\": \"bar\"");
+        text.ShouldContain("\"quantize\": \"phrase4\"");
+        back.OwnBpm.ShouldBe(90);
         text.ShouldNotContain("\"hex\"");
         text.ShouldNotContain("\"dmx\"");
     }

@@ -31,6 +31,26 @@ public static class SceneOptions
         new(EndMode.Chain, "Enchaîner sur…"),
     ];
 
+    /// <summary>Événements qui font avancer d'étape (MOT-017).</summary>
+    public static IReadOnlyList<Choice<StepAdvanceMode>> Advances { get; } =
+    [
+        new(StepAdvanceMode.Duration, "À la durée de l'étape"),
+        new(StepAdvanceMode.Beat, "À chaque temps"),
+        new(StepAdvanceMode.Bar, "À chaque mesure"),
+        new(StepAdvanceMode.BassPulse, "Sur les basses (kick)"),
+        new(StepAdvanceMode.TreblePulse, "Sur les aigus (caisse claire)"),
+    ];
+
+    /// <summary>Quantification du lancement (MOT-018).</summary>
+    public static IReadOnlyList<Choice<LaunchQuantize>> Quantizes { get; } =
+    [
+        new(LaunchQuantize.None, "Tout de suite"),
+        new(LaunchQuantize.Beat, "Au prochain temps"),
+        new(LaunchQuantize.Bar, "À la prochaine mesure"),
+        new(LaunchQuantize.Phrase4, "À la prochaine phrase (4 mesures)"),
+        new(LaunchQuantize.Phrase8, "À la prochaine phrase (8 mesures)"),
+    ];
+
     /// <summary>Courbes de fondu (MOT-011).</summary>
     public static IReadOnlyList<Choice<FadeCurve>> Curves { get; } =
     [

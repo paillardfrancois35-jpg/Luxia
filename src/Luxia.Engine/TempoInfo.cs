@@ -13,5 +13,5 @@ namespace Luxia.Engine;
 public readonly record struct TempoInfo(double Bpm, TempoSourceKind Source, double Confidence, int BeatInBar, long Bar, double Phase, double LatencySeconds)
 {
     /// <summary>Tempo fixe à 120 BPM, avant tout réglage.</summary>
-    public static TempoInfo Default =>  new(120, TempoSourceKind.Fixed, 1, 1, 1, 0, 0);
+    public static TempoInfo Default => new(120, TempoSourceKind.Fixed, 1, 1, 1, 0, 0);
 }

@@ -54,6 +54,9 @@ public sealed class RenderEngine : ICommandSink
     private long _sequenceAtTickStart;
     private TimeSpan? _lastTick;
     private readonly MusicalClock _tempo = new();
+    private readonly TickEvents _events = new();
+    private readonly List<PendingLaunch> _quantized = [];
+    private PendingSceneLaunch[] _publishedPending = [];
     private TempoInfo _publishedTempo = TempoInfo.Default;
 
     // Modèle courant et tableaux alignés sur ses paramètres (réalloués seulement au chargement d'un modèle).
@@ -195,6 +198,8 @@ public sealed class RenderEngine : ICommandSink
         {
             Apply(item.Command, item.ReceivedAt, now);
         }
+
+        LaunchDueQuantized(now);
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
         // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
@@ -508,6 +513,12 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
+        if (command.StopIfPlaying && _quantized.RemoveAll(q => q.SceneId == scene.Id) > 0)
+        {
+            // Une seconde pression sur une scène qui attend son instant musical annule l'attente (MOT-018).
+            return null;
+        }
+
         if (command.StopIfPlaying)
         {
             // Bascule (LIVE-003) : décidée ici, sur l'état exact du moteur, pas sur celui qu'affiche l'écran.
@@ -528,9 +539,68 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        if (!command.Immediate && QuantizeTarget(scene.Quantize) is { } target)
+        {
+            // MOT-018 : la scène attend le prochain temps, la prochaine mesure ou la prochaine phrase.
+            _quantized.RemoveAll(q => q.SceneId == scene.Id);
+            _quantized.Add(new PendingLaunch(command, scene.Id, target));
+            return null;
+        }
+
         Launch(scene, layerIndex, command.Fade?.TotalSeconds, command.Origin, command.Solo, null, now);
         return null;
     }
+
+    /// <summary>Position de l'horloge (en temps) où démarrer une scène quantifiée ; <c>null</c> = tout de suite.</summary>
+    private double? QuantizeTarget(LaunchQuantize quantize)
+    {
+        var unit = quantize switch
+        {
+            LaunchQuantize.Beat => 1.0,
+            LaunchQuantize.Bar => Duration.BeatsPerBar,
+            LaunchQuantize.Phrase4 => 4.0 * Duration.BeatsPerBar,
+            LaunchQuantize.Phrase8 => 8.0 * Duration.BeatsPerBar,
+            _ => 0,
+        };
+        if (unit <= 0)
+        {
+            return null;
+        }
+
+        var position = _tempo.EffectivePosition;
+        var next = Math.Ceiling((position / unit) - 1e-9) * unit;
+        return next - position < 0.02 ? null : next;
+    }
+
+    private void LaunchDueQuantized(TimeSpan now)
+    {
+        if (_quantized.Count == 0)
+        {
+            return;
+        }
+
+        var position = _tempo.EffectivePosition;
+        for (var i = 0; i < _quantized.Count; i++)
+        {
+            var pending = _quantized[i];
+            if (position + 1e-6 < pending.TargetBeat)
+            {
+                continue;
+            }
+
+            _quantized.RemoveAt(i);
+            i--;
+            var rejection = LaunchScene(pending.Command with { Immediate = true }, now);
+            if (rejection is not null)
+            {
+                _logger.LogWarning("Lancement quantifié refusé : {Motif}", rejection);
+            }
+        }
+    }
+
+    /// <summary>Annule les lancements en attente dont la scène satisfait le filtre (arrêts de scène ou de couche).</summary>
+    private int CancelQuantized(Func<EngineScene?, bool> filter) =>
+        _quantized.RemoveAll(q => filter(_show.Scene(q.SceneId)));
 
     private string? Flash(FlashSceneCommand command, TimeSpan now)
     {
@@ -573,7 +643,7 @@ public sealed class RenderEngine : ICommandSink
     private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now, bool flash = false)
     {
         var layer = _show.Layers[layerIndex];
-        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed) };
+        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed), Clock = _tempo, Events = _events };
         playback.Bind(scene, _show);
 
         // Lectures remplacées : toute la couche si elle est exclusive (MOT-030), sinon une lecture de la même scène.
@@ -658,12 +728,13 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        var cancelled = CancelQuantized(s => s?.Id == command.SceneId) > 0;
         if (found)
         {
             _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", _show.Scene(command.SceneId)?.Name, command.Origin);
         }
 
-        return found ? null : "la scène ne joue pas";
+        return found || cancelled ? null : "la scène ne joue pas";
     }
 
     private string? StopLayer(StopLayerCommand command)
@@ -678,6 +749,11 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        CancelQuantized(s =>
+        {
+            var index = s is null ? -1 : LayerIndexFor(s.LayerId, fallback: false);
+            return index >= 0 && (layerIndex >= 0 ? index == layerIndex : command.Everything || !_show.Layers[index].KeepOnStopAll);
+        });
         foreach (var playback in _playbacks)
         {
             // « Tout arrêter » épargne les couches protégées (Ambiance par défaut), sauf demande expresse (COU-007).
@@ -771,7 +847,7 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
-        var playback = new Playback(scene, layerIndex, ++_sequence, command.Origin, false) { Flash = true, SessionSeed = unchecked((ulong)Seed) };
+        var playback = new Playback(scene, layerIndex, ++_sequence, command.Origin, false) { Flash = true, SessionSeed = unchecked((ulong)Seed), Clock = _tempo, Events = _events };
         playback.Bind(scene, _show);
         playback.Pin(step, Bpm);
         _shownStep = playback;
@@ -1285,6 +1361,7 @@ public sealed class RenderEngine : ICommandSink
             _publishedSmoking = _safety.ManualSmoke;
             _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
+            _publishedPending = _quantized.Count == 0 ? [] : [.. _quantized.Select(q => new PendingSceneLaunch(q.SceneId, Math.Max(0, q.TargetBeat - _tempo.EffectivePosition)))];
             _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds);
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
@@ -1336,6 +1413,7 @@ public sealed class RenderEngine : ICommandSink
             SmokeRestSeconds = _publishedSmokeRest,
             GrandMaster = _publishedGrandMaster,
             Tempo = _publishedTempo,
+            PendingLaunches = _publishedPending,
             ActiveLimits = _publishedLimits,
         };
     }
@@ -1369,6 +1447,9 @@ public sealed class RenderEngine : ICommandSink
             _logCount = Math.Min(_logCount + 1, CommandLogCapacity);
         }
     }
+
+    /// <summary>Lancement quantifié en attente de son instant musical (MOT-018).</summary>
+    private sealed record PendingLaunch(LaunchSceneCommand Command, Guid SceneId, double TargetBeat);
 
     /// <summary>Chargement d'un modèle, transporté par la file des commandes pour être appliqué entre deux ticks.</summary>
     private sealed record LoadShowRequest(ShowModel Show) : Command(CommandOrigin.Tool);
