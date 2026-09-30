@@ -45,8 +45,15 @@ public sealed class AudioListenerTests
 
         public bool Fail { get; set; }
 
-        public IAudioSource CreateLoopback()
+        public List<string?> Requested { get; } = [];
+
+        public IReadOnlyList<AudioDeviceInfo> Devices() => [new AudioDeviceInfo("haut-parleurs", "Haut-parleurs", false), new AudioDeviceInfo("micro", "Micro USB", true)];
+
+        public IAudioSource CreateLoopback() => Create(null);
+
+        public IAudioSource Create(string? deviceId)
         {
+            Requested.Add(deviceId);
             if (Fail)
             {
                 throw new InvalidOperationException("périphérique absent");

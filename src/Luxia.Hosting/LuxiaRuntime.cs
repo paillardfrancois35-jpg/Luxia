@@ -95,6 +95,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         if (audioSources is not null)
         {
             Audio = new Audio.AudioListener(audioSources, loggers.CreateLogger<Audio.AudioListener>());
+            Audio.SetDevice(Preferences.Current.Audio.DeviceId);
+            Audio.Tune(AudioTuningFrom(Preferences.Current.Audio));
+            Audio.EventRaised += (_, e) => Bus.Publish(new Messaging.Events.MusicEvent((Messaging.Events.MusicEventKind)(int)e.Kind, (int)e.Level, e.Energy, Clock.Now));
             Engine.SetAudioFeed(Audio);
         }
 
@@ -132,6 +135,42 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
         Preferences.Update(p => p with { Audio = p.Audio with { Listen = listen } });
     }
+
+    /// <summary>Choisit le périphérique écouté (AUD-003) et le mémorise ; <c>null</c> = le son joué par le PC.</summary>
+    public void SetAudioDevice(string? deviceId)
+    {
+        Audio?.SetDevice(deviceId);
+        Preferences.Update(p => p with { Audio = p.Audio with { DeviceId = deviceId } });
+    }
+
+    /// <summary>Applique et mémorise les réglages de l'analyse (AUD-081).</summary>
+    public void SetAudioTuning(Audio.AudioTuning tuning, double latencySeconds)
+    {
+        ArgumentNullException.ThrowIfNull(tuning);
+        Audio?.Tune(tuning);
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.User, latencySeconds));
+        Preferences.Update(p => p with
+        {
+            Audio = p.Audio with
+            {
+                PulseSensitivity = tuning.PulseSensitivity,
+                EnergySmoothingSeconds = tuning.EnergySmoothingSeconds,
+                MinBpm = tuning.MinBpm,
+                MaxBpm = tuning.MaxBpm,
+                PreferredBpm = tuning.PreferredBpm,
+                LatencySeconds = Math.Clamp(latencySeconds, -0.25, 0.25),
+            },
+        });
+    }
+
+    private static Audio.AudioTuning AudioTuningFrom(Core.Settings.AudioPreferences prefs) => new()
+    {
+        PulseSensitivity = prefs.PulseSensitivity,
+        EnergySmoothingSeconds = prefs.EnergySmoothingSeconds,
+        MinBpm = prefs.MinBpm,
+        MaxBpm = prefs.MaxBpm,
+        PreferredBpm = prefs.PreferredBpm,
+    };
 
     /// <summary>Bibliothèque d'appareils (<c>Documents\LuXia\Bibliothèque</c>).</summary>
     public Fixtures.FixtureLibrary Library { get; }

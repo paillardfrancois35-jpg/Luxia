@@ -41,6 +41,31 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     /// <summary>L'écoute est demandée (même si le périphérique est en cours de reconnexion).</summary>
     public bool IsListening => Volatile.Read(ref _wanted);
 
+    /// <summary>Périphérique choisi (AUD-003) ; <c>null</c> = le son joué par le PC, sur la sortie par défaut.</summary>
+    public string? DeviceId { get; private set; }
+
+    /// <summary>Choisit le périphérique à écouter ; l'écoute en cours se reconnecte dessus.</summary>
+    public void SetDevice(string? deviceId)
+    {
+        lock (_gate)
+        {
+            if (DeviceId == deviceId)
+            {
+                return;
+            }
+
+            DeviceId = deviceId;
+            if (_wanted && !_disposed)
+            {
+                Disconnect();
+                Connect();
+            }
+        }
+    }
+
+    /// <summary>Périphériques proposés (sorties à écouter et entrées).</summary>
+    public IReadOnlyList<AudioDeviceInfo> Devices() => _factory.Devices();
+
     /// <summary>Texte d'état pour l'écran : périphérique écouté, reconnexion ou erreur.</summary>
     public string Status { get; private set; } = "Écoute arrêtée";
 
@@ -62,10 +87,18 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         ArgumentNullException.ThrowIfNull(tuning);
         lock (_gate)
         {
+            var rangeChanged = tuning.MinBpm != Tuning.MinBpm || tuning.MaxBpm != Tuning.MaxBpm;
             Tuning = tuning;
             if (_analyzer is { } analyzer)
             {
                 Apply(analyzer);
+            }
+
+            if (rangeChanged && _source is not null && _wanted && !_disposed)
+            {
+                // La plage de tempo se règle à la création de l'analyse : on se reconnecte pour l'appliquer.
+                Disconnect();
+                Connect();
             }
         }
     }
@@ -146,7 +179,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     {
         try
         {
-            var source = _factory.CreateLoopback();
+            var source = _factory.Create(DeviceId);
             _analyzer = new AudioAnalyzer(source.SampleRate, Tuning.MinBpm, Tuning.MaxBpm);
             Apply(_analyzer);
             _analyzer.EventRaised += OnAudioEvent;

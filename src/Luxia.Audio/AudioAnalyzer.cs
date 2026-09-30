@@ -26,6 +26,8 @@ public sealed class AudioAnalyzer
     private int _sincePublish;
     private int _bassCount;
     private int _trebleCount;
+    private long _bassTotal;
+    private long _trebleTotal;
     private double _bassStrength;
     private double _trebleStrength;
     private FrameFeatures _last;
@@ -150,6 +152,7 @@ public sealed class AudioAnalyzer
         if (_bassPulses.Process(features.BassFlux, out var bassStrength))
         {
             Interlocked.Increment(ref _bassCount);
+            _bassTotal++;
             _bassStrength = bassStrength;
             pulses++;
         }
@@ -157,6 +160,7 @@ public sealed class AudioAnalyzer
         if (_treblePulses.Process(features.TrebleFlux, out var trebleStrength))
         {
             Interlocked.Increment(ref _trebleCount);
+            _trebleTotal++;
             _trebleStrength = trebleStrength;
             pulses++;
         }
@@ -194,6 +198,8 @@ public sealed class AudioAnalyzer
             EnergyLevel = _energy.Level,
             Trend = _energy.Trend,
             InBreak = _energy.InBreak,
+            BassPulseCount = _bassTotal,
+            TreblePulseCount = _trebleTotal,
             BassPulseStrength = _bassStrength,
             TreblePulseStrength = _trebleStrength,
         });

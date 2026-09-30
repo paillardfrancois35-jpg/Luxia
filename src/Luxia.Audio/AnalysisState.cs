@@ -41,6 +41,12 @@ public sealed record AnalysisState(
     /// <summary>Un break est en cours, AUD-062.</summary>
     public bool InBreak { get; init; }
 
+    /// <summary>Impulsions des basses depuis le début de l'écoute (pour les indicateurs de l'écran Audio).</summary>
+    public long BassPulseCount { get; init; }
+
+    /// <summary>Impulsions des aigus depuis le début de l'écoute.</summary>
+    public long TreblePulseCount { get; init; }
+
     /// <summary>Force de la dernière impulsion des basses (0 à 1), AUD-041.</summary>
     public double BassPulseStrength { get; init; }
 

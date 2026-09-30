@@ -5,24 +5,28 @@ using NAudio.Wave;
 namespace Luxia.Audio;
 
 /// <summary>
-/// Son joué par le PC (AUD-001) : boucle WASAPI sur le périphérique de sortie par défaut. Quand celui-ci change
-/// (casque, enceintes, Bluetooth), la source s'arrête avec <c>null</c> et l'écoute la recrée sur le nouveau (AUD-002).
+/// Source WASAPI. Sans périphérique choisi : le son joué par le PC (AUD-001), boucle sur la sortie par défaut ; quand celle-ci
+/// change (casque, enceintes, Bluetooth), la source s'arrête avec <c>null</c> et l'écoute la recrée sur la nouvelle (AUD-002).
+/// Avec un périphérique de sortie choisi : la boucle de celui-ci ; avec une entrée (micro, ligne) : sa capture (AUD-003).
 /// </summary>
-public sealed class WasapiLoopbackSource : IAudioSource, IMMNotificationClient
+public sealed class WasapiSource : IAudioSource, IMMNotificationClient
 {
     private readonly MMDeviceEnumerator _enumerator = new();
-    private readonly WasapiLoopbackCapture _capture;
+    private readonly IWaveIn _capture;
+    private readonly bool _followsDefault;
     private readonly MMDevice _device;
     private float[] _mono = new float[4096];
     private bool _disposed;
     private bool _stopping;
 
-    /// <summary>Ouvre la boucle sur le périphérique de sortie par défaut.</summary>
-    public WasapiLoopbackSource()
+    /// <summary>Ouvre la source.</summary>
+    /// <param name="deviceId">Identifiant du périphérique (entrée ou sortie), ou <c>null</c> pour suivre la sortie par défaut.</param>
+    public WasapiSource(string? deviceId = null)
     {
-        _device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+        _followsDefault = deviceId is null;
+        _device = deviceId is null ? _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia) : _enumerator.GetDevice(deviceId);
         Name = _device.FriendlyName;
-        _capture = new WasapiLoopbackCapture(_device);
+        _capture = _device.DataFlow == DataFlow.Capture ? new WasapiCapture(_device) : new WasapiLoopbackCapture(_device);
         SampleRate = _capture.WaveFormat.SampleRate;
         _capture.DataAvailable += OnData;
         _capture.RecordingStopped += OnStopped;
@@ -86,7 +90,7 @@ public sealed class WasapiLoopbackSource : IAudioSource, IMMNotificationClient
     /// <inheritdoc />
     public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
     {
-        if (flow == DataFlow.Render && role == Role.Multimedia && defaultDeviceId != _device.ID && !_stopping)
+        if (_followsDefault && flow == DataFlow.Render && role == Role.Multimedia && defaultDeviceId != _device.ID && !_stopping)
         {
             // AUD-002 : on s'arrête proprement ; l'écoute se rebranche sur le nouveau périphérique par défaut.
             StopCapture();

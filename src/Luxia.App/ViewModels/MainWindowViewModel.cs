@@ -90,6 +90,7 @@ public sealed partial class MainWindowViewModel : ViewModelBase
             new NavigationItem("Installation", "▦", new Luxia.UI.Modules.Installation.InstallationViewModel(runtime, dialogs)),
             new NavigationItem("Scènes", "✦", new Luxia.UI.Modules.Scenes.ScenesViewModel(runtime, dialogs)),
             new NavigationItem("Simulateur", "◎", new Luxia.UI.Modules.Simulator.SimulatorViewModel(runtime)),
+            new NavigationItem("Audio", "♪", new Luxia.UI.Modules.Audio.AudioViewModel(runtime)),
             new NavigationItem("Sorties", "⇄", new OutputsViewModel(runtime)),
         ];
         _selectedPage = Pages[0];
