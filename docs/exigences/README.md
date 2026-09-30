@@ -87,6 +87,11 @@
 <!-- INDEX:DEBUT -->
 | Fiche | Titre | Phase | Pri. | Statut |
 |---|---|---|---|---|
+| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Partiel |
+| [AUD-024](AUD-024.md) | Détection du premier temps de la mesure | P7 | I | Partiel |
+| [AUD-025](AUD-025.md) | Tap tempo | P7 | I | Réalisé |
+| [AUD-029](AUD-029.md) | Mesures à 4 temps par défaut | P7 | M | Réalisé |
+| [AUD-081](AUD-081.md) | Réglages | P7 | I | Partiel |
 | [BIB-001](BIB-001.md) | Modèle de données complet d'un appareil | P2 | I | Réalisé |
 | [BIB-002](BIB-002.md) | Au moins un mode ; définitions de canaux partagées | P2 | I | Réalisé |
 | [BIB-003](BIB-003.md) | Attribut 16 bits = un seul attribut sur deux canaux | P2 | I | Réalisé |
@@ -141,6 +146,9 @@
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
 | [CMD-031](CMD-031.md) | Commande RéglerDimmerGroupe | ERG2 | I | Réalisé |
+| [CMD-040](CMD-040.md) | Commande TapTempo | P7 | I | Réalisé |
+| [CMD-041](CMD-041.md) | Commande ChoisirSourceTempo | P7 | I | Réalisé |
+| [CMD-042](CMD-042.md) | Commande AjusterTempo | P7 | I | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -236,11 +244,12 @@
 | [GEN-020](GEN-020.md) | Valeurs internes normalisées 0-1 | P2 | I | Réalisé |
 | [GEN-021](GEN-021.md) | Affichage dans l'unité la plus parlante | P2 | I | Réalisé |
 | [GEN-022](GEN-022.md) | Couleurs logiques converties selon les émetteurs | P4 | I | Réalisé |
-| [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Partiel |
+| [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Réalisé |
 | [GEN-030](GEN-030.md) | Tick à 40 Hz (25-44 Hz) | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
 | [GEN-033](GEN-033.md) | Horloges injectables | P4 | I | Réalisé |
+| [GEN-035](GEN-035.md) | Un décalage de latence global | P7 | M | Partiel |
 | [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Réalisé |
 | [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
 | [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Réalisé |
@@ -367,6 +376,7 @@
 | [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Validé |
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
+| [MOT-016](MOT-016.md) | Durées musicales | P7 | I | Réalisé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
 | [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Validé |
 | [MOT-031](MOT-031.md) | Fusion entre couches et modes d'intensité | P4 | I | Réalisé |

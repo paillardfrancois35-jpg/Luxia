@@ -620,6 +620,7 @@ scène ou de couche entre guillemets s'il contient des espaces (ou identifiant).
 Verbes ajoutés en P5 : `flash "scène" appui|relache` (CMD-014), `figer oui|non [suspendre]` (CMD-003), `fumee appui|relache`
 ou `fumee rafale 3` (CMD-030), `canal 180 255` (surcharge brute de l'univers 1, pour éprouver les limites de sûreté),
 `liberer-canaux`, `arreter-couche "couche"`, `tout-arreter tout` (sans « tout », les couches protégées continuent).
+Verbes ajoutés en P7 (horloge musicale, CMD-040 à 042) : `tempo 90` (tempo fixe), `tap` (une frappe), `ajuster-tempo x2|/2|un-ici`.
 Chaque intervention d'une limite de sûreté apparaît dans le résumé (`⚠ sûreté : …`, MOT-083).
 
 Le résultat est un **résumé lisible** (qui s'allume, en quelle couleur, à quel niveau, où pointent les lyres, à quel

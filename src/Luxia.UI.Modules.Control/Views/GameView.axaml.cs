@@ -166,6 +166,14 @@ public partial class GameView : UserControl
                 return;
             }
 
+            // Q42 : T = tap tempo.
+            if (e.Key == Key.T && e.KeyModifiers == KeyModifiers.None)
+            {
+                vm.Tempo.Tap();
+                e.Handled = true;
+                return;
+            }
+
             if (e.Key == Key.Escape && vm.HasRetouches)
             {
                 vm.ReleaseAllCommand.Execute(null);

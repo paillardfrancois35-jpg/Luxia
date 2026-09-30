@@ -613,6 +613,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Engine.Tick();
         if (PreviewActive)
         {
+            // L'aperçu (aveugle, édition) suit le tempo du moteur : les durées musicales y ont la même valeur.
+            Preview.Bpm = Engine.Bpm;
             Preview.Tick();
         }
     }

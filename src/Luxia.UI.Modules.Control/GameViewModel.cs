@@ -59,6 +59,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Columns = new ColumnsPanelViewModel(runtime, Session, dialogs) { EditedScene = () => _editedSceneId };
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
+        Tempo = new TempoBarViewModel(runtime, Journal);
         Editor = new EditorViewModel(runtime, dialogs, Journal);
         Editor.Closed += (_, _) => EditedSceneId = null;
         Columns.EditRequested += (_, id) => Edit(id);
@@ -84,6 +85,9 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Panneau Colonnes.</summary>
     public ColumnsPanelViewModel Columns { get; }
+
+    /// <summary>Bloc BPM de l'en-tête (Q42) : source, tempo, TAP, ×2, ÷2, compteur des temps.</summary>
+    public TempoBarViewModel Tempo { get; }
 
     /// <summary>Panneau Groupes dimmer.</summary>
     public DimmersPanelViewModel Dimmers { get; }
@@ -136,6 +140,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     {
         Columns.Refresh();
         Dimmers.Refresh();
+        Tempo.Refresh();
         Journal.Refresh();
         UpdateState();
     }

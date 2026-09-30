@@ -46,6 +46,31 @@
       </DockPanel>
     </Border>
 
+    <!-- Bloc BPM (Q42) : source, valeur, TAP (touche T), ×2, ÷2, « 1 ici », compteur 1-2-3-4. -->
+    <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,4">
+      <StackPanel Orientation="Horizontal" Spacing="6" DataContext="{Binding Tempo}" x:DataType="vm:TempoBarViewModel" VerticalAlignment="Center">
+        <TextBlock Text="♪" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding BpmText}" FontSize="18" FontWeight="SemiBold" MinWidth="44" TextAlignment="Right" VerticalAlignment="Center"
+                   ToolTip.Tip="Tempo courant en battements par minute" />
+        <TextBlock Text="BPM" Foreground="#8B949E" VerticalAlignment="Center" />
+        <Button Classes="target" Content="−" MinWidth="30" Padding="6,4" Command="{Binding DecreaseCommand}" ToolTip.Tip="Retirer 1 BPM" />
+        <Button Classes="target" Content="+" MinWidth="30" Padding="6,4" Command="{Binding IncreaseCommand}" ToolTip.Tip="Ajouter 1 BPM" />
+        <Button Classes="target" Content="TAP" FontWeight="Bold" Command="{Binding TapCommand}"
+                ToolTip.Tip="Taper le rythme : quatre frappes régulières donnent le tempo, chaque frappe cale le temps (touche T)" />
+        <Button Classes="target" Content="×2" Padding="8,4" Command="{Binding TimesTwoCommand}" ToolTip.Tip="Doubler le tempo (corrige une détection à la moitié)" />
+        <Button Classes="target" Content="÷2" Padding="8,4" Command="{Binding DivideByTwoCommand}" ToolTip.Tip="Diviser le tempo par deux" />
+        <Button Classes="target" Content="1 ici" Padding="8,4" Command="{Binding ResyncBarCommand}" ToolTip.Tip="Le temps en cours devient le premier de la mesure" />
+        <TextBlock Text="●" Foreground="{Binding Beat1}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat2}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat3}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding SourceText}" Foreground="#8B949E" VerticalAlignment="Center" MinWidth="36"
+                   ToolTip.Tip="Source du tempo : Fixe (saisi), Tap (tapé) ou Audio (musique écoutée)" />
+        <TextBox Text="{Binding BpmInput}" Width="64" MinHeight="34" VerticalContentAlignment="Center" PlaceholderText="BPM" ToolTip.Tip="Saisir un tempo fixe (puis « Fixer »)" />
+        <Button Classes="target" Content="Fixer" Padding="8,4" Command="{Binding UseFixedCommand}" ToolTip.Tip="Utiliser le BPM saisi comme tempo fixe" />
+      </StackPanel>
+    </Border>
+
     <!-- Retouches en direct : le seul rappel d'état de l'écran de jeu. Sa place est réservée en permanence : qu'il apparaisse ou
          disparaisse, rien ne bouge (essai 1.007.080 : la mise en page sautait sous la souris et le fader tenu clignotait). -->
     <Panel DockPanel.Dock="Top" Height="32">

@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 71 couvertes par des tests automatiques
 
-> Partiel : 5 · Réalisé : 47 · Validé : 35
+> Partiel : 4 · Réalisé : 48 · Validé : 35
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -198,7 +198,7 @@
 | [GEN-012](exigences/GEN-012.md) | M | Commande refusée : événement avec le motif | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
 | [GEN-013](exigences/GEN-013.md) | I | Publication non bloquante des événements | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
 | [GEN-022](exigences/GEN-022.md) | I | Couleurs logiques converties selon les émetteurs | Réalisé | ColorConversionTests.LedBar_24Channels_ColorOnWholeFixture_ReachesEverySection<br>ColorConversionTests.Rgb_Par_TakesColorDirectly |
-| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Partiel | ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
+| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Réalisé | MusicalClockTests.Clock_Fixed120_CountsBeatsAndBars<br>ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
 | [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
 | [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
 | [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
@@ -393,9 +393,9 @@
 | [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé | GameViewModelTests.StopAndStopAll_StayAvailable_LockComprised |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
-## P6 – 18 exigences, 17 couvertes par des tests automatiques
+## P6 – 19 exigences, 18 couvertes par des tests automatiques
 
-> Réalisé : 2 · Validé : 16
+> Réalisé : 2 · Validé : 17
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -433,3 +433,56 @@
 | [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Validé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+12) |
 | [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Validé | DimmerGroupsViewModelTests.DimmerPlatine_ChosenInTheInterface_IsWrittenToMidiJson<br>DimmerGroupsViewModelTests.FaderMarkers_PastEight_NameThePage<br>DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>DimmersPanelTests.WithMoreThanEightDimmers_TheMarkersFollowThePlatinePage_AndTheOtherPageIsDimmed<br>(+13) |
 | [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | Validé |  |
+
+## P7 – 46 exigences, 6 couvertes par des tests automatiques
+
+> Partiel : 4 · Réalisé : 3 · Sans fiche : 39
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [AUD-001](exigences/AUD-001.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-002](exigences/AUD-002.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-003](exigences/AUD-003.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-004](exigences/AUD-004.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-005](exigences/AUD-005.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-006](exigences/AUD-006.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-007](exigences/AUD-007.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-020](exigences/AUD-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-021](exigences/AUD-021.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-022](exigences/AUD-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-023](exigences/AUD-023.md) | I | Correction d'octave | Partiel | MusicalClockTests.Scale_DoublesAndHalves_WithinBounds<br>TempoBarTests.TimesTwoAndDivideByTwo_ChangeTheEngineTempo_AndTheBarFollows |
+| [AUD-024](exigences/AUD-024.md) | I | Détection du premier temps de la mesure | Partiel | MusicalClockTests.ResyncBar_MakesTheCurrentBeatTheFirstOfABar<br>TempoBarTests.ResyncBar_MakesTheCurrentBeatTheFirst |
+| [AUD-025](exigences/AUD-025.md) | I | Tap tempo | Réalisé | MusicalClockTests.Tap_FourTapsAtHalfSecond_Gives120<br>MusicalClockTests.Tap_SnapsThePhaseToTheTap<br>MusicalClockTests.Tap_ThreeTaps_DoNotChangeTheTempoYet<br>MusicalClockTests.Tap_TwoSecondsWithoutTap_RestartsTheCount<br>(+1) |
+| [AUD-026](exigences/AUD-026.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-027](exigences/AUD-027.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-028](exigences/AUD-028.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-029](exigences/AUD-029.md) | M | Mesures à 4 temps par défaut | Réalisé |  |
+| [AUD-040](exigences/AUD-040.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-041](exigences/AUD-041.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-042](exigences/AUD-042.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-043](exigences/AUD-043.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-044](exigences/AUD-044.md) | S | (fiche manquante) | Sans fiche |  |
+| [AUD-060](exigences/AUD-060.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-061](exigences/AUD-061.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-062](exigences/AUD-062.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-063](exigences/AUD-063.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-064](exigences/AUD-064.md) | M | (fiche manquante) | Sans fiche |  |
+| [AUD-080](exigences/AUD-080.md) | I | (fiche manquante) | Sans fiche |  |
+| [AUD-081](exigences/AUD-081.md) | I | Réglages | Partiel | TempoBarTests.Bar_StartsAt120_Fixed_AndShowsTheFirstBeat |
+| [AUD-082](exigences/AUD-082.md) | M | (fiche manquante) | Sans fiche |  |
+| [GEN-024](exigences/GEN-024.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-026](exigences/GEN-026.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-034](exigences/GEN-034.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-035](exigences/GEN-035.md) | M | Un décalage de latence global | Partiel | MusicalClockTests.Latency_AdvancesTheEventsAndIsBounded |
+| [LIVE-020](exigences/LIVE-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [LIVE-021](exigences/LIVE-021.md) | I | (fiche manquante) | Sans fiche |  |
+| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Réalisé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles |
+| [MOT-017](exigences/MOT-017.md) | I | (fiche manquante) | Sans fiche |  |
+| [MOT-018](exigences/MOT-018.md) | M | (fiche manquante) | Sans fiche |  |
+| [MOT-020](exigences/MOT-020.md) | M | (fiche manquante) | Sans fiche |  |
+| [MOT-062](exigences/MOT-062.md) | I | (fiche manquante) | Sans fiche |  |
+| [SCN-006](exigences/SCN-006.md) | I | (fiche manquante) | Sans fiche |  |
+| [SCN-050](exigences/SCN-050.md) | I | (fiche manquante) | Sans fiche |  |
+| [SCN-051](exigences/SCN-051.md) | M | (fiche manquante) | Sans fiche |  |
+| [SCN-052](exigences/SCN-052.md) | M | (fiche manquante) | Sans fiche |  |
+| [SIM-011](exigences/SIM-011.md) | M | (fiche manquante) | Sans fiche |  |
