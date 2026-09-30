@@ -230,6 +230,60 @@ public sealed class MusicalClockTests
         engine.Engine.Bpm.ShouldBe(128, 0.01);
     }
 
+    private static int FollowBarFor(MusicalClock clock, int audioBarBeat, int ticks)
+    {
+        // L'écoute donne toujours le même temps dans la mesure ; sa phase est celle de l'horloge (aucun recalage de phase).
+        for (var i = 0; i < ticks; i++)
+        {
+            clock.Advance(0.025);
+            var phase = clock.BeatPosition - Math.Floor(clock.BeatPosition);
+            clock.FollowAudio(new AudioReading(true, 120, 0.9, true, phase, audioBarBeat, 0, 0));
+        }
+
+        return clock.BeatInBar;
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-024")]
+    public void Audio_Downbeat_ThatDisagreesForASecond_MovesTheBarPosition()
+    {
+        var clock = new MusicalClock();
+        clock.UseSource(TempoSourceKind.Audio);
+        FollowBarFor(clock, 1, 10);
+        var before = clock.BeatIndex;
+
+        // L'écoute dit toujours « temps suivant » : après chaque seconde de désaccord, l'horloge avance d'un temps.
+        FollowBarFor(clock, (clock.BeatInBar % 4) + 1, 160);
+
+        (clock.BeatIndex - before).ShouldBeGreaterThan(9, "8 temps d'horloge en 4 s, plus les sauts de recalage du premier temps");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-024")]
+    public void ManualBarResync_IsNotOverruledByTheGuessedDownbeat_UntilANewSong()
+    {
+        var clock = new MusicalClock();
+        clock.UseSource(TempoSourceKind.Audio);
+        FollowBarFor(clock, 1, 10);
+        clock.ResyncBar();
+        var afterManual = clock.BeatIndex;
+
+        // Même désaccord pendant 4 s : le « 1 » posé à la main tient, le temps n'avance qu'avec l'horloge.
+        FollowBarFor(clock, (clock.BeatInBar % 4) + 1, 160);
+        (clock.BeatIndex - afterManual).ShouldBeInRange(7, 9);
+
+        // Un autre morceau (tempo très différent) lève la garde : l'écoute reprend la main sur le premier temps.
+        clock.FollowAudio(new AudioReading(true, 90, 0.9, true, 0, 2, 0, 0));
+        var restart = clock.BeatIndex;
+        for (var i = 0; i < 80; i++)
+        {
+            clock.Advance(0.025);
+            clock.FollowAudio(new AudioReading(true, 90, 0.9, true, clock.BeatPosition - Math.Floor(clock.BeatPosition), (clock.BeatInBar % 4) + 1, 0, 0));
+        }
+
+        (clock.BeatIndex - restart).ShouldBeGreaterThan(3, "deux secondes à 90 BPM = 3 temps ; le désaccord a été corrigé en plus");
+    }
+
     [Fact]
     [Trait("Exigence", "AUD-020")]
     public void OtherSources_IgnoreTheFeed()
