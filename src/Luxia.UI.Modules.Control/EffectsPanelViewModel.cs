@@ -147,7 +147,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
     private bool _previewStepped;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsIntensityShape), nameof(IsPositionShape), nameof(IsColorShape), nameof(UsesDuty), nameof(UsesGroups), nameof(UsesCenter), nameof(UsesColorList), nameof(UsesOwnColors), nameof(SizeMaximum), nameof(SizeStep), nameof(SizeLabel))]
+    [NotifyPropertyChangedFor(nameof(IsIntensityShape), nameof(IsPositionShape), nameof(IsColorShape), nameof(FamilyShapes), nameof(FamilyText), nameof(ShapeLabel), nameof(UsesDuty), nameof(UsesGroups), nameof(UsesCenter), nameof(UsesColorList), nameof(UsesOwnColors), nameof(SizeMaximum), nameof(SizeStep), nameof(SizeLabel))]
     private SceneEffectShape _kind;
 
     /// <summary>Crée le panneau.</summary>
@@ -184,6 +184,15 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
         new(SceneEffectShape.Alternate, "▦ Alternance de couleurs"),
         new(SceneEffectShape.Gradient, "▭ Dégradé de couleurs"),
     ];
+
+    /// <summary>Formes de la famille de l'effet édité (une forme d'une autre famille ne se choisit pas ici : on change de modèle).</summary>
+    public IReadOnlyList<Choice<SceneEffectShape>> FamilyShapes => IsPositionShape ? [.. Shapes.Skip(7).Take(5)] : IsColorShape ? [.. Shapes.Skip(12)] : [.. Shapes.Take(7)];
+
+    /// <summary>Type de l'effet édité, avec ce qu'il anime (doc 16b).</summary>
+    public string FamilyText => IsPositionShape ? "Mouvement — anime Pan / Tilt (lyres)" : IsColorShape ? "Couleur — écrit la couleur des appareils" : "Intensité — anime un attribut (intensité, couleur…)";
+
+    /// <summary>Libellé de la liste des formes selon le type.</summary>
+    public string ShapeLabel => IsPositionShape ? "Trajectoire" : IsColorShape ? "Mode de couleur" : "Courbe";
 
     /// <summary>Attributs qu'une forme d'intensité peut animer.</summary>
     public static IReadOnlyList<Choice<AttributeKind>> Attributes { get; } =
@@ -687,7 +696,7 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
 
             var selected = SelectedEffect?.Id;
             var names = _runtime.Project.Installation.Fixtures.ToDictionary(f => f.Id, f => f.Name);
-            var rows = _session.StepEffects.Select(e => new EffectRow(e.Id, $"{Icon(e.Shape)} {e.Name ?? "Effet"}", Describe(e, names), ShapeColor(e))).ToList();
+            var rows = _session.StepEffects.Select(e => new EffectRow(e.Id, $"{Icon(e.Shape)} {e.Name ?? "Effet"}{Modified(e)}", Describe(e, names), ShapeColor(e))).ToList();
             if (!rows.SequenceEqual(Effects))
             {
                 Effects.Clear();
@@ -705,6 +714,14 @@ public sealed partial class EffectsPanelViewModel : ViewModelBase
         }
 
         LoadEffect();
+    }
+
+    /// <summary>« (modifié) » quand la forme n'est plus celle du modèle dont l'effet porte le nom.</summary>
+    private string Modified(SceneEffect effect)
+    {
+        var model = _runtime.Project.Effects.Templates.FirstOrDefault(t => t.Name == effect.Name)?.Effect
+            ?? DefaultEffects.Templates.FirstOrDefault(t => t.Name == effect.Name)?.Effect;
+        return model is not null && model.Shape != effect.Shape ? " (modifié)" : string.Empty;
     }
 
     private void LoadEffect()

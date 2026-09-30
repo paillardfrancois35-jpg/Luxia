@@ -409,6 +409,7 @@
 | [EFF-008](exigences/EFF-008.md) | M | Effets sur cellules | Validé | EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.PerCell_OnBars_EachSegmentIsAMember<br>ReferenceShowP6Tests.MultiHead_64Channels_HeadsShowDifferentColors<br>ReferenceShowP6Tests.SegmentChase_OneSectionOfTheBarsAtATime<br>(+1) |
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
 | [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Validé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
+| [EFF-012](exigences/EFF-012.md) | I | Type d'effet lisible et formes limitées à la famille | Réalisé | EffectsPanelTests.Edit_ShapesAreLimitedToTheFamily_AndNameIsMarkedModified |
 | [ERG-028](exigences/ERG-028.md) | M | Molette | Validé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
 | [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
 | [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Validé |  |
