@@ -29,6 +29,24 @@ public sealed record AnalysisState(
     long FrameIndex,
     double FrameRate)
 {
+    /// <summary>Énergie perçue, lissée (0 à 1), AUD-060.</summary>
+    public double Energy { get; init; }
+
+    /// <summary>Niveau d'énergie discret, AUD-061.</summary>
+    public EnergyLevel EnergyLevel { get; init; }
+
+    /// <summary>Tendance de l'énergie, AUD-064.</summary>
+    public EnergyTrend Trend { get; init; }
+
+    /// <summary>Un break est en cours, AUD-062.</summary>
+    public bool InBreak { get; init; }
+
+    /// <summary>Force de la dernière impulsion des basses (0 à 1), AUD-041.</summary>
+    public double BassPulseStrength { get; init; }
+
+    /// <summary>Force de la dernière impulsion des aigus (0 à 1), AUD-041.</summary>
+    public double TreblePulseStrength { get; init; }
+
     /// <summary>État initial : rien entendu.</summary>
     public static AnalysisState None { get; } = new(0, 0, 0, 0, false, true, 0, 0, 0, 0, 0, 172);
 }

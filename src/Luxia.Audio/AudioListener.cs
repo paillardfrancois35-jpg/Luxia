@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using Luxia.Engine.Timing;
 using Microsoft.Extensions.Logging;
@@ -22,6 +23,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private AudioAnalyzer? _analyzer;
     private Timer? _retry;
     private Snapshot _snapshot = new(AnalysisState.None, 0);
+    private readonly ConcurrentQueue<AudioEvent> _recent = new();
     private long _lastData;
     private bool _wanted;
     private bool _disposed;
@@ -44,6 +46,29 @@ public sealed class AudioListener : IAudioFeed, IDisposable
 
     /// <summary>Dernier état de l'analyse.</summary>
     public AnalysisState State => Volatile.Read(ref _snapshot).State;
+
+    /// <summary>Réglages de l'analyse (AUD-081) ; appliqués à la source en cours et aux suivantes.</summary>
+    public AudioTuning Tuning { get; private set; } = new();
+
+    /// <summary>Derniers événements musicaux (break, drop, silence…), du plus ancien au plus récent (AUD-080).</summary>
+    public IReadOnlyCollection<AudioEvent> RecentEvents => _recent.ToArray();
+
+    /// <summary>Levé (sur le fil de capture) à chaque événement musical (EVT-022, EVT-023).</summary>
+    public event EventHandler<AudioEvent>? EventRaised;
+
+    /// <summary>Change les réglages de l'analyse (sensibilité, temps morts, lissage, octave), effectifs tout de suite.</summary>
+    public void Tune(AudioTuning tuning)
+    {
+        ArgumentNullException.ThrowIfNull(tuning);
+        lock (_gate)
+        {
+            Tuning = tuning;
+            if (_analyzer is { } analyzer)
+            {
+                Apply(analyzer);
+            }
+        }
+    }
 
     /// <summary>Levé quand <see cref="Status"/> ou l'état d'écoute change (sur un fil quelconque).</summary>
     public event EventHandler? StatusChanged;
@@ -95,7 +120,8 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         var beats = state.BeatPhase + (age * state.Bpm / 60.0);
         var phase = beats - Math.Floor(beats);
         var bar = state.BarBeat == 0 ? 0 : (((state.BarBeat - 1) + (int)Math.Floor(beats)) % 4) + 1;
-        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, 0, 0);
+        var (bass, treble) = Volatile.Read(ref _analyzer)?.TakePulses() ?? (0, 0);
+        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, bass, treble);
     }
 
     /// <inheritdoc />
@@ -121,7 +147,9 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         try
         {
             var source = _factory.CreateLoopback();
-            _analyzer = new AudioAnalyzer(source.SampleRate);
+            _analyzer = new AudioAnalyzer(source.SampleRate, Tuning.MinBpm, Tuning.MaxBpm);
+            Apply(_analyzer);
+            _analyzer.EventRaised += OnAudioEvent;
             _source = source;
             source.BlockAvailable += OnBlock;
             source.Stopped += OnStopped;
@@ -237,6 +265,26 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             analyzer.Push(new float[(int)(analyzer.SampleRate * 0.25)]);
             Publish(analyzer);
         }
+    }
+
+    private void Apply(AudioAnalyzer analyzer)
+    {
+        analyzer.PulseSensitivity = Tuning.PulseSensitivity;
+        analyzer.BassDeadSeconds = Tuning.BassDeadSeconds;
+        analyzer.TrebleDeadSeconds = Tuning.TrebleDeadSeconds;
+        analyzer.EnergySmoothingSeconds = Tuning.EnergySmoothingSeconds;
+        analyzer.PreferredBpm = Tuning.PreferredBpm;
+    }
+
+    private void OnAudioEvent(AudioEvent audioEvent)
+    {
+        _recent.Enqueue(audioEvent);
+        while (_recent.Count > 30)
+        {
+            _recent.TryDequeue(out _);
+        }
+
+        EventRaised?.Invoke(this, audioEvent);
     }
 
     private void Publish(AudioAnalyzer analyzer)

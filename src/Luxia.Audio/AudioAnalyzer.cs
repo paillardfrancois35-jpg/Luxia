@@ -14,12 +14,20 @@ public sealed class AudioAnalyzer
 
     private readonly FrameAnalyzer _frames;
     private readonly RhythmTracker _rhythm;
+    private readonly PulseDetector _bassPulses;
+    private readonly PulseDetector _treblePulses;
+    private readonly EnergyTracker _energy;
     private readonly Action<FrameFeatures> _onFrame;
     private readonly int _publishEvery;
     private AnalysisState _state = AnalysisState.None;
     private long _frameIndex;
     private int _silentFrames;
+    private bool _silenceAnnounced;
     private int _sincePublish;
+    private int _bassCount;
+    private int _trebleCount;
+    private double _bassStrength;
+    private double _trebleStrength;
     private FrameFeatures _last;
 
     /// <summary>Crée l'analyseur pour une fréquence d'échantillonnage donnée.</summary>
@@ -30,9 +38,15 @@ public sealed class AudioAnalyzer
     {
         _frames = new FrameAnalyzer(sampleRate);
         _rhythm = new RhythmTracker(_frames.FrameRate, minBpm, maxBpm);
+        _bassPulses = new PulseDetector(_frames.FrameRate, 0.25);
+        _treblePulses = new PulseDetector(_frames.FrameRate, 0.10);
+        _energy = new EnergyTracker(_frames.FrameRate);
         _publishEvery = Math.Max(1, (int)(_frames.FrameRate / 40));
         _onFrame = OnFrame;
     }
+
+    /// <summary>Levé (sur le fil qui appelle <see cref="Push"/>) à chaque événement musical : silence, break, drop, montée, niveau.</summary>
+    public event Action<AudioEvent>? EventRaised;
 
     /// <summary>Dernier état publié.</summary>
     public AnalysisState State => Volatile.Read(ref _state);
@@ -53,13 +67,51 @@ public sealed class AudioAnalyzer
         set => _rhythm.PreferredBpm = value;
     }
 
+    /// <summary>Sensibilité des impulsions de 0 à 1 (AUD-042).</summary>
+    public double PulseSensitivity
+    {
+        get => _bassPulses.Sensitivity;
+        set
+        {
+            _bassPulses.Sensitivity = value;
+            _treblePulses.Sensitivity = value;
+        }
+    }
+
+    /// <summary>Temps mort des impulsions des basses, en secondes (AUD-042).</summary>
+    public double BassDeadSeconds
+    {
+        get => _bassPulses.DeadSeconds;
+        set => _bassPulses.DeadSeconds = Math.Clamp(value, 0.03, 1);
+    }
+
+    /// <summary>Temps mort des impulsions des aigus, en secondes (AUD-042).</summary>
+    public double TrebleDeadSeconds
+    {
+        get => _treblePulses.DeadSeconds;
+        set => _treblePulses.DeadSeconds = Math.Clamp(value, 0.03, 1);
+    }
+
+    /// <summary>Lissage de l'énergie, en secondes (AUD-060).</summary>
+    public double EnergySmoothingSeconds
+    {
+        get => _energy.SmoothingSeconds;
+        set => _energy.SmoothingSeconds = Math.Clamp(value, 0.2, 10);
+    }
+
     /// <summary>Envoie des échantillons mono (valeurs de −1 à 1).</summary>
     public void Push(ReadOnlySpan<float> mono) => _frames.Push(mono, _onFrame);
+
+    /// <summary>Impulsions reconnues depuis le dernier appel (les compteurs repartent de zéro).</summary>
+    public (int Bass, int Treble) TakePulses() => (Interlocked.Exchange(ref _bassCount, 0), Interlocked.Exchange(ref _trebleCount, 0));
 
     /// <summary>Remet le suivi à zéro (changement de morceau connu, AUD-026).</summary>
     public void Reset()
     {
         _rhythm.Reset();
+        _energy.Reset();
+        _bassPulses.Reset();
+        _treblePulses.Reset();
         Publish();
     }
 
@@ -69,23 +121,57 @@ public sealed class AudioAnalyzer
         _frameIndex++;
         if (features.Silent)
         {
-            if (++_silentFrames == (int)(SilenceResetSeconds * _frames.FrameRate))
+            var limit = (int)(SilenceResetSeconds * _frames.FrameRate);
+            if (++_silentFrames == limit)
             {
                 _rhythm.Reset();
+                _energy.Reset();
+                _bassPulses.Reset();
+                _treblePulses.Reset();
+            }
+
+            if (_silentFrames >= _frames.FrameRate * 0.5 && !_silenceAnnounced)
+            {
+                _silenceAnnounced = true;
+                Raise(AudioEventKind.Silence);
             }
         }
         else
         {
             _silentFrames = 0;
+            if (_silenceAnnounced)
+            {
+                _silenceAnnounced = false;
+                Raise(AudioEventKind.Resumed);
+            }
+        }
+
+        var pulses = 0;
+        if (_bassPulses.Process(features.BassFlux, out var bassStrength))
+        {
+            Interlocked.Increment(ref _bassCount);
+            _bassStrength = bassStrength;
+            pulses++;
+        }
+
+        if (_treblePulses.Process(features.TrebleFlux, out var trebleStrength))
+        {
+            Interlocked.Increment(ref _trebleCount);
+            _trebleStrength = trebleStrength;
+            pulses++;
         }
 
         _rhythm.Add(features.Flux, features.BassFlux);
+        _energy.Process(features, pulses, _rhythm.Bpm, e => EventRaised?.Invoke(e));
         if (++_sincePublish >= _publishEvery)
         {
             _sincePublish = 0;
             Publish();
         }
     }
+
+    private void Raise(AudioEventKind kind) =>
+        EventRaised?.Invoke(new AudioEvent(kind, _frameIndex / _frames.FrameRate, _energy.Level, _energy.Energy));
 
     private void Publish()
     {
@@ -102,6 +188,14 @@ public sealed class AudioAnalyzer
             _last.Mid,
             _last.Treble,
             _frameIndex,
-            _frames.FrameRate));
+            _frames.FrameRate)
+        {
+            Energy = _energy.Energy,
+            EnergyLevel = _energy.Level,
+            Trend = _energy.Trend,
+            InBreak = _energy.InBreak,
+            BassPulseStrength = _bassStrength,
+            TreblePulseStrength = _trebleStrength,
+        });
     }
 }

@@ -15,7 +15,20 @@ public readonly record struct TempoPoint(double Seconds, double Bpm, double Conf
 /// <param name="Bpm">Tempo médian sur la seconde moitié du morceau (le plus stable).</param>
 /// <param name="ConvergenceSeconds">Instant à partir duquel le tempo reste dans ± 2 % de <paramref name="Bpm"/> (−1 s'il ne converge pas).</param>
 /// <param name="DownbeatKnown">Part du temps où le premier temps de la mesure était connu.</param>
-public sealed record FileAnalysis(double DurationSeconds, IReadOnlyList<TempoPoint> Timeline, double Bpm, double ConvergenceSeconds, double DownbeatKnown);
+/// <param name="Events">Événements musicaux relevés (break, drop, montée, silence, niveaux).</param>
+/// <param name="BassPulsesPerSecond">Impulsions des basses par seconde.</param>
+/// <param name="TreblePulsesPerSecond">Impulsions des aigus par seconde.</param>
+/// <param name="MeanEnergy">Énergie moyenne (0 à 1).</param>
+public sealed record FileAnalysis(
+    double DurationSeconds,
+    IReadOnlyList<TempoPoint> Timeline,
+    double Bpm,
+    double ConvergenceSeconds,
+    double DownbeatKnown,
+    IReadOnlyList<AudioEvent> Events,
+    double BassPulsesPerSecond,
+    double TreblePulsesPerSecond,
+    double MeanEnergy);
 
 /// <summary>Analyse d'un fichier audio (mp3, wav…) sans passer par la carte son : tests et rapport chiffré (T-AUD-02).</summary>
 public static class AudioFileAnalysis
@@ -43,6 +56,12 @@ public static class AudioFileAnalysis
         }
 
         var analyzer = new AudioAnalyzer(44100);
+        var events = new List<AudioEvent>();
+        analyzer.EventRaised += events.Add;
+        var bassTotal = 0;
+        var trebleTotal = 0;
+        double energySum = 0;
+        var energyCount = 0;
         var block = new float[4096];
         var total = 0L;
         var skip = (long)(skipSeconds * 44100);
@@ -64,6 +83,11 @@ public static class AudioFileAnalysis
             if (start < read)
             {
                 analyzer.Push(block.AsSpan(start, read - start));
+                var (bass, treble) = analyzer.TakePulses();
+                bassTotal += bass;
+                trebleTotal += treble;
+                energySum += analyzer.State.Energy;
+                energyCount++;
             }
 
             var seconds = (total - skip) / 44100.0;
@@ -101,6 +125,15 @@ public static class AudioFileAnalysis
             }
         }
 
-        return new FileAnalysis(duration, timeline, bpm, convergence, checks == 0 ? 0 : (double)known / checks);
+        return new FileAnalysis(
+            duration,
+            timeline,
+            bpm,
+            convergence,
+            checks == 0 ? 0 : (double)known / checks,
+            events,
+            duration > 0 ? bassTotal / duration : 0,
+            duration > 0 ? trebleTotal / duration : 0,
+            energyCount == 0 ? 0 : energySum / energyCount);
     }
 }

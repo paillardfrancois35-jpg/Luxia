@@ -21,8 +21,8 @@ internal static class AudioCommands
             : new List<string> { target };
         var annotations = LoadAnnotations(Path.Combine(Directory.Exists(target) ? target : Path.GetDirectoryName(target)!, "annotations.csv"));
         var report = new StringBuilder();
-        report.AppendLine("| Morceau | BPM mesuré | BPM attendu | Écart | Convergence | Confiance | 1er temps connu |");
-        report.AppendLine("|---|---|---|---|---|---|---|");
+        report.AppendLine("| Morceau | BPM mesuré | BPM attendu | Écart | Convergence | Confiance | 1er temps connu | Kicks/s | Aigus/s | Énergie | Breaks | Drops | Montées |");
+        report.AppendLine("|---|---|---|---|---|---|---|---|---|---|---|---|---|");
         foreach (var file in files)
         {
             var name = Path.GetFileNameWithoutExtension(file);
@@ -34,14 +34,14 @@ internal static class AudioCommands
                 var gap = expected is { } e && e > 0 ? Gap(result.Bpm, e) : "—";
                 var line = string.Create(
                     CultureInfo.InvariantCulture,
-                    $"| {name} | {result.Bpm:0.0} | {(expected is { } x ? x.ToString("0.#", CultureInfo.InvariantCulture) : "?")} | {gap} | {(result.ConvergenceSeconds < 0 ? "non" : result.ConvergenceSeconds.ToString("0", CultureInfo.InvariantCulture) + " s")} | {confidence:0.00} | {result.DownbeatKnown * 100:0} % |");
+                    $"| {name} | {result.Bpm:0.0} | {(expected is { } x ? x.ToString("0.#", CultureInfo.InvariantCulture) : "?")} | {gap} | {(result.ConvergenceSeconds < 0 ? "non" : result.ConvergenceSeconds.ToString("0", CultureInfo.InvariantCulture) + " s")} | {confidence:0.00} | {result.DownbeatKnown * 100:0} % | {result.BassPulsesPerSecond:0.0} | {result.TreblePulsesPerSecond:0.0} | {result.MeanEnergy:0.00} | {result.Events.Count(e => e.Kind == AudioEventKind.Break)} | {result.Events.Count(e => e.Kind == AudioEventKind.Drop)} | {result.Events.Count(e => e.Kind == AudioEventKind.BuildUp)} |");
                 Console.WriteLine(line);
                 report.AppendLine(line);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"{name} : erreur {ex.Message}");
-                report.AppendLine(string.Create(CultureInfo.InvariantCulture, $"| {name} | erreur | | | | | |"));
+                report.AppendLine(string.Create(CultureInfo.InvariantCulture, $"| {name} | erreur | | | | | | | | | | | |"));
             }
         }
 
