@@ -156,3 +156,28 @@ Correctifs du commit `1e69021` vérifiés : fermeture de LuXia avec fenêtre d'�
 **À réobserver** : les LED allumées sur les deux platines au branchement de la seconde : le code renvoie toutes les LED quand le rôle change (pads de la platine des dimmers éteints) ; à confirmer au matériel.
 
 **Reste à vérifier** : ex. 12 points 3 à 5 (taille et état maximisé de la fenêtre d'édition), en-tête fixe des Propriétés, repères avec plus de 8 dimmers, choix de la platine dans l'interface.
+
+## Seconde revérification (discussion test, v1.007.101)
+
+| Date | Version | Exemple | Résultat | Observation de l'utilisateur | Demande / anomalie |
+|---|---|---|---|---|---|
+| 2026-09-30 | v1.007.101 | Revérif. A – ex. 12 points 2 à 5 : taille et état maximisé de la fenêtre d'édition (ERG-035) | ✅ | « Ma résolution est 1920*1980 [sic, sans doute 1920 × 1080]. Tout est ok à un détail près. » Fenêtre principale à 1366 × 768 : la fenêtre d'édition tient, maximisée elle se rouvre maximisée. | – |
+| 2026-09-30 | v1.007.101 | Revérif. A – état maximisé après retour à la taille normale (ERG-035) | ❌ | « Une fois maximisée, si je ferme avec la croix, que je rouvre, je diminue la taille de fenêtre, je ferme, je rouvre une édition, la fenêtre se rouvre en maximisée. » | L'état maximisé n'est pas remis à « normal » : après avoir maximisé, rouvert, puis restauré la fenêtre à sa taille normale et fermé, la réouverture suivante est de nouveau maximisée. Piste : l'état mémorisé n'est écrit qu'à la maximisation (ou la fermeture avec retour en normal n'écrase pas l'état). |
+| 2026-09-30 | v1.007.101 | Revérif. A – résolution de l'écran principal | ✅ | « 1920x1980 oui. » (confirmé par l'utilisateur) | Résolution notée telle que confirmée : 1920 × 1980. |
+| 2026-09-30 | v1.007.101 | Revérif. B – Propriétés et étapes : en-tête fixe, Lecture repliée, Lancer / Arrêter depuis l'en-tête | ✅ | « Tout est ok » | – |
+| 2026-09-30 | v1.007.101 | Revérif. C – ex. 10 point 6 : repères « ② n » et « ② p2·1 », légende « Platine 2 : page x / y », changement de page par Maj + bouton du bas 4 / 3 (MK2 : DEVICE / SEND) | ✅ | « tout ok » | – |
+| 2026-09-30 | v1.007.101 | Revérif. D – ex. 10 point 7 : choix de la platine des dimmers dans l'interface (Installation › Gestion des dimmers : Automatique / MK1 / MK2), pages avec la MK1 (flèches gauche / droite) | ✅ | « tout ok » | – |
+| 2026-09-30 | v1.007.101 | Revérif. E – ex. 10 : état des LED au branchement de la seconde platine (pads de la platine des dimmers éteints ; boutons du bas allumés seulement si un dimmer est retouché ; pads de la platine des couches allumés) | ✅ | « tout ok » | Lève l'observation en suspens des lignes précédentes (LED des deux platines au branchement). |
+
+### Bilan de la seconde revérification (discussion test, 2026-09-30, v1.007.101)
+
+Tous les points vérifiés sont ✅, sauf un détail mineur :
+- ❌ **État maximisé de la fenêtre d'édition** : après maximisation, réouverture, restauration en taille normale puis fermeture, la réouverture suivante est de nouveau maximisée (Revérif. A). Non bloquant.
+
+Validés : taille de la fenêtre d'édition (bornée à la fenêtre principale à 1366 × 768, maximisée mémorisée), en-tête fixe de « Propriétés et étapes » (Lancer / Arrêter, étapes, Lecture repliée), repères « ② n » / « ② p2·1 » et légende de page, choix de la platine des dimmers dans l'interface (Automatique / MK1 / MK2, effet immédiat, pages avec flèches sur la MK1), LED au branchement de la seconde platine.
+
+Reste ouvert pour la dev : le détail de l'état maximisé ci-dessus ; idées 💡 non retenues de la dev (notifications colorées, aperçu du plan à l'écran de jeu, affichage 125 %) à reprendre à l'analyse ergonomique de fin de chantier.
+
+## Suite donnée par la dev après la seconde revérification (2026-09-30, correctif livré en 1.007.108)
+
+**Corrigé** : l'état maximisé de la fenêtre d'édition n'est plus lu à la fermeture mais retenu à chaque changement (maximiser, restaurer), et posé explicitement dans les deux sens (Normal ou Maximisé) à chaque ouverture. **Validé** : ERG-033, ERG-034, ERG-035 (sous réserve de reconfirmer ce détail), ERG-038.

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -58,7 +59,6 @@ public partial class EditorWindow : Window
         vm.Closed += (_, _) =>
         {
             _timer.Stop();
-            Remember();
             Hide();
         };
     }
@@ -85,10 +85,8 @@ public partial class EditorWindow : Window
             WindowState = WindowState.Normal;
         }
 
-        if (_maximized)
-        {
-            WindowState = WindowState.Maximized;
-        }
+        // État voulu, posé explicitement dans les deux sens : Hide / Show peut garder l'état natif de la dernière fois.
+        WindowState = _maximized ? WindowState.Maximized : WindowState.Normal;
 
         Activate();
     }
@@ -120,9 +118,16 @@ public partial class EditorWindow : Window
         Height = Math.Min(Height, maxHeight);
     }
 
-    private void Remember()
+    // L'état maximisé suit ce que l'utilisateur fait (maximiser, restaurer) : il est retenu au moment du changement, pas à la
+    // fermeture (essai 1.007.101 : restaurée puis fermée, la fenêtre se rouvrait pourtant maximisée).
+    /// <inheritdoc />
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
-        _maximized = WindowState == WindowState.Maximized;
+        base.OnPropertyChanged(change);
+        if (change.Property == WindowStateProperty && IsVisible && WindowState != WindowState.Minimized)
+        {
+            _maximized = WindowState == WindowState.Maximized;
+        }
     }
 
     /// <inheritdoc />
@@ -176,7 +181,6 @@ public partial class EditorWindow : Window
         if (_vm is null || await _vm.ConfirmCloseAsync().ConfigureAwait(true))
         {
             _timer.Stop();
-            Remember();
             Hide();
         }
     }
