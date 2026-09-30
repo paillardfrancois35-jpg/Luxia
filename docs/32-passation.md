@@ -1,8 +1,8 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-30, **chantier « Contrôle 2 »
-> validé** (`main`, étiquette **`v1.007`**). **Prochaine étape : P7 – BPM / horloge musicale** (doc 40). Restent à décider
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-30, **mini-lot « familles d'effets »
+> validé** (`main`, étiquette **`v1.008`**, après `v1.007` « Contrôle 2 »). **Prochaine étape : P7 – BPM / horloge musicale** (doc 40). Restent à décider
 > (analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md),
 > [de code](chantiers/analyse-code-fin-controle-2.md)) : notifications colorées, retrait des écrans Live et Scènes, retrait du
 > mode LIVE de la session d'édition, glisser-déposer des groupes, apprentissage MIDI. Essai du chantier : guide
@@ -344,3 +344,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-29 | P6 | Essai en discussion test (doc 33), correctifs 1.006.053 → 1.006.065, analyse ergonomique de fin de phase acceptée (chantier « Contrôle 2 » avant P7, Q37 règle proportionnelle). **Validée, fusionnée dans `main`, étiquette `v1.006`.** |
 | 2026-09-29 | Contrôle 2 | Chantier « Contrôle 2 » développé sur `ergo/controle-2` (1.007) : maquettes validées, sept lots (moteur, données, Installation, panneau et platine MIDI, écran de jeu, fenêtre d'édition, documentation), 759 tests. **En attente de l'essai en discussion test.** |
 | 2026-09-30 | Contrôle 2 | Essai en discussion test (1.007.080), deux revérifications (1.007.092, 1.007.101), corrections au fil de l'essai avec leurs fiches ; analyses ergonomique et de code de fin de chantier ; option 125 % / 150 % masquée ; `ControlViewModel` purgé et renommé `EditBenchViewModel`. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.007`.** Prochaine étape : P7. |
+| 2026-09-30 | Effets | Mini-lot « familles d'effets » (1.008) : doc 16b (principe de fonctionnement des effets, plusieurs effets par étape), formes limitées à la famille, type affiché, « (modifié) » (EFF-012). Reste : estomper les modèles selon les capacités des appareils. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.008`.** Prochaine étape : P7. |

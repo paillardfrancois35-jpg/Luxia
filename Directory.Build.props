@@ -15,13 +15,13 @@
     <SatelliteResourceLanguages>fr</SatelliteResourceLanguages>
     <Company>LuXia</Company>
     <Product>LuXia</Product>
-    <Version>1.007</Version>
+    <Version>1.008</Version>
     <!--
       GEN-119 : pendant le développement d'un passage non encore validé, l'application affiche « v<LuxiaDevVersion>.NNN »,
       NNN augmentant à chaque compilation (cible LuxiaBuildNumber de Luxia.App), comme les étiquettes v1.0NN.MMM (doc 03 §7).
       À la validation : Version = cette valeur, LuxiaDevVersion vidé.
     -->
-    <LuxiaDevVersion>1.008</LuxiaDevVersion>
+    <LuxiaDevVersion></LuxiaDevVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
