@@ -32,6 +32,11 @@ public sealed class MusicalClock
     private double _position;
     private double _latency;
     private double _shift;
+    private bool _audioLocked;
+    private int _barMismatch;
+
+    /// <summary>Confiance minimale de l'analyse pour que l'horloge la suive ; en dessous, elle garde son tempo (AUD-022, GEN-034).</summary>
+    public const double MinAudioConfidence = 0.3;
 
     /// <summary>Tempo courant en temps par minute.</summary>
     public double Bpm => Volatile.Read(ref _bpm);
@@ -116,6 +121,48 @@ public sealed class MusicalClock
     {
         Volatile.Write(ref _source, (int)source);
         _taps.Clear();
+        _audioLocked = false;
+        _barMismatch = 0;
+    }
+
+    /// <summary>
+    /// Suit l'écoute de la musique (source Audio, AUD-021, AUD-024, GEN-034) : tempo lissé (recalé d'un coup si le morceau
+    /// change), phase ramenée en douceur sur les temps entendus, premier temps corrigé s'il est confirmé plus d'une seconde.
+    /// Sans son fiable, l'horloge continue au dernier tempo connu.
+    /// </summary>
+    public void FollowAudio(in AudioReading reading)
+    {
+        Volatile.Write(ref _confidence, reading.Live ? reading.Confidence : 0);
+        if (!reading.Live || reading.Bpm <= 0 || reading.Confidence < MinAudioConfidence || !reading.HasGrid)
+        {
+            return;
+        }
+
+        var jump = Math.Abs(reading.Bpm - Bpm) / Bpm > 0.06;
+        Volatile.Write(ref _bpm, Math.Clamp(jump || !_audioLocked ? reading.Bpm : Bpm + (0.15 * (reading.Bpm - Bpm)), MinBpm, MaxBpm));
+
+        var fraction = _position - Math.Floor(_position);
+        var error = reading.BeatPhase - fraction;
+        error -= Math.Round(error);
+        var delta = !_audioLocked || jump || Math.Abs(error) > 0.35 ? error : 0.12 * error;
+        _position += delta;
+        _shift += delta;
+        _audioLocked = true;
+
+        if (reading.BarBeat is >= 1 and <= Duration.BeatsPerBar)
+        {
+            var gap = (reading.BarBeat - BeatInBar + Duration.BeatsPerBar) % Duration.BeatsPerBar;
+            if (gap == 0)
+            {
+                _barMismatch = 0;
+            }
+            else if (++_barMismatch >= 40)
+            {
+                _position += gap;
+                _shift += gap;
+                _barMismatch = 0;
+            }
+        }
     }
 
     /// <summary>

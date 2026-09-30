@@ -207,6 +207,9 @@ internal sealed class RhythmTracker
         }
     }
 
+    /// <summary>Enveloppe servant à placer les temps : les basses (le kick) d'abord, l'ensemble du spectre en appoint.</summary>
+    private double Beat(int index) => _processedBass[index] + (0.5 * _processed[index]);
+
     private bool EstimateTempo(int count, out double bpm, out double confidence)
     {
         bpm = 0;
@@ -322,7 +325,8 @@ internal sealed class RhythmTracker
 
                 var low = (int)position;
                 var fraction = position - low;
-                score += (_processed[low] * (1 - fraction)) + (_processed[Math.Min(count - 1, low + 1)] * fraction);
+                var next = Math.Min(count - 1, low + 1);
+                score += (Beat(low) * (1 - fraction)) + (Beat(next) * fraction);
             }
 
             if (score > bestScore)

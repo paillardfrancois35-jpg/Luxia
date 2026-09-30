@@ -53,6 +53,40 @@ internal static class AudioCommands
         return 0;
     }
 
+    /// <summary>
+    /// Essai de bout en bout sans interface : joue un fichier sur la sortie par défaut et l'écoute par la boucle WASAPI
+    /// (<c>luxia-headless audio-ecoute fichier --duree 25</c>) ; affiche le tempo trouvé chaque seconde.
+    /// </summary>
+    public static int Listen(Arguments args)
+    {
+        if (args.Positional.Count == 0)
+        {
+            Console.Error.WriteLine("Usage : luxia-headless audio-ecoute <fichier> [--duree 25] [--debut 30]");
+            return 1;
+        }
+
+        using var listener = new AudioListener(new WasapiSourceFactory(), Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
+        listener.Start();
+        Console.WriteLine(listener.Status);
+        using var reader = new NAudio.Wave.MediaFoundationReader(Path.GetFullPath(args.Positional[0]));
+        reader.CurrentTime = TimeSpan.FromSeconds(args.GetDouble("debut", 0));
+        using var output = new NAudio.Wave.WasapiOut();
+        output.Init(reader);
+        output.Volume = 0.6f;
+        output.Play();
+        var seconds = args.GetInt("duree", 25);
+        for (var i = 0; i < seconds; i++)
+        {
+            Thread.Sleep(1000);
+            var state = listener.State;
+            var reading = listener.Read();
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"{i + 1,3} s  niveau {state.Level:0.000}  tempo {state.Bpm:0.0}  confiance {state.Confidence:0.00}  temps {reading.BarBeat}  phase {reading.BeatPhase:0.00}  {(reading.Live ? "écoute" : "silence")}"));
+        }
+
+        output.Stop();
+        return 0;
+    }
+
     private static string Gap(double measured, double expected)
     {
         var ratio = measured / expected;

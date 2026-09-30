@@ -81,7 +81,7 @@ public partial class App : Application
                     var loggers = _loggers;
                     _runtime = await Task.Run(() =>
                     {
-                        var runtime = new LuxiaRuntime(DataPaths.Current, loggers, midiPorts: new Midi.WinMmMidiPorts());
+                        var runtime = new LuxiaRuntime(DataPaths.Current, loggers, midiPorts: new Midi.WinMmMidiPorts(), audioSources: new Luxia.Audio.WasapiSourceFactory());
 
                         // LuXia.exe "dossier du projet" : ouvre ce projet (à défaut, le dernier projet ouvert).
                         if (args is [var projectFolder, ..] && Directory.Exists(projectFolder))

@@ -57,6 +57,7 @@ public sealed class RenderEngine : ICommandSink
     private readonly TickEvents _events = new();
     private readonly List<PendingLaunch> _quantized = [];
     private PendingSceneLaunch[] _publishedPending = [];
+    private IAudioFeed? _audioFeed;
     private TempoInfo _publishedTempo = TempoInfo.Default;
 
     // Modèle courant et tableaux alignés sur ses paramètres (réalloués seulement au chargement d'un modèle).
@@ -151,6 +152,33 @@ public sealed class RenderEngine : ICommandSink
         set => _tempo.SetFixed(value);
     }
 
+    /// <summary>
+    /// Branche (ou débranche) l'écoute de la musique (doc 19) : le moteur lit son tempo et ses impulsions à chaque tick.
+    /// Sans écoute, les scènes à impulsion avancent au temps de l'horloge (SCN-052).
+    /// </summary>
+    public void SetAudioFeed(IAudioFeed? feed) => Volatile.Write(ref _audioFeed, feed);
+
+    private void ReadAudio()
+    {
+        var feed = Volatile.Read(ref _audioFeed);
+        if (feed is null)
+        {
+            _events.AudioLive = false;
+            _events.BassPulses = 0;
+            _events.TreblePulses = 0;
+            return;
+        }
+
+        var reading = feed.Read();
+        _events.AudioLive = reading.Live;
+        _events.BassPulses = reading.BassPulses;
+        _events.TreblePulses = reading.TreblePulses;
+        if (_tempo.Source == TempoSourceKind.Audio)
+        {
+            _tempo.FollowAudio(reading);
+        }
+    }
+
     /// <summary>Horloge musicale (lecture seule pour les autres composants ; réglée par commandes).</summary>
     internal MusicalClock Tempo => _tempo;
 
@@ -192,6 +220,7 @@ public sealed class RenderEngine : ICommandSink
         _lastTick = now;
         _sequenceAtTickStart = _sequence;
         _tempo.Advance(elapsed);
+        ReadAudio();
 
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))

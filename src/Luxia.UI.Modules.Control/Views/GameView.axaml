@@ -66,8 +66,13 @@
         <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="16" VerticalAlignment="Center" />
         <TextBlock Text="{Binding SourceText}" Foreground="#8B949E" VerticalAlignment="Center" MinWidth="36"
                    ToolTip.Tip="Source du tempo : Fixe (saisi), Tap (tapé) ou Audio (musique écoutée)" />
+        <TextBlock Text="{Binding Detail}" Foreground="#8B949E" VerticalAlignment="Center" FontSize="12" />
         <TextBox Text="{Binding BpmInput}" Width="64" MinHeight="34" VerticalContentAlignment="Center" PlaceholderText="BPM" ToolTip.Tip="Saisir un tempo fixe (puis « Fixer »)" />
         <Button Classes="target" Content="Fixer" Padding="8,4" Command="{Binding UseFixedCommand}" ToolTip.Tip="Utiliser le BPM saisi comme tempo fixe" />
+        <Button Classes="target" Content="🎧 Audio" Padding="8,4" Command="{Binding UseAudioCommand}" IsEnabled="{Binding CanListen}"
+                ToolTip.Tip="Suivre le tempo de la musique jouée sur ce PC (démarre l'écoute)" />
+        <CheckBox Content="Écoute" IsChecked="{Binding Listening}" IsEnabled="{Binding CanListen}" VerticalAlignment="Center"
+                  ToolTip.Tip="{Binding AudioStatus}" />
       </StackPanel>
     </Border>
 

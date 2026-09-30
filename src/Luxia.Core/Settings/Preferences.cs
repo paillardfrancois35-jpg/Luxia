@@ -29,11 +29,24 @@ public sealed record Preferences
     /// </summary>
     public bool CompactScenes { get; init; }
 
+    /// <summary>Écoute de la musique (doc 19, AUD-081) ; propre au poste.</summary>
+    public AudioPreferences Audio { get; init; } = new();
+
     /// <summary>Sorties.</summary>
     public OutputPreferences Outputs { get; init; } = new();
 
     /// <summary>Réglages du test de sortie (SORT-007).</summary>
     public TestOutputPreferences TestOutput { get; init; } = new();
+}
+
+/// <summary>Écoute de la musique (doc 19 §6, AUD-081).</summary>
+public sealed record AudioPreferences
+{
+    /// <summary>L'écoute du son joué par le PC démarre avec l'application.</summary>
+    public bool Listen { get; init; }
+
+    /// <summary>Décalage de latence global en secondes (GEN-035, AUD-027), de −0,25 à +0,25.</summary>
+    public double LatencySeconds { get; init; }
 }
 
 /// <summary>Configuration des sorties (SORT-001, SORT-006).</summary>

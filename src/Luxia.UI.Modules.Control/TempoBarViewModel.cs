@@ -54,6 +54,20 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     [ObservableProperty]
     private string _bpmInput = "120";
 
+    [ObservableProperty]
+    private bool _isAudio;
+
+    [ObservableProperty]
+    private bool _listening;
+
+    [ObservableProperty]
+    private string _audioStatus = "Écoute arrêtée";
+
+    [ObservableProperty]
+    private bool _canListen;
+
+    private bool _refreshing;
+
     /// <summary>Crée le bloc sur le moteur en service.</summary>
     public TempoBarViewModel(LuxiaRuntime runtime, JournalPanelViewModel journal)
     {
@@ -61,12 +75,14 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(journal);
         _runtime = runtime;
         _journal = journal;
+        CanListen = runtime.Audio is not null;
         Refresh();
     }
 
     /// <summary>Relit l'horloge du moteur (appelé par le rafraîchissement de l'écran, 20 fois par seconde).</summary>
     public void Refresh()
     {
+        _refreshing = true;
         var tempo = _runtime.Engine.Snapshot.Tempo;
         var text = tempo.Bpm.ToString("0.#", CultureInfo.CurrentCulture);
         if (BpmText != text)
@@ -88,6 +104,38 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         Beat3 = tempo.BeatInBar == 3 ? BeatOn : BeatOff;
         Beat4 = tempo.BeatInBar == 4 ? BeatOn : BeatOff;
         BarText = $"Mesure {tempo.Bar}";
+        IsAudio = tempo.Source == TempoSourceKind.Audio;
+        Listening = _runtime.Audio?.IsListening ?? false;
+        AudioStatus = _runtime.Audio?.Status ?? "Pas d'écoute dans cette configuration";
+        _refreshing = false;
+    }
+
+    partial void OnListeningChanged(bool value)
+    {
+        if (_refreshing || _runtime.Audio is null)
+        {
+            return;
+        }
+
+        _runtime.SetListening(value);
+        _journal.Log(value ? "🎧 écoute du son du PC démarrée" : "🎧 écoute arrêtée");
+        _runtime.TraceUi("Contrôle", value ? "écoute démarrée" : "écoute arrêtée");
+    }
+
+    /// <summary>Source Audio : démarre l'écoute du son joué par le PC et suit son tempo (AUD-020).</summary>
+    [RelayCommand]
+    private void UseAudio()
+    {
+        if (_runtime.Audio is null)
+        {
+            _journal.Log("♪ pas d'écoute audio dans cette configuration");
+            return;
+        }
+
+        _runtime.SetListening(true);
+        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Audio));
+        _journal.Log("♪ tempo : source Audio (écoute du son du PC)");
+        _runtime.TraceUi("Contrôle", "source audio");
     }
 
     /// <summary>TAP (touche T) : une frappe ; quatre frappes régulières donnent le tempo (AUD-025).</summary>

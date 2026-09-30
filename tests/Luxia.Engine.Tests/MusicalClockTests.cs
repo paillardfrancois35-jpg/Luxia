@@ -172,6 +172,75 @@ public sealed class MusicalClockTests
         engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
     }
 
+    private sealed class FakeFeed : IAudioFeed
+    {
+        public AudioReading Reading { get; set; }
+
+        public AudioReading Read() => Reading;
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-020")]
+    public void Audio_Source_FollowsTheTempoAndThePhaseOfTheFeed()
+    {
+        var engine = new EngineHarness(new ShowBuilder().Build());
+        var feed = new FakeFeed { Reading = new AudioReading(true, 130, 0.9, true, 0.25, 2, 0, 0) };
+        engine.Engine.SetAudioFeed(feed);
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Audio));
+        engine.Run(1);
+
+        engine.Engine.Bpm.ShouldBe(130, 0.5);
+        engine.Engine.Snapshot.Tempo.Source.ShouldBe(TempoSourceKind.Audio);
+        engine.Engine.Snapshot.Tempo.Confidence.ShouldBe(0.9);
+    }
+
+    [Fact]
+    [Trait("Exigence", "GEN-034")]
+    public void Audio_Source_KeepsTheLastTempoWhenTheSoundIsLostOrUnsure()
+    {
+        var engine = new EngineHarness(new ShowBuilder().Build());
+        var feed = new FakeFeed { Reading = new AudioReading(true, 100, 0.9, true, 0, 1, 0, 0) };
+        engine.Engine.SetAudioFeed(feed);
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Audio));
+        engine.Run(0.5);
+        engine.Engine.Bpm.ShouldBe(100, 0.5);
+
+        feed.Reading = new AudioReading(false, 0, 0, false, 0, 0, 0, 0);
+        engine.Run(2);
+        engine.Engine.Bpm.ShouldBe(100, 0.5);
+
+        feed.Reading = new AudioReading(true, 170, 0.1, true, 0, 1, 0, 0);
+        engine.Run(1);
+        engine.Engine.Bpm.ShouldBe(100, 0.5);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-026")]
+    public void Audio_Source_SnapsToANewSongTempo()
+    {
+        var engine = new EngineHarness(new ShowBuilder().Build());
+        var feed = new FakeFeed { Reading = new AudioReading(true, 90, 0.9, true, 0, 1, 0, 0) };
+        engine.Engine.SetAudioFeed(feed);
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Audio));
+        engine.Run(0.5);
+
+        feed.Reading = new AudioReading(true, 128, 0.9, true, 0, 1, 0, 0);
+        engine.Tick();
+
+        engine.Engine.Bpm.ShouldBe(128, 0.01);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-020")]
+    public void OtherSources_IgnoreTheFeed()
+    {
+        var engine = new EngineHarness(new ShowBuilder().Build());
+        engine.Engine.SetAudioFeed(new FakeFeed { Reading = new AudioReading(true, 150, 1, true, 0, 1, 0, 0) });
+        engine.Run(1);
+
+        engine.Engine.Bpm.ShouldBe(120);
+    }
+
     [Fact]
     [Trait("Exigence", "MOT-016")]
     public void Step_SecondsHold_IgnoresTheTempoChange()

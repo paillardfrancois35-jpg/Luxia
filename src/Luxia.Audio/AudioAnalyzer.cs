@@ -37,6 +37,9 @@ public sealed class AudioAnalyzer
     /// <summary>Dernier état publié.</summary>
     public AnalysisState State => Volatile.Read(ref _state);
 
+    /// <summary>Fréquence d'échantillonnage du son entrant.</summary>
+    public int SampleRate => _frames.SampleRate;
+
     /// <summary>Trames par seconde.</summary>
     public double FrameRate => _frames.FrameRate;
 

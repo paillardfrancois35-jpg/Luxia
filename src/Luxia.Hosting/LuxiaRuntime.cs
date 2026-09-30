@@ -53,7 +53,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     /// <param name="serialPorts">Ports série (Arduino) ; ceux du système par défaut.</param>
     /// <param name="clock">Horloge ; réelle par défaut.</param>
     /// <param name="midiPorts">Ports MIDI (APC mini, doc 18b) ; <c>null</c> = pas de contrôleur (outils, tests).</param>
-    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null)
+    /// <param name="audioSources">Sources audio (son joué par le PC, doc 19) ; <c>null</c> = pas d'écoute (outils, tests).</param>
+    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null, Audio.IAudioSourceFactory? audioSources = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(loggers);
@@ -90,11 +91,46 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             ? null
             : new MidiService(midiPorts, Engine, () => Engine.Snapshot, () => _midiLayout, loggers.CreateLogger<MidiService>());
 
+        // Écoute de la musique (doc 19) : le moteur lit tempo et impulsions à chaque tick ; le démarrage suit les préférences.
+        if (audioSources is not null)
+        {
+            Audio = new Audio.AudioListener(audioSources, loggers.CreateLogger<Audio.AudioListener>());
+            Engine.SetAudioFeed(Audio);
+        }
+
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencySeconds));
+
         // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
         PendingResume = ReadPendingResume();
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
+    }
+
+    /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
+    public Audio.AudioListener? Audio { get; }
+
+    /// <summary>
+    /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
+    /// de tempo Audio garde le dernier tempo (GEN-034).
+    /// </summary>
+    public void SetListening(bool listen)
+    {
+        if (Audio is null)
+        {
+            return;
+        }
+
+        if (listen)
+        {
+            Audio.Start();
+        }
+        else
+        {
+            Audio.Stop();
+        }
+
+        Preferences.Update(p => p with { Audio = p.Audio with { Listen = listen } });
     }
 
     /// <summary>Bibliothèque d'appareils (<c>Documents\LuXia\Bibliothèque</c>).</summary>
@@ -199,6 +235,10 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
             Loop.Start();
             Midi?.Start();
+            if (Preferences.Current.Audio.Listen)
+            {
+                Audio?.Start();
+            }
 
             // Toutes les 5 s : instantané de reprise (MOT-102) et mesure du processeur (GEN-094) ; toutes les 2 min :
             // version du projet si quelque chose a changé (GEN-054, GEN-055).
@@ -400,6 +440,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
         WriteResume(clean: true);
         Midi?.Dispose();
+        Audio?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();
