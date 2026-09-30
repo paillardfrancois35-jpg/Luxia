@@ -151,3 +151,17 @@
 | Groupe de scènes | **Couche** |
 | Méga-scène | **Séquence** |
 | Scène de pilotage / scène d'aiguillage | **Étape de show** |
+
+## 8. Audio et tempo (P7)
+
+| Terme | Sens |
+|---|---|
+| **BPM** | Battements par minute : le tempo de la musique. |
+| **Tap tempo** | Taper le rythme (bouton TAP, touche T) : quatre frappes régulières donnent le tempo. |
+| **Horloge musicale** | Compteur de temps et de mesures du moteur, à un tempo donné ; source **Fixe**, **Tap** ou **Audio**. |
+| **Quantification** | Faire attendre à une scène le temps, la mesure ou la phrase suivante pour démarrer. |
+| **Phrase** | Groupe de 4 ou 8 mesures. |
+| **Impulsion** | Attaque détectée dans le son : basses (kick) ou aigus (caisse claire, charleston). |
+| **Énergie** | Intensité perçue de la musique (volume, basses, densité des attaques) : Calme, Groove, Énergique, Explosif. |
+| **Break / Drop / Montée** | Pause brève de la musique ; retour brutal après une pause ; énergie qui grimpe avant un drop. |
+| **Latence** | Décalage entre le son entendu et la lumière, réglable de ± 250 ms (calibration). |

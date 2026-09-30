@@ -222,3 +222,16 @@ Le paramétrage des effets est défini au doc 16. Le moteur les exécute ainsi :
 | Étape montrée (CMD-017) | Lecture à part, figée sur une étape, fusionnée après toutes les couches (intensité prioritaire, master 1), absente de la liste des lectures : l'écran Contrôle s'en sert pour montrer l'étape éditée avec ses effets (EFF-006). |
 | Sûreté | Inchangée et toujours après : un effet qui vise une zone interdite est ramené au bord (exemple « Piège : grand cercle de la lyre 1 »). |
 | MOT-002 | Le test de charge porte des effets sur une scène sur deux : toujours 0 octet alloué par tick. |
+
+## 16. Notes de réalisation (P7)
+
+| Sujet | Réalisation |
+|---|---|
+| Horloge (GEN-023, GEN-034) | `MusicalClock` (`Luxia.Engine/Timing`) : tempo, source (Fixe, Tap, Audio), position en temps, compteur de mesures à 4 temps, temps franchis à chaque tick, décalage de latence, somme des sauts de phase. Avancée à chaque tick du temps réellement écoulé, avant les commandes. Commandes CMD-040 (Tap), 041 (source, BPM fixe), 042 (×2, ÷2, ± BPM, « 1 ici »). `RenderEngine.Bpm` est le tempo de l'horloge (l'écrire = source Fixe). |
+| Durées musicales (MOT-016) | Le changement de tempo en cours d'étape recalcule la part musicale de la durée en gardant la proportion écoulée (`Playback.RescaleForTempo`) ; les durées en secondes ne bougent pas ; les retards et fondus propres à une valeur ne sont pas recalculés. |
+| Avance à l'événement (MOT-017) | Option de scène `advance` (`duration`, `beat`, `bar`, `bassPulse`, `treblePulse`) et `advanceEvery` (1 à 64) : l'étape dure jusqu'au N-ième événement ; le fondu de l'étape reste en temps. Les impulsions viennent de `IAudioFeed` quand le son est entendu, sinon l'horloge (SCN-052). |
+| Quantification (MOT-018) | `quantize` (`beat`, `bar`, `phrase4`, `phrase8`) : le lancement attend la position d'horloge voulue (file du moteur, publiée dans `EngineSnapshot.PendingLaunches`) ; sur un instant exact, départ immédiat ; un second appui (bascule) ou l'arrêt de la scène, de sa couche ou de tout annule l'attente. `LaunchSceneCommand.Immediate` démarre sans attendre. Les phrases se comptent depuis l'origine de l'horloge (« 1 ici » la recale). |
+| Horloge propre (MOT-020) | `ownBpm` : la lecture a sa propre `MusicalClock` à tempo fixe (durées, événements et effets en temps musicaux la suivent) ; sa vitesse suit celle de la scène. |
+| Effets calés (MOT-062) | Un effet dont la période est en temps ou en mesures commence son cycle à la position de l'horloge (`ClockCycle`) et suit ses recalages (`ShiftTotal`) ; vitesse en Hz et en secondes inchangées. |
+| Vitesse selon l'énergie (SCN-051) | `energySpeed` : facteur de 0,6 (calme) à 1,4 (explosif) sur la vitesse de la scène quand le son est entendu. |
+| Sans allocation | `TempoInfo` est une structure ; les lectures audio sont des structures ; aucune allocation par tick ajoutée (test de performance inchangé). |

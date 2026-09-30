@@ -87,11 +87,36 @@
 <!-- INDEX:DEBUT -->
 | Fiche | Titre | Phase | Pri. | Statut |
 |---|---|---|---|---|
-| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Partiel |
+| [AUD-001](AUD-001.md) | Capture du son joué par le PC | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-002](AUD-002.md) | Suivi du changement de périphérique par défaut | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-003](AUD-003.md) | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | P7 | M | Réalisé, à valider sur matériel |
+| [AUD-004](AUD-004.md) | L'analyse est indépendante du volume | P7 | I | Réalisé |
+| [AUD-005](AUD-005.md) | Détection du silence | P7 | I | Réalisé |
+| [AUD-006](AUD-006.md) | L'analyse audio fonctionne dans son propre fil d'exécution | P7 | I | Réalisé |
+| [AUD-007](AUD-007.md) | Charge CPU de l'analyse < 5 % d'un cœur | P7 | M | Réalisé |
+| [AUD-020](AUD-020.md) | Estimation du tempo dans une plage réglable | P7 | I | Réalisé |
+| [AUD-021](AUD-021.md) | Suivi de la phase | P7 | I | Partiel |
+| [AUD-022](AUD-022.md) | Indice de confiance | P7 | I | Réalisé |
+| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Réalisé |
 | [AUD-024](AUD-024.md) | Détection du premier temps de la mesure | P7 | I | Partiel |
 | [AUD-025](AUD-025.md) | Tap tempo | P7 | I | Réalisé |
+| [AUD-026](AUD-026.md) | Changement de morceau | P7 | I | Réalisé |
+| [AUD-027](AUD-027.md) | Décalage de latence global réglable ± 250 ms | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-028](AUD-028.md) | Le BPM corrigé par l'utilisateur | P7 | M | Non réalisé |
 | [AUD-029](AUD-029.md) | Mesures à 4 temps par défaut | P7 | M | Réalisé |
-| [AUD-081](AUD-081.md) | Réglages | P7 | I | Partiel |
+| [AUD-040](AUD-040.md) | Détection des attaques dans deux bandes | P7 | I | Réalisé |
+| [AUD-041](AUD-041.md) | Chaque impulsion porte une force | P7 | I | Réalisé |
+| [AUD-042](AUD-042.md) | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | P7 | I | Réalisé |
+| [AUD-043](AUD-043.md) | Latence de détection < 60 ms | P7 | M | Réalisé |
+| [AUD-044](AUD-044.md) | Bande médiums | P7 | S | Non réalisé |
+| [AUD-060](AUD-060.md) | Mesure continue de l'énergie perçue | P7 | I | Réalisé |
+| [AUD-061](AUD-061.md) | Niveaux discrets avec hystérésis | P7 | I | Réalisé |
+| [AUD-062](AUD-062.md) | Détection de Break | P7 | I | Réalisé |
+| [AUD-063](AUD-063.md) | Détection de montée | P7 | M | Réalisé |
+| [AUD-064](AUD-064.md) | Tendance | P7 | M | Réalisé |
+| [AUD-080](AUD-080.md) | Écran Audio | P7 | I | Réalisé |
+| [AUD-081](AUD-081.md) | Réglages | P7 | I | Réalisé |
+| [AUD-082](AUD-082.md) | Enregistrement de l'analyse | P7 | M | Non réalisé |
 | [BIB-001](BIB-001.md) | Modèle de données complet d'un appareil | P2 | I | Réalisé |
 | [BIB-002](BIB-002.md) | Au moins un mode ; définitions de canaux partagées | P2 | I | Réalisé |
 | [BIB-003](BIB-003.md) | Attribut 16 bits = un seul attribut sur deux canaux | P2 | I | Réalisé |
@@ -233,6 +258,11 @@
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
+| [EVT-020](EVT-020.md) | Événement Temps | P7 | I | Partiel |
+| [EVT-021](EVT-021.md) | Événement Impulsion | P7 | I | Partiel |
+| [EVT-022](EVT-022.md) | Événement ÉnergieChangée | P7 | I | Réalisé |
+| [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Réalisé |
+| [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Partiel |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -249,7 +279,8 @@
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
 | [GEN-033](GEN-033.md) | Horloges injectables | P4 | I | Réalisé |
-| [GEN-035](GEN-035.md) | Un décalage de latence global | P7 | M | Partiel |
+| [GEN-034](GEN-034.md) | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît | P7 | I | Réalisé |
+| [GEN-035](GEN-035.md) | Un décalage de latence global | P7 | M | Réalisé |
 | [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Réalisé |
 | [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
 | [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Réalisé |
@@ -450,7 +481,8 @@
 | [SCN-038](SCN-038.md) | Copier / coller, miroir | P4 | M | Réalisé |
 | [SCN-039](SCN-039.md) | Annuler / rétablir dans l'éditeur de scènes | P4 | I | Validé |
 | [SCN-050](SCN-050.md) | Les paramètres ci-dessus sont réglables par scène | P7 | I | Partiel |
-| [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Partiel |
+| [SCN-051](SCN-051.md) | Modulation par l'énergie | P7 | M | Partiel |
+| [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Réalisé |
 | [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
 | [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
 | [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |

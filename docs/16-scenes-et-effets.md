@@ -97,6 +97,10 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | SCN-051 | M | P7 | **Modulation par l'énergie** : la vitesse, la taille d'un effet ou une intensité peuvent suivre l'énergie (doc 19). | Énergie haute → cercle plus rapide. |
 | SCN-052 | M | P7 | En l'absence de signal audio (silence, capture arrêtée), une scène à avance « impulsion » avance au temps de l'horloge (repli). | Pas de scène figée pendant un break. |
 
+## 5b. Notes de réalisation de la réactivité musicale (P7)
+
+Réalisé : **avance d'étape** au temps, à la mesure ou aux impulsions (SCN-050, MOT-017), **quantification du lancement**, **horloge propre** et **vitesse selon l'énergie** (SCN-051, sur la vitesse de la scène seulement), repli au temps sans signal audio (SCN-052). Réglages dans la fenêtre d'édition, volet « Au rythme » ; format : [doc 50](50-format-des-donnees.md). **Non fait** : réglages propres à un effet (bump d'intensité sur impulsion, modulation de la taille ou de l'intensité par l'énergie). Détails : [15 §16](15-moteur-de-rendu.md), [19 §10](19-audio-et-tempo.md).
+
 ## 6. Effets générés
 
 > Principe de fonctionnement d'ensemble (types, plusieurs effets par étape, combinaison, continuité) : [doc 16b](16b-effets-fonctionnement.md).
