@@ -29,3 +29,8 @@ samples/Démo Contrôle/
 
 # Versions automatiques du projet (GEN-054), créées si on ouvre un échantillon directement
 samples/*/Versions/
+
+# Morceaux du jeu de test audio (fichiers personnels, non diffusés) — doc 19 §7
+tests/assets/audio/*
+!tests/assets/audio/annotations.csv
+!tests/assets/audio/LISEZ-MOI.md
