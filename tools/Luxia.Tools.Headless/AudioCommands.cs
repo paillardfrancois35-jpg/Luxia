@@ -28,7 +28,11 @@ internal static class AudioCommands
             var name = Path.GetFileNameWithoutExtension(file);
             try
             {
-                var result = AudioFileAnalysis.Analyze(file, args.GetDouble("duree", 0), args.GetDouble("debut", 0));
+                var result = AudioFileAnalysis.Analyze(
+                    file,
+                    args.GetDouble("duree", 0),
+                    args.GetDouble("debut", 0),
+                    args.Has("trace") ? (s, st) => Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  {s,6:0} s niveau {st.Level:0.000} basses {st.Bass:0.0000} méd {st.Mid:0.0000} aig {st.Treble:0.0000} énergie {st.Energy:0.00} {st.EnergyLevel} {st.Trend}{(st.InBreak ? " BREAK" : string.Empty)}")) : null);
                 var confidence = result.Timeline.Count == 0 ? 0 : result.Timeline.Skip(result.Timeline.Count / 2).Average(p => p.Confidence);
                 var expected = annotations.GetValueOrDefault(name);
                 var gap = expected is { } e && e > 0 ? Gap(result.Bpm, e) : "—";
@@ -37,6 +41,13 @@ internal static class AudioCommands
                     $"| {name} | {result.Bpm:0.0} | {(expected is { } x ? x.ToString("0.#", CultureInfo.InvariantCulture) : "?")} | {gap} | {(result.ConvergenceSeconds < 0 ? "non" : result.ConvergenceSeconds.ToString("0", CultureInfo.InvariantCulture) + " s")} | {confidence:0.00} | {result.DownbeatKnown * 100:0} % | {result.BassPulsesPerSecond:0.0} | {result.TreblePulsesPerSecond:0.0} | {result.MeanEnergy:0.00} | {result.Events.Count(e => e.Kind == AudioEventKind.Break)} | {result.Events.Count(e => e.Kind == AudioEventKind.Drop)} | {result.Events.Count(e => e.Kind == AudioEventKind.BuildUp)} |");
                 Console.WriteLine(line);
                 report.AppendLine(line);
+                if (args.Has("evenements"))
+                {
+                    foreach (var ev in result.Events.Where(x => x.Kind is AudioEventKind.Break or AudioEventKind.Drop or AudioEventKind.BuildUp))
+                    {
+                        Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"      {ev.Seconds,6:0.0} s  {ev.Kind}"));
+                    }
+                }
             }
             catch (Exception ex)
             {

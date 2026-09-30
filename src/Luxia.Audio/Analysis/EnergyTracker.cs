@@ -8,7 +8,7 @@ namespace Luxia.Audio.Analysis;
 internal sealed class EnergyTracker
 {
     private const int HistorySteps = 24;
-    private static readonly double[] Rise = [0.30, 0.55, 0.78];
+    private static readonly double[] Rise = [0.30, 0.60, 0.85];
 
     private readonly double _dt;
     private readonly double[] _energyHistory = new double[HistorySteps];
@@ -34,6 +34,8 @@ internal sealed class EnergyTracker
     private int _historyIndex;
     private bool _buildActive;
     private double _warmup;
+    private double _energyHigh;
+    private double _energyLow;
     private long _frame;
 
     public EnergyTracker(double frameRate)
@@ -61,6 +63,8 @@ internal sealed class EnergyTracker
     public void Reset()
     {
         _warmup = 0;
+        _energyHigh = 0;
+        _energyLow = 0;
         Energy = 0;
         _fast = 0;
         _slow = 0;
@@ -123,6 +127,18 @@ internal sealed class EnergyTracker
             Step(seconds, density, bpm, emit);
         }
 
+        // AUD-061 : les seuils suivent l'historique de la soirée (environ deux minutes) : le niveau est relatif à l'énergie récente.
+        if (_warmup >= 1.5 && !features.Silent)
+        {
+            if (_energyHigh == 0 && _energyLow == 0)
+            {
+                _energyHigh = _energyLow = Energy;
+            }
+
+            _energyHigh += Energy > _energyHigh ? 0.05 * (Energy - _energyHigh) : (Energy - _energyHigh) * _dt / 120;
+            _energyLow += Energy < _energyLow ? 0.05 * (Energy - _energyLow) : (Energy - _energyLow) * _dt / 120;
+        }
+
         _sinceDrop += _dt;
         _sinceBuild += _dt;
         UpdateLevel(seconds, emit);
@@ -151,8 +167,8 @@ internal sealed class EnergyTracker
         Trend = change > 0.06 ? EnergyTrend.Rising : change < -0.06 ? EnergyTrend.Falling : EnergyTrend.Steady;
 
         // Break : les basses disparaissent et l'énergie chute, pendant au moins deux mesures (AUD-062).
-        var minimum = bpm > 0 ? Math.Clamp(8 * 60 / bpm, 2, 8) : 4;
-        var breakCondition = _bassNorm < 0.25 && _fast < 0.7 * _slow && _slow > 0.25;
+        var minimum = bpm > 0 ? Math.Clamp(4 * 60 / bpm, 1.5, 4) : 2.5;
+        var breakCondition = _fast < 0.6 * _slow && _slow > 0.3;
         if (!InBreak)
         {
             _breakHold = breakCondition ? _breakHold + 0.25 : 0;
@@ -169,7 +185,7 @@ internal sealed class EnergyTracker
         }
 
         // Montée : énergie et densité rythmique croissantes sur six secondes (AUD-063).
-        if (!_buildActive && _sinceBuild > 20 && oldest > 0 && Energy - oldest > 0.25 && density > oldestDensity * 1.2 && Trend == EnergyTrend.Rising)
+        if (!_buildActive && seconds > 20 && _sinceBuild > 20 && oldest > 0 && Energy - oldest > 0.25 && density > oldestDensity * 1.2 && Trend == EnergyTrend.Rising)
         {
             _buildActive = true;
             _sinceBuild = 0;
@@ -181,7 +197,7 @@ internal sealed class EnergyTracker
         }
 
         // Drop : retour brutal des basses et de l'énergie après un break ou une montée (AUD-062).
-        if ((InBreak || _buildActive) && _sinceDrop > 8 && _bassNorm > 0.6 && _fast - Math.Min(_minFast, _fast) > 0.2 && _fast > 0.5)
+        if ((InBreak || _buildActive) && _sinceDrop > 8 && _bassNorm > 0.4 && _fast - Math.Min(_minFast, _fast) > 0.3 && _fast > 0.5)
         {
             InBreak = false;
             _buildActive = false;
@@ -195,11 +211,12 @@ internal sealed class EnergyTracker
     private void UpdateLevel(double seconds, Action<AudioEvent> emit)
     {
         var target = EnergyLevel.Calm;
+        var relative = Math.Clamp(0.5 + ((Energy - ((_energyLow + _energyHigh) / 2)) / Math.Max(_energyHigh - _energyLow, 0.3)), 0, 1);
         for (var i = 0; i < Rise.Length; i++)
         {
             // Hystérésis : on monte au seuil, on redescend 0,05 plus bas.
             var threshold = (int)Level > i ? Rise[i] - 0.05 : Rise[i];
-            if (Energy >= threshold)
+            if (relative >= threshold)
             {
                 target = (EnergyLevel)(i + 1);
             }

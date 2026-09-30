@@ -37,7 +37,8 @@ public static class AudioFileAnalysis
     /// <param name="path">Fichier audio.</param>
     /// <param name="maxSeconds">Durée maximale analysée (0 = tout le fichier).</param>
     /// <param name="skipSeconds">Début ignoré (introductions, silence).</param>
-    public static FileAnalysis Analyze(string path, double maxSeconds = 0, double skipSeconds = 0)
+    /// <param name="trace">Reçoit l'état de l'analyse chaque seconde (diagnostic).</param>
+    public static FileAnalysis Analyze(string path, double maxSeconds = 0, double skipSeconds = 0, Action<double, AnalysisState>? trace = null)
     {
         using var reader = new MediaFoundationReader(path);
         ISampleProvider samples = reader.ToSampleProvider();
@@ -94,6 +95,7 @@ public static class AudioFileAnalysis
             if (seconds >= nextPoint)
             {
                 var state = analyzer.State;
+                trace?.Invoke(seconds, state);
                 timeline.Add(new TempoPoint(seconds, state.Bpm, state.Confidence));
                 nextPoint += 1;
                 checks++;
