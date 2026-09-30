@@ -98,9 +98,11 @@
         <TextBlock Text="{Binding Problems}" IsVisible="{Binding Problems, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                    FontSize="11" Foreground="#F85149" TextWrapping="Wrap" />
 
+        <TextBlock Text="{Binding FamilyText, StringFormat='Type : {0}'}" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap"
+                   ToolTip.Tip="Le type vient du modèle choisi ; pour en changer, ajoutez un autre effet à partir d'un autre modèle" />
         <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto" RowSpacing="6">
-          <TextBlock Classes="label" Text="Forme" />
-          <ComboBox Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.Shapes}" SelectedItem="{Binding Shape}" HorizontalAlignment="Stretch" />
+          <TextBlock Classes="label" Text="{Binding ShapeLabel}" />
+          <ComboBox Grid.Column="1" ItemsSource="{Binding FamilyShapes}" SelectedItem="{Binding Shape}" HorizontalAlignment="Stretch" />
           <TextBlock Grid.Row="1" Classes="label" Text="Anime" IsVisible="{Binding IsIntensityShape}" />
           <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static vm:EffectsPanelViewModel.Attributes}" SelectedItem="{Binding Attribute}"
                     HorizontalAlignment="Stretch" IsVisible="{Binding IsIntensityShape}" />

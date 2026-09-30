@@ -376,6 +376,24 @@ public sealed class EffectsPanelTests : IAsyncLifetime
 
     private Guid Fixture(string name) => _host.Runtime.Project.Installation.Fixtures.Single(f => f.Name == name).Id;
 
+    [Fact]
+    [Trait("Exigence", "EFF-012")]
+    public void Edit_ShapesAreLimitedToTheFamily_AndNameIsMarkedModified()
+    {
+        Session.ChooseScene(Scene("Plein feu").Id);
+        Session.SetMode(EditMode.Edit).ShouldBeNull();
+        SelectPars();
+        Panel.SelectedTemplate = Panel.Templates.Single(t => t.Template.Name == "Arc-en-ciel en vague");
+        Panel.AddEffectCommand.Execute(null);
+
+        Panel.IsColorShape.ShouldBeTrue();
+        Panel.FamilyShapes.Select(s => s.Value).ShouldBe([SceneEffectShape.Rainbow, SceneEffectShape.Alternate, SceneEffectShape.Gradient]);
+        Panel.FamilyText.ShouldStartWith("Couleur");
+        Panel.Shape = Panel.FamilyShapes.Single(s => s.Value == SceneEffectShape.Gradient);
+        Session.StepEffects[0].IsColor.ShouldBeTrue();
+        Panel.Effects[0].Title.ShouldEndWith("(modifié)");
+    }
+
     private Scene Scene(string name) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == name);
 
     private Scene Stored(Guid id) => _host.Runtime.Project.Scenes.Scenes.Single(s => s.Id == id);

@@ -22,6 +22,7 @@ Application C# (Avalonia, Windows) de pilotage d'éclairage, alternative légèr
 | [14](14-simulateur.md) | Simulateur | SIM | P3 |
 | [15](15-moteur-de-rendu.md) | Moteur de rendu | MOT | P4-P7 |
 | [16](16-scenes-et-effets.md) | Scènes, programmeur, effets | SCN / EFF | P4 / P6 |
+| [16b](16b-effets-fonctionnement.md) | Les effets : principe de fonctionnement | EFF | P6 |
 | [17](17-couches-et-palettes.md) | Couches et palettes | COU / PAL | P4 / P5 |
 | [18](18-live.md) | Écran Live | LIVE | P5-P10 |
 | [18b](18b-controleurs-midi.md) | Contrôleurs MIDI (APC mini) | MIDI | P5 |

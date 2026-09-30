@@ -185,6 +185,7 @@
 | [EFF-008](EFF-008.md) | Effets sur cellules | P6 | M | Validé |
 | [EFF-009](EFF-009.md) | Combinaison de deux effets sur un même attribut | P6 | S | Réalisé |
 | [EFF-011](EFF-011.md) | Effet d'intensité visible | P6 | I | Validé |
+| [EFF-012](EFF-012.md) | Type d'effet lisible et formes limitées à la famille | P6 | I | Validé |
 | [ERG-001](ERG-001.md) | Ancrage de panneaux | ERG | I | Validé |
 | [ERG-002](ERG-002.md) | Enregistrement de la disposition | ERG | I | Validé |
 | [ERG-003](ERG-003.md) | Grille Pan / Tilt | ERG | I | Validé |

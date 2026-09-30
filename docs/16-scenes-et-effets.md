@@ -99,6 +99,8 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 
 ## 6. Effets générés
 
+> Principe de fonctionnement d'ensemble (types, plusieurs effets par étape, combinaison, continuité) : [doc 16b](16b-effets-fonctionnement.md).
+
 ### 6.1 Paramètres d'un effet
 
 | Paramètre | Valeurs |
@@ -128,6 +130,7 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | EFF-008 | M | P6 | Effets sur **cellules** (segments de barre, têtes de l'effet multi-têtes). | Chenillard sur les 16 segments des 2 barres. |
 | EFF-009 | S | P6 | Combinaison de deux effets sur un même attribut (ex. cercle + balayage) par addition. | — |
 | EFF-011 | I | P6 | **Effet d'intensité visible** (essai P6) : ajouter un effet d'intensité à des appareils sans couleur dans l'étape leur donne le **blanc** (palette « Blanc »), modifiable ensuite ; inverse de MOT-041 (un PAR RVB aux émetteurs à 0 reste noir quelle que soit son intensité). | Nouvelle scène + chenillard sur les 4 PAR : ils s'allument. |
+| EFF-012 | I | P6 | **Type d'effet lisible** : le panneau affiche le type (Intensité, Mouvement, Couleur), ne propose que les formes de ce type et marque « (modifié) » un effet dont la forme diffère du modèle. Principe d'ensemble : [doc 16b](16b-effets-fonctionnement.md). | Modèle « Arc-en-ciel en vague » sur 4 PAR : seules 3 formes de couleur. |
 
 ### 6.3 Précisions (P6)
 
