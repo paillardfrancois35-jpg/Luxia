@@ -72,9 +72,12 @@ public sealed class AudioViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "AUD-080")]
-    public void Screen_ListsTheDevices_AndStartsStopped()
+    public async Task Screen_ListsTheDevices_AndStartsStopped()
     {
-        var vm = new AudioViewModel(_runtime);
+        var vm = new AudioViewModel(_runtime, a => a());
+
+        vm.Devices.Count.ShouldBe(1, "rien n'est énuméré avant le premier affichage");
+        await vm.LoadDevicesAsync();
 
         vm.Available.ShouldBeTrue();
         vm.Listening.ShouldBeFalse();
@@ -84,16 +87,19 @@ public sealed class AudioViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "AUD-003")]
-    public void ChoosingTheMicrophone_IsRememberedAndUsedByTheListening()
+    public async Task ChoosingTheMicrophone_IsRememberedAndUsedByTheListening()
     {
-        var vm = new AudioViewModel(_runtime);
+        var vm = new AudioViewModel(_runtime, a => a());
+        await vm.LoadDevicesAsync();
         vm.Listening = true;
 
         vm.SelectedDevice = vm.Devices.Single(d => d.Id == "micro");
 
         _runtime.Preferences.Current.Audio.DeviceId.ShouldBe("micro");
         _sources.Requested.ShouldBe([null, "micro"]);
-        new AudioViewModel(_runtime).SelectedDevice!.Id.ShouldBe("micro");
+        var again = new AudioViewModel(_runtime, a => a());
+        await again.LoadDevicesAsync();
+        again.SelectedDevice!.Id.ShouldBe("micro");
     }
 
     [Fact]

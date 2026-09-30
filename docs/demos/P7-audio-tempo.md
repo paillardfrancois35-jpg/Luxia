@@ -11,7 +11,8 @@
 2. Brancher les PAR (et les lyres si on veut voir les cercles). Écran **Contrôle** : le **bloc BPM** est sous la barre
    d'arrêt, avec `♪ 120 BPM`, `− +`, `TAP`, `×2 ÷2`, `1 ici`, les quatre points du compteur de temps, `Fixer`, `🎧 Audio`, `Écoute`.
 3. Les scènes de l'essai sont dans les colonnes (catégorie « Phase P7 ») : *Un PAR par temps*, *Couleur à chaque mesure*,
-   *Flash sur le kick*, *Cercle calé sur la mesure*, *Mouvement lent à 30 BPM*, *Départ à la mesure*, *Calibration de latence*.
+   *Flash sur le kick*, *Cercle calé sur la mesure*, *Mouvement lent à 30 BPM*, *Départ à la mesure*, *Calibration de latence*, *Lyres allumées (sans les PAR)*.
+   **Piège à connaître** : *Plein feu* allume tous les appareils à 100 % et, l'intensité la plus haute l'emportant, il **fige** les scènes qui jouent sur l'intensité des PAR (*Un PAR par temps*, *Flash sur le kick*). Pour voir les lyres avec ces scènes, lancer *Lyres allumées (sans les PAR)* (colonne Intensité) à la place de *Plein feu*.
 
 ## 1. Horloge sans musique (lot 1)
 
@@ -29,7 +30,7 @@
 | 5 | Un PAR par temps | Lancer *Un PAR par temps (chenillard au tempo)* ; changer le tempo (TAP, ×2, Fixer 60) | Un PAR s'allume par temps, en tournant ; le chenillard suit immédiatement le tempo |
 | 6 | Couleur à chaque mesure | Lancer *Couleur à chaque mesure*, puis **1 ici** | Les PAR changent de couleur au « 1 » de chaque mesure ; « 1 ici » déplace le changement |
 | 7 | Départ à la mesure | Appuyer n'importe quand sur *Départ à la mesure (blanc chaud)* | Le bouton affiche **⏳ dans N t** ; la scène démarre au « 1 » suivant ; un **second appui** annule l'attente |
-| 8 | Cercle calé sur la mesure | Lancer *Cercle calé sur la mesure* sur les lyres ; taper un nouveau tempo | Un tour de cercle par mesure ; le cercle repart sur le « 1 » |
+| 8 | Cercle calé sur la mesure | Lancer *Lyres allumées (sans les PAR)*, puis *Cercle calé sur la mesure* ; taper un nouveau tempo | Un tour de cercle par mesure ; le cercle repart sur le « 1 » |
 | 9 | Horloge propre | Lancer *Mouvement lent à 30 BPM*, puis changer le tempo de l'horloge | Le mouvement lent **ne change pas** (horloge propre de la scène) |
 | 10 | Fenêtre d'édition | Ouvrir une scène (✎), volet **Au rythme** | « Étape suivante », « Tous les », « Démarrage », « Horloge propre », « La vitesse suit l'énergie » |
 

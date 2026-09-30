@@ -274,9 +274,10 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
             Loop.Start();
             Midi?.Start();
-            if (Preferences.Current.Audio.Listen)
+            if (Preferences.Current.Audio.Listen && Audio is { } listener)
             {
-                Audio?.Start();
+                // L'ouverture de la capture (0,4 à 0,5 s) ne doit pas retarder le démarrage de l'application.
+                _ = Task.Run(listener.Start);
             }
 
             // Toutes les 5 s : instantané de reprise (MOT-102) et mesure du processeur (GEN-094) ; toutes les 2 min :

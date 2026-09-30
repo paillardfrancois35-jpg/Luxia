@@ -33,6 +33,8 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private const string BeatOff = "#30363D";
 
     private readonly LuxiaRuntime _runtime;
+    private readonly Action<Action> _post;
+    private bool _devicesRequested;
     private long _bassSeen;
     private long _trebleSeen;
     private int _dirty;
@@ -136,14 +138,23 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private bool _calibrating;
 
     /// <summary>Crée l'écran sur l'écoute de l'application.</summary>
-    public AudioViewModel(LuxiaRuntime runtime)
+    /// <param name="runtime">Application.</param>
+    /// <param name="post">Exécute une action sur le fil de l'interface (tests : tout de suite).</param>
+    public AudioViewModel(LuxiaRuntime runtime, Action<Action>? post = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         _runtime = runtime;
+        _post = post ?? (action => Avalonia.Threading.Dispatcher.UIThread.Post(action));
         Available = runtime.Audio is not null;
         LoadSettings();
-        RefreshDevices();
-        Refresh();
+
+        // L'énumération des périphériques prend de 0,5 à 1 s (Bluetooth compris) : elle ne se fait ni au démarrage de
+        // l'application ni sur le fil de l'interface, mais au premier affichage de l'écran (contrôle du temps de chargement).
+        Devices.Add(new AudioDeviceChoice(null, "Le son joué par le PC (sortie par défaut)"));
+        _loading = true;
+        SelectedDevice = Devices[0];
+        _loading = false;
+        Update();
     }
 
     /// <summary>Périphériques proposés.</summary>
@@ -154,6 +165,16 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
 
     /// <inheritdoc />
     public void Refresh()
+    {
+        if (!_devicesRequested && Available)
+        {
+            _ = LoadDevicesAsync();
+        }
+
+        Update();
+    }
+
+    private void Update()
     {
         var audio = _runtime.Audio;
         var tempo = _runtime.Engine.Snapshot.Tempo;
@@ -258,25 +279,41 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Relit la liste des périphériques (un casque branché depuis l'ouverture de l'écran).</summary>
     [RelayCommand]
-    private void RefreshDevices()
+    private void RefreshDevices() => _ = LoadDevicesAsync();
+
+    /// <summary>Énumère les périphériques hors du fil de l'interface, puis remplit la liste (et retrouve le choix mémorisé).</summary>
+    public async Task LoadDevicesAsync()
     {
-        Devices.Clear();
-        Devices.Add(new AudioDeviceChoice(null, "Le son joué par le PC (sortie par défaut)"));
+        _devicesRequested = true;
+        IReadOnlyList<AudioDeviceInfo> found = [];
+        string? error = null;
         try
         {
-            foreach (var device in _runtime.Audio?.Devices() ?? [])
-            {
-                Devices.Add(new AudioDeviceChoice(device.Id, device.IsInput ? $"Entrée : {device.Name}" : $"Sortie : {device.Name}"));
-            }
+            found = await Task.Run(() => _runtime.Audio?.Devices() ?? []).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            Message = "Liste des périphériques indisponible : " + ex.Message;
+            error = "Liste des périphériques indisponible : " + ex.Message;
         }
 
-        _loading = true;
-        SelectedDevice = Devices.FirstOrDefault(d => d.Id == _runtime.Preferences.Current.Audio.DeviceId) ?? Devices[0];
-        _loading = false;
+        _post(() =>
+        {
+            Devices.Clear();
+            Devices.Add(new AudioDeviceChoice(null, "Le son joué par le PC (sortie par défaut)"));
+            foreach (var device in found)
+            {
+                Devices.Add(new AudioDeviceChoice(device.Id, device.IsInput ? $"Entrée : {device.Name}" : $"Sortie : {device.Name}"));
+            }
+
+            if (error is not null)
+            {
+                Message = error;
+            }
+
+            _loading = true;
+            SelectedDevice = Devices.FirstOrDefault(d => d.Id == _runtime.Preferences.Current.Audio.DeviceId) ?? Devices[0];
+            _loading = false;
+        });
     }
 
     /// <summary>Tempo de l'écoute : recale la source Audio (et démarre l'écoute).</summary>

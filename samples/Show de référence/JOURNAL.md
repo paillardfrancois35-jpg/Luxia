@@ -207,7 +207,7 @@ l'effet multi-têtes a d'autres canaux).
 
 | Élément | Fichier | Contenu |
 |---|---|---|
-| Scènes « Phase P7 » | `scènes.json` | 7 scènes au rythme : *Un PAR par temps (chenillard au tempo)*, *Couleur à chaque mesure*, *Flash sur le kick* (impulsions basses, au temps sans musique), *Cercle calé sur la mesure* (effet d'une mesure), *Mouvement lent à 30 BPM (horloge propre)*, *Départ à la mesure (blanc chaud)* (quantifié), *Calibration de latence* (flash sur chaque deuxième temps, pour l'écran Audio) |
+| Scènes « Phase P7 » | `scènes.json` | 8 scènes au rythme (la dernière, *Lyres allumées (sans les PAR)*, remplace *Plein feu* qui masquait le chenillard des PAR) : *Un PAR par temps (chenillard au tempo)*, *Couleur à chaque mesure*, *Flash sur le kick* (impulsions basses, au temps sans musique), *Cercle calé sur la mesure* (effet d'une mesure), *Mouvement lent à 30 BPM (horloge propre)*, *Départ à la mesure (blanc chaud)* (quantifié), *Calibration de latence* (flash sur chaque deuxième temps, pour l'écran Audio) |
 | Options de scène | `scènes.json` | `advance`, `advanceEvery`, `quantize`, `ownBpm`, `energySpeed` (doc 50 §12) |
 
 ### Comment rejouer / vérifier sans matériel
