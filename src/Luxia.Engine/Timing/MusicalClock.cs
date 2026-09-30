@@ -1,0 +1,156 @@
+using Luxia.Engine.Model;
+using Luxia.Messaging.Commands;
+
+namespace Luxia.Engine.Timing;
+
+/// <summary>
+/// Horloge musicale du moteur (doc 19 §3, GEN-023, GEN-034) : tempo, position en temps, compteur de mesures.
+/// Avancée par le moteur du temps réellement écoulé ; les réglages (Fixe, Tap, ×2, ÷2, recalage) arrivent par
+/// commandes. Le tempo et la source se lisent depuis n'importe quel fil ; le reste appartient au fil du moteur.
+/// </summary>
+public sealed class MusicalClock
+{
+    /// <summary>Tempo minimal accepté.</summary>
+    public const double MinBpm = 20;
+
+    /// <summary>Tempo maximal accepté.</summary>
+    public const double MaxBpm = 400;
+
+    /// <summary>Intervalle sans frappe après lequel le tap repart de zéro (AUD-025).</summary>
+    public const double TapResetSeconds = 2;
+
+    /// <summary>Nombre de frappes à partir duquel le tempo est calculé (AUD-025).</summary>
+    public const int TapMinimum = 4;
+
+    /// <summary>Nombre maximal de frappes retenues (AUD-025).</summary>
+    public const int TapMaximum = 8;
+
+    private readonly List<double> _taps = [];
+    private double _bpm = 120;
+    private int _source = (int)TempoSourceKind.Fixed;
+    private double _confidence = 1;
+    private double _position;
+    private double _latency;
+
+    /// <summary>Tempo courant en temps par minute.</summary>
+    public double Bpm => Volatile.Read(ref _bpm);
+
+    /// <summary>Source du tempo.</summary>
+    public TempoSourceKind Source => (TempoSourceKind)Volatile.Read(ref _source);
+
+    /// <summary>Indice de confiance du tempo (0 à 1) : 1 pour Fixe et Tap, celui de l'analyse pour Audio (AUD-022).</summary>
+    public double Confidence => Volatile.Read(ref _confidence);
+
+    /// <summary>Décalage de latence global en secondes (±0,25 s, GEN-035, AUD-027).</summary>
+    public double LatencySeconds => Volatile.Read(ref _latency);
+
+    /// <summary>Position depuis l'origine, en temps (fractions comprises), sans décalage de latence.</summary>
+    public double BeatPosition => _position;
+
+    /// <summary>Position vue par les scènes : avancée du décalage de latence (GEN-035).</summary>
+    public double EffectivePosition => _position + (LatencySeconds * Bpm / 60.0);
+
+    /// <summary>Numéro du temps en cours depuis l'origine (0, 1, 2…).</summary>
+    public long BeatIndex => (long)Math.Floor(EffectivePosition + 1e-9);
+
+    /// <summary>Phase dans le temps en cours (0 inclus à 1 exclu).</summary>
+    public double Phase
+    {
+        get
+        {
+            var position = EffectivePosition + 1e-9;
+            return Math.Clamp(position - Math.Floor(position), 0, 1);
+        }
+    }
+
+    /// <summary>Temps dans la mesure, de 1 à 4 (AUD-029).</summary>
+    public int BeatInBar => (int)(((BeatIndex % Duration.BeatsPerBar) + Duration.BeatsPerBar) % Duration.BeatsPerBar) + 1;
+
+    /// <summary>Numéro de mesure depuis l'origine, à partir de 1.</summary>
+    public long Bar => (long)Math.Floor((double)BeatIndex / Duration.BeatsPerBar) + 1;
+
+    /// <summary>Fait avancer l'horloge de <paramref name="elapsed"/> secondes réelles.</summary>
+    public void Advance(double elapsed)
+    {
+        if (elapsed > 0)
+        {
+            _position += elapsed * Bpm / 60.0;
+        }
+    }
+
+    /// <summary>Tempo fixe (CMD-041) : la source devient Fixe, la phase continue.</summary>
+    public void SetFixed(double bpm)
+    {
+        Volatile.Write(ref _bpm, Math.Clamp(bpm, MinBpm, MaxBpm));
+        Volatile.Write(ref _source, (int)TempoSourceKind.Fixed);
+        Volatile.Write(ref _confidence, 1);
+        _taps.Clear();
+    }
+
+    /// <summary>Choisit la source sans toucher au tempo courant (CMD-041).</summary>
+    public void UseSource(TempoSourceKind source)
+    {
+        Volatile.Write(ref _source, (int)source);
+        _taps.Clear();
+    }
+
+    /// <summary>
+    /// Une frappe de tap (CMD-040, AUD-025) : la phase se cale sur la frappe ; à partir de quatre frappes, le tempo est la
+    /// moyenne des intervalles des huit dernières, et la source devient Tap. Plus de deux secondes sans frappe : on repart de zéro.
+    /// </summary>
+    /// <param name="at">Instant de la frappe, en secondes sur l'horloge du moteur.</param>
+    /// <param name="secondsAgo">Âge de la frappe à l'instant du tick (la commande attend le tick suivant).</param>
+    public void Tap(double at, double secondsAgo)
+    {
+        if (_taps.Count > 0 && at - _taps[^1] > TapResetSeconds)
+        {
+            _taps.Clear();
+        }
+
+        _taps.Add(at);
+        if (_taps.Count > TapMaximum)
+        {
+            _taps.RemoveAt(0);
+        }
+
+        if (_taps.Count >= TapMinimum)
+        {
+            var mean = (_taps[^1] - _taps[0]) / (_taps.Count - 1);
+            if (mean > 0)
+            {
+                Volatile.Write(ref _bpm, Math.Clamp(60.0 / mean, MinBpm, MaxBpm));
+                Volatile.Write(ref _source, (int)TempoSourceKind.Tap);
+                Volatile.Write(ref _confidence, 1);
+            }
+        }
+
+        // La frappe est un temps : on recale sur le temps entier le plus proche, tel qu'il était à l'instant de la frappe.
+        var beatsAgo = secondsAgo * Bpm / 60.0;
+        var atTap = _position - beatsAgo;
+        _position = Math.Round(atTap) + beatsAgo;
+    }
+
+    /// <summary>×2 ou ÷2 (AUD-023, CMD-042).</summary>
+    public void Scale(double factor)
+    {
+        Volatile.Write(ref _bpm, Math.Clamp(Bpm * factor, MinBpm, MaxBpm));
+        _taps.Clear();
+    }
+
+    /// <summary>Ajoute (ou retire) des BPM au tempo courant (CMD-042).</summary>
+    public void Nudge(double deltaBpm)
+    {
+        Volatile.Write(ref _bpm, Math.Clamp(Bpm + deltaBpm, MinBpm, MaxBpm));
+        _taps.Clear();
+    }
+
+    /// <summary>« Le 1 est maintenant » (AUD-024) : le temps en cours devient le premier d'une mesure.</summary>
+    public void ResyncBar()
+    {
+        var beats = Duration.BeatsPerBar;
+        _position = Math.Round(_position / beats) * beats;
+    }
+
+    /// <summary>Décalage de latence global (GEN-035), borné à ±250 ms.</summary>
+    public void SetLatency(double seconds) => Volatile.Write(ref _latency, Math.Clamp(seconds, -0.25, 0.25));
+}

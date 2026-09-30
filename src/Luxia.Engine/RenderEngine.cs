@@ -3,6 +3,7 @@ using System.Globalization;
 using Luxia.Core.Dmx;
 using Luxia.Core.Time;
 using Luxia.Engine.Model;
+using Luxia.Engine.Timing;
 using Luxia.Messaging.Commands;
 using Luxia.Messaging.Events;
 using Microsoft.Extensions.Logging;
@@ -52,7 +53,8 @@ public sealed class RenderEngine : ICommandSink
     private long _sequence;
     private long _sequenceAtTickStart;
     private TimeSpan? _lastTick;
-    private double _bpm = 120;
+    private readonly MusicalClock _tempo = new();
+    private TempoInfo _publishedTempo = TempoInfo.Default;
 
     // Modèle courant et tableaux alignés sur ses paramètres (réalloués seulement au chargement d'un modèle).
     private ShowModel _show = ShowModel.Empty;
@@ -137,14 +139,17 @@ public sealed class RenderEngine : ICommandSink
     public TestPatternState TestState => _testPattern.State;
 
     /// <summary>
-    /// Tempo utilisé pour convertir les durées musicales (GEN-023). Fixe (120 BPM par défaut) jusqu'à l'horloge
-    /// musicale de P7 (MOT-016).
+    /// Tempo utilisé pour convertir les durées musicales (GEN-023, MOT-016) : celui de l'horloge musicale (120 BPM fixes
+    /// par défaut). L'écrire revient à choisir la source Fixe ; les commandes CMD-040 à 042 règlent l'horloge en service.
     /// </summary>
     public double Bpm
     {
-        get => Volatile.Read(ref _bpm);
-        set => Volatile.Write(ref _bpm, Math.Clamp(value, 20, 400));
+        get => _tempo.Bpm;
+        set => _tempo.SetFixed(value);
     }
+
+    /// <summary>Horloge musicale (lecture seule pour les autres composants ; réglée par commandes).</summary>
+    internal MusicalClock Tempo => _tempo;
 
     /// <summary>Dernier état publié (mis à jour à la fin de chaque tick).</summary>
     public EngineSnapshot Snapshot
@@ -183,6 +188,7 @@ public sealed class RenderEngine : ICommandSink
         var elapsed = _lastTick is { } last ? Math.Max(0, (now - last).TotalSeconds) : 0;
         _lastTick = now;
         _sequenceAtTickStart = _sequence;
+        _tempo.Advance(elapsed);
 
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))
@@ -281,7 +287,7 @@ public sealed class RenderEngine : ICommandSink
 
     private void Apply(Command command, TimeSpan receivedAt, TimeSpan now)
     {
-        var rejection = ApplyCore(command, now);
+        var rejection = ApplyCore(command, now, receivedAt);
         var entry = new CommandLogEntry(receivedAt, now, command, rejection);
         Log(entry);
         CommandApplied?.Invoke(entry);
@@ -293,7 +299,7 @@ public sealed class RenderEngine : ICommandSink
         }
     }
 
-    private string? ApplyCore(Command command, TimeSpan now)
+    private string? ApplyCore(Command command, TimeSpan now, TimeSpan receivedAt)
     {
         switch (command)
         {
@@ -376,6 +382,50 @@ public sealed class RenderEngine : ICommandSink
 
             case SetSceneSpeedCommand speed:
                 return SetSceneSpeed(speed);
+
+            case TapTempoCommand:
+                _tempo.Tap(receivedAt.TotalSeconds, Math.Max(0, (now - receivedAt).TotalSeconds));
+                return null;
+
+            case SetTempoSourceCommand source:
+                if (source.Bpm is { } fixedBpm)
+                {
+                    if (fixedBpm < MusicalClock.MinBpm || fixedBpm > MusicalClock.MaxBpm)
+                    {
+                        return $"BPM hors de {MusicalClock.MinBpm:0} à {MusicalClock.MaxBpm:0}";
+                    }
+
+                    _tempo.SetFixed(fixedBpm);
+                }
+                else
+                {
+                    _tempo.UseSource(source.Source);
+                }
+
+                return null;
+
+            case AdjustTempoCommand adjust:
+                switch (adjust.Adjustment)
+                {
+                    case TempoAdjustment.TimesTwo:
+                        _tempo.Scale(2);
+                        break;
+                    case TempoAdjustment.DivideByTwo:
+                        _tempo.Scale(0.5);
+                        break;
+                    case TempoAdjustment.AddBpm:
+                        _tempo.Nudge(adjust.Value);
+                        break;
+                    default:
+                        _tempo.ResyncBar();
+                        break;
+                }
+
+                return null;
+
+            case SetTempoLatencyCommand latency:
+                _tempo.SetLatency(latency.Seconds);
+                return null;
 
             case ShowStepCommand show:
                 return ShowStep(show);
@@ -1235,6 +1285,7 @@ public sealed class RenderEngine : ICommandSink
             _publishedSmoking = _safety.ManualSmoke;
             _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
+            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds);
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
             Array.Copy(_overrides, _publishedOverrides, _overrides.Length);
@@ -1284,6 +1335,7 @@ public sealed class RenderEngine : ICommandSink
             Smoking = _publishedSmoking,
             SmokeRestSeconds = _publishedSmokeRest,
             GrandMaster = _publishedGrandMaster,
+            Tempo = _publishedTempo,
             ActiveLimits = _publishedLimits,
         };
     }

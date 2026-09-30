@@ -127,6 +127,10 @@ internal sealed class Playback
 
     private double _stepElapsed;
     private double _stepLength;
+    private double _stepBpm = 120;
+    private double _stepFade;
+    private bool _fadeMusical;
+    private bool _holdMusical;
     private double _transitionElapsed;
     private double _transitionEnd;
     private FadeCurve _curve;
@@ -570,6 +574,7 @@ internal sealed class Playback
         // MOT-015 : la vitesse raccourcit ou allonge les durées de la scène (pas le fondu de sortie).
         var scaled = _stepStartsNow ? 0 : elapsed * Speed;
         _stepStartsNow = false;
+        RescaleForTempo(bpm);
         _transitionElapsed += scaled;
         UpdateContributions();
         AdvanceEffects(scaled, bpm);
@@ -675,6 +680,39 @@ internal sealed class Playback
         }
     }
 
+    /// <summary>
+    /// MOT-016 : quand le tempo change en cours d'étape, la part musicale de la durée garde sa proportion :
+    /// 2 temps à 120 BPM, à mi-étape le tempo passe à 60 → il reste 1 s. Les durées en secondes ne bougent pas.
+    /// </summary>
+    private void RescaleForTempo(double bpm)
+    {
+        if (Math.Abs(bpm - _stepBpm) < 1e-9 || Scene.Steps.Count == 0)
+        {
+            return;
+        }
+
+        var factor = _stepBpm / bpm;
+        var fade = _fadeMusical ? _stepFade * factor : _stepFade;
+        var holdOld = _stepLength - _stepFade;
+        var hold = _holdMusical ? holdOld * factor : holdOld;
+        _stepElapsed = Rescale(_stepElapsed, _stepFade, fade, factor);
+        _transitionElapsed = Rescale(_transitionElapsed, _stepFade, fade, factor);
+        _transitionEnd = _fadeMusical && _transitionEnd > 0 && Math.Abs(_transitionEnd - _stepFade) < 1e-9 ? fade : _transitionEnd;
+        _stepFade = fade;
+        _stepLength = fade + hold;
+        _stepBpm = bpm;
+
+        double Rescale(double elapsed, double oldFade, double newFade, double k)
+        {
+            if (elapsed < oldFade)
+            {
+                return _fadeMusical ? elapsed * k : elapsed;
+            }
+
+            return newFade + ((elapsed - oldFade) * (_holdMusical ? k : 1));
+        }
+    }
+
     private void EnterStep(int index, double? forcedFade, double bpm)
     {
         StepIndex = index;
@@ -683,6 +721,10 @@ internal sealed class Playback
         _curve = step.Curve;
         _switch = step.Switch;
         _stepLength = stepFade + step.Hold.ToSeconds(bpm);
+        _stepBpm = bpm;
+        _stepFade = stepFade;
+        _fadeMusical = forcedFade is null && step.Fade.Unit != DurationUnit.Seconds;
+        _holdMusical = step.Hold.Unit != DurationUnit.Seconds;
         _stepElapsed = 0;
         _transitionElapsed = 0;
         _transitionEnd = stepFade;
