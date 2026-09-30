@@ -239,6 +239,8 @@
   5. **Contenu et documentation** : 7 scènes « Phase P7 », trames de référence `P7-scenes.txt`, guide P7, doc 15 §16, doc 19 §10, doc 16 §5b, doc 41, glossaire, doc 99, fiches (AUD-001 à 082, GEN-034/035, MOT-016 à 020 et 062, SCN-050 à 052, EVT-020 à 024), rapport chiffré [essais/P7-audio-rapport.md](essais/P7-audio-rapport.md) (41 morceaux).
   Tests : plus de 850, tous verts, 0 avertissement. **Limites connues** : ballades à 6/8 (octave), premier temps de la mesure ≈ 50 %, rubato et mesures irrégulières (confiance faible, l'horloge garde son tempo) ; AUD-028 → P9 ; AUD-044, AUD-082 non faits ; SCN-050 / 051 limités à la scène. **À valider au matériel** : écoute avec Deezer / YouTube Music / VLC, changement de périphérique, micro USB, calibration de latence, phase des temps (AUD-021).
 
+- **Pré-analyses de P7 (2026-10-01), à reprendre à la fin de la phase** : [code](chantiers/analyse-code-p7.md) (C1 à C17), [documentation](chantiers/analyse-docs-p7.md) (D1 à D19), [ergonomie](chantiers/analyse-ergonomique-p7.md) (E1 à E19 et décisions demandées). Trouvés et corrigés avant l'essai : le « 1 ici » écrasé par l'écoute, le chenillard masqué par *Plein feu*, le démarrage ralenti par l'énumération audio. **Avant de retirer l'écran Scènes** : porter le choix d'unité (s / temps / mesures) dans les Propriétés (C17, E2).
+
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).
