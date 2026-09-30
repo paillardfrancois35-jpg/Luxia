@@ -132,4 +132,18 @@ public sealed class AnalyzerTests
 
         state.BarBeat.ShouldBeInRange(1, 4);
     }
+
+    [Fact]
+    [Trait("Exigence", "AUD-007")]
+    public void Analysis_OfOneMinuteOfSound_TakesAFewPercentOfRealTime()
+    {
+        var signal = Beat(128, 60);
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        Run(signal);
+        watch.Stop();
+
+        // Charge d'un cœur : durée de calcul / durée du son. Objectif AUD-007 : moins de 5 % (mesuré seul, machine au repos) ; seuil large ici pour ne pas échouer quand toute la série tourne en parallèle.
+        var load = watch.Elapsed.TotalSeconds / 60;
+        load.ShouldBeLessThan(0.3);
+    }
 }

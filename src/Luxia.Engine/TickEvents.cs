@@ -12,6 +12,9 @@ internal sealed class TickEvents
     /// <summary>Impulsions des aigus depuis le tick précédent.</summary>
     public int TreblePulses { get; set; }
 
+    /// <summary>Énergie perçue (0 à 1), SCN-051.</summary>
+    public double Energy { get; set; }
+
     /// <summary>Un signal audio exploitable est présent (pas de silence, capture active).</summary>
     public bool AudioLive { get; set; }
 }

@@ -60,6 +60,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private Choice<LaunchQuantize> _quantize = SceneOptions.Quantizes[0];
 
     [ObservableProperty]
+    private bool _energySpeed;
+
+    [ObservableProperty]
     private bool _hasOwnClock;
 
     [ObservableProperty]
@@ -355,6 +358,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     partial void OnQuantizeChanged(Choice<LaunchQuantize> value) => Update(s => s with { Quantize = value.Value }, "Démarrage au rythme");
 
+    partial void OnEnergySpeedChanged(bool value) => Update(s => s with { EnergySpeed = value }, "Vitesse selon l'énergie");
+
     partial void OnHasOwnClockChanged(bool value) => Update(s => s with { OwnBpm = value ? (double)Math.Clamp(OwnBpm, 20, 400) : null }, "Horloge propre de la scène");
 
     partial void OnOwnBpmChanged(decimal value)
@@ -459,6 +464,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             Advance = SceneOptions.Advances.FirstOrDefault(a => a.Value == scene.Advance) ?? SceneOptions.Advances[0];
             AdvanceEvery = scene.AdvanceEvery;
             Quantize = SceneOptions.Quantizes.FirstOrDefault(q => q.Value == scene.Quantize) ?? SceneOptions.Quantizes[0];
+            EnergySpeed = scene.EnergySpeed;
             HasOwnClock = scene.OwnBpm is not null;
             OwnBpm = scene.OwnBpm is { } own ? (decimal)own : 120;
             FadeInSeconds = scene.FadeIn is { } fadeIn ? (decimal)fadeIn.ToSeconds(120) : null;

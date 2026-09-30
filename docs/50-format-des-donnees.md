@@ -314,6 +314,7 @@ Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
 | `speed` | 0,1 à 10 | Vitesse (MOT-015) |
 | `advance` / `advanceEvery` | `duration` (défaut), `beat`, `bar`, `bassPulse`, `treblePulse` ; entier 1 à 64 | Événement qui fait passer à l'étape suivante, tous les N (MOT-017) ; les impulsions avancent au temps sans signal audio (SCN-052) |
 | `quantize` | `none` (défaut), `beat`, `bar`, `phrase4`, `phrase8` | Instant musical attendu avant le démarrage de la scène (MOT-018) |
+| `energySpeed` | booléen | La vitesse de la scène suit l'énergie de la musique écoutée, de 0,6× (calme) à 1,4× (explosif) (SCN-051) ; sans écoute, vitesse normale |
 | `ownBpm` | 20 à 400 ou `null` | Tempo propre de la scène (MOT-020) ; `null` = horloge principale |
 | durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023), convertis avec le tempo de l'horloge musicale (MOT-016) |
 | `steps[].curve` | `linear`, `sCurve`, `instant` | Courbe du fondu (MOT-011) |

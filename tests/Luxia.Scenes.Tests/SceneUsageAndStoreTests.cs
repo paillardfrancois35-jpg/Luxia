@@ -116,6 +116,7 @@ public sealed class SceneUsageAndStoreTests : IDisposable
             AdvanceEvery = 2,
             Quantize = LaunchQuantize.Phrase4,
             OwnBpm = 90,
+            EnergySpeed = true,
             Steps =
             [
                 new SceneStep
@@ -148,6 +149,7 @@ public sealed class SceneUsageAndStoreTests : IDisposable
         text.ShouldContain("\"advance\": \"bar\"");
         text.ShouldContain("\"quantize\": \"phrase4\"");
         back.OwnBpm.ShouldBe(90);
+        back.EnergySpeed.ShouldBeTrue();
         text.ShouldNotContain("\"hex\"");
         text.ShouldNotContain("\"dmx\"");
     }

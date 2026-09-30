@@ -596,7 +596,9 @@ internal sealed class Playback
         }
 
         // MOT-015 : la vitesse raccourcit ou allonge les durées de la scène (pas le fondu de sortie).
-        var scaled = _stepStartsNow ? 0 : elapsed * Speed;
+        // SCN-051 : la vitesse peut suivre l'énergie de la musique écoutée (0,6× calme, 1,4× explosif).
+        var energyFactor = Scene.EnergySpeed && Events.AudioLive ? 0.6 + (0.8 * Math.Clamp(Events.Energy, 0, 1)) : 1;
+        var scaled = _stepStartsNow ? 0 : elapsed * Speed * energyFactor;
         _stepStartsNow = false;
         _own?.Advance(scaled);
         RescaleForTempo(bpm);

@@ -166,6 +166,7 @@ public sealed class RenderEngine : ICommandSink
             _events.AudioLive = false;
             _events.BassPulses = 0;
             _events.TreblePulses = 0;
+            _events.Energy = 0;
             return;
         }
 
@@ -173,6 +174,7 @@ public sealed class RenderEngine : ICommandSink
         _events.AudioLive = reading.Live;
         _events.BassPulses = reading.BassPulses;
         _events.TreblePulses = reading.TreblePulses;
+        _events.Energy = reading.Energy;
         if (_tempo.Source == TempoSourceKind.Audio)
         {
             _tempo.FollowAudio(reading);

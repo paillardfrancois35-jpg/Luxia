@@ -12,7 +12,8 @@ namespace Luxia.Engine.Timing;
 /// <param name="BarBeat">Temps dans la mesure (1 à 4), 0 s'il est inconnu.</param>
 /// <param name="BassPulses">Impulsions des basses depuis la lecture précédente.</param>
 /// <param name="TreblePulses">Impulsions des aigus depuis la lecture précédente.</param>
-public readonly record struct AudioReading(bool Live, double Bpm, double Confidence, bool HasGrid, double BeatPhase, int BarBeat, int BassPulses, int TreblePulses);
+/// <param name="Energy">Énergie perçue (0 à 1, signal C).</param>
+public readonly record struct AudioReading(bool Live, double Bpm, double Confidence, bool HasGrid, double BeatPhase, int BarBeat, int BassPulses, int TreblePulses, double Energy = 0);
 
 /// <summary>Source de lectures audio pour le moteur ; appelée par le fil du moteur à chaque tick, sans jamais bloquer.</summary>
 public interface IAudioFeed

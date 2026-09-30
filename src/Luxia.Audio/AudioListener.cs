@@ -154,7 +154,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         var phase = beats - Math.Floor(beats);
         var bar = state.BarBeat == 0 ? 0 : (((state.BarBeat - 1) + (int)Math.Floor(beats)) % 4) + 1;
         var (bass, treble) = Volatile.Read(ref _analyzer)?.TakePulses() ?? (0, 0);
-        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, bass, treble);
+        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, bass, treble, state.Energy);
     }
 
     /// <inheritdoc />

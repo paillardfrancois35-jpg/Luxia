@@ -42,6 +42,9 @@ public sealed record EngineScene
     /// <summary>Instant musical attendu avant de démarrer (MOT-018).</summary>
     public LaunchQuantize Quantize { get; init; } = LaunchQuantize.None;
 
+    /// <summary>La vitesse de la scène suit l'énergie de la musique (SCN-051) : de 0,6× (calme) à 1,4× (explosif).</summary>
+    public bool EnergySpeed { get; init; }
+
     /// <summary>Tempo propre de la scène (MOT-020) ; <c>null</c> = elle suit l'horloge principale.</summary>
     public double? OwnBpm { get; init; }
 

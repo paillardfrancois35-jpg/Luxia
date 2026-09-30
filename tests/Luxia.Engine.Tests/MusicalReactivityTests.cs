@@ -67,6 +67,69 @@ public sealed class MusicalReactivityTests
         engine.Playback(scene)!.Value.StepIndex.ShouldBeGreaterThan(0);
     }
 
+    private sealed class Feed : Luxia.Engine.Timing.IAudioFeed
+    {
+        public int Bass { get; set; }
+
+        public double Energy { get; set; }
+
+        public Luxia.Engine.Timing.AudioReading Read()
+        {
+            var reading = new Luxia.Engine.Timing.AudioReading(true, 120, 0.9, true, 0, 0, Bass, 0, Energy);
+            Bass = 0;
+            return reading;
+        }
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-017")]
+    public void Step_OnBassPulses_AdvancesOnTheKicks_NotOnTheBeats()
+    {
+        var (engine, scene) = Play(TwoSteps(advance: StepAdvanceMode.BassPulse));
+        var feed = new Feed();
+        engine.Engine.SetAudioFeed(feed);
+
+        // Sans impulsion, même après plusieurs temps (2 s), la scène ne bouge pas : le son est entendu.
+        engine.Run(2);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+
+        feed.Bass = 1;
+        engine.Tick();
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+        feed.Bass = 1;
+        engine.Tick();
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+    }
+
+    [Fact]
+    [Trait("Exigence", "SCN-051")]
+    public void EnergySpeed_MakesTheSceneFasterWhenTheMusicIsMoreEnergetic()
+    {
+        EngineScene Scene(string name) => _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            LayerId = _layer.Id,
+            EnergySpeed = true,
+            Steps = [Step(0, 1, V(_par["r"], 1)), Step(0, 1, V(_par["g"], 1))],
+        });
+
+        int StepAfter(double energy, double seconds)
+        {
+            var scene = Scene("Énergie " + energy);
+            var engine = new EngineHarness(_show.Build());
+            engine.Engine.SetAudioFeed(new Feed { Energy = energy });
+            engine.Launch(scene);
+            engine.Tick();
+            engine.Run(seconds);
+            return engine.Playback(scene)!.Value.StepIndex;
+        }
+
+        // Étape d'1 s : énergie 0 → 0,6× (1,67 s par étape) ; énergie 1 → 1,4× (0,71 s par étape).
+        StepAfter(0, 1.3).ShouldBe(0);
+        StepAfter(1, 1.3).ShouldBe(1);
+    }
+
     [Fact]
     [Trait("Exigence", "MOT-020")]
     public void OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster()
