@@ -31,6 +31,9 @@ public partial class EditorWindow : Window
     }
 
     private bool _maximized;
+    private bool _frozen;
+    private PixelPoint? _normalPosition;
+    private Size? _normalSize;
 
     private readonly DispatcherTimer _timer;
     private EditorViewModel? _vm;
@@ -56,18 +59,15 @@ public partial class EditorWindow : Window
         this.FindControl<ContentControl>("SettingsHost")!.Content = ControlPanelTemplate.WithHelp(new SettingsPanelView { DataContext = work.Settings }, ControlPanels.Get(ControlPanels.Settings));
         this.FindControl<ContentControl>("EffectsHost")!.Content = ControlPanelTemplate.WithHelp(new EffectsPanelView { DataContext = work.Effects }, ControlPanels.Get(ControlPanels.Effects));
         this.FindControl<ContentControl>("PropertiesHost")!.Content = ControlPanelTemplate.WithHelp(new PropertiesPanelView { DataContext = work.Properties }, ControlPanels.Get(ControlPanels.Properties));
-        vm.Closed += (_, _) =>
-        {
-            _timer.Stop();
-            Hide();
-        };
+        vm.Closed += (_, _) => HideRemembering();
     }
 
     /// <summary>Montre la fenêtre (ou la ramène au premier plan) ; démarre son rafraîchissement.</summary>
     public void Present(Window? owner)
     {
         _timer.Start();
-        if (!IsVisible)
+        var reopening = !IsVisible;
+        if (reopening)
         {
             FitToScreen(owner);
             if (owner is not null)
@@ -78,6 +78,12 @@ public partial class EditorWindow : Window
             {
                 Show();
             }
+
+            // Retour à l'endroit où l'on avait laissé la fenêtre (taille normale, position), si cet endroit existe encore.
+            if (_normalPosition is { } position && Screens.All.Any(screen => screen.WorkingArea.Contains(position)))
+            {
+                Position = position;
+            }
         }
 
         if (WindowState == WindowState.Minimized)
@@ -85,8 +91,14 @@ public partial class EditorWindow : Window
             WindowState = WindowState.Normal;
         }
 
-        // État voulu, posé explicitement dans les deux sens : Hide / Show peut garder l'état natif de la dernière fois.
-        WindowState = _maximized ? WindowState.Maximized : WindowState.Normal;
+        // État voulu, posé explicitement dans les deux sens : Hide / Show peut laisser l'état natif de la dernière fois.
+        if (reopening)
+        {
+            WindowState = _maximized ? WindowState.Maximized : WindowState.Normal;
+
+            // La mémoire ne reprend qu'une fois la fenêtre remise comme on l'avait laissée.
+            _frozen = false;
+        }
 
         Activate();
     }
@@ -114,19 +126,50 @@ public partial class EditorWindow : Window
         // MinWidth / MinHeight cèdent : mieux vaut une fenêtre un peu serrée qu'une fenêtre qui déborde.
         MinWidth = Math.Min(1000, maxWidth);
         MinHeight = Math.Min(620, maxHeight);
-        Width = Math.Min(Width, maxWidth);
-        Height = Math.Min(Height, maxHeight);
+        var (width, height) = _normalSize is { } size ? (size.Width, size.Height) : (Width, Height);
+        Width = Math.Min(width, maxWidth);
+        Height = Math.Min(height, maxHeight);
     }
 
-    // L'état maximisé suit ce que l'utilisateur fait (maximiser, restaurer) : il est retenu au moment du changement, pas à la
-    // fermeture (essai 1.007.101 : restaurée puis fermée, la fenêtre se rouvrait pourtant maximisée).
+    // Mémoire de la fenêtre : état (maximisée ou non) et, en taille normale, position et taille. Retenue à chaque changement d'état
+    // et juste avant de cacher ; figée pendant que la fenêtre est cachée (Avalonia remet alors l'état à « normal », ce qui effaçait
+    // la maximisation : essai 1.007.108) et reprise à la réouverture.
+    private void Capture()
+    {
+        switch (WindowState)
+        {
+            case WindowState.Maximized:
+                _maximized = true;
+                break;
+            case WindowState.Normal:
+                _maximized = false;
+                _normalPosition = Position;
+                _normalSize = ClientSize;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void HideRemembering()
+    {
+        if (!_frozen)
+        {
+            Capture();
+        }
+
+        _frozen = true;
+        _timer.Stop();
+        Hide();
+    }
+
     /// <inheritdoc />
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == WindowStateProperty && IsVisible && WindowState != WindowState.Minimized)
+        if (!_frozen && IsVisible && change.Property == WindowStateProperty)
         {
-            _maximized = WindowState == WindowState.Maximized;
+            Capture();
         }
     }
 
@@ -180,8 +223,7 @@ public partial class EditorWindow : Window
     {
         if (_vm is null || await _vm.ConfirmCloseAsync().ConfigureAwait(true))
         {
-            _timer.Stop();
-            Hide();
+            HideRemembering();
         }
     }
 }

@@ -219,7 +219,7 @@
 | [ERG-032](ERG-032.md) | Écran de jeu | ERG2 | I | Validé |
 | [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | Validé |
 | [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | Validé |
-| [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Validé |
+| [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Réalisé |
 | [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Validé |
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |

@@ -181,3 +181,7 @@ Reste ouvert pour la dev : le détail de l'état maximisé ci-dessus ; idées �
 ## Suite donnée par la dev après la seconde revérification (2026-09-30, correctif livré en 1.007.108)
 
 **Corrigé** : l'état maximisé de la fenêtre d'édition n'est plus lu à la fermeture mais retenu à chaque changement (maximiser, restaurer), et posé explicitement dans les deux sens (Normal ou Maximisé) à chaque ouverture. **Validé** : ERG-033, ERG-034, ERG-035 (sous réserve de reconfirmer ce détail), ERG-038.
+
+## Régression signalée sur 1.007.108, correctif en 1.007.115 (2026-09-30)
+
+« Le maximiser n'est plus retenu » : après maximisation, fermeture et réouverture, la fenêtre d'édition ne se rouvrait pas maximisée et prenait une position incorrecte. Correctif : la mémoire de la fenêtre (maximisée ou non, position et taille normales) est prise juste avant de cacher, figée pendant que la fenêtre est cachée, puis rendue à la réouverture. **À reconfirmer** : (1) maximiser, fermer, rouvrir : maximisée ; (2) restaurer, déplacer, fermer, rouvrir : taille normale, à la position où on l'a laissée.
