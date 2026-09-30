@@ -59,7 +59,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Columns = new ColumnsPanelViewModel(runtime, Session, dialogs) { EditedScene = () => _editedSceneId };
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
-        Editor = new EditorViewModel(runtime, dialogs);
+        Editor = new EditorViewModel(runtime, dialogs, Journal);
         Editor.Closed += (_, _) => EditedSceneId = null;
         Columns.EditRequested += (_, id) => Edit(id);
         Columns.MessageChanged += (_, _) => Message = Columns.Message;

@@ -1,11 +1,12 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-29, **chantier « Contrôle 2 »
-> développé** (branche `ergo/controle-2`, version de développement **1.007**, lots 1 à 7 faits) ; **P6 – Effets validée**
-> (`main`, étiquette **`v1.006`**). **Prochaine étape : essai du chantier en discussion test** (guide
-> [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md), résultats dans [essais/ERG2-resultats.md](essais/ERG2-resultats.md), doc 33),
-> puis correctifs, validation, fusion (`v1.007`), et **P7**. Sources du chantier :
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-09-30, **chantier « Contrôle 2 »
+> validé** (`main`, étiquette **`v1.007`**). **Prochaine étape : P7 – BPM / horloge musicale** (doc 40). Restent à décider
+> (analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md),
+> [de code](chantiers/analyse-code-fin-controle-2.md)) : notifications colorées, retrait des écrans Live et Scènes, retrait du
+> mode LIVE de la session d'édition, glisser-déposer des groupes, apprentissage MIDI. Essai du chantier : guide
+> [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md), résultats [essais/ERG2-resultats.md](essais/ERG2-resultats.md). Sources du chantier :
 > [chantiers/ergonomie-sujet-2.md](chantiers/ergonomie-sujet-2.md), [chantiers/analyse-ergonomique-fin-P6.md](chantiers/analyse-ergonomique-fin-P6.md), Q37 et Q38 (doc 01), doc 60 §4.9.
 
 ## 1. Où en est-on
@@ -19,7 +20,7 @@
 | P4 – Moteur + Scènes | Validée | `p4/moteur-scenes` (fusionnée dans `main`, `v1.003`) | [demos/P4-moteur-scenes.md](demos/P4-moteur-scenes.md) | ✅ 2026-09-26, matériel réel (4 PAR + lyre 1 + barre 1), exemples 1 à 12 |
 | P5 – Couches, Palettes, Live, MIDI | Validée | `p5/couches-palettes-live` (fusionnée dans `main`, `v1.004`) | [demos/P5-couches-palettes-live.md](demos/P5-couches-palettes-live.md) | ✅ 2026-09-27, matériel réel (4 PAR, lyre 1, UV 1, barre 1, APC mini MK2 et MK1), exemples 1 à 13 |
 | Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
-| Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Développé | `ergo/controle-2` (version de développement 1.007) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ⏳ essai en discussion test |
+| Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -224,9 +225,9 @@
   3. **Installation › Gestion des dimmers** (`DimmerGroupsViewModel`, `GroupEdits` pures).
   4. **Panneau « Groupes dimmer »** (`DimmersPanelViewModel`) et **seconde platine MIDI** (`MidiRole`, `MidiRoles.Assign` : réglage `dimmerController` de `midi.json`, sinon la deuxième platine par ordre alphabétique des ports quand le projet a des dimmers).
   5. **Écran de jeu** (`GameViewModel` + `GameView`, page « Contrôle » : plus de modes, disposition unique `jeu.json`, bandeau « Retouches en direct », tailles de cibles, « Niveau » de couche).
-  6. **Fenêtre d'édition en brouillon** (`EditorViewModel`, `EditorWindow`, `ControlSession.BeginDraft` / `ApplyDraft` / `DiscardDraft` / `EndDraft`, `ShowService.SetWorkingCopy(scene, previewOnly)`). `ControlViewModel` (l'ancien écran Contrôle) est conservé comme **établi d'édition** : ses panneaux Plan, Réglages, Effets, Propriétés vivent dans la fenêtre, avec sa propre session en mode brouillon.
+  6. **Fenêtre d'édition en brouillon** (`EditorViewModel`, `EditorWindow`, `ControlSession.BeginDraft` / `ApplyDraft` / `DiscardDraft` / `EndDraft`, `ShowService.SetWorkingCopy(scene, previewOnly)`). `EditBenchViewModel` (ex-`ControlViewModel`, purgé en fin de chantier) est l'**établi d'édition** : ses panneaux Plan, Réglages, Effets, Propriétés vivent dans la fenêtre, avec sa propre session en mode brouillon.
   7. **Documentation et essai** : guide `docs/demos/ERG2-controle-2.md`, `docs/essais/ERG2-resultats.md`, doc 60 §4.9, doc 50, glossaire, fiches ERG-032 à ERG-039 (ERG-010/011/012/024 remplacées).
-  Tests : 759, tous verts, 0 avertissement. **Points à juger à l'essai** : la platine des dimmers par défaut (MK2), la croix de la fenêtre d'édition (refuse de fermer avec des modifications), l'absence de retouche d'appareil en direct sur l'écran de jeu, les tailles en 1366 × 768, la largeur du panneau Groupes dimmer. **Restent** : retrait des écrans Live et Scènes (après l'essai), glisser-déposer des appareils dans l'arbre, apprentissage MIDI (MIDI-008).
+  Tests : 759 à la livraison, 770 à la validation, tous verts, 0 avertissement. **Points jugés à l'essai** : la platine des dimmers par défaut (MK2), la croix de la fenêtre d'édition (refuse de fermer avec des modifications), l'absence de retouche d'appareil en direct sur l'écran de jeu, les tailles en 1366 × 768, la largeur du panneau Groupes dimmer. **Restent** : retrait des écrans Live et Scènes (après l'essai), glisser-déposer des appareils dans l'arbre, apprentissage MIDI (MIDI-008).
 
 ## 2. Lire avant de coder (dans cet ordre)
 
@@ -253,7 +254,7 @@
 | `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface, versions du projet, reprise, MIDI | `LuxiaRuntime` (`Engine`, `Preview`, `Midi`, `PendingResume`), `ProjectSession`, `ShowService`, `ProjectVersions`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
 | `Luxia.UI.Controls` | Fader, **molette**, dessin d'effet, moniteur, barre de plages, barre d'univers, simulateur 2D, grille Pan/Tilt, sélecteur de couleur, historique annuler / rétablir, dialogues | `Fader`, `Dial`, `EffectPreview`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
 | `Luxia.UI.Modules.*` | Un écran par projet : **Live** (premier écran), Console (+ faders d'appareil), Library, Outputs, Installation, Simulator, Scenes (+ fenêtres Couches…, Zones interdites…) | `LiveViewModel`, `ConsoleViewModel`, `FixtureFadersViewModel`, `LibraryViewModel`, `InstallationViewModel`, `SimulatorViewModel`, `ScenesViewModel` (+ `ProgrammerViewModel`, `SceneEditorViewModel`, `PalettesViewModel`, `LayersEditorViewModel`, `ZonesEditorViewModel`) |
-| `Luxia.UI.Modules.Control` | Écran **Contrôle** = **écran de jeu** (`GameViewModel`, `GameView` : Colonnes, Groupes dimmer, Looks, Pilote, Journal, ancrables Dock, disposition `jeu.json`, verrou soirée) et **fenêtre d'édition** (`EditorViewModel`, `EditorWindow` : brouillon, Appliquer / Annuler / Valider, Aveugle) ; `ControlViewModel` = établi d'édition (session, panneaux Plan, Réglages, Effets, Propriétés) | `GameViewModel`, `EditorViewModel`, `ControlSession` (mode brouillon), `ControlViewModel`, `*PanelViewModel` (dont `DimmersPanelViewModel`, `EffectsPanelViewModel`), `Docking/ControlDockFactory`, `Docking/ControlLayoutStore` |
+| `Luxia.UI.Modules.Control` | Écran **Contrôle** = **écran de jeu** (`GameViewModel`, `GameView` : Colonnes, Groupes dimmer, Looks, Pilote, Journal, ancrables Dock, disposition `jeu.json`, verrou soirée) et **fenêtre d'édition** (`EditorViewModel`, `EditorWindow` : brouillon, Appliquer / Annuler / Valider, Aveugle) ; `EditBenchViewModel` = établi d'édition (session, panneaux Plan, Réglages, Effets, Propriétés) | `GameViewModel`, `EditorViewModel`, `ControlSession` (mode brouillon), `EditBenchViewModel`, `*PanelViewModel` (dont `DimmersPanelViewModel`, `EffectsPanelViewModel`), `Docking/ControlDockFactory`, `Docking/ControlLayoutStore` |
 | `Luxia.App` | Coquille Avalonia (navigation, menu Projet, menu Aide/À propos, barre d'état, verrou mono-instance) | `App`, `MainWindowViewModel`, `Program` |
 | `tools/Luxia.Tools.Headless` | `luxia-headless` : ports, **midi**, lancer, endurance, gigue, relire, projet, **valider**, **jouer**, **scenario** | `Commands`, `ProjectCommands` |
 | `tools/Luxia.Tools.Prototype` | Prototype ergonomique **séparé de LuXia** (`LuXia-Prototype.exe`) : ancrage Dock, dispositions, galerie, mesures, maquettes « Contrôle » ; captures sans écran | `ShellViewModel`, `Docking/PrototypeDockFactory`, `Docking/LayoutStore`, `Panels/*`, `Mockups/*`, `HeadlessCaptures` |
@@ -342,3 +343,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-28 | P6 | Effets développés sur `p6/effets` (1.006) en autonomie (Q36, Q25) : moteur d'effets, données et compilation, panneau Effets de l'écran Contrôle (molettes, dessin, aperçu CMD-017), thèmes, bibliothèque, assistants, sélections en cellules, fondu par la teinte ; WZYBUTA en 64 canaux à 181 ; 10 scènes « Phase P6 », guide P6. **En attente de l'essai de l'utilisateur.** |
 | 2026-09-29 | P6 | Essai en discussion test (doc 33), correctifs 1.006.053 → 1.006.065, analyse ergonomique de fin de phase acceptée (chantier « Contrôle 2 » avant P7, Q37 règle proportionnelle). **Validée, fusionnée dans `main`, étiquette `v1.006`.** |
 | 2026-09-29 | Contrôle 2 | Chantier « Contrôle 2 » développé sur `ergo/controle-2` (1.007) : maquettes validées, sept lots (moteur, données, Installation, panneau et platine MIDI, écran de jeu, fenêtre d'édition, documentation), 759 tests. **En attente de l'essai en discussion test.** |
+| 2026-09-30 | Contrôle 2 | Essai en discussion test (1.007.080), deux revérifications (1.007.092, 1.007.101), corrections au fil de l'essai avec leurs fiches ; analyses ergonomique et de code de fin de chantier ; option 125 % / 150 % masquée ; `ControlViewModel` purgé et renommé `EditBenchViewModel`. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.007`.** Prochaine étape : P7. |

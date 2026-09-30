@@ -8,7 +8,7 @@ namespace Luxia.UI.Tests;
 public sealed class DimmersPanelTests : IAsyncLifetime
 {
     private readonly TestHost _host = new();
-    private ControlViewModel _vm = null!;
+    private GameViewModel _vm = null!;
     private FixtureGroup _parc = null!;
     private FixtureGroup _face = null!;
 
@@ -23,7 +23,7 @@ public sealed class DimmersPanelTests : IAsyncLifetime
         }
 
         _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
-        _vm = new ControlViewModel(_host.Runtime, _host.Dialogs);
+        _vm = new GameViewModel(_host.Runtime, _host.Dialogs);
         _host.Tick();
         return ValueTask.CompletedTask;
     }

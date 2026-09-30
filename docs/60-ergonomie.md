@@ -173,7 +173,7 @@ d'autres**, modifiable par la surcouche « Affecter » (§4.7). `midi.json` devi
 
 ### 4.9 Écran de jeu et fenêtre d'édition (chantier « Contrôle 2 », ERG-032 à ERG-039)
 
-**Remplace le modèle à trois modes du §4.1** (décision de l'utilisateur, 2026-09-29, Q38 ; maquettes 5 à 8 validées). Deux
+**Remplace le modèle à trois modes du §4.1** (décision de l'utilisateur, 2026-09-29, Q38 ; maquettes 5 à 8 validées ; chantier **validé** le 2026-09-30, v1.007 ; analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md), [de code](chantiers/analyse-code-fin-controle-2.md)). Deux
 lieux évidents au lieu d'un sélecteur de modes :
 
 | Lieu | Ce qu'on y fait | Ce qu'il contient |

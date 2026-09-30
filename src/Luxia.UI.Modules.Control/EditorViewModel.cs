@@ -12,7 +12,7 @@ namespace Luxia.UI.Modules.Control;
 /// la sortie sur scène ne change pas. Non bloquante : la sortie et l'écran de jeu continuent pendant l'édition.
 /// </summary>
 /// <remarks>
-/// Les panneaux d'édition (Plan, Réglages, Effets, Propriétés) sont ceux de l'établi <see cref="ControlViewModel"/>, avec
+/// Les panneaux d'édition (Plan, Réglages, Effets, Propriétés) sont ceux de l'établi <see cref="EditBenchViewModel"/>, avec
 /// sa propre session en mode brouillon (<see cref="ControlSession.IsDraft"/>) ; l'écran de jeu n'en a plus.
 /// </remarks>
 public sealed partial class EditorViewModel : ViewModelBase
@@ -39,19 +39,19 @@ public sealed partial class EditorViewModel : ViewModelBase
     [ObservableProperty]
     private string? _message;
 
-    /// <summary>Crée la fenêtre d'édition (fermée).</summary>
-    public EditorViewModel(LuxiaRuntime runtime, IDialogService dialogs)
+    /// <summary>Crée la fenêtre d'édition (fermée) ; ses traces vont au journal de l'écran de jeu quand il est donné.</summary>
+    public EditorViewModel(LuxiaRuntime runtime, IDialogService dialogs, JournalPanelViewModel? journal = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(dialogs);
         _runtime = runtime;
         _dialogs = dialogs;
-        Workbench = new ControlViewModel(runtime, dialogs);
+        Workbench = new EditBenchViewModel(runtime, dialogs, journal);
         Workbench.Session.Changed += (_, _) => UpdateState();
     }
 
     /// <summary>Panneaux d'édition et session en mode brouillon.</summary>
-    public ControlViewModel Workbench { get; }
+    public EditBenchViewModel Workbench { get; }
 
     /// <summary>Session d'édition (brouillon).</summary>
     public ControlSession Session => Workbench.Session;

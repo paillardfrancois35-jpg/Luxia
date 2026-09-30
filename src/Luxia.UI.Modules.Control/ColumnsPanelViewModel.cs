@@ -38,11 +38,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         _dialogs = dialogs;
         runtime.Project.Changed += (_, _) => Rebuild();
         runtime.Project.ShowDataChanged += (_, _) => Rebuild();
-        session.Changed += (_, _) =>
-        {
-            MarkEditTarget();
-            OnPropertyChanged(nameof(CanEdit));
-        };
+        session.Changed += (_, _) => OnPropertyChanged(nameof(CanEdit));
         _isCompact = runtime.Preferences.Current.CompactScenes;
         Rebuild();
     }
@@ -75,7 +71,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     /// </summary>
     public event EventHandler<Guid>? EditRequested;
 
-    /// <summary>Scène ouverte dans la fenêtre d'édition (marquée d'un contour) ; par défaut, la scène choisie dans la session.</summary>
+    /// <summary>Scène ouverte dans la fenêtre d'édition (marquée d'un contour), ou <c>null</c> ; fournie par l'écran de jeu.</summary>
     public Func<Guid?>? EditedScene { get; set; }
 
     /// <summary>Une scène vient d'être jouée ou arrêtée d'un appui (l'éditeur ouvert cesse alors de la recouvrir).</summary>
@@ -325,16 +321,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             return;
         }
 
-        // La scène éditée passe par la session (geste en cours compris) ; les autres, par l'ensemble des scènes.
-        if (_session.EditScene?.Id == sceneId)
-        {
-            _session.UpdateScene(change, description);
-            _session.Commit();
-        }
-        else
-        {
-            _session.ChangeScenes(set => set with { Scenes = [.. set.Scenes.Select(s => s.Id == sceneId ? change(s) : s)] }, description);
-        }
+        _session.ChangeScenes(set => set with { Scenes = [.. set.Scenes.Select(s => s.Id == sceneId ? change(s) : s)] }, description);
     }
 
     private void StepLayer(ControlColumnViewModel? column, StepDirection direction)
@@ -368,19 +355,11 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
 
     private void MarkEditTarget()
     {
-        var edited = EditedScene is { } provider ? provider() : _session.EditScene?.Id;
-        var color = EditedScene is not null
-            ? ControlColors.Edit
-            : _session.Mode switch
-            {
-                EditMode.Edit => ControlColors.Edit,
-                EditMode.Blind => ControlColors.Blind,
-                _ => ControlColors.Accent,
-            };
+        var edited = EditedScene?.Invoke();
         foreach (var button in Columns.SelectMany(c => c.Scenes))
         {
             button.IsEditTarget = button.Scene.Id == edited;
-            button.EditColor = color;
+            button.EditColor = ControlColors.Edit;
         }
     }
 }

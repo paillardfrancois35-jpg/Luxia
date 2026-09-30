@@ -13,7 +13,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     private static readonly string[] ParNames = ["PAR 1", "PAR 2", "PAR 3", "PAR 4"];
     private static readonly string[] ChaseColors = ["Rouge", "Vert", "Bleu"];
     private readonly TestHost _host = new();
-    private ControlViewModel _vm = null!;
+    private EditBenchViewModel _vm = null!;
 
     private EffectsPanelViewModel Panel => _vm.Effects;
 
@@ -30,7 +30,7 @@ public sealed class EffectsPanelTests : IAsyncLifetime
         }
 
         _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
-        _vm = new ControlViewModel(_host.Runtime, _host.Dialogs);
+        _vm = new EditBenchViewModel(_host.Runtime, _host.Dialogs);
         _host.Tick();
         return ValueTask.CompletedTask;
     }
@@ -94,8 +94,10 @@ public sealed class EffectsPanelTests : IAsyncLifetime
     public void IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors()
     {
         // Essai P6, exemple 7 : nouvelle scène vide, chenillard d'intensité sur les 4 PAR → ils restaient noirs.
-        _host.Dialogs.TextAnswers.Enqueue("Mon effet");
-        _vm.Columns.NewSceneCommand.Execute(_vm.Columns.Columns.Single(c => c.Layer.Name == "Effets"));
+        var layer = _host.Runtime.Project.Layers.Layers.Single(l => l.Name == "Effets");
+        var created = new Scene { Name = "Mon effet", LayerId = layer.Id, Color = layer.Color };
+        Session.ChangeScenes(set => set with { Scenes = [.. set.Scenes, created] }, "Nouvelle scène");
+        Session.ChooseScene(created.Id);
         Session.SetMode(EditMode.Edit).ShouldBeNull();
         SelectPars();
         Panel.SelectedTemplate = Panel.Templates.Single(t => t.Template.Name == "Chenillard on/off");

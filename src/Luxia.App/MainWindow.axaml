@@ -39,12 +39,8 @@
             <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
             <MenuItem Header="_Versions du projet…" Command="{Binding ShowVersionsCommand}" />
           </MenuItem>
-          <MenuItem Header="Aff_ichage">
-            <MenuItem Header="Taille de l'interface : 100 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1" />
-            <MenuItem Header="Taille de l'interface : 125 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.25" />
-            <MenuItem Header="Taille de l'interface : 150 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.5"
-                      ToolTip.Tip="Écran tactile ou lecture de loin (F8). Gardé pour ce poste." />
-          </MenuItem>
+          <!-- Menu Affichage (taille de l'interface 125 % / 150 %, F8, ERG-022) masqué : décision de l'utilisateur, 2026-09-30.
+               La commande SetUiScale et la préférence restent, pour le jour où l'option reviendra. -->
           <MenuItem Header="_Aide">
             <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
           </MenuItem>

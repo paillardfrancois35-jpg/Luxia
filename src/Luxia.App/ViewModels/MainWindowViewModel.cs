@@ -97,7 +97,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         runtime.Show.Compiled += (_, _) => UpdateProject();
         UpdateProject();
         RefreshStatus();
-        _uiScale = Math.Clamp(runtime.Preferences.Current.UiScale, 0.75, 2);
+
+        // Taille de l'interface : l'option est masquée (ERG-022, décision du 2026-09-30) ; l'interface reste à 100 % quelle que
+        // soit la valeur enregistrée dans les préférences du poste.
+        _uiScale = 1;
     }
 
     /// <summary>Change la taille de l'interface (paramètre : 1, 1.25, 1.5) et la garde dans les préférences du poste.</summary>
