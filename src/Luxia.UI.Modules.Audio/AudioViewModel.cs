@@ -28,6 +28,10 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     /// <summary>Nom de la scène de calibration du show de référence : un flash sur chaque temps de l'horloge.</summary>
     public const string CalibrationSceneName = "Calibration de latence";
 
+    private const string BeatOn = "#3FB950";
+    private const string BeatFirstOn = "#F0883E";
+    private const string BeatOff = "#30363D";
+
     private readonly LuxiaRuntime _runtime;
     private long _bassSeen;
     private long _trebleSeen;
@@ -79,6 +83,18 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
 
     [ObservableProperty]
     private string _sourceText = "Fixe";
+
+    [ObservableProperty]
+    private string _beat1 = BeatFirstOn;
+
+    [ObservableProperty]
+    private string _beat2 = BeatOff;
+
+    [ObservableProperty]
+    private string _beat3 = BeatOff;
+
+    [ObservableProperty]
+    private string _beat4 = BeatOff;
 
     [ObservableProperty]
     private double _energy;
@@ -169,6 +185,10 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         ConfidenceText = state.Bpm > 0 ? $"{state.Confidence * 100:0} %" : "—";
         BeatPhase = tempo.Phase;
         BeatText = tempo.BeatInBar.ToString(CultureInfo.CurrentCulture);
+        Beat1 = tempo.BeatInBar == 1 ? BeatFirstOn : BeatOff;
+        Beat2 = tempo.BeatInBar == 2 ? BeatOn : BeatOff;
+        Beat3 = tempo.BeatInBar == 3 ? BeatOn : BeatOff;
+        Beat4 = tempo.BeatInBar == 4 ? BeatOn : BeatOff;
         Energy = state.Energy;
         EnergyText = live ? state.EnergyLevel switch
         {

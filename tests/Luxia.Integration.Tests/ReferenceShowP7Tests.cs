@@ -20,7 +20,7 @@ public sealed class ReferenceShowP7Tests
     public void ReferenceShow_P7_ContentIsThere_AndValid()
     {
         var content = ProjectFiles.Load(Folder);
-        content.Scenes.Scenes.Count(s => s.Category == "Phase P7").ShouldBe(7);
+        content.Scenes.Scenes.Count(s => s.Category == "Phase P7").ShouldBe(8);
         content.Scenes.Scenes.Single(s => s.Name == "Calibration de latence").Advance.ShouldBe(Engine.Model.StepAdvanceMode.Beat);
         content.Scenes.Scenes.Single(s => s.Name == "Départ à la mesure (blanc chaud)").Quantize.ShouldBe(Engine.Model.LaunchQuantize.Bar);
         content.Scenes.Scenes.Single(s => s.Name == "Mouvement lent à 30 BPM (horloge propre)").OwnBpm.ShouldBe(30);

@@ -68,6 +68,10 @@
             <TextBlock Text="{Binding ConfidenceText}" Width="50" VerticalAlignment="Center" />
             <TextBlock Text="temps" Opacity="0.7" VerticalAlignment="Center" />
             <TextBlock Text="{Binding BeatText}" FontSize="22" Width="28" VerticalAlignment="Center" />
+            <TextBlock Text="●" Foreground="{Binding Beat1}" FontSize="18" VerticalAlignment="Center" ToolTip.Tip="Temps 1 de la mesure (orange)" />
+            <TextBlock Text="●" Foreground="{Binding Beat2}" FontSize="18" VerticalAlignment="Center" />
+            <TextBlock Text="●" Foreground="{Binding Beat3}" FontSize="18" VerticalAlignment="Center" />
+            <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="18" VerticalAlignment="Center" />
             <ProgressBar Minimum="0" Maximum="1" Value="{Binding BeatPhase}" Width="100" Height="12" VerticalAlignment="Center" />
             <TextBlock Text="{Binding SourceText}" Opacity="0.7" Width="60" VerticalAlignment="Center" ToolTip.Tip="Source du tempo de l'horloge" />
           </StackPanel>

@@ -3044,6 +3044,46 @@
         }
       ],
       "quantize": "bar"
+    },
+    {
+      "id": "7e92f912-a135-5994-a57a-48257ce4ff1c",
+      "name": "Lyres allumées (sans les PAR)",
+      "color": "#79C0FF",
+      "category": "Phase P7",
+      "notes": "Intensité des lyres seules, pour les scènes de mouvement (Cercle calé sur la mesure…) sans figer les PAR : « Plein feu » allume tous les appareils à 100 % et masque les scènes qui jouent sur l'intensité des PAR (la plus haute intensité l'emporte, doc 15 §5.2).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000001",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "movingHead"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
     }
   ]
 }
