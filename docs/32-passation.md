@@ -303,6 +303,7 @@ dotnet run --project tools/Luxia.Tools.Prototype -- --maquettes docs/maquettes #
 - `LUXIA_DOSSIER_DONNEES=<dossier>` : toutes les données de l'application sous ce dossier (essais sans toucher aux vraies données).
 - arduino-cli : `%LOCALAPPDATA%\Programs\arduino-cli\arduino-cli.exe` ; **tout téléversement se fait avec l'accord de l'utilisateur**.
 - PyMuPDF est disponible pour rendre en images les notices PDF sans texte.
+- **Régénérer le show de travail** : `powershell -File tools/regenerer-show-de-travail.ps1` (refuse si LuXia est ouvert, met l'ancien de côté dans le dossier temporaire, renomme le projet). Claude l'exécute lui-même quand c'est nécessaire, après l'avoir demandé à l'utilisateur.
 - **Essais manuels avec l'utilisateur (démos)** : ouvrir `samples/Show de travail` (copie de `samples/Show de référence`, ignorée par Git,
   régénérable avec `cp -r "samples/Show de référence" "samples/Show de travail"`), **jamais l'original**. Un instantané mémorisé pendant
   un essai écrit dans le projet ouvert : si c'est le show de référence, ça pollue l'échantillon livré et casse `ReferenceShowP1Tests`
