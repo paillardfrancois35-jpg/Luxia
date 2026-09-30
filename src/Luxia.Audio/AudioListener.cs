@@ -252,9 +252,20 @@ public sealed class AudioListener : IAudioFeed, IDisposable
                 return;
             }
 
-            analyzer.Push(block.Samples.Span);
-            _lastData = Stopwatch.GetTimestamp();
-            Publish(analyzer);
+            try
+            {
+                analyzer.Push(block.Samples.Span);
+                _lastData = Stopwatch.GetTimestamp();
+                Publish(analyzer);
+            }
+            catch (Exception ex)
+            {
+                // AUD-006 : une erreur d'analyse ne doit jamais remonter au fil de capture (ni au moteur, ni à l'interface).
+                _logger.LogError(ex, "Erreur d'analyse audio : l'écoute redémarre");
+                Disconnect();
+                SetStatus("Erreur d'analyse : " + ex.Message + " (reconnexion…)");
+                ScheduleRetry(2000);
+            }
         }
     }
 
@@ -295,8 +306,15 @@ public sealed class AudioListener : IAudioFeed, IDisposable
                 return;
             }
 
-            analyzer.Push(new float[(int)(analyzer.SampleRate * 0.25)]);
-            Publish(analyzer);
+            try
+            {
+                analyzer.Push(new float[(int)(analyzer.SampleRate * 0.25)]);
+                Publish(analyzer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur d'analyse audio pendant le silence");
+            }
         }
     }
 

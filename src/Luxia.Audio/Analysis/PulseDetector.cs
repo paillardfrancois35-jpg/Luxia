@@ -8,7 +8,7 @@ namespace Luxia.Audio.Analysis;
 internal sealed class PulseDetector
 {
     /// <summary>Flux minimal d'une attaque (en dessous, c'est du bruit de calcul).</summary>
-    private const double MinimumFlux = 0.02;
+    private const double MinimumFlux = 0.1;
 
     private readonly double _fps;
     private readonly double _meanRate;

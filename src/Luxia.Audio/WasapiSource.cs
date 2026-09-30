@@ -127,6 +127,19 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
 
     private void OnData(object? sender, WaveInEventArgs e)
     {
+        try
+        {
+            Convert(e);
+        }
+        catch (Exception ex)
+        {
+            // AUD-006 : une erreur de conversion ou d'abonné s'arrête ici, l'écoute la traite comme une capture interrompue.
+            Stopped?.Invoke(this, ex);
+        }
+    }
+
+    private void Convert(WaveInEventArgs e)
+    {
         var format = _capture.WaveFormat;
         var channels = Math.Max(1, format.Channels);
         var bytesPerSample = format.BitsPerSample / 8;
