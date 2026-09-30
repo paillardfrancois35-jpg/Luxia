@@ -17,14 +17,14 @@ namespace Luxia.UI.Modules.Control;
 /// </summary>
 public sealed partial class DimmersPanelViewModel : ViewModelBase
 {
-    /// <summary>Nombre de faders de la seconde platine MIDI : au-delà, un dimmer n'a pas de fader physique.</summary>
-    public const int PlatineFaders = 8;
-
     private readonly LuxiaRuntime _runtime;
     private readonly JournalPanelViewModel _journal;
 
     [ObservableProperty]
     private bool _isRetouched;
+
+    [ObservableProperty]
+    private string _pageText = string.Empty;
 
     /// <summary>Crée le panneau.</summary>
     public DimmersPanelViewModel(LuxiaRuntime runtime, JournalPanelViewModel journal)
@@ -65,6 +65,15 @@ public sealed partial class DimmersPanelViewModel : ViewModelBase
             fader.SetEffective(snapshot.DimmerEffective[index]);
         }
 
+        // Page de la platine des dimmers : les repères ② n suivent ce que la platine pilote (8 dimmers par page).
+        var page = _runtime.Midi?.DimmerPage ?? 0;
+        foreach (var fader in Faders)
+        {
+            fader.ShowPage(page);
+        }
+
+        var pages = (Faders.Count + GroupRules.FadersPerPage - 1) / GroupRules.FadersPerPage;
+        PageText = pages > 1 ? $"Platine 2 : page {page + 1} / {pages}  (Maj + boutons 3 / 4 du bas)" : string.Empty;
         IsRetouched = Faders.Any(f => f.IsRetouched);
     }
 
@@ -96,7 +105,7 @@ public sealed partial class DimmersPanelViewModel : ViewModelBase
         Faders.Clear();
         for (var i = 0; i < dimmers.Count; i++)
         {
-            Faders.Add(new DimmerFaderViewModel(dimmers[i], i < PlatineFaders ? i + 1 : null, OnLevelChanged));
+            Faders.Add(new DimmerFaderViewModel(dimmers[i], i, OnLevelChanged));
         }
 
         OnPropertyChanged(nameof(IsEmpty));
@@ -125,10 +134,11 @@ public sealed partial class DimmerFaderViewModel : ObservableObject
     private string _effectiveText = "= 100 %";
 
     /// <summary>Crée le fader.</summary>
-    public DimmerFaderViewModel(FixtureGroup group, int? fader, Action<DimmerFaderViewModel, double> changed)
+    public DimmerFaderViewModel(FixtureGroup group, int index, Action<DimmerFaderViewModel, double> changed)
     {
         Group = group;
-        Fader = fader;
+        Index = index;
+        _faderText = GroupRules.FaderLabel(index);
         _changed = changed;
     }
 
@@ -141,11 +151,24 @@ public sealed partial class DimmerFaderViewModel : ObservableObject
     /// <summary>Nom du groupe.</summary>
     public string Name => Group.Name;
 
-    /// <summary>Numéro de fader de la seconde platine (ERG-038), ou <c>null</c> au-delà de 8.</summary>
-    public int? Fader { get; }
+    /// <summary>Rang du dimmer dans l'arbre (0 = premier) ; la platine en pilote 8 par page.</summary>
+    public int Index { get; }
 
-    /// <summary>Repère de fader (« ② 3 »).</summary>
-    public string FaderText => Fader is { } n ? $"② {n}" : string.Empty;
+    /// <summary>Repère du fader de la seconde platine (« ② 3 », ou « ② p2·1 » sur une autre page).</summary>
+    [ObservableProperty]
+    private string _faderText;
+
+    /// <summary>Opacité du repère : pleine quand la platine pilote ce dimmer, atténuée sur une autre page.</summary>
+    [ObservableProperty]
+    private double _faderOpacity = 1;
+
+    /// <summary>Met le repère à jour selon la page courante de la platine (ERG-038).</summary>
+    public void ShowPage(int page)
+    {
+        var onPage = Index / GroupRules.FadersPerPage == page;
+        FaderOpacity = onPage ? 1 : 0.45;
+        FaderText = onPage ? GroupRules.FaderLabel(Index % GroupRules.FadersPerPage) : GroupRules.PageFaderLabel(Index);
+    }
 
     /// <summary>Le dimmer n'est pas à 100 % : retouche en cours (couleur d'avertissement).</summary>
     public bool IsRetouched => Percent < 99.5;

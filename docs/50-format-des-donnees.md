@@ -500,10 +500,12 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 
 | `dimmerController` | Platine des dimmers de groupe (ERG-038) : morceau du nom du port ou du modèle (`"MK1"`). Absent = la **deuxième platine branchée** (ordre alphabétique des ports) quand le projet a des dimmers de groupe ; une seule platine, ou aucun dimmer : toutes gardent les couches |
 
-**Platine des dimmers** (ERG-038) : faders 1 à 8 = les 8 premiers dimmers de groupe dans l'ordre de l'arbre (reprise douce), boutons
-du bas 1 à 8 = remettre le dimmer à 100 % (LED allumée tant que le dimmer est retouché), Maj + bas 3 / 4 = dimmers précédents /
-suivants (8 par page) ; pads éteints et fader 9 sans effet ; boutons de droite (Blackout, Flash…) inchangés. La platine des
-couches ne change pas. Une affectation `bindings` prime toujours sur ce rôle.
+**Platine des dimmers** (ERG-038) : faders 1 à 8 = les 8 dimmers de la page courante, dans l'ordre de l'arbre (reprise douce ; après une
+remise à 100 % au bouton, le fader doit recroiser le niveau), boutons du bas 1 à 8 (de gauche à droite ; ronds sur la MK1, carrés sur la MK2)
+= remettre le dimmer à 100 % (LED allumée tant que le dimmer est retouché), Maj + bas 3 / 4 = page précédente / suivante (8 dimmers par
+page ; MK1 : flèches gauche / droite, MK2 : SEND / DEVICE) ; pads éteints et fader 9 sans effet ; boutons de droite (Blackout, Flash…)
+inchangés. Le réglage se choisit dans Installation › Gestion des dimmers (« Platine MIDI des dimmers »), qui écrit `dimmerController`.
+La platine des couches ne change pas. Une affectation `bindings` prime toujours sur ce rôle.
 
 Profils des modèles (notes, LED) : fichiers de données du module (`src/Luxia.Midi/Profiles/*.json`).
 

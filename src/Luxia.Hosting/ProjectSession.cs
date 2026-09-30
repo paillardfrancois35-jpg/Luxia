@@ -252,6 +252,20 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>
+    /// Remplace les réglages MIDI du projet et les enregistre (<c>midi.json</c>) : platine des dimmers, affectations (ERG-038).
+    /// Les contrôleurs reprennent la disposition tout de suite.
+    /// </summary>
+    public void SaveMidi(Luxia.Midi.MidiSettings midi)
+    {
+        ArgumentNullException.ThrowIfNull(midi);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        Luxia.Midi.MidiStore.Save(folder, midi);
+        Midi = midi;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Looks du projet (ERG-023, doc 60 §4.8).</summary>
     public LookSet Looks { get; private set; } = new();
 

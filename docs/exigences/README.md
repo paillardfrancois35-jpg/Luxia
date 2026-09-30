@@ -216,12 +216,12 @@
 | [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Validé |
 | [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Validé |
 | [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Validé |
-| [ERG-032](ERG-032.md) | Écran de jeu | ERG2 | I | Réalisé |
+| [ERG-032](ERG-032.md) | Écran de jeu | ERG2 | I | Validé |
 | [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | Réalisé |
 | [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | Réalisé |
 | [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Réalisé |
-| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Réalisé |
-| [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Réalisé |
+| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Validé |
+| [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Réalisé, à valider sur matériel |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |

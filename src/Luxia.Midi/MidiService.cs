@@ -63,6 +63,19 @@ public sealed class MidiService : IDisposable
         }
     }
 
+    /// <summary>Page de dimmers affichée par la platine des dimmers (0 = première, 8 dimmers par page), ou 0 sans platine des dimmers.</summary>
+    public int DimmerPage
+    {
+        get
+        {
+            ApplyRoles(_layout());
+            lock (_lock)
+            {
+                return _devices.FirstOrDefault(d => d.Controller.Role == MidiRole.Dimmers)?.Controller.DimmerPage ?? 0;
+            }
+        }
+    }
+
     /// <summary>Démarre la détection et le retour lumineux.</summary>
     public void Start()
     {

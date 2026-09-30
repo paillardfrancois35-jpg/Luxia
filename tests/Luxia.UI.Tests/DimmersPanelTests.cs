@@ -98,6 +98,29 @@ public sealed class DimmersPanelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-038")]
+    public void WithMoreThanEightDimmers_TheMarkersFollowThePlatinePage_AndTheOtherPageIsDimmed()
+    {
+        var groups = Enumerable.Range(1, 10).Select(i => new FixtureGroup { Name = "Groupe " + i, HasDimmer = true }).ToList();
+        _host.Runtime.Project.SaveGroups(new FixtureGroupSet { Groups = groups });
+        _host.Tick();
+        _vm.Dimmers.Refresh();
+
+        _vm.Dimmers.Faders.Select(f => f.FaderText).ShouldBe(["② 1", "② 2", "② 3", "② 4", "② 5", "② 6", "② 7", "② 8", "② p2·1", "② p2·2"]);
+        _vm.Dimmers.Faders[8].FaderOpacity.ShouldBeLessThan(1);
+        _vm.Dimmers.PageText.ShouldContain("page 1 / 2");
+
+        foreach (var fader in _vm.Dimmers.Faders)
+        {
+            fader.ShowPage(1);
+        }
+
+        _vm.Dimmers.Faders.Select(f => f.FaderText).ShouldBe(["② p1·1", "② p1·2", "② p1·3", "② p1·4", "② p1·5", "② p1·6", "② p1·7", "② p1·8", "② 1", "② 2"]);
+        _vm.Dimmers.Faders[0].FaderOpacity.ShouldBeLessThan(1);
+        _vm.Dimmers.Faders[9].FaderOpacity.ShouldBe(1);
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-037")]
     public void ReopeningTheProject_DropsTheLiveRetouches()
     {

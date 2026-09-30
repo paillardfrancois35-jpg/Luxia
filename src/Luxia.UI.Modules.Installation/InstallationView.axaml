@@ -200,12 +200,19 @@
 
       <!-- Gestion des dimmers (ERG-036, ERG-037) : arbre des groupes d'appareils -->
       <TabItem Header="Gestion des dimmers">
-        <Grid DataContext="{Binding Dimmers}" x:DataType="vm:DimmerGroupsViewModel" ColumnDefinitions="1.3*,1.2*,1*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+        <Grid DataContext="{Binding Dimmers}" x:DataType="vm:DimmerGroupsViewModel" ColumnDefinitions="1.3*,1.2*,1*" RowDefinitions="Auto,Auto,*" Margin="0,8,0,0">
           <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="{Binding Message}" Foreground="#58A6FF" Margin="0,0,0,6"
                      IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
+          <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <TextBlock Text="Platine MIDI des dimmers :" VerticalAlignment="Center" Opacity="0.8" />
+            <ComboBox ItemsSource="{Binding DimmerControllers}" SelectedItem="{Binding SelectedDimmerController}" MinWidth="260"
+                      ToolTip.Tip="La seconde platine MIDI commande les dimmers de groupe (faders 1 à 8, boutons du bas 1 à 8 = remise à 100 %). Automatique : la deuxième platine branchée (ordre alphabétique des ports). Enregistré dans midi.json." />
+            <TextBlock Text="Faders 1 à 8 ; boutons du bas : remise à 100 % ; Maj + boutons 3 / 4 du bas : page suivante / précédente" Opacity="0.6" FontSize="11" VerticalAlignment="Center" />
+          </StackPanel>
+
           <!-- Arbre des groupes -->
-          <Border Grid.Row="1" Grid.Column="0" Classes="panel" Margin="0,0,8,0">
+          <Border Grid.Row="2" Grid.Column="0" Classes="panel" Margin="0,0,8,0">
             <DockPanel>
               <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
                 <TextBlock Classes="section" Text="Arbre des groupes" VerticalAlignment="Center" />
@@ -245,7 +252,7 @@
           </Border>
 
           <!-- Détail du groupe choisi -->
-          <Border Grid.Row="1" Grid.Column="1" Classes="panel" Margin="0,0,8,0">
+          <Border Grid.Row="2" Grid.Column="1" Classes="panel" Margin="0,0,8,0">
             <ScrollViewer>
               <StackPanel Spacing="10">
                 <TextBlock Classes="section" Text="{Binding DetailTitle}" />
@@ -319,7 +326,7 @@
           </Border>
 
           <!-- Appareils à ranger dans le groupe choisi -->
-          <Border Grid.Row="1" Grid.Column="2" Classes="panel" IsVisible="{Binding IsGroupSelected}">
+          <Border Grid.Row="2" Grid.Column="2" Classes="panel" IsVisible="{Binding IsGroupSelected}">
             <DockPanel>
               <TextBlock DockPanel.Dock="Top" Classes="section" Text="Ajouter au groupe choisi" Margin="0,0,0,6" />
               <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowAll}" Content="Tous voir" MinHeight="30"

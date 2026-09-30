@@ -18,9 +18,6 @@ namespace Luxia.UI.Modules.Installation;
 /// </summary>
 public sealed partial class DimmerGroupsViewModel : ViewModelBase
 {
-    /// <summary>Nombre de faders de la seconde platine MIDI (ERG-038) : au-delà, un dimmer n'a pas de fader.</summary>
-    public const int PlatineFaders = 8;
-
     private readonly LuxiaRuntime _runtime;
     private readonly IDialogService _dialogs;
     private bool _loading;
@@ -47,6 +44,9 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
     [ObservableProperty]
     private bool _showAll;
 
+    [ObservableProperty]
+    private DimmerControllerChoice? _selectedDimmerController;
+
     /// <summary>Crée l'onglet.</summary>
     public DimmerGroupsViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -56,6 +56,14 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
         _dialogs = dialogs;
         Reload();
     }
+
+    /// <summary>Platines proposées pour les dimmers de groupe (ERG-038) : automatique, MK1, MK2.</summary>
+    public ObservableCollection<DimmerControllerChoice> DimmerControllers { get; } =
+    [
+        new(null, "Automatique (la 2e platine branchée)"),
+        new("MK1", "APC mini MK1"),
+        new("MK2", "APC mini MK2"),
+    ];
 
     /// <summary>Arbre aplati (parent avant enfants), puis le groupe implicite « non assigné ».</summary>
     public ObservableCollection<GroupRowViewModel> Rows { get; } = [];
@@ -97,7 +105,7 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
             var known = installation.Fixtures.Select(f => f.Id).ToHashSet();
             var nameOf = installation.Fixtures.ToDictionary(f => f.Id, f => f.Name);
             var layout = GroupRules.Layout(set);
-            var faders = layout.Where(n => n.Group.HasDimmer).Select((n, i) => (n.Group.Id, Fader: i + 1)).ToDictionary(x => x.Id, x => x.Fader);
+            var faders = layout.Where(n => n.Group.HasDimmer).Select((n, i) => (n.Group.Id, Index: i)).ToDictionary(x => x.Id, x => x.Index);
             var children = layout.Select(n => n.Parent).ToList();
             var seen = new HashSet<Guid>();
 
@@ -109,7 +117,7 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
                 var summary = direct.Count > 0
                     ? string.Join(", ", direct.Select(f => nameOf[f]))
                     : children.Contains(i) ? "(sous-groupes)" : "(vide)";
-                Rows.Add(new GroupRowViewModel(node.Group, node.Depth, summary, faders.TryGetValue(node.Group.Id, out var fader) && fader <= PlatineFaders ? fader : null));
+                Rows.Add(new GroupRowViewModel(node.Group, node.Depth, summary, faders.TryGetValue(node.Group.Id, out var fader) ? fader : null));
             }
 
             var free = known.Where(id => !seen.Contains(id)).ToList();
@@ -119,6 +127,17 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
                 free.Count == 0 ? "(aucun appareil)" : string.Join(", ", installation.Fixtures.Where(f => free.Contains(f.Id)).Select(f => f.Name)),
                 null,
                 isUnassigned: true));
+
+            // Platine des dimmers (midi.json) : une valeur écrite à la main et inconnue est gardée telle quelle.
+            var wanted = _runtime.Project.Midi.DimmerController;
+            var platine = DimmerControllers.FirstOrDefault(c => string.Equals(c.Value, wanted, StringComparison.OrdinalIgnoreCase));
+            if (platine is null)
+            {
+                platine = new DimmerControllerChoice(wanted, $"Personnalisée : {wanted}");
+                DimmerControllers.Add(platine);
+            }
+
+            SelectedDimmerController = platine;
 
             SelectedRow = unassigned
                 ? Rows.Last()
@@ -155,6 +174,24 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
         if (!_loading)
         {
             LoadDetail();
+        }
+    }
+
+    partial void OnSelectedDimmerControllerChanged(DimmerControllerChoice? value)
+    {
+        if (_loading || value is null || _runtime.Project.Folder is null || value.Value == _runtime.Project.Midi.DimmerController)
+        {
+            return;
+        }
+
+        try
+        {
+            _runtime.Project.SaveMidi(_runtime.Project.Midi with { DimmerController = value.Value });
+            Message = value.Value is null ? "Platine des dimmers : automatique." : $"Platine des dimmers : {value.Label}.";
+        }
+        catch (IOException ex)
+        {
+            Message = "Enregistrement de midi.json impossible : " + ex.Message;
         }
     }
 
@@ -441,12 +478,12 @@ public sealed partial class GroupRowViewModel : ObservableObject
     private double _level = 1;
 
     /// <summary>Crée la ligne.</summary>
-    public GroupRowViewModel(FixtureGroup group, int depth, string summary, int? fader, bool isUnassigned = false)
+    public GroupRowViewModel(FixtureGroup group, int depth, string summary, int? dimmerIndex, bool isUnassigned = false)
     {
         Group = group;
         Depth = depth;
         Summary = summary;
-        Fader = fader;
+        DimmerIndex = dimmerIndex;
         IsUnassigned = isUnassigned;
     }
 
@@ -468,11 +505,11 @@ public sealed partial class GroupRowViewModel : ObservableObject
     /// <summary>Appareils rangés directement dans le groupe.</summary>
     public string Summary { get; }
 
-    /// <summary>Numéro de fader sur la seconde platine (ERG-038), ou <c>null</c> (pas de dimmer ou au-delà de 8).</summary>
-    public int? Fader { get; }
+    /// <summary>Rang du dimmer parmi les groupes qui en ont un (0 = premier), ou <c>null</c> sans dimmer.</summary>
+    public int? DimmerIndex { get; }
 
-    /// <summary>Repère de fader (« ② 3 »).</summary>
-    public string FaderText => Fader is { } n ? $"② {n}" : string.Empty;
+    /// <summary>Repère du fader de la seconde platine (ERG-038) : « ② 3 », ou « ② p2·1 » au-delà de 8 dimmers.</summary>
+    public string FaderText => DimmerIndex is { } index ? GroupRules.FaderLabel(index) : string.Empty;
 
     /// <summary>C'est le groupe implicite des appareils sans groupe.</summary>
     public bool IsUnassigned { get; }
@@ -515,3 +552,12 @@ public sealed record GroupFixtureRow(Guid Id, string Name, string Kind, string W
 /// <param name="Value">Niveau.</param>
 /// <param name="IsResult">Dernière étape (la sortie).</param>
 public sealed record FlowStep(string Label, string Value, bool IsResult);
+
+/// <summary>Une platine possible pour les dimmers de groupe (<c>dimmerController</c> de <c>midi.json</c>).</summary>
+/// <param name="Value">Morceau du nom du modèle ou du port (« MK1 »), ou <c>null</c> = automatique.</param>
+/// <param name="Label">Libellé affiché.</param>
+public sealed record DimmerControllerChoice(string? Value, string Label)
+{
+    /// <inheritdoc />
+    public override string ToString() => Label;
+}

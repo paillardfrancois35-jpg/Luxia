@@ -193,4 +193,32 @@ public sealed class DimmerGroupsViewModelTests : IAsyncLifetime
         _vm.Flow[^1].Value.ShouldBe("40 %");
         _vm.Flow[^1].IsResult.ShouldBeTrue();
     }
+
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
+    public async Task FaderMarkers_PastEight_NameThePage()
+    {
+        for (var i = 1; i <= 9; i++)
+        {
+            await Add("Groupe " + i);
+        }
+
+        _vm.Rows.Where(r => !r.IsUnassigned).Select(r => r.FaderText).ShouldBe(["② 1", "② 2", "② 3", "② 4", "② 5", "② 6", "② 7", "② 8", "② p2·1"]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
+    public void DimmerPlatine_ChosenInTheInterface_IsWrittenToMidiJson()
+    {
+        _vm.SelectedDimmerController.ShouldNotBeNull();
+        _vm.SelectedDimmerController.Value.ShouldBeNull("automatique par défaut");
+
+        _vm.SelectedDimmerController = _vm.DimmerControllers.Single(c => c.Value == "MK1");
+
+        _host.Runtime.Project.Midi.DimmerController.ShouldBe("MK1");
+        Luxia.Midi.MidiStore.Load(_host.ProjectFolder).Value.DimmerController.ShouldBe("MK1");
+
+        _vm.SelectedDimmerController = _vm.DimmerControllers.Single(c => c.Value is null);
+        Luxia.Midi.MidiStore.Load(_host.ProjectFolder).Value.DimmerController.ShouldBeNull();
+    }
 }

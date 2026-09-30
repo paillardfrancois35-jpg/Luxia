@@ -29,7 +29,7 @@ public partial class EditorWindow : Window
         return window;
     }
 
-    private bool _sized;
+    private bool _maximized;
 
     private readonly DispatcherTimer _timer;
     private EditorViewModel? _vm;
@@ -58,6 +58,7 @@ public partial class EditorWindow : Window
         vm.Closed += (_, _) =>
         {
             _timer.Stop();
+            Remember();
             Hide();
         };
     }
@@ -84,27 +85,44 @@ public partial class EditorWindow : Window
             WindowState = WindowState.Normal;
         }
 
+        if (_maximized)
+        {
+            WindowState = WindowState.Maximized;
+        }
+
         Activate();
     }
 
-    // Taille initiale bornée à la zone de travail de l'écran (essai 1.007.080 : plus grande qu'un 1366 × 768).
+    // À chaque ouverture : la fenêtre n'est jamais plus grande que la fenêtre principale ni que l'écran (essai 1.007.092 : encore
+    // trop grande quand la fenêtre principale est réduite à 1366 × 768) ; si elle était maximisée, elle le redevient.
     private void FitToScreen(Window? owner)
     {
-        if (_sized)
-        {
-            return;
-        }
-
-        _sized = true;
         var screen = (owner is not null ? Screens.ScreenFromWindow(owner) : null) ?? Screens.Primary;
-        if (screen is null)
+        var maxWidth = double.PositiveInfinity;
+        var maxHeight = double.PositiveInfinity;
+        if (screen is not null)
         {
-            return;
+            var scaling = screen.Scaling <= 0 ? 1 : screen.Scaling;
+            maxWidth = (screen.WorkingArea.Width / scaling) - 40;
+            maxHeight = (screen.WorkingArea.Height / scaling) - 40;
         }
 
-        var scaling = screen.Scaling <= 0 ? 1 : screen.Scaling;
-        Width = Math.Min(Width, Math.Max(MinWidth, (screen.WorkingArea.Width / scaling) - 40));
-        Height = Math.Min(Height, Math.Max(MinHeight, (screen.WorkingArea.Height / scaling) - 40));
+        if (owner is { WindowState: not WindowState.Minimized, Bounds: { Width: > 0, Height: > 0 } bounds })
+        {
+            maxWidth = Math.Min(maxWidth, bounds.Width);
+            maxHeight = Math.Min(maxHeight, bounds.Height);
+        }
+
+        // MinWidth / MinHeight cèdent : mieux vaut une fenêtre un peu serrée qu'une fenêtre qui déborde.
+        MinWidth = Math.Min(1000, maxWidth);
+        MinHeight = Math.Min(620, maxHeight);
+        Width = Math.Min(Width, maxWidth);
+        Height = Math.Min(Height, maxHeight);
+    }
+
+    private void Remember()
+    {
+        _maximized = WindowState == WindowState.Maximized;
     }
 
     /// <inheritdoc />
@@ -158,6 +176,7 @@ public partial class EditorWindow : Window
         if (_vm is null || await _vm.ConfirmCloseAsync().ConfigureAwait(true))
         {
             _timer.Stop();
+            Remember();
             Hide();
         }
     }

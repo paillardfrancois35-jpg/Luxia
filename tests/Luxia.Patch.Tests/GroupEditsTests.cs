@@ -97,4 +97,18 @@ public sealed class GroupEditsTests
         GroupEdits.Rename(set, parc.Id, " Grand parc ").Groups[0].Name.ShouldBe("Grand parc");
         GroupEdits.SetDimmer(set, parc.Id, false).Groups[0].HasDimmer.ShouldBeFalse();
     }
+
+    [Theory]
+    [InlineData(0, "② 1")]
+    [InlineData(7, "② 8")]
+    [InlineData(8, "② p2·1")]
+    [InlineData(17, "② p3·2")]
+    [Trait("Exigence", "ERG-038")]
+    public void FaderLabel_IsTheNumberOnTheFirstPage_ThenPageAndNumber(int index, string expected) =>
+        GroupRules.FaderLabel(index).ShouldBe(expected);
+
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
+    public void PageFaderLabel_AlwaysNamesThePage() =>
+        new[] { GroupRules.PageFaderLabel(0), GroupRules.PageFaderLabel(2), GroupRules.PageFaderLabel(9) }.ShouldBe(["② p1·1", "② p1·3", "② p2·2"]);
 }

@@ -88,7 +88,7 @@ Copy-Item -Recurse "D:\Develop\Claude\CSharp\DMX\samples\Show de référence" "D
 4. Baissez maintenant **Parc lumineux** à **80 %** : les PAR sont à 40 % (80 % × 50 %) ; les lyres, barres restent à 80 % ; **l'UV n'a pas changé** (autre branche). Vérifiez les textes « = … % » sous chaque fader.
 5. Baissez **UV** à 40 % pendant que la scène **Scintillement UV** (couche Ambiance, si présente) ou **UV plein** joue : l'UV baisse, la forme du scintillement est conservée (plus doux, pas plat).
 6. **Grand Master** (en haut de la fenêtre) à 50 % : tout baisse encore de moitié (il reste à part) ; remettez-le à 100 %.
-7. **Double-clic** sur un fader (ou sur le **Grand Master**) : il revient à 100 %. **Tout à 100 %** (en haut du panneau) ou **Échap** ou **Libérer tout** (bandeau) remettent tout à 100 % ; le bandeau disparaît.
+7. **Double-clic** sur un fader (ou sur le **Grand Master**) : il revient à 100 %. Puis, **en rebaissant des faders avant chaque geste** : **Tout à 100 %** (en haut du panneau), **Échap** et **Libérer tout** (bandeau) remettent tout à 100 % ; le texte du bandeau repasse à « Aucune retouche en direct ».
 8. **Blackout** : tout devient noir ; retirez-le, les dimmers ont gardé leur niveau.
 9. **Ce que ça illustre** : chaque étage multiplie ; une retouche en direct n'est jamais enregistrée (**Projet → Ouvrir…** le même projet : tout est à 100 %). Le bandeau « Retouches en direct » occupe une place **fixe** en haut : rien ne saute quand il s'allume.
 
@@ -144,13 +144,9 @@ Copy-Item -Recurse "D:\Develop\Claude\CSharp\DMX\samples\Show de référence" "D
 2. Ouvrez l'écran **Live** : le bandeau MIDI liste les platines et indique laquelle sert aux dimmers (« … – dimmers de groupe »). Par défaut c'est la **deuxième dans l'ordre alphabétique des ports** (« APC MINI » puis « APC mini mk2 » : le **MK2** sert donc aux dimmers).
 3. **Platine des couches** (l'autre) : les pads lancent les scènes, les faders 1 à 8 = niveaux de couches, le fader 9 = Grand Master : **comme avant**.
 4. **Platine des dimmers** : faders **1 à 8** = les dimmers dans l'ordre de l'arbre (Parc lumineux, Face, PAR scène, Barres, Lyres, UV…) ; les **pads sont éteints**. Un fader ne prend la main qu'une fois croisé le niveau actuel (reprise douce). Les repères « ② n » du panneau correspondent aux faders.
-5. **Boutons ronds du bas 1 à 8** (les boutons ronds au-dessus des faders) : remettent le dimmer à 100 % ; leur LED reste **allumée tant que le dimmer est retouché**. Après la remise à 100 %, le fader physique (resté plus bas) **ne reprend la main qu'en recroisant 100 %** : pas de saut.
-6. **Maj** (le bouton **Shift** de la platine, en bas de la colonne de droite) **+ bouton rond du bas 4** (puis 3) : page suivante / précédente si plus de 8 dimmers (à tester en créant des groupes supplémentaires).
-7. Inverser les rôles : le fichier `midi.json` n'existe pas dans un projet neuf : **créez-le** dans `samples\Show de travail` avec ce contenu (PowerShell), puis rouvrez le projet :
-
-```powershell
-Set-Content -Path "D:\Develop\Claude\CSharp\DMX\samples\Show de travail\midi.json" -Value '{ "formatVersion": 1, "dimmerController": "MK1" }'
-```
+5. **Boutons du bas 1 à 8** (les 8 boutons au-dessus des faders, de gauche à droite ; ronds sur la MK1, carrés sur la MK2) : remettent le dimmer à 100 % ; leur LED reste **allumée tant que le dimmer est retouché**. Après la remise à 100 %, le fader physique (resté plus bas) **ne reprend la main qu'en recroisant 100 %** : pas de saut.
+6. **Maj** (le bouton **Shift** de la platine, en bas de la colonne de droite) **+ bouton du bas 4** (puis 3) : page suivante / précédente si plus de 8 dimmers (à tester en créant au moins 3 groupes de plus avec un dimmer). Le bouton du bas 4 est **DEVICE** sur la MK2 et la **flèche droite** sur la MK1 ; le 3 est **SEND** sur la MK2 et la **flèche gauche** sur la MK1. Dans l'écran Contrôle, le panneau « Groupes dimmer » indique « Platine 2 : page 1 / 2 » et ses repères suivent la page : **② n** pour ce que la platine pilote, **② p2·1** (page 2, fader 1) pour les dimmers d'une autre page, estompés.
+7. Inverser les rôles : **Installation → Gestion des dimmers**, liste **Platine MIDI des dimmers** : choisissez « APC mini MK1 » (ou MK2, ou « Automatique » = la 2e platine branchée par ordre alphabétique des ports). Le choix s'applique tout de suite (vérifiez le bandeau MIDI de l'écran **Live**) et s'écrit dans `midi.json` (fichier créé au premier choix ; plus d'édition à la main).
 8. **Ce que ça illustre** : une platine pour jouer, l'autre pour les réglages fins.
 
 ## Exemple 11 – Reprise, fermeture, fiabilité
@@ -163,7 +159,7 @@ Set-Content -Path "D:\Develop\Claude\CSharp\DMX\samples\Show de travail\midi.jso
 ## Exemple 12 – Écran de portable (ERG-035)
 
 1. Réduisez la fenêtre de LuXia à 1366 × 768 (ou testez sur un portable) : l'écran de jeu reste utilisable (colonnes lisibles avec défilement, dimmers accessibles, aucune cible minuscule).
-2. Ouvrez une scène : la fenêtre d'édition reste utilisable (Appliquer / Annuler / Valider visibles).
+2. Ouvrez une scène : la fenêtre d'édition **n'est jamais plus grande que la fenêtre principale ni que l'écran** et reste utilisable (Appliquer / Annuler / Valider visibles). Maximisez-la, fermez-la (Annuler), rouvrez-la : elle se remet **maximisée**.
 3. **Affichage → taille 125 %** : les deux écrans suivent.
 
 ---

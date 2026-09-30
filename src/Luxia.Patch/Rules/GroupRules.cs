@@ -75,6 +75,30 @@ public static class GroupRules
         return result;
     }
 
+    /// <summary>Faders de la seconde platine MIDI, donc dimmers par page (ERG-038).</summary>
+    public const int FadersPerPage = 8;
+
+    /// <summary>
+    /// Repère du fader qui commande le dimmer de rang <paramref name="index"/> (0 = premier dans l'arbre) sur la seconde platine :
+    /// « ② 3 » sur la première page, « ② p2·1 » au-delà (page 2, fader 1 ; Maj + boutons 3 / 4 du bas pour changer de page).
+    /// </summary>
+    /// <param name="index">Rang du dimmer parmi les groupes qui en ont un, dans l'ordre de l'arbre.</param>
+    public static string FaderLabel(int index)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        return index < FadersPerPage
+            ? string.Create(System.Globalization.CultureInfo.InvariantCulture, $"② {index + 1}")
+            : PageFaderLabel(index);
+    }
+
+    /// <summary>Repère avec la page, toujours : « ② p1·3 » (dimmer de rang 2), « ② p2·1 » (rang 8) ; pour un dimmer hors de la page affichée.</summary>
+    /// <param name="index">Rang du dimmer (0 = premier).</param>
+    public static string PageFaderLabel(int index)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        return string.Create(System.Globalization.CultureInfo.InvariantCulture, $"② p{(index / FadersPerPage) + 1}·{(index % FadersPerPage) + 1}");
+    }
+
     /// <summary>Groupe qui contient directement un appareil (le premier, si le fichier en cite plusieurs), ou <c>null</c> = non assigné.</summary>
     /// <param name="set">Groupes.</param>
     /// <param name="fixtureId">Appareil.</param>
