@@ -6,8 +6,8 @@
   <UserControl.Styles>
     <Style Selector="Button.mini">
       <Setter Property="Padding" Value="0" />
-      <Setter Property="Width" Value="30" />
-      <Setter Property="Height" Value="24" />
+      <Setter Property="Width" Value="34" />
+      <Setter Property="Height" Value="32" />
       <Setter Property="FontSize" Value="12" />
       <Setter Property="HorizontalContentAlignment" Value="Center" />
       <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -21,7 +21,7 @@
     </Style>
     <!-- Valeurs normales en styles (une valeur posée sur l'élément l'emporterait sur le mode resserré). -->
     <Style Selector="Border.play">
-      <Setter Property="MinHeight" Value="46" />
+      <Setter Property="MinHeight" Value="48" />
       <Setter Property="Padding" Value="8,6,6,4" />
     </Style>
     <Style Selector="TextBlock.name">
@@ -85,8 +85,8 @@
                       <Button Classes="mini" Content="■" Foreground="#F85149" ToolTip.Tip="Arrêter la couche : net, sauf si la scène qui joue porte un fondu de sortie"
                               Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).StopLayerCommand}" CommandParameter="{Binding}" />
                     </StackPanel>
-                    <Grid ColumnDefinitions="Auto,*,40" ToolTip.Tip="Master de la couche : baisse les intensités qu'elle envoie (faders 1 à 8 de l'APC). Sans effet sur une couleur seule, ni si une autre couche envoie plus fort (la plus forte intensité l'emporte)">
-                      <TextBlock Text="Master" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" Margin="0,0,4,0" />
+                    <Grid ColumnDefinitions="Auto,*,40" ToolTip.Tip="Niveau de la couche : multiplie les intensités qu'elle envoie (faders 1 à 8 de l'APC). Sans effet sur une couleur seule, ni si une autre couche envoie plus fort (la plus forte intensité l'emporte)">
+                      <TextBlock Text="Niveau" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" Margin="0,0,4,0" />
                       <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Master}" VerticalAlignment="Center" Margin="0,-8" />
                       <TextBlock Grid.Column="2" Text="{Binding Master, StringFormat='{}{0:0} %'}" FontSize="11" VerticalAlignment="Center" TextAlignment="Right" />
                     </Grid>
@@ -119,7 +119,11 @@
                       <DataTemplate x:DataType="vm:ControlSceneViewModel">
                         <Border CornerRadius="7" BorderBrush="{Binding EditColor}" BorderThickness="{Binding OutlineThickness}"
                                 Opacity="{Binding HiddenInLive, Converter={x:Static vm:ControlConverters.DimIfTrue}}">
-                          <Grid ColumnDefinitions="*,24">
+                          <DockPanel>
+                            <Button DockPanel.Dock="Right" Width="34" IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    ToolTip.Tip="Ouvrir la fenêtre d'édition de cette scène"
+                                    Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
                             <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0"
                                     CornerRadius="6,0,0,6"
                                     PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost" ContextRequested="OnSceneContext"
@@ -128,7 +132,7 @@
                                 <StackPanel Spacing="3" MaxWidth="320">
                                   <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
                                   <TextBlock Text="{Binding State}" IsVisible="{Binding IsActive}" FontSize="12" />
-                                  <TextBlock Text="Clic : lancer / arrêter (maintenir : flash) · clic droit : menu" FontSize="11" Foreground="#8B949E" />
+                                  <TextBlock Text="Clic : lancer / arrêter (maintenir : flash) · ✎ : éditer · clic droit : menu" FontSize="11" Foreground="#8B949E" />
                                 </StackPanel>
                               </ToolTip.Tip>
                               <DockPanel>
@@ -139,18 +143,15 @@
                                 <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                               </DockPanel>
                             </Border>
-                            <Button Grid.Column="1" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                    ToolTip.Tip="Choisir cette scène pour l'éditer (un second clic la libère)"
-                                    Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
-                          </Grid>
+
+                          </DockPanel>
                         </Border>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
 
-                  <Button Content="+ scène" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
-                          ToolTip.Tip="Nouvelle scène dans cette couche, choisie aussitôt pour l'édition"
+                  <Button Content="+ scène" MinHeight="36" HorizontalAlignment="Stretch" IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
+                          ToolTip.Tip="Nouvelle scène dans cette couche"
                           Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
                 </StackPanel>
                 </ScrollViewer>

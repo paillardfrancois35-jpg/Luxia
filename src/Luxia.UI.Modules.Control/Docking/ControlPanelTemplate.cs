@@ -36,13 +36,15 @@ public sealed class ControlPanelTemplate : IDataTemplate
             ControlPanels.Journal => new JournalPanelView(),
             ControlPanels.Looks => new LooksPanelView(),
             ControlPanels.Pilot => new PilotPanelView(),
+            ControlPanels.Dimmers => new DimmersPanelView(),
             _ => new TextBlock { Text = ControlPanels.Get(tool.Id).Help, Margin = new Thickness(12, 36) },
         };
         view.DataContext = tool.Context;
         return WithHelp(view, ControlPanels.Get(tool.Id));
     }
 
-    private static Panel WithHelp(Avalonia.Controls.Control content, ControlPanel info)
+    /// <summary>Le contenu d'un panneau avec son bouton « ? » (aide en trois lignes) : aussi dans la fenêtre d'édition.</summary>
+    public static Panel WithHelp(Avalonia.Controls.Control content, ControlPanel info)
     {
         var help = new Button
         {

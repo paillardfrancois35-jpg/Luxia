@@ -55,6 +55,14 @@ public sealed class SoftTakeover
         return physical;
     }
 
+    /// <summary>Le fader perd la main : il devra recroiser la valeur courante (remise à 100 % par un bouton, essai 1.007.080).</summary>
+    public void Disengage()
+    {
+        _engaged = false;
+        _last = null;
+        _recent.Clear();
+    }
+
     private bool IsRecent(double target)
     {
         foreach (var sent in _recent)

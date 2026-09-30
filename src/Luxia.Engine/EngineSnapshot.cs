@@ -26,6 +26,12 @@ public sealed record EngineSnapshot
     /// <summary>Master de chaque couche, aligné sur <see cref="ShowModel.Layers"/>.</summary>
     public required double[] LayerMasters { get; init; }
 
+    /// <summary>Niveau réglé du dimmer de chaque groupe (1 pour un groupe sans dimmer), aligné sur <see cref="ShowModel.DimmerGroups"/> (ERG-037).</summary>
+    public double[] DimmerLevels { get; init; } = [];
+
+    /// <summary>Niveau effectif de chaque groupe : son niveau × celui de ses parents (règle proportionnelle, ERG-037).</summary>
+    public double[] DimmerEffective { get; init; } = [];
+
     /// <summary>Blackout actif.</summary>
     public bool Blackout { get; init; }
 

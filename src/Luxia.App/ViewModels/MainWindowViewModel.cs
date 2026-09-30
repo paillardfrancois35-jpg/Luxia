@@ -82,8 +82,8 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         _dialogs = dialogs;
         Pages =
         [
-            // E2, C5 : l'écran Contrôle (jouer et corriger) arrive en tête ; Live et Scènes restent jusqu'à leur remplacement.
-            new NavigationItem("Contrôle", "◉", new Luxia.UI.Modules.Control.ControlViewModel(runtime, dialogs)),
+            // ERG-032 : l'écran de jeu arrive en tête (l'édition d'une scène a sa propre fenêtre, ERG-033) ; Live et Scènes restent jusqu'à leur remplacement.
+            new NavigationItem("Contrôle", "◉", new Luxia.UI.Modules.Control.GameViewModel(runtime, dialogs)),
             new NavigationItem("Live", "▶", new Luxia.UI.Modules.Live.LiveViewModel(runtime)),
             new NavigationItem("Console", "▥", new ConsoleViewModel(runtime, dialogs)),
             new NavigationItem("Bibliothèque", "▤", new Luxia.UI.Modules.Library.LibraryViewModel(runtime, dialogs)),
@@ -97,7 +97,10 @@ public sealed partial class MainWindowViewModel : ViewModelBase
         runtime.Show.Compiled += (_, _) => UpdateProject();
         UpdateProject();
         RefreshStatus();
-        _uiScale = Math.Clamp(runtime.Preferences.Current.UiScale, 0.75, 2);
+
+        // Taille de l'interface : l'option est masquée (ERG-022, décision du 2026-09-30) ; l'interface reste à 100 % quelle que
+        // soit la valeur enregistrée dans les préférences du poste.
+        _uiScale = 1;
     }
 
     /// <summary>Change la taille de l'interface (paramètre : 1, 1.25, 1.5) et la garde dans les préférences du poste.</summary>

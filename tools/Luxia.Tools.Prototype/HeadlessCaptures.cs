@@ -32,6 +32,15 @@ internal static class HeadlessCaptures
                 mockup.Close();
             }
 
+            // Chantier « Contrôle 2 » (ERG-032 à ERG-039) : écran de jeu, fenêtre d'édition, gestion des dimmers.
+            foreach (var mockup in Mockups.Controle2Mockups.All)
+            {
+                var window2 = mockup.Create();
+                window2.Show();
+                Capture(window2, output, mockup.FileName);
+                window2.Close();
+            }
+
             Environment.Exit(0);
             return 0;
         }

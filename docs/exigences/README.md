@@ -140,6 +140,7 @@
 | [CMD-023](CMD-023.md) | Commande IdentifierAppareil | P3 | — | Réalisé |
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
+| [CMD-031](CMD-031.md) | Commande RéglerDimmerGroupe | ERG2 | I | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -193,9 +194,9 @@
 | [ERG-007](ERG-007.md) | Maquettes de la disposition Contrôle | ERG | I | Réalisé |
 | [ERG-008](ERG-008.md) | 8e couche par défaut « Libre » | ERG | I | Validé |
 | [ERG-009](ERG-009.md) | Identité visuelle | ERG | I | Validé |
-| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Validé |
-| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Validé |
-| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Validé |
+| [ERG-010](ERG-010.md) | Mode LIVE de l'écran Contrôle | ERG | I | Abandonné |
+| [ERG-011](ERG-011.md) | Mode ÉDITION | ERG | I | Abandonné |
+| [ERG-012](ERG-012.md) | Mode AVEUGLE | ERG | I | Abandonné |
 | [ERG-013](ERG-013.md) | Zones du lieu dans l'écran Contrôle | ERG | I | Validé |
 | [ERG-014](ERG-014.md) | Plan des appareils = la sélection | ERG | I | Validé |
 | [ERG-015](ERG-015.md) | Bande d'étapes | ERG | M | Validé |
@@ -207,7 +208,7 @@
 | [ERG-021](ERG-021.md) | Verrou soirée | ERG | I | Validé |
 | [ERG-022](ERG-022.md) | Taille de l'interface | ERG | M | Validé |
 | [ERG-023](ERG-023.md) | Looks | ERG | I | Validé |
-| [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Validé |
+| [ERG-024](ERG-024.md) | Disposition Spectacle | ERG | I | Abandonné |
 | [ERG-025](ERG-025.md) | Scènes resserrées | ERG | M | Validé |
 | [ERG-026](ERG-026.md) | Stop et Tout stopper | ERG | I | Validé |
 | [ERG-027](ERG-027.md) | Marges | ERG | M | Validé |
@@ -215,6 +216,14 @@
 | [ERG-029](ERG-029.md) | Panneau Effets de l'écran Contrôle | P6 | I | Validé |
 | [ERG-030](ERG-030.md) | En-têtes de couche toujours visibles | P6 | I | Validé |
 | [ERG-031](ERG-031.md) | Éditeur de thèmes | P6 | M | Validé |
+| [ERG-032](ERG-032.md) | Écran de jeu | ERG2 | I | Validé |
+| [ERG-033](ERG-033.md) | Fenêtre d'édition de scène | ERG2 | I | Validé |
+| [ERG-034](ERG-034.md) | Aperçu du brouillon | ERG2 | I | Validé |
+| [ERG-035](ERG-035.md) | Tailles minimales des cibles | ERG2 | M | Validé |
+| [ERG-036](ERG-036.md) | Groupes d'appareils | ERG2 | I | Validé |
+| [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
+| [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |
+| [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |

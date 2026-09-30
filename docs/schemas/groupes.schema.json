@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/groupes.schema.json",
+  "title": "LuXia – groupes.json (format 1)",
+  "description": "Arbre des groupes d'appareils et de leurs dimmers (doc 50 §12d-quater, ERG-036, ERG-037). Tout est facultatif.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "unassignedName": {
+      "type": "string",
+      "description": "nom du groupe implicite des appareils sans groupe (« Non assigné » par défaut)"
+    },
+    "groups": {
+      "type": "array",
+      "description": "groupes dans l'ordre d'affichage ; un parent peut être cité avant ou après ses enfants",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "parentId": { "type": ["string", "null"], "format": "uuid", "description": "groupe parent ; absent ou null = racine" },
+          "hasDimmer": { "type": "boolean", "description": "le groupe a un dimmer réglable (niveau 0-1 multiplié le long de l'arbre)" },
+          "fixtureIds": {
+            "type": "array",
+            "description": "appareils rangés directement dans ce groupe ; un appareil n'est que dans un seul groupe",
+            "items": { "type": "string", "format": "uuid" }
+          }
+        }
+      }
+    }
+  }
+}

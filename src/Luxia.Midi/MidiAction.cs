@@ -47,4 +47,10 @@ public enum MidiAction
 
     /// <summary>Tout arrêter (sauf couches protégées).</summary>
     StopAll,
+
+    /// <summary>Dimmer d'un groupe d'appareils (fader de la platine des dimmers, ERG-038).</summary>
+    GroupDimmer,
+
+    /// <summary>Remet le dimmer d'un groupe à 100 % (boutons du bas de la platine des dimmers).</summary>
+    GroupDimmerReset,
 }

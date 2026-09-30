@@ -133,6 +133,10 @@ accent (sélection) bleu, joue = couleur de la scène, surcharge live jaune, éd
 danger / blackout / enregistrement rouge, texte secondaire gris. Deux tailles de texte dans les panneaux (normal, secondaire),
 une pour les titres ; espacement sur une grille de 4 px ; largeurs de champs selon doc 03 §11.
 
+**Tailles minimales des cibles** (ERG-035, demande de l'utilisateur : « éléments trop petits »), à vérifier en 1366 × 768 :
+boutons de scène ≥ 44 px de haut (hors mode « resserré », choix de l'utilisateur), boutons ≥ 32 px, bande ✎ et boutons de
+couche ≥ 32 px, molettes ≥ 70 px, glisseurs et faders : cible de saisie ≥ 32 px de large.
+
 ### 4.6 Verrou et Live
 
 « Verrou soirée » : en LIVE, l'édition, l'installation et les suppressions sont bloquées (mot de passe facultatif). Le
@@ -166,6 +170,24 @@ calme »).
 
 La disposition par défaut de l'APC (grille = colonnes) reste proposée, mais comme **un ensemble de déclencheurs parmi
 d'autres**, modifiable par la surcouche « Affecter » (§4.7). `midi.json` devient `declencheurs.json` (toutes les entrées).
+
+### 4.9 Écran de jeu et fenêtre d'édition (chantier « Contrôle 2 », ERG-032 à ERG-039)
+
+**Remplace le modèle à trois modes du §4.1** (décision de l'utilisateur, 2026-09-29, Q38 ; maquettes 5 à 8 validées ; chantier **validé** le 2026-09-30, v1.007 ; analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md), [de code](chantiers/analyse-code-fin-controle-2.md)). Deux
+lieux évidents au lieu d'un sélecteur de modes :
+
+| Lieu | Ce qu'on y fait | Ce qu'il contient |
+|---|---|---|
+| **Écran de jeu** (Contrôle) | Jouer. Aucun mode à garder en tête. | Colonnes (grandes cibles), **Groupes dimmer**, Looks, Pilote automatique, Journal ; Stop / Tout stopper, Verrou soirée. Panneaux ancrables (une seule disposition, `jeu.json`). |
+| **Fenêtre d'édition d'une scène** | Concevoir. Ouverte par la bande ✎, jamais toute seule ; non bloquante ; sur un second écran si on veut. | Plan, Réglages, Effets, Propriétés et étapes en disposition fixe ; brouillon ; Appliquer / Valider / Annuler ; case Aveugle. |
+| Configuration | Installer. | Installation (dont « Gestion des dimmers »), Bibliothèque, Sorties. |
+
+- **LIVE** n'est plus un mode : c'est l'état normal de l'écran de jeu. Les seules retouches en direct sont les **dimmers de groupe**
+  (et les niveaux de couches), temporaires, jamais enregistrées ; un bandeau jaune les rappelle avec « Libérer tout » (Échap).
+- **ÉDITION** = « la fenêtre d'édition est ouverte ». **AVEUGLE** = case à cocher de la fenêtre (aperçu au plan seulement).
+- **Fader de couche** = **niveau** de la couche (multiplie ce qu'elle envoie) ; pas de réglage de couche propre à la scène (Q38 point 4).
+- **Dimmers de groupe** : arbre de groupes (Installation › Gestion des dimmers), règle proportionnelle, seconde platine MIDI (doc 18b).
+- Verrou soirée : la fenêtre d'édition ne s'ouvre pas ; jouer, arrêter et retoucher les dimmers restent permis.
 
 ## 5. Composants communs (catalogue)
 
@@ -282,6 +304,14 @@ CONS-061) gardent leur identifiant et leur fiche.
 | ERG-030 | I | P6 | **En-têtes de couche toujours visibles** (demande de l'utilisateur, essai P6) : dans les Colonnes, le nom de la couche, ◀ ▶ ■ et le master restent en haut ; seules les scènes défilent verticalement ; **un ascenseur par colonne** (idée de l'utilisateur, essai 1.006.053) ; un défilement horizontal (colonnes trop nombreuses) déplace en-têtes et scènes ensemble, alignés. | Capture 1366 × 768 ; essai. |
 | ERG-031 | M | P6 | **Éditeur de thèmes** (essai P6) : liste « Thème » avec « Aucun », boutons **+** (nouveau), **✎** (modifier) et **🗑** (retirer) à côté ; fenêtre « Thème de couleurs » : nom, crans (ajouter, retirer, monter, descendre, au moins deux), couleur au sélecteur commun ou en saisie libre « #RRGGBB » ; les thèmes livrés ne se modifient ni ne se retirent. Bibliothèque d'effets gérée à l'écart des boutons courants (« Bibliothèque ▾ » : retirer un modèle, rétablir les modèles livrés). « ⇠ Déplacer / Déplacer ⇢ » pour l'ordre des étapes ; « ▶ Lancer » repasse en LIVE depuis l'ÉDITION. | Tests. |
 | ERG-007 | I | ERG | **Maquettes de la disposition Contrôle** (§7.3) : images rendues par Avalonia avec les vrais composants et des données fictives (modes LIVE / ÉDITION / AVEUGLE, scène en édition, zones), validées par l'utilisateur **avant** tout développement des écrans. | Validation de l'utilisateur. |
+| ERG-032 | I | ERG2 | **Écran de jeu** (chantier « Contrôle 2 », remplace ERG-010/011/012 et le sélecteur de modes) : pas de mode ; peu de panneaux, grands (Colonnes, Groupes dimmer, Looks, Pilote, Journal) ancrables et détachables ; les retouches en direct (masters, dimmers, couleur rapide) sont temporaires (« Libérer ») ; verrou soirée gardé ; une seule disposition (Contrôle / Spectacle fusionnées, ERG-001/024 reformulées). | Maquette validée ; tests. |
+| ERG-033 | I | ERG2 | **Fenêtre d'édition de scène** : ouverte à la demande (✎, jamais toute seule), non bloquante, déplaçable sur un second écran ; travaille sur une **copie** (brouillon) ; contient Plan, Réglages, Effets, Propriétés, Étapes en disposition fixe ; **Valider** enregistre (et rejoue la scène si elle joue), **Annuler** ou fermeture = retour à l'état d'origine sans confirmation ; un geste = une annulation (Ctrl+Z dans le brouillon) ; ouvre les sous-éditeurs (thème, effet). | Maquette validée ; tests. |
+| ERG-034 | I | ERG2 | **Aperçu du brouillon** : hors aveugle, le brouillon est montré sur la sortie (CMD-017) ; **Appliquer** met à jour la scène sans fermer ; case **Aveugle** = aperçu au plan seulement, sortie inchangée (reformule GEN-063, SCN-035) ; l'état d'origine est restauré à l'annulation. | Tests. |
+| ERG-035 | M | ERG2 | **Tailles minimales des cibles** (charte, §4.5) : boutons de scène ≥ 44 px de haut, boutons ≥ 32 px, molettes ≥ 70 px ; vérifiées en 1366 × 768 sur l'écran de jeu et la fenêtre d'édition. | Captures relues. |
+| ERG-036 | I | ERG2 | **Groupes d'appareils (arbre)** : onglet « Gestion des dimmers » de l'écran Installation ; groupes imbriqués (Groupe 1 → 1.1, 1.2…), **un appareil dans un seul groupe** ; appareil non assigné = groupe racine implicite, nommable ; renommer, déplacer, supprimer (les appareils reviennent au parent) ; choix des groupes qui ont un dimmer ; enregistré dans le projet (`groupes.json`), distinct des sélections. | Tests ; maquette. |
+| ERG-037 | I | ERG2 | **Dimmers de groupe** : panneau « Groupes dimmer » de l'écran de jeu (un fader par groupe à dimmer) ; le moteur multiplie l'intensité des appareils **après** la fusion des couches par chaque étage de l'arbre (règle proportionnelle : Maître × G1 × G1.1) ; appareil RVB sans canal d'intensité : les canaux émetteurs sont multipliés ; retouche non enregistrée (Q37). | Tests moteur. |
+| ERG-038 | I | ERG2 | **Seconde platine MIDI** : deuxième contrôleur reconnu à part (par son port, MIDI-005) ; ses 8 premiers faders commandent les 8 premiers dimmers de groupe, dans l'ordre du panneau ; la première platine garde les couches ; affectation fixe (l'apprentissage « Affecter… », MIDI-008, reste reporté). | Tests ; essai matériel. |
+| ERG-039 | I | ERG2 | **Fader de couche = niveau de couche** (précise COU, LIVE-040) : le master d'une couche multiplie sa contribution, comme aujourd'hui ; aucun réglage de couche paramétrable par scène (Q37, Q38 point 4). | Tests. |
 
 ## 10. Prototype technique (§7.2) : réalisation et bilan
 
@@ -330,6 +360,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-09-29 | §4.9 : écran de jeu et fenêtre d'édition (chantier « Contrôle 2 »), qui remplace le modèle à trois modes du §4.1 ; tailles minimales des cibles (§4.5). |
 | 2026-09-28 | **Chantier validé** par l'utilisateur (1.005.237), fusionné dans `main`, étiquette `v1.005`. |
 | 2026-09-28 | Essai de l'écran Contrôle par l'utilisateur, au matériel (guide §0 à §7, 1.005.192 → 1.005.226) : corrections au fil de l'eau (ERG-001, 013, 014, 016, 017, 018, 019, 023) ; ERG-025 scènes resserrées, ERG-026 Stop / Tout stopper, ERG-027 marges ; choix C12 à C14. |
 | 2026-09-28 | Nuit de développement par délégation : écran Contrôle dans LuXia, zone permise, identité visuelle, démo ; ERG-009 à ERG-020. |

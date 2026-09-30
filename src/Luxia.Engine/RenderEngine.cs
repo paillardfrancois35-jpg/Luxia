@@ -65,6 +65,9 @@ public sealed class RenderEngine : ICommandSink
     private ParameterRole[] _roles = [];
     private int[] _intensitySource = [];
     private double[] _layerMasters = [];
+    private double[] _dimmerLevels = [];
+    private double[] _dimmerEffective = [];
+    private int[] _parameterGroup = [];
     private (int Parameter, ChannelAddress Address)[][] _outputSlots;
     private bool[][] _blackoutMasks;
     private bool _blackout;
@@ -88,6 +91,8 @@ public sealed class RenderEngine : ICommandSink
     private PlaybackInfo[] _publishedPlaybacks = new PlaybackInfo[64];
     private int _publishedPlaybackCount;
     private double[] _publishedLayerMasters = [];
+    private double[] _publishedDimmerLevels = [];
+    private double[] _publishedDimmerEffective = [];
     private ActiveLimit[] _publishedLimits = [];
 
     /// <summary>Crée un moteur.</summary>
@@ -343,6 +348,9 @@ public sealed class RenderEngine : ICommandSink
 
             case SetLayerMasterCommand layerMaster:
                 return SetLayerMaster(layerMaster);
+
+            case SetGroupDimmerCommand groupDimmer:
+                return SetGroupDimmer(groupDimmer);
 
             case FlashSceneCommand flash:
                 return Flash(flash, now);
@@ -647,6 +655,24 @@ public sealed class RenderEngine : ICommandSink
         return null;
     }
 
+    // ERG-037 : niveau du dimmer d'un groupe (CMD-031).
+    private string? SetGroupDimmer(SetGroupDimmerCommand command)
+    {
+        var index = _show.IndexOfDimmerGroup(command.GroupId);
+        if (index < 0)
+        {
+            return "groupe inconnu";
+        }
+
+        if (!_show.DimmerGroups[index].HasDimmer)
+        {
+            return "ce groupe n'a pas de dimmer";
+        }
+
+        _dimmerLevels[index] = Math.Clamp(command.Level, 0, 1);
+        return null;
+    }
+
     private string? StepScene(StepSceneCommand command, TimeSpan now)
     {
         var found = false;
@@ -944,6 +970,16 @@ public sealed class RenderEngine : ICommandSink
     private void ApplyMasters()
     {
         var count = _result.Length;
+
+        // ERG-037 : niveau effectif de chaque groupe = son niveau × celui de tous ses parents (règle proportionnelle) ;
+        // un parent précède toujours ses enfants (ShowModel), un seul passage suffit.
+        var groups = _show.DimmerGroups;
+        for (var g = 0; g < groups.Count; g++)
+        {
+            var parent = groups[g].Parent;
+            _dimmerEffective[g] = _dimmerLevels[g] * (parent >= 0 ? _dimmerEffective[parent] : 1);
+        }
+
         for (var p = 0; p < count; p++)
         {
             // Étape 5 : surcharges d'attributs (console en mode appareils, programmeur).
@@ -958,6 +994,13 @@ public sealed class RenderEngine : ICommandSink
             if (_roles[p] == ParameterRole.Intensity)
             {
                 _result[p] *= _grandMaster;
+
+                // Étape 6 bis : dimmers de groupe, après la fusion des couches et le Grand Master (ERG-037).
+                var group = _parameterGroup[p];
+                if (group >= 0)
+                {
+                    _result[p] *= _dimmerEffective[group];
+                }
             }
         }
 
@@ -1051,6 +1094,14 @@ public sealed class RenderEngine : ICommandSink
             masters[i] = old is not null ? _layerMasters[previous.IndexOfLayer(old.Id)] : Math.Clamp(show.Layers[i].Master, 0, 1);
         }
 
+        var levels = new double[show.DimmerGroups.Count];
+        for (var i = 0; i < levels.Length; i++)
+        {
+            // Un dimmer garde son niveau quand le projet est recompilé (comme le master d'une couche) ; un nouveau groupe démarre à 1.
+            var oldIndex = previous.IndexOfDimmerGroup(show.DimmerGroups[i].Id);
+            levels[i] = oldIndex >= 0 && show.DimmerGroups[i].HasDimmer ? _dimmerLevels[oldIndex] : 1;
+        }
+
         var frozen = new double[count];
         for (var i = 0; i < _frozen.Length && i < previous.Parameters.Count; i++)
         {
@@ -1067,6 +1118,9 @@ public sealed class RenderEngine : ICommandSink
         _frozen = frozen;
         _overrides = overrides;
         _layerMasters = masters;
+        _dimmerLevels = levels;
+        _dimmerEffective = new double[levels.Length];
+        _parameterGroup = [.. show.ParameterGroups];
         _defaults = [.. show.Parameters.Select(p => Math.Clamp(p.Default, 0, 1))];
         _result = new double[count];
         _output = new double[count];
@@ -1172,6 +1226,8 @@ public sealed class RenderEngine : ICommandSink
                 _publishedSources = new ParameterSource[_sources.Length];
                 _publishedOverrides = new double[_overrides.Length];
                 _publishedLayerMasters = new double[_layerMasters.Length];
+                _publishedDimmerLevels = new double[_dimmerLevels.Length];
+                _publishedDimmerEffective = new double[_dimmerEffective.Length];
             }
 
             _publishedBlackout = _blackout;
@@ -1183,6 +1239,8 @@ public sealed class RenderEngine : ICommandSink
             Array.Copy(_sources, _publishedSources, _sources.Length);
             Array.Copy(_overrides, _publishedOverrides, _overrides.Length);
             Array.Copy(_layerMasters, _publishedLayerMasters, _layerMasters.Length);
+            Array.Copy(_dimmerLevels, _publishedDimmerLevels, _dimmerLevels.Length);
+            Array.Copy(_dimmerEffective, _publishedDimmerEffective, _dimmerEffective.Length);
             if (_publishedPlaybacks.Length < _playbacks.Count)
             {
                 _publishedPlaybacks = new PlaybackInfo[_playbacks.Count * 2];
@@ -1219,6 +1277,8 @@ public sealed class RenderEngine : ICommandSink
             Overrides = (double[])_publishedOverrides.Clone(),
             Playbacks = _publishedPlaybacks.AsSpan(0, _publishedPlaybackCount).ToArray(),
             LayerMasters = (double[])_publishedLayerMasters.Clone(),
+            DimmerLevels = (double[])_publishedDimmerLevels.Clone(),
+            DimmerEffective = (double[])_publishedDimmerEffective.Clone(),
             Blackout = _publishedBlackout,
             Frozen = _publishedFrozen,
             Smoking = _publishedSmoking,
@@ -1245,7 +1305,7 @@ public sealed class RenderEngine : ICommandSink
                 var last = _log[lastIndex];
                 if (last.Rejection is null && entry.Rejection is null && last.Command.GetType() == entry.Command.GetType()
                     && last.Command.Origin == entry.Command.Origin
-                    && entry.Command is OverrideChannelsCommand or OverrideAttributesCommand or SetGrandMasterCommand or SetLayerMasterCommand)
+                    && entry.Command is OverrideChannelsCommand or OverrideAttributesCommand or SetGrandMasterCommand or SetLayerMasterCommand or SetGroupDimmerCommand)
                 {
                     _log[lastIndex] = entry with { ReceivedAt = last.ReceivedAt, Repeat = last.Repeat + 1 };
                     return;

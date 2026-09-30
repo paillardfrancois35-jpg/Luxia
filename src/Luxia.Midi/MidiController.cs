@@ -44,6 +44,12 @@ public sealed class MidiController
     /// <summary>Page de couches (8 colonnes par page).</summary>
     public int LayerPage { get; private set; }
 
+    /// <summary>Rôle de la platine (ERG-038) : donné par le service d'après les platines branchées et le projet.</summary>
+    public MidiRole Role { get; set; }
+
+    /// <summary>Page de dimmers (8 faders par page) de la platine des dimmers.</summary>
+    public int DimmerPage { get; private set; }
+
     /// <summary>Traduit un message en commandes (vide si le message n'a pas d'effet).</summary>
     public IReadOnlyList<Command> Handle(MidiMessage message, MidiLayout layout, EngineSnapshot snapshot)
     {
@@ -83,6 +89,12 @@ public sealed class MidiController
         }
 
         var (action, id) = ActionOf(control, layout);
+        if (pressed && action == MidiAction.GroupDimmerReset)
+        {
+            // Le fader physique, resté plus bas, ne reprend la main qu'en recroisant le niveau (100 %) : pas de saut de valeur.
+            _faders[Math.Clamp(control.X - 1, 0, _faders.Length - 1)].Disengage();
+        }
+
         return Button(action, id, pressed, layout, snapshot);
     }
 
@@ -115,7 +127,12 @@ public sealed class MidiController
         for (var i = 0; i < Profile.BottomButtons.Count; i++)
         {
             var (action, id) = ActionOf(new MidiControl(MidiControlKind.Bottom, i + 1), layout);
-            var on = action == MidiAction.StopLayer && id is { } layer && snapshot.Playbacks.Any(p => p.LayerId == layer && !p.Flash && IsPlaying(p));
+            var on = action switch
+            {
+                MidiAction.StopLayer when id is { } layer => snapshot.Playbacks.Any(p => p.LayerId == layer && !p.Flash && IsPlaying(p)),
+                MidiAction.GroupDimmerReset when id is { } group => DimmerLevel(group, snapshot) < 0.995,
+                _ => false,
+            };
             Set(Profile.BottomButtons[i], ButtonLed(Profile.BottomButtons[i], on));
         }
 
@@ -199,6 +216,8 @@ public sealed class MidiController
                 return [new FreezeCommand(Midi, !snapshot.Frozen)];
             case MidiAction.StopAll when pressed:
                 return [new StopLayerCommand(Midi)];
+            case MidiAction.GroupDimmerReset when pressed && id is { } group:
+                return [new SetGroupDimmerCommand(Midi, group, 1)];
             default:
                 return [];
         }
@@ -216,13 +235,34 @@ public sealed class MidiController
                 var index = snapshot.Show.IndexOfLayer(layer);
                 var current = index >= 0 && index < snapshot.LayerMasters.Length ? snapshot.LayerMasters[index] : 1;
                 return takeover.Move(value, current) is { } master ? [new SetLayerMasterCommand(CommandOrigin.Midi, layer, master)] : [];
+            case MidiAction.GroupDimmer when id is { } group:
+                return takeover.Move(value, DimmerLevel(group, snapshot)) is { } dimmer ? [new SetGroupDimmerCommand(CommandOrigin.Midi, group, dimmer)] : [];
             default:
                 return [];
         }
     }
 
+    private static double DimmerLevel(Guid group, EngineSnapshot snapshot)
+    {
+        var index = snapshot.Show.IndexOfDimmerGroup(group);
+        return index >= 0 && index < snapshot.DimmerLevels.Length ? snapshot.DimmerLevels[index] : 1;
+    }
+
     private void Page(int button, MidiLayout layout)
     {
+        if (Role == MidiRole.Dimmers)
+        {
+            // Shift + bas 3 / 4 = dimmers précédents / suivants (8 par page), comme les couches sur l'autre platine.
+            var dimmerPages = Math.Max(1, (layout.Dimmers.Count + 7) / 8);
+            DimmerPage = button switch
+            {
+                3 => Math.Max(0, DimmerPage - 1),
+                4 => Math.Min(dimmerPages - 1, DimmerPage + 1),
+                _ => DimmerPage,
+            };
+            return;
+        }
+
         var maxScenes = layout.Columns.Select(c => c.Scenes.Count).DefaultIfEmpty(0).Max();
         var scenePages = Math.Max(1, (maxScenes + 7) / 8);
         var layerPages = Math.Max(1, (layout.Columns.Count + 7) / 8);
@@ -249,6 +289,14 @@ public sealed class MidiController
         if (Binding(control, layout) is { } binding)
         {
             return (binding.Action, binding.SceneId ?? binding.LayerId);
+        }
+
+        if (Role == MidiRole.Dimmers && control.Kind is MidiControlKind.Pad or MidiControlKind.Bottom or MidiControlKind.Fader)
+        {
+            var dimmer = control.Kind != MidiControlKind.Pad && control.X <= 8 ? DimmerAt(control.X, layout) : null;
+            return dimmer is null
+                ? (MidiAction.None, null)
+                : (control.Kind == MidiControlKind.Fader ? MidiAction.GroupDimmer : MidiAction.GroupDimmerReset, dimmer.GroupId);
         }
 
         switch (control.Kind)
@@ -284,6 +332,12 @@ public sealed class MidiController
 
     private MidiBinding? Binding(MidiControl control, MidiLayout layout) =>
         layout.Bindings.LastOrDefault(b => b.AppliesTo(Profile) && MidiControl.Parse(b.Control) == control);
+
+    private MidiDimmerSlot? DimmerAt(int x, MidiLayout layout)
+    {
+        var index = (DimmerPage * 8) + x - 1;
+        return index >= 0 && index < layout.Dimmers.Count ? layout.Dimmers[index] : null;
+    }
 
     private MidiColumn? ColumnAt(int x, MidiLayout layout)
     {

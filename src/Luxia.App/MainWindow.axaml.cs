@@ -62,6 +62,16 @@ public partial class MainWindow : Window
         AddHandler(SelectingItemsControl.SelectionChangedEvent, OnAnySelection, RoutingStrategies.Bubble, handledEventsToo: true);
     }
 
+    // Double-clic sur le Grand Master : retour à 100 % (comme sur les dimmers de groupe).
+    private void OnGrandMasterDoubleTapped(object? sender, TappedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.GrandMaster = 100;
+            e.Handled = true;
+        }
+    }
+
     private void OnAnyClick(object? sender, RoutedEventArgs e)
     {
         if (e.Source is Button button && DataContext is MainWindowViewModel vm)
@@ -73,10 +83,26 @@ public partial class MainWindow : Window
 
     private void OnAnySelection(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.Source is SelectingItemsControl list && e.AddedItems.Count > 0 && DataContext is MainWindowViewModel vm)
+        if (e.Source is not SelectingItemsControl list || DataContext is not MainWindowViewModel vm)
         {
-            var kind = list is ComboBox ? "choix" : "sélection";
-            vm.TraceUi($"{kind} « {UiLabel.Describe(e.AddedItems[0])} »");
+            return;
+        }
+
+        // La liste peut être reconstruite pendant l'événement (choix d'un « Groupe parent » : essai 1.007.080, exception
+        // ArgumentOutOfRange sur AddedItems[0]) : la trace ne doit jamais faire échouer le choix.
+        object? first;
+        try
+        {
+            first = e.AddedItems.Count > 0 ? e.AddedItems[0] : null;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return;
+        }
+
+        if (first is not null)
+        {
+            vm.TraceUi($"{(list is ComboBox ? "choix" : "sélection")} « {UiLabel.Describe(first)} »");
         }
     }
 

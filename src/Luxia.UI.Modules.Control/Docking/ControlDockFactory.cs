@@ -26,32 +26,20 @@ public sealed class ControlDockFactory : Factory
         HideToolsOnClose = true;
     }
 
-    /// <summary>Disposition prête que construit <see cref="CreateLayout()"/> (et où revient un panneau réaffiché).</summary>
-    public ControlLayoutPreset Preset { get; set; }
-
     /// <summary>Crée la fenêtre d'un panneau détaché (remplaçable pour les tests, sans fenêtrage).</summary>
     public Func<IHostWindow?> HostWindowFactory { get; init; } = () => new ControlHostWindow();
 
     /// <inheritdoc />
-    public override IRootDock CreateLayout() => Preset == ControlLayoutPreset.Show ? CreateShow() : CreateControl();
+    public override IRootDock CreateLayout() => CreateGame();
 
-    // Contrôle (doc 60 §6) : colonnes au centre, propriétés et looks à droite, plan + réglages en bas, journal en onglet.
-    private IRootDock CreateControl()
+    // Écran de jeu (maquette 5) : les colonnes en grand, les dimmers de groupe et les looks à droite, le pilote et le journal en bas.
+    private IRootDock CreateGame()
     {
-        var bottom = Split(0.46, Orientation.Horizontal, Tools(0.34, ControlPanels.Plan), Tools(0.66, ControlPanels.Settings, ControlPanels.Effects, ControlPanels.Journal));
-        var left = Split(0.78, Orientation.Vertical, Tools(0.58, ControlPanels.Columns), bottom);
-        var right = Split(0.24, Orientation.Vertical, Tools(0.66, ControlPanels.Properties), Tools(0.34, ControlPanels.Looks));
+        var right = Split(0.3, Orientation.Vertical, Tools(0.62, ControlPanels.Dimmers), Tools(0.38, ControlPanels.Looks));
+        var bottom = Split(0.14, Orientation.Horizontal, Tools(0.5, ControlPanels.Pilot), Tools(0.5, ControlPanels.Journal));
+        var left = Split(0.76, Orientation.Vertical, Tools(0.86, ControlPanels.Columns), bottom);
         var main = Split(double.NaN, Orientation.Horizontal, left, right);
-        main.Id = "controle";
-        return Root(main);
-    }
-
-    // Spectacle (doc 60 §6, F10) : les colonnes en grand, le pilote automatique et ses interventions, le journal.
-    private IRootDock CreateShow()
-    {
-        var right = Split(0.28, Orientation.Vertical, Tools(0.62, ControlPanels.Pilot, ControlPanels.Looks), Tools(0.38, ControlPanels.Journal));
-        var main = Split(double.NaN, Orientation.Horizontal, Tools(0.72, ControlPanels.Columns), right);
-        main.Id = "spectacle";
+        main.Id = "jeu";
         return Root(main);
     }
 

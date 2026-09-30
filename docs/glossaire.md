@@ -84,6 +84,11 @@
 | **Molette** | Dial / Encoder | Réglage rotatif de l'interface (vitesse, taille, décalage), tourné en glissant ou à la molette de la souris. |
 | **Phase / Décalage** | Phase / Spread | Décalage temporel d'un effet entre les appareils d'une sélection. |
 | **Couche** | Layer / Playback group | Conteneur de scènes exclusives, avec priorité et master. *(anciennement « groupe de scènes »)* |
+| **Groupe (de dimmer)** | Fixture group / Dimmer group | Ensemble d'appareils rangé dans un **arbre** (un appareil dans un seul groupe ; les autres sont dans le groupe implicite « Non assigné »). Un groupe peut avoir un **dimmer** : un niveau réglé en direct, multiplié le long de l'arbre. Distinct d'une *sélection* (ordre, cellules). |
+| **Dimmer de groupe** | Group dimmer | Niveau (0-100 %) d'un groupe, appliqué **après** les couches : l'intensité de ses appareils est multipliée par le niveau de chaque groupe, de la racine au sien (règle proportionnelle). Retouche en direct, jamais enregistrée. |
+| **Niveau de couche** | Layer level | Fader d'une couche : multiplie ce qu'elle envoie (anciennement « master » de couche). |
+| **Brouillon** | Draft | Copie d'une scène en cours d'édition dans la fenêtre d'édition : rien n'est écrit avant **Appliquer** ou **Valider** ; **Annuler** revient à l'état d'origine. |
+| **Fenêtre d'édition** | Scene editor | Fenêtre non bloquante (Plan, Réglages, Effets, Propriétés et étapes) ouverte par la bande ✎ d'une scène. |
 | **Séquence** | Sequence | Enchaînement temporel de scènes sur des pistes, exprimé en mesures ou en secondes. *(anciennement « méga-scène »)* |
 | **Timeline** | Timeline | Éditeur graphique de séquences. |
 | **Show** | Show | Graphe d'étapes et de transitions (de type Grafcet) qui pilote couches, scènes et séquences. |

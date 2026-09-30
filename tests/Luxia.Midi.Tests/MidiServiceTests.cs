@@ -65,6 +65,48 @@ public sealed class MidiServiceTests
         _ports.LastSent("APC MINI").ShouldAllBe(m => m.Data2 == 0);
     }
 
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
+    [Trait("Exigence", "MIDI-005")]
+    public void WithDimmers_TheSecondPlatineServesThemWhileTheFirstKeepsTheScenes()
+    {
+        var slot = new MidiDimmerSlot(Guid.NewGuid(), "PAR");
+        var layout = Layout() with { Dimmers = [slot] };
+        using var service = new MidiService(_ports, new Sink(_commands), () => Snapshot(), () => layout);
+        _ports.Plug("APC MINI");
+        _ports.Plug("APC mini mk2");
+        service.Scan();
+
+        service.Connected.ShouldBe(["APC mini MK1 (APC MINI)", "APC mini MK2 (APC mini mk2) – dimmers de groupe"]);
+        _ports.Receive("APC MINI", Press(Pad(Mk1, 1, 1)));
+        _ports.Receive("APC mini mk2", Press(Pad(Mk2, 2, 1)));
+        _ports.Receive("APC mini mk2", Fader(Mk2, 1, 1));
+        service.DrainForTests();
+
+        _commands.OfType<LaunchSceneCommand>().Select(c => c.SceneId).ShouldBe([Red], "seule la première platine lance des scènes");
+        _commands.OfType<SetGroupDimmerCommand>().Select(c => c.GroupId).ShouldBe([slot.GroupId]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
+    public void DimmerPage_IsTheOneTheDimmerPlatineShows()
+    {
+        var slots = Enumerable.Range(1, 10).Select(i => new MidiDimmerSlot(Guid.NewGuid(), "G" + i)).ToList();
+        var layout = Layout() with { Dimmers = slots };
+        using var service = new MidiService(_ports, new Sink(_commands), () => Snapshot(), () => layout);
+        _ports.Plug("APC MINI");
+        _ports.Plug("APC mini mk2");
+        service.Scan();
+        service.DimmerPage.ShouldBe(0);
+
+        _ports.Receive("APC mini mk2", Press(Mk2.ShiftNote));
+        _ports.Receive("APC mini mk2", Press(Mk2.BottomButtons[3]));
+        _ports.Receive("APC mini mk2", Release(Mk2.ShiftNote));
+        service.DrainForTests();
+
+        service.DimmerPage.ShouldBe(1);
+    }
+
     private MidiService Service() => new(_ports, new Sink(_commands), () => Snapshot(), () => Layout());
 
     private sealed class Sink(List<Command> commands) : ICommandSink

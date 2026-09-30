@@ -39,19 +39,15 @@
             <MenuItem Header="_Problèmes du projet…" Command="{Binding ShowProjectProblemsCommand}" />
             <MenuItem Header="_Versions du projet…" Command="{Binding ShowVersionsCommand}" />
           </MenuItem>
-          <MenuItem Header="Aff_ichage">
-            <MenuItem Header="Taille de l'interface : 100 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1" />
-            <MenuItem Header="Taille de l'interface : 125 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.25" />
-            <MenuItem Header="Taille de l'interface : 150 %" Command="{Binding SetUiScaleCommand}" CommandParameter="1.5"
-                      ToolTip.Tip="Écran tactile ou lecture de loin (F8). Gardé pour ce poste." />
-          </MenuItem>
+          <!-- Menu Affichage (taille de l'interface 125 % / 150 %, F8, ERG-022) masqué : décision de l'utilisateur, 2026-09-30.
+               La commande SetUiScale et la préférence restent, pour le jour où l'option reviendra. -->
           <MenuItem Header="_Aide">
             <MenuItem Header="À _propos…" Command="{Binding ShowAboutCommand}" />
           </MenuItem>
         </Menu>
       <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
         <TextBlock Text="Grand Master" VerticalAlignment="Center" Opacity="0.8" />
-        <Slider Minimum="0" Maximum="100" Value="{Binding GrandMaster}" Width="200" VerticalAlignment="Center" />
+        <Slider Minimum="0" Maximum="100" Value="{Binding GrandMaster}" Width="200" VerticalAlignment="Center" DoubleTapped="OnGrandMasterDoubleTapped" ToolTip.Tip="Grand Master : double-clic pour revenir à 100 %" />
         <TextBlock Text="{Binding GrandMaster, StringFormat='{}{0:0} %'}" Width="48" VerticalAlignment="Center" />
         <ToggleButton Classes="blackout" IsChecked="{Binding Blackout}" Content="BLACKOUT (B)" MinWidth="150"
                       ToolTip.Tip="Coupe toutes les intensités au tick suivant ; couleurs et positions inchangées (GEN-041). Touche B." />
@@ -112,8 +108,8 @@
         <DataTemplate DataType="simulator:SimulatorViewModel">
           <simulator:SimulatorView />
         </DataTemplate>
-        <DataTemplate DataType="control:ControlViewModel">
-          <controlviews:ControlView />
+        <DataTemplate DataType="control:GameViewModel">
+          <controlviews:GameView />
         </DataTemplate>
         <DataTemplate DataType="live:LiveViewModel">
           <live:LiveView />

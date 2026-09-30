@@ -17,6 +17,7 @@ public sealed class ShowService
     private readonly IReadOnlyList<RenderEngine> _engines;
     private readonly ILogger _logger;
     private Scene? _workingCopy;
+    private bool _workingCopyPreviewOnly;
 
     /// <summary>Branche le service sur le projet et les moteurs (sortie, aperçu) ; compile tout de suite le projet ouvert.</summary>
     public ShowService(ProjectSession project, IReadOnlyList<RenderEngine> engines, ILogger<ShowService>? logger = null)
@@ -48,17 +49,28 @@ public sealed class ShowService
     /// Remplace (ou ajoute) une scène par sa version en cours d'édition, sans l'enregistrer, puis recompile :
     /// « Tester » joue ce que l'on voit dans le programmeur. <c>null</c> revient aux scènes enregistrées.
     /// </summary>
-    public void SetWorkingCopy(Scene? scene)
+    /// <param name="scene">Scène en cours d'édition, ou <c>null</c> pour revenir aux scènes enregistrées.</param>
+    /// <param name="previewOnly">
+    /// Le brouillon n'est chargé que dans le moteur d'aperçu : la sortie garde les scènes enregistrées (case Aveugle de la
+    /// fenêtre d'édition, ERG-034).
+    /// </param>
+    public void SetWorkingCopy(Scene? scene, bool previewOnly = false)
     {
         _workingCopy = scene;
+        _workingCopyPreviewOnly = scene is not null && previewOnly;
         Recompile();
     }
 
+    /// <summary>Scène en cours d'édition qui remplace sa version enregistrée, ou <c>null</c>.</summary>
+    public Scene? WorkingCopy => _workingCopy;
+
     /// <summary>Contenu du projet tel que compilé (avec la scène en cours d'édition, s'il y en a une).</summary>
-    public ProjectContent Content()
+    public ProjectContent Content() => ContentWith(_workingCopy);
+
+    private ProjectContent ContentWith(Scene? workingCopy)
     {
         var scenes = _project.Scenes;
-        if (_workingCopy is { } copy)
+        if (workingCopy is { } copy)
         {
             var list = scenes.Scenes.Where(s => s.Id != copy.Id).ToList();
             var index = scenes.Scenes.ToList().FindIndex(s => s.Id == copy.Id);
@@ -74,7 +86,8 @@ public sealed class ShowService
             _project.Layers,
             scenes,
             _project.Palettes,
-            _project.Safety);
+            _project.Safety,
+            _project.Groups);
     }
 
     /// <summary>Compile le projet et charge le résultat dans le moteur.</summary>
@@ -84,9 +97,12 @@ public sealed class ShowService
         var result = ShowCompiler.Compile(content);
         Patch = new PatchContext(content.Installation, content.Venues, content.TypeOf);
         Last = result;
-        foreach (var engine in _engines)
+
+        // Aveugle : la sortie (premier moteur) garde les scènes enregistrées, seul l'aperçu voit le brouillon.
+        var output = _workingCopyPreviewOnly ? ShowCompiler.Compile(ContentWith(null)).Model : result.Model;
+        for (var i = 0; i < _engines.Count; i++)
         {
-            engine.LoadShow(result.Model);
+            _engines[i].LoadShow(i == 0 ? output : result.Model);
         }
         foreach (var issue in result.Issues)
         {

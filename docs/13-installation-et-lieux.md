@@ -122,7 +122,7 @@ Parcours guidé, accessible depuis l'accueil et le Live, pour être prêt en **m
 | INST-034 | Sélection de cellules individuelles (segments de barre) reportée après P6 (effets par cellule) ; les barres se pilotent en entier dès P3. **P6** : boutons « En cellules » / « Par appareil » d'une sélection manuelle (les opérations d'ordre s'appliquent ensuite aux cellules) ; pour un effet, la case « Cellules » suffit. |
 | INST-051 | Positionnement par champs numériques (X, Y en mètres), pas de glisser-déposer sur un plan visuel. |
 | Identification (CMD-023) | Réalisée par des surcharges de canaux minutées côté interface (comme la découverte BIB-062), pas par une commande moteur dédiée : voir la fiche CMD-023 pour la discussion complète. |
-| Écran | `Luxia.UI.Modules.Installation` : onglets Univers et patch, Sélections, Lieux, Fiche d'installation. |
+| Écran | `Luxia.UI.Modules.Installation` : onglets Univers et patch, Sélections, **Gestion des dimmers** (arbre des groupes, ERG-036, `groupes.json`), Lieux, Fiche d'installation. |
 
 ## 9. Notes de réalisation (P5)
 

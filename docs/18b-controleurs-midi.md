@@ -16,9 +16,16 @@ du moteur. Rend le Live beaucoup plus confortable qu'à la souris.
 |---|---|---|
 | Grille 8 × 8 pads | LED 3 couleurs (vert, rouge, jaune) + clignotement | LED **RGB** (couleur + luminosité / clignotement / pulsation) |
 | Faders | 9 (8 + 1 master) | 9 (8 + 1 master) |
-| Boutons ronds bas | 8 (LED rouge) | 8 (LED rouge) |
-| Boutons ronds droite | 8 (LED verte) | 8 (LED verte) |
+| Boutons du bas (au-dessus des faders) | 8, **ronds**, LED rouge | 8, **carrés**, LED rouge |
+| Boutons de droite | 8, ronds, LED verte | 8, carrés, LED verte |
 | Shift | 1 | 1 |
+
+**Inscriptions** (relevées sur le matériel, essai « Contrôle 2 », 2026-09-30). Les 8 boutons du bas, de gauche à droite :
+MK1 = flèche haut, flèche bas, flèche gauche, flèche droite, VOLUME, PAN, SEND, DEVICE (les quatre derniers encadrés « FADER CTRL ») ;
+MK2 = VOLUME, PAN, SEND, DEVICE (encadrés « FADER CTRL »), puis flèche haut, flèche bas, flèche gauche, flèche droite. La
+numérotation « bas 1 à 8 » de LuXia suit l'**ordre physique de gauche à droite** sur les deux modèles : « bas 3 / 4 » =
+**MK1 : flèche gauche / flèche droite ; MK2 : SEND / DEVICE**. Colonne de droite, de haut en bas : MK1 = CLIP STOP, SOLO, REC ARM,
+MUTE, SELECT, (2 sans libellé), STOP ALL CLIPS, SHIFT ; MK2 = CLIP STOP, SOLO, MUTE, REC ARM, SELECT, DRUM, NOTE, STOP ALL CLIPS, SHIFT.
 
 > Les numéros de notes / contrôleurs et les valeurs de couleur des LED sont différents entre MK1 et MK2 ; ils seront relevés
 > dans les notices présentes (`docs/Equipements/AKAI`) et stockés dans un **profil** par modèle (fichier de données, pas de code).
@@ -87,4 +94,5 @@ du moteur. Rend le Live beaucoup plus confortable qu'à la souris.
 | Retour lumineux | Recalculé toutes les 40 ms d'après l'état du moteur, seuls les changements envoyés ; boutons stop allumés quand la couche joue ; LED éteintes à la fermeture. MK2 : couleur de la scène approchée dans une palette de couleurs franches. |
 | Numéros MIDI (essai P5, 2026-09-27) | **MK2 et MK1 validés sur l'appareil** par l'utilisateur. Boutons de droite du MK2 (haut → bas) : CLIP STOP = blackout maintenu, SOLO = flash, MUTE = strobe, REC ARM = fumée, SELECT = (tap, P7), DRUM = figer, NOTE = (auto, P10), STOP ALL CLIPS = tout arrêter ; fader 9 = Grand Master. |
 | Reprise douce (MIDI-004, essai P5) | L'APC n'envoie pas la position de ses faders au branchement : au démarrage, chaque fader doit croiser la valeur affichée. Le fader garde la main tant que la valeur relue du moteur correspond à l'une de ses **128 dernières valeurs envoyées** (un fader rapide émet plus vite que le moteur ne relit : doc 03 §11). |
+| **Platine des dimmers** (ERG-038) | Seconde platine : faders 1 à 8 = dimmers de groupe, bas 1 à 8 = remise à 100 %, Maj + bas 3 / 4 = pages ; réglage `dimmerController` de `midi.json` ; à défaut la deuxième platine branchée quand le projet a des groupes à dimmer (doc 50 §12d). |
 | Affectations (MIDI-007) | `midi.json` (doc 50 §12d), par modèle possible (MIDI-005) ; apprentissage (MIDI-008) et disposition « palettes » (MIDI-009) reportés (Q32). |

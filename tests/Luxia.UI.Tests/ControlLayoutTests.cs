@@ -3,7 +3,7 @@ using Luxia.UI.Modules.Control.Docking;
 
 namespace Luxia.UI.Tests;
 
-/// <summary>Disposition des panneaux de l'écran Contrôle (ERG-001, ERG-002, C10).</summary>
+/// <summary>Disposition des panneaux de l'écran de jeu (ERG-001, ERG-002, ERG-032, C10).</summary>
 public sealed class ControlLayoutTests : IDisposable
 {
     private readonly string _folder = Path.Combine(Path.GetTempPath(), "luxia-controle-tests", Guid.NewGuid().ToString("N"));
@@ -19,18 +19,23 @@ public sealed class ControlLayoutTests : IDisposable
 
     [Fact]
     [Trait("Exigence", "ERG-001")]
-    public void DefaultLayout_HasEveryPanelOnce()
+    [Trait("Exigence", "ERG-032")]
+    public void DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel()
     {
         var layout = NewLayout(out _);
 
-        foreach (var panel in ControlPanels.All.Where(p => p.Id != ControlPanels.Pilot))
+        foreach (var panel in ControlPanels.Game)
         {
             DockTree.Find(layout, panel.Id).Place.ShouldBe(PanelPlace.Visible, panel.Title);
         }
 
-        DockTree.Find(layout, ControlPanels.Pilot).Place.ShouldBe(PanelPlace.Absent, "le pilote est dans la disposition Spectacle");
+        ControlPanels.Game.Select(p => p.Id).ShouldBe([ControlPanels.Columns, ControlPanels.Dimmers, ControlPanels.Looks, ControlPanels.Pilot, ControlPanels.Journal]);
+        foreach (var id in new[] { ControlPanels.Properties, ControlPanels.Plan, ControlPanels.Settings, ControlPanels.Effects })
+        {
+            DockTree.Find(layout, id).Place.ShouldBe(PanelPlace.Absent, id + " : dans la fenêtre d'édition, plus sur l'écran de jeu");
+        }
 
-        DockTree.FindOwner(layout, ControlPanels.Journal)!.Id.ShouldBe(DockTree.FindOwner(layout, ControlPanels.Settings)!.Id, "journal en onglet avec les réglages");
+        DockTree.FindOwner(layout, ControlPanels.Dimmers)!.Id.ShouldNotBe(DockTree.FindOwner(layout, ControlPanels.Looks)!.Id, "dimmers et looks : deux groupes, l'un au-dessus de l'autre");
     }
 
     [Fact]
@@ -38,6 +43,7 @@ public sealed class ControlLayoutTests : IDisposable
     public void SaveThenLoad_ClosedPanel_StaysClosed_AndComesBackHome()
     {
         var layout = NewLayout(out var factory);
+        var home = DockTree.FindOwner(layout, ControlPanels.Journal)!.Id;
         factory.CloseDockable(DockTree.Find(layout, ControlPanels.Journal).Dockable!);
         var store = new ControlLayoutStore(_folder);
 
@@ -49,7 +55,7 @@ public sealed class ControlLayoutTests : IDisposable
 
         DockTree.Find(loaded, ControlPanels.Journal).Place.ShouldBe(PanelPlace.Hidden);
         reloaded.ShowPanel(loaded, ControlPanels.Journal).ShouldNotBeNull();
-        DockTree.FindOwner(loaded, ControlPanels.Journal)!.Id.ShouldBe(DockTree.FindOwner(loaded, ControlPanels.Settings)!.Id);
+        DockTree.FindOwner(loaded, ControlPanels.Journal)!.Id.ShouldBe(home);
     }
 
     [Fact]
@@ -73,25 +79,18 @@ public sealed class ControlLayoutTests : IDisposable
     {
         var layout = NewLayout(out _);
 
-        DockTree.Find(layout, ControlPanels.Plan).Dockable!.Context.ShouldBe("Plan des appareils");
+        DockTree.Find(layout, ControlPanels.Dimmers).Dockable!.Context.ShouldBe("Groupes dimmer");
     }
 
     [Fact]
-    [Trait("Exigence", "ERG-024")]
-    public void ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately()
+    [Trait("Exigence", "ERG-032")]
+    public void Store_KeepsTheGameLayoutInItsOwnFile_TheOldOnesAreIgnored()
     {
-        var factory = new ControlDockFactory(_contexts) { Preset = ControlLayoutPreset.Show };
-        var layout = factory.CreateLayout();
-        factory.InitLayout(layout);
-
-        foreach (var id in new[] { ControlPanels.Columns, ControlPanels.Pilot, ControlPanels.Looks, ControlPanels.Journal })
-        {
-            DockTree.Find(layout, id).Place.ShouldBe(PanelPlace.Visible, id);
-        }
-
-        DockTree.Find(layout, ControlPanels.Settings).Place.ShouldBe(PanelPlace.Absent, "le Spectacle ne montre pas les réglages");
-        factory.ShowPanel(layout, ControlPanels.Settings).ShouldNotBeNull("mais on peut les réafficher");
-        new ControlLayoutStore(_folder, ControlLayoutPreset.Show).Path.ShouldNotBe(new ControlLayoutStore(_folder).Path);
+        new ControlLayoutStore(_folder).Path.ShouldEndWith("jeu.json");
+        Directory.CreateDirectory(_folder);
+        File.WriteAllText(System.IO.Path.Combine(_folder, "controle.json"), "disposition d'une version précédente");
+        new ControlLayoutStore(_folder).Load(out var message).ShouldBeNull("l'ancienne disposition Contrôle est laissée de côté");
+        message.ShouldBeNull();
     }
 
     [Theory]
@@ -103,8 +102,8 @@ public sealed class ControlLayoutTests : IDisposable
         var factory = new ControlDockFactory(_contexts) { HostWindowFactory = () => null };
         var layout = factory.CreateLayout();
         factory.InitLayout(layout);
-        var plan = DockTree.Find(layout, ControlPanels.Plan).Dockable!;
-        var home = DockTree.FindOwner(layout, ControlPanels.Plan)!.Id;
+        var plan = DockTree.Find(layout, ControlPanels.Pilot).Dockable!;
+        var home = DockTree.FindOwner(layout, ControlPanels.Pilot)!.Id;
 
         // Fenêtre détachée telle que Dock l'enregistre : une racine, un groupe d'onglets, le panneau.
         // Comme Dock en détachant : le groupe devenu vide disparaît de la fenêtre principale (cause vue en 1.005.214).
@@ -120,22 +119,22 @@ public sealed class ControlLayoutTests : IDisposable
         if (closedInWindow)
         {
             factory.CloseDockable(plan);
-            DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Hidden);
+            DockTree.Find(layout, ControlPanels.Pilot).Place.ShouldBe(PanelPlace.Hidden);
         }
         else
         {
-            DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Floating);
+            DockTree.Find(layout, ControlPanels.Pilot).Place.ShouldBe(PanelPlace.Floating);
         }
 
-        factory.ShowPanel(layout, ControlPanels.Plan).ShouldNotBeNull();
+        factory.ShowPanel(layout, ControlPanels.Pilot).ShouldNotBeNull();
 
-        DockTree.Find(layout, ControlPanels.Plan).Place.ShouldBe(PanelPlace.Visible, "remis dans la fenêtre principale");
-        DockTree.FindOwner(layout, ControlPanels.Plan)!.Id.ShouldBe(home, "à sa place livrée");
-        var group = DockTree.FindOwner(layout, ControlPanels.Plan)!;
-        var settings = DockTree.FindOwner(layout, ControlPanels.Settings)!;
+        DockTree.Find(layout, ControlPanels.Pilot).Place.ShouldBe(PanelPlace.Visible, "remis dans la fenêtre principale");
+        DockTree.FindOwner(layout, ControlPanels.Pilot)!.Id.ShouldBe(home, "à sa place livrée");
+        var group = DockTree.FindOwner(layout, ControlPanels.Pilot)!;
+        var settings = DockTree.FindOwner(layout, ControlPanels.Journal)!;
         var split = DockTree.ParentOf(layout, group)!;
-        split.ShouldBeSameAs(DockTree.ParentOf(layout, settings), "à côté des Réglages, comme livré");
-        split.VisibleDockables!.IndexOf(group).ShouldBeLessThan(split.VisibleDockables.IndexOf(settings), "à leur gauche");
+        split.ShouldBeSameAs(DockTree.ParentOf(layout, settings), "à côté du Journal, comme livré");
+        split.VisibleDockables!.IndexOf(group).ShouldBeLessThan(split.VisibleDockables.IndexOf(settings), "à sa gauche");
         layout.Windows.ShouldBeEmpty("la fenêtre vide est fermée");
     }
 

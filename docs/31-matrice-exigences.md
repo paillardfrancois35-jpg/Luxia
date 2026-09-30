@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -15,7 +15,7 @@
 | [GEN-003](exigences/GEN-003.md) | I | Atelier et Live indépendants | Réalisé | DependencyRulesTests.UserInterfaceModules_DoNotReferenceApplication |
 | [GEN-030](exigences/GEN-030.md) | I | Tick à 40 Hz (25-44 Hz) | Réalisé, à valider sur matériel | TickLoopTests.RateHz_IsClampedTo25To44<br>TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
 | [GEN-031](exigences/GEN-031.md) | I | Gigue du tick < 5 ms | Réalisé, à valider sur matériel | TickLoopTests.Run_TwoSeconds_KeepsFortyHertz |
-| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.Save_WritesIndentedUtf8WithVersionFirst_AndReadableAccents |
+| [GEN-050](exigences/GEN-050.md) | I | Fichiers JSON lisibles | Réalisé | GroupRulesTests.GroupStore_Missing_ReturnsNoGroup_ThenSaveAndLoadRoundTrips<br>SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>StoresTests.InstallationStore_SaveThenLoad_RoundTrips<br>VersionedJsonFileTests.SaveThenLoad_RoundTrips<br>(+1) |
 | [GEN-051](exigences/GEN-051.md) | I | Version de format et migrations | Réalisé | VersionedJsonFileTests.Load_OldVersion_MigratesAndKeepsBackup |
 | [GEN-056](exigences/GEN-056.md) | I | Fichier illisible sans plantage | Réalisé | PreferencesAndProjectTests.Preferences_Corrupt_GivesDefaultsAndSetsFileAside<br>PreferencesAndProjectTests.Project_CorruptFile_ReportsMessageWithoutThrowing<br>VersionedJsonFileTests.Load_CorruptFile_IsSetAsideWithoutThrowing<br>VersionedJsonFileTests.Load_MissingVersion_IsInvalid<br>(+1) |
 | [GEN-060](exigences/GEN-060.md) | I | Blackout au démarrage | Réalisé | RenderEngineTests.Tick_WithoutAnything_ProducesBlackoutFrame |
@@ -177,7 +177,7 @@
 | [SIM-007](exigences/SIM-007.md) | M | Fenêtre détachable et plein écran | Non réalisé |  |
 | [SIM-008](exigences/SIM-008.md) | M | Zones interdites et repères du lieu | Non réalisé |  |
 | [SIM-009](exigences/SIM-009.md) | M | Appareils identifiés et en erreur mis en évidence | Réalisé | SimulatorViewModelTests.Refresh_FixtureTypeMissingFromProjectLibrary_IsFlaggedAsError |
-| [SIM-010](exigences/SIM-010.md) | M | Sélection au clic / au lasso | Réalisé | ControlPanelsTests.Plan_ClickCtrlClickRectangle_BuildTheSharedSelection<br>PlanAndStepStripTests.FixturesIn_Rectangle_KeepsOnlyFixturesInside |
+| [SIM-010](exigences/SIM-010.md) | M | Sélection au clic / au lasso | Réalisé | EditBenchPanelsTests.Plan_ClickCtrlClickRectangle_BuildTheSharedSelection<br>PlanAndStepStripTests.FixturesIn_Rectangle_KeepsOnlyFixturesInside |
 | [SIM-012](exigences/SIM-012.md) | I | Protection photosensible (strobe) | Réalisé | FixtureDecoderTests.Decode_StrobeCapability_IsFlaggedAsStrobing |
 | [SIM-013](exigences/SIM-013.md) | S | Vue de face | Non réalisé |  |
 | [SORT-008](exigences/SORT-008.md) | M | Canaux maintenus pendant le test de sortie | Réalisé | RenderEngineTests.TestPattern_HeldChannels_RespectExcludedChannels<br>RenderEngineTests.TestPattern_HeldChannels_StayLitForTheWholeChase |
@@ -205,7 +205,7 @@
 | [GEN-041](exigences/GEN-041.md) | I | Blackout et Grand Master sur les seules intensités | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
 | [GEN-042](exigences/GEN-042.md) | I | Surcharges brutes soumises au blackout et à la sûreté | Réalisé | RenderChainTests.RawOverrides_OfDimmedChannels_AreSilencedByBlackout<br>SafetyTests.Smoke_Held20s_CutAt10s_ThenRest30s<br>SafetyTests.Strobe_Requested30s_CutAfter10s_ThenPause_ThenAllowedAgain |
 | [GEN-043](exigences/GEN-043.md) | M | Chaîne de rendu explicable | Validé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
-| [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Validé | ControlPanelsTests.Plan_ShowsOutput_OrPreviewInBlind<br>ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
+| [GEN-063](exigences/GEN-063.md) | M | Mode aveugle en Atelier | Validé | EditBenchPanelsTests.Plan_ShowsOutput_OrPreviewInBlind<br>ScenesViewModelTests.Blind_SendsProgrammerToPreviewOnly<br>SimulatorViewModelTests.Blind_ShowsPreviewEngine_AndSaysSo |
 | [GEN-082](exigences/GEN-082.md) | I | Blackout accessible en permanence | Validé |  |
 | [GEN-106](exigences/GEN-106.md) | M | Nom, couleur et icône des objets | Réalisé |  |
 | [GEN-112](exigences/GEN-112.md) | M | Journal des commandes consultable | Réalisé | LayerMergeTests.CommandLog_KeepsReceptionTime_Origin_AndGroupsFaderMoves<br>LiveViewModelTests.StatusBand_AndCommandJournal |
@@ -233,7 +233,7 @@
 | [MOT-032](exigences/MOT-032.md) | I | Attribut non touché = valeur par défaut | Validé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
 | [MOT-033](exigences/MOT-033.md) | I | Master de couche | Réalisé | LayerMergeTests.LayerMaster_ScalesIntensity_NotColors_UnlessOptionSet |
 | [MOT-034](exigences/MOT-034.md) | M | Source de chaque valeur finale | Réalisé | RenderChainTests.Sources_ExplainWhereEachValueComesFrom |
-| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
+| [MOT-040](exigences/MOT-040.md) | I | « Suit l'intensité » en fin de chaîne | Validé | GroupDimmerTests.VirtualIntensity_Rgb3Channels_FollowsTheGroupDimmer<br>ReferenceShowP4Tests.WarmWhite_OnFourPars_HasDimmerAndColor<br>RenderChainTests.FollowsIntensity_Rgb3Channels_WhiteAt80Percent_ThenGrandMasterHalf<br>ShowCompilerTests.Par3Channels_GetsVirtualIntensity_ThatItsEmittersFollow |
 | [MOT-041](exigences/MOT-041.md) | I | « Allumer en coloriant » | Validé | CompiledShowPlaybackTests.WarmWhiteOnFourPars_ThenPaletteChange_UpdatesOutput<br>ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>EffectsPanelTests.ColorEffect_LightsTargetsWithoutIntensity<br>ReferenceShowP4Tests.Trap_ColorWithoutIntensity_LeavesSevenChannelParsDark<br>(+1) |
 | [MOT-050](exigences/MOT-050.md) | I | Couleur logique vers RVB | Réalisé | ColorConversionTests.Rgb_Par_TakesColorDirectly |
 | [MOT-051](exigences/MOT-051.md) | I | Couleur logique vers RVBW (extraction du blanc) | Réalisé | ColorConversionTests.Rgbw_Par_WhiteLogical_GoesToWhiteEmitter_ByDefault<br>ColorConversionTests.Rgbw_WhiteModes |
@@ -241,7 +241,7 @@
 | [MOT-053](exigences/MOT-053.md) | M | UV et ambre en émetteurs indépendants | Réalisé | ColorConversionTests.Uv_Fixture_IgnoresColor_UnlessUvIsSpecified |
 | [MOT-054](exigences/MOT-054.md) | M | Interpolation des couleurs sans teintes « sales » | Validé | EffectCompilerTests.ColorGroups_OnePerRgbCell<br>EffectTests.HueFade_RedToGreen_PassesThroughYellow<br>EffectsPanelTests.StepHueFade_WrittenFromProperties |
 | [MOT-070](exigences/MOT-070.md) | I | Blackout | Validé | RenderChainTests.Blackout_ZeroesIntensitiesOnly_AndReleaseRestoresInstantly |
-| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
+| [MOT-071](exigences/MOT-071.md) | I | Grand Master | Validé | GroupDimmerTests.GroupDimmer_AndGrandMaster_Multiply<br>RenderChainTests.GrandMaster_MultipliesIntensities_NotColors |
 | [MOT-090](exigences/MOT-090.md) | I | Conversion des attributs en octets selon le patch | Réalisé | RenderChainTests.Scene_Values_AreConvertedTo8And16Bits_WithInversion<br>ShowCompilerTests.Parameters_OfReferenceRig_HaveRolesAddressesAnd16Bits |
 | [MOT-091](exigences/MOT-091.md) | I | Appareils absents émis à 0 | Réalisé | RenderChainTests.AbsentFixture_IsEmittedAtZero<br>ShowCompilerTests.AbsentFixture_InActiveVenue_IsMarkedAbsent |
 | [MOT-092](exigences/MOT-092.md) | I | Jumeaux : mêmes valeurs | Réalisé | RenderChainTests.Twins_ShareParameters_AndReceiveSameValues<br>ShowCompilerTests.Twins_ShareParametersOfFirstFixture |
@@ -256,13 +256,13 @@
 | [PAL-006](exigences/PAL-006.md) | I | Suppression d'une palette utilisée | Réalisé | SceneUsageAndStoreTests.PaletteUsage_ListsSteps_AndFreezeReplacesReferenceByValue<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze |
 | [PAL-007](exigences/PAL-007.md) | M | Grilles de palettes | Partiel |  |
 | [PAL-009](exigences/PAL-009.md) | M | Jeu de palettes couleur par défaut | Réalisé | SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
-| [SCN-001](exigences/SCN-001.md) | I | Créer, dupliquer, renommer, supprimer une scène | Validé | ControlPanelsTests.NewScene_InTheColumnLayer_ChosenForEdit_Undoable<br>SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
-| [SCN-002](exigences/SCN-002.md) | I | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | Validé | ControlPanelsTests.Properties_EditFieldsAndSteps_AreSavedAndUndoable<br>ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
+| [SCN-001](exigences/SCN-001.md) | I | Créer, dupliquer, renommer, supprimer une scène | Validé | GamePanelsTests.NewScene_InTheColumnLayer_OpensTheEditor_Undoable<br>SceneUsageAndStoreTests.Stores_RoundTrip_AllValueForms<br>ScenesViewModelTests.NewScene_RecordColor_LightsWhenColoring_ThenPlays |
+| [SCN-002](exigences/SCN-002.md) | I | Étapes : ajouter, insérer, dupliquer, supprimer, réordonner | Validé | EditBenchPanelsTests.Properties_EditFieldsAndSteps_AreSavedAndUndoable<br>ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
 | [SCN-003](exigences/SCN-003.md) | I | Durées d'une étape et courbe | Validé |  |
 | [SCN-004](exigences/SCN-004.md) | I | Modification groupée des durées | Réalisé | ScenesViewModelTests.Steps_AddDuplicateMove_AndGroupTiming |
 | [SCN-005](exigences/SCN-005.md) | I | Paramètres de lecture d'une scène | Réalisé |  |
 | [SCN-007](exigences/SCN-007.md) | I | Cibles : appareil, cellule, sélection | Validé | ShowCompilerTests.AutoSelection_ByCategory_IncludesFixturePatchedLater<br>ShowCompilerTests.AutoSelection_WithCell_TargetsThatCellOfEachMember<br>ShowCompilerTests.FixtureValue_WinsOverSelectionValue_WhateverTheOrder<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
-| [SCN-008](exigences/SCN-008.md) | I | Valeur directe, palette ou plage | Réalisé | ControlPanelsTests.Settings_PaletteAndRange_AreApplied<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze<br>ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
+| [SCN-008](exigences/SCN-008.md) | I | Valeur directe, palette ou plage | Réalisé | EditBenchPanelsTests.Settings_PaletteAndRange_AreApplied<br>ScenesViewModelTests.PaletteReference_Recorded_ThenDeletedWithFreeze<br>ShowCompilerTests.PaletteReference_IsTranslatedPerFixture_AndModelSpecificValueWins |
 | [SCN-009](exigences/SCN-009.md) | I | Drapeau « Visible en Live » | Réalisé |  |
 | [SCN-010](exigences/SCN-010.md) | M | Retard par membre (« fan ») | Validé | ReferenceShowP4Tests.Wave_StartsEachParHalfASecondAfterItsNeighbour<br>ScenePlaybackTests.PerValueDelay_SpreadsTheFade_AcrossMembers<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection<br>ShowCompilerTests.ManualSelection_KeepsItsOrder_ForTheFan |
 | [SCN-011](exigences/SCN-011.md) | M | Fondu propre à un attribut | Réalisé | ScenePlaybackTests.PerAttributeFade_ColorsSlow_PositionInstant<br>ScenesViewModelTests.Programmer_FanAndOwnFade_OnIndividuallySelectedFixtures_AndOnSelection |
@@ -291,7 +291,7 @@
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
 | [COU-003](exigences/COU-003.md) | I | Exclusivité | Validé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
-| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Validé | ControlPanelsTests.FlashLayer_PlaysOnlyWhileHeld<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>(+1) |
+| [COU-005](exigences/COU-005.md) | I | Couche de type Flash | Validé | GamePanelsTests.FlashLayer_PlaysOnlyWhileHeld<br>LiveCommandTests.Flash_WhileHeld_OverridesAllLayers_ThenReturnsInstantly<br>LiveViewModelTests.FlashLayerScene_PlaysOnlyWhileHeld<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>(+1) |
 | [COU-006](exigences/COU-006.md) | I | Modèle de couches par défaut pour un nouveau projet | Réalisé | LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>SceneUsageAndStoreTests.MissingFiles_GiveDefaultPalettesAndLayers |
 | [COU-007](exigences/COU-007.md) | M | Arrêter la couche | Réalisé | LiveCommandTests.StopAll_SparesProtectedLayers_UnlessEverything |
 | [COU-008](exigences/COU-008.md) | M | Avertissement | Validé | ProjectProblemsTests.ProjectProblems_ShowTheOutOfFamilyWarning<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
@@ -320,14 +320,14 @@
 | [INST-071](exigences/INST-071.md) | M | Test appareil par appareil avec résultat | Reporté (chantier ergonomie) |  |
 | [INST-072](exigences/INST-072.md) | M | Calibration des positions | Partiel |  |
 | [LIVE-001](exigences/LIVE-001.md) | I | Bandeau d'état permanent | Partiel | LiveViewModelTests.StatusBand_AndCommandJournal |
-| [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | ControlPanelsTests.LayerMaster_SendsCommand_StopLayer_Stops<br>LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
-| [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Validé | ControlPanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>ControlPanelsTests.Press_LaunchesThenStops_TheEngineDecides<br>LiveCommandTests.LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick<br>LiveUvRepeatTests.FullOn_ThenTenClicksOnUv_EachClickTogglesTheUv<br>(+4) |
+| [LIVE-002](exigences/LIVE-002.md) | I | Colonnes de couches | Réalisé | GamePanelsTests.LayerMaster_SendsCommand_StopLayer_Stops<br>LiveViewModelTests.ClickScene_Launches_ClickAgain_Stops<br>LiveViewModelTests.Columns_AreTheLayers_WithTheirLiveScenes_InOrder |
+| [LIVE-003](exigences/LIVE-003.md) | I | Un clic sur une scène la lance | Validé | GamePanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>GamePanelsTests.Press_LaunchesThenStops_TheEngineDecides<br>LiveCommandTests.LaunchWithStopIfPlaying_TogglesInTheEngine_EvenWhenSentTwiceBeforeATick<br>LiveUvRepeatTests.FullOn_ThenTenClicksOnUv_EachClickTogglesTheUv<br>(+4) |
 | [LIVE-004](exigences/LIVE-004.md) | I | Actions permanentes toujours visibles | Validé | LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased |
 | [LIVE-005](exigences/LIVE-005.md) | I | Palettes rapides | Validé | LiveViewModelTests.QuickPalette_OverridesTheSelection_ThenReleaseGivesBack |
 | [LIVE-006](exigences/LIVE-006.md) | M | Disposition personnalisable | Partiel |  |
 | [LIVE-007](exigences/LIVE-007.md) | M | Mini-simulateur optionnel dans l'écran Live | Reporté (chantier ergonomie) |  |
 | [LIVE-008](exigences/LIVE-008.md) | I | Indication visible de toute limite de sûreté active et de tout verrou | Réalisé | LiveUvRepeatTests.SmokeCut_PillShowsTheTimeLeftBeforeTheRestEnds |
-| [LIVE-009](exigences/LIVE-009.md) | M | Journal défilant des derniers événements | Réalisé | ControlPanelsTests.Journal_ShowsLaunchedScenes<br>LiveViewModelTests.Journal_ShowsSceneStarts |
+| [LIVE-009](exigences/LIVE-009.md) | M | Journal défilant des derniers événements | Réalisé | GamePanelsTests.Journal_ShowsLaunchedScenes<br>LiveViewModelTests.Journal_ShowsSceneStarts |
 | [LIVE-010](exigences/LIVE-010.md) | I | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | Validé | LiveViewModelTests.StatusBand_AndCommandJournal |
 | [LIVE-011](exigences/LIVE-011.md) | M | Accès à l'assistant d'installation | Reporté (chantier ergonomie) |  |
 | [LIVE-040](exigences/LIVE-040.md) | I | Raccourcis du tableau ci-dessus | Validé | LiveViewModelTests.Keys_ArrowsChooseLayer_DigitsLaunchItsScenes_GFreezes_PageDownLowersMaster<br>LiveViewModelTests.Keys_FlashHeldWithAutoRepeat_ThenReleased<br>LiveViewModelTests.Keys_UpDownArrows_DriveTheMasterOfTheFramedLayer<br>LiveViewModelTests.LayerMaster_RefreshBeforeTheEngineTick_DoesNotJumpBack |
@@ -338,7 +338,7 @@
 | [MIDI-002](exigences/MIDI-002.md) | I | Affectation par défaut du §3 | Validé | MidiControllerTests.BottomButton_StopsItsLayer_AndRightButtons_AreTheLiveActions<br>MidiControllerTests.Pad_LaunchesTheSceneOfItsColumnAndRow_WithMidiOrigin<br>MidiControllerTests.Pad_OfFlashLayer_FlashesWhileHeld<br>MidiControllerTests.ShiftBottom_ChangesTheScenePage |
 | [MIDI-003](exigences/MIDI-003.md) | I | Retour lumineux du §4, mis à jour à chaque changement d'état | Validé | MidiControllerTests.Leds_AfterReset_AreAllSentAgain<br>MidiControllerTests.Leds_Mk1_YellowAvailable_GreenActive_BlinkingWhileFadingIn<br>MidiControllerTests.Leds_Mk2_UseTheSceneColor_DimWhenAvailable_FullWhenActive<br>MidiServiceTests.Dispose_TurnsAllLedsOff<br>(+1) |
 | [MIDI-004](exigences/MIDI-004.md) | I | Reprise douce des faders | Validé | MidiControllerTests.Fader_LosesControl_WhenTheValueIsChangedElsewhere<br>MidiControllerTests.Fader_MovedFast_KeepsControl_WhileTheEngineLagsBehind<br>MidiControllerTests.Fader_TakesOverOnlyAfterCrossingTheCurrentValue |
-| [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine |
+| [MIDI-005](exigences/MIDI-005.md) | I | Les deux contrôleurs peuvent être branchés simultanément, avec des affectations différente | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiServiceTests.BothModels_AreDetected_AndDriveTheEngine<br>MidiServiceTests.WithDimmers_TheSecondPlatineServesThemWhileTheFirstKeepsTheScenes |
 | [MIDI-006](exigences/MIDI-006.md) | I | Débranchement / rebranchement à chaud | Validé | MidiServiceTests.Unplug_ThenReplug_RestoresTheLeds |
 | [MIDI-007](exigences/MIDI-007.md) | M | Affectations modifiables et enregistrées dans le projet | Réalisé | MidiControllerTests.Binding_ReplacesTheDefault_ForItsModelOnly<br>MidiControllerTests.BlackoutToggle_ByBinding_TogglesOnPressOnly<br>MidiControllerTests.Control_Parses<br>MidiControllerTests.Control_Unreadable_IsNull |
 | [MIDI-008](exigences/MIDI-008.md) | S | Apprentissage | Reporté (chantier ergonomie) |  |
@@ -361,36 +361,36 @@
 
 ## ERG – 27 exigences, 19 couvertes par des tests automatiques
 
-> En cours : 1 · Réalisé : 2 · Validé : 24
+> Abandonné : 4 · En cours : 1 · Réalisé : 2 · Validé : 20
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Validé | ControlLayoutTests.DefaultLayout_HasEveryPanelOnce<br>ControlLayoutTests.Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
+| [ERG-001](exigences/ERG-001.md) | I | Ancrage de panneaux | Validé | ControlLayoutTests.DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel<br>ControlLayoutTests.Floating_OrClosedInItsWindow_ComesBackHome_AndTheEmptyWindowGoes<br>ControlLayoutTests.InitLayout_GivesEachPanelItsContext<br>LayoutStoreTests.ShowPanel_AbsentFromLayout_IsCreatedInItsHomeGroup |
 | [ERG-002](exigences/ERG-002.md) | I | Enregistrement de la disposition | Validé | ControlLayoutTests.Load_Missing_IsNullWithoutMessage_Unreadable_IsSetAside<br>ControlLayoutTests.SaveThenLoad_ClosedPanel_StaysClosed_AndComesBackHome<br>LayoutStoreTests.Delete_ThenLoad_GivesNothing<br>LayoutStoreTests.Load_MissingFile_GivesNothingAndNoMessage<br>(+5) |
-| [ERG-003](exigences/ERG-003.md) | I | Grille Pan / Tilt | Validé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>PanTiltGeometryTests.FromCorners_AnyOrder_GivesOrderedRect<br>PanTiltGeometryTests.FromScreen_OutsideGrid_IsClamped<br>PanTiltGeometryTests.HitTest_HandlesBodyAndOutside<br>(+7) |
+| [ERG-003](exigences/ERG-003.md) | I | Grille Pan / Tilt | Validé | EditBenchPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>PanTiltGeometryTests.FromCorners_AnyOrder_GivesOrderedRect<br>PanTiltGeometryTests.FromScreen_OutsideGrid_IsClamped<br>PanTiltGeometryTests.HitTest_HandlesBodyAndOutside<br>(+7) |
 | [ERG-004](exigences/ERG-004.md) | I | Sélecteur de couleur | Validé | ColorPickerLayoutTests.BrightnessAt_BarTopAndBottom_IsFullAndBlack<br>ColorPickerLayoutTests.For_Size_SquareBarAndSwatchesDoNotOverlap<br>ColorPickerLayoutTests.HueSaturationAt_Corners_GivesHueAcrossAndSaturationDown<br>ColorPickerLayoutTests.SquarePoint_IsInverseOfHueSaturationAt<br>(+4) |
 | [ERG-005](exigences/ERG-005.md) | M | Galerie des composants | Réalisé |  |
 | [ERG-006](exigences/ERG-006.md) | I | Mesures du prototype | En cours |  |
 | [ERG-007](exigences/ERG-007.md) | I | Maquettes de la disposition Contrôle | Réalisé |  |
 | [ERG-008](exigences/ERG-008.md) | I | 8e couche par défaut « Libre » | Validé | SceneUsageAndStoreTests.DefaultLayers_HaveEightNonFlashAndFlash_WithFreeLayerWithoutFamilies |
 | [ERG-009](exigences/ERG-009.md) | I | Identité visuelle | Validé |  |
-| [ERG-010](exigences/ERG-010.md) | I | Mode LIVE de l'écran Contrôle | Validé | ControlSessionTests.EditAndBlind_WithoutScene_AreRefusedWithAReason<br>ControlSessionTests.Live_OverrideStays_WhenASceneOnTheSameChannelIsLaunched<br>ControlSessionTests.Live_SettingIsTemporaryOverride_ReleasedByReleaseAll<br>ControlSessionTests.ProjectReopened_BackToLive_WithNothingPushed |
-| [ERG-011](exigences/ERG-011.md) | I | Mode ÉDITION | Validé | ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>ControlSessionTests.Edit_ShowsTheStepOnOutput_UntilBackToLive<br>ControlSessionTests.Edit_WritesIntoStep_OneUndoEntryPerGesture<br>(+1) |
-| [ERG-012](exigences/ERG-012.md) | I | Mode AVEUGLE | Validé | ControlSessionTests.Blind_WritesStep_WithoutChangingTheOutput |
-| [ERG-013](exigences/ERG-013.md) | I | Zones du lieu dans l'écran Contrôle | Validé | ControlPanelsTests.Settings_Zones_DrawAllowedAndForbidden_Modify_Delete<br>ControlSessionTests.EditVenues_IsOneUndoableGesture |
-| [ERG-014](exigences/ERG-014.md) | I | Plan des appareils = la sélection | Validé | ControlPanelsTests.Plan_ClickCtrlClickRectangle_BuildTheSharedSelection<br>ControlPanelsTests.Plan_QuickSelections_EveryOther_Invert_None<br>ControlPanelsTests.Plan_ShowsOutput_OrPreviewInBlind<br>PlanAndStepStripTests.FixturesIn_Rectangle_KeepsOnlyFixturesInside |
+| [ERG-010](exigences/ERG-010.md) | I | Mode LIVE de l'écran Contrôle | Abandonné | ControlSessionTests.EditAndBlind_WithoutScene_AreRefusedWithAReason<br>ControlSessionTests.Live_OverrideStays_WhenASceneOnTheSameChannelIsLaunched<br>ControlSessionTests.Live_SettingIsTemporaryOverride_ReleasedByReleaseAll<br>ControlSessionTests.ProjectReopened_BackToLive_WithNothingPushed |
+| [ERG-011](exigences/ERG-011.md) | I | Mode ÉDITION | Abandonné | ControlSessionTests.Edit_ColorWithoutIntensity_AlsoLightsTheFixture<br>ControlSessionTests.Edit_ShowsTheStepOnOutput_UntilBackToLive<br>ControlSessionTests.Edit_WritesIntoStep_OneUndoEntryPerGesture<br>ControlSessionTests.Remove_InEdit_TakesTheFixtureOutOfTheStep<br>(+1) |
+| [ERG-012](exigences/ERG-012.md) | I | Mode AVEUGLE | Abandonné | ControlSessionTests.Blind_WritesStep_WithoutChangingTheOutput |
+| [ERG-013](exigences/ERG-013.md) | I | Zones du lieu dans l'écran Contrôle | Validé | ControlSessionTests.EditVenues_IsOneUndoableGesture<br>EditBenchPanelsTests.Settings_Zones_DrawAllowedAndForbidden_Modify_Delete |
+| [ERG-014](exigences/ERG-014.md) | I | Plan des appareils = la sélection | Validé | EditBenchPanelsTests.Plan_ClickCtrlClickRectangle_BuildTheSharedSelection<br>EditBenchPanelsTests.Plan_QuickSelections_EveryOther_Invert_None<br>EditBenchPanelsTests.Plan_ShowsOutput_OrPreviewInBlind<br>PlanAndStepStripTests.FixturesIn_Rectangle_KeepsOnlyFixturesInside |
 | [ERG-015](exigences/ERG-015.md) | M | Bande d'étapes | Validé | PlanAndStepStripTests.Widths_AreProportionalToDurations_AndFill<br>PlanAndStepStripTests.Widths_ShortOrZeroStep_KeepsMinimumWidth<br>PlanAndStepStripTests.Widths_TooNarrow_EveryCellAtMinimum |
-| [ERG-016](exigences/ERG-016.md) | I | Propriétés de la scène éditée | Validé | ControlPanelsTests.Properties_EditFieldsAndSteps_AreSavedAndUndoable<br>ControlPanelsTests.Properties_StepContent_IsReadable<br>ControlSessionTests.ChangeScenes_DeleteEditedScene_BackToLive_AndUndoBringsItBack<br>ControlSessionTests.UpdateScene_StepsAndProperties_AreUndoable |
-| [ERG-017](exigences/ERG-017.md) | I | Zone permise | Validé | AllowedZoneStoreTests.SaveThenLoad_AllowedFlag_RoundTrips_AndOldFilesReadAsForbidden<br>ControlPanelsTests.Settings_Zones_ChosenFromTheList_Renamed_Deleted<br>ControlPanelsTests.Settings_Zones_DrawAllowedAndForbidden_Modify_Delete<br>PanTiltGeometryTests.PickZone_BigSelected_ClickInTheSmall_TakesTheSmall_ButItsHandlesStillWin<br>(+4) |
-| [ERG-018](exigences/ERG-018.md) | I | Colonnes de l'écran Contrôle | Validé | ControlPanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>ControlPanelsTests.Compact_IsKeptOnThisComputer<br>ControlPanelsTests.ContextMenu_RenameDuplicateColorLayerHideDelete<br>ControlPanelsTests.EditBand_AsksForTheProperties_AndExplainsHowToWrite<br>(+8) |
-| [ERG-019](exigences/ERG-019.md) | I | Réglages des appareils | Validé | ControlPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>ControlPanelsTests.Settings_ColorInLive_OverridesOutput_AndKeepsTheRequestedColorShown<br>ControlPanelsTests.Settings_HeaderSaysWhereSettingsGo<br>ControlPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>(+4) |
+| [ERG-016](exigences/ERG-016.md) | I | Propriétés de la scène éditée | Validé | ControlSessionTests.ChangeScenes_DeleteEditedScene_BackToLive_AndUndoBringsItBack<br>ControlSessionTests.UpdateScene_StepsAndProperties_AreUndoable<br>EditBenchPanelsTests.Properties_EditFieldsAndSteps_AreSavedAndUndoable<br>EditBenchPanelsTests.Properties_StepContent_IsReadable |
+| [ERG-017](exigences/ERG-017.md) | I | Zone permise | Validé | AllowedZoneStoreTests.SaveThenLoad_AllowedFlag_RoundTrips_AndOldFilesReadAsForbidden<br>EditBenchPanelsTests.Settings_Zones_ChosenFromTheList_Renamed_Deleted<br>EditBenchPanelsTests.Settings_Zones_DrawAllowedAndForbidden_Modify_Delete<br>PanTiltGeometryTests.PickZone_BigSelected_ClickInTheSmall_TakesTheSmall_ButItsHandlesStillWin<br>(+4) |
+| [ERG-018](exigences/ERG-018.md) | I | Colonnes de l'écran Contrôle | Validé | GamePanelsTests.Columns_AreAllLayersByPriority_WithAllTheirScenes<br>GamePanelsTests.Compact_IsKeptOnThisComputer<br>GamePanelsTests.ContextMenu_RenameDuplicateColorLayerHideDelete<br>GamePanelsTests.FlashLayer_PlaysOnlyWhileHeld<br>(+6) |
+| [ERG-019](exigences/ERG-019.md) | I | Réglages des appareils | Validé | EditBenchPanelsTests.Settings_AimTwoLyres_Relative_EachGetsItsOwnValues<br>EditBenchPanelsTests.Settings_ColorInLive_OverridesOutput_AndKeepsTheRequestedColorShown<br>EditBenchPanelsTests.Settings_HeaderSaysWhereSettingsGo<br>EditBenchPanelsTests.Settings_IntensityInEdit_IsWrittenAfterTheGesture<br>(+4) |
 | [ERG-020](exigences/ERG-020.md) | I | Démonstration | Validé |  |
-| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | ControlPanelsTests.Lock_PlayAndLiveStillWork_EditingIsRefused |
+| [ERG-021](exigences/ERG-021.md) | I | Verrou soirée | Validé | DraftSessionTests.BeginDraft_IsRefusedUnderTheEveningLock_OrForAnUnknownScene<br>EditorViewModelTests.EveningLock_RefusesToOpen<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays<br>GameViewModelTests.TheEveningLock_CannotBeSetWhileTheEditorIsOpen |
 | [ERG-022](exigences/ERG-022.md) | M | Taille de l'interface | Validé | PreferencesAndProjectTests.UiScale_DefaultsTo100Percent_AndRoundTrips |
-| [ERG-023](exigences/ERG-023.md) | I | Looks | Validé | ControlPanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>ControlPanelsTests.Looks_Capture_LeavesTheGrandMasterToTheOperator<br>ControlPanelsTests.Looks_FunctionKeys_PlayByRank<br>ControlPanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>(+3) |
-| [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Validé | ControlLayoutTests.ShowPreset_BigColumnsPilotLooksJournal_SavedSeparately<br>ControlPanelsTests.LayoutPreset_SwitchesBetweenControlAndShow |
+| [ERG-023](exigences/ERG-023.md) | I | Looks | Validé | GamePanelsTests.Looks_CaptureWhatPlays_ThenReplayItFromAnotherState<br>GamePanelsTests.Looks_Capture_LeavesTheGrandMasterToTheOperator<br>GamePanelsTests.Looks_FunctionKeys_PlayByRank<br>GamePanelsTests.Looks_RenameColorDelete_AndLockRefusesEditingButNotPlaying<br>(+3) |
+| [ERG-024](exigences/ERG-024.md) | I | Disposition Spectacle | Abandonné |  |
 | [ERG-025](exigences/ERG-025.md) | M | Scènes resserrées | Validé |  |
-| [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé |  |
+| [ERG-026](exigences/ERG-026.md) | I | Stop et Tout stopper | Validé | GameViewModelTests.StopAndStopAll_StayAvailable_LockComprised |
 | [ERG-027](exigences/ERG-027.md) | M | Marges | Validé |  |
 
 ## P6 – 18 exigences, 17 couvertes par des tests automatiques
@@ -399,7 +399,7 @@
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+5) |
+| [EFF-001](exigences/EFF-001.md) | I | Ajouter un ou plusieurs effets à une étape, avec les paramètres du §6 | Validé | EffectCompilerTests.Problems_Reported_EffectDropped<br>EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.EffectOnlyInFirstStep_FadesOutWithSecondStepFade<br>EffectTests.SameEffectInTwoSteps_ContinuesWithoutRestart<br>(+4) |
 | [EFF-002](exigences/EFF-002.md) | I | Formes d'intensité | Validé | EffectCompilerTests.Wave_OnFourPars_OneDimmerPerMember_InPatchOrder<br>EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>EffectTests.Shapes_ExpectedOffsets<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues<br>(+2) |
 | [EFF-003](exigences/EFF-003.md) | I | Formes de position | Validé | EffectCompilerTests.Circle_AroundPositionPalette_CenterFromPalette_SizeInDegrees<br>EffectTests.PositionShapes_CircleAndEight<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees<br>(+1) |
 | [EFF-004](exigences/EFF-004.md) | I | Formes de couleur | Validé | EffectCompilerTests.Alternate_FromTheme_SteppedTables<br>EffectCompilerTests.Gradient_FromPaletteColors<br>EffectCompilerTests.MultiHead_64Channels_TwelveHeads_Rainbow<br>EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>(+3) |
@@ -410,10 +410,25 @@
 | [EFF-009](exigences/EFF-009.md) | S | Combinaison de deux effets sur un même attribut | Réalisé | EffectTests.TwoRelativeEffects_SameAttribute_Add |
 | [EFF-011](exigences/EFF-011.md) | I | Effet d'intensité visible | Validé | EffectsPanelTests.IntensityEffect_OnNewScene_GivesWhiteToUncoloredTargets_KeepsExistingColors |
 | [ERG-028](exigences/ERG-028.md) | M | Molette | Validé | EffectsPanelTests.Dial_Fraction<br>EffectsPanelTests.Dial_Parse_TypedValues<br>EffectsPanelTests.Dials_WriteIntoTheEffect_OneGesture |
-| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.DefaultLayout_HasEffectsPanel_NextToSettings<br>EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
+| [ERG-029](exigences/ERG-029.md) | I | Panneau Effets de l'écran Contrôle | Validé | EffectsPanelTests.Edit_AddWaveFromLibrary_OnPlanSelection_PlaysOnOutputAtOnce_UndoRemovesIt<br>EffectsPanelTests.PositionShape_ShowsPlane_AndDegrees |
 | [ERG-030](exigences/ERG-030.md) | I | En-têtes de couche toujours visibles | Validé |  |
 | [ERG-031](exigences/ERG-031.md) | M | Éditeur de thèmes | Validé | EffectsPanelTests.ThemeEditor_NewTheme_FromWindow_UsedByTheEffect_DefaultThemesLocked |
 | [MOT-060](exigences/MOT-060.md) | I | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | Validé | EffectCompilerTests.Rainbow_PlayedByEngine_ColorChangesOverCycle<br>EffectTests.SceneSpeed_DoublesEffectSpeed<br>EffectTests.Sine_FourPars_NinetyDegreesApart_ExpectedValues |
 | [MOT-061](exigences/MOT-061.md) | I | Effet relatif | Validé | EffectTests.AbsoluteEffect_ReplacesStepValue<br>EffectTests.RelativeCircle_AroundStepPosition<br>EffectTests.RelativeEffect_WithoutStepValue_AddsToUnderlyingLayer |
 | [MOT-063](exigences/MOT-063.md) | M | Un effet entre et sort avec le poids de sa scène | Réalisé | EffectTests.EffectEntersWithSceneFade_NoJump<br>EffectTests.EffectLeavesWithSceneFadeOut |
 | [SCN-014](exigences/SCN-014.md) | S | Assistants de création | Validé | EffectsPanelTests.Wizard_ColorChase_ReplacesSteps_Undoable<br>SceneWizardsTests.Alternate_TwoSteps_Swapped<br>SceneWizardsTests.ColorChase_FourParsFourColors_FourSteps_ColorsShiftByOne<br>SceneWizardsTests.PositionSweep_OneStepPerPalette_AllMembers |
+
+## ERG2 – 8 exigences, 6 couvertes par des tests automatiques
+
+> Validé : 8
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [ERG-032](exigences/ERG-032.md) | I | Écran de jeu | Validé | ControlLayoutTests.DefaultLayout_IsTheGameScreen_FiveBigPanels_NoEditingPanel<br>ControlLayoutTests.Store_KeepsTheGameLayoutInItsOwnFile_TheOldOnesAreIgnored<br>GameViewModelTests.EditBand_AsksForTheEditWindow_WithTheSceneId_AndChangesNothingElse<br>GameViewModelTests.LockedEveningLock_RefusesTheEditWindow_WithItsReason_ButStillPlays<br>(+3) |
+| [ERG-033](exigences/ERG-033.md) | I | Fenêtre d'édition de scène | Validé | DraftSessionTests.BeginDraft_ChoosesTheSceneInEdit_WithoutWritingAnything<br>DraftSessionTests.BeginDraft_IsRefusedUnderTheEveningLock_OrForAnUnknownScene<br>DraftSessionTests.Editing_KeepsTheDraftInMemory_TheProjectSceneStaysAsItWas_TheEngineGetsTheDraft<br>DraftSessionTests.EndDraft_LeavesNoSceneEdited_NoOutputChange_AndTheDraftIsGone<br>(+17) |
+| [ERG-034](exigences/ERG-034.md) | I | Aperçu du brouillon | Validé | DraftSessionTests.ApplyDraft_WritesTheSceneIntoTheProject_AndTheDraftGoesOn<br>DraftSessionTests.Blind_TheOutputKeepsTheSavedScene_OnlyThePreviewSeesTheDraft<br>DraftSessionTests.DiscardDraft_GoesBackToTheOriginalScene_KeepingWhatWasApplied<br>DraftSessionTests.SuspendShow_LetsTheDraftSceneBePlayedWithoutTheEditedStepOnTop<br>(+3) |
+| [ERG-035](exigences/ERG-035.md) | M | Tailles minimales des cibles | Validé |  |
+| [ERG-036](exigences/ERG-036.md) | I | Groupes d'appareils | Validé | DimmerCompilerTests.Compile_FaultyGroups_AreReportedAsWarnings_AndNeverBlock<br>DimmerCompilerTests.Compile_GroupsTree_GivesParentFirstAndTheGroupOfEachFixtureParameter<br>DimmerCompilerTests.Compile_WithoutGroups_GivesTheEngineNoGroup<br>DimmerGroupsViewModelTests.AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack<br>(+19) |
+| [ERG-037](exigences/ERG-037.md) | I | Dimmers de groupe | Validé | DimmerCompilerTests.EndToEnd_GroupDimmer_HalvesTheFourParsOnTheWire_LeavingTheLyreAlone<br>DimmerGroupsViewModelTests.Levels_AreReadFromTheEngine_ReadOnly_WithFaderNumbersAndTheFlow<br>DimmersPanelTests.AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack<br>DimmersPanelTests.MovingAFader_SendsTheCommand_TheEngineMultiplies_AndTheEffectiveLevelFollows<br>(+12) |
+| [ERG-038](exigences/ERG-038.md) | I | Seconde platine MIDI | Validé | DimmerGroupsViewModelTests.DimmerPlatine_ChosenInTheInterface_IsWrittenToMidiJson<br>DimmerGroupsViewModelTests.FaderMarkers_PastEight_NameThePage<br>DimmersPanelTests.OneFaderPerDimmerGroup_InTreeOrder_WithTheirPlatineNumber<br>DimmersPanelTests.WithMoreThanEightDimmers_TheMarkersFollowThePlatinePage_AndTheOtherPageIsDimmed<br>(+13) |
+| [ERG-039](exigences/ERG-039.md) | I | Fader de couche = niveau de couche | Validé |  |

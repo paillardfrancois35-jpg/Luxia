@@ -484,6 +484,7 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 ```json
 {
   "formatVersion": 1,
+  "dimmerController": "MK1",
   "bindings": [
     { "model": "MK1", "control": "pad 1 1", "action": "launchScene", "sceneId": "…" },
     { "control": "droite 5", "action": "smokeBurst" },
@@ -495,7 +496,16 @@ Schéma : [`schemas/midi.schema.json`](schemas/midi.schema.json).
 | Propriété | Rôle |
 |---|---|
 | `control` | `pad <colonne 1-8> <ligne 1-8>` (ligne 1 en haut), `bas <1-8>`, `droite <1-8>` (de haut en bas), `fader <1-9>` (9 = master) |
-| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `none` |
+| `action` | `launchScene`, `flashScene` (scène : `sceneId`) ; `stopLayer`, `layerMaster` (couche : `layerId`) ; `grandMaster`, `blackout` (tant que maintenu, MIDI-011), `blackoutToggle` (bascule), `flash`, `strobe`, `smoke`, `smokeBurst`, `freeze`, `stopAll`, `groupDimmer` (fader, avec `layerId` = identifiant du groupe), `groupDimmerReset`, `none` |
+
+| `dimmerController` | Platine des dimmers de groupe (ERG-038) : morceau du nom du port ou du modèle (`"MK1"`). Absent = la **deuxième platine branchée** (ordre alphabétique des ports) quand le projet a des dimmers de groupe ; une seule platine, ou aucun dimmer : toutes gardent les couches |
+
+**Platine des dimmers** (ERG-038) : faders 1 à 8 = les 8 dimmers de la page courante, dans l'ordre de l'arbre (reprise douce ; après une
+remise à 100 % au bouton, le fader doit recroiser le niveau), boutons du bas 1 à 8 (de gauche à droite ; ronds sur la MK1, carrés sur la MK2)
+= remettre le dimmer à 100 % (LED allumée tant que le dimmer est retouché), Maj + bas 3 / 4 = page précédente / suivante (8 dimmers par
+page ; MK1 : flèches gauche / droite, MK2 : SEND / DEVICE) ; pads éteints et fader 9 sans effet ; boutons de droite (Blackout, Flash…)
+inchangés. Le réglage se choisit dans Installation › Gestion des dimmers (« Platine MIDI des dimmers »), qui écrit `dimmerController`.
+La platine des couches ne change pas. Une affectation `bindings` prime toujours sur ce rôle.
 
 Profils des modèles (notes, LED) : fichiers de données du module (`src/Luxia.Midi/Profiles/*.json`).
 
@@ -526,6 +536,38 @@ conception ; `valider` signale une scène ou une couche introuvable.
 |---|---|
 | `looks[].actions[].kind` | `launchScene`, `stopScene` (avec `sceneId`) ; `stopLayer` (avec `layerId`) ; `stopAll` (« tout arrêter », sauf les couches épargnées comme Ambiance) ; `layerMaster` (`layerId`, `level` 0-1) ; `grandMaster` (`level` 0-1 : lu, mais « Capturer ce qui joue » n'en produit pas, le Grand Master reste à l'opérateur, C13). Jouées dans l'ordre ; une action incomplète est ignorée |
 | `color`, `notes` | Couleur du bouton ; explication lisible (infobulle) |
+
+## 12d-quater. Projet : `groupes.json` (format 1)
+
+Arbre des groupes d'appareils (ERG-036) et dimmers de groupe (ERG-037, Q37). Facultatif : sans fichier, aucun groupe.
+Un appareil n'est que dans **un seul** groupe ; un appareil sans groupe est dans le groupe implicite « non assigné »
+(nom : `unassignedName`), sans dimmer. Distinct des **sélections** (`installation.json` : ordre, cellules). Écrit par LuXia
+(onglet « Gestion des dimmers » de l'écran Installation) ou par une IA de conception. Schéma :
+[`schemas/groupes.schema.json`](schemas/groupes.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "unassignedName": "Non assigné",
+  "groups": [
+    { "id": "…", "name": "Parc lumineux", "hasDimmer": true },
+    { "id": "…", "name": "Face (PAR)", "parentId": "<id de Parc lumineux>", "hasDimmer": true },
+    { "id": "…", "name": "PAR scène", "parentId": "<id de Face (PAR)>", "hasDimmer": true, "fixtureIds": ["<id de PAR 1>", "…"] },
+    { "id": "…", "name": "UV", "hasDimmer": true, "fixtureIds": ["…"] }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `groups[].parentId` | Groupe parent (arbre) ; absent = racine. Un parent inconnu ou une boucle remonte le groupe à la racine (avertissement) |
+| `groups[].hasDimmer` | Le groupe a un dimmer : un niveau 0-1 réglé en direct (commande `RéglerDimmerGroupe`, CMD-031), **non enregistré** (retouche, comme le Grand Master) |
+| `groups[].fixtureIds` | Appareils rangés directement dans le groupe. Un appareil cité deux fois : le premier groupe l'emporte (avertissement) ; identifiant inconnu : ignoré (avertissement) ; des jumeaux suivent le groupe de leur appareil de référence |
+
+**Règle des dimmers (proportionnelle)** : l'intensité finale d'un appareil est multipliée, **après** la fusion des couches
+et le Grand Master, par le niveau de chaque groupe de la racine à son groupe (Grand Master 85 % × Parc 80 % × Face 70 % ×
+PAR scène 50 % ≈ 24 %). Les formes des effets et les fondus restent intacts. Un appareil RVB sans canal d'intensité est
+atténué par son intensité virtuelle (ses canaux de couleur la suivent, MOT-040). `valider` signale les problèmes ci-dessus.
 
 ## 12d-ter. Projet : `effets.json` (format 1)
 
@@ -595,6 +637,7 @@ seule scène (GEN-132).
 | 2026-09-26 | P4 : `scènes.json`, `palettes.json`, `couches.json`, scénario de commandes, schémas JSON ; `whiteMode` facultatif sur le modèle d'appareil (MOT-051). |
 | 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
 | 2026-09-28 | P6 : `effects` et `hueFade` des étapes (§10.1), palettes `theme` avec `colors` (PAL-010, thèmes par défaut ajoutés à un projet qui n'en a aucun), `effets.json` (§12d-ter) ; schémas mis à jour ; champs facultatifs : format 1 inchangé, sans migration. |
+| 2026-09-29 | `groupes.json` (ERG-036, ERG-037, CMD-031) : arbre des groupes d'appareils et dimmers de groupe. |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |

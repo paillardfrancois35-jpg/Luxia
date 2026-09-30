@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Control"
+             x:Class="Luxia.UI.Modules.Control.Views.DimmersPanelView"
+             x:DataType="vm:DimmersPanelViewModel">
+  <DockPanel Margin="8,4,8,6">
+    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,30,6">
+      <TextBlock Text="{Binding PageText}" FontSize="12" Foreground="#8B949E" VerticalAlignment="Center"
+                 IsVisible="{Binding PageText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+      <Button Content="Tout à 100 %" MinHeight="32" Command="{Binding ResetAllCommand}" IsEnabled="{Binding IsRetouched}"
+              ToolTip.Tip="Remet tous les dimmers de groupe à 100 % (ce sont des retouches en direct, jamais enregistrées)" />
+    </StackPanel>
+    <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" FontSize="11" Foreground="#8B949E" Margin="0,4,0,0"
+               Text="Le niveau effectif multiplie chaque étage de l'arbre (Parc × Face × PAR scène…). Le Grand Master reste à part. ② n = numéro du fader sur la seconde platine MIDI." />
+    <TextBlock DockPanel.Dock="Top" IsVisible="{Binding IsEmpty}" TextWrapping="Wrap" Foreground="#8B949E" Margin="0,0,0,8"
+               Text="Aucun groupe n'a de dimmer. Créez des groupes dans Installation › Gestion des dimmers (un groupe par type d'appareil : PAR, UV, lyres…), cochez « Ce groupe a un dimmer » : un fader apparaît ici." />
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,16">
+      <ItemsControl ItemsSource="{Binding Faders}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="6" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:DimmerFaderViewModel">
+            <Grid Width="76" RowDefinitions="Auto,*,Auto,Auto,Auto" ToolTip.Tip="{Binding Tip}" DoubleTapped="OnDoubleTapped">
+              <TextBlock Grid.Row="0" Text="{Binding Percent, StringFormat='{}{0:0} %'}" FontSize="15" FontWeight="SemiBold"
+                         HorizontalAlignment="Center" Foreground="{Binding IsRetouched, Converter={x:Static vm:ControlConverters.RetouchBrush}}" />
+              <Slider Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="100" SmallChange="1" LargeChange="10"
+                      Value="{Binding Percent}" HorizontalAlignment="Center" MinHeight="120" Margin="0,8" />
+              <TextBlock Grid.Row="2" Text="{Binding Name}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" TextAlignment="Center"
+                         MinHeight="32" />
+              <TextBlock Grid.Row="3" Text="{Binding EffectiveText}" FontSize="11" Foreground="#8B949E" HorizontalAlignment="Center" />
+              <TextBlock Grid.Row="4" Text="{Binding FaderText}" FontSize="10" Foreground="#8B949E" HorizontalAlignment="Center" Opacity="{Binding FaderOpacity}"
+                         ToolTip.Tip="Fader de la seconde platine MIDI" />
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

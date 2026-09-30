@@ -12,6 +12,7 @@ namespace Luxia.Scenes.Compilation;
 /// <param name="Scenes">Scènes.</param>
 /// <param name="Palettes">Palettes.</param>
 /// <param name="Safety">Réglages de sûreté (<c>null</c> = valeurs par défaut).</param>
+/// <param name="Groups">Arbre des groupes de dimmers (<c>null</c> = aucun, ERG-036).</param>
 public sealed record ProjectContent(
     Installation Installation,
     VenueSet Venues,
@@ -19,4 +20,5 @@ public sealed record ProjectContent(
     LayerSet Layers,
     SceneSet Scenes,
     PaletteSet Palettes,
-    SafetySettings? Safety = null);
+    SafetySettings? Safety = null,
+    FixtureGroupSet? Groups = null);

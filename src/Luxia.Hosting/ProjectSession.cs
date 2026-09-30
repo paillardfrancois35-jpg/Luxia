@@ -146,6 +146,12 @@ public sealed class ProjectSession
             messages.Add(looksMessage);
         }
 
+        var (groups, groupsMessage) = GroupStore.Load(folder);
+        if (groupsMessage is not null)
+        {
+            messages.Add(groupsMessage);
+        }
+
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         if (effectsMessage is not null)
         {
@@ -164,6 +170,7 @@ public sealed class ProjectSession
         Live = live;
         Midi = midi;
         Looks = looks;
+        Groups = groups;
         Effects = effects;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
@@ -245,6 +252,20 @@ public sealed class ProjectSession
         NotifyShowDataChanged();
     }
 
+    /// <summary>
+    /// Remplace les réglages MIDI du projet et les enregistre (<c>midi.json</c>) : platine des dimmers, affectations (ERG-038).
+    /// Les contrôleurs reprennent la disposition tout de suite.
+    /// </summary>
+    public void SaveMidi(Luxia.Midi.MidiSettings midi)
+    {
+        ArgumentNullException.ThrowIfNull(midi);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        Luxia.Midi.MidiStore.Save(folder, midi);
+        Midi = midi;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Looks du projet (ERG-023, doc 60 §4.8).</summary>
     public LookSet Looks { get; private set; } = new();
 
@@ -255,6 +276,20 @@ public sealed class ProjectSession
         var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
         LookStore.Save(folder, looks);
         Looks = looks;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Arbre des groupes d'appareils et de leurs dimmers (<c>groupes.json</c>, ERG-036).</summary>
+    public FixtureGroupSet Groups { get; private set; } = new();
+
+    /// <summary>Remplace l'arbre des groupes, l'enregistre (<c>groupes.json</c>) et recompile le moteur (ERG-036, ERG-037).</summary>
+    public void SaveGroups(FixtureGroupSet groups)
+    {
+        ArgumentNullException.ThrowIfNull(groups);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        GroupStore.Save(folder, groups);
+        Groups = groups;
         Info = ProjectStore.Save(folder, Info!);
         NotifyShowDataChanged();
     }
@@ -307,12 +342,14 @@ public sealed class ProjectSession
         var (live, liveMessage) = LiveStore.Load(folder);
         var (midi, midiMessage) = Luxia.Midi.MidiStore.Load(folder);
         var (looks, looksMessage) = LookStore.Load(folder);
+        var (groups, groupsMessage) = GroupStore.Load(folder);
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         Live = live;
         Midi = midi;
         Looks = looks;
+        Groups = groups;
         Effects = effects;
-        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, effectsMessage }.OfType<string>());
+        messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, groupsMessage, effectsMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
         NotifyShowDataChanged();

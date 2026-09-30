@@ -1,6 +1,8 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Luxia.App;
 using Luxia.App.ViewModels;
 using Luxia.Core.Time;
@@ -77,83 +79,16 @@ foreach (var page in vm.Pages)
     Capture(page.Title);
 }
 
-// Écran Contrôle (doc 60, E2) en situation : LIVE, ÉDITION, AVEUGLE, zones.
-if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewModel) is { Page: Luxia.UI.Modules.Control.ControlViewModel control } controlPage)
+// Écran de jeu (ERG-032) : des scènes jouent, des looks, un dimmer retouché (bandeau jaune) ; la bande ✎ vise la fenêtre d'édition.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewModel) is { Page: Luxia.UI.Modules.Control.GameViewModel game } gamePage)
 {
-    vm.SelectedPage = controlPage;
-    var fixtures = runtime.Project.Installation.Fixtures;
-    Guid Id(string name) => fixtures.First(f => f.Name == name).Id;
+    vm.SelectedPage = gamePage;
     Luxia.Scenes.Model.Scene SceneNamed(string name) => runtime.Project.Scenes.Scenes.First(s => s.Name == name);
+    foreach (var name in new[] { "Plein feu", "Chenillard 4 couleurs", "Lyres sur 3 positions", "UV plein" })
+    {
+        runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchSceneCommand(Luxia.Messaging.Commands.CommandOrigin.User, SceneNamed(name).Id));
+    }
 
-    // LIVE : deux scènes jouent, les 4 PAR sont retouchés en bleu.
-    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchSceneCommand(Luxia.Messaging.Commands.CommandOrigin.User, SceneNamed("Plein feu").Id));
-    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchSceneCommand(Luxia.Messaging.Commands.CommandOrigin.User, SceneNamed("Lyres sur 3 positions").Id));
-    control.Session.Select([Id("PAR 1"), Id("PAR 2"), Id("PAR 3"), Id("PAR 4")]);
-    Tick(40);
-    control.Settings.SelectedTab = 1;
-    control.Settings.RequestColor(new LightColor(215, 1, 1));
-    Tick(40);
-    Capture("Contrôle - LIVE surcharge");
-
-    // Boutons de scène resserrés (essai 1.005.226).
-    control.Columns.IsCompact = true;
-    Tick(5);
-    Capture("Contrôle - scènes resserrées");
-    control.Columns.IsCompact = false;
-
-    // ÉDITION : étape 2 du chenillard, PAR sélectionnés.
-    control.Session.ReleaseAll();
-    control.Session.ChooseScene(SceneNamed("Chenillard 4 couleurs").Id);
-    control.Session.ChooseStep(1);
-    control.SetModeCommand.Execute("edition");
-    Tick(10);
-    Capture("Contrôle - ÉDITION");
-
-    // P6 : panneau Effets, un chenillard sur les PAR (courbe et points des membres), puis des cercles opposés sur les lyres.
-    control.Session.ChooseScene(SceneNamed("Plein feu").Id);
-    control.SetModeCommand.Execute("edition");
-    control.Session.Select([Id("PAR 1"), Id("PAR 2"), Id("PAR 3"), Id("PAR 4")]);
-    control.Effects.SelectedTemplate = control.Effects.Templates.First(t => t.Template.Name == "Vague douce");
-    control.Effects.AddEffectCommand.Execute(null);
-    control.Session.Commit();
-    control.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Effects);
-    Tick(20);
-    Capture("Contrôle - Effets vague");
-    control.Session.Select([Id("Lyre 1"), Id("Lyre 2")]);
-    control.Effects.SelectedTemplate = control.Effects.Templates.First(t => t.Template.Name == "Cercles opposés");
-    control.Effects.AddEffectCommand.Execute(null);
-    control.Session.Commit();
-    Tick(20);
-    Capture("Contrôle - Effets cercles");
-    control.Session.Undo();
-    control.Session.Undo();
-    control.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Settings);
-
-    // AVEUGLE : les lyres, onglet Position.
-    control.Session.ChooseScene(SceneNamed("Lyres sur 3 positions").Id);
-    control.SetModeCommand.Execute("aveugle");
-    control.Session.Select([Id("Lyre 1"), Id("Lyre 2")]);
-    Tick(10);
-    control.Settings.SelectedTab = 2;
-    Tick(10);
-    Capture("Contrôle - AVEUGLE lyres");
-
-    // Zones de la lyre 1 (lieu).
-    control.SetModeCommand.Execute("live");
-    control.Session.Select([Id("Lyre 1")]);
-    Tick(5);
-    control.Settings.SelectedTab = 2;
-    control.Settings.IsZoneEditing = true;
-    control.Settings.NewZoneAllowed = true;
-    control.Settings.RequestZone(new PanTiltZoneRequest(null, new PanTiltRect(0.1, 0.9, 0.15, 0.95)));
-    control.Settings.NewZoneAllowed = false;
-    control.Settings.RequestZone(new PanTiltZoneRequest(null, new PanTiltRect(0.35, 0.65, 0.05, 0.3)));
-    Tick(5);
-    Capture("Contrôle - zones");
-    control.Settings.IsZoneEditing = false;
-    control.Flush();
-
-    // Disposition Spectacle (F10) avec deux looks.
     runtime.Project.SaveLooks(new Luxia.Scenes.Model.LookSet
     {
         Looks =
@@ -162,15 +97,42 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.ControlViewM
             new() { Name = "Retour de piste", Color = "#DB61A2", Actions = [new() { Kind = Luxia.Scenes.Model.LookActionKind.StopAll }, new() { Kind = Luxia.Scenes.Model.LookActionKind.LaunchScene, SceneId = SceneNamed("Chenillard 4 couleurs").Id }] },
         ],
     });
-    control.SetLayoutCommand.Execute("spectacle");
+    Tick(40);
+    Capture("Contrôle - écran de jeu");
+    game.Columns.IsCompact = true;
     Tick(5);
-    Capture("Contrôle - disposition Spectacle");
-    control.SetLayoutCommand.Execute("controle");
+    Capture("Contrôle - écran de jeu resserré");
+    game.Columns.IsCompact = false;
 
     // F8 : la même chose à 125 %.
     vm.SetUiScaleCommand.Execute("1.25");
-    Capture("Contrôle - taille 125 %");
+    Capture("Contrôle - écran de jeu 125 %");
     vm.SetUiScaleCommand.Execute("1");
+
+    // Fenêtre d'édition (ERG-033, ERG-034) : brouillon du chenillard, puis aveugle sur les lyres.
+    var editor = new Luxia.UI.Modules.Control.Views.EditorWindow { Width = 1440, Height = 860 };
+    editor.Attach(game.Editor);
+    editor.Show();
+    Guid FixtureId(string name) => runtime.Project.Installation.Fixtures.First(f => f.Name == name).Id;
+    var work = game.Editor.Workbench;
+    game.Editor.Open(SceneNamed("Chenillard 4 couleurs").Id);
+    work.Session.ChooseStep(1);
+    work.Session.Select([FixtureId("PAR 1"), FixtureId("PAR 2"), FixtureId("PAR 3"), FixtureId("PAR 4")]);
+    work.Settings.SelectedTab = 1;
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - brouillon", editor);
+    game.Editor.Cancel();
+    game.Editor.Open(SceneNamed("Lyres sur 3 positions").Id);
+    editor.Present(null);
+    game.Editor.IsBlind = true;
+    work.Session.ChooseStep(2);
+    work.Session.Select([FixtureId("Lyre 1"), FixtureId("Lyre 2")]);
+    work.Settings.SelectedTab = 2;
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - aveugle", editor);
+    game.Editor.Cancel();
 }
 
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.
@@ -231,6 +193,41 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
         zones.Show();
         Capture("Zones interdites", zones);
         zones.Close();
+    }
+}
+
+// Onglet « Gestion des dimmers » (ERG-036) : un arbre d'exemple sur le parc du projet, dimmers réglés pour voir les niveaux.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Installation.InstallationViewModel) is { Page: Luxia.UI.Modules.Installation.InstallationViewModel installation } installationPage)
+{
+    vm.SelectedPage = installationPage;
+    var all = runtime.Project.Installation.Fixtures;
+    Guid[] Named(params string[] names) => [.. all.Where(f => names.Contains(f.Name)).Select(f => f.Id)];
+    var parc = new Luxia.Patch.Model.FixtureGroup { Name = "Parc lumineux", HasDimmer = true };
+    var face = new Luxia.Patch.Model.FixtureGroup { Name = "Face (PAR)", ParentId = parc.Id, HasDimmer = true };
+    var pars = new Luxia.Patch.Model.FixtureGroup { Name = "PAR scène", ParentId = face.Id, HasDimmer = true, FixtureIds = Named("PAR 1", "PAR 2", "PAR 3", "PAR 4") };
+    var barres = new Luxia.Patch.Model.FixtureGroup { Name = "Barres", ParentId = parc.Id, HasDimmer = true, FixtureIds = Named("Barre 1", "Barre 2") };
+    var uv = new Luxia.Patch.Model.FixtureGroup { Name = "UV", HasDimmer = true, FixtureIds = Named("UV 1", "UV 2") };
+    runtime.Project.SaveGroups(new Luxia.Patch.Model.FixtureGroupSet { Groups = [parc, face, pars, barres, uv] });
+    Tick(3);
+    foreach (var (group, level) in new[] { (parc, 0.8), (face, 0.7), (pars, 0.5), (uv, 0.4) })
+    {
+        runtime.Engine.Send(new Luxia.Messaging.Commands.SetGroupDimmerCommand(Luxia.Messaging.Commands.CommandOrigin.User, group.Id, level));
+    }
+
+    Tick(3);
+    installation.Dimmers.Reload();
+    installation.Dimmers.SelectedRow = installation.Dimmers.Rows.First(r => r.Name == "PAR scène");
+    var tabs = window.GetVisualDescendants().OfType<TabControl>().First();
+    tabs.SelectedItem = tabs.Items.OfType<TabItem>().First(t => (t.Header as string) == "Gestion des dimmers");
+    Capture("Installation - Gestion des dimmers");
+
+    // Panneau « Groupes dimmer » de l'écran Contrôle (ERG-037) : mêmes groupes, mêmes niveaux.
+    if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewModel) is { Page: Luxia.UI.Modules.Control.GameViewModel dimmersControl } dimmersControlPage)
+    {
+        vm.SelectedPage = dimmersControlPage;
+        dimmersControl.RequestPanel(Luxia.UI.Modules.Control.Docking.ControlPanels.Dimmers);
+        Tick(5);
+        Capture("Contrôle - Groupes dimmer");
     }
 }
 

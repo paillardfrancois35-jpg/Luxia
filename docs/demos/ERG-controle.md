@@ -1,5 +1,7 @@
 # Chantier ergonomique – essai de l'écran « Contrôle »
 
+> **Guide historique.** Depuis le chantier « Contrôle 2 » (v1.007), l'écran Contrôle n'a plus de modes LIVE / ÉDITION / AVEUGLE ni de
+> disposition Spectacle : voir [ERG2-controle-2.md](ERG2-controle-2.md) et le doc 60 §4.9. Ce guide décrit l'écran tel qu'il était en 1.005 / 1.006.
 > Branche `ergo/analyse`, version de développement **1.005** (numéro exact annoncé dans la discussion, à lire dans la
 > barre de titre). Doc de référence : [60 – Ergonomie](../60-ergonomie.md) §4, §9 (ERG-009 à ERG-020), §11 (choix faits
 > par délégation, **à rediscuter après usage**).

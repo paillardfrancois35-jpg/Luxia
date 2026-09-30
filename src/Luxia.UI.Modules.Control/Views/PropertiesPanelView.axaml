@@ -22,16 +22,30 @@
     </Style>
   </UserControl.Styles>
 
-  <Panel Margin="10,4,10,8">
-    <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,4,30,8" />
+  <DockPanel Margin="10,4,10,8">
+    <!-- En-tête fixe : nom, essai (▶ Lancer, ■ Arrêter) et étapes restent à portée de main où qu'on soit dans les propriétés (essai 1.007.092). -->
+    <StackPanel DockPanel.Dock="Top" IsVisible="{Binding HasScene}" IsEnabled="{Binding IsEditable}" Spacing="6" Margin="0,0,0,6">
+      <Grid ColumnDefinitions="Auto,*" Margin="0,0,30,4">
+        <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" Margin="0,0,8,0" />
+        <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" ToolTip.Tip="Nom de la scène (enregistré à la frappe, Ctrl+Z pour annuler)" />
+      </Grid>
+      <TextBlock Text="{Binding Summary}" FontSize="12" Foreground="#8B949E" Margin="0,0,0,8" />
+      <StackPanel Orientation="Horizontal" Spacing="6">
+        <Button Content="▶ Lancer" MinHeight="32" Command="{Binding TestCommand}" ToolTip.Tip="Joue la scène avec le brouillon (les autres couches continuent), sans changer de mode" />
+        <Button Content="■ Arrêter" MinHeight="32" Command="{Binding StopTestCommand}" />
+      </StackPanel>
+      <c:StepStrip x:Name="Strip" Items="{Binding Steps}" SelectedIndex="{Binding SelectedStep}" Accent="{Binding Accent}" />
+      <WrapPanel>
+        <Button Content="+ étape" Margin="0,0,4,4" Command="{Binding AddStepCommand}" ToolTip.Tip="Nouvelle étape vide après l'étape choisie" />
+        <Button Content="Dupliquer" Margin="0,0,4,4" Command="{Binding DuplicateStepCommand}" />
+        <Button Content="⇠ Déplacer" Margin="0,0,4,4" Command="{Binding MoveStepLeftCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la gauche (plus tôt dans la scène). Pour choisir une autre étape : clic dans la bande ou flèches ← →" />
+        <Button Content="Déplacer ⇢" Margin="0,0,4,4" Command="{Binding MoveStepRightCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la droite (plus tard dans la scène)" />
+        <Button Content="Supprimer" Margin="0,0,4,4" Foreground="#F85149" Command="{Binding DeleteStepCommand}" ToolTip.Tip="Il reste toujours une étape (Ctrl+Z pour annuler)" />
+      </WrapPanel>
+    </StackPanel>
+    <TextBlock DockPanel.Dock="Top" Text="{Binding EmptyText}" IsVisible="{Binding !HasScene}" TextWrapping="Wrap" Foreground="#8B949E" Margin="4,4,30,8" />
     <ScrollViewer IsVisible="{Binding HasScene}">
       <StackPanel IsEnabled="{Binding IsEditable}">
-        <!-- Identité -->
-        <Grid ColumnDefinitions="Auto,*" Margin="0,0,30,4">
-          <Border Width="22" Height="22" CornerRadius="4" Background="{Binding Color}" Margin="0,0,8,0" />
-          <TextBox Grid.Column="1" Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" ToolTip.Tip="Nom de la scène (enregistré à la frappe, Ctrl+Z pour annuler)" />
-        </Grid>
-        <TextBlock Text="{Binding Summary}" FontSize="12" Foreground="#8B949E" Margin="0,0,0,8" />
         <Border IsVisible="{Binding ShowsModeHint}" Background="#1F58A6FF" BorderBrush="#58A6FF" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,0,8">
           <TextBlock TextWrapping="Wrap" FontSize="12"
                      Text="Scène choisie : vous pouvez déjà la renommer, changer ses étapes, sa vitesse… ci-dessous. Pour modifier ses couleurs, positions, intensités : ÉDITION (on la voit sur la sortie) ou 👁 AVEUGLE (sans toucher la sortie). En LIVE, les Réglages restent des retouches temporaires." />
@@ -48,7 +62,7 @@
         </ItemsControl>
 
         <!-- Lecture -->
-        <Expander Header="Lecture" IsExpanded="True">
+        <Expander Header="Lecture" IsExpanded="False">
           <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
             <TextBlock Classes="label" Text="Couche" />
             <ComboBox Grid.Column="1" ItemsSource="{Binding Layers}" SelectedItem="{Binding Layer}" HorizontalAlignment="Stretch" />
@@ -66,21 +80,6 @@
                            PlaceholderText="immédiat" ToolTip.Tip="Vide : arrêt immédiat" />
             <CheckBox Grid.Row="6" Grid.Column="1" Content="Visible dans l'écran Live" IsChecked="{Binding VisibleInLive}" />
           </Grid>
-        </Expander>
-
-        <!-- Étapes -->
-        <Expander Header="Étapes" IsExpanded="True">
-          <StackPanel Spacing="6">
-            <c:StepStrip x:Name="Strip" Items="{Binding Steps}" SelectedIndex="{Binding SelectedStep}" Accent="{Binding Accent}" />
-            <WrapPanel>
-              <Button Content="+ étape" Margin="0,0,4,4" Command="{Binding AddStepCommand}" ToolTip.Tip="Nouvelle étape vide après l'étape choisie" />
-              <Button Content="Dupliquer" Margin="0,0,4,4" Command="{Binding DuplicateStepCommand}" />
-              <Button Content="⇠ Déplacer" Margin="0,0,4,4" Command="{Binding MoveStepLeftCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la gauche (plus tôt dans la scène). Pour choisir une autre étape : clic dans la bande ou flèches ← →" />
-              <Button Content="Déplacer ⇢" Margin="0,0,4,4" Command="{Binding MoveStepRightCommand}" ToolTip.Tip="Déplacer l'étape choisie d'un rang vers la droite (plus tard dans la scène)" />
-              <Button Content="Supprimer" Margin="0,0,4,4" Foreground="#F85149" Command="{Binding DeleteStepCommand}" ToolTip.Tip="Il reste toujours une étape (Ctrl+Z pour annuler)" />
-            </WrapPanel>
-            <TextBlock Text="Choisir une étape : clic dans la bande, ou flèches ← →." FontSize="11" Foreground="#8B949E" />
-          </StackPanel>
         </Expander>
 
         <!-- Assistants (SCN-014) -->
@@ -142,15 +141,11 @@
           </StackPanel>
         </Expander>
 
-        <!-- Essai et notes -->
-        <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,0,8">
-          <Button Content="▶ Lancer" Command="{Binding TestCommand}" ToolTip.Tip="Lancer la scène dans son contexte (les autres couches continuent). En ÉDITION, repasse d'abord en LIVE : sinon l'étape éditée, montrée par-dessus, cacherait la scène qui joue" />
-          <Button Content="■ Arrêter" Command="{Binding StopTestCommand}" />
-        </StackPanel>
+        <!-- Notes -->
         <Expander Header="Notes" IsExpanded="False">
           <TextBox Text="{Binding Notes}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="60" />
         </Expander>
       </StackPanel>
     </ScrollViewer>
-  </Panel>
+  </DockPanel>
 </UserControl>
