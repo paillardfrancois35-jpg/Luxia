@@ -119,7 +119,11 @@
                       <DataTemplate x:DataType="vm:ControlSceneViewModel">
                         <Border CornerRadius="7" BorderBrush="{Binding EditColor}" BorderThickness="{Binding OutlineThickness}"
                                 Opacity="{Binding HiddenInLive, Converter={x:Static vm:ControlConverters.DimIfTrue}}">
-                          <Grid ColumnDefinitions="*,34">
+                          <DockPanel>
+                            <Button DockPanel.Dock="Right" Width="34" IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    ToolTip.Tip="Ouvrir la fenêtre d'édition de cette scène"
+                                    Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
                             <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0"
                                     CornerRadius="6,0,0,6"
                                     PointerPressed="OnScenePressed" PointerReleased="OnSceneReleased" PointerCaptureLost="OnSceneCaptureLost" ContextRequested="OnSceneContext"
@@ -139,17 +143,14 @@
                                 <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
                               </DockPanel>
                             </Border>
-                            <Button Grid.Column="1" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                    ToolTip.Tip="Ouvrir la fenêtre d'édition de cette scène"
-                                    Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).ChooseForEditCommand}" CommandParameter="{Binding}" />
-                          </Grid>
+
+                          </DockPanel>
                         </Border>
                       </DataTemplate>
                     </ItemsControl.ItemTemplate>
                   </ItemsControl>
 
-                  <Button Content="+ scène" MinHeight="36" HorizontalAlignment="Stretch" IsEnabled="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
+                  <Button Content="+ scène" MinHeight="36" HorizontalAlignment="Stretch" IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}" HorizontalContentAlignment="Center" Foreground="#8B949E"
                           ToolTip.Tip="Nouvelle scène dans cette couche"
                           Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).NewSceneCommand}" CommandParameter="{Binding}" />
                 </StackPanel>

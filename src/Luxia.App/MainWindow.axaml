@@ -51,7 +51,7 @@
         </Menu>
       <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
         <TextBlock Text="Grand Master" VerticalAlignment="Center" Opacity="0.8" />
-        <Slider Minimum="0" Maximum="100" Value="{Binding GrandMaster}" Width="200" VerticalAlignment="Center" />
+        <Slider Minimum="0" Maximum="100" Value="{Binding GrandMaster}" Width="200" VerticalAlignment="Center" DoubleTapped="OnGrandMasterDoubleTapped" ToolTip.Tip="Grand Master : double-clic pour revenir à 100 %" />
         <TextBlock Text="{Binding GrandMaster, StringFormat='{}{0:0} %'}" Width="48" VerticalAlignment="Center" />
         <ToggleButton Classes="blackout" IsChecked="{Binding Blackout}" Content="BLACKOUT (B)" MinWidth="150"
                       ToolTip.Tip="Coupe toutes les intensités au tick suivant ; couleurs et positions inchangées (GEN-041). Touche B." />

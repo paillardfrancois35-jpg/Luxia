@@ -13,6 +13,24 @@ namespace Luxia.UI.Modules.Control.Views;
 /// </summary>
 public partial class EditorWindow : Window
 {
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<EditorViewModel, EditorWindow> Windows = [];
+
+    /// <summary>La fenêtre d'édition de ce modèle (créée à la première demande : jamais deux pour le même brouillon).</summary>
+    public static EditorWindow For(EditorViewModel vm)
+    {
+        ArgumentNullException.ThrowIfNull(vm);
+        if (!Windows.TryGetValue(vm, out var window))
+        {
+            window = new EditorWindow();
+            window.Attach(vm);
+            Windows.Add(vm, window);
+        }
+
+        return window;
+    }
+
+    private bool _sized;
+
     private readonly DispatcherTimer _timer;
     private EditorViewModel? _vm;
 
@@ -50,6 +68,7 @@ public partial class EditorWindow : Window
         _timer.Start();
         if (!IsVisible)
         {
+            FitToScreen(owner);
             if (owner is not null)
             {
                 Show(owner);
@@ -66,6 +85,26 @@ public partial class EditorWindow : Window
         }
 
         Activate();
+    }
+
+    // Taille initiale bornée à la zone de travail de l'écran (essai 1.007.080 : plus grande qu'un 1366 × 768).
+    private void FitToScreen(Window? owner)
+    {
+        if (_sized)
+        {
+            return;
+        }
+
+        _sized = true;
+        var screen = (owner is not null ? Screens.ScreenFromWindow(owner) : null) ?? Screens.Primary;
+        if (screen is null)
+        {
+            return;
+        }
+
+        var scaling = screen.Scaling <= 0 ? 1 : screen.Scaling;
+        Width = Math.Min(Width, Math.Max(MinWidth, (screen.WorkingArea.Width / scaling) - 40));
+        Height = Math.Min(Height, Math.Max(MinHeight, (screen.WorkingArea.Height / scaling) - 40));
     }
 
     /// <inheritdoc />
@@ -100,16 +139,23 @@ public partial class EditorWindow : Window
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        if (e.CloseReason is WindowCloseReason.ApplicationShutdown or WindowCloseReason.OSShutdown)
+        // Fermeture de l'application ou de sa fenêtre principale : le brouillon n'a jamais été écrit, il est abandonné, sans
+        // question (essai 1.007.080 : la fenêtre restait ouverte et LuXia ne se fermait plus).
+        if (e.CloseReason is WindowCloseReason.ApplicationShutdown or WindowCloseReason.OSShutdown or WindowCloseReason.OwnerWindowClosing)
         {
             _vm?.Abandon();
             _timer.Stop();
             return;
         }
 
-        // La croix ne perd jamais un brouillon : sans modification elle ferme (en cachant), sinon elle laisse choisir.
+        // La croix ne perd jamais un brouillon par mégarde : sans modification elle ferme (en cachant), sinon elle demande.
         e.Cancel = true;
-        if (_vm?.TryClose() ?? true)
+        _ = CloseWithConfirmationAsync();
+    }
+
+    private async Task CloseWithConfirmationAsync()
+    {
+        if (_vm is null || await _vm.ConfirmCloseAsync().ConfigureAwait(true))
         {
             _timer.Stop();
             Hide();

@@ -6,6 +6,14 @@
              x:DataType="vm:GameViewModel"
              Focusable="True">
   <UserControl.Styles>
+    <!-- Verrou soirée : bleu quand il est posé. Un simple bouton (et non une bascule) : un refus ne peut plus le laisser coché. -->
+    <Style Selector="Button.lock.locked">
+      <Setter Property="Background" Value="#1F6FEB" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.lock.locked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#388BFD" />
+    </Style>
     <!-- Cibles d'au moins 32 px de haut (ERG-035). -->
     <Style Selector="Button.target">
       <Setter Property="MinHeight" Value="34" />
@@ -31,22 +39,24 @@
           <Button Classes="target" Content="■ Tout stopper" Foreground="#F85149" Margin="0,0,10,0"
                   Command="{Binding StopAllCommand}" CommandParameter="tout"
                   ToolTip.Tip="Arrêter absolument toutes les scènes, couches protégées comprises (fin de soirée)" />
-          <ToggleButton MinHeight="34" Content="🔒 Verrou soirée" IsChecked="{Binding IsLocked, Mode=OneWay}" Command="{Binding ToggleLockCommand}" Margin="0,0,10,0"
-                        ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'ouverture de la fenêtre d'édition et la modification des scènes sont bloquées (anti-fausse manipulation)." />
+          <Button Classes="target lock" Classes.locked="{Binding IsLocked}" Content="🔒 Verrou soirée" Command="{Binding ToggleLockCommand}" Margin="0,0,10,0"
+                        ToolTip.Tip="Verrou soirée : on ne fait plus que jouer et retoucher en direct ; l'ouverture de la fenêtre d'édition et la modification des scènes sont bloquées (anti-fausse manipulation). Bleu : verrou posé." />
           <TextBlock Text="{Binding Message}" Foreground="#D29922" VerticalAlignment="Center" Margin="4,0,0,0" TextTrimming="CharacterEllipsis" MaxWidth="700" />
         </StackPanel>
       </DockPanel>
     </Border>
 
-    <!-- Retouches en direct : le seul rappel d'état de l'écran de jeu (elles ne sont jamais enregistrées). -->
-    <Panel DockPanel.Dock="Top" IsVisible="{Binding HasRetouches}">
-      <Border Background="#D29922" Opacity="0.16" />
-      <Border BorderBrush="#D29922" BorderThickness="0,1,0,1" Padding="10,4">
-        <DockPanel>
-          <Button DockPanel.Dock="Right" Content="Libérer tout  (Échap)" MinHeight="28" Padding="10,1" FontSize="12"
+    <!-- Retouches en direct : le seul rappel d'état de l'écran de jeu. Sa place est réservée en permanence : qu'il apparaisse ou
+         disparaisse, rien ne bouge (essai 1.007.080 : la mise en page sautait sous la souris et le fader tenu clignotait). -->
+    <Panel DockPanel.Dock="Top" Height="32">
+      <Border Background="#D29922" Opacity="0.16" IsVisible="{Binding HasRetouches}" />
+      <Border BorderBrush="{Binding RetouchBorder}" BorderThickness="0,1,0,1" Padding="10,0">
+        <DockPanel VerticalAlignment="Center">
+          <Button DockPanel.Dock="Right" Content="Libérer tout  (Échap)" MinHeight="26" Padding="10,0" FontSize="12"
                   BorderBrush="#D29922" BorderThickness="1" Foreground="#D29922" Background="Transparent"
-                  Command="{Binding ReleaseAllCommand}" />
-          <TextBlock Text="{Binding RetouchText}" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis" />
+                  IsVisible="{Binding HasRetouches}" Command="{Binding ReleaseAllCommand}" />
+          <TextBlock Text="{Binding RetouchText}" VerticalAlignment="Center" FontSize="13" TextTrimming="CharacterEllipsis"
+                     Foreground="{Binding RetouchForeground}" />
         </DockPanel>
       </Border>
     </Panel>

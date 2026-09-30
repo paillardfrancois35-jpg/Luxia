@@ -99,6 +99,22 @@ public sealed class DimmersPanelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-037")]
+    public void ReopeningTheProject_DropsTheLiveRetouches()
+    {
+        CreateGroups();
+        _vm.Dimmers.Faders[0].Percent = 30;
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.DimmerLevels[0].ShouldBe(0.3, 1e-9);
+
+        _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
+        _host.Tick();
+        _host.Tick();
+
+        _host.Runtime.Engine.Snapshot.DimmerLevels.ShouldAllBe(l => Math.Abs(l - 1) < 1e-9, "rien n'est enregistré : tout revient à 100 %");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-037")]
     public void AnOutsideChange_MidiForExample_IsShownOnTheFader_WithoutSendingACommandBack()
     {
         CreateGroups();

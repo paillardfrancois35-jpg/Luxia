@@ -55,45 +55,76 @@ public partial class GameView : UserControl
         if (ViewModel is { } vm && _factory is null)
         {
             BuildLayout(vm);
-
-            // ✎ : la fenêtre d'édition (ERG-033), non bloquante, sur un second écran si on veut.
-            vm.EditRequested += (_, _) => ShowEditor(vm);
-            vm.PanelRequested += (_, id) =>
-            {
-                if (_layout is not null && _factory is not null)
-                {
-                    _factory.ShowPanel(_layout, id);
-                    AssignContexts(_layout);
-                    SaveLayout();
-                }
-            };
         }
-    }
 
-    private EditorWindow? _editor;
-
-    private void ShowEditor(GameViewModel vm)
-    {
-        if (_editor is null)
+        if (IsShown())
         {
-            _editor = new EditorWindow();
-            _editor.Attach(vm.Editor);
+            Subscribe();
+        }
+    }
+
+    // La coquille recrée l'écran à chaque retour dessus : les abonnements suivent l'affichage, sinon chaque ancienne vue
+    // ouvrait sa propre fenêtre d'édition (essai 1.007.080 : deux fenêtres, puis trois…).
+    private EventHandler<Guid>? _editHandler;
+    private EventHandler<string>? _panelHandler;
+
+    private void Subscribe()
+    {
+        Unsubscribe();
+        if (ViewModel is not { } vm)
+        {
+            return;
         }
 
-        _editor.Present(TopLevel.GetTopLevel(this) as Window);
+        // ✎ : la fenêtre d'édition (ERG-033), non bloquante, sur un second écran si on veut ; une seule par modèle d'édition.
+        _editHandler = (_, _) => EditorWindow.For(vm.Editor).Present(TopLevel.GetTopLevel(this) as Window);
+        _panelHandler = (_, id) =>
+        {
+            if (_layout is not null && _factory is not null)
+            {
+                _factory.ShowPanel(_layout, id);
+                AssignContexts(_layout);
+                SaveLayout();
+            }
+        };
+        vm.EditRequested += _editHandler;
+        vm.PanelRequested += _panelHandler;
     }
+
+    private void Unsubscribe()
+    {
+        if (ViewModel is { } vm)
+        {
+            if (_editHandler is not null)
+            {
+                vm.EditRequested -= _editHandler;
+            }
+
+            if (_panelHandler is not null)
+            {
+                vm.PanelRequested -= _panelHandler;
+            }
+        }
+
+        _editHandler = null;
+        _panelHandler = null;
+    }
+
+    private bool IsShown() => TopLevel.GetTopLevel(this) is not null;
 
     /// <inheritdoc />
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
         _autosave.Start();
+        Subscribe();
     }
 
     /// <inheritdoc />
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        Unsubscribe();
         _autosave.Stop();
         ViewModel?.Flush();
         SaveLayout();

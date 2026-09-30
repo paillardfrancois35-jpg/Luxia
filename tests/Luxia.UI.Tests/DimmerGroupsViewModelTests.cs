@@ -79,7 +79,7 @@ public sealed class DimmerGroupsViewModelTests : IAsyncLifetime
     public async Task AddFixture_MovesItFromTheUnassignedGroup_AndRemoveGivesItBack()
     {
         await Add("Face");
-        _vm.AddFixtureCommand.Execute(_vm.Candidates.Single(c => c.Name == "PAR 2"));
+        await _vm.AddFixtureCommand.ExecuteAsync(_vm.Candidates.Single(c => c.Name == "PAR 2"));
 
         _vm.Rows.Single(r => r.Name == "Face").Summary.ShouldBe("PAR 2");
         _vm.Rows.Single(r => r.IsUnassigned).Summary.ShouldBe("PAR 1, PAR 3");
@@ -89,6 +89,30 @@ public sealed class DimmerGroupsViewModelTests : IAsyncLifetime
         _vm.RemoveFixtureCommand.Execute(_vm.Members[0]);
         _vm.Rows.Single(r => r.Name == "Face").Summary.ShouldBe("(vide)");
         _vm.Rows.Single(r => r.IsUnassigned).Summary.ShouldBe("PAR 1, PAR 2, PAR 3");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-036")]
+    public async Task Candidates_AreTheUnassignedOnesByDefault_ShowAllListsTheOthers_AndMovingAsksConfirmation()
+    {
+        await Add("Face");
+        await _vm.AddFixtureCommand.ExecuteAsync(_vm.Candidates.Single(c => c.Name == "PAR 1"));
+        await Add("Lyres");
+
+        _vm.Candidates.Select(c => c.Name).ShouldBe(["PAR 2", "PAR 3"], "PAR 1 est rangé ailleurs : masqué");
+        _vm.ShowAll = true;
+        var moved = _vm.Candidates.Single(c => c.Name == "PAR 1");
+        moved.CurrentGroup.ShouldBe("Face");
+
+        _host.Dialogs.ConfirmAnswer = false;
+        await _vm.AddFixtureCommand.ExecuteAsync(moved);
+        _vm.Rows.Single(r => r.Name == "Face").Summary.ShouldBe("PAR 1", "refusé : il reste où il est");
+        _host.Dialogs.Confirmations.ShouldHaveSingleItem().ShouldContain("fait déjà partie du groupe « Face »");
+
+        _host.Dialogs.ConfirmAnswer = true;
+        await _vm.AddFixtureCommand.ExecuteAsync(_vm.Candidates.Single(c => c.Name == "PAR 1"));
+        _vm.Rows.Single(r => r.Name == "Lyres").Summary.ShouldBe("PAR 1");
+        _host.Dialogs.Confirmations.Count.ShouldBe(2);
     }
 
     [Fact]

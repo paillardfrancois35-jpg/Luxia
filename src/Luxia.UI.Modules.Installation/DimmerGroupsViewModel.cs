@@ -43,6 +43,10 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
     [ObservableProperty]
     private string _flowTitle = string.Empty;
 
+    /// <summary>Lister aussi les appareils déjà rangés dans un groupe (par défaut : les non assignés seulement).</summary>
+    [ObservableProperty]
+    private bool _showAll;
+
     /// <summary>Crée l'onglet.</summary>
     public DimmerGroupsViewModel(LuxiaRuntime runtime, IDialogService dialogs)
     {
@@ -154,6 +158,14 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
         }
     }
 
+    partial void OnShowAllChanged(bool value)
+    {
+        if (!_loading)
+        {
+            LoadDetail();
+        }
+    }
+
     partial void OnHasDimmerChanged(bool value)
     {
         if (_loading || SelectedRow is not { IsUnassigned: false } row || row.Group.HasDimmer == value)
@@ -252,11 +264,20 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
         Save(GroupEdits.Shift(_runtime.Project.Groups, row.Id, int.Parse(delta, CultureInfo.InvariantCulture)), null);
     }
 
-    /// <summary>Range un appareil dans le groupe choisi (il quitte son groupe actuel).</summary>
+    /// <summary>
+    /// Range un appareil dans le groupe choisi (il quitte son groupe actuel). S'il est déjà dans un autre groupe, le déplacement
+    /// est confirmé : une erreur de clic ne défait plus un rangement (essai 1.007.080).
+    /// </summary>
     [RelayCommand]
-    private void AddFixture(GroupFixtureRow? fixture)
+    private async Task AddFixtureAsync(GroupFixtureRow? fixture)
     {
         if (fixture is null || SelectedRow is not { IsUnassigned: false } row)
+        {
+            return;
+        }
+
+        if (fixture.CurrentGroup is { } other
+            && !await _dialogs.ConfirmAsync("Déplacer l'appareil", $"« {fixture.Name} » fait déjà partie du groupe « {other} ». Confirmez-vous son déplacement vers « {row.Name} » ?").ConfigureAwait(true))
         {
             return;
         }
@@ -334,10 +355,16 @@ public sealed partial class DimmerGroupsViewModel : ViewModelBase
                 {
                     Members.Add(new GroupFixtureRow(fixture.Id, fixture.Name, KindOf(fixture), string.Empty));
                 }
+                else if (groupOf[fixture.Id] is { } other)
+                {
+                    if (ShowAll)
+                    {
+                        Candidates.Add(new GroupFixtureRow(fixture.Id, fixture.Name, KindOf(fixture), $"groupe « {other.Name} »", other.Name));
+                    }
+                }
                 else
                 {
-                    var where = groupOf[fixture.Id] is { } other ? $"groupe « {other.Name} »" : $"« {set.UnassignedName} »";
-                    Candidates.Add(new GroupFixtureRow(fixture.Id, fixture.Name, KindOf(fixture), where));
+                    Candidates.Add(new GroupFixtureRow(fixture.Id, fixture.Name, KindOf(fixture), $"« {set.UnassignedName} »"));
                 }
             }
 
@@ -480,7 +507,8 @@ public sealed record ParentChoice(Guid? Id, string Label)
 /// <param name="Name">Nom.</param>
 /// <param name="Kind">Modèle.</param>
 /// <param name="Where">Où il est rangé actuellement (pour les candidats).</param>
-public sealed record GroupFixtureRow(Guid Id, string Name, string Kind, string Where);
+/// <param name="CurrentGroup">Nom du groupe où il est déjà rangé (déplacer demande confirmation), ou <c>null</c> s'il est non assigné.</param>
+public sealed record GroupFixtureRow(Guid Id, string Name, string Kind, string Where, string? CurrentGroup = null);
 
 /// <summary>Une étape du flux d'intensité.</summary>
 /// <param name="Label">Nom de l'étage.</param>

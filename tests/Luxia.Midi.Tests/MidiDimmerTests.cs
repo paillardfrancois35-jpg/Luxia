@@ -98,6 +98,23 @@ public sealed class MidiDimmerTests
 
     [Fact]
     [Trait("Exigence", "ERG-038")]
+    public void AfterTheResetButton_TheFaderMustCrossTheLevelAgain_NoJump()
+    {
+        var controller = DimmerPlatine();
+        var snapshot = DimmerSnapshot(Enumerable.Repeat(1.0, 10).ToArray());
+        Single<SetGroupDimmerCommand>(controller.Handle(Fader(Mk1, 1, 1), WithDimmers(), snapshot)).Level.ShouldBe(1, 0.01);
+        Single<SetGroupDimmerCommand>(controller.Handle(Fader(Mk1, 1, 0.4), WithDimmers(), snapshot)).Level.ShouldBe(0.4, 0.01);
+
+        // Remise à 100 % au bouton rond : le fader, resté à 40 %, ne reprend pas la main d'un coup.
+        Single<SetGroupDimmerCommand>(controller.Handle(Press(Mk1.BottomButtons[0]), WithDimmers(), snapshot)).Level.ShouldBe(1);
+        controller.Handle(Fader(Mk1, 1, 0.4), WithDimmers(), snapshot).ShouldBeEmpty("pas de saut à 40 %");
+        controller.Handle(Fader(Mk1, 1, 0.7), WithDimmers(), snapshot).ShouldBeEmpty();
+        Single<SetGroupDimmerCommand>(controller.Handle(Fader(Mk1, 1, 1), WithDimmers(), snapshot)).Level.ShouldBe(1, 0.01);
+        Single<SetGroupDimmerCommand>(controller.Handle(Fader(Mk1, 1, 0.6), WithDimmers(), snapshot)).Level.ShouldBe(0.6, 0.01);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-038")]
     public void ShiftBottom4_ShowsTheNextEightDimmers()
     {
         var controller = DimmerPlatine();

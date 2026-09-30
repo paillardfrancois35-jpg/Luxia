@@ -210,6 +210,8 @@
               <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
                 <TextBlock Classes="section" Text="Arbre des groupes" VerticalAlignment="Center" />
                 <TextBlock Text="un appareil dans un seul groupe" Opacity="0.6" FontSize="11" VerticalAlignment="Center" />
+                <TextBlock Text="② n : fader de la 2e platine MIDI" Opacity="0.6" FontSize="11" VerticalAlignment="Center"
+                           ToolTip.Tip="Les 8 premiers groupes qui ont un dimmer sont commandés par les faders 1 à 8 de la seconde platine MIDI ; ② 3 = le troisième fader." />
               </StackPanel>
               <WrapPanel DockPanel.Dock="Bottom" Margin="0,6,0,0" ItemSpacing="6" LineSpacing="6">
                 <Button Content="+ Groupe" MinHeight="32" Command="{Binding AddGroupCommand}" />
@@ -320,7 +322,9 @@
           <Border Grid.Row="1" Grid.Column="2" Classes="panel" IsVisible="{Binding IsGroupSelected}">
             <DockPanel>
               <TextBlock DockPanel.Dock="Top" Classes="section" Text="Ajouter au groupe choisi" Margin="0,0,0,6" />
-              <TextBlock DockPanel.Dock="Top" Text="Un appareil déjà rangé ailleurs est déplacé (il n'est que dans un seul groupe)."
+              <CheckBox DockPanel.Dock="Top" IsChecked="{Binding ShowAll}" Content="Tous voir" MinHeight="30"
+                        ToolTip.Tip="Par défaut, seuls les appareils non assignés sont proposés. Cochez pour voir aussi ceux déjà rangés dans un groupe (les ajouter demande confirmation : ils quittent leur groupe)." />
+              <TextBlock DockPanel.Dock="Top" Text="Seuls les appareils non assignés sont proposés (« Tous voir » pour les autres : un appareil n'est que dans un seul groupe)."
                          Opacity="0.6" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,6" />
               <ScrollViewer>
                 <ItemsControl ItemsSource="{Binding Candidates}">

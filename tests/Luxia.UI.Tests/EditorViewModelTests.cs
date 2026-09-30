@@ -111,18 +111,40 @@ public sealed class EditorViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-033")]
-    public void TheCross_NeverLosesADraft_ItClosesOnlyWithoutChanges()
+    public async Task TheCross_ClosesWithoutChanges_AsksBeforeLosingADraft()
     {
         _vm.Open(_chaserId);
-        _vm.TryClose().ShouldBeTrue("aucune modification : la fenêtre se ferme");
+        (await _vm.ConfirmCloseAsync()).ShouldBeTrue("aucune modification : la fenêtre se ferme");
         _vm.IsOpen.ShouldBeFalse();
+        _host.Dialogs.Confirmations.ShouldBeEmpty();
 
         _vm.Open(_chaserId);
         Rename("À garder");
-        _vm.TryClose().ShouldBeFalse();
+        _host.Dialogs.ConfirmAnswer = false;
+        (await _vm.ConfirmCloseAsync()).ShouldBeFalse("Non : la fenêtre reste ouverte");
         _vm.IsOpen.ShouldBeTrue();
-        _vm.Message.ShouldNotBeNull();
-        _vm.Message.ShouldContain("Valider");
+        Stored(_chaserId).Name.ShouldBe("Chenillard 4 couleurs");
+        _host.Dialogs.Confirmations.ShouldHaveSingleItem().ShouldContain("À garder");
+
+        _host.Dialogs.ConfirmAnswer = true;
+        (await _vm.ConfirmCloseAsync()).ShouldBeTrue("Oui : brouillon abandonné");
+        _vm.IsOpen.ShouldBeFalse();
+        Stored(_chaserId).Name.ShouldBe("Chenillard 4 couleurs");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-033")]
+    public void AWarning_GoesAwayWhenTheDraftIsIdenticalAgain()
+    {
+        _vm.Open(_chaserId);
+        Rename("Un");
+        _vm.Message = "Modifications non validées.";
+
+        _vm.UndoCommand.Execute(null);
+        _vm.Refresh();
+
+        _vm.HasChanges.ShouldBeFalse();
+        _vm.Message.ShouldBeNull();
     }
 
     [Fact]

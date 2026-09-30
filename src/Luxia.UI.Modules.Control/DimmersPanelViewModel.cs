@@ -33,7 +33,12 @@ public sealed partial class DimmersPanelViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(journal);
         _runtime = runtime;
         _journal = journal;
-        runtime.Project.Changed += (_, _) => Rebuild();
+        runtime.Project.Changed += (_, _) =>
+        {
+            // Projet (ré)ouvert : les retouches en direct ne survivent pas (le moteur garde les niveaux d'un groupe recompilé).
+            Rebuild();
+            ReleaseLevels();
+        };
         runtime.Project.ShowDataChanged += (_, _) => Rebuild();
         Rebuild();
     }
@@ -74,6 +79,14 @@ public sealed partial class DimmersPanelViewModel : ViewModelBase
 
         _runtime.TraceUi("Contrôle", "dimmers de groupe remis à 100 %");
         _journal.Log("Dimmers de groupe remis à 100 %");
+    }
+
+    private void ReleaseLevels()
+    {
+        foreach (var fader in Faders)
+        {
+            _runtime.Engine.Send(new SetGroupDimmerCommand(CommandOrigin.User, fader.Id, 1));
+        }
     }
 
     private void Rebuild()

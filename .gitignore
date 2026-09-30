@@ -26,3 +26,6 @@ logs/
 samples/Show de travail/
 # Copie de démonstration de l'écran Contrôle (tools/generer-demo-controle.py) — doc 32
 samples/Démo Contrôle/
+
+# Versions automatiques du projet (GEN-054), créées si on ouvre un échantillon directement
+samples/*/Versions/

@@ -78,6 +78,9 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     /// <summary>Scène ouverte dans la fenêtre d'édition (marquée d'un contour) ; par défaut, la scène choisie dans la session.</summary>
     public Func<Guid?>? EditedScene { get; set; }
 
+    /// <summary>Une scène vient d'être jouée ou arrêtée d'un appui (l'éditeur ouvert cesse alors de la recouvrir).</summary>
+    public event EventHandler? ScenePlayed;
+
     /// <summary>Demande la fenêtre d'édition d'une scène (menu contextuel, bande ✎).</summary>
     public void RequestEdit(Guid sceneId) => EditRequested?.Invoke(this, sceneId);
 
@@ -124,6 +127,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     {
         ArgumentNullException.ThrowIfNull(scene);
         _runtime.TraceUi("Contrôle", $"appui « {scene.Name} »{(scene.IsActive ? " (affichée active)" : string.Empty)}");
+        ScenePlayed?.Invoke(this, EventArgs.Empty);
         if (scene.Column.IsFlash)
         {
             _runtime.Engine.Send(new FlashSceneCommand(CommandOrigin.User, scene.Scene.Id, Pressed: true));

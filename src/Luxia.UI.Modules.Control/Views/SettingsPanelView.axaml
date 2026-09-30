@@ -47,9 +47,9 @@
     <DockPanel DockPanel.Dock="Top" Margin="2,0,30,6">
       <Button DockPanel.Dock="Right" Content="{Binding ActionText}" ToolTip.Tip="{Binding ActionTip}" IsEnabled="{Binding HasSelection}"
               BorderBrush="{Binding TargetColor}" BorderThickness="1" Foreground="{Binding TargetColor}" Command="{Binding RemoveSelectionCommand}" />
-      <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-        <TextBlock Text="{Binding SelectionText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxWidth="520" />
-        <TextBlock Text="{Binding TargetText}" Foreground="{Binding TargetColor}" IsVisible="{Binding HasSelection}" />
+      <StackPanel Spacing="2" VerticalAlignment="Center">
+        <TextBlock Text="{Binding SelectionText}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+        <TextBlock Text="{Binding TargetText}" Foreground="{Binding TargetColor}" IsVisible="{Binding HasSelection}" TextWrapping="Wrap" />
       </StackPanel>
     </DockPanel>
 

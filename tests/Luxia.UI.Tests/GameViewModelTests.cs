@@ -65,6 +65,23 @@ public sealed class GameViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-034")]
+    public void APlayedScene_IsNoLongerHiddenByTheDraftBeingEdited()
+    {
+        _vm.Columns.ChooseForEditCommand.Execute(Button("Chenillard 4 couleurs"));
+        var par1 = _host.Runtime.Project.Installation.Fixtures.Single(f => f.Name == "PAR 1").Id;
+        _vm.Editor.Session.Select([par1]);
+        _vm.Editor.Session.Apply(t => new Luxia.Scenes.Model.SceneValue { Target = t, Color = new Luxia.Scenes.Model.LogicalColor { G = 1 } }, "Couleur");
+        _host.Tick();
+        _host.Runtime.Engine.Snapshot.Overrides.ShouldContain(v => !double.IsNaN(v), "le brouillon montre son étape sur la sortie");
+
+        _vm.Columns.Press(Button("Chenillard 4 couleurs"));
+        _host.Tick();
+
+        _host.Runtime.Engine.Snapshot.Overrides.ShouldAllBe(v => double.IsNaN(v), "la scène jouée reprend la main");
+    }
+
+    [Fact]
     [Trait("Exigence", "ERG-033")]
     public void AnotherScene_WhileTheEditorHasChanges_IsRefused_AndTheEditorIsBroughtForward()
     {

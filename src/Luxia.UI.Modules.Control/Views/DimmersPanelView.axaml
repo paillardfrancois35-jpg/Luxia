@@ -9,10 +9,10 @@
               ToolTip.Tip="Remet tous les dimmers de groupe à 100 % (ce sont des retouches en direct, jamais enregistrées)" />
     </StackPanel>
     <TextBlock DockPanel.Dock="Bottom" TextWrapping="Wrap" FontSize="11" Foreground="#8B949E" Margin="0,4,0,0"
-               Text="Le niveau effectif multiplie chaque étage de l'arbre (Parc × Face × PAR scène…). Le Grand Master reste à part." />
+               Text="Le niveau effectif multiplie chaque étage de l'arbre (Parc × Face × PAR scène…). Le Grand Master reste à part. ② n = numéro du fader sur la seconde platine MIDI." />
     <TextBlock DockPanel.Dock="Top" IsVisible="{Binding IsEmpty}" TextWrapping="Wrap" Foreground="#8B949E" Margin="0,0,0,8"
                Text="Aucun groupe n'a de dimmer. Créez des groupes dans Installation › Gestion des dimmers (un groupe par type d'appareil : PAR, UV, lyres…), cochez « Ce groupe a un dimmer » : un fader apparaît ici." />
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,16">
       <ItemsControl ItemsSource="{Binding Faders}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>

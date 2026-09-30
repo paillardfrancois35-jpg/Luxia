@@ -18,6 +18,7 @@ namespace Luxia.UI.Modules.Control;
 public sealed partial class EditorViewModel : ViewModelBase
 {
     private readonly LuxiaRuntime _runtime;
+    private readonly IDialogService _dialogs;
     private bool _syncing;
 
     [ObservableProperty]
@@ -44,6 +45,7 @@ public sealed partial class EditorViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(dialogs);
         _runtime = runtime;
+        _dialogs = dialogs;
         Workbench = new ControlViewModel(runtime, dialogs);
         Workbench.Session.Changed += (_, _) => UpdateState();
     }
@@ -174,10 +176,11 @@ public sealed partial class EditorViewModel : ViewModelBase
     public void Redo() => Workbench.Redo();
 
     /// <summary>
-    /// Fermeture demandée par la croix de la fenêtre : sans modification, la fenêtre se ferme ; avec des modifications, elle
-    /// reste ouverte et le dit (on ne perd pas son travail par un clic malheureux, et on ne pose pas de question modale).
+    /// Fermeture demandée par la croix de la fenêtre : sans modification, la fenêtre se ferme ; avec des modifications, on demande
+    /// s'il faut les abandonner (Oui : la scène revient à l'état d'origine ; Non : la fenêtre reste, Valider et Appliquer
+    /// sont dans le pied). Renvoie vrai si la fenêtre est fermée.
     /// </summary>
-    public bool TryClose()
+    public async Task<bool> ConfirmCloseAsync()
     {
         if (!IsOpen)
         {
@@ -186,13 +189,22 @@ public sealed partial class EditorViewModel : ViewModelBase
 
         Workbench.Flush();
         UpdateState();
-        if (HasChanges)
+        if (!HasChanges)
         {
-            Message = "Modifications non validées : choisissez Valider, Appliquer ou Annuler.";
+            Close("fermée sans modification");
+            return true;
+        }
+
+        var abandon = await _dialogs.ConfirmAsync(
+            "Fermer la fenêtre d'édition",
+            $"« {SceneName} » a des modifications non validées.{Environment.NewLine}{Environment.NewLine}Oui : les abandonner (la scène revient à l'état d'origine).{Environment.NewLine}Non : garder la fenêtre ouverte (Valider ou Appliquer dans le pied de la fenêtre).").ConfigureAwait(true);
+        if (!abandon)
+        {
             return false;
         }
 
-        Close("fermée sans modification");
+        Session.DiscardDraft();
+        Close("abandonnée");
         return true;
     }
 
@@ -257,6 +269,12 @@ public sealed partial class EditorViewModel : ViewModelBase
         SceneName = scene?.Name ?? SceneName;
         SceneColor = scene?.Color ?? SceneColor;
         HasChanges = Session.HasDraftChanges;
+        if (!HasChanges)
+        {
+            // Le refus ou l'avertissement ne vaut plus quand le brouillon redevient identique à la scène (Ctrl+Z, Appliquer).
+            Message = null;
+        }
+
         var blind = Session.Mode == EditMode.Blind;
         if (blind != IsBlind)
         {

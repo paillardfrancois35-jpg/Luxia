@@ -64,11 +64,14 @@
           <Button Classes="action" Content="Valider" FontWeight="Bold" Background="{Binding ModeColor}" Foreground="#0D1117" Command="{Binding ValidateCommand}"
                   MinWidth="130" ToolTip.Tip="Écrit la scène dans le projet et ferme" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-          <CheckBox IsChecked="{Binding IsBlind}" Content="👁 Aveugle" FontWeight="SemiBold" FontSize="14" MinHeight="32"
-                    ToolTip.Tip="Aveugle : le brouillon n'est montré qu'à l'aperçu du plan, la sortie sur scène ne change pas" />
-          <TextBlock Text="{Binding SafetyText}" Foreground="#8B949E" FontSize="13" VerticalAlignment="Center" />
-          <TextBlock Text="{Binding Message}" Foreground="#D29922" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="520" />
+        <StackPanel VerticalAlignment="Center" Spacing="2">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <CheckBox IsChecked="{Binding IsBlind}" Content="👁 Aveugle" FontWeight="SemiBold" FontSize="14" MinHeight="32"
+                      ToolTip.Tip="Aveugle : le brouillon n'est montré qu'à l'aperçu du plan, la sortie sur scène ne change pas" />
+            <TextBlock Text="{Binding SafetyText}" Foreground="#8B949E" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="640" />
+          </StackPanel>
+          <TextBlock Text="{Binding Message}" Foreground="#D29922" FontSize="13" TextTrimming="CharacterEllipsis" MaxWidth="900"
+                     IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
         </StackPanel>
       </DockPanel>
     </Border>

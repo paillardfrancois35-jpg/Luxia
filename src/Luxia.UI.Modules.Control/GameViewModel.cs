@@ -37,6 +37,12 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     [ObservableProperty]
     private string _retouchText = string.Empty;
 
+    [ObservableProperty]
+    private string _retouchBorder = "#30363D";
+
+    [ObservableProperty]
+    private string _retouchForeground = "#8B949E";
+
     private Guid? _editedSceneId;
 
     /// <summary>Crée l'écran de jeu.</summary>
@@ -57,6 +63,16 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Editor.Closed += (_, _) => EditedSceneId = null;
         Columns.EditRequested += (_, id) => Edit(id);
         Columns.MessageChanged += (_, _) => Message = Columns.Message;
+
+        // Une scène jouée ou arrêtée dans les colonnes pendant l'édition : l'étape éditée, montrée par-dessus, ne la recouvre
+        // plus (essai 1.007.080) ; elle reprend au premier réglage ou au choix d'une autre étape.
+        Columns.ScenePlayed += (_, _) =>
+        {
+            if (Editor.IsOpen)
+            {
+                Editor.Session.SuspendShow();
+            }
+        };
         Session.Changed += (_, _) => UpdateState();
         runtime.Project.Changed += (_, _) => HasProject = runtime.Project.Folder is not null;
         HasProject = runtime.Project.Folder is not null;
@@ -226,7 +242,9 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         HasRetouches = retouched.Count > 0;
         RetouchText = HasRetouches
             ? "Retouches en direct (temporaires, rien n'est enregistré) :  " + string.Join(" · ", retouched)
-            : string.Empty;
+            : "Aucune retouche en direct : les dimmers de groupe sont à 100 %.";
+        RetouchBorder = HasRetouches ? "#D29922" : "#30363D";
+        RetouchForeground = HasRetouches ? "#E6EDF3" : "#8B949E";
         if (Session.Message is { } message)
         {
             Message = message;

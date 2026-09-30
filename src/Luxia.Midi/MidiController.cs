@@ -89,6 +89,12 @@ public sealed class MidiController
         }
 
         var (action, id) = ActionOf(control, layout);
+        if (pressed && action == MidiAction.GroupDimmerReset)
+        {
+            // Le fader physique, resté plus bas, ne reprend la main qu'en recroisant le niveau (100 %) : pas de saut de valeur.
+            _faders[Math.Clamp(control.X - 1, 0, _faders.Length - 1)].Disengage();
+        }
+
         return Button(action, id, pressed, layout, snapshot);
     }
 
