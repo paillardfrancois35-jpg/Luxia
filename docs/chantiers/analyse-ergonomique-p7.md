@@ -138,7 +138,7 @@ développement** (règle du chantier « Contrôle 2 »), sur le même principe q
 | 5 | **Entrée** dans la case BPM = Fixer | Oui, sans décision (devient inutile si la case disparaît : voir 1) | à faire |
 | 6 | **Rappel du BPM et des voyants** dans le **Simulateur** (lecture seule) | Oui, même composant que le bloc de l'écran Audio | à faire |
 | 7 | **Volet « Au rythme »** : revoir toutes les règles | Réglages inopérants masqués + phrase de résumé | ✅ **Décidé le 2026-10-01** : seuls les réglages qui agissent sont affichés selon « Étape suivante » ; une phrase d'en-tête résume la scène (« Change d'étape à chaque mesure, démarre au début de la prochaine mesure ») ; « La vitesse suit l'énergie » n'apparaît pas quand les étapes suivent les temps |
-| 8 | **Facteur de rythme dans les deux sens** (÷ 8 … × 4) sans changer le BPM affiché | À définir : par scène (le volet « Au rythme ») ou global (bloc BPM) ? | ❓ |
+| 8 | **Facteur de rythme dans les deux sens** (÷ 8 … × 4) sans changer le BPM affiché | Par scène, à la place de « Tous les N » | ✅ **Décidé le 2026-10-01** : volet « Au rythme » : liste **Fréquence** (÷ 8, ÷ 4, ÷ 2, × 1, × 2, × 4 par temps ou par mesure ; ÷ seulement pour les impulsions) à la place du champ « Tous les N » ; le moteur devra compter des sous-temps (× 2, × 4) ; migration des anciennes scènes (« Tous les N » = ÷ N) |
 | 9 | **Mesure à 3 temps** (valses) | Aujourd'hui 4 temps fixes ; prévu en P8 (GEN-025) pour la séquence ou le morceau ; détecter 3/4 automatiquement est un autre travail | ❓ |
 | 10 | Autres idées de l'analyse : durées en temps / mesures dans les Propriétés (E2), Plein feu (E1), looks de démonstration (E16), pad de tap sur l'APC (E14) | Reprises après les neuf ci-dessus | ⏳ |
 
