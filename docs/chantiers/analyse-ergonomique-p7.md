@@ -107,3 +107,43 @@ développement** (règle du chantier « Contrôle 2 »), sur le même principe q
 1. Passer chaque ligne E1 à E19 à ✅, ❌ (refusée, avec la raison) ou ⏳ (rangée dans doc 40 / 99).
 2. Ajouter ce que l'essai a montré qui n'est pas dans ce tableau ; refaire les captures 1366 × 768 (`luxia-captures`) de l'écran Audio, du bloc BPM et du volet « Au rythme ».
 3. Reporter les règles retenues au doc 60 (§4.10 « Horloge musicale et écoute », voir l'analyse de la documentation D12).
+
+## 9. Après l'essai du 2026-10-01 (v1.009.065) : constats et file de décisions
+
+> Ajout de la discussion dev, à partir de [essais/P7-resultats.md](../essais/P7-resultats.md) (bilan) et des idées de l'utilisateur.
+> Les anomalies fonctionnelles (impulsions, énergie, drop, bloc BPM, micro, avis, boutons, calage) sont corrigées en **1.009.077** ;
+> restent ici les idées d'ergonomie, à décider **une par une**.
+
+### 9.1 Ce que l'essai a confirmé ou infirmé
+
+| # | Constat de l'essai | Effet sur l'analyse |
+|---|---|---|
+| E1 | Plein feu masquant une scène : non rencontré à l'essai (le guide l'annonçait) | Reste valable ; badge « masquée » toujours proposé, non urgent |
+| E3 | « Un défilement à 1920 × 1080 », « gros vide à droite » ; la liste des événements est introuvable (« c'est où ? ») | Confirmé : refonte de l'écran Audio (idée 2) |
+| E4, E5 | **Spécification de l'utilisateur** : un seul bouton **Audio** à bascule (gris / bleu), plus de libellé Tap / Fixe / Audio, plus de case « Écoute », champ BPM et boutons manuels grisés quand Audio est actif, confiance à droite du bouton | Remplace E4 et E5 (idée 1) |
+| E6 | La confiance se lit dans l'écran Audio ; le bloc BPM la montrait même hors écoute (défaut corrigé) | La pastille de couleur reste utile (idée 1) |
+| E9 | « Revoir la matrice de gestion ou les règles de ce panneau, entièrement » : la case « vitesse selon l'énergie » ne joue pas avec « À chaque temps » | Confirmé (idée 7) |
+| E12 | Calibration à 0 ms jugée conforme ; mesure 2 : flash et kick indiscernables | Satisfaisant ; le bouton à bascule reste un petit confort |
+| E14 | La touche T doit allumer TAP ; **Entrée** = Fixer (idées 4 et 5) | Faits simples, sans décision |
+| E16 | Démonstrations : plusieurs gestes ; l'utilisateur a bien suivi *Animals* et *Sandstorm* | Reste une idée (looks de démonstration) |
+
+### 9.2 Idées de l'utilisateur et décisions à prendre
+
+| N° | Idée | Ma recommandation | Décision |
+|---|---|---|---|
+| 1 | **Bloc BPM** : bouton Audio à bascule ; Audio actif = BPM, TAP, + et − grisés ; confiance à droite ; plus de libellé de source ni de case Écoute | Oui ; **garder actifs ×2, ÷ 2 et « 1 ici » en Audio** (ils corrigent l'analyse : ballades à 6/8, premier temps) ; le champ BPM affiche le tempo suivi, grisé | ❓ en cours |
+| 2 | **Écran Audio** sur une page à 1920 × 1080, niveaux **verticaux** dans un panneau à droite | Oui ; maquette à valider avant tout code (gabarit § 5, révisé) | ❓ |
+| 3 | **Titre du morceau en cours** (écran Audio et bloc BPM) | Les titres viennent de Windows (lecteur multimédia système : Deezer, YouTube Music, VLC) : c'est la fonction « Lecture en cours » de P9 ; en faire une **première version minimale** (titre et artiste affichés, rien d'autre) ou l'attendre | ❓ |
+| 4 | **Touche T** allume le bouton TAP | Oui, sans décision | à faire |
+| 5 | **Entrée** dans la case BPM = Fixer | Oui, sans décision (devient inutile si la case disparaît : voir 1) | à faire |
+| 6 | **Rappel du BPM et des voyants** dans le **Simulateur** (lecture seule) | Oui, même composant que le bloc de l'écran Audio | à faire |
+| 7 | **Volet « Au rythme »** : revoir toutes les règles | Matrice des réglages selon « Étape suivante » : les réglages inopérants sont **masqués**, pas seulement grisés, avec une phrase de résumé en tête de volet | ❓ |
+| 8 | **Facteur de rythme dans les deux sens** (÷ 8 … × 4) sans changer le BPM affiché | À définir : par scène (le volet « Au rythme ») ou global (bloc BPM) ? | ❓ |
+| 9 | **Mesure à 3 temps** (valses) | Aujourd'hui 4 temps fixes ; prévu en P8 (GEN-025) pour la séquence ou le morceau ; détecter 3/4 automatiquement est un autre travail | ❓ |
+| 10 | Autres idées de l'analyse : durées en temps / mesures dans les Propriétés (E2), Plein feu (E1), looks de démonstration (E16), pad de tap sur l'APC (E14) | Reprises après les neuf ci-dessus | ⏳ |
+
+### 9.3 Faits simples à réaliser sans attendre une décision
+
+Touche T allumant TAP, Entrée = Fixer (jusqu'à la refonte du bloc), rappel du tempo dans le Simulateur : à faire dans la prochaine
+version, avec les décisions 1 à 3.
+
