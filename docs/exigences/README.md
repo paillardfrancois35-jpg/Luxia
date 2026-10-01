@@ -88,32 +88,32 @@
 | Fiche | Titre | Phase | Pri. | Statut |
 |---|---|---|---|---|
 | [AUD-001](AUD-001.md) | Capture du son joué par le PC | P7 | I | Validé |
-| [AUD-002](AUD-002.md) | Suivi du changement de périphérique par défaut | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-003](AUD-003.md) | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | P7 | M | Réalisé, à valider sur matériel |
+| [AUD-002](AUD-002.md) | Suivi du changement de périphérique par défaut | P7 | I | Validé |
+| [AUD-003](AUD-003.md) | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | P7 | M | Validé |
 | [AUD-004](AUD-004.md) | L'analyse est indépendante du volume | P7 | I | Validé |
-| [AUD-005](AUD-005.md) | Détection du silence | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-006](AUD-006.md) | L'analyse audio fonctionne dans son propre fil d'exécution | P7 | I | Réalisé |
+| [AUD-005](AUD-005.md) | Détection du silence | P7 | I | Validé |
+| [AUD-006](AUD-006.md) | L'analyse audio fonctionne dans son propre fil d'exécution | P7 | I | Validé |
 | [AUD-007](AUD-007.md) | Charge CPU de l'analyse < 5 % d'un cœur | P7 | M | Validé |
-| [AUD-020](AUD-020.md) | Estimation du tempo dans une plage réglable | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-020](AUD-020.md) | Estimation du tempo dans une plage réglable | P7 | I | Validé |
 | [AUD-021](AUD-021.md) | Suivi de la phase | P7 | I | Validé |
-| [AUD-022](AUD-022.md) | Indice de confiance | P7 | I | Réalisé |
-| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-022](AUD-022.md) | Indice de confiance | P7 | I | Validé |
+| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Validé |
 | [AUD-024](AUD-024.md) | Détection du premier temps de la mesure | P7 | I | Partiel |
 | [AUD-025](AUD-025.md) | Tap tempo | P7 | I | Validé |
 | [AUD-026](AUD-026.md) | Changement de morceau | P7 | I | Validé |
 | [AUD-027](AUD-027.md) | Décalage de latence global réglable ± 250 ms | P7 | I | Validé |
 | [AUD-028](AUD-028.md) | Le BPM corrigé par l'utilisateur | P7 | M | Non réalisé |
-| [AUD-029](AUD-029.md) | Mesures à 4 temps par défaut | P7 | M | Réalisé |
-| [AUD-040](AUD-040.md) | Détection des attaques dans deux bandes | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-041](AUD-041.md) | Chaque impulsion porte une force | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-042](AUD-042.md) | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-043](AUD-043.md) | Latence de détection < 60 ms | P7 | M | Réalisé, à valider sur matériel |
+| [AUD-029](AUD-029.md) | Mesures à 4 temps par défaut | P7 | M | Validé |
+| [AUD-040](AUD-040.md) | Détection des attaques dans deux bandes | P7 | I | Validé |
+| [AUD-041](AUD-041.md) | Chaque impulsion porte une force | P7 | I | Validé |
+| [AUD-042](AUD-042.md) | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | P7 | I | Validé |
+| [AUD-043](AUD-043.md) | Latence de détection < 60 ms | P7 | M | Validé |
 | [AUD-044](AUD-044.md) | Bande médiums | P7 | S | Non réalisé |
-| [AUD-060](AUD-060.md) | Mesure continue de l'énergie perçue | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-061](AUD-061.md) | Niveaux discrets avec hystérésis | P7 | I | Réalisé, à valider sur matériel |
-| [AUD-062](AUD-062.md) | Détection de Break | P7 | I | Réalisé, à valider sur matériel |
+| [AUD-060](AUD-060.md) | Mesure continue de l'énergie perçue | P7 | I | Validé |
+| [AUD-061](AUD-061.md) | Niveaux discrets avec hystérésis | P7 | I | Validé |
+| [AUD-062](AUD-062.md) | Détection de Break | P7 | I | Validé |
 | [AUD-063](AUD-063.md) | Détection de montée | P7 | M | Réalisé |
-| [AUD-064](AUD-064.md) | Tendance | P7 | M | Réalisé, à valider sur matériel |
+| [AUD-064](AUD-064.md) | Tendance | P7 | M | Validé |
 | [AUD-080](AUD-080.md) | Écran Audio | P7 | I | Validé |
 | [AUD-081](AUD-081.md) | Réglages | P7 | I | Validé |
 | [AUD-082](AUD-082.md) | Enregistrement de l'analyse | P7 | M | Non réalisé |
@@ -172,8 +172,8 @@
 | [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
 | [CMD-031](CMD-031.md) | Commande RéglerDimmerGroupe | ERG2 | I | Réalisé |
 | [CMD-040](CMD-040.md) | Commande TapTempo | P7 | I | Validé |
-| [CMD-041](CMD-041.md) | Commande ChoisirSourceTempo | P7 | I | Réalisé, à valider sur matériel |
-| [CMD-042](CMD-042.md) | Commande AjusterTempo | P7 | I | Réalisé, à valider sur matériel |
+| [CMD-041](CMD-041.md) | Commande ChoisirSourceTempo | P7 | I | Validé |
+| [CMD-042](CMD-042.md) | Commande AjusterTempo | P7 | I | Validé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -412,7 +412,7 @@
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
 | [MOT-016](MOT-016.md) | Durées musicales | P7 | I | Validé |
-| [MOT-017](MOT-017.md) | Avance à l'événement | P7 | I | Réalisé, à valider sur matériel |
+| [MOT-017](MOT-017.md) | Avance à l'événement | P7 | I | Validé |
 | [MOT-018](MOT-018.md) | Quantification du lancement | P7 | M | Validé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
 | [MOT-020](MOT-020.md) | Une scène peut suivre l'horloge principale ou une horloge fixe propre | P7 | M | Validé |
