@@ -205,3 +205,29 @@ Guides : [demos/P7-audio-tempo-reverification-2.md](../demos/P7-audio-tempo-reve
 **Idées (💡)** : filtrer le champ BPM (chiffres et décimale) ou ouvrir une petite fenêtre de saisie (Entrée valide, Échap annule, clic ailleurs valide) ; raccourcir le vert du bouton TAP (≈ 0,2 s aujourd'hui, viser 50 à 100 ms) ; fenêtre de fermeture de l'application avec la liste des étapes ; sensibilité des impulsions pilotable en direct (curseur, contrôleur MIDI, futur « directeur ») ; exemple parlant pour « La vitesse suit l'énergie » dans le show de référence ; texte d'aide trop long dans Réglages (« Tempo préféré ») ; tri alphabétique du glossaire, et termes à ajouter (Fréquence, break, drop, kick, beat, montée) ; info-bulle pour l'en-tête tronqué du volet « Au rythme ».
 
 **Suite** : la discussion dev lit ce bilan, corrige les 3 ❌ (le 1 en premier), puis propose la validation de la phase et l'analyse ergonomique finale (doc 32 §5.6) avant fusion et étiquette.
+
+## Re-vérification 3 (version 1.009.099)
+
+Guide : [demos/P7-audio-tempo-reverification-3.md](../demos/P7-audio-tempo-reverification-3.md) (E3, E3 b, E4, C, E9, R). Même grille, en ajout seul.
+
+| Date | Version | Exemple | Résultat | Observation de l'utilisateur | Demande / anomalie |
+|---|---|---|---|---|---|
+| 2026-10-01 | 1.009.099 | Démarrage de la re-vérification 3 | ⏸ | Version à vérifier : 1.009.099 | — |
+| 2026-10-01 | 1.009.099 | E3 Saisie du BPM | ✅ | « Tout ok » | Plus de blocage après Entrée ; champ filtré chiffres / décimale |
+| 2026-10-01 | 1.009.099 | E3 b Sortie du champ | ✅ | « Tout ok » | 110 appliqué en quittant le champ |
+| 2026-10-01 | 1.009.099 | E4 TAP réactif | ✅ | « Tout ok » | Vert bref, chaque frappe se sent |
+| 2026-10-01 | 1.009.099 | C Colonne de scènes après édition | ✅ | « Tout ok » | La colonne garde sa position, la scène éditée reste visible |
+| 2026-10-01 | 1.009.099 | E9 En-tête « Au rythme » | ✅ | « Tout ok » | Texte à la ligne, ÷ 4 complet, info-bulle |
+| 2026-10-01 | 1.009.099 | R Tempo préféré (écran Audio, Réglages) | ✅ | « Tout ok » | Ligne de la même hauteur, aide en info-bulle |
+
+## Bilan de la re-vérification 3 (2026-10-01, version 1.009.099)
+
+Écrit par la discussion test à la fin du mini-guide : les 6 exemples sont faits, tous conformes.
+
+**Corrigé et vérifié (✅)** : E3 (saisie du BPM sans blocage après Entrée, champ filtré chiffres et décimale), E3 b (110 appliqué en quittant le champ), E4 (vert du bouton TAP bref), C (la colonne de scènes garde sa position après l'édition), E9 (en-tête « Au rythme » complet, ÷ 4 lisible, info-bulle), R (ligne « Tempo préféré » de la même hauteur, aide en info-bulle).
+
+**Reste à corriger (❌)** : rien.
+
+**Idées (💡) restantes, déjà notées plus haut** : fenêtre de fermeture de l'application avec les étapes, sensibilité des impulsions pilotable en direct, exemple parlant pour « La vitesse suit l'énergie », titre du morceau en cours (écran Audio et bloc BPM), tri alphabétique et nouveaux termes du glossaire.
+
+**Suite** : la discussion dev peut passer à l'analyse ergonomique de fin de phase, à la validation de la phase P7, à la fusion dans main et à l'étiquette.
