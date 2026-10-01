@@ -23,6 +23,9 @@ public sealed partial class ControlColumnViewModel : ViewModelBase
     [ObservableProperty]
     private bool _canStep;
 
+    /// <summary>Position de défilement vertical de la colonne : gardée quand la liste des scènes est recréée (édition validée).</summary>
+    public double ScrollOffset { get; set; }
+
     /// <summary>Crée la colonne.</summary>
     public ControlColumnViewModel(Layer layer, Action<ControlColumnViewModel, double> masterChanged)
     {

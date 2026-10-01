@@ -161,7 +161,8 @@
             <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding MaxBpm}" Minimum="80" Maximum="240" Increment="5" FormatString="0" />
             <TextBlock Grid.Row="4" Text="Tempo préféré (BPM)" VerticalAlignment="Center" />
             <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding PreferredBpm}" Minimum="60" Maximum="200" Increment="5" FormatString="0" />
-            <TextBlock Grid.Row="4" Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" Text="En cas de doute entre un tempo et son double ou sa moitié, LuXia préfère celui le plus proche" />
+            <TextBlock Grid.Row="4" Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" Text="Tranche entre un tempo et son double ou sa moitié"
+                       ToolTip.Tip="En cas de doute entre un tempo et son double ou sa moitié, LuXia préfère celui le plus proche de cette valeur" />
             <TextBlock Grid.Row="5" Text="Latence (ms)" VerticalAlignment="Center" />
             <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding LatencyMilliseconds}" Minimum="-500" Maximum="500" Increment="10" FormatString="0" />
             <TextBlock Grid.Row="5" Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" Text="Positif : la lumière avance sur le son ; négatif : elle retarde" />

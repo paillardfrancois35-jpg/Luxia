@@ -426,7 +426,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
                 StepAdvanceMode.BassPulse => "kick",
                 _ => "caisse claire",
             };
-            parts.Add($"étapes sur le {unit}, {Frequency.Label.Split(' ')[0]}");
+            parts.Add($"étapes sur le {unit}, {Frequency.Label.Split('(')[0].Trim()}");
         }
 
         if (Quantize.Value != LaunchQuantize.None)
