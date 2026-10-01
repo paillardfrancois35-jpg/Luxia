@@ -59,6 +59,9 @@ public sealed record Scene
     /// <summary>Nombre d'événements entre deux étapes (1 ou plus).</summary>
     public int AdvanceEvery { get; init; } = 1;
 
+    /// <summary>Plusieurs étapes par temps ou par mesure : 1 (défaut), 2 ou 4 (essai P7, décision 5) ; sans effet sur les impulsions.</summary>
+    public int AdvanceMultiplier { get; init; } = 1;
+
     /// <summary>Instant musical attendu avant de démarrer (MOT-018).</summary>
     public LaunchQuantize Quantize { get; init; } = LaunchQuantize.None;
 

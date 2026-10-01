@@ -162,6 +162,7 @@
         "speed": { "type": "number", "minimum": 0.1, "maximum": 10 },
         "advance": { "enum": ["duration", "beat", "bar", "bassPulse", "treblePulse"], "description": "événement qui fait avancer d'étape (MOT-017)" },
         "advanceEvery": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "advanceMultiplier": { "enum": [1, 2, 4], "description": "étapes par temps ou par mesure : 1, 2 ou 4 (sans effet sur les impulsions)" },
         "quantize": { "enum": ["none", "beat", "bar", "phrase4", "phrase8"], "description": "instant musical attendu avant de démarrer (MOT-018)" },
         "energySpeed": { "type": "boolean", "description": "la vitesse suit l'énergie de la musique, de 0,6× à 1,4× (SCN-051)" },
         "ownBpm": { "type": ["number", "null"], "minimum": 20, "maximum": 400, "description": "tempo propre de la scène (MOT-020)" },

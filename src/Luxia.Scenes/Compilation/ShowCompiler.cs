@@ -274,6 +274,7 @@ public static class ShowCompiler
             Speed = Math.Clamp(scene.Speed, 0.1, 10),
             Advance = scene.Advance,
             AdvanceEvery = Math.Clamp(scene.AdvanceEvery, 1, 64),
+            AdvanceMultiplier = scene.AdvanceMultiplier is 2 or 4 ? scene.AdvanceMultiplier : 1,
             Quantize = scene.Quantize,
             EnergySpeed = scene.EnergySpeed,
             OwnBpm = scene.OwnBpm is { } own ? Math.Clamp(own, MusicalClock.MinBpm, MusicalClock.MaxBpm) : null,

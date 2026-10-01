@@ -39,6 +39,9 @@ public sealed record EngineScene
     /// <summary>Nombre d'événements (temps, mesures, impulsions) entre deux étapes (1 ou plus).</summary>
     public int AdvanceEvery { get; init; } = 1;
 
+    /// <summary>Étapes par temps ou par mesure : 1, 2 ou 4 (« ×2 », « ×4 » de la fréquence) ; sans effet sur les impulsions.</summary>
+    public int AdvanceMultiplier { get; init; } = 1;
+
     /// <summary>Instant musical attendu avant de démarrer (MOT-018).</summary>
     public LaunchQuantize Quantize { get; init; } = LaunchQuantize.None;
 

@@ -88,6 +88,9 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private string _sourceText = "Fixe";
 
     [ObservableProperty]
+    private int _beatInBar;
+
+    [ObservableProperty]
     private string _beat1 = BeatFirstOn;
 
     [ObservableProperty]
@@ -208,6 +211,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         ConfidenceText = state.Bpm > 0 ? $"{state.Confidence * 100:0} %" : "—";
         BeatPhase = tempo.Phase;
         BeatText = tempo.BeatInBar.ToString(CultureInfo.CurrentCulture);
+        BeatInBar = tempo.BeatInBar;
         Beat1 = tempo.BeatInBar == 1 ? BeatFirstOn : BeatOff;
         Beat2 = tempo.BeatInBar == 2 ? BeatOn : BeatOff;
         Beat3 = tempo.BeatInBar == 3 ? BeatOn : BeatOff;
@@ -253,7 +257,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             return;
         }
 
-        _runtime.SetListening(value);
+        _runtime.SetAudioMode(value);
     }
 
     partial void OnSelectedDeviceChanged(AudioDeviceChoice? value)
@@ -321,14 +325,6 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             SelectedDevice = Devices.FirstOrDefault(d => d.Id == _runtime.Preferences.Current.Audio.DeviceId) ?? Devices[0];
             _loading = false;
         });
-    }
-
-    /// <summary>Tempo de l'écoute : recale la source Audio (et démarre l'écoute).</summary>
-    [RelayCommand]
-    private void UseAudioTempo()
-    {
-        _runtime.SetListening(true);
-        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Audio));
     }
 
     /// <summary>×2 (AUD-023).</summary>

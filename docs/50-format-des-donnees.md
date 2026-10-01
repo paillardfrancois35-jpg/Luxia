@@ -324,6 +324,7 @@ Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
 | `fadeIn` / `fadeOut` | durée ou `null` | Fondu d'entrée (défaut : celui de la 1ʳᵉ étape) ; de sortie (défaut : arrêt immédiat) |
 | `speed` | 0,1 à 10 | Vitesse (MOT-015) |
 | `advance` / `advanceEvery` | `duration` (défaut), `beat`, `bar`, `bassPulse`, `treblePulse` ; entier 1 à 64 | Événement qui fait passer à l'étape suivante, tous les N (MOT-017) ; les impulsions avancent au temps sans signal audio (SCN-052) |
+| `advanceMultiplier` | 1 (défaut), 2 ou 4 | Plusieurs étapes par temps ou par mesure (« ×2 », « ×4 » de la fréquence) ; exclusif de `advanceEvery` supérieur à 1 ; sans effet sur les impulsions |
 | `quantize` | `none` (défaut), `beat`, `bar`, `phrase4`, `phrase8` | Instant musical attendu avant le démarrage de la scène (MOT-018) |
 | `energySpeed` | booléen | La vitesse de la scène suit l'énergie de la musique écoutée, de 0,6× (calme) à 1,4× (explosif) (SCN-051) ; sans écoute, vitesse normale |
 | `ownBpm` | 20 à 400 ou `null` | Tempo propre de la scène (MOT-020) ; `null` = horloge principale |

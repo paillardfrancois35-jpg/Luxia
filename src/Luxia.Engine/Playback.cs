@@ -139,6 +139,7 @@ internal sealed class Playback
     private MusicalClock? _own;
     private double _seenShift;
     private int _eventCount;
+    private long? _subIndex;
     private double _eventProgress;
 
     private double _stepElapsed;
@@ -679,6 +680,16 @@ internal sealed class Playback
     private int CountEvents()
     {
         var clock = _own ?? Clock;
+        if (Scene.AdvanceMultiplier > 1 && Scene.Advance is StepAdvanceMode.Beat or StepAdvanceMode.Bar)
+        {
+            // « ×2 », « ×4 » : on compte les sous-divisions franchies (demi-temps, quart de mesure…) sur la position de l'horloge.
+            var unit = Scene.Advance == StepAdvanceMode.Bar ? Duration.BeatsPerBar : 1.0;
+            var index = (long)Math.Floor((clock.EffectivePosition * Scene.AdvanceMultiplier / unit) + 1e-9);
+            var crossed = _subIndex is { } last ? (int)Math.Clamp(index - last, 0, int.MaxValue) : 0;
+            _subIndex = index;
+            return crossed;
+        }
+
         return Scene.Advance switch
         {
             StepAdvanceMode.Beat => clock.BeatsCrossed,
