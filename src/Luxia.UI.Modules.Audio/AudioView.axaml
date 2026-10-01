@@ -17,10 +17,8 @@
         <StackPanel Spacing="8">
           <TextBlock Classes="section" Text="Écoute" />
           <StackPanel Orientation="Horizontal" Spacing="10">
-            <CheckBox Content="Écouter" IsChecked="{Binding Listening}" IsEnabled="{Binding Available}"
-                      ToolTip.Tip="Démarre ou arrête l'écoute. Mémorisé : l'écoute redémarre avec l'application." />
-            <Button Content="Suivre le tempo de la musique" Command="{Binding UseAudioTempoCommand}" IsEnabled="{Binding Available}"
-                    ToolTip.Tip="Source du tempo : Audio (démarre l'écoute)" />
+            <CheckBox Content="Écouter et suivre le tempo" IsChecked="{Binding Listening}" IsEnabled="{Binding Available}"
+                      ToolTip.Tip="Même interrupteur que « Audio » de l'écran de jeu : écoute le son du PC et suit son tempo. Mémorisé : l'écoute redémarre avec l'application." />
             <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Opacity="0.8" TextTrimming="CharacterEllipsis" />
           </StackPanel>
           <StackPanel Orientation="Horizontal" Spacing="8">

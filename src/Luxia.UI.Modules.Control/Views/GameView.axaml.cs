@@ -37,6 +37,10 @@ public partial class GameView : UserControl
             menu.ShowAt(panelsButton);
         };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
+        // Saisie du BPM : l'affichage ne l'écrase pas pendant la frappe ; la valeur est appliquée en quittant le champ (Entrée l'applique aussi).
+        var bpmBox = this.FindControl<TextBox>("BpmBox")!;
+        bpmBox.GotFocus += (_, _) => ViewModel?.Tempo.BeginEdit();
+        bpmBox.LostFocus += (_, _) => ViewModel?.Tempo.EndEdit();
         _autosave = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Background, (_, _) => SaveLayout());
 
         // Au niveau de l'application : un panneau détaché vit dans une autre fenêtre et doit y retrouver son contenu.

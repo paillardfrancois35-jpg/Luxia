@@ -14,6 +14,15 @@
     <Style Selector="Button.lock.locked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="#388BFD" />
     </Style>
+    <!-- Interrupteur Audio : bleu quand l'horloge suit la musique ; TAP s'allume un instant à chaque frappe (bouton ou touche T). -->
+    <Style Selector="ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#1F6FEB" />
+      <Setter Property="TextElement.Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.tap.flash /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#3FB950" />
+      <Setter Property="TextElement.Foreground" Value="#0D1117" />
+    </Style>
     <!-- Cibles d'au moins 32 px de haut (ERG-035). -->
     <Style Selector="Button.target">
       <Setter Property="MinHeight" Value="34" />
@@ -46,16 +55,25 @@
       </DockPanel>
     </Border>
 
-    <!-- Bloc BPM (Q42) : source, valeur, TAP (touche T), ×2, ÷2, « 1 ici », compteur 1-2-3-4. -->
+    <!-- Bloc BPM (Q42, essai P7 décision 1) : interrupteur Audio (gris = tempo à la main, bleu = suit la musique), BPM saisissable
+         (Entrée), TAP (touche T), − +, corrections ×2 ÷ 2 « 1 ici » (toujours actives), voyants des temps. Largeurs fixes : rien ne bouge. -->
     <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,4">
       <StackPanel Orientation="Horizontal" Spacing="6" DataContext="{Binding Tempo}" x:DataType="vm:TempoBarViewModel" VerticalAlignment="Center">
         <TextBlock Text="♪" FontSize="16" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding BpmText}" FontSize="18" FontWeight="SemiBold" Width="56" TextAlignment="Right" VerticalAlignment="Center"
-                   ToolTip.Tip="Tempo courant en battements par minute" />
+        <ToggleButton Classes="target" Content="🎧 Audio" IsChecked="{Binding AudioOn}" IsEnabled="{Binding CanListen}" Width="96"
+                      HorizontalContentAlignment="Center" ToolTip.Tip="{Binding AudioStatus}" />
+        <TextBlock Text="{Binding ConfidenceText}" Foreground="{Binding ConfidenceColor}" Width="44" FontSize="12" VerticalAlignment="Center"
+                   ToolTip.Tip="Confiance dans le tempo détecté (vert : sûr, orange : moyen, rouge : incertain, l'horloge garde alors son tempo)" />
+        <TextBox x:Name="BpmBox" Text="{Binding BpmInput}" Width="64" MinHeight="34" FontSize="16" FontWeight="SemiBold" HorizontalContentAlignment="Right"
+                 VerticalContentAlignment="Center" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Tempo en battements par minute : taper une valeur puis Entrée">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding ApplyTypedBpmCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
         <TextBlock Text="BPM" Foreground="#8B949E" VerticalAlignment="Center" />
-        <Button Classes="target" Content="−" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding DecreaseCommand}" ToolTip.Tip="Retirer 1 BPM" />
-        <Button Classes="target" Content="+" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding IncreaseCommand}" ToolTip.Tip="Ajouter 1 BPM" />
-        <Button Classes="target" Content="TAP" FontWeight="Bold" Command="{Binding TapCommand}"
+        <Button Classes="target" Content="−" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding DecreaseCommand}" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Retirer 1 BPM" />
+        <Button Classes="target" Content="+" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding IncreaseCommand}" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Ajouter 1 BPM" />
+        <Button Classes="target tap" Classes.flash="{Binding TapFlash}" Content="TAP" FontWeight="Bold" Width="56" HorizontalContentAlignment="Center" Command="{Binding TapCommand}" IsEnabled="{Binding ManualEnabled}"
                 ToolTip.Tip="Taper le rythme : quatre frappes régulières donnent le tempo, chaque frappe cale le temps (touche T)" />
         <Button Classes="target" Content="×2" Width="44" Padding="0" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding TimesTwoCommand}" ToolTip.Tip="Doubler le tempo (corrige une détection à la moitié)" />
         <Button Classes="target" Content="÷ 2" Width="44" Padding="0" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding DivideByTwoCommand}" ToolTip.Tip="Diviser le tempo par deux" />
@@ -64,15 +82,6 @@
         <TextBlock Text="●" Foreground="{Binding Beat2}" FontSize="16" VerticalAlignment="Center" />
         <TextBlock Text="●" Foreground="{Binding Beat3}" FontSize="16" VerticalAlignment="Center" />
         <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="16" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding SourceText}" Foreground="#8B949E" VerticalAlignment="Center" Width="40"
-                   ToolTip.Tip="Source du tempo : Fixe (saisi), Tap (tapé) ou Audio (musique écoutée)" />
-        <TextBlock Text="{Binding Detail}" Foreground="#8B949E" VerticalAlignment="Center" FontSize="12" Width="92" TextTrimming="CharacterEllipsis" />
-        <TextBox Text="{Binding BpmInput}" Width="64" MinHeight="34" VerticalContentAlignment="Center" PlaceholderText="BPM" ToolTip.Tip="Saisir un tempo fixe (puis « Fixer »)" />
-        <Button Classes="target" Content="Fixer" Padding="8,4" Command="{Binding UseFixedCommand}" ToolTip.Tip="Utiliser le BPM saisi comme tempo fixe" />
-        <Button Classes="target" Content="🎧 Audio" Padding="8,4" Command="{Binding UseAudioCommand}" IsEnabled="{Binding CanListen}"
-                ToolTip.Tip="Suivre le tempo de la musique jouée sur ce PC (démarre l'écoute)" />
-        <CheckBox Content="Écoute" IsChecked="{Binding Listening}" IsEnabled="{Binding CanListen}" VerticalAlignment="Center"
-                  ToolTip.Tip="{Binding AudioStatus}" />
       </StackPanel>
     </Border>
 

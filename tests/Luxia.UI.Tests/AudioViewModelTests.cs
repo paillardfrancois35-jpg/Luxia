@@ -155,7 +155,7 @@ public sealed class AudioViewModelTests : IAsyncLifetime
     public void StoppingTheListening_GivesTheTempoBackToFixed()
     {
         var vm = new AudioViewModel(_runtime, a => a());
-        vm.UseAudioTempoCommand.Execute(null);
+        vm.Listening = true;
         _clock.Advance(TimeSpan.FromMilliseconds(25));
         _runtime.Engine.Tick();
         _runtime.Engine.Snapshot.Tempo.Source.ShouldBe(Luxia.Messaging.Commands.TempoSourceKind.Audio);
@@ -167,6 +167,29 @@ public sealed class AudioViewModelTests : IAsyncLifetime
         _runtime.Engine.Tick();
 
         _runtime.Engine.Snapshot.Tempo.Source.ShouldBe(Luxia.Messaging.Commands.TempoSourceKind.Fixed, "l'état affiché est l'état réel (essai P7, exemple 28)");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-020")]
+    public void GameSwitch_FollowsTheMusic_GreysTheManualControls_AndKeepsTheCorrections()
+    {
+        var tempo = new Luxia.UI.Modules.Control.TempoBarViewModel(_runtime, new Luxia.UI.Modules.Control.JournalPanelViewModel(_runtime));
+        tempo.CanListen.ShouldBeTrue();
+        tempo.AudioOn = true;
+        _clock.Advance(TimeSpan.FromMilliseconds(25));
+        _runtime.Engine.Tick();
+        tempo.Refresh();
+        tempo.AudioOn.ShouldBeTrue();
+        tempo.ManualEnabled.ShouldBeFalse();
+        tempo.SourceText.ShouldBe("Audio");
+
+        tempo.AudioOn = false;
+        _clock.Advance(TimeSpan.FromMilliseconds(25));
+        _runtime.Engine.Tick();
+        tempo.Refresh();
+        tempo.AudioOn.ShouldBeFalse();
+        tempo.ManualEnabled.ShouldBeTrue();
+        tempo.SourceText.ShouldBe("Fixe");
     }
 
     [Fact]

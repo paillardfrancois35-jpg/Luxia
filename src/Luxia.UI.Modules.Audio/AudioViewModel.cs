@@ -253,7 +253,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             return;
         }
 
-        _runtime.SetListening(value);
+        _runtime.SetAudioMode(value);
     }
 
     partial void OnSelectedDeviceChanged(AudioDeviceChoice? value)
@@ -321,14 +321,6 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             SelectedDevice = Devices.FirstOrDefault(d => d.Id == _runtime.Preferences.Current.Audio.DeviceId) ?? Devices[0];
             _loading = false;
         });
-    }
-
-    /// <summary>Tempo de l'écoute : recale la source Audio (et démarre l'écoute).</summary>
-    [RelayCommand]
-    private void UseAudioTempo()
-    {
-        _runtime.SetListening(true);
-        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Audio));
     }
 
     /// <summary>×2 (AUD-023).</summary>

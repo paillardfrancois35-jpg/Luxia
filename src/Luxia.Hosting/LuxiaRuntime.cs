@@ -142,6 +142,24 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Preferences.Update(p => p with { Audio = p.Audio with { Listen = listen } });
     }
 
+    /// <summary>
+    /// Interrupteur « Audio » (essai P7, décision 1) : actif = l'écoute démarre **et** l'horloge suit le tempo entendu ; éteint = plus
+    /// d'écoute, le tempo reste celui d'avant, devenu fixe. Le choix est mémorisé et rétabli au démarrage.
+    /// </summary>
+    public void SetAudioMode(bool on)
+    {
+        if (Audio is null)
+        {
+            return;
+        }
+
+        SetListening(on);
+        if (on)
+        {
+            Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Audio));
+        }
+    }
+
     /// <summary>Choisit le périphérique écouté (AUD-003) et le mémorise ; <c>null</c> = le son joué par le PC.</summary>
     public void SetAudioDevice(string? deviceId)
     {
@@ -288,7 +306,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             Midi?.Start();
             if (Preferences.Current.Audio.Listen && Audio is { } listener)
             {
-                // L'ouverture de la capture (0,4 à 0,5 s) ne doit pas retarder le démarrage de l'application.
+                // Le mode Audio mémorisé revient tel quel : écoute et tempo suivi. L'ouverture de la capture (0,4 à 0,5 s)
+                // ne doit pas retarder le démarrage de l'application.
+                Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Audio));
                 _ = Task.Run(listener.Start);
             }
 

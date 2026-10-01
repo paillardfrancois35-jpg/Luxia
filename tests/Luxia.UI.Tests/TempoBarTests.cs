@@ -34,7 +34,8 @@ public sealed class TempoBarTests : IAsyncLifetime
         _vm.Refresh();
         _vm.Tempo.SourceText.ShouldBe("Fixe");
         _vm.Tempo.BpmText.ShouldBe("120");
-        _vm.Tempo.IsFixed.ShouldBeTrue();
+        _vm.Tempo.AudioOn.ShouldBeFalse();
+        _vm.Tempo.ManualEnabled.ShouldBeTrue();
     }
 
     [Fact]
@@ -52,7 +53,6 @@ public sealed class TempoBarTests : IAsyncLifetime
 
         _vm.Refresh();
         _vm.Tempo.SourceText.ShouldBe("Tap");
-        _vm.Tempo.IsTap.ShouldBeTrue();
         _host.Runtime.Engine.Bpm.ShouldBe(150, 1.5);
     }
 
@@ -77,12 +77,12 @@ public sealed class TempoBarTests : IAsyncLifetime
     public void Fixed_WithTypedBpm_SetsTheTempo_AndWrongInputKeepsTheCurrentOne()
     {
         _vm.Tempo.BpmInput = "95";
-        _vm.Tempo.UseFixedCommand.Execute(null);
+        _vm.Tempo.ApplyTypedBpmCommand.Execute(null);
         _host.Tick();
         _host.Runtime.Engine.Bpm.ShouldBe(95);
 
         _vm.Tempo.BpmInput = "abc";
-        _vm.Tempo.UseFixedCommand.Execute(null);
+        _vm.Tempo.ApplyTypedBpmCommand.Execute(null);
         _host.Tick();
         _host.Runtime.Engine.Bpm.ShouldBe(95);
     }
@@ -111,5 +111,19 @@ public sealed class TempoBarTests : IAsyncLifetime
         _host.Runtime.Engine.Bpm.ShouldBe(121);
         _vm.Refresh();
         _vm.Journal.Lines.ShouldContain(l => l.Contains("+1 BPM"));
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-025")]
+    public void Tap_LightsTheButtonForAMoment()
+    {
+        _vm.Tempo.Tap();
+        _vm.Tempo.TapFlash.ShouldBeTrue();
+        for (var i = 0; i < 6; i++)
+        {
+            _vm.Tempo.Refresh();
+        }
+
+        _vm.Tempo.TapFlash.ShouldBeFalse();
     }
 }

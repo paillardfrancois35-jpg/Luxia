@@ -8,63 +8,57 @@ using Luxia.UI.Controls;
 namespace Luxia.UI.Modules.Control;
 
 /// <summary>
-/// Bloc BPM de l'écran de jeu (Q42, doc 19 §3) : source du tempo (Fixe, Tap, Audio), valeur, TAP, ×2, ÷2, « 1 ici »
-/// (recalage de la mesure) et compteur 1-2-3-4. Ne fait que lire l'état de l'horloge du moteur et lui envoyer des commandes
-/// (CMD-040 à 042) ; les réglages de tempo ne sont pas enregistrés dans le projet.
+/// Bloc BPM de l'écran de jeu (Q42, doc 19 §3, essai P7 décision 1) : un seul interrupteur **Audio** (gris : tempo réglé à la main ;
+/// bleu : l'horloge suit la musique écoutée), le BPM (saisie directe, validée par Entrée), TAP, − et +, les corrections ×2, ÷ 2 et
+/// « 1 ici », et les voyants des quatre temps. Audio actif : le champ BPM, TAP, − et + sont grisés (le tempo vient du son) ;
+/// ×2, ÷ 2 et « 1 ici » restent actifs (ils corrigent l'analyse) ; la confiance s'affiche à droite de l'interrupteur.
+/// Ne fait que lire l'horloge du moteur et lui envoyer des commandes (CMD-040 à 042) ; les réglages de tempo ne sont pas
+/// enregistrés dans le projet.
 /// </summary>
 public sealed partial class TempoBarViewModel : ViewModelBase
 {
     private const string BeatOn = "#3FB950";
     private const string BeatFirstOn = "#F0883E";
     private const string BeatOff = "#30363D";
+    private const int FlashTicks = 4;
 
     private readonly LuxiaRuntime _runtime;
     private readonly JournalPanelViewModel _journal;
+    private int _flashLeft;
+    private bool _editing;
 
     [ObservableProperty]
     private string _bpmText = "120";
 
     [ObservableProperty]
-    private string _sourceText = "Fixe";
+    private string _bpmInput = "120";
 
     [ObservableProperty]
-    private string _detail = string.Empty;
-
-    [ObservableProperty]
-    private string _beat1 = BeatFirstOn;
-
-    [ObservableProperty]
-    private string _beat2 = BeatOff;
-
-    [ObservableProperty]
-    private string _beat3 = BeatOff;
-
-    [ObservableProperty]
-    private string _beat4 = BeatOff;
+    private int _beatInBar = 1;
 
     [ObservableProperty]
     private string _barText = "Mesure 1";
 
     [ObservableProperty]
-    private bool _isFixed = true;
+    private bool _audioOn;
 
     [ObservableProperty]
-    private bool _isTap;
-
-    [ObservableProperty]
-    private string _bpmInput = "120";
-
-    [ObservableProperty]
-    private bool _isAudio;
-
-    [ObservableProperty]
-    private bool _listening;
-
-    [ObservableProperty]
-    private string _audioStatus = "Écoute arrêtée";
+    private bool _manualEnabled = true;
 
     [ObservableProperty]
     private bool _canListen;
+
+    [ObservableProperty]
+    private bool _tapFlash;
+
+    [ObservableProperty]
+    private string _confidenceText = string.Empty;
+
+    [ObservableProperty]
+    private string _confidenceColor = "#F85149";
+
+    [ObservableProperty]
+    private string _audioStatus = "Écoute du son du PC et suivi du tempo";
 
     private bool _refreshing;
     private string? _loggedNotice;
@@ -80,69 +74,98 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         Refresh();
     }
 
+    /// <summary>Texte de la source du tempo (« Fixe », « Tap » ou « Audio »), pour les tests et les info-bulles.</summary>
+    public string SourceText => _runtime.Engine.Snapshot.Tempo.Source switch
+    {
+        TempoSourceKind.Tap => "Tap",
+        TempoSourceKind.Audio => "Audio",
+        _ => "Fixe",
+    };
+
+    /// <summary>Couleur du voyant de chacun des quatre temps.</summary>
+    public string Beat1 => BeatInBar == 1 ? BeatFirstOn : BeatOff;
+
+    /// <summary>Voyant du temps 2.</summary>
+    public string Beat2 => BeatInBar == 2 ? BeatOn : BeatOff;
+
+    /// <summary>Voyant du temps 3.</summary>
+    public string Beat3 => BeatInBar == 3 ? BeatOn : BeatOff;
+
+    /// <summary>Voyant du temps 4.</summary>
+    public string Beat4 => BeatInBar == 4 ? BeatOn : BeatOff;
+
     /// <summary>Relit l'horloge du moteur (appelé par le rafraîchissement de l'écran, 20 fois par seconde).</summary>
     public void Refresh()
     {
         _refreshing = true;
         var tempo = _runtime.Engine.Snapshot.Tempo;
         var text = tempo.Bpm.ToString("0.#", CultureInfo.CurrentCulture);
-        if (BpmText != text)
+        BpmText = text;
+        if (!_editing)
         {
-            BpmText = text;
+            BpmInput = text;
         }
 
-        SourceText = tempo.Source switch
-        {
-            TempoSourceKind.Tap => "Tap",
-            TempoSourceKind.Audio => "Audio",
-            _ => "Fixe",
-        };
-        IsFixed = tempo.Source == TempoSourceKind.Fixed;
-        IsTap = tempo.Source == TempoSourceKind.Tap;
-        Detail = tempo.Source == TempoSourceKind.Audio ? $"confiance {tempo.Confidence * 100:0} %" : string.Empty;
-        Beat1 = tempo.BeatInBar == 1 ? BeatFirstOn : BeatOff;
-        Beat2 = tempo.BeatInBar == 2 ? BeatOn : BeatOff;
-        Beat3 = tempo.BeatInBar == 3 ? BeatOn : BeatOff;
-        Beat4 = tempo.BeatInBar == 4 ? BeatOn : BeatOff;
+        AudioOn = tempo.Source == TempoSourceKind.Audio;
+        ManualEnabled = !AudioOn;
+        BeatInBar = tempo.BeatInBar;
         BarText = $"Mesure {tempo.Bar}";
-        IsAudio = tempo.Source == TempoSourceKind.Audio;
-        Listening = _runtime.Audio?.IsListening ?? false;
-        AudioStatus = _runtime.Audio?.Status ?? "Pas d'écoute dans cette configuration";
+        OnPropertyChanged(nameof(SourceText));
+        OnPropertyChanged(nameof(Beat1));
+        OnPropertyChanged(nameof(Beat2));
+        OnPropertyChanged(nameof(Beat3));
+        OnPropertyChanged(nameof(Beat4));
+
+        // Confiance : vert à partir de 70 %, orange de 30 à 70 %, rouge en dessous (l'horloge garde alors son tempo, AUD-022).
+        ConfidenceText = AudioOn ? $"{tempo.Confidence * 100:0} %" : string.Empty;
+        ConfidenceColor = tempo.Confidence >= 0.7 ? BeatOn : tempo.Confidence >= 0.3 ? "#D29922" : "#F85149";
+        AudioStatus = AudioOn && _runtime.Audio?.Status is { } status ? status : "Écoute du son du PC et suivi du tempo";
+        if (_flashLeft > 0 && --_flashLeft == 0)
+        {
+            TapFlash = false;
+        }
+
         if (_runtime.Audio is { Notice: { } notice } audio && audio.NoticeAgeSeconds < 12 && _loggedNotice != notice)
         {
             // Changement de périphérique, reprise, erreur : une ligne au Journal de l'écran de jeu (essai P7, exemple 15).
             _loggedNotice = notice;
             _journal.Log("🎧 " + notice);
         }
+
         _refreshing = false;
     }
 
-    partial void OnListeningChanged(bool value)
+    /// <summary>La saisie du BPM commence : l'affichage ne l'écrase plus pendant la frappe.</summary>
+    public void BeginEdit() => _editing = true;
+
+    /// <summary>La saisie se termine (sortie du champ) : la valeur saisie, si elle a changé, est appliquée.</summary>
+    public void EndEdit()
+    {
+        if (!_editing)
+        {
+            return;
+        }
+
+        if (BpmInput != BpmText)
+        {
+            ApplyTypedBpm();
+        }
+
+        _editing = false;
+    }
+
+    partial void OnAudioOnChanged(bool value)
     {
         if (_refreshing || _runtime.Audio is null)
         {
             return;
         }
 
-        _runtime.SetListening(value);
-        _journal.Log(value ? "🎧 écoute du son du PC démarrée" : "🎧 écoute arrêtée");
-        _runtime.TraceUi("Contrôle", value ? "écoute démarrée" : "écoute arrêtée");
-    }
-
-    /// <summary>Source Audio : démarre l'écoute du son joué par le PC et suit son tempo (AUD-020).</summary>
-    [RelayCommand]
-    private void UseAudio()
-    {
-        if (_runtime.Audio is null)
-        {
-            _journal.Log("♪ pas d'écoute audio dans cette configuration");
-            return;
-        }
-
-        _runtime.SetListening(true);
-        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Audio));
-        _journal.Log("♪ tempo : source Audio (écoute du son du PC)");
-        _runtime.TraceUi("Contrôle", "source audio");
+        // L'utilisateur a basculé l'interrupteur (le moteur confirmera la source au tick suivant).
+        _runtime.SetAudioMode(value);
+        _journal.Log(value ? "🎧 Audio : écoute du son du PC, tempo suivi" : "🎧 Audio coupé : tempo fixe");
+        _runtime.TraceUi("Contrôle", value ? "audio activé" : "audio coupé");
+        ManualEnabled = !value;
     }
 
     /// <summary>TAP (touche T) : une frappe ; quatre frappes régulières donnent le tempo (AUD-025).</summary>
@@ -151,6 +174,8 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     {
         _runtime.Engine.Send(new TapTempoCommand(CommandOrigin.User));
         _runtime.TraceUi("Contrôle", "tap tempo");
+        TapFlash = true;
+        _flashLeft = FlashTicks;
     }
 
     /// <summary>×2 (AUD-023).</summary>
@@ -173,14 +198,21 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     [RelayCommand]
     private void ResyncBar() => Adjust(TempoAdjustment.ResyncBar, 0, "le 1 est maintenant");
 
-    /// <summary>Passe en tempo fixe, avec le BPM saisi s'il est valide, sinon avec le tempo courant.</summary>
+    /// <summary>Applique le BPM saisi comme tempo fixe (Entrée) ; une saisie invalide est ignorée et l'affichage revient au tempo courant.</summary>
     [RelayCommand]
-    private void UseFixed()
+    private void ApplyTypedBpm()
     {
         var parsed = double.TryParse(BpmInput, NumberStyles.Float, CultureInfo.CurrentCulture, out var bpm)
             || double.TryParse(BpmInput, NumberStyles.Float, CultureInfo.InvariantCulture, out bpm);
-        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Fixed, parsed ? bpm : _runtime.Engine.Bpm));
-        _journal.Log(parsed ? $"♪ tempo fixe {bpm:0.#} BPM" : "♪ tempo fixe au tempo courant");
+        _editing = false;
+        if (!parsed || AudioOn)
+        {
+            BpmInput = BpmText;
+            return;
+        }
+
+        _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Fixed, bpm));
+        _journal.Log($"♪ tempo fixe {bpm:0.#} BPM");
         _runtime.TraceUi("Contrôle", "tempo fixe");
     }
 
