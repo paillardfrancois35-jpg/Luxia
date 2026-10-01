@@ -20,7 +20,7 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     private const string BeatOn = "#3FB950";
     private const string BeatFirstOn = "#F0883E";
     private const string BeatOff = "#30363D";
-    private const int FlashTicks = 4;
+    private const int FlashTicks = 2;
 
     private readonly LuxiaRuntime _runtime;
     private readonly JournalPanelViewModel _journal;
@@ -135,6 +135,40 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         _refreshing = false;
     }
 
+    /// <summary>Champ BPM : seuls les chiffres et une décimale (virgule ou point) sont gardés, même au collage (essai P7, E3).</summary>
+    partial void OnBpmInputChanged(string value)
+    {
+        if (value is null)
+        {
+            return;
+        }
+
+        var clean = new System.Text.StringBuilder(value.Length);
+        var decimalSeen = false;
+        foreach (var c in value)
+        {
+            if (char.IsAsciiDigit(c))
+            {
+                clean.Append(c);
+            }
+            else if ((c == '.' || c == ',') && !decimalSeen)
+            {
+                decimalSeen = true;
+                clean.Append(c);
+            }
+        }
+
+        if (clean.Length > 6)
+        {
+            clean.Length = 6;
+        }
+
+        if (clean.ToString() != value)
+        {
+            BpmInput = clean.ToString();
+        }
+    }
+
     /// <summary>La saisie du BPM commence : l'affichage ne l'écrase plus pendant la frappe.</summary>
     public void BeginEdit() => _editing = true;
 
@@ -204,7 +238,6 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     {
         var parsed = double.TryParse(BpmInput, NumberStyles.Float, CultureInfo.CurrentCulture, out var bpm)
             || double.TryParse(BpmInput, NumberStyles.Float, CultureInfo.InvariantCulture, out bpm);
-        _editing = false;
         if (!parsed || AudioOn)
         {
             BpmInput = BpmText;

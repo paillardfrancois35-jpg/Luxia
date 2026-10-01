@@ -83,7 +83,10 @@
         </Expander>
 
         <!-- Au rythme (MOT-017, MOT-018, MOT-020) : avancer, démarrer et battre au tempo de l'horloge musicale -->
-        <Expander Header="{Binding RhythmHeader}" IsExpanded="False">
+        <Expander IsExpanded="False">
+          <Expander.Header>
+            <TextBlock Text="{Binding RhythmHeader}" TextWrapping="Wrap" ToolTip.Tip="{Binding RhythmHeader}" />
+          </Expander.Header>
           <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
             <TextBlock Classes="label" Text="Étape suivante" />
             <ComboBox Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.AdvanceOptions}" SelectedItem="{Binding Advance}" HorizontalAlignment="Stretch"

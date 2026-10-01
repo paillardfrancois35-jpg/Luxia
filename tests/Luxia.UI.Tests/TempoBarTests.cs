@@ -126,4 +126,48 @@ public sealed class TempoBarTests : IAsyncLifetime
 
         _vm.Tempo.TapFlash.ShouldBeFalse();
     }
+
+    [Fact]
+    [Trait("Exigence", "AUD-025")]
+    public void TypingTheBpm_AfterEnter_IsNotOverwrittenByTheRefresh()
+    {
+        // Essai P7, E3 : après Entrée le champ garde le focus ; la frappe suivante ne doit pas être écrasée par le rafraîchissement.
+        _vm.Tempo.BeginEdit();
+        _vm.Tempo.BpmInput = "96";
+        _vm.Tempo.ApplyTypedBpmCommand.Execute(null);
+        _host.Tick();
+        _vm.Refresh();
+
+        _vm.Tempo.BpmInput = "60";
+        _vm.Refresh();
+        _vm.Tempo.BpmInput.ShouldBe("60");
+
+        _vm.Tempo.EndEdit();
+        _host.Tick();
+        _host.Runtime.Engine.Bpm.ShouldBe(60);
+    }
+
+    [Theory]
+    [InlineData("12a.5.3", "12.53")]
+    [InlineData("abc", "")]
+    [InlineData("9 6,5", "96,5")]
+    [Trait("Exigence", "AUD-025")]
+    public void BpmField_KeepsOnlyDigitsAndOneDecimal(string typed, string expected)
+    {
+        _vm.Tempo.BeginEdit();
+        _vm.Tempo.BpmInput = typed;
+        _vm.Tempo.BpmInput.ShouldBe(expected);
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-030")]
+    public void ColumnScrollPosition_SurvivesARebuildOfTheScenes()
+    {
+        var column = _vm.Columns.Columns[0];
+        column.ScrollOffset = 123;
+
+        _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
+
+        _vm.Columns.Columns.First(c => c.Layer.Id == column.Layer.Id).ScrollOffset.ShouldBe(123);
+    }
 }

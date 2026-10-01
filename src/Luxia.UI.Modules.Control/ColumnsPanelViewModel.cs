@@ -337,10 +337,12 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     private void Rebuild()
     {
         var project = _runtime.Project;
+        var offsets = Columns.ToDictionary(c => c.Layer.Id, c => c.ScrollOffset);
         Columns.Clear();
         foreach (var layer in project.Layers.Layers.OrderBy(l => l.Priority).Where(l => !project.Live.HiddenLayerIds.Contains(l.Id)))
         {
             var column = new ControlColumnViewModel(layer, (c, value) => _runtime.Engine.Send(new SetLayerMasterCommand(CommandOrigin.User, c.Layer.Id, value / 100)));
+            column.ScrollOffset = offsets.GetValueOrDefault(layer.Id);
             foreach (var scene in project.Scenes.Scenes.Where(s => s.LayerId == layer.Id))
             {
                 column.Scenes.Add(new ControlSceneViewModel(scene, column));

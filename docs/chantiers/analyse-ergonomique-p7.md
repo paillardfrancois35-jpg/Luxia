@@ -161,3 +161,34 @@ version, avec les décisions 1 à 3.
 
 **Reste à planifier** (lot « Ergonomie P7 », avant la validation de P7 ou juste après, au choix de l'utilisateur) : bloc BPM (1), écran Audio sur maquette (2), volet « Au rythme » et sous-temps du moteur (4 et 5), faits simples (6). Hors liste : durées en temps / mesures dans les Propriétés (E2), badge Plein feu (E1), looks de démonstration (E16), pad de tap APC (E14).
 
+
+## 10. Revue de fin de phase (2026-10-01, versions 1.009.090 à 1.009.092)
+
+Passage de chaque ligne du §3 à ✅ (fait et vu à l'essai), ❌ (refusée) ou ⏳ (rangée au plan). Sources : essais de l'utilisateur
+([résultats](../essais/P7-resultats.md), re-vérification 2) et état du code.
+
+| # | État | Remarque |
+|---|---|---|
+| E1 | ⏳ | Contournée (scène « Lyres allumées », consigne au guide) ; le badge « Plein feu masque l'intensité » reste à faire |
+| E2 | ⏳ | **À faire avant de retirer l'écran Scènes** : durées en s / temps / mesures dans les Propriétés |
+| E3 | ✅ | Écran Audio en une page à 1920 × 1080 (E6 de la re-vérification) ; capture 1366 × 768 à refaire |
+| E4 | ✅ | Un seul interrupteur « 🎧 Audio », même réglage dans l'écran Audio (E1, E7) |
+| E5 | ✅ | Interrupteur gris / bleu à la place des trois boutons et du texte de source |
+| E6 | ✅ | Confiance en couleur à droite de l'interrupteur (E2) |
+| E7 | ⏳ | Le résumé de l'en-tête « Au rythme » aide ; l'horloge à 120 BPM fixes n'est toujours pas signalée sur la scène |
+| E8 | ⏳ | Info-bulle du départ quantifié à vérifier |
+| E9 | ✅ | Volet résumé en tête, éléments masqués, fréquence ÷ 8 à × 4 (E9 à E12) ; en-tête complet et info-bulle corrigés en 1.009.096 |
+| E10 | ⏳ | La barre de phase reste dans le panneau Tempo de l'écran Audio |
+| E11 | ⏳ | États vides toujours muets |
+| E12 | ⏳ | Calibration : état du bouton et mesure automatique non faits |
+| E13 | ✅ | « Fixer » et la case de saisie remplacés par le champ BPM direct (Entrée) |
+| E14 | ⏳ | Raccourcis « 1 », « [ », « ] » et pad de tap de l'APC non faits |
+| E15 | ⏳ | Break / drop au Journal de l'écran de jeu non faits (les avis de reconnexion y sont) |
+| E16 | ⏳ | Looks de démonstration non faits ; en plus, l'essai demande un exemple parlant pour « La vitesse suit l'énergie » |
+| E17 | ⏳ | Aperçu d'édition non calé sur le direct |
+| E18 | ✅ | Message d'autorisation du micro présent |
+| E19 | ✅ | Place de l'écran Audio conservée |
+
+**Ajouts de l'essai** : saisie du BPM à corriger puis filtrée (chiffres et décimale) ; position de la colonne de scènes conservée après
+l'édition ; TAP plus bref (≈ 0,1 s) ; écran de fermeture avec les étapes ; sensibilité des impulsions pilotable en direct ;
+titre du morceau (P9) ; texte d'aide de « Tempo préféré » à raccourcir.
