@@ -88,6 +88,9 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private string _sourceText = "Fixe";
 
     [ObservableProperty]
+    private int _beatInBar;
+
+    [ObservableProperty]
     private string _beat1 = BeatFirstOn;
 
     [ObservableProperty]
@@ -208,6 +211,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         ConfidenceText = state.Bpm > 0 ? $"{state.Confidence * 100:0} %" : "—";
         BeatPhase = tempo.Phase;
         BeatText = tempo.BeatInBar.ToString(CultureInfo.CurrentCulture);
+        BeatInBar = tempo.BeatInBar;
         Beat1 = tempo.BeatInBar == 1 ? BeatFirstOn : BeatOff;
         Beat2 = tempo.BeatInBar == 2 ? BeatOn : BeatOff;
         Beat3 = tempo.BeatInBar == 3 ? BeatOn : BeatOff;
