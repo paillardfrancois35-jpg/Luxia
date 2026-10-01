@@ -192,3 +192,5 @@ Passage de chaque ligne du §3 à ✅ (fait et vu à l'essai), ❌ (refusée) ou
 **Ajouts de l'essai** : saisie du BPM à corriger puis filtrée (chiffres et décimale) ; position de la colonne de scènes conservée après
 l'édition ; TAP plus bref (≈ 0,1 s) ; écran de fermeture avec les étapes ; sensibilité des impulsions pilotable en direct ;
 titre du morceau (P9) ; texte d'aide de « Tempo préféré » à raccourcir.
+
+**Décision de l'utilisateur (2026-10-01)** : « Range tout » : les 11 lignes ⏳ (E1, E2, E7, E8, E10, E11, E12, E14, E15, E16, E17) sont rangées dans le [carnet d'idées](../99-idees.md) ; E2 est en tête de P8 ([doc 40](../40-feuille-de-route.md)). Bilan : 8 lignes ✅, 11 ⏳, aucune refusée.
