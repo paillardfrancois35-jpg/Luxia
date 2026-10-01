@@ -57,7 +57,7 @@ Musique jouée **sur ce PC** (Deezer, YouTube Music ou VLC), volume confortable.
 | 20 | Sensibilité | Écran Audio → Sensibilité des impulsions : 20 % puis 80 % | Moins puis plus d'impulsions |
 | 21 | Break et drop | Lancer *Animals* (Martin Garrix) ou *Summer* | Événements **BREAK** puis **DROP** dans la liste au bon moment ; « BREAK » rouge pendant la pause |
 | 22 | Énergie | Regarder la jauge et le niveau (Calme, Groove, Énergique, Explosif) sur un morceau qui monte | Le niveau change sans osciller ; la tendance (↗ ↘) suit |
-| 23 | Vitesse selon l'énergie | Dans la fenêtre d'édition d'une scène, cocher « La vitesse suit l'énergie de la musique » ; la jouer pendant un morceau | La scène accélère sur les passages énergiques, ralentit sur les calmes |
+| 23 | Vitesse selon l'énergie | Dans la fenêtre d'édition d'une scène à étapes de 2 s (par ex. *Un PAR par temps*), volet **Au rythme** : **Étape suivante = « À la durée de l'étape »** (avec « À chaque temps », le rythme est celui du BPM : le facteur ne joue pas), cocher « La vitesse suit l'énergie de la musique » ; la jouer pendant un morceau | La scène accélère sur les passages énergiques, ralentit sur les calmes |
 | 24 | Calibration | Écran Audio → **Lancer le flash sur chaque temps**, puis régler la **Latence (ms)** | Le flash des PAR tombe sur le kick ; noter la valeur retenue ; **Arrêter** |
 
 ## 5. Pièges (DEMO-4)

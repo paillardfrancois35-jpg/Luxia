@@ -126,6 +126,50 @@ public sealed class AudioViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "AUD-081")]
+    public async Task Latency_FollowsTheChosenDevice()
+    {
+        var vm = new AudioViewModel(_runtime, a => a());
+        await vm.LoadDevicesAsync();
+        var micro = vm.Devices.Single(d => d.Id == "micro");
+
+        vm.SelectedDevice = micro;
+        vm.LatencyMilliseconds = 350;
+        for (var i = 0; i < 12; i++)
+        {
+            vm.Refresh();
+        }
+
+        _runtime.Preferences.Current.Audio.LatencyFor("micro").ShouldBe(0.35, 1e-9);
+        _runtime.Preferences.Current.Audio.LatencyFor(null).ShouldBe(0, 1e-9, "le son du PC garde sa latence");
+
+        // On revient au son du PC : la latence du micro ne le suit pas ; elle revient avec le micro.
+        vm.SelectedDevice = vm.Devices[0];
+        vm.LatencyMilliseconds.ShouldBe(0);
+        vm.SelectedDevice = micro;
+        vm.LatencyMilliseconds.ShouldBe(350);
+    }
+
+    [Fact]
+    [Trait("Exigence", "CMD-041")]
+    public void StoppingTheListening_GivesTheTempoBackToFixed()
+    {
+        var vm = new AudioViewModel(_runtime, a => a());
+        vm.UseAudioTempoCommand.Execute(null);
+        _clock.Advance(TimeSpan.FromMilliseconds(25));
+        _runtime.Engine.Tick();
+        _runtime.Engine.Snapshot.Tempo.Source.ShouldBe(Luxia.Messaging.Commands.TempoSourceKind.Audio);
+        vm.Refresh();
+        vm.Listening.ShouldBeTrue();
+
+        vm.Listening = false;
+        _clock.Advance(TimeSpan.FromMilliseconds(25));
+        _runtime.Engine.Tick();
+
+        _runtime.Engine.Snapshot.Tempo.Source.ShouldBe(Luxia.Messaging.Commands.TempoSourceKind.Fixed, "l'état affiché est l'état réel (essai P7, exemple 28)");
+    }
+
+    [Fact]
     [Trait("Exigence", "AUD-027")]
     public void Calibration_WithoutTheScene_ExplainsWhere()
     {

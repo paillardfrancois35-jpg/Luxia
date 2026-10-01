@@ -129,6 +129,43 @@ public sealed class AudioListenerTests
     }
 
     [Fact]
+    [Trait("Exigence", "AUD-002")]
+    public async Task DeviceChange_LeavesAVisibleNotice_ThenTheRecoveryOne()
+    {
+        var factory = new FakeFactory();
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        listener.Start();
+        listener.Notice.ShouldBeNull();
+
+        factory.Created[0].Stop(null);
+
+        listener.Notice.ShouldNotBeNull().ShouldContain("Changement de périphérique");
+        listener.NoticeAgeSeconds.ShouldBeLessThan(5);
+        await WaitAsync(() => factory.Created.Count == 2);
+        await WaitAsync(() => listener.Notice!.Contains("reprise", StringComparison.Ordinal) || listener.Status.Contains("Haut-parleurs", StringComparison.Ordinal));
+        listener.Status.ShouldContain("Haut-parleurs simulés");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-006")]
+    public async Task StopWhileBlocksArrive_NeverBlocks()
+    {
+        // L'écoute ne doit jamais libérer la source en tenant son verrou (interblocage vu en analyse de code, C3).
+        var factory = new FakeFactory();
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        for (var round = 0; round < 25; round++)
+        {
+            listener.Start();
+            var source = factory.Created[^1];
+            var feeding = Task.Run(() => source.Emit(Kicks(120, 3)), TestContext.Current.CancellationToken);
+            await Task.Delay(5, TestContext.Current.CancellationToken);
+            var stopping = Task.Run(listener.Stop, TestContext.Current.CancellationToken);
+            (await Task.WhenAny(Task.WhenAll(feeding, stopping), Task.Delay(5000, TestContext.Current.CancellationToken))).IsCompleted.ShouldBeTrue();
+            Task.WhenAll(feeding, stopping).IsCompleted.ShouldBeTrue("arrêt et blocs en cours se terminent");
+        }
+    }
+
+    [Fact]
     [Trait("Exigence", "AUD-006")]
     public async Task CaptureError_DoesNotThrow_AndRetries()
     {

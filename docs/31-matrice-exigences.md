@@ -436,51 +436,51 @@
 
 ## P7 – 46 exigences, 31 couvertes par des tests automatiques
 
-> Non réalisé : 3 · Partiel : 4 · Réalisé : 29 · Réalisé, à valider sur matériel : 4 · Sans fiche : 6
+> Non réalisé : 3 · Partiel : 3 · Réalisé : 5 · Réalisé, à valider sur matériel : 14 · Sans fiche : 6 · Validé : 15
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [AUD-001](exigences/AUD-001.md) | I | Capture du son joué par le PC | Réalisé, à valider sur matériel | AudioListenerTests.Listening_AnalysesTheSource_AndFeedsTheEngine |
-| [AUD-002](exigences/AUD-002.md) | I | Suivi du changement de périphérique par défaut | Réalisé, à valider sur matériel | AudioListenerTests.DeviceChange_ReconnectsOnTheNewDevice |
+| [AUD-001](exigences/AUD-001.md) | I | Capture du son joué par le PC | Validé | AudioListenerTests.Listening_AnalysesTheSource_AndFeedsTheEngine |
+| [AUD-002](exigences/AUD-002.md) | I | Suivi du changement de périphérique par défaut | Réalisé, à valider sur matériel | AudioListenerTests.DeviceChange_LeavesAVisibleNotice_ThenTheRecoveryOne<br>AudioListenerTests.DeviceChange_ReconnectsOnTheNewDevice |
 | [AUD-003](exigences/AUD-003.md) | M | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | Réalisé, à valider sur matériel | AudioViewModelTests.ChoosingTheMicrophone_IsRememberedAndUsedByTheListening |
-| [AUD-004](exigences/AUD-004.md) | I | L'analyse est indépendante du volume | Réalisé | AnalyzerTests.Silence_OnlyNoiseFloor_GivesNoTempoAndNoGrid<br>AnalyzerTests.Tempo_DoesNotDependOnTheVolume<br>PulseAndEnergyTests.Energy_DoesNotDependOnTheVolume |
-| [AUD-005](exigences/AUD-005.md) | I | Détection du silence | Réalisé | AnalyzerTests.Silence_IsDetected_AndResetsTheTracking<br>AudioListenerTests.Listening_WithoutBlocks_IsNotLive<br>PulseAndEnergyTests.Silence_RaisesAnEvent_AndResumeAnother |
-| [AUD-006](exigences/AUD-006.md) | I | L'analyse audio fonctionne dans son propre fil d'exécution | Réalisé | AudioListenerTests.CaptureError_DoesNotThrow_AndRetries<br>AudioListenerTests.Stop_DisposesTheSource_AndReadsSilence |
-| [AUD-007](exigences/AUD-007.md) | M | Charge CPU de l'analyse < 5 % d'un cœur | Réalisé | AnalyzerTests.Analysis_OfOneMinuteOfSound_TakesAFewPercentOfRealTime |
-| [AUD-020](exigences/AUD-020.md) | I | Estimation du tempo dans une plage réglable | Réalisé | AnalyzerTests.Tempo_OfASyntheticGroove_IsFoundWithinOnePercent<br>MusicalClockTests.Audio_Source_FollowsTheTempoAndThePhaseOfTheFeed<br>MusicalClockTests.OtherSources_IgnoreTheFeed |
-| [AUD-021](exigences/AUD-021.md) | I | Suivi de la phase | Partiel | AnalyzerTests.BeatPhase_IsConsistentWithTheKicks |
+| [AUD-004](exigences/AUD-004.md) | I | L'analyse est indépendante du volume | Validé | AnalyzerTests.Silence_OnlyNoiseFloor_GivesNoTempoAndNoGrid<br>AnalyzerTests.Tempo_DoesNotDependOnTheVolume<br>PulseAndEnergyTests.Energy_DoesNotDependOnTheVolume |
+| [AUD-005](exigences/AUD-005.md) | I | Détection du silence | Réalisé, à valider sur matériel | AnalyzerTests.Silence_IsDetected_AndResetsTheTracking<br>AudioListenerTests.Listening_WithoutBlocks_IsNotLive<br>MusicalClockTests.Audio_OctaveCorrection_DoesNotSurviveASilence<br>PulseAndEnergyTests.Silence_RaisesAnEvent_AndResumeAnother |
+| [AUD-006](exigences/AUD-006.md) | I | L'analyse audio fonctionne dans son propre fil d'exécution | Réalisé | AudioListenerHardwareTests.ToggleWhileSoundPlays_DoesNotHang<br>AudioListenerTests.CaptureError_DoesNotThrow_AndRetries<br>AudioListenerTests.StopWhileBlocksArrive_NeverBlocks<br>AudioListenerTests.Stop_DisposesTheSource_AndReadsSilence |
+| [AUD-007](exigences/AUD-007.md) | M | Charge CPU de l'analyse < 5 % d'un cœur | Validé | AnalyzerTests.Analysis_OfOneMinuteOfSound_TakesAFewPercentOfRealTime |
+| [AUD-020](exigences/AUD-020.md) | I | Estimation du tempo dans une plage réglable | Réalisé, à valider sur matériel | AnalyzerTests.Tempo_OfASyntheticGroove_IsFoundWithinOnePercent<br>MusicalClockTests.Audio_Source_FollowsTheTempoAndThePhaseOfTheFeed<br>MusicalClockTests.OtherSources_IgnoreTheFeed<br>PulseAndEnergyTests.Tempo_AfterAPause_DoesNotDropBeforeComingBack |
+| [AUD-021](exigences/AUD-021.md) | I | Suivi de la phase | Validé | AnalyzerTests.BeatPhase_IsConsistentWithTheKicks |
 | [AUD-022](exigences/AUD-022.md) | I | Indice de confiance | Réalisé |  |
-| [AUD-023](exigences/AUD-023.md) | I | Correction d'octave | Réalisé | MusicalClockTests.Scale_DoublesAndHalves_WithinBounds<br>TempoBarTests.TimesTwoAndDivideByTwo_ChangeTheEngineTempo_AndTheBarFollows |
-| [AUD-024](exigences/AUD-024.md) | I | Détection du premier temps de la mesure | Partiel | AnalyzerTests.Downbeat_FromAnAccentedFirstBeat_IsKnown<br>MusicalClockTests.ResyncBar_MakesTheCurrentBeatTheFirstOfABar<br>TempoBarTests.ResyncBar_MakesTheCurrentBeatTheFirst |
-| [AUD-025](exigences/AUD-025.md) | I | Tap tempo | Réalisé | MusicalClockTests.Tap_FourTapsAtHalfSecond_Gives120<br>MusicalClockTests.Tap_SnapsThePhaseToTheTap<br>MusicalClockTests.Tap_ThreeTaps_DoNotChangeTheTempoYet<br>MusicalClockTests.Tap_TwoSecondsWithoutTap_RestartsTheCount<br>(+1) |
-| [AUD-026](exigences/AUD-026.md) | I | Changement de morceau | Réalisé | AnalyzerTests.NewSong_AfterASilence_IsFoundInUnderEightSeconds<br>MusicalClockTests.Audio_Source_SnapsToANewSongTempo |
-| [AUD-027](exigences/AUD-027.md) | I | Décalage de latence global réglable ± 250 ms | Réalisé, à valider sur matériel | AudioViewModelTests.Calibration_WithoutTheScene_ExplainsWhere |
+| [AUD-023](exigences/AUD-023.md) | I | Correction d'octave | Réalisé, à valider sur matériel | MusicalClockTests.Audio_TimesTwo_FollowsTheAnalysisWhenItChangesOctaveItself<br>MusicalClockTests.Audio_TimesTwo_IsKeptWhileTheSameSongPlays<br>MusicalClockTests.Scale_DoublesAndHalves_WithinBounds<br>TempoBarTests.TimesTwoAndDivideByTwo_ChangeTheEngineTempo_AndTheBarFollows |
+| [AUD-024](exigences/AUD-024.md) | I | Détection du premier temps de la mesure | Partiel | AnalyzerTests.Downbeat_FromAnAccentedFirstBeat_IsKnown<br>MusicalClockTests.Audio_Downbeat_ThatDisagreesForASecond_MovesTheBarPosition<br>MusicalClockTests.ManualBarResync_IsNotOverruledByTheGuessedDownbeat_UntilANewSong<br>MusicalClockTests.ResyncBar_MakesTheCurrentBeatTheFirstOfABar<br>(+1) |
+| [AUD-025](exigences/AUD-025.md) | I | Tap tempo | Validé | MusicalClockTests.Tap_FourTapsAtHalfSecond_Gives120<br>MusicalClockTests.Tap_SnapsThePhaseToTheTap<br>MusicalClockTests.Tap_ThreeTaps_DoNotChangeTheTempoYet<br>MusicalClockTests.Tap_TwoSecondsWithoutTap_RestartsTheCount<br>(+1) |
+| [AUD-026](exigences/AUD-026.md) | I | Changement de morceau | Validé | AnalyzerTests.NewSong_AfterASilence_IsFoundInUnderEightSeconds<br>MusicalClockTests.Audio_NewSong_DropsTheOctaveCorrection<br>MusicalClockTests.Audio_Source_SnapsToANewSongTempo |
+| [AUD-027](exigences/AUD-027.md) | I | Décalage de latence global réglable ± 250 ms | Validé | AudioViewModelTests.Calibration_WithoutTheScene_ExplainsWhere |
 | [AUD-028](exigences/AUD-028.md) | M | Le BPM corrigé par l'utilisateur | Non réalisé |  |
 | [AUD-029](exigences/AUD-029.md) | M | Mesures à 4 temps par défaut | Réalisé |  |
-| [AUD-040](exigences/AUD-040.md) | I | Détection des attaques dans deux bandes | Réalisé | PulseAndEnergyTests.Pulses_KickAndHats_AreCountedPerBand |
-| [AUD-041](exigences/AUD-041.md) | I | Chaque impulsion porte une force | Réalisé | PulseAndEnergyTests.Pulses_CarryAStrength_BetweenZeroAndOne |
-| [AUD-042](exigences/AUD-042.md) | I | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | Réalisé | PulseAndEnergyTests.Pulses_LongDeadTime_ThinsThemOut |
-| [AUD-043](exigences/AUD-043.md) | M | Latence de détection < 60 ms | Réalisé |  |
+| [AUD-040](exigences/AUD-040.md) | I | Détection des attaques dans deux bandes | Réalisé, à valider sur matériel | PulseAndEnergyTests.Pulses_KickAndHats_AreCountedPerBand<br>PulseAndEnergyTests.Pulses_NoBassPassage_GivesNoBassPulse |
+| [AUD-041](exigences/AUD-041.md) | I | Chaque impulsion porte une force | Réalisé, à valider sur matériel | PulseAndEnergyTests.Pulses_CarryAStrength_BetweenZeroAndOne |
+| [AUD-042](exigences/AUD-042.md) | I | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | Réalisé, à valider sur matériel | PulseAndEnergyTests.Pulses_LongDeadTime_ThinsThemOut<br>PulseAndEnergyTests.Sensitivity_ChangesTheNumberOfPulses_Visibly |
+| [AUD-043](exigences/AUD-043.md) | M | Latence de détection < 60 ms | Réalisé, à valider sur matériel |  |
 | [AUD-044](exigences/AUD-044.md) | S | Bande médiums | Non réalisé |  |
-| [AUD-060](exigences/AUD-060.md) | I | Mesure continue de l'énergie perçue | Réalisé | PulseAndEnergyTests.Energy_ALoudGroove_IsHigherThanAQuietPad |
-| [AUD-061](exigences/AUD-061.md) | I | Niveaux discrets avec hystérésis | Réalisé | PulseAndEnergyTests.EnergyLevel_DoesNotOscillate_OnAStableGroove |
-| [AUD-062](exigences/AUD-062.md) | I | Détection de Break | Réalisé | PulseAndEnergyTests.BreakThenDrop_AreDetected_InOrder |
+| [AUD-060](exigences/AUD-060.md) | I | Mesure continue de l'énergie perçue | Réalisé, à valider sur matériel | PulseAndEnergyTests.Energy_ALoudGroove_IsHigherThanAQuietPad |
+| [AUD-061](exigences/AUD-061.md) | I | Niveaux discrets avec hystérésis | Réalisé, à valider sur matériel | PulseAndEnergyTests.EnergyLevel_DoesNotOscillate_OnAStableGroove<br>PulseAndEnergyTests.EnergyLevel_OnAStablePassage_StaysStable |
+| [AUD-062](exigences/AUD-062.md) | I | Détection de Break | Réalisé, à valider sur matériel | PulseAndEnergyTests.BreakThenDrop_AreDetected_InOrder |
 | [AUD-063](exigences/AUD-063.md) | M | Détection de montée | Réalisé |  |
-| [AUD-064](exigences/AUD-064.md) | M | Tendance | Réalisé |  |
-| [AUD-080](exigences/AUD-080.md) | I | Écran Audio | Réalisé | AudioViewModelTests.Refresh_WithoutSound_ShowsNothingHeard<br>AudioViewModelTests.Screen_ListsTheDevices_AndStartsStopped |
-| [AUD-081](exigences/AUD-081.md) | I | Réglages | Réalisé | AudioViewModelTests.Settings_AreAppliedAfterAShortWhile_AndRemembered<br>TempoBarTests.Bar_StartsAt120_Fixed_AndShowsTheFirstBeat |
+| [AUD-064](exigences/AUD-064.md) | M | Tendance | Réalisé, à valider sur matériel |  |
+| [AUD-080](exigences/AUD-080.md) | I | Écran Audio | Validé | AudioViewModelTests.Refresh_WithoutSound_ShowsNothingHeard<br>AudioViewModelTests.Screen_ListsTheDevices_AndStartsStopped |
+| [AUD-081](exigences/AUD-081.md) | I | Réglages | Validé | AudioViewModelTests.Latency_FollowsTheChosenDevice<br>AudioViewModelTests.Settings_AreAppliedAfterAShortWhile_AndRemembered<br>TempoBarTests.Bar_StartsAt120_Fixed_AndShowsTheFirstBeat |
 | [AUD-082](exigences/AUD-082.md) | M | Enregistrement de l'analyse | Non réalisé |  |
 | [GEN-024](exigences/GEN-024.md) | I | (fiche manquante) | Sans fiche |  |
 | [GEN-026](exigences/GEN-026.md) | I | (fiche manquante) | Sans fiche |  |
-| [GEN-034](exigences/GEN-034.md) | I | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît | Réalisé | MusicalClockTests.Audio_Source_KeepsTheLastTempoWhenTheSoundIsLostOrUnsure |
-| [GEN-035](exigences/GEN-035.md) | M | Un décalage de latence global | Réalisé | MusicalClockTests.Latency_AdvancesTheEventsAndIsBounded |
+| [GEN-034](exigences/GEN-034.md) | I | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît | Validé | MusicalClockTests.Audio_Source_KeepsTheLastTempoWhenTheSoundIsLostOrUnsure |
+| [GEN-035](exigences/GEN-035.md) | M | Un décalage de latence global | Validé | MusicalClockTests.Latency_AdvancesTheEventsAndIsBounded |
 | [LIVE-020](exigences/LIVE-020.md) | I | (fiche manquante) | Sans fiche |  |
 | [LIVE-021](exigences/LIVE-021.md) | I | (fiche manquante) | Sans fiche |  |
-| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Réalisé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
-| [MOT-017](exigences/MOT-017.md) | I | Avance à l'événement | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio<br>MusicalReactivityTests.Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges<br>MusicalReactivityTests.Step_OnBassPulses_AdvancesOnTheKicks_NotOnTheBeats<br>ReferenceShowP7Tests.OnePerBeat_LightsOneParPerBeat_AtTheClockTempo<br>(+1) |
-| [MOT-018](exigences/MOT-018.md) | M | Quantification du lancement | Réalisé | MusicalReactivityTests.Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting<br>MusicalReactivityTests.Quantize_Beat_OnTheBeat_StartsImmediately<br>MusicalReactivityTests.Quantize_Phrase4_WaitsSixteenBeats<br>MusicalReactivityTests.Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt<br>(+1) |
-| [MOT-020](exigences/MOT-020.md) | M | Une scène peut suivre l'horloge principale ou une horloge fixe propre | Réalisé | MusicalReactivityTests.OwnClock_MusicalDurationsUseTheSceneTempo<br>MusicalReactivityTests.OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster<br>ReferenceShowP7Tests.SlowMovement_FollowsItsOwnTempo_WhateverTheMainClock |
-| [MOT-062](exigences/MOT-062.md) | I | Vitesse d'effet en Hz ou en temps musicaux | Réalisé | MusicalReactivityTests.MusicalEffect_CycleStartsOnTheClock_NotOnTheLaunch<br>MusicalReactivityTests.MusicalEffect_FollowsTheClockWhenItIsResynchronised |
+| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Validé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
+| [MOT-017](exigences/MOT-017.md) | I | Avance à l'événement | Réalisé, à valider sur matériel | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio<br>MusicalReactivityTests.Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges<br>MusicalReactivityTests.Step_OnBassPulses_AdvancesOnTheKicks_NotOnTheBeats<br>ReferenceShowP7Tests.OnePerBeat_LightsOneParPerBeat_AtTheClockTempo<br>(+1) |
+| [MOT-018](exigences/MOT-018.md) | M | Quantification du lancement | Validé | MusicalReactivityTests.Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting<br>MusicalReactivityTests.Quantize_Beat_OnTheBeat_StartsImmediately<br>MusicalReactivityTests.Quantize_Phrase4_WaitsSixteenBeats<br>MusicalReactivityTests.Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt<br>(+1) |
+| [MOT-020](exigences/MOT-020.md) | M | Une scène peut suivre l'horloge principale ou une horloge fixe propre | Validé | MusicalReactivityTests.OwnClock_MusicalDurationsUseTheSceneTempo<br>MusicalReactivityTests.OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster<br>ReferenceShowP7Tests.SlowMovement_FollowsItsOwnTempo_WhateverTheMainClock |
+| [MOT-062](exigences/MOT-062.md) | I | Vitesse d'effet en Hz ou en temps musicaux | Validé | MusicalReactivityTests.MusicalEffect_CycleStartsOnTheClock_NotOnTheLaunch<br>MusicalReactivityTests.MusicalEffect_FollowsTheClockWhenItIsResynchronised |
 | [SCN-006](exigences/SCN-006.md) | I | (fiche manquante) | Sans fiche |  |
 | [SCN-050](exigences/SCN-050.md) | I | Les paramètres ci-dessus sont réglables par scène | Partiel |  |
 | [SCN-051](exigences/SCN-051.md) | M | Modulation par l'énergie | Partiel | MusicalReactivityTests.EnergySpeed_MakesTheSceneFasterWhenTheMusicIsMoreEnergetic |

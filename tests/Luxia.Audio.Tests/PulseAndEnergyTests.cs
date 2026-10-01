@@ -165,4 +165,113 @@ public sealed class PulseAndEnergyTests
 
         events.Count(e => e.Kind == AudioEventKind.EnergyChanged).ShouldBeLessThan(6);
     }
+
+    private static void Kick(float[] target, double atSeconds, double amplitude)
+    {
+        var start = (int)(atSeconds * Rate);
+        for (var i = 0; i < 0.12 * Rate && start + i < target.Length; i++)
+        {
+            var time = (double)i / Rate;
+            target[start + i] += (float)(amplitude * Math.Sin(2 * Math.PI * (55 + (90 * Math.Exp(-time * 30))) * time) * Math.Exp(-time * 25));
+        }
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-042")]
+    public void Sensitivity_ChangesTheNumberOfPulses_Visibly()
+    {
+        // Kicks forts et faibles en alternance : une sensibilité basse ne garde que les forts, une haute garde tout.
+        var signal = new float[Rate * 24];
+        for (var beat = 0; beat < 48; beat++)
+        {
+            Kick(signal, beat * 0.5, beat % 2 == 0 ? 0.8 : 0.3);
+        }
+
+        int Count(double sensitivity)
+        {
+            var analyzer = new AudioAnalyzer(Rate) { PulseSensitivity = sensitivity };
+            for (var i = 0; i < signal.Length; i += 1024)
+            {
+                analyzer.Push(signal.AsSpan(i, Math.Min(1024, signal.Length - i)));
+            }
+
+            return analyzer.TakePulses().Bass;
+        }
+
+        var low = Count(0.1);
+        var high = Count(0.9);
+        high.ShouldBeGreaterThan(low + 8, "la sensibilité doit se voir (essai P7, exemple 20)");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-040")]
+    public void Pulses_NoBassPassage_GivesNoBassPulse()
+    {
+        // 12 s de kicks, puis 12 s sans basses (nappe et charleston) : aucune impulsion des basses dans la seconde partie.
+        var signal = new float[Rate * 24];
+        Mix(signal, 0, 12, 120, kick: true, hats: false, pad: 0.03);
+        Mix(signal, 12, 12, 120, kick: false, hats: true, pad: 0.03);
+        var analyzer = new AudioAnalyzer(Rate);
+        for (var i = 0; i < 12 * Rate; i += 1024)
+        {
+            analyzer.Push(signal.AsSpan(i, Math.Min(1024, (12 * Rate) - i)));
+        }
+
+        analyzer.TakePulses();
+        for (var i = 12 * Rate; i < signal.Length; i += 1024)
+        {
+            analyzer.Push(signal.AsSpan(i, Math.Min(1024, signal.Length - i)));
+        }
+
+        analyzer.TakePulses().Bass.ShouldBeLessThan(3, "essai P7, exemple 19 : des impulsions sur les passages sans basses");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-061")]
+    public void EnergyLevel_OnAStablePassage_StaysStable()
+    {
+        var signal = new float[Rate * 60];
+        Mix(signal, 0, 20, 120, kick: false, hats: false, pad: 0.04);
+        Mix(signal, 20, 40, 120, kick: true, hats: true, pad: 0.04);
+
+        var (_, events) = Run(signal);
+
+        // Une fois le groove établi (après 30 s), le niveau ne change plus (essai P7, exemple 22).
+        events.Count(e => e.Kind == AudioEventKind.EnergyChanged && e.Seconds > 32).ShouldBeLessThan(2);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-020")]
+    public void Tempo_AfterAPause_DoesNotDropBeforeComingBack()
+    {
+        var groove = new float[Rate * 10];
+        Mix(groove, 0, 10, 120, kick: true, hats: true, pad: 0);
+        var analyzer = new AudioAnalyzer(Rate);
+        void PushAll(float[] samples)
+        {
+            for (var i = 0; i < samples.Length; i += 1024)
+            {
+                analyzer.Push(samples.AsSpan(i, Math.Min(1024, samples.Length - i)));
+            }
+        }
+
+        PushAll(groove);
+        analyzer.State.Bpm.ShouldBe(120, 2);
+
+        PushAll(new float[Rate * 4]);
+
+        // Reprise du même morceau : à aucun moment le tempo ne s'écarte de plus de 5 % (essai P7, exemple 17).
+        var worst = 0.0;
+        for (var i = 0; i < groove.Length; i += 1024)
+        {
+            analyzer.Push(groove.AsSpan(i, Math.Min(1024, groove.Length - i)));
+            var bpm = analyzer.State.Bpm;
+            if (bpm > 0)
+            {
+                worst = Math.Max(worst, Math.Abs(bpm - 120));
+            }
+        }
+
+        worst.ShouldBeLessThan(6);
+    }
 }

@@ -40,6 +40,17 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
   "lastProjectPath": null,
   "uiScale": 1,
   "compactScenes": false,
+  "audio": {
+    "listen": false,
+    "deviceId": null,
+    "pulseSensitivity": 0.6,
+    "energySmoothingSeconds": 2,
+    "minBpm": 70,
+    "maxBpm": 180,
+    "preferredBpm": 118,
+    "latencySeconds": 0,
+    "latencyByDevice": { }
+  },
   "outputs": {
     "assignments": [ { "universe": 1, "driver": "arduino" } ],
     "arduino": {
@@ -643,6 +654,7 @@ seule scène (GEN-132).
 | 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
 | 2026-09-28 | P6 : `effects` et `hueFade` des étapes (§10.1), palettes `theme` avec `colors` (PAL-010, thèmes par défaut ajoutés à un projet qui n'en a aucun), `effets.json` (§12d-ter) ; schémas mis à jour ; champs facultatifs : format 1 inchangé, sans migration. |
 | 2026-09-29 | `groupes.json` (ERG-036, ERG-037, CMD-031) : arbre des groupes d'appareils et dimmers de groupe. |
+| 2026-10-01 | Section `audio` des préférences (écoute du son, périphérique choisi, sensibilité des impulsions, lissage de l'énergie, plage et préférence de tempo, latence du son du PC et **latence par périphérique** `latencyByDevice`, ±0,5 s) ; AUD-081, AUD-003. Champs absents = valeurs par défaut (format inchangé). |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |
