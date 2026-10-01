@@ -26,4 +26,10 @@ public sealed record EngineStep
     /// Faux = interpolation directe des émetteurs.
     /// </summary>
     public bool HueFade { get; init; }
+
+    /// <summary>
+    /// Quand la scène avance sur un événement musical (temps, mesure, impulsion), l'étape passe quand même à la suivante au bout de son
+    /// fondu et de son maintien : un flash bref sur un kick (allumage au kick, extinction après quelques dixièmes de seconde).
+    /// </summary>
+    public bool AutoAdvance { get; init; }
 }

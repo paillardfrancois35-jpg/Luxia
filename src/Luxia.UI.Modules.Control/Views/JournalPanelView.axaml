@@ -3,13 +3,24 @@
              xmlns:vm="using:Luxia.UI.Modules.Control"
              x:Class="Luxia.UI.Modules.Control.Views.JournalPanelView"
              x:DataType="vm:JournalPanelViewModel">
-  <!-- Une ligne par événement, serrées (l'interligne du thème était énorme, analyse de fin d'essai). -->
-  <ListBox ItemsSource="{Binding Lines}" Margin="4,30,4,4" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="12" Background="Transparent">
+  <!-- Une ligne par événement, serrées (l'interligne du thème était énorme, analyse de fin d'essai). Le texte d'une ligne se sélectionne
+       (souris, Ctrl+C) ; le clic droit propose de copier tout le journal (essai P7). -->
+  <ListBox x:Name="LinesList" ItemsSource="{Binding Lines}" Margin="4,30,4,4" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="12" Background="Transparent">
+    <ListBox.ContextMenu>
+      <ContextMenu>
+        <MenuItem x:Name="CopyAll" Header="Copier tout le journal" />
+      </ContextMenu>
+    </ListBox.ContextMenu>
     <ListBox.Styles>
       <Style Selector="ListBoxItem">
         <Setter Property="Padding" Value="6,1" />
         <Setter Property="MinHeight" Value="0" />
       </Style>
     </ListBox.Styles>
+    <ListBox.ItemTemplate>
+      <DataTemplate x:DataType="x:String">
+        <SelectableTextBlock Text="{Binding}" />
+      </DataTemplate>
+    </ListBox.ItemTemplate>
   </ListBox>
 </UserControl>

@@ -12,6 +12,21 @@ public sealed class WasapiSourceFactory : IAudioSourceFactory
     public IAudioSource Create(string? deviceId) => new WasapiSource(deviceId);
 
     /// <inheritdoc />
+    public string? DefaultOutputId()
+    {
+        try
+        {
+            using var enumerator = new MMDeviceEnumerator();
+            using var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+            return device.ID;
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            return null;
+        }
+    }
+
+    /// <inheritdoc />
     public IReadOnlyList<AudioDeviceInfo> Devices()
     {
         using var enumerator = new MMDeviceEnumerator();

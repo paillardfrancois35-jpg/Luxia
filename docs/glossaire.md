@@ -163,5 +163,9 @@
 | **Phrase** | Groupe de 4 ou 8 mesures. |
 | **Impulsion** | Attaque détectée dans le son : basses (kick) ou aigus (caisse claire, charleston). |
 | **Énergie** | Intensité perçue de la musique (volume, basses, densité des attaques) : Calme, Groove, Énergique, Explosif. |
-| **Break / Drop / Montée** | Pause brève de la musique ; retour brutal après une pause ; énergie qui grimpe avant un drop. |
-| **Latence** | Décalage entre le son entendu et la lumière, réglable de ± 250 ms (calibration). |
+| **Kick** | Coup de grosse caisse de batterie : grave, bref et franc, accompagné d'un claquement dans les médiums. Une note de basse (guitare, synthé) n'est pas un kick : LuXia ne compte comme kick que l'attaque des basses accompagnée de ce claquement. |
+| **Beat** | Un temps de la musique, le « pouls » sur lequel on tape du pied (le mot anglais pour *temps*) ; à 120 BPM, un beat toutes les 0,5 s. Ne pas confondre avec le *kick*, qui est un son de batterie, même si les deux tombent souvent ensemble. |
+| **Break** | Le morceau retombe un moment : pause ou creux où l'énergie et les basses chutent nettement pendant 1 à 4 s. LuXia l'affiche en rouge (« BREAK ») dès qu'il le voit. |
+| **Drop** | Retour brutal et fort de la musique, basses comprises, juste après un break ou une montée : le moment « explosion » d'un morceau électro. |
+| **Montée** (build-up) | L'énergie grimpe sur plusieurs mesures avant un drop : roulements, sons qui montent, densité croissante. |
+| **Latence** | Décalage entre le son entendu et la lumière, réglable de ± 500 ms, propre à chaque périphérique d'écoute (calibration). |

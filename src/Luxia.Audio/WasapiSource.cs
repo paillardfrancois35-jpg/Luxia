@@ -52,6 +52,9 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     public int SampleRate { get; }
 
     /// <inheritdoc />
+    public string? FollowedDefaultId => _followsDefault ? _device.ID : null;
+
+    /// <inheritdoc />
     public event EventHandler<AudioBlock>? BlockAvailable;
 
     /// <inheritdoc />

@@ -241,6 +241,9 @@
 
 - **Pré-analyses de P7 (2026-10-01), à reprendre à la fin de la phase** : [code](chantiers/analyse-code-p7.md) (C1 à C17), [documentation](chantiers/analyse-docs-p7.md) (D1 à D19), [ergonomie](chantiers/analyse-ergonomique-p7.md) (E1 à E19 et décisions demandées). Trouvés et corrigés avant l'essai : le « 1 ici » écrasé par l'écoute, le chenillard masqué par *Plein feu*, le démarrage ralenti par l'énumération audio. **Avant de retirer l'écran Scènes** : porter le choix d'unité (s / temps / mesures) dans les Propriétés (C17, E2).
 
+> **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
+> elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.
+
 ## 2. Lire avant de coder (dans cet ordre)
 
 1. [README](README.md), [02 – Principes](02-principes-et-architecture-fonctionnelle.md) (dont le **registre des décisions** §19, D1 à D28), [glossaire](glossaire.md).

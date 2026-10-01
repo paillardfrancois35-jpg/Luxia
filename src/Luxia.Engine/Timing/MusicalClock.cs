@@ -180,15 +180,46 @@ public sealed class MusicalClock
 
         Volatile.Write(ref _bpm, Math.Clamp(jump || !_audioLocked ? heard : Bpm + (0.15 * (heard - Bpm)), MinBpm, MaxBpm));
 
+        // Phase attendue : celle des temps du tempo corrigé. Avec ×2, deux temps de l'horloge par temps entendu ; avec ÷ 2, un temps sur
+        // deux (on garde le candidat le plus proche de la phase courante, pour ne pas sauter d'un temps à l'autre). Sans cela, la phase du
+        // tempo d'origine ramenait les voyants au rythme de la musique (essai P7, exemple 28 b).
+        var scaled = Math.Abs(_audioScale - 1) > 0.01;
         var fraction = _position - Math.Floor(_position);
-        var error = reading.BeatPhase - fraction;
+        var error = 0.0;
+        if (!scaled)
+        {
+            error = reading.BeatPhase - fraction;
+        }
+        else if (_audioScale > 1)
+        {
+            var target = reading.BeatPhase * _audioScale;
+            error = (target - Math.Floor(target)) - fraction;
+        }
+        else
+        {
+            var candidates = Math.Max(1, (int)Math.Round(1 / _audioScale));
+            var best = double.MaxValue;
+            for (var k = 0; k < candidates; k++)
+            {
+                var target = (reading.BeatPhase + k) * _audioScale;
+                var candidate = (target - Math.Floor(target)) - fraction;
+                candidate -= Math.Round(candidate);
+                if (Math.Abs(candidate) < Math.Abs(best))
+                {
+                    best = candidate;
+                }
+            }
+
+            error = best;
+        }
+
         error -= Math.Round(error);
         var delta = !_audioLocked || jump || Math.Abs(error) > 0.35 ? error : 0.12 * error;
         _position += delta;
         _shift += delta;
         _audioLocked = true;
 
-        if (!_barManual && reading.BarBeat is >= 1 and <= Duration.BeatsPerBar)
+        if (!_barManual && !scaled && reading.BarBeat is >= 1 and <= Duration.BeatsPerBar)
         {
             var gap = (reading.BarBeat - BeatInBar + Duration.BeatsPerBar) % Duration.BeatsPerBar;
             if (gap == 0)

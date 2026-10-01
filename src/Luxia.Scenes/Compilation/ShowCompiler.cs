@@ -360,6 +360,7 @@ public static class ShowCompiler
             Values = [.. values.Values.OrderBy(v => v.Parameter)],
             Effects = compiled,
             HueFade = step.HueFade,
+            AutoAdvance = step.AutoAdvance,
         };
     }
 

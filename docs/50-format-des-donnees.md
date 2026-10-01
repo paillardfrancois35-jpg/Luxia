@@ -326,7 +326,7 @@ Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
 | `advance` / `advanceEvery` | `duration` (défaut), `beat`, `bar`, `bassPulse`, `treblePulse` ; entier 1 à 64 | Événement qui fait passer à l'étape suivante, tous les N (MOT-017) ; les impulsions avancent au temps sans signal audio (SCN-052) |
 | `advanceMultiplier` | 1 (défaut), 2 ou 4 | Plusieurs étapes par temps ou par mesure (« ×2 », « ×4 » de la fréquence) ; exclusif de `advanceEvery` supérieur à 1 ; sans effet sur les impulsions |
 | `quantize` | `none` (défaut), `beat`, `bar`, `phrase4`, `phrase8` | Instant musical attendu avant le démarrage de la scène (MOT-018) |
-| `energySpeed` | booléen | La vitesse de la scène suit l'énergie de la musique écoutée, de 0,6× (calme) à 1,4× (explosif) (SCN-051) ; sans écoute, vitesse normale |
+| `energySpeed` | booléen | La vitesse de la scène suit l'énergie de la musique écoutée, de 0,5× (calme) à 1,8× (explosif), 1× à mi-énergie (SCN-051) ; sans écoute, vitesse normale |
 | `ownBpm` | 20 à 400 ou `null` | Tempo propre de la scène (MOT-020) ; `null` = horloge principale |
 | durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023), convertis avec le tempo de l'horloge musicale (MOT-016) |
 | `steps[].curve` | `linear`, `sCurve`, `instant` | Courbe du fondu (MOT-011) |
@@ -349,7 +349,7 @@ n'allume pas un appareil dont l'intensité vaut 0** : ajouter `intensity` (le pr
 
 ### 10.1 Effets d'une étape (P6)
 
-Une étape peut porter des **effets générés** (doc 16 §6) ; `hueFade` demande le fondu des couleurs par la teinte (MOT-054).
+Une étape peut porter des **effets générés** (doc 16 §6) ; `hueFade` demande le fondu des couleurs par la teinte (MOT-054) ; `autoAdvance` (au rythme) fait passer à l'étape suivante au bout du fondu et du maintien sans attendre l'événement : un flash bref sur un kick.
 
 ```json
 "steps": [

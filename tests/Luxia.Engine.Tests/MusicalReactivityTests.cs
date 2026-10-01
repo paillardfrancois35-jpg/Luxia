@@ -75,6 +75,29 @@ public sealed class MusicalReactivityTests
 
     [Fact]
     [Trait("Exigence", "MOT-017")]
+    public void Step_AutoAdvance_MakesAShortFlash_WhileTheNextStepWaitsForTheEvent()
+    {
+        var scene = _show.Scene(new EngineScene
+        {
+            Id = Guid.NewGuid(),
+            Name = "Flash bref",
+            LayerId = _layer.Id,
+            Advance = StepAdvanceMode.Beat,
+            Steps = [Step(0, 0.15, V(_par["r"], 1)) with { AutoAdvance = true }, Step(0, 60, V(_par["r"], 0))],
+        });
+        var (engine, _) = Play(scene);
+
+        // Premier temps : le flash s'allume ; il s'éteint tout seul au bout de 0,15 s, bien avant le temps suivant (0,5 s).
+        engine.Run(0.3);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1, "le flash est fini, on attend le prochain temps");
+        engine.Run(0.25);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0, "un nouveau temps rallume le flash");
+        engine.Run(0.2);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-017")]
     public void Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges()
     {
         var (engine, scene) = Play(TwoSteps());
@@ -141,9 +164,10 @@ public sealed class MusicalReactivityTests
             return engine.Playback(scene)!.Value.StepIndex;
         }
 
-        // Étape d'1 s : énergie 0 → 0,6× (1,67 s par étape) ; énergie 1 → 1,4× (0,71 s par étape).
-        StepAfter(0, 1.3).ShouldBe(0);
-        StepAfter(1, 1.3).ShouldBe(1);
+        // Étape d'1 s : énergie 0 → 0,5× (2 s par étape) ; énergie 1 → 1,8× (0,56 s par étape).
+        StepAfter(0, 0.9).ShouldBe(0);
+        StepAfter(1, 0.9).ShouldBe(1);
+        StepAfter(0.5, 0.9).ShouldBe(0);
     }
 
     [Fact]

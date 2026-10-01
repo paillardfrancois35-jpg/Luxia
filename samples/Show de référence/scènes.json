@@ -2815,7 +2815,7 @@
       "name": "Flash sur le kick",
       "color": "#F0883E",
       "category": "Phase P7",
-      "notes": "Les PAR flashent sur chaque kick (impulsion des basses) ; sans musique écoutée, au temps de l'horloge (MOT-017, SCN-052).",
+      "notes": "Les PAR flashent brièvement à chaque kick (allumage au kick, extinction d'elle-même après 0,15 s) ; sans musique écoutée, au temps de l'horloge (MOT-017, SCN-052).",
       "visibleInLive": true,
       "layerId": "7c1a0001-0000-4000-8000-000000000005",
       "loop": "infinite",
@@ -2829,7 +2829,7 @@
             "unit": "seconds"
           },
           "hold": {
-            "value": 1,
+            "value": 0.15,
             "unit": "seconds"
           },
           "curve": "linear",
@@ -2860,7 +2860,8 @@
                 "b": 1.0
               }
             }
-          ]
+          ],
+          "autoAdvance": true
         },
         {
           "fade": {

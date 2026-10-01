@@ -14,6 +14,8 @@ public sealed class AudioListenerTests
 
         public int SampleRate => Rate;
 
+        public string? FollowedDefaultId { get; init; }
+
         public bool Started { get; private set; }
 
         public bool Disposed { get; private set; }
@@ -45,6 +47,10 @@ public sealed class AudioListenerTests
 
         public bool Fail { get; set; }
 
+        public string? DefaultId { get; set; }
+
+        public string? DefaultOutputId() => DefaultId;
+
         public List<string?> Requested { get; } = [];
 
         public IReadOnlyList<AudioDeviceInfo> Devices() => [new AudioDeviceInfo("haut-parleurs", "Haut-parleurs", false), new AudioDeviceInfo("micro", "Micro USB", true)];
@@ -59,7 +65,7 @@ public sealed class AudioListenerTests
                 throw new InvalidOperationException("périphérique absent");
             }
 
-            var source = new FakeSource();
+            var source = new FakeSource { FollowedDefaultId = deviceId is null ? DefaultId : null };
             Created.Add(source);
             return source;
         }
@@ -102,6 +108,66 @@ public sealed class AudioListenerTests
     }
 
     [Fact]
+    [Trait("Exigence", "AUD-002")]
+    public async Task DefaultOutputChange_WithoutSystemNotification_ReconnectsAndWarns()
+    {
+        var factory = new FakeFactory { DefaultId = "casque" };
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        listener.Start();
+        factory.Created.Count.ShouldBe(1);
+
+        // Windows change la sortie par défaut sans prévenir la source (essai P7, exemple 15) : l'écoute le voit seule.
+        factory.DefaultId = "haut-parleurs";
+        for (var i = 0; i < 40 && factory.Created.Count < 2; i++)
+        {
+            await Task.Delay(100, TestContext.Current.CancellationToken);
+        }
+
+        factory.Created.Count.ShouldBe(2);
+        factory.Created[1].Started.ShouldBeTrue();
+        listener.Notice.ShouldNotBeNull();
+        listener.Notice.ShouldContain("Changement de périphérique");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-006")]
+    public void AFailingEventSubscriber_NeverStopsTheListening()
+    {
+        var factory = new FakeFactory();
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        listener.EventRaised += (_, _) => throw new FormatException("abonné défaillant");
+        listener.Start();
+
+        var source = factory.Created[0];
+        source.Emit(Kicks(128, 20));
+        source.Emit(new float[Rate * 3]);
+        source.Emit(Kicks(128, 10));
+
+        listener.RecentEvents.ShouldNotBeEmpty();
+        factory.Created.Count.ShouldBe(1);
+        listener.Read().Live.ShouldBeTrue();
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-005")]
+    public async Task Listening_AfterAPauseWithoutBlocks_ComesBackWhenTheMusicReturns()
+    {
+        var factory = new FakeFactory();
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        listener.Start();
+        factory.Created[0].Emit(Kicks(128, 10));
+        listener.State.Silent.ShouldBeFalse();
+
+        // Pause : la boucle WASAPI ne livre plus rien pendant que le silence est numérique (essai P7, exemple 21 : drop jamais vu).
+        await Task.Delay(3000, TestContext.Current.CancellationToken);
+        listener.State.Silent.ShouldBeTrue();
+
+        factory.Created[0].Emit(Kicks(128, 6));
+        listener.State.Silent.ShouldBeFalse();
+        listener.Read().Live.ShouldBeTrue();
+    }
+
+    [Fact]
     [Trait("Exigence", "AUD-005")]
     public void Listening_WithoutBlocks_IsNotLive()
     {
@@ -122,7 +188,7 @@ public sealed class AudioListenerTests
 
         factory.Created[0].Stop(null);
 
-        factory.Created[0].Disposed.ShouldBeTrue();
+        await WaitAsync(() => factory.Created[0].Disposed);
         await WaitAsync(() => factory.Created.Count == 2);
         factory.Created[1].Started.ShouldBeTrue();
         listener.IsListening.ShouldBeTrue();

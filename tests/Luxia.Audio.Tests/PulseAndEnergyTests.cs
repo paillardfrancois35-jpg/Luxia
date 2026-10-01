@@ -205,6 +205,53 @@ public sealed class PulseAndEnergyTests
 
     [Fact]
     [Trait("Exigence", "AUD-040")]
+    public void Pulses_BassGuitarNotes_AreNotKicks_ButDrumKicksAre()
+    {
+        // 12 s de notes de basse (attaque douce, tenues, sans claquement), puis 12 s de kicks avec leur claquement (essai P7, exemple 19).
+        var signal = new float[Rate * 24];
+        var random = new Random(3);
+        for (var beat = 0; beat < 24; beat++)
+        {
+            var note = beat % 2 == 0 ? 55.0 : 73.4;
+            var start = (int)(beat * 0.5 * Rate);
+            for (var i = 0; i < 0.45 * Rate && start + i < signal.Length; i++)
+            {
+                var t = (double)i / Rate;
+                var envelope = Math.Min(1, t / 0.02) * Math.Exp(-t * 4);
+                signal[start + i] += (float)(0.7 * envelope * (Math.Sin(2 * Math.PI * note * t) + (0.3 * Math.Sin(2 * Math.PI * 2 * note * t))));
+            }
+        }
+
+        for (var beat = 0; beat < 24; beat++)
+        {
+            var at = 12 + (beat * 0.5);
+            Kick(signal, at, 0.8);
+            var start = (int)(at * Rate);
+            for (var i = 0; i < 0.02 * Rate; i++)
+            {
+                signal[start + i] += (float)(0.5 * (random.NextDouble() - 0.5) * Math.Exp(-i / (0.004 * Rate)));
+            }
+        }
+
+        var analyzer = new AudioAnalyzer(Rate);
+        for (var i = 0; i < 12 * Rate; i += 1024)
+        {
+            analyzer.Push(signal.AsSpan(i, Math.Min(1024, (12 * Rate) - i)));
+        }
+
+        var notes = analyzer.TakePulses().Bass;
+        for (var i = 12 * Rate; i < signal.Length; i += 1024)
+        {
+            analyzer.Push(signal.AsSpan(i, Math.Min(1024, signal.Length - i)));
+        }
+
+        var kicks = analyzer.TakePulses().Bass;
+        notes.ShouldBeLessThan(6, $"des notes de basse ne sont pas des kicks ({notes} notes, {kicks} kicks)");
+        kicks.ShouldBeGreaterThan(17, $"les coups de batterie sont comptés ({notes} notes, {kicks} kicks)");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-040")]
     public void Pulses_NoBassPassage_GivesNoBassPulse()
     {
         // 12 s de kicks, puis 12 s sans basses (nappe et charleston) : aucune impulsion des basses dans la seconde partie.

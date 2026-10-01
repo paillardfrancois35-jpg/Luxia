@@ -117,6 +117,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private bool _stepHueFade;
 
     [ObservableProperty]
+    private bool _stepAutoAdvance;
+
+    [ObservableProperty]
     private Choice<string> _wizard = Wizards[0];
 
     [ObservableProperty]
@@ -482,6 +485,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     partial void OnStepHoldSecondsChanged(decimal value) => UpdateStep(s => s with { Hold = Duration.FromSeconds((double)Math.Max(0, value)) }, "Maintien de l'étape");
 
+    partial void OnStepAutoAdvanceChanged(bool value) => UpdateStep(s => s with { AutoAdvance = value }, value ? "Étape brève au rythme" : "Étape au rythme jusqu'à l'événement");
+
     partial void OnStepHueFadeChanged(bool value) => UpdateStep(s => s with { HueFade = value }, value ? "Fondu par la teinte" : "Fondu direct des couleurs");
 
     private void Update(Func<Scene, Scene> change, string description)
@@ -590,6 +595,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             StepFadeSeconds = (decimal)step.Fade.ToSeconds(120);
             StepHoldSeconds = (decimal)step.Hold.ToSeconds(120);
             StepHueFade = step.HueFade;
+            StepAutoAdvance = step.AutoAdvance;
             FillStepValues(step);
             FillWizardPalettes();
         }

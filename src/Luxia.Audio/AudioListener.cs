@@ -31,7 +31,10 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private Snapshot _snapshot = new(AnalysisState.None, 0);
     private long _lastData;
     private long _noticeStamp;
+    private long _eventTotal;
     private int _failures;
+    private int _watchTicks;
+    private int _checking;
     private bool _wanted;
     private bool _disposed;
 
@@ -71,6 +74,16 @@ public sealed class AudioListener : IAudioFeed, IDisposable
 
     /// <summary>Derniers événements musicaux (break, drop, silence…), du plus ancien au plus récent (AUD-080).</summary>
     public IReadOnlyCollection<AudioEvent> RecentEvents => _recent.ToArray();
+
+    /// <summary>Nombre d'événements survenus depuis le démarrage : change à chaque nouvel événement, même quand la liste récente est pleine.</summary>
+    public long EventTotal => Interlocked.Read(ref _eventTotal);
+
+    /// <summary>Efface la liste des événements récents (on repart d'une page blanche avant un morceau).</summary>
+    public void ClearEvents()
+    {
+        _recent.Clear();
+        Interlocked.Increment(ref _eventTotal);
+    }
 
     /// <summary>Levé (sur le fil de capture) à chaque événement musical (EVT-022, EVT-023).</summary>
     public event EventHandler<AudioEvent>? EventRaised;
@@ -366,12 +379,21 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private void OnAudioEvent(AudioEvent audioEvent)
     {
         _recent.Enqueue(audioEvent);
+        Interlocked.Increment(ref _eventTotal);
         while (_recent.Count > 30)
         {
             _recent.TryDequeue(out _);
         }
 
-        EventRaised?.Invoke(this, audioEvent);
+        try
+        {
+            EventRaised?.Invoke(this, audioEvent);
+        }
+        catch (Exception ex)
+        {
+            // Un abonné défaillant (interface, journal…) ne doit jamais arrêter l'écoute (AUD-006).
+            _logger.LogError(ex, "Erreur dans un abonné aux événements musicaux");
+        }
     }
 
     private void OnBlock(object? sender, AudioBlock block)
@@ -416,7 +438,8 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             old = Detach();
         }
 
-        Release(old);
+        // On peut être sur le fil de capture de cette source : l'arrêter ici l'attendrait lui-même. Hors de ce fil.
+        _ = Task.Run(() => Release(old));
         bool wanted;
         lock (_gate)
         {
@@ -439,6 +462,13 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     /// <summary>Sans bloc depuis un moment (rien ne joue : la boucle WASAPI ne livre rien), on fait entendre du silence à l'analyse.</summary>
     private void Watch()
     {
+        // Une fois par seconde : la sortie par défaut de Windows a-t-elle changé ? La notification du système n'arrive pas toujours
+        // (casque Bluetooth, essai P7 exemple 15) : on compare nous-mêmes, hors verrou (l'interrogation du système peut être lente).
+        if (++_watchTicks % 4 == 0)
+        {
+            CheckDefaultOutput();
+        }
+
         lock (_gate)
         {
             if (_analyzer is not { } analyzer || !_wanted)
@@ -460,6 +490,52 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             {
                 _logger.LogError(ex, "Erreur d'analyse audio pendant le silence");
             }
+        }
+    }
+
+    private void CheckDefaultOutput()
+    {
+        string? followed;
+        lock (_gate)
+        {
+            followed = _wanted && !_disposed ? _source?.FollowedDefaultId : null;
+        }
+
+        if (followed is null || Interlocked.Exchange(ref _checking, 1) == 1)
+        {
+            return;
+        }
+
+        try
+        {
+            var current = _factory.DefaultOutputId();
+            if (current is null || current == followed)
+            {
+                return;
+            }
+
+            IAudioSource? old;
+            lock (_gate)
+            {
+                if (_source?.FollowedDefaultId != followed)
+                {
+                    return;
+                }
+
+                old = Detach();
+            }
+
+            // L'arrêt d'une boucle sur un périphérique disparu peut tarder (Bluetooth) : on ne l'attend pas.
+            _ = Task.Run(() => Release(old));
+            const string message = "Changement de périphérique audio : reconnexion…";
+            SetStatus(message);
+            SetNotice(message);
+            _logger.LogWarning("Sortie par défaut changée : l'écoute se reconnecte");
+            ScheduleRetry(100);
+        }
+        finally
+        {
+            Volatile.Write(ref _checking, 0);
         }
     }
 

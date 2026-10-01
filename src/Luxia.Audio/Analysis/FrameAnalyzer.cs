@@ -109,7 +109,7 @@ internal sealed class FrameAnalyzer
 
         _fft.Transform(_re, _im);
 
-        double flux = 0, bassFlux = 0, trebleFlux = 0, bass = 0, mid = 0, treble = 0;
+        double flux = 0, bassFlux = 0, trebleFlux = 0, upperFlux = 0, bass = 0, mid = 0, treble = 0;
         for (var k = 1; k <= WindowSize / 2; k++)
         {
             var magnitude = Math.Sqrt((_re[k] * _re[k]) + (_im[k] * _im[k])) * 2 / WindowSize * 4;
@@ -129,10 +129,12 @@ internal sealed class FrameAnalyzer
             else if (k > _bassTo && k <= _midTo)
             {
                 mid += magnitude * magnitude;
+                upperFlux += rise;
             }
             else if (k > _midTo && k <= _trebleTo)
             {
                 trebleFlux += rise;
+                upperFlux += rise;
                 treble += magnitude * magnitude;
             }
         }
@@ -147,6 +149,7 @@ internal sealed class FrameAnalyzer
             Math.Sqrt(mid),
             Math.Sqrt(treble),
             silent,
-            gain);
+            gain,
+            upperFlux / Math.Max(1, _trebleTo - _bassTo));
     }
 }

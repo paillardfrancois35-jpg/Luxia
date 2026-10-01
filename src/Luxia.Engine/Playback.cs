@@ -597,8 +597,10 @@ internal sealed class Playback
         }
 
         // MOT-015 : la vitesse raccourcit ou allonge les durées de la scène (pas le fondu de sortie).
-        // SCN-051 : la vitesse peut suivre l'énergie de la musique écoutée (0,6× calme, 1,4× explosif).
-        var energyFactor = Scene.EnergySpeed && Events.AudioLive ? 0.6 + (0.8 * Math.Clamp(Events.Energy, 0, 1)) : 1;
+        // SCN-051 : la vitesse peut suivre l'énergie de la musique écoutée (0,5× calme, 1× à mi-énergie,
+        // 1,8× explosif : les accélérations se voient autant que les ralentissements, essai P7 exemple 23).
+        var energy = Math.Clamp(Events.Energy, 0, 1);
+        var energyFactor = Scene.EnergySpeed && Events.AudioLive ? (energy < 0.5 ? 0.5 + energy : 1 + (1.6 * (energy - 0.5))) : 1;
         var scaled = _stepStartsNow ? 0 : elapsed * Speed * energyFactor;
         _stepStartsNow = false;
         _own?.Advance(scaled);
@@ -635,13 +637,21 @@ internal sealed class Playback
             var every = Math.Max(1, Scene.AdvanceEvery);
             _eventCount += CountEvents();
             _eventProgress = (_eventCount + (scaled > 0 ? (_own ?? Clock).Phase : 0)) / every;
-            if (_eventCount < every)
+            if (Scene.Steps[Math.Min(StepIndex, Scene.Steps.Count - 1)].AutoAdvance && _stepElapsed + TimeEpsilon >= _stepLength)
+            {
+                // Flash bref : l'étape finit toute seule, l'événement suivant ne sert qu'aux autres étapes.
+                carry = Math.Max(0, _stepElapsed - _stepLength);
+                _eventCount = 0;
+            }
+            else if (_eventCount < every)
             {
                 return result;
             }
-
-            _eventCount = 0;
-            carry = 0;
+            else
+            {
+                _eventCount = 0;
+                carry = 0;
+            }
         }
         var next = NextStep(random, out var endReached);
         if (endReached)

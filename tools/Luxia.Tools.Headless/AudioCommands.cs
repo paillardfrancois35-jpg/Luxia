@@ -76,7 +76,19 @@ internal static class AudioCommands
             return 1;
         }
 
-        using var listener = new AudioListener(new WasapiSourceFactory(), Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance);
+        if (args.Has("brut"))
+        {
+            return ListenRaw(args);
+        }
+
+        using var listener = new AudioListener(new WasapiSourceFactory(), new ConsoleLogger());
+        listener.EventRaised += (_, e) =>
+        {
+            if (e.Kind is AudioEventKind.Break or AudioEventKind.Drop or AudioEventKind.BuildUp)
+            {
+                Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"      ► {e.Kind} ({e.Level}, énergie {e.Energy:0.00})"));
+            }
+        };
         listener.Start();
         Console.WriteLine(listener.Status);
         using var reader = new NAudio.Wave.MediaFoundationReader(Path.GetFullPath(args.Positional[0]));
@@ -95,6 +107,40 @@ internal static class AudioCommands
         }
 
         output.Stop();
+        return 0;
+    }
+
+    /// <summary>Écoute brute (<c>--brut</c>) : blocs reçus et crête par seconde, sans analyse, pour voir si la boucle WASAPI livre toujours.</summary>
+    private static int ListenRaw(Arguments args)
+    {
+        using var source = new WasapiSourceFactory().Create(null);
+        var blocks = 0;
+        var peak = 0f;
+        source.BlockAvailable += (_, b) =>
+        {
+            Interlocked.Increment(ref blocks);
+            foreach (var v in b.Samples.Span)
+            {
+                peak = Math.Max(peak, Math.Abs(v));
+            }
+        };
+        source.StartCapture();
+        Console.WriteLine(source.Name);
+        using var reader = new NAudio.Wave.MediaFoundationReader(Path.GetFullPath(args.Positional[0]));
+        reader.CurrentTime = TimeSpan.FromSeconds(args.GetDouble("debut", 0));
+        using var output = new NAudio.Wave.WasapiOut();
+        output.Init(reader);
+        output.Volume = 0.6f;
+        output.Play();
+        for (var i = 0; i < args.GetInt("duree", 25); i++)
+        {
+            Thread.Sleep(1000);
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"{i + 1,3} s  blocs {Interlocked.Exchange(ref blocks, 0)}  crête {peak:0.000}  lecture {reader.CurrentTime.TotalSeconds:0.0} s"));
+            peak = 0;
+        }
+
+        output.Stop();
+        source.StopCapture();
         return 0;
     }
 
@@ -274,5 +320,22 @@ internal static class AudioCommands
         }
 
         return map;
+    }
+}
+
+/// <summary>Journal sur la console pour les essais d'écoute : on voit les erreurs d'analyse et les reconnexions.</summary>
+internal sealed class ConsoleLogger : Microsoft.Extensions.Logging.ILogger
+{
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull => null;
+
+    public bool IsEnabled(Microsoft.Extensions.Logging.LogLevel logLevel) => logLevel >= Microsoft.Extensions.Logging.LogLevel.Warning;
+
+    public void Log<TState>(Microsoft.Extensions.Logging.LogLevel logLevel, Microsoft.Extensions.Logging.EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        if (IsEnabled(logLevel))
+        {
+            Console.WriteLine($"      [{logLevel}] {formatter(state, exception)} {exception}");
+        }
     }
 }

@@ -316,6 +316,46 @@ public sealed class MusicalClockTests
 
     [Fact]
     [Trait("Exigence", "AUD-023")]
+    public void Audio_TimesTwo_BeatsFollowTheDoubledTempo_NotTheMusicsOwn()
+    {
+        // Musique à 100 BPM dont la grille est connue ; l'utilisateur double : l'horloge doit battre deux fois par temps entendu,
+        // sur les temps entendus (essai P7, exemple 28 b : les voyants suivaient le tempo d'origine).
+        var clock = new MusicalClock();
+        clock.UseSource(TempoSourceKind.Audio);
+        double music = 0;
+        void Run(int ticks, Action? each = null)
+        {
+            for (var i = 0; i < ticks; i++)
+            {
+                music += 0.025 * 100 / 60.0;
+                clock.Advance(0.025);
+                clock.FollowAudio(new AudioReading(true, 100, 0.9, true, music - Math.Floor(music), 0, 0, 0));
+                each?.Invoke();
+            }
+        }
+
+        Run(120);
+        clock.Scale(2);
+        Run(80);
+
+        var crossed = 0;
+        var worst = 0.0;
+        Run(160, () =>
+        {
+            crossed += clock.BeatsCrossed;
+            var target = 2 * music;
+            var error = (clock.BeatPosition - target) % 1;
+            error -= Math.Round(error);
+            worst = Math.Max(worst, Math.Abs(error));
+        });
+
+        // 4 s à 100 BPM doublé : 4 × 200 / 60 = 13,3 temps de l'horloge ; la phase reste calée sur les temps entendus doublés.
+        crossed.ShouldBeInRange(12, 15);
+        worst.ShouldBeLessThan(0.2);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-023")]
     public void Audio_TimesTwo_FollowsTheAnalysisWhenItChangesOctaveItself()
     {
         var clock = AudioClock(64, 40);

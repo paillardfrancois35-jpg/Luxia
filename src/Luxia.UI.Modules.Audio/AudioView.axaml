@@ -85,14 +85,30 @@
               <TextBlock Text="{Binding TrendText}" Width="90" VerticalAlignment="Center" Opacity="0.8" />
               <TextBlock Text="{Binding BreakText}" Foreground="#F85149" FontWeight="Bold" Width="70" VerticalAlignment="Center" />
             </StackPanel>
-            <TextBlock Text="Derniers événements" Opacity="0.7" />
-            <ItemsControl ItemsSource="{Binding Events}">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                  <TextBlock Text="{Binding}" FontFamily="Consolas,monospace" />
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Break, drop, montée, silence" Opacity="0.7" />
+                <ItemsControl ItemsSource="{Binding Events}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <SelectableTextBlock Text="{Binding}" FontFamily="Consolas,monospace" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="Niveaux d'énergie" Opacity="0.7" />
+                <ItemsControl ItemsSource="{Binding EnergyEvents}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <SelectableTextBlock Text="{Binding}" FontFamily="Consolas,monospace" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Grid>
+            <Button Content="Effacer les listes" HorizontalAlignment="Left" Command="{Binding ClearEventsCommand}"
+                    ToolTip.Tip="Repartir d'une page blanche avant de lancer un morceau" />
           </StackPanel>
         </Border>
       </StackPanel>

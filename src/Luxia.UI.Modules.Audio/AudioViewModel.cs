@@ -40,7 +40,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private long _trebleSeen;
     private int _dirty;
     private bool _loading;
-    private int _lastEventCount = -1;
+    private long _lastEventCount = -1;
 
     [ObservableProperty]
     private string _status = "Écoute arrêtée";
@@ -167,6 +167,9 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     /// <summary>Derniers événements musicaux, du plus récent au plus ancien (AUD-080).</summary>
     public ObservableCollection<string> Events { get; } = [];
 
+    /// <summary>Changements de niveau d'énergie (calme, groove, énergique, explosif), du plus récent au plus ancien.</summary>
+    public ObservableCollection<string> EnergyEvents { get; } = [];
+
     /// <inheritdoc />
     public void Refresh()
     {
@@ -233,14 +236,27 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         };
         BreakText = state.InBreak ? "BREAK" : string.Empty;
 
-        var recent = audio.RecentEvents;
-        if (recent.Count != _lastEventCount)
+        // Le total change à chaque événement : la liste récente est plafonnée, son nombre d'éléments ne dit plus rien une fois pleine
+        // (essai P7, exemple 21 : le DROP n'apparaissait pas alors qu'il était détecté).
+        var total = audio.EventTotal;
+        if (total != _lastEventCount)
         {
-            _lastEventCount = recent.Count;
+            _lastEventCount = total;
             Events.Clear();
-            foreach (var e in recent.Reverse().Take(12))
+            EnergyEvents.Clear();
+            foreach (var e in audio.RecentEvents.Reverse())
             {
-                Events.Add(Describe(e));
+                if (e.Kind == AudioEventKind.EnergyChanged)
+                {
+                    if (EnergyEvents.Count < 10)
+                    {
+                        EnergyEvents.Add(Describe(e));
+                    }
+                }
+                else if (Events.Count < 10)
+                {
+                    Events.Add(Describe(e));
+                }
             }
         }
 
@@ -325,6 +341,15 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             SelectedDevice = Devices.FirstOrDefault(d => d.Id == _runtime.Preferences.Current.Audio.DeviceId) ?? Devices[0];
             _loading = false;
         });
+    }
+
+    /// <summary>Efface les deux listes d'événements : on repart d'une page blanche avant de lancer un morceau.</summary>
+    [RelayCommand]
+    private void ClearEvents()
+    {
+        _runtime.Audio?.ClearEvents();
+        Events.Clear();
+        EnergyEvents.Clear();
     }
 
     /// <summary>×2 (AUD-023).</summary>

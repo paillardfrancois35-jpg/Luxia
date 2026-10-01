@@ -117,6 +117,10 @@ public sealed class AudioAnalyzer
         Publish();
     }
 
+    private readonly double[] _upperRecent = new double[5];
+    private int _upperIndex;
+    private double _upperAverage;
+
     private void OnFrame(FrameFeatures features)
     {
         _last = features;
@@ -148,8 +152,17 @@ public sealed class AudioAnalyzer
             }
         }
 
+        // Un kick est un coup de batterie : l'attaque des basses s'accompagne d'un claquement dans les médiums et les aigus. Une note de
+        // basse (guitare, synthé) n'en a pas : elle ne compte pas (essai P7, exemple 19). La sensibilité règle l'exigence.
+        _upperRecent[_upperIndex] = features.UpperFlux;
+        _upperIndex = (_upperIndex + 1) % _upperRecent.Length;
+        var upperPeak = _upperRecent.Max();
+        var factor = 2.0 - (1.0 * Math.Clamp(PulseSensitivity, 0, 1));
+        var punch = upperPeak > factor * _upperAverage && upperPeak > 0.05;
+        _upperAverage += 0.006 * (features.UpperFlux - _upperAverage);
+
         var pulses = 0;
-        if (_bassPulses.Process(features.Bass, out var bassStrength))
+        if (_bassPulses.Process(features.Bass, out var bassStrength, punch))
         {
             Interlocked.Increment(ref _bassCount);
             _bassTotal++;

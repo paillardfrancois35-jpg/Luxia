@@ -45,14 +45,14 @@ internal sealed class PulseDetector
     public double PresenceFraction => 0.55 - (0.47 * Math.Clamp(Sensitivity, 0, 1));
 
     /// <summary>Traite l'amplitude de la bande pour une trame ; renvoie vrai si une impulsion vient d'être reconnue.</summary>
-    public bool Process(double magnitude, out double strength)
+    public bool Process(double magnitude, out double strength, bool accept = true)
     {
         strength = 0;
         _frame++;
         var pulse = false;
         var candidate = _previous;
         if (candidate > _older && candidate >= magnitude && candidate > JumpRatio * Math.Max(_previousValley, 1e-9)
-            && candidate > PresenceFraction * _longPeak && candidate > 1e-6 && _frame - _lastPulse >= DeadSeconds * _fps)
+            && candidate > PresenceFraction * _longPeak && candidate > 1e-6 && _frame - _lastPulse >= DeadSeconds * _fps && accept)
         {
             strength = Math.Clamp(candidate / Math.Max(_peak, 1e-9), 0, 1);
             _lastPulse = _frame;

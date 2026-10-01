@@ -47,7 +47,7 @@ Morceaux conseillés : *Sandstorm* (kicks nets, intro sans basses), *Animals*, *
 | 20 | Sensibilité | Écran Audio, réglage « Sensibilité des impulsions » : 20 % puis 60 % puis 90 % (attendre 3 s après chaque changement) | Moins, normal, puis beaucoup plus d'impulsions : la différence se **voit** sur « Impulsion basses » et sur les PAR |
 | 21 | Break et drop | Écran Audio ouvert pendant *Animals* (pause vers 0:17, retour vers 0:21) | **BREAK** (rouge) peu après le début de la pause, puis **DROP** dans la liste « Derniers événements » au retour de la musique ; note : la liste est dans le panneau Énergie, sous la jauge (défiler si besoin) |
 | 22 | Énergie | Écran Audio pendant *Glue* (passages calmes et passages forts) | Niveau **Calme / Groove** sur les passages calmes, **Énergique / Explosif** sur les forts ; un passage stable **reste stable** ; pas de changement plus rapide que toutes les 2 à 3 s |
-| 23 | Vitesse selon l'énergie | Fenêtre d'édition d'*Un PAR par temps* : étapes de **2 s**, volet **Au rythme** → *Étape suivante = À la durée de l'étape*, cocher « La vitesse suit l'énergie de la musique » ; jouer pendant *Glue* | Le chenillard est **plus lent** sur les passages calmes et **plus rapide** sur les forts (facteur de 0,6× à 1,4×) |
+| 23 | Vitesse selon l'énergie | Fenêtre d'édition d'*Un PAR par temps* : étapes de **2 s**, volet **Au rythme** → *Étape suivante = À la durée de l'étape*, cocher « La vitesse suit l'énergie de la musique » ; jouer pendant *Glue* | Le chenillard est **plus lent** sur les passages calmes et **plus rapide** sur les forts (facteur de 0,5× à 1,8×) |
 
 ### Mesure 1 et pause
 

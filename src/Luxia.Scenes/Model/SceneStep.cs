@@ -28,4 +28,7 @@ public sealed record SceneStep
 
     /// <summary>Fondu des couleurs par la teinte (MOT-054) plutôt qu'en ligne droite.</summary>
     public bool HueFade { get; init; }
+
+    /// <summary>Au rythme : passe à l'étape suivante au bout de la durée de l'étape, sans attendre l'événement (flash bref).</summary>
+    public bool AutoAdvance { get; init; }
 }
