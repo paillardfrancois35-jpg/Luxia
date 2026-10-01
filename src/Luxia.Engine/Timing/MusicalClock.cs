@@ -294,7 +294,7 @@ public sealed class MusicalClock
         _barManual = true;
     }
 
-    /// <summary>Décalage de latence global (GEN-035), borné à ±500 ms (un micro Bluetooth ajoute 300 à 500 ms, essai P7).</summary>
+    /// <summary>Décalage de latence global (GEN-035), borné à ±500 ms (un micro USB de conférence, avec son traitement du signal, a montré 300 à 500 ms à l'essai P7).</summary>
     public void SetLatency(double seconds)
     {
         var before = EffectivePosition;
