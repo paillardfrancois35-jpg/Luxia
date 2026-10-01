@@ -16,6 +16,8 @@
     <PackageVersion Include="Dock.Avalonia.Themes.Fluent" Version="12.1.0.6" />
     <PackageVersion Include="Dock.Model.Mvvm" Version="12.1.0.6" />
     <PackageVersion Include="Dock.Serializer.SystemTextJson" Version="12.1.0.6" />
+    <!-- Capture du son joué par le PC (boucle WASAPI) et lecture de fichiers audio (D34, Q40) : NAudio, licence MIT. -->
+    <PackageVersion Include="NAudio.Wasapi" Version="2.2.1" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.12" />
     <PackageVersion Include="Serilog.Extensions.Logging" Version="10.0.0" />

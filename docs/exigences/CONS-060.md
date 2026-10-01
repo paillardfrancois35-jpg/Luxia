@@ -17,10 +17,10 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/FixtureChannelViewModel.cs`
-- `src/Dmx.UI.Modules.Console/FixtureFadersView.axaml.cs`
-- `src/Dmx.UI.Modules.Console/FixtureFadersViewModel.cs`
-- `src/Dmx.UI.Modules.Library/LibraryViewModel.cs`
+- `src/Luxia.UI.Modules.Console/FixtureChannelViewModel.cs`
+- `src/Luxia.UI.Modules.Console/FixtureFadersView.axaml.cs`
+- `src/Luxia.UI.Modules.Console/FixtureFadersViewModel.cs`
+- `src/Luxia.UI.Modules.Library/LibraryViewModel.cs`
 
 ## Tests
 

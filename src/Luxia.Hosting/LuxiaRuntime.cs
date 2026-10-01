@@ -53,7 +53,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     /// <param name="serialPorts">Ports série (Arduino) ; ceux du système par défaut.</param>
     /// <param name="clock">Horloge ; réelle par défaut.</param>
     /// <param name="midiPorts">Ports MIDI (APC mini, doc 18b) ; <c>null</c> = pas de contrôleur (outils, tests).</param>
-    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null)
+    /// <param name="audioSources">Sources audio (son joué par le PC, doc 19) ; <c>null</c> = pas d'écoute (outils, tests).</param>
+    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null, Audio.IAudioSourceFactory? audioSources = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(loggers);
@@ -90,12 +91,116 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             ? null
             : new MidiService(midiPorts, Engine, () => Engine.Snapshot, () => _midiLayout, loggers.CreateLogger<MidiService>());
 
+        // Écoute de la musique (doc 19) : le moteur lit tempo et impulsions à chaque tick ; le démarrage suit les préférences.
+        if (audioSources is not null)
+        {
+            Audio = new Audio.AudioListener(audioSources, loggers.CreateLogger<Audio.AudioListener>());
+            Audio.SetDevice(Preferences.Current.Audio.DeviceId);
+            Audio.Tune(AudioTuningFrom(Preferences.Current.Audio));
+            Audio.EventRaised += (_, e) => Bus.Publish(new Messaging.Events.MusicEvent((Messaging.Events.MusicEventKind)(int)e.Kind, (int)e.Level, e.Energy, Clock.Now));
+            Engine.SetAudioFeed(Audio);
+        }
+
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencyFor(Preferences.Current.Audio.DeviceId)));
+
         // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
         PendingResume = ReadPendingResume();
         _sleepInhibitor = new SleepInhibitor(loggers.CreateLogger<SleepInhibitor>());
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
     }
+
+    /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
+    public Audio.AudioListener? Audio { get; }
+
+    /// <summary>
+    /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
+    /// de tempo Audio garde le dernier tempo (GEN-034).
+    /// </summary>
+    public void SetListening(bool listen)
+    {
+        if (Audio is null)
+        {
+            return;
+        }
+
+        if (listen)
+        {
+            Audio.Start();
+        }
+        else
+        {
+            Audio.Stop();
+
+            // Sans écoute, la source Audio n'a plus de sens : le tempo reste celui d'avant, devenu fixe (l'état affiché doit être l'état réel).
+            if (Engine.Snapshot.Tempo.Source == Messaging.Commands.TempoSourceKind.Audio)
+            {
+                Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Fixed));
+            }
+        }
+
+        Preferences.Update(p => p with { Audio = p.Audio with { Listen = listen } });
+    }
+
+    /// <summary>
+    /// Interrupteur « Audio » (essai P7, décision 1) : actif = l'écoute démarre **et** l'horloge suit le tempo entendu ; éteint = plus
+    /// d'écoute, le tempo reste celui d'avant, devenu fixe. Le choix est mémorisé et rétabli au démarrage.
+    /// </summary>
+    public void SetAudioMode(bool on)
+    {
+        if (Audio is null)
+        {
+            return;
+        }
+
+        SetListening(on);
+        if (on)
+        {
+            Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Audio));
+        }
+    }
+
+    /// <summary>Choisit le périphérique écouté (AUD-003) et le mémorise ; <c>null</c> = le son joué par le PC.</summary>
+    public void SetAudioDevice(string? deviceId)
+    {
+        Audio?.SetDevice(deviceId);
+        Preferences.Update(p => p with { Audio = p.Audio with { DeviceId = deviceId } });
+
+        // La latence suit le périphérique : celle de son dernier réglage (0 pour un périphérique encore jamais calibré).
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.User, Preferences.Current.Audio.LatencyFor(deviceId)));
+    }
+
+    /// <summary>Applique et mémorise les réglages de l'analyse (AUD-081).</summary>
+    public void SetAudioTuning(Audio.AudioTuning tuning, double latencySeconds)
+    {
+        ArgumentNullException.ThrowIfNull(tuning);
+        Audio?.Tune(tuning);
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.User, latencySeconds));
+        Preferences.Update(p => p with
+        {
+            Audio = p.Audio with
+            {
+                PulseSensitivity = tuning.PulseSensitivity,
+                EnergySmoothingSeconds = tuning.EnergySmoothingSeconds,
+                MinBpm = tuning.MinBpm,
+                MaxBpm = tuning.MaxBpm,
+                PreferredBpm = tuning.PreferredBpm,
+                LatencySeconds = p.Audio.DeviceId is null ? Math.Clamp(latencySeconds, -0.5, 0.5) : p.Audio.LatencySeconds,
+                LatencyByDevice = p.Audio.DeviceId is null
+                    ? p.Audio.LatencyByDevice
+                    : new Dictionary<string, double>(p.Audio.LatencyByDevice) { [p.Audio.DeviceId] = Math.Clamp(latencySeconds, -0.5, 0.5) },
+            },
+        });
+    }
+
+    private static Audio.AudioTuning AudioTuningFrom(Core.Settings.AudioPreferences prefs) => new()
+    {
+        PulseSensitivity = prefs.PulseSensitivity,
+        EnergySmoothingSeconds = prefs.EnergySmoothingSeconds,
+        MinBpm = prefs.MinBpm,
+        MaxBpm = prefs.MaxBpm,
+        PreferredBpm = prefs.PreferredBpm,
+    };
 
     /// <summary>Bibliothèque d'appareils (<c>Documents\LuXia\Bibliothèque</c>).</summary>
     public Fixtures.FixtureLibrary Library { get; }
@@ -199,6 +304,13 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
             Loop.Start();
             Midi?.Start();
+            if (Preferences.Current.Audio.Listen && Audio is { } listener)
+            {
+                // Le mode Audio mémorisé revient tel quel : écoute et tempo suivi. L'ouverture de la capture (0,4 à 0,5 s)
+                // ne doit pas retarder le démarrage de l'application.
+                Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Audio));
+                _ = Task.Run(listener.Start);
+            }
 
             // Toutes les 5 s : instantané de reprise (MOT-102) et mesure du processeur (GEN-094) ; toutes les 2 min :
             // version du projet si quelque chose a changé (GEN-054, GEN-055).
@@ -400,6 +512,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
         WriteResume(clean: true);
         Midi?.Dispose();
+        Audio?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();
@@ -613,6 +726,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Engine.Tick();
         if (PreviewActive)
         {
+            // L'aperçu (aveugle, édition) suit le tempo du moteur : les durées musicales y ont la même valeur.
+            Preview.Bpm = Engine.Bpm;
             Preview.Tick();
         }
     }

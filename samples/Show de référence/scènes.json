@@ -2238,6 +2238,853 @@
           ]
         }
       ]
+    },
+    {
+      "id": "b190a885-15e0-502a-bc87-8b901117b98d",
+      "name": "Calibration de latence",
+      "color": "#F85149",
+      "category": "Phase P7",
+      "notes": "Les PAR flashent en blanc à chaque deuxième temps de l'horloge : règlez la latence (écran Audio) jusqu'à ce que le flash tombe sur le kick (AUD-027, MOT-017).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0
+              }
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            }
+          ]
+        }
+      ],
+      "advance": "beat",
+      "advanceEvery": 1
+    },
+    {
+      "id": "8f76de6c-96cf-5e9f-979f-02dd2275464b",
+      "name": "Un PAR par temps (chenillard au tempo)",
+      "color": "#DB61A2",
+      "category": "Phase P7",
+      "notes": "Un PAR s'allume à chaque temps de l'horloge, en tournant sur les quatre (MOT-017).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ],
+      "advance": "beat",
+      "advanceEvery": 1
+    },
+    {
+      "id": "a7f7e17c-9715-575f-b474-cd5a0be5e316",
+      "name": "Couleur à chaque mesure",
+      "color": "#D29922",
+      "category": "Phase P7",
+      "notes": "Tous les PAR changent de couleur au début de chaque mesure : rouge, bleu, ambre, vert (MOT-017).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            }
+          ]
+        }
+      ],
+      "advance": "bar",
+      "advanceEvery": 1
+    },
+    {
+      "id": "d5395e8f-03f1-5bbd-ae68-0b8228b98f7c",
+      "name": "Flash sur le kick",
+      "color": "#F0883E",
+      "category": "Phase P7",
+      "notes": "Les PAR flashent brièvement à chaque kick (allumage au kick, extinction d'elle-même après 0,15 s) ; sans musique écoutée, au temps de l'horloge (MOT-017, SCN-052).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0
+              }
+            }
+          ],
+          "autoAdvance": true
+        },
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 0.0
+            }
+          ]
+        }
+      ],
+      "advance": "bassPulse",
+      "advanceEvery": 1
+    },
+    {
+      "id": "e44450d6-535b-5fef-bf50-3cbfe66fbfe0",
+      "name": "Cercle calé sur la mesure",
+      "color": "#79C0FF",
+      "category": "Phase P7",
+      "notes": "Un tour de cercle par mesure : le départ du cercle tombe sur le premier temps et suit les recalages de l'horloge (MOT-062).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "9034d5a3-7b8e-5140-832d-dfe2c3b66636",
+              "name": "Cercle",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "movingHead"
+                  }
+                }
+              ],
+              "shape": "circle",
+              "period": {
+                "value": 1,
+                "unit": "bars"
+              },
+              "size": 60,
+              "spread": 0,
+              "positionPaletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c11a62b9-33f1-5f79-97bf-483b9c2c38ff",
+      "name": "Mouvement lent à 30 BPM (horloge propre)",
+      "color": "#79C0FF",
+      "category": "Phase P7",
+      "notes": "Un tour de cercle en 4 temps à 30 BPM propres à la scène, quel que soit le tempo de la musique (MOT-020).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000003",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "f5e40846-9e99-56e0-a625-73e756df82dc",
+              "name": "Cercle",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byCategory",
+                    "category": "movingHead"
+                  }
+                }
+              ],
+              "shape": "circle",
+              "period": {
+                "value": 4,
+                "unit": "beats"
+              },
+              "size": 60,
+              "spread": 0,
+              "positionPaletteId": "6310f1c5-e498-5b0a-b0a9-9937e3483b10"
+            }
+          ]
+        }
+      ],
+      "ownBpm": 30
+    },
+    {
+      "id": "17e86280-7523-50fd-8a2a-70604554bc6f",
+      "name": "Départ à la mesure (blanc chaud)",
+      "color": "#FFC773",
+      "category": "Phase P7",
+      "notes": "Appuyez n'importe quand : la scène attend le début de la prochaine mesure pour démarrer ; le bouton affiche ⏳ (MOT-018). Un second appui annule.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000002"
+            },
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "Betopper LPC008S"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ],
+      "quantize": "bar"
+    },
+    {
+      "id": "7e92f912-a135-5994-a57a-48257ce4ff1c",
+      "name": "Lyres allumées (sans les PAR)",
+      "color": "#79C0FF",
+      "category": "Phase P7",
+      "notes": "Intensité des lyres seules, pour les scènes de mouvement (Cercle calé sur la mesure…) sans figer les PAR : « Plein feu » allume tous les appareils à 100 % et masque les scènes qui jouent sur l'intensité des PAR (la plus haute intensité l'emporte, doc 15 §5.2).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000001",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "movingHead"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
     }
   ]
 }

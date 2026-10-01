@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/FixturePlacement.cs`.
-- `src/Dmx.UI.Modules.Installation/PlacementRowViewModel.cs`, `InstallationViewModel.cs` (`SavePlacementsCommand`) : un appareil par ligne, champs X, Y, hauteur, orientation, suspendu.
+- `src/Luxia.Patch/Model/FixturePlacement.cs`.
+- `src/Luxia.UI.Modules.Installation/PlacementRowViewModel.cs`, `InstallationViewModel.cs` (`SavePlacementsCommand`) : un appareil par ligne, champs X, Y, hauteur, orientation, suspendu.
 
 ## Tests
 

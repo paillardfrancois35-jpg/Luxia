@@ -28,7 +28,7 @@ Scène
  │    └─ quantification du lancement : aucune | temps | mesure | phrase (4 / 8 mesures)
  └─ Étapes[]
       ├─ nom (facultatif), durée de maintien, fondu d'entrée, courbe
-      │   (durées en secondes ou en temps musicaux)
+      │   (durées en secondes ou en temps musicaux ; limite : seul l'ancien écran Scènes offre le choix s / temps / mesures, la fenêtre d'édition ne saisit que des secondes — E2, en tête de P8)
       ├─ Valeurs[] : cible (appareil | cellule | sélection) × attribut → valeur | palette | plage
       │               (option par valeur : fondu propre, retard)
       └─ Effets[] (§6)
@@ -87,7 +87,7 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 
 | Signal | Usages dans une scène | Paramètres |
 |---|---|---|
-| **A – Horloge tempo** | Durées en temps/mesures ; avance d'étape tous les N temps ; vitesse d'effet calée sur le tempo | Multiplicateur : ×4, ×2, ×1, ½, ¼, 1 mesure, 2 mesures, 4 mesures |
+| **A – Horloge tempo** | Durées en temps/mesures ; avance d'étape tous les N temps ; vitesse d'effet calée sur le tempo | Fréquence des étapes : ×4, ×2, ×1, ÷ 2, ÷ 4, ÷ 8 ; période d'un effet : N temps ou N mesures (MOT-062) |
 | **B – Impulsions** (basses / aigus) | Avance d'étape à chaque impulsion ; effet « bump » d'intensité | Bande, seuil de force, temps mort minimal entre deux déclenchements |
 | **C – Énergie** | Moduler la vitesse, la taille d'un effet ou l'intensité selon l'énergie | Plage d'énergie → plage de valeur, lissage |
 
@@ -96,6 +96,10 @@ Une scène (ou une étape, ou un effet) peut s'abonner aux trois signaux du doc 
 | SCN-050 | I | P7 | Les paramètres ci-dessus sont réglables par scène (avance, horloge) et par effet (vitesse, bump, modulation). | — |
 | SCN-051 | M | P7 | **Modulation par l'énergie** : la vitesse, la taille d'un effet ou une intensité peuvent suivre l'énergie (doc 19). | Énergie haute → cercle plus rapide. |
 | SCN-052 | M | P7 | En l'absence de signal audio (silence, capture arrêtée), une scène à avance « impulsion » avance au temps de l'horloge (repli). | Pas de scène figée pendant un break. |
+
+## 5b. Notes de réalisation de la réactivité musicale (P7)
+
+Réalisé : **avance d'étape** au temps, à la mesure ou aux impulsions (SCN-050, MOT-017), **quantification du lancement**, **horloge propre** et **vitesse selon l'énergie** (SCN-051, sur la vitesse de la scène seulement), repli au temps sans signal audio (SCN-052). Réglages dans la fenêtre d'édition, volet « Au rythme » ; format : [doc 50](50-format-des-donnees.md). **Non fait** : réglages propres à un effet (bump d'intensité sur impulsion, modulation de la taille ou de l'intensité par l'énergie). Détails : [15 §16](15-moteur-de-rendu.md), [19 §10](19-audio-et-tempo.md).
 
 ## 6. Effets générés
 

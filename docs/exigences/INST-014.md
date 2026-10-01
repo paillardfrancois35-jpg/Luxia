@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/PatchedFixture.cs` : `TwinGroupId`.
-- `src/Dmx.Patch/Rules/PatchRules.cs` : `AreTwins` (même groupe, même modèle, même mode).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : case « Jumeaux (même adresse) » à l'ajout multiple.
+- `src/Luxia.Patch/Model/PatchedFixture.cs` : `TwinGroupId`.
+- `src/Luxia.Patch/Rules/PatchRules.cs` : `AreTwins` (même groupe, même modèle, même mode).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : case « Jumeaux (même adresse) » à l'ajout multiple.
 
 ## Tests
 

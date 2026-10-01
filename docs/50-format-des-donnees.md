@@ -40,6 +40,17 @@ Préférences **du poste** : ne voyagent pas avec un projet (SORT-006).
   "lastProjectPath": null,
   "uiScale": 1,
   "compactScenes": false,
+  "audio": {
+    "listen": false,
+    "deviceId": null,
+    "pulseSensitivity": 0.6,
+    "energySmoothingSeconds": 2,
+    "minBpm": 70,
+    "maxBpm": 180,
+    "preferredBpm": 118,
+    "latencySeconds": 0,
+    "latencyByDevice": { }
+  },
   "outputs": {
     "assignments": [ { "universe": 1, "driver": "arduino" } ],
     "arduino": {
@@ -312,7 +323,12 @@ Schéma JSON : [`schemas/scenes.schema.json`](schemas/scenes.schema.json).
 | `end` | `stop`, `hold`, `chain` | Fin d'une scène jouée une ou N fois (MOT-014) ; `chainSceneId` pour `chain` |
 | `fadeIn` / `fadeOut` | durée ou `null` | Fondu d'entrée (défaut : celui de la 1ʳᵉ étape) ; de sortie (défaut : arrêt immédiat) |
 | `speed` | 0,1 à 10 | Vitesse (MOT-015) |
-| durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023) ; en P4, 120 BPM fixe |
+| `advance` / `advanceEvery` | `duration` (défaut), `beat`, `bar`, `bassPulse`, `treblePulse` ; entier 1 à 64 | Événement qui fait passer à l'étape suivante, tous les N (MOT-017) ; les impulsions avancent au temps sans signal audio (SCN-052) |
+| `advanceMultiplier` | 1 (défaut), 2 ou 4 | Plusieurs étapes par temps ou par mesure (« ×2 », « ×4 » de la fréquence) ; exclusif de `advanceEvery` supérieur à 1 ; sans effet sur les impulsions |
+| `quantize` | `none` (défaut), `beat`, `bar`, `phrase4`, `phrase8` | Instant musical attendu avant le démarrage de la scène (MOT-018) |
+| `energySpeed` | booléen | La vitesse de la scène suit l'énergie de la musique écoutée, de 0,5× (calme) à 1,8× (explosif), 1× à mi-énergie (SCN-051) ; sans écoute, vitesse normale |
+| `ownBpm` | 20 à 400 ou `null` | Tempo propre de la scène (MOT-020) ; `null` = horloge principale |
+| durée (`fade`, `hold`, `delay`, `spread`…) | `{ "value": n, "unit": "seconds" \| "beats" \| "bars" }` | Secondes ou temps musicaux (GEN-023), convertis avec le tempo de l'horloge musicale (MOT-016) |
 | `steps[].curve` | `linear`, `sCurve`, `instant` | Courbe du fondu (MOT-011) |
 | `steps[].switch` | `start`, `middle`, `end` | Moment où bascule un attribut discret (roue, gobo, programme) (MOT-012) |
 | `values[].target` | **une seule** forme : `fixtureId` (+ `cell`, 0 = appareil entier) ; `selectionId` (sélection manuelle, dans son ordre) ; `auto` = `{ "kind": "allFixtures" }`, `{ "kind": "byCategory", "category": "par" }` ou `{ "kind": "byModel", "model": "Fabricant Modèle" }` | Cible (SCN-007) ; une sélection automatique suit le patch |
@@ -333,7 +349,7 @@ n'allume pas un appareil dont l'intensité vaut 0** : ajouter `intensity` (le pr
 
 ### 10.1 Effets d'une étape (P6)
 
-Une étape peut porter des **effets générés** (doc 16 §6) ; `hueFade` demande le fondu des couleurs par la teinte (MOT-054).
+Une étape peut porter des **effets générés** (doc 16 §6) ; `hueFade` demande le fondu des couleurs par la teinte (MOT-054) ; `autoAdvance` (au rythme) fait passer à l'étape suivante au bout du fondu et du maintien sans attendre l'événement : un flash bref sur un kick.
 
 ```json
 "steps": [
@@ -620,6 +636,7 @@ scène ou de couche entre guillemets s'il contient des espaces (ou identifiant).
 Verbes ajoutés en P5 : `flash "scène" appui|relache` (CMD-014), `figer oui|non [suspendre]` (CMD-003), `fumee appui|relache`
 ou `fumee rafale 3` (CMD-030), `canal 180 255` (surcharge brute de l'univers 1, pour éprouver les limites de sûreté),
 `liberer-canaux`, `arreter-couche "couche"`, `tout-arreter tout` (sans « tout », les couches protégées continuent).
+Verbes ajoutés en P7 (horloge musicale, CMD-040 à 042) : `tempo 90` (tempo fixe), `tap` (une frappe), `ajuster-tempo x2|/2|un-ici`.
 Chaque intervention d'une limite de sûreté apparaît dans le résumé (`⚠ sûreté : …`, MOT-083).
 
 Le résultat est un **résumé lisible** (qui s'allume, en quelle couleur, à quel niveau, où pointent les lyres, à quel
@@ -638,6 +655,7 @@ seule scène (GEN-132).
 | 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
 | 2026-09-28 | P6 : `effects` et `hueFade` des étapes (§10.1), palettes `theme` avec `colors` (PAL-010, thèmes par défaut ajoutés à un projet qui n'en a aucun), `effets.json` (§12d-ter) ; schémas mis à jour ; champs facultatifs : format 1 inchangé, sans migration. |
 | 2026-09-29 | `groupes.json` (ERG-036, ERG-037, CMD-031) : arbre des groupes d'appareils et dimmers de groupe. |
+| 2026-10-01 | Section `audio` des préférences (écoute du son, périphérique choisi, sensibilité des impulsions, lissage de l'énergie, plage et préférence de tempo, latence du son du PC et **latence par périphérique** `latencyByDevice`, ±0,5 s) ; AUD-081, AUD-003. Champs absents = valeurs par défaut (format inchangé). |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |

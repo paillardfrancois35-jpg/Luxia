@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/FixtureOptions.cs` : toutes les options du texte.
-- `src/Dmx.Patch/Rules/FixtureDecoder.cs` : applique les inversions, l'échange et le décalage au décodage (utilisé par le simulateur, SIM-004).
+- `src/Luxia.Patch/Model/FixtureOptions.cs` : toutes les options du texte.
+- `src/Luxia.Patch/Rules/FixtureDecoder.cs` : applique les inversions, l'échange et le décalage au décodage (utilisé par le simulateur, SIM-004).
 
 ## Tests
 

@@ -1,0 +1,195 @@
+using NAudio.CoreAudioApi;
+using NAudio.CoreAudioApi.Interfaces;
+using NAudio.Wave;
+
+namespace Luxia.Audio;
+
+/// <summary>
+/// Source WASAPI. Sans périphérique choisi : le son joué par le PC (AUD-001), boucle sur la sortie par défaut ; quand celle-ci
+/// change (casque, enceintes, Bluetooth), la source s'arrête avec <c>null</c> et l'écoute la recrée sur la nouvelle (AUD-002).
+/// Avec un périphérique de sortie choisi : la boucle de celui-ci ; avec une entrée (micro, ligne) : sa capture (AUD-003).
+/// </summary>
+public sealed class WasapiSource : IAudioSource, IMMNotificationClient
+{
+    private readonly MMDeviceEnumerator _enumerator = new();
+    private IWaveIn _capture;
+    private readonly bool _followsDefault;
+    private readonly MMDevice _device;
+    private readonly string _deviceId;
+    private float[] _mono = new float[4096];
+    private bool _disposed;
+    private bool _stopping;
+
+    /// <summary>Ouvre la source.</summary>
+    /// <param name="deviceId">Identifiant du périphérique (entrée ou sortie), ou <c>null</c> pour suivre la sortie par défaut.</param>
+    public WasapiSource(string? deviceId = null)
+    {
+        _followsDefault = deviceId is null;
+        _device = deviceId is null ? _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia) : _enumerator.GetDevice(deviceId);
+        // Identifiant lu une fois : le périphérique COM peut être libéré par un arrêt concurrent, on ne l'interroge plus ensuite.
+        _deviceId = _device.ID;
+        Name = _device.FriendlyName;
+        _capture = CreateCapture(eventSync: true);
+        SampleRate = _capture.WaveFormat.SampleRate;
+        _enumerator.RegisterEndpointNotificationCallback(this);
+    }
+
+    /// <summary>
+    /// Une entrée (micro, ligne) se capture sur événement, par blocs de 10 ms, au lieu des blocs d'environ 60 ms du mode par
+    /// défaut : 50 ms de moins en moyenne entre le son et son analyse (essai P7, exemple 18). La boucle d'une sortie garde le mode par défaut.
+    /// </summary>
+    private IWaveIn CreateCapture(bool eventSync)
+    {
+        IWaveIn capture = _device.DataFlow == DataFlow.Capture
+            ? (eventSync ? new WasapiCapture(_device, true, 30) : new WasapiCapture(_device))
+            : new WasapiLoopbackCapture(_device);
+        capture.DataAvailable += OnData;
+        capture.RecordingStopped += OnStopped;
+        return capture;
+    }
+
+    /// <inheritdoc />
+    public string Name { get; }
+
+    /// <inheritdoc />
+    public int SampleRate { get; }
+
+    /// <inheritdoc />
+    public string? FollowedDefaultId => _followsDefault ? _deviceId : null;
+
+    /// <inheritdoc />
+    public event EventHandler<AudioBlock>? BlockAvailable;
+
+    /// <inheritdoc />
+    public event EventHandler<Exception?>? Stopped;
+
+    /// <inheritdoc />
+    public void StartCapture()
+    {
+        try
+        {
+            _capture.StartRecording();
+        }
+        catch (Exception) when (_device.DataFlow == DataFlow.Capture)
+        {
+            // Certains périphériques refusent le mode sur événement : on retombe sur le mode par défaut.
+            _capture.DataAvailable -= OnData;
+            _capture.RecordingStopped -= OnStopped;
+            _capture.Dispose();
+            _capture = CreateCapture(eventSync: false);
+            _capture.StartRecording();
+        }
+    }
+
+    /// <inheritdoc />
+    public void StopCapture()
+    {
+        _stopping = true;
+        try
+        {
+            _capture.StopRecording();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or InvalidCastException or ObjectDisposedException or System.Runtime.InteropServices.COMException)
+        {
+            // Déjà arrêtée ou libérée : rien à faire (appelé aussi depuis les notifications du système).
+        }
+    }
+
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+        try
+        {
+            _enumerator.UnregisterEndpointNotificationCallback(this);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or System.Runtime.InteropServices.COMException)
+        {
+            // Le système ne connaît plus l'abonnement : rien à défaire.
+        }
+
+        _capture.DataAvailable -= OnData;
+        _capture.RecordingStopped -= OnStopped;
+        _capture.Dispose();
+        _device.Dispose();
+        _enumerator.Dispose();
+    }
+
+    /// <inheritdoc />
+    public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+    {
+        if (_followsDefault && flow == DataFlow.Render && role == Role.Multimedia && defaultDeviceId != _deviceId && !_stopping)
+        {
+            // AUD-002 : on s'arrête proprement ; l'écoute se rebranche sur le nouveau périphérique par défaut.
+            StopCapture();
+        }
+    }
+
+    /// <inheritdoc />
+    public void OnDeviceStateChanged(string deviceId, DeviceState newState)
+    {
+        if (deviceId == _deviceId && newState != DeviceState.Active && !_stopping)
+        {
+            StopCapture();
+        }
+    }
+
+    /// <inheritdoc />
+    public void OnDeviceAdded(string pwstrDeviceId)
+    {
+    }
+
+    /// <inheritdoc />
+    public void OnDeviceRemoved(string deviceId)
+    {
+        if (deviceId == _deviceId && !_stopping)
+        {
+            StopCapture();
+        }
+    }
+
+    /// <inheritdoc />
+    public void OnPropertyValueChanged(string pwstrDeviceId, PropertyKey key)
+    {
+    }
+
+    private void OnData(object? sender, WaveInEventArgs e)
+    {
+        try
+        {
+            Convert(e);
+        }
+        catch (Exception ex)
+        {
+            // AUD-006 : une erreur de conversion ou d'abonné s'arrête ici, l'écoute la traite comme une capture interrompue.
+            Stopped?.Invoke(this, ex);
+        }
+    }
+
+    private void Convert(WaveInEventArgs e)
+    {
+        var format = _capture.WaveFormat;
+        var channels = Math.Max(1, format.Channels);
+        var frames = e.BytesRecorded / ((format.BitsPerSample / 8) * channels);
+        if (frames <= 0)
+        {
+            return;
+        }
+
+        if (_mono.Length < frames)
+        {
+            _mono = new float[frames];
+        }
+
+        var standard = format is WaveFormatExtensible extensible ? extensible.ToStandardWaveFormat() : format;
+        var count = PcmMixer.ToMono(e.Buffer, e.BytesRecorded, channels, format.BitsPerSample, standard.Encoding == WaveFormatEncoding.IeeeFloat, _mono);
+        BlockAvailable?.Invoke(this, new AudioBlock(_mono.AsMemory(0, count)));
+    }
+
+    private void OnStopped(object? sender, StoppedEventArgs e) => Stopped?.Invoke(this, e.Exception);
+}

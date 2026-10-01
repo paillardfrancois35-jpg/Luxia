@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/PatchLookup.cs` : résolution canal → appareil patché → définition de canal.
-- `src/Dmx.UI.Modules.Console/ChannelViewModel.cs` : `Caption` rendue observable.
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs` : `Caption` et `PercentText` (nom de plage au lieu du %) recalculés à chaque rafraîchissement via `DmxConversion.Describe`.
+- `src/Luxia.Patch/Rules/PatchLookup.cs` : résolution canal → appareil patché → définition de canal.
+- `src/Luxia.UI.Modules.Console/ChannelViewModel.cs` : `Caption` rendue observable.
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs` : `Caption` et `PercentText` (nom de plage au lieu du %) recalculés à chaque rafraîchissement via `DmxConversion.Describe`.
 
 ## Tests
 

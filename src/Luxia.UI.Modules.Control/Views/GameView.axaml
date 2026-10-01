@@ -14,6 +14,15 @@
     <Style Selector="Button.lock.locked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
       <Setter Property="Background" Value="#388BFD" />
     </Style>
+    <!-- Interrupteur Audio : bleu quand l'horloge suit la musique ; TAP s'allume un instant à chaque frappe (bouton ou touche T). -->
+    <Style Selector="ToggleButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#1F6FEB" />
+      <Setter Property="TextElement.Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button.tap.flash /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#3FB950" />
+      <Setter Property="TextElement.Foreground" Value="#0D1117" />
+    </Style>
     <!-- Cibles d'au moins 32 px de haut (ERG-035). -->
     <Style Selector="Button.target">
       <Setter Property="MinHeight" Value="34" />
@@ -44,6 +53,36 @@
           <TextBlock Text="{Binding Message}" Foreground="#D29922" VerticalAlignment="Center" Margin="4,0,0,0" TextTrimming="CharacterEllipsis" MaxWidth="700" />
         </StackPanel>
       </DockPanel>
+    </Border>
+
+    <!-- Bloc BPM (Q42, essai P7 décision 1) : interrupteur Audio (gris = tempo à la main, bleu = suit la musique), BPM saisissable
+         (Entrée), TAP (touche T), − +, corrections ×2 ÷ 2 « 1 ici » (toujours actives), voyants des temps. Largeurs fixes : rien ne bouge. -->
+    <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,4">
+      <StackPanel Orientation="Horizontal" Spacing="6" DataContext="{Binding Tempo}" x:DataType="vm:TempoBarViewModel" VerticalAlignment="Center">
+        <TextBlock Text="♪" FontSize="16" VerticalAlignment="Center" />
+        <ToggleButton Classes="target" Content="🎧 Audio" IsChecked="{Binding AudioOn}" IsEnabled="{Binding CanListen}" Width="96"
+                      HorizontalContentAlignment="Center" ToolTip.Tip="{Binding AudioStatus}" />
+        <TextBlock Text="{Binding ConfidenceText}" Foreground="{Binding ConfidenceColor}" Width="44" FontSize="12" VerticalAlignment="Center"
+                   ToolTip.Tip="Confiance dans le tempo détecté (vert : sûr, orange : moyen, rouge : incertain, l'horloge garde alors son tempo)" />
+        <TextBox x:Name="BpmBox" Text="{Binding BpmInput}" Width="64" MinHeight="34" FontSize="16" FontWeight="SemiBold" HorizontalContentAlignment="Right"
+                 VerticalContentAlignment="Center" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Tempo en battements par minute : taper une valeur puis Entrée">
+          <TextBox.KeyBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding ApplyTypedBpmCommand}" />
+          </TextBox.KeyBindings>
+        </TextBox>
+        <TextBlock Text="BPM" Foreground="#8B949E" VerticalAlignment="Center" />
+        <Button Classes="target" Content="−" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding DecreaseCommand}" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Retirer 1 BPM" />
+        <Button Classes="target" Content="+" Width="38" Padding="0" FontSize="18" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding IncreaseCommand}" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Ajouter 1 BPM" />
+        <Button Classes="target tap" Classes.flash="{Binding TapFlash}" Content="TAP" FontWeight="Bold" Width="56" HorizontalContentAlignment="Center" Command="{Binding TapCommand}" IsEnabled="{Binding ManualEnabled}"
+                ToolTip.Tip="Taper le rythme : quatre frappes régulières donnent le tempo, chaque frappe cale le temps (touche T)" />
+        <Button Classes="target" Content="×2" Width="44" Padding="0" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding TimesTwoCommand}" ToolTip.Tip="Doubler le tempo (corrige une détection à la moitié)" />
+        <Button Classes="target" Content="÷ 2" Width="44" Padding="0" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Command="{Binding DivideByTwoCommand}" ToolTip.Tip="Diviser le tempo par deux" />
+        <Button Classes="target" Content="1 ici" Padding="8,4" Command="{Binding ResyncBarCommand}" ToolTip.Tip="Le temps en cours devient le premier de la mesure" />
+        <TextBlock Text="●" Foreground="{Binding Beat1}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat2}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat3}" FontSize="16" VerticalAlignment="Center" />
+        <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="16" VerticalAlignment="Center" />
+      </StackPanel>
     </Border>
 
     <!-- Retouches en direct : le seul rappel d'état de l'écran de jeu. Sa place est réservée en permanence : qu'il apparaisse ou

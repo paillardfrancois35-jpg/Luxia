@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/PatchRules.cs` : `DetectOverlaps` (ignore les jumeaux, INST-014).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs`, `PatchRowViewModel.cs` : `HasOverlap`, recalculé après chaque modification du patch.
-- `src/Dmx.UI.Modules.Installation/InstallationView.axaml` : icône ⚠ sur la ligne concernée.
+- `src/Luxia.Patch/Rules/PatchRules.cs` : `DetectOverlaps` (ignore les jumeaux, INST-014).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs`, `PatchRowViewModel.cs` : `HasOverlap`, recalculé après chaque modification du patch.
+- `src/Luxia.UI.Modules.Installation/InstallationView.axaml` : icône ⚠ sur la ligne concernée.
 
 ## Tests
 

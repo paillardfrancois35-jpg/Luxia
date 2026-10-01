@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/Selection.cs`, `SelectionItem.cs`.
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `CreateSelectionCommand`.
+- `src/Luxia.Patch/Model/Selection.cs`, `SelectionItem.cs`.
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `CreateSelectionCommand`.
 
 ## Tests
 

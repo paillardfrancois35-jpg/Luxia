@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `MoveFixture` (saisie numérique univers/adresse par ligne) ; l'identifiant stable de l'appareil (GEN-052) est conservé.
-- `src/Dmx.UI.Modules.Installation/InstallationView.axaml` : champs univers/adresse éditables par ligne, bouton « Déplacer ».
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `MoveFixture` (saisie numérique univers/adresse par ligne) ; l'identifiant stable de l'appareil (GEN-052) est conservé.
+- `src/Luxia.UI.Modules.Installation/InstallationView.axaml` : champs univers/adresse éditables par ligne, bouton « Déplacer ».
 
 ## Tests
 

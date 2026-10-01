@@ -287,6 +287,21 @@ public static class ProjectValidator
                 yield return Warning(file, where, "speed", "vitesse hors de 0,1 à 10 : elle sera bornée (MOT-015)");
             }
 
+            if (scene.AdvanceEvery is < 1 or > 64)
+            {
+                yield return Warning(file, where, "advanceEvery", "nombre d'événements hors de 1 à 64 : il sera borné (MOT-017)");
+            }
+
+            if (scene.AdvanceMultiplier is not (1 or 2 or 4))
+            {
+                yield return Warning(file, where, "advanceMultiplier", "multiplicateur de fréquence autre que 1, 2 ou 4 : il sera ramené à 1 (MOT-017)");
+            }
+
+            if (scene.OwnBpm is { } ownBpm && (ownBpm < 20 || ownBpm > 400))
+            {
+                yield return Warning(file, where, "ownBpm", "tempo propre hors de 20 à 400 BPM : il sera borné (MOT-020)");
+            }
+
             if (scene.Loop == LoopMode.Count && scene.LoopCount < 1)
             {
                 yield return Warning(file, where, "loopCount", "nombre de passages inférieur à 1 : 1 sera utilisé");

@@ -1,0 +1,187 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Luxia.UI.Modules.Audio"
+             xmlns:c="using:Luxia.UI.Controls"
+             x:Class="Luxia.UI.Modules.Audio.AudioView"
+             x:DataType="vm:AudioViewModel">
+  <UserControl.Styles>
+    <!-- Niveau vertical : une colonne étroite et haute, son nom dessous (essai P7, décision 2). -->
+    <Style Selector="ProgressBar.vmeter">
+      <Setter Property="Orientation" Value="Vertical" />
+      <Setter Property="Width" Value="26" />
+      <Setter Property="Height" Value="300" />
+      <Setter Property="Minimum" Value="0" />
+      <Setter Property="Maximum" Value="1" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.vlabel">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+      <Setter Property="TextAlignment" Value="Center" />
+      <Setter Property="Opacity" Value="0.8" />
+    </Style>
+  </UserControl.Styles>
+
+  <!-- Une seule page, sans défilement à 1920 × 1080 : à gauche ce qu'on regarde en direct (écoute, tempo, énergie), à droite les niveaux
+       en colonnes verticales et, repliés, les réglages et la calibration. -->
+  <ScrollViewer>
+    <Grid Margin="16" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,*">
+      <TextBlock Text="Audio" FontSize="22" FontWeight="SemiBold" />
+      <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="0,2,0,6" TextWrapping="Wrap" Opacity="0.8"
+                 Text="LuXia écoute la musique jouée sur ce PC (Deezer, YouTube Music, VLC…). L'interrupteur « Audio » de l'écran Contrôle et la case ci-dessous sont le même réglage." />
+
+      <!-- Colonne de gauche : en direct -->
+      <StackPanel Grid.Row="2" Spacing="12" Margin="0,0,16,0">
+        <TextBlock Text="{Binding Message}" Foreground="#58A6FF" TextWrapping="Wrap"
+                   IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <!-- Écoute et périphérique (AUD-001 à 003) -->
+        <Border Classes="panel">
+          <StackPanel Spacing="8">
+            <TextBlock Classes="section" Text="Écoute" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <CheckBox Content="Écouter et suivre le tempo" IsChecked="{Binding Listening}" IsEnabled="{Binding Available}"
+                        ToolTip.Tip="Même interrupteur que « Audio » de l'écran de jeu : écoute le son du PC et suit son tempo. Mémorisé : l'écoute redémarre avec l'application." />
+              <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Opacity="0.8" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Périphérique" VerticalAlignment="Center" Width="100" />
+              <ComboBox ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}" Width="480"
+                        ToolTip.Tip="Le son joué par le PC (par défaut), la sortie d'un autre périphérique, ou une entrée : micro USB, ligne. Un micro capte aussi la salle : tempo et drops sont moins précis." />
+              <Button Content="Actualiser" Command="{Binding RefreshDevicesCommand}" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Tempo (signal A) -->
+        <Border Classes="panel">
+          <StackPanel Spacing="8">
+            <TextBlock Classes="section" Text="Tempo" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <c:TempoGlance BpmText="{Binding BpmText}" BeatInBar="{Binding BeatInBar}" VerticalAlignment="Center" />
+              <TextBlock Text="confiance" Opacity="0.7" VerticalAlignment="Center" Margin="16,0,0,0" />
+              <ProgressBar Minimum="0" Maximum="1" Value="{Binding Confidence}" Width="160" Height="12" VerticalAlignment="Center"
+                           ToolTip.Tip="En dessous de 30 %, l'horloge garde son dernier tempo (AUD-022)" />
+              <TextBlock Text="{Binding ConfidenceText}" Width="50" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding SourceText}" Opacity="0.7" Width="60" VerticalAlignment="Center" ToolTip.Tip="Source du tempo de l'horloge" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="temps" Opacity="0.7" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding BeatText}" FontSize="22" Width="28" VerticalAlignment="Center" />
+              <ProgressBar Minimum="0" Maximum="1" Value="{Binding BeatPhase}" Width="140" Height="12" VerticalAlignment="Center" />
+              <Button Content="×2" Width="48" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" Command="{Binding TimesTwoCommand}" ToolTip.Tip="Corrige un tempo détecté à la moitié" />
+              <Button Content="÷ 2" Width="48" FontSize="16" FontWeight="Bold" HorizontalContentAlignment="Center" Command="{Binding DivideByTwoCommand}" ToolTip.Tip="Corrige un tempo détecté au double" />
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Énergie (signal C) -->
+        <Border Classes="panel">
+          <StackPanel Spacing="8">
+            <TextBlock Classes="section" Text="Énergie" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <ProgressBar Minimum="0" Maximum="1" Value="{Binding Energy}" Width="320" Height="16" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding EnergyText}" FontSize="18" Width="110" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding TrendText}" Width="90" VerticalAlignment="Center" Opacity="0.8" />
+              <TextBlock Text="{Binding BreakText}" Foreground="#F85149" FontWeight="Bold" Width="70" VerticalAlignment="Center" />
+            </StackPanel>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+              <StackPanel Spacing="4">
+                <TextBlock Text="Break, drop, montée, silence" Opacity="0.7" />
+                <ItemsControl ItemsSource="{Binding Events}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <SelectableTextBlock Text="{Binding}" FontFamily="Consolas,monospace" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock Text="Niveaux d'énergie" Opacity="0.7" />
+                <ItemsControl ItemsSource="{Binding EnergyEvents}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <SelectableTextBlock Text="{Binding}" FontFamily="Consolas,monospace" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Grid>
+            <Button Content="Effacer les listes" HorizontalAlignment="Left" Command="{Binding ClearEventsCommand}"
+                    ToolTip.Tip="Repartir d'une page blanche avant de lancer un morceau" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+
+      <!-- Colonne de droite : niveaux verticaux (AUD-080), puis réglages et calibration repliés -->
+      <StackPanel Grid.Row="2" Grid.Column="1" Spacing="12" Width="560">
+        <Border Classes="panel">
+          <StackPanel Spacing="8">
+            <TextBlock Classes="section" Text="Ce que LuXia entend" />
+            <Grid ColumnDefinitions="*,*,*,*,*,*">
+              <StackPanel Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding Level}" />
+                <TextBlock Classes="vlabel" Text="Niveau" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding Bass}" Foreground="#F0883E" />
+                <TextBlock Classes="vlabel" Text="Basses" />
+              </StackPanel>
+              <StackPanel Grid.Column="2" Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding Mid}" Foreground="#3FB950" />
+                <TextBlock Classes="vlabel" Text="Médiums" />
+              </StackPanel>
+              <StackPanel Grid.Column="3" Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding Treble}" Foreground="#A371F7" />
+                <TextBlock Classes="vlabel" Text="Aigus" />
+              </StackPanel>
+              <StackPanel Grid.Column="4" Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding BassFlash}" Foreground="#F0883E" ToolTip.Tip="S'allume à chaque kick détecté (AUD-040)" />
+                <TextBlock Classes="vlabel" Text="Impulsion&#10;basses" />
+              </StackPanel>
+              <StackPanel Grid.Column="5" Spacing="4">
+                <ProgressBar Classes="vmeter" Value="{Binding TrebleFlash}" Foreground="#A371F7" ToolTip.Tip="S'allume à chaque caisse claire ou charleston détecté (AUD-040)" />
+                <TextBlock Classes="vlabel" Text="Impulsion&#10;aigus" />
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Réglages (AUD-081) : repliés, on s'en sert rarement -->
+        <Expander Header="Réglages" IsExpanded="False" HorizontalAlignment="Stretch">
+          <Grid ColumnDefinitions="200,120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6" Margin="0,6,0,0">
+            <TextBlock Text="Sensibilité impulsions (%)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Column="1" Value="{Binding Sensitivity}" Minimum="0" Maximum="100" Increment="5" FormatString="0" />
+            <TextBlock Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" Text="Plus haut : plus d'impulsions (et de fausses détections)" />
+            <TextBlock Grid.Row="1" Text="Lissage de l'énergie (s)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Smoothing}" Minimum="0.5" Maximum="8" Increment="0.5" FormatString="0.0" />
+            <TextBlock Grid.Row="2" Text="Tempo minimal (BPM)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding MinBpm}" Minimum="40" Maximum="170" Increment="5" FormatString="0" />
+            <TextBlock Grid.Row="3" Text="Tempo maximal (BPM)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding MaxBpm}" Minimum="80" Maximum="240" Increment="5" FormatString="0" />
+            <TextBlock Grid.Row="4" Text="Tempo préféré (BPM)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding PreferredBpm}" Minimum="60" Maximum="200" Increment="5" FormatString="0" />
+            <TextBlock Grid.Row="4" Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" Text="Tranche entre un tempo et son double ou sa moitié"
+                       ToolTip.Tip="En cas de doute entre un tempo et son double ou sa moitié, LuXia préfère celui le plus proche de cette valeur" />
+            <TextBlock Grid.Row="5" Text="Latence (ms)" VerticalAlignment="Center" />
+            <NumericUpDown Grid.Row="5" Grid.Column="1" Value="{Binding LatencyMilliseconds}" Minimum="-500" Maximum="500" Increment="10" FormatString="0" />
+            <TextBlock Grid.Row="5" Grid.Column="2" Margin="10,0,0,0" Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" Text="Positif : la lumière avance sur le son ; négatif : elle retarde" />
+          </Grid>
+        </Expander>
+
+        <!-- Calibration de la latence (AUD-027) -->
+        <Expander Header="Calibration de la latence" IsExpanded="False" HorizontalAlignment="Stretch">
+          <StackPanel Spacing="8" Margin="0,6,0,0">
+            <TextBlock TextWrapping="Wrap" Opacity="0.8"
+                       Text="Lancez un morceau au rythme net, puis le flash : les appareils flashent à chaque temps de l'horloge. Réglez la latence (volet Réglages) jusqu'à ce que le flash tombe sur le kick, puis arrêtez." />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button Content="▶ Flash sur chaque temps" Command="{Binding StartCalibrationCommand}" />
+              <Button Content="■ Arrêter" Command="{Binding StopCalibrationCommand}" />
+              <Button Content="Latence à zéro" Command="{Binding ResetLatencyCommand}" />
+            </StackPanel>
+          </StackPanel>
+        </Expander>
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

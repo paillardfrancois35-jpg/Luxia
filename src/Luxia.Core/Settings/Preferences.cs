@@ -29,11 +29,52 @@ public sealed record Preferences
     /// </summary>
     public bool CompactScenes { get; init; }
 
+    /// <summary>Écoute de la musique (doc 19, AUD-081) ; propre au poste.</summary>
+    public AudioPreferences Audio { get; init; } = new();
+
     /// <summary>Sorties.</summary>
     public OutputPreferences Outputs { get; init; } = new();
 
     /// <summary>Réglages du test de sortie (SORT-007).</summary>
     public TestOutputPreferences TestOutput { get; init; } = new();
+}
+
+/// <summary>Écoute de la musique (doc 19 §6, AUD-081).</summary>
+public sealed record AudioPreferences
+{
+    /// <summary>L'écoute du son joué par le PC démarre avec l'application.</summary>
+    public bool Listen { get; init; }
+
+    /// <summary>Périphérique écouté (AUD-003) ; vide = le son joué par le PC, sur la sortie par défaut.</summary>
+    public string? DeviceId { get; init; }
+
+    /// <summary>Sensibilité des impulsions, de 0 à 1 (AUD-042).</summary>
+    public double PulseSensitivity { get; init; } = 0.6;
+
+    /// <summary>Lissage de l'énergie en secondes (AUD-060).</summary>
+    public double EnergySmoothingSeconds { get; init; } = 2;
+
+    /// <summary>Tempo minimal exploré (AUD-020).</summary>
+    public double MinBpm { get; init; } = 70;
+
+    /// <summary>Tempo maximal exploré (AUD-020).</summary>
+    public double MaxBpm { get; init; } = 180;
+
+    /// <summary>Centre de la préférence d'octave, en BPM (AUD-023).</summary>
+    public double PreferredBpm { get; init; } = 118;
+
+    /// <summary>Décalage de latence du son joué par le PC en secondes (GEN-035, AUD-027), de −0,5 à +0,5.</summary>
+    public double LatencySeconds { get; init; }
+
+    /// <summary>
+    /// Latence propre à chaque périphérique choisi, par identifiant (un micro Bluetooth n'a pas le retard d'une boucle de sortie) :
+    /// le réglage suit le périphérique quand on en change (essai P7, exemple 18).
+    /// </summary>
+    public IReadOnlyDictionary<string, double> LatencyByDevice { get; init; } = new Dictionary<string, double>();
+
+    /// <summary>Latence à appliquer pour un périphérique (<c>null</c> = le son joué par le PC).</summary>
+    public double LatencyFor(string? deviceId) =>
+        deviceId is not null && LatencyByDevice.TryGetValue(deviceId, out var value) ? value : deviceId is null ? LatencySeconds : 0;
 }
 
 /// <summary>Configuration des sorties (SORT-001, SORT-006).</summary>

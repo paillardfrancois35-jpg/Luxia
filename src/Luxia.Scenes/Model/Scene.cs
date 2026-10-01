@@ -53,6 +53,24 @@ public sealed record Scene
     /// <summary>Vitesse (multiplicateur 0,1 à 10, MOT-015).</summary>
     public double Speed { get; init; } = 1;
 
+    /// <summary>Événement qui fait avancer d'étape (MOT-017, SCN-050) ; par défaut, la durée de l'étape.</summary>
+    public StepAdvanceMode Advance { get; init; } = StepAdvanceMode.Duration;
+
+    /// <summary>Nombre d'événements entre deux étapes (1 ou plus).</summary>
+    public int AdvanceEvery { get; init; } = 1;
+
+    /// <summary>Plusieurs étapes par temps ou par mesure : 1 (défaut), 2 ou 4 (essai P7, décision 5) ; sans effet sur les impulsions.</summary>
+    public int AdvanceMultiplier { get; init; } = 1;
+
+    /// <summary>Instant musical attendu avant de démarrer (MOT-018).</summary>
+    public LaunchQuantize Quantize { get; init; } = LaunchQuantize.None;
+
+    /// <summary>La vitesse de la scène suit l'énergie de la musique (SCN-051) : de 0,5× (calme) à 1,8× (explosif), 1× à mi-énergie.</summary>
+    public bool EnergySpeed { get; init; }
+
+    /// <summary>Tempo propre de la scène (MOT-020) ; <c>null</c> = elle suit l'horloge principale.</summary>
+    public double? OwnBpm { get; init; }
+
     /// <summary>Étapes (au moins une, SCN-002).</summary>
     public IReadOnlyList<SceneStep> Steps { get; init; } = [new SceneStep()];
 }

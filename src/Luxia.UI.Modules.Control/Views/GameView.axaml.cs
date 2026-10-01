@@ -37,6 +37,10 @@ public partial class GameView : UserControl
             menu.ShowAt(panelsButton);
         };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
+        // Saisie du BPM : l'affichage ne l'écrase pas pendant la frappe ; la valeur est appliquée en quittant le champ (Entrée l'applique aussi).
+        var bpmBox = this.FindControl<TextBox>("BpmBox")!;
+        bpmBox.GotFocus += (_, _) => ViewModel?.Tempo.BeginEdit();
+        bpmBox.LostFocus += (_, _) => ViewModel?.Tempo.EndEdit();
         _autosave = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Background, (_, _) => SaveLayout());
 
         // Au niveau de l'application : un panneau détaché vit dans une autre fenêtre et doit y retrouver son contenu.
@@ -162,6 +166,14 @@ public partial class GameView : UserControl
             // ERG-023 : F1 à F12 jouent les looks 1 à 12.
             if (e.Key is >= Key.F1 and <= Key.F12 && e.KeyModifiers == KeyModifiers.None && vm.Looks.PlayAt(e.Key - Key.F1))
             {
+                e.Handled = true;
+                return;
+            }
+
+            // Q42 : T = tap tempo.
+            if (e.Key == Key.T && e.KeyModifiers == KeyModifiers.None)
+            {
+                vm.Tempo.Tap();
                 e.Handled = true;
                 return;
             }

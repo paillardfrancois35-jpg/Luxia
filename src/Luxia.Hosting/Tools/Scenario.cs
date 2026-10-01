@@ -134,6 +134,25 @@ public sealed class Scenario
                         ? new SetSceneSpeedCommand(CommandOrigin.Tool, sped, speed)
                         : null;
                     break;
+                case "tempo":
+                    command = Number(rest, 0, out var tempo, ref error)
+                        ? new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Fixed, tempo)
+                        : null;
+                    break;
+                case "tap":
+                    command = new TapTempoCommand(CommandOrigin.Tool);
+                    break;
+                case "ajuster-tempo":
+                    var adjustment = rest.FirstOrDefault()?.ToLowerInvariant();
+                    command = adjustment switch
+                    {
+                        "x2" => new AdjustTempoCommand(CommandOrigin.Tool, TempoAdjustment.TimesTwo),
+                        "/2" => new AdjustTempoCommand(CommandOrigin.Tool, TempoAdjustment.DivideByTwo),
+                        "un-ici" => new AdjustTempoCommand(CommandOrigin.Tool, TempoAdjustment.ResyncBar),
+                        _ => null,
+                    };
+                    error ??= command is null ? "ajuster-tempo x2|/2|un-ici" : null;
+                    break;
                 case "blackout":
                     var on = rest.FirstOrDefault()?.ToLowerInvariant();
                     command = on is "oui" or "non" ? new BlackoutCommand(CommandOrigin.Tool, on == "oui") : null;

@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Messaging/Commands/ReleaseOverridesCommand.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.Messaging/Commands/ReleaseOverridesCommand.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

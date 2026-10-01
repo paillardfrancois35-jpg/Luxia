@@ -44,6 +44,12 @@ public sealed record EngineSnapshot
     /// <summary>Repos de fumée restant en secondes (0 = fumée disponible), MOT-081.</summary>
     public double SmokeRestSeconds { get; init; }
 
+    /// <summary>Horloge musicale : tempo, source, position dans la mesure (doc 19 §3).</summary>
+    public TempoInfo Tempo { get; init; } = TempoInfo.Default;
+
+    /// <summary>Scènes qui attendent leur instant musical pour démarrer (MOT-018).</summary>
+    public IReadOnlyList<PendingSceneLaunch> PendingLaunches { get; init; } = [];
+
     /// <summary>Grand Master (0 à 1).</summary>
     public double GrandMaster { get; init; } = 1;
 

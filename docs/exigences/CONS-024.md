@@ -17,14 +17,14 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/IdentifyRules.cs` : canaux et valeurs d'identification (`Identify` du canal, sinon canaux d'intensité au maximum ; jamais couleur ni position).
-- `src/Dmx.UI.Modules.Console/FixtureFadersViewModel.cs` : `ToggleIdentifyCommand`, clignotement (400 ms) via des surcharges brutes classiques, libérées à l'arrêt.
-- `src/Dmx.UI.Modules.Console/FixtureFadersView.axaml` : bouton « Identifier ».
+- `src/Luxia.Patch/Rules/IdentifyRules.cs` : canaux et valeurs d'identification (`Identify` du canal, sinon canaux d'intensité au maximum ; jamais couleur ni position).
+- `src/Luxia.UI.Modules.Console/FixtureFadersViewModel.cs` : `ToggleIdentifyCommand`, clignotement (400 ms) via des surcharges brutes classiques, libérées à l'arrêt.
+- `src/Luxia.UI.Modules.Console/FixtureFadersView.axaml` : bouton « Identifier ».
 
 ## Tests
 
-- `Dmx.Patch.Tests/IdentifyRulesTests.cs` (3 tests)
-- `ConsoleViewModelTests.Identify_LightsIntensityChannel_WithoutTouchingColor_AndReleasesOnStop`
+- `Luxia.Patch.Tests/IdentifyRulesTests.cs` (3 tests)
+- `ConsoleViewModelTests.Identify_LightsIntensityAndColorEmitters_AndReleasesOnStop`
 
 ## Historique
 

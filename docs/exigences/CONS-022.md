@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/FixtureFadersViewModel.cs` : `SetValue` envoie une surcharge de canal brut (`CMD-020`), comme CONS-008 pour le mode canaux.
+- `src/Luxia.UI.Modules.Console/FixtureFadersViewModel.cs` : `SetValue` envoie une surcharge de canal brut (`CMD-020`), comme CONS-008 pour le mode canaux.
 
 ## Tests
 

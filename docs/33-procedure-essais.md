@@ -31,7 +31,11 @@ le plus solide pour les lots d'architecture. À la fin du développement, la dis
 4. Quand un correctif est nécessaire, l'utilisateur dit à la discussion **dev** : « lis `docs/essais/Pn-resultats.md` ». La
    discussion dev corrige, met à jour les fiches (entrées « Utilisateur | Test », « Validation »), compile, commite, et
    indique **la nouvelle version à vérifier** ; la discussion test la note et reprend l'exemple concerné.
-5. En fin de guide, la discussion test fait le bilan dans le fichier ; la discussion dev propose l'analyse ergonomique de
+5. **Glossaire** (toutes les discussions, dev comme test) : dès qu'une discussion explique un terme technique ou musical à
+   l'utilisateur (break, drop, kick, latence…), elle lui **propose de l'ajouter au [glossaire](glossaire.md)** avec une définition
+   courte ; elle l'ajoute s'il accepte (discussion dev), ou la note dans le fichier de résultats, ligne « Glossaire »
+   (discussion test), pour que la discussion dev l'intègre.
+6. En fin de guide, la discussion test fait le bilan dans le fichier ; la discussion dev propose l'analyse ergonomique de
    fin de phase (doc 32 §5.6), puis fusion et étiquette après validation.
 
 ## 3. Fichier de résultats

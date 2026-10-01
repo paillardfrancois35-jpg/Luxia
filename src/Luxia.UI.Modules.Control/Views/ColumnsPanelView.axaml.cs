@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -19,6 +20,38 @@ public partial class ColumnsPanelView : UserControl
         var scroll = this.FindControl<ScrollViewer>("Scroll")!;
         var board = this.FindControl<DockPanel>("Board")!;
         scroll.SizeChanged += (_, e) => board.Width = Math.Max(e.NewSize.Width - 4, board.MinWidth);
+    }
+
+    // La colonne ne doit pas bouger quand la liste est recréée (essai P7 : l'édition validée remettait la barre en haut). La position est
+    // mémorisée dans la colonne et rétablie dès que le contenu est mesuré.
+    private void OnColumnAttached(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        if (sender is not ScrollViewer scroll || scroll.DataContext is not ControlColumnViewModel column || column.ScrollOffset <= 0)
+        {
+            return;
+        }
+
+        scroll.Tag = "restoring";
+        var tries = 0;
+        void Restore(object? s, EventArgs args)
+        {
+            scroll.Offset = new Vector(0, column.ScrollOffset);
+            if (Math.Abs(scroll.Offset.Y - column.ScrollOffset) < 0.5 || ++tries > 20)
+            {
+                scroll.LayoutUpdated -= Restore;
+                scroll.Tag = null;
+            }
+        }
+
+        scroll.LayoutUpdated += Restore;
+    }
+
+    private void OnColumnScrolled(object? sender, ScrollChangedEventArgs e)
+    {
+        if (sender is ScrollViewer { Tag: null } scroll && scroll.DataContext is ControlColumnViewModel column)
+        {
+            column.ScrollOffset = scroll.Offset.Y;
+        }
     }
 
     private ColumnsPanelViewModel? ViewModel => DataContext as ColumnsPanelViewModel;

@@ -31,6 +31,40 @@ public static class SceneOptions
         new(EndMode.Chain, "Enchaîner sur…"),
     ];
 
+    /// <summary>Événements qui font avancer d'étape (MOT-017).</summary>
+    public static IReadOnlyList<Choice<StepAdvanceMode>> Advances { get; } =
+    [
+        new(StepAdvanceMode.Duration, "À la durée de l'étape"),
+        new(StepAdvanceMode.Beat, "À chaque temps"),
+        new(StepAdvanceMode.Bar, "À chaque mesure"),
+        new(StepAdvanceMode.BassPulse, "Sur les basses (kick)"),
+        new(StepAdvanceMode.TreblePulse, "Sur les aigus (caisse claire)"),
+    ];
+
+    /// <summary>
+    /// Fréquence des étapes (essai P7, décision 5) : le code est le nombre d'événements entre deux étapes (1, 2, 4, 8) ou, à partir de 100,
+    /// le nombre d'étapes par temps ou par mesure (102 = ×2, 104 = ×4).
+    /// </summary>
+    public static IReadOnlyList<Choice<int>> Frequencies { get; } =
+    [
+        new(104, "×4 (quatre fois plus vite)"),
+        new(102, "×2 (deux fois plus vite)"),
+        new(1, "×1 (à chaque événement)"),
+        new(2, "÷ 2 (un sur deux)"),
+        new(4, "÷ 4 (un sur quatre)"),
+        new(8, "÷ 8 (un sur huit)"),
+    ];
+
+    /// <summary>Quantification du lancement (MOT-018).</summary>
+    public static IReadOnlyList<Choice<LaunchQuantize>> Quantizes { get; } =
+    [
+        new(LaunchQuantize.None, "Tout de suite"),
+        new(LaunchQuantize.Beat, "Au prochain temps"),
+        new(LaunchQuantize.Bar, "À la prochaine mesure"),
+        new(LaunchQuantize.Phrase4, "À la prochaine phrase (4 mesures)"),
+        new(LaunchQuantize.Phrase8, "À la prochaine phrase (8 mesures)"),
+    ];
+
     /// <summary>Courbes de fondu (MOT-011).</summary>
     public static IReadOnlyList<Choice<FadeCurve>> Curves { get; } =
     [

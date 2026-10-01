@@ -1,4 +1,5 @@
 using Luxia.Engine.Model;
+using Luxia.Engine.Timing;
 using Luxia.Messaging.Commands;
 
 namespace Luxia.Engine;
@@ -14,13 +15,14 @@ namespace Luxia.Engine;
 /// pas de poids prend directement sa valeur cible et monte en poids : il part de la valeur sous-jacente (doc 15 §5.1).
 /// Les tableaux sont alloués au lancement (commande), jamais pendant les ticks (doc 03 §4.1).
 /// </remarks>
-internal sealed class Playback
+internal sealed partial class Playback
 {
     private int[][] _stepSlots = [];
 
     public Playback(EngineScene scene, int layerIndex, long sequence, CommandOrigin origin, bool solo)
     {
         Scene = scene;
+        UpdateOwnClock();
         LayerIndex = layerIndex;
         Sequence = sequence;
         Origin = origin;
@@ -32,6 +34,12 @@ internal sealed class Playback
     }
 
     public EngineScene Scene { get; private set; }
+
+    /// <summary>Horloge principale du moteur (tempo, temps franchis à ce tick, sauts de phase).</summary>
+    public required MusicalClock Clock { get; init; }
+
+    /// <summary>Impulsions audio du tick (basses, aigus) et disponibilité du signal (MOT-017, SCN-052).</summary>
+    public required TickEvents Events { get; init; }
 
     public int LayerIndex { get; set; }
 
@@ -58,7 +66,9 @@ internal sealed class Playback
     public bool Holding { get; private set; }
 
     /// <summary>Progression 0-1 dans l'étape courante (affichage).</summary>
-    public double StepProgress => _stepLength <= 0 ? 1 : Math.Clamp(_stepElapsed / _stepLength, 0, 1);
+    public double StepProgress => Scene.Advance != StepAdvanceMode.Duration
+        ? Math.Clamp(_eventProgress, 0, 1)
+        : _stepLength <= 0 ? 1 : Math.Clamp(_stepElapsed / _stepLength, 0, 1);
 
     // Paramètres touchés par la scène (union de toutes ses étapes) et leur contribution courante.
     public int[] Parameters { get; private set; }
@@ -125,8 +135,19 @@ internal sealed class Playback
     private int[][] _hueGroups = [];
     private double[] _progress = [];
 
+    // Horloge propre de la scène (MOT-020), avance d'étape sur événement (MOT-017), suivi des sauts de phase (MOT-062).
+    private MusicalClock? _own;
+    private double _seenShift;
+    private int _eventCount;
+    private long? _subIndex;
+    private double _eventProgress;
+
     private double _stepElapsed;
     private double _stepLength;
+    private double _stepBpm = 120;
+    private double _stepFade;
+    private bool _fadeMusical;
+    private bool _holdMusical;
     private double _transitionElapsed;
     private double _transitionEnd;
     private FadeCurve _curve;
@@ -223,6 +244,7 @@ internal sealed class Playback
         }
 
         Scene = scene;
+        UpdateOwnClock();
         Parameters = parameters;
         StartValue = startValue;
         StartWeight = startWeight;
@@ -467,6 +489,8 @@ internal sealed class Playback
     /// <param name="bpm">Tempo courant.</param>
     public void Start(double? entryFade, double bpm)
     {
+        bpm = _own?.Bpm ?? bpm;
+        _seenShift = (_own ?? Clock).ShiftTotal;
         State = PlaybackState.FadingIn;
         StepIndex = 0;
         _direction = 1;
@@ -483,6 +507,8 @@ internal sealed class Playback
     /// </summary>
     public void Pin(int index, double bpm)
     {
+        bpm = _own?.Bpm ?? bpm;
+        _seenShift = (_own ?? Clock).ShiftTotal;
         State = PlaybackState.Running;
         _direction = 1;
         _passes = 0;
@@ -501,6 +527,7 @@ internal sealed class Playback
             return;
         }
 
+        bpm = _own?.Bpm ?? bpm;
         Holding = false;
         var next = direction == StepDirection.Next ? (StepIndex + 1) % count : (StepIndex - 1 + count) % count;
         EnterStep(next, null, bpm);
@@ -535,13 +562,6 @@ internal sealed class Playback
         }
     }
 
-    /// <summary>Arrêt immédiat (retrait au tick courant).</summary>
-    public void Kill()
-    {
-        ExitWeight = 0;
-        State = PlaybackState.Done;
-    }
-
     /// <summary>
     /// Fait avancer la lecture de <paramref name="elapsed"/> secondes réelles (GEN-032).
     /// Renvoie l'action de fin de scène à exécuter par le moteur, s'il y en a une.
@@ -553,6 +573,8 @@ internal sealed class Playback
         {
             return PlaybackAdvance.None;
         }
+
+        bpm = _own?.Bpm ?? bpm;
 
         var result = PlaybackAdvance.None;
         if (State == PlaybackState.FadingOut)
@@ -568,8 +590,14 @@ internal sealed class Playback
         }
 
         // MOT-015 : la vitesse raccourcit ou allonge les durées de la scène (pas le fondu de sortie).
-        var scaled = _stepStartsNow ? 0 : elapsed * Speed;
+        // SCN-051 : la vitesse peut suivre l'énergie de la musique écoutée (0,5× calme, 1× à mi-énergie,
+        // 1,8× explosif : les accélérations se voient autant que les ralentissements, essai P7 exemple 23).
+        var energy = Math.Clamp(Events.Energy, 0, 1);
+        var energyFactor = Scene.EnergySpeed && Events.AudioLive ? (energy < 0.5 ? 0.5 + energy : 1 + (1.6 * (energy - 0.5))) : 1;
+        var scaled = _stepStartsNow ? 0 : elapsed * Speed * energyFactor;
         _stepStartsNow = false;
+        _own?.Advance(scaled);
+        RescaleForTempo(bpm);
         _transitionElapsed += scaled;
         UpdateContributions();
         AdvanceEffects(scaled, bpm);
@@ -585,13 +613,39 @@ internal sealed class Playback
         }
 
         _stepElapsed += scaled;
-        if (_stepElapsed + TimeEpsilon < _stepLength)
+        double carry;
+        if (Scene.Advance == StepAdvanceMode.Duration)
         {
-            return result;
-        }
+            if (_stepElapsed + TimeEpsilon < _stepLength)
+            {
+                return result;
+            }
 
-        // Une seule étape au plus par tick, le reste du temps est reporté (précision des durées, GEN-032).
-        var carry = Math.Max(0, _stepElapsed - _stepLength);
+            // Une seule étape au plus par tick, le reste du temps est reporté (précision des durées, GEN-032).
+            carry = Math.Max(0, _stepElapsed - _stepLength);
+        }
+        else
+        {
+            // MOT-017 : l'étape dure jusqu'au prochain événement musical (temps, mesure, impulsion), tous les N.
+            var every = Math.Max(1, Scene.AdvanceEvery);
+            _eventCount += CountEvents();
+            _eventProgress = (_eventCount + (scaled > 0 ? (_own ?? Clock).Phase : 0)) / every;
+            if (Scene.Steps[Math.Min(StepIndex, Scene.Steps.Count - 1)].AutoAdvance && _stepElapsed + TimeEpsilon >= _stepLength)
+            {
+                // Flash bref : l'étape finit toute seule, l'événement suivant ne sert qu'aux autres étapes.
+                carry = Math.Max(0, _stepElapsed - _stepLength);
+                _eventCount = 0;
+            }
+            else if (_eventCount < every)
+            {
+                return result;
+            }
+            else
+            {
+                _eventCount = 0;
+                carry = 0;
+            }
+        }
         var next = NextStep(random, out var endReached);
         if (endReached)
         {
@@ -683,6 +737,12 @@ internal sealed class Playback
         _curve = step.Curve;
         _switch = step.Switch;
         _stepLength = stepFade + step.Hold.ToSeconds(bpm);
+        _stepBpm = bpm;
+        _eventCount = 0;
+        _eventProgress = 0;
+        _stepFade = stepFade;
+        _fadeMusical = forcedFade is null && step.Fade.Unit != DurationUnit.Seconds;
+        _holdMusical = step.Hold.Unit != DurationUnit.Seconds;
         _stepElapsed = 0;
         _transitionElapsed = 0;
         _transitionEnd = stepFade;
@@ -734,8 +794,9 @@ internal sealed class Playback
             _effectCurrent[e] = instance;
             if (_effectWeight[e] <= 0)
             {
-                // Un effet qui arrive commence au début de son cycle.
-                _effectPhase[e] = 0;
+                // Un effet qui arrive commence au début de son cycle ; un effet en temps musicaux se cale sur l'horloge (MOT-062).
+                var entering = _instanceDefinition[instance].Period;
+                _effectPhase[e] = entering.Unit == DurationUnit.Seconds ? 0 : ClockCycle((_own ?? Clock).EffectivePosition, entering);
             }
         }
     }
@@ -754,6 +815,9 @@ internal sealed class Playback
         Array.Clear(EffectWeight);
         Array.Clear(EffectOffset);
         Array.Clear(EffectRelative);
+        var clockShift = (_own ?? Clock).ShiftTotal;
+        var shift = clockShift - _seenShift;
+        _seenShift = clockShift;
         var progress = _effectFade <= 0 ? 1 : Math.Clamp(_transitionElapsed / _effectFade, 0, 1);
         for (var e = 0; e < _effectIds.Length; e++)
         {
@@ -768,6 +832,12 @@ internal sealed class Playback
             var effect = _instanceDefinition[instance];
             var period = Math.Max(0.02, effect.Period.ToSeconds(bpm));
             _effectPhase[e] += scaled / period;
+            if (shift != 0 && effect.Period.Unit != DurationUnit.Seconds)
+            {
+                // MOT-062 : un recalage de l'horloge (tap, « 1 ici », latence) déplace aussi le cycle de l'effet.
+                _effectPhase[e] += ClockCycle(shift, effect.Period);
+            }
+
             if (weight <= 0)
             {
                 continue;

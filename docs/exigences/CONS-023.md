@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/FixtureFadersViewModel.cs` : `SelectRange`, `StartDiscovery` (réutilisés sans changement, le composant est le même en Console mode appareils qu'à la bibliothèque, GEN-004).
+- `src/Luxia.UI.Modules.Console/FixtureFadersViewModel.cs` : `SelectRange`, `StartDiscovery` (réutilisés sans changement, le composant est le même en Console mode appareils qu'à la bibliothèque, GEN-004).
 
 ## Tests
 

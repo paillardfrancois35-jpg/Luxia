@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `AddFixtureCommand` (modèle, mode, univers, adresse, nom de base) ; copie du modèle dans le projet (GEN-053) à l'ajout.
-- `src/Dmx.UI.Modules.Installation/InstallationView.axaml` : panneau « Ajouter un appareil ».
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `AddFixtureCommand` (modèle, mode, univers, adresse, nom de base) ; copie du modèle dans le projet (GEN-053) à l'ajout.
+- `src/Luxia.UI.Modules.Installation/InstallationView.axaml` : panneau « Ajouter un appareil ».
 
 ## Tests
 

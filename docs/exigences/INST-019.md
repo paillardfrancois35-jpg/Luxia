@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `ToggleIdentifyFixture` (par appareil), `IdentifyNextCommand` (chenillard, avance manuelle dans l'ordre du patch).
-- `src/Dmx.UI.Modules.Installation/InstallationView.axaml` : bouton Identifier par ligne.
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `ToggleIdentifyFixture` (par appareil), `IdentifyNextCommand` (chenillard, avance manuelle dans l'ordre du patch).
+- `src/Luxia.UI.Modules.Installation/InstallationView.axaml` : bouton Identifier par ligne.
 
 ## Tests
 

@@ -17,10 +17,10 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs`
-- `src/Dmx.Output/Arduino/ArduinoOutputDriver.cs`
-- `src/Dmx.Output/Arduino/EnttecProtocol.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsViewModel.cs`
+- `src/Luxia.Core/Settings/Preferences.cs`
+- `src/Luxia.Output/Arduino/ArduinoOutputDriver.cs`
+- `src/Luxia.Output/Arduino/EnttecProtocol.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsViewModel.cs`
 
 ## Tests
 

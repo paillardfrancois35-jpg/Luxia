@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/AutoSelections.cs` : `Build` (jamais persistées, D24).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `AutoSelections`, recalculées à chaque `LoadAll`.
+- `src/Luxia.Patch/Rules/AutoSelections.cs` : `Build` (jamais persistées, D24).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `AutoSelections`, recalculées à chaque `LoadAll`.
 
 ## Tests
 

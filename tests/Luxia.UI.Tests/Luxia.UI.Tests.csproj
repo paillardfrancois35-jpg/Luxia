@@ -10,6 +10,7 @@
     <PackageReference Include="Shouldly" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Outputs/Luxia.UI.Modules.Outputs.csproj" />
+    <ProjectReference Include="../../src/Luxia.UI.Modules.Audio/Luxia.UI.Modules.Audio.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Library/Luxia.UI.Modules.Library.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Installation/Luxia.UI.Modules.Installation.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Simulator/Luxia.UI.Modules.Simulator.csproj" />

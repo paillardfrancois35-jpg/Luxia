@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Luxia.UI.Modules.Live/LiveItems.cs` (`LayerColumnViewModel`, `LiveSceneViewModel`)
+- `src/Luxia.UI.Modules.Live/LayerColumnViewModel.cs`, `src/Luxia.UI.Modules.Live/LiveSceneViewModel.cs`
 - `src/Luxia.UI.Modules.Live/LiveView.axaml`
 
 ## Tests

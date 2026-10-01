@@ -82,6 +82,30 @@
           </Grid>
         </Expander>
 
+        <!-- Au rythme (MOT-017, MOT-018, MOT-020) : avancer, démarrer et battre au tempo de l'horloge musicale -->
+        <Expander IsExpanded="False">
+          <Expander.Header>
+            <TextBlock Text="{Binding RhythmHeader}" TextWrapping="Wrap" ToolTip.Tip="{Binding RhythmHeader}" />
+          </Expander.Header>
+          <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+            <TextBlock Classes="label" Text="Étape suivante" />
+            <ComboBox Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.AdvanceOptions}" SelectedItem="{Binding Advance}" HorizontalAlignment="Stretch"
+                      ToolTip.Tip="Ce qui fait passer à l'étape suivante : la durée de l'étape, ou un événement musical (les basses et aigus avancent au temps tant qu'aucune musique n'est écoutée)" />
+            <TextBlock Grid.Row="1" Classes="label" Text="Fréquence" IsVisible="{Binding ShowFrequency}" />
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Frequencies}" SelectedItem="{Binding Frequency}" HorizontalAlignment="Stretch" IsVisible="{Binding ShowFrequency}"
+                      ToolTip.Tip="Combien d'étapes pour chaque événement : ×2 et ×4 passent deux ou quatre étapes par temps (ou par mesure) ; ÷ 2, ÷ 4, ÷ 8 n'en passent qu'une toutes les 2, 4, 8 fois. ×2 et ×4 ne s'appliquent pas aux basses et aux aigus." />
+            <TextBlock Grid.Row="2" Classes="label" Text="Démarrage" />
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.QuantizeOptions}" SelectedItem="{Binding Quantize}" HorizontalAlignment="Stretch"
+                      ToolTip.Tip="La scène attend le temps, la mesure ou la phrase suivante pour démarrer ; un second clic pendant l'attente l'annule" />
+            <CheckBox Grid.Row="5" Grid.Column="1" Content="La vitesse suit l'énergie de la musique" IsChecked="{Binding EnergySpeed}" IsVisible="{Binding ShowEnergySpeed}"
+                      ToolTip.Tip="Plus la musique est énergique, plus la scène va vite (de 0,5× à 1,8×) ; sans écoute, vitesse normale" />
+            <CheckBox Grid.Row="3" Grid.Column="1" Content="Horloge propre (tempo fixe de la scène)" IsChecked="{Binding HasOwnClock}" IsVisible="{Binding ShowOwnClock}"
+                      ToolTip.Tip="La scène bat à son propre tempo au lieu de suivre la musique (mouvement lent à 30 BPM pendant que la musique est à 128)" />
+            <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding OwnBpm}" Minimum="20" Maximum="400" Increment="1" FormatString="0.#" Width="150" HorizontalAlignment="Left"
+                           IsEnabled="{Binding HasOwnClock}" IsVisible="{Binding ShowOwnClock}" />
+          </Grid>
+        </Expander>
+
         <!-- Assistants (SCN-014) -->
         <Expander Header="Assistant : générer les étapes" IsExpanded="False">
           <StackPanel Spacing="6">
@@ -116,13 +140,15 @@
         <!-- Étape choisie -->
         <Expander Header="{Binding StepTitle}" IsExpanded="True">
           <StackPanel Spacing="6">
-            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
               <TextBlock Classes="label" Text="Nom de l'étape" />
               <TextBox Grid.Column="1" Text="{Binding StepName}" PlaceholderText="(sans nom)" />
               <TextBlock Grid.Row="1" Classes="label" Text="Fondu (s)" />
               <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding StepFadeSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
               <TextBlock Grid.Row="2" Classes="label" Text="Maintien (s)" />
               <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding StepHoldSeconds}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.##" Width="150" HorizontalAlignment="Left" />
+              <CheckBox Grid.Row="4" Grid.Column="1" Content="Brève : passe d'elle-même (au rythme)" IsChecked="{Binding StepAutoAdvance}" IsVisible="{Binding ShowFrequency}"
+                        ToolTip.Tip="Quand la scène avance sur un événement musical : cette étape ne l'attend pas, elle passe à la suivante au bout de son fondu et de son maintien. Pour un flash bref sur un kick : étape allumée brève, puis étape éteinte qui attend le kick suivant." />
               <CheckBox Grid.Row="3" Grid.Column="1" Content="Fondu par la teinte" IsChecked="{Binding StepHueFade}"
                         ToolTip.Tip="Pendant le fondu d'entrée de l'étape, les couleurs passent par la roue des teintes : rouge → vert passe par le jaune au lieu d'un brun terne (MOT-054)" />
             </Grid>

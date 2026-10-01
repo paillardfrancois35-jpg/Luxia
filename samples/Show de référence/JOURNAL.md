@@ -202,3 +202,24 @@ contrôles ciblés : vague à un quart de cycle d'écart, chenillard d'une seule
 cercle de 60° de Pan, grand cercle jamais dans la zone interdite. Trames P4 / P5 régénérées (scènes visant tout le parc :
 l'effet multi-têtes a d'autres canaux).
 
+
+## Phase P7 – Audio et tempo (2026-09-30)
+
+| Élément | Fichier | Contenu |
+|---|---|---|
+| Scènes « Phase P7 » | `scènes.json` | 8 scènes au rythme (la dernière, *Lyres allumées (sans les PAR)*, remplace *Plein feu* qui masquait le chenillard des PAR) : *Un PAR par temps (chenillard au tempo)*, *Couleur à chaque mesure*, *Flash sur le kick* (impulsions basses, au temps sans musique), *Cercle calé sur la mesure* (effet d'une mesure), *Mouvement lent à 30 BPM (horloge propre)*, *Départ à la mesure (blanc chaud)* (quantifié), *Calibration de latence* (flash sur chaque deuxième temps, pour l'écran Audio) |
+| Options de scène | `scènes.json` | `advance`, `advanceEvery`, `quantize`, `ownBpm`, `energySpeed` (doc 50 §12) |
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --scene "Un PAR par temps (chenillard au tempo)" --duree 3 --pas 0.25
+luxia-headless scenario "samples/Show de référence" mon-scenario.txt   # verbes tempo 90, tap, ajuster-tempo x2|/2|un-ici
+luxia-headless audio tests/assets/audio --rapport rapport.md           # rapport chiffré de l'analyse du son
+```
+
+### Non-régression
+
+`ReferenceShowP7Tests` : chaque scène « Phase P7 » rejouée 6 s à 120 BPM fixes et comparée à `tests/assets/golden/P7-scenes.txt` ;
+un PAR par temps, tempo du scénario, départ quantifié à la mesure, horloge propre indépendante du tempo principal.

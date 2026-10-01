@@ -1,5 +1,6 @@
 using System.Globalization;
 using Luxia.Engine.Model;
+using Luxia.Engine.Timing;
 using Luxia.Fixtures.Model;
 using Luxia.Fixtures.Rules;
 using Luxia.Scenes.Model;
@@ -271,6 +272,12 @@ public static class ShowCompiler
             FadeIn = scene.FadeIn,
             FadeOut = scene.FadeOut,
             Speed = Math.Clamp(scene.Speed, 0.1, 10),
+            Advance = scene.Advance,
+            AdvanceEvery = Math.Clamp(scene.AdvanceEvery, 1, 64),
+            AdvanceMultiplier = scene.AdvanceMultiplier is 2 or 4 ? scene.AdvanceMultiplier : 1,
+            Quantize = scene.Quantize,
+            EnergySpeed = scene.EnergySpeed,
+            OwnBpm = scene.OwnBpm is { } own ? Math.Clamp(own, MusicalClock.MinBpm, MusicalClock.MaxBpm) : null,
             Steps = steps,
         };
     }
@@ -313,7 +320,8 @@ public static class ShowCompiler
                 if (value.Spread is { } spread && item.MemberCount > 1)
                 {
                     // SCN-010 : retard réparti linéairement dans l'ordre de la sélection, dans l'unité de la répartition.
-                    // TODO(P7, MOT-016) : retard et répartition d'unités différentes (secondes / temps) convertis au tempo courant.
+                    // Limite connue (MOT-016, doc 15 §16) : un retard et une répartition d'unités différentes (secondes / temps) sont convertis une fois pour
+                    // toutes à 120 BPM ; seule la durée de l'étape et son fondu suivent le tempo. Cas rare, volontairement non traité.
                     var share = spread.Value * item.MemberIndex / (item.MemberCount - 1);
                     delay = delay.Unit == spread.Unit || delay.Value == 0
                         ? new Duration(delay.Value + share, spread.Unit)
@@ -353,6 +361,7 @@ public static class ShowCompiler
             Values = [.. values.Values.OrderBy(v => v.Parameter)],
             Effects = compiled,
             HueFade = step.HueFade,
+            AutoAdvance = step.AutoAdvance,
         };
     }
 

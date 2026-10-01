@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/SelectionRules.cs` : `Reverse`, `Odd`, `Even`, `FirstHalf`, `SecondHalf`, `OrderByPosition` (d'après le lieu actif).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `ReorderSelectionCommand`.
+- `src/Luxia.Patch/Rules/SelectionRules.cs` : `Reverse`, `Odd`, `Even`, `FirstHalf`, `SecondHalf`, `OrderByPosition` (d'après le lieu actif).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `ReorderSelectionCommand`.
 
 ## Tests
 

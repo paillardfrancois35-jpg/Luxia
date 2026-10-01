@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Controls/OutputMonitor.cs` : propriété `FixtureBoundaries`, trait entre deux canaux voisins d'appareils différents (haut/bas/gauche/droite selon le voisin réellement différent, gère le passage à la ligne des 32 colonnes).
-- `src/Dmx.Patch/Rules/PatchLookup.cs` : `FixtureRanges`.
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`, `ConsoleView.axaml.cs` : `FixtureBoundaries` transmise au moniteur à chaque rafraîchissement.
+- `src/Luxia.UI.Controls/OutputMonitor.cs` : propriété `FixtureBoundaries`, trait entre deux canaux voisins d'appareils différents (haut/bas/gauche/droite selon le voisin réellement différent, gère le passage à la ligne des 32 colonnes).
+- `src/Luxia.Patch/Rules/PatchLookup.cs` : `FixtureRanges`.
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`, `ConsoleView.axaml.cs` : `FixtureBoundaries` transmise au moniteur à chaque rafraîchissement.
 
 ## Tests
 

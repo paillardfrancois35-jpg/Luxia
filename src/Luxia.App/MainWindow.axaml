@@ -3,6 +3,7 @@
         xmlns:vm="using:Luxia.App.ViewModels"
         xmlns:console="using:Luxia.UI.Modules.Console"
         xmlns:outputs="using:Luxia.UI.Modules.Outputs"
+        xmlns:audio="using:Luxia.UI.Modules.Audio"
         xmlns:library="using:Luxia.UI.Modules.Library"
         xmlns:installation="using:Luxia.UI.Modules.Installation"
         xmlns:simulator="using:Luxia.UI.Modules.Simulator"
@@ -116,6 +117,9 @@
         </DataTemplate>
         <DataTemplate DataType="scenes:ScenesViewModel">
           <scenes:ScenesView />
+        </DataTemplate>
+        <DataTemplate DataType="audio:AudioViewModel">
+          <audio:AudioView />
         </DataTemplate>
         <DataTemplate DataType="outputs:OutputsViewModel">
           <outputs:OutputsView />

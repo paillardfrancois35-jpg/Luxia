@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/PatchUniverse.cs`, `Installation.cs`.
-- `src/Dmx.Patch/InstallationStore.cs` : `installation.json`.
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : un univers créé automatiquement au patch d'un appareil dans un univers inconnu.
+- `src/Luxia.Patch/Model/PatchUniverse.cs`, `Installation.cs`.
+- `src/Luxia.Patch/InstallationStore.cs` : `installation.json`.
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : un univers créé automatiquement au patch d'un appareil dans un univers inconnu.
 
 ## Tests
 

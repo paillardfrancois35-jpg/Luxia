@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/ConsoleView.axaml`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleView.axaml`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

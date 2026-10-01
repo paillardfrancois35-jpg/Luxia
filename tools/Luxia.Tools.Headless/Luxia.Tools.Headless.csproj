@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../../src/Luxia.Audio/Luxia.Audio.csproj" />
   </ItemGroup>
 
 </Project>

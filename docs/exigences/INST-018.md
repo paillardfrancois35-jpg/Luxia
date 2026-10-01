@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `InstallationSheet` (une ligne par appareil : nom, modèle, mode, réglage sur l'appareil, univers, adresse).
-- `src/Dmx.UI.Modules.Installation/InstallationView.axaml` : onglet « Fiche d'installation ».
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `InstallationSheet` (une ligne par appareil : nom, modèle, mode, réglage sur l'appareil, univers, adresse).
+- `src/Luxia.UI.Modules.Installation/InstallationView.axaml` : onglet « Fiche d'installation ».
 
 ## Tests
 

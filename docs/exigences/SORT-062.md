@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Simulator/SimulatorViewModel.cs` : `FrameOf`, lit `RenderEngine.CopyLastFrame` par univers utilisé.
+- `src/Luxia.UI.Modules.Simulator/SimulatorViewModel.cs` : `FrameOf`, lit `RenderEngine.CopyLastFrame` par univers utilisé.
 
 ## Tests
 

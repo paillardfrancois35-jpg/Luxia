@@ -51,6 +51,42 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private Choice<EndMode> _end = SceneOptions.Ends[0];
 
     [ObservableProperty]
+    private Choice<StepAdvanceMode> _advance = SceneOptions.Advances[0];
+
+    [ObservableProperty]
+    private Choice<int> _frequency = SceneOptions.Frequencies[2];
+
+    [ObservableProperty]
+    private IReadOnlyList<Choice<int>> _frequencies = SceneOptions.Frequencies;
+
+    [ObservableProperty]
+    private bool _showFrequency;
+
+    [ObservableProperty]
+    private bool _showOwnClock;
+
+    [ObservableProperty]
+    private bool _showEnergySpeed = true;
+
+    [ObservableProperty]
+    private string _rhythmHeader = "Au rythme";
+
+    private bool _sceneIsMusical;
+    private bool _sceneHasEffects;
+
+    [ObservableProperty]
+    private Choice<LaunchQuantize> _quantize = SceneOptions.Quantizes[0];
+
+    [ObservableProperty]
+    private bool _energySpeed;
+
+    [ObservableProperty]
+    private bool _hasOwnClock;
+
+    [ObservableProperty]
+    private decimal _ownBpm = 120;
+
+    [ObservableProperty]
     private decimal? _fadeInSeconds;
 
     [ObservableProperty]
@@ -79,6 +115,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _stepHueFade;
+
+    [ObservableProperty]
+    private bool _stepAutoAdvance;
 
     [ObservableProperty]
     private Choice<string> _wizard = Wizards[0];
@@ -126,6 +165,12 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     /// <summary>Couleurs proposées pour la scène.</summary>
     public static IReadOnlyList<string> Colors => ColumnsPanelViewModel.SceneColors;
+
+    /// <summary>Choix de l'événement qui fait avancer d'étape (MOT-017).</summary>
+    public static IReadOnlyList<Choice<StepAdvanceMode>> AdvanceOptions => SceneOptions.Advances;
+
+    /// <summary>Choix de la quantification du lancement (MOT-018).</summary>
+    public static IReadOnlyList<Choice<LaunchQuantize>> QuantizeOptions => SceneOptions.Quantizes;
 
     /// <summary>Choix de boucle.</summary>
     public static IReadOnlyList<Choice<LoopMode>> LoopOptions => SceneOptions.Loops;
@@ -328,6 +373,106 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     partial void OnEndChanged(Choice<EndMode> value) => Update(s => s with { End = value.Value }, "Fin de scène");
 
+    partial void OnAdvanceChanged(Choice<StepAdvanceMode> value)
+    {
+        Update(s => s with { Advance = value.Value }, "Étape suivante au rythme");
+        RefreshRhythmView();
+    }
+
+    partial void OnFrequencyChanged(Choice<int> value)
+    {
+        if (value is null)
+        {
+            return;
+        }
+
+        var multiplier = value.Value >= 100 ? value.Value - 100 : 1;
+        var every = value.Value >= 100 ? 1 : value.Value;
+        Update(s => s with { AdvanceEvery = every, AdvanceMultiplier = multiplier }, "Fréquence des étapes");
+        RefreshRhythmView();
+    }
+
+    /// <summary>
+    /// Volet « Au rythme » (essai P7, décision 4) : on ne montre que ce qui sert. La fréquence n'a de sens que si un événement fait
+    /// avancer ; l'horloge propre seulement si la scène est musicale ; la vitesse selon l'énergie quand la durée des étapes ou des
+    /// effets en dépend. Une phrase de résumé sur l'en-tête dit l'essentiel sans ouvrir le volet.
+    /// </summary>
+    private void RefreshRhythmView()
+    {
+        var onEvent = Advance.Value != StepAdvanceMode.Duration;
+        ShowFrequency = onEvent;
+        ShowOwnClock = HasOwnClock || onEvent || _sceneIsMusical || _sceneHasEffects;
+        ShowEnergySpeed = !onEvent || _sceneHasEffects || EnergySpeed;
+
+        var pulses = Advance.Value is StepAdvanceMode.BassPulse or StepAdvanceMode.TreblePulse;
+        var wanted = SceneOptions.Frequencies.Where(f => !pulses || f.Value < 100).ToList();
+        if (Frequency is { } current && wanted.All(f => f.Value != current.Value))
+        {
+            wanted.Add(current);
+        }
+
+        if (wanted.Count != Frequencies.Count)
+        {
+            Frequencies = wanted;
+        }
+
+        var parts = new List<string>();
+        if (onEvent)
+        {
+            var unit = Advance.Value switch
+            {
+                StepAdvanceMode.Beat => "temps",
+                StepAdvanceMode.Bar => "mesure",
+                StepAdvanceMode.BassPulse => "kick",
+                _ => "caisse claire",
+            };
+            parts.Add($"étapes sur le {unit}, {Frequency.Label.Split('(')[0].Trim()}");
+        }
+
+        if (Quantize.Value != LaunchQuantize.None)
+        {
+            parts.Add("démarrage " + Quantize.Label.ToLowerInvariant());
+        }
+
+        if (HasOwnClock)
+        {
+            parts.Add($"tempo propre {OwnBpm:0.#}");
+        }
+
+        if (EnergySpeed)
+        {
+            parts.Add("vitesse selon l'énergie");
+        }
+
+        RhythmHeader = parts.Count == 0 ? "Au rythme : rien de réglé" : "Au rythme : " + string.Join(" · ", parts);
+    }
+
+    partial void OnQuantizeChanged(Choice<LaunchQuantize> value)
+    {
+        Update(s => s with { Quantize = value.Value }, "Démarrage au rythme");
+        RefreshRhythmView();
+    }
+
+    partial void OnEnergySpeedChanged(bool value)
+    {
+        Update(s => s with { EnergySpeed = value }, "Vitesse selon l'énergie");
+        RefreshRhythmView();
+    }
+
+    partial void OnHasOwnClockChanged(bool value)
+    {
+        Update(s => s with { OwnBpm = value ? (double)Math.Clamp(OwnBpm, 20, 400) : null }, "Horloge propre de la scène");
+        RefreshRhythmView();
+    }
+
+    partial void OnOwnBpmChanged(decimal value)
+    {
+        if (HasOwnClock)
+        {
+            Update(s => s with { OwnBpm = (double)Math.Clamp(value, 20, 400) }, "Tempo propre de la scène");
+        }
+    }
+
     partial void OnFadeInSecondsChanged(decimal? value) => Update(s => s with { FadeIn = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu d'entrée");
 
     partial void OnFadeOutSecondsChanged(decimal? value) => Update(s => s with { FadeOut = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu de sortie");
@@ -339,6 +484,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     partial void OnStepFadeSecondsChanged(decimal value) => UpdateStep(s => s with { Fade = Duration.FromSeconds((double)Math.Max(0, value)) }, "Fondu de l'étape");
 
     partial void OnStepHoldSecondsChanged(decimal value) => UpdateStep(s => s with { Hold = Duration.FromSeconds((double)Math.Max(0, value)) }, "Maintien de l'étape");
+
+    partial void OnStepAutoAdvanceChanged(bool value) => UpdateStep(s => s with { AutoAdvance = value }, value ? "Étape brève au rythme" : "Étape au rythme jusqu'à l'événement");
 
     partial void OnStepHueFadeChanged(bool value) => UpdateStep(s => s with { HueFade = value }, value ? "Fondu par la teinte" : "Fondu direct des couleurs");
 
@@ -419,9 +566,19 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             SpeedPercent = (decimal)Math.Round(scene.Speed * 100);
             Loop = SceneOptions.Loops.FirstOrDefault(l => l.Value == scene.Loop) ?? SceneOptions.Loops[0];
             End = SceneOptions.Ends.FirstOrDefault(e => e.Value == scene.End) ?? SceneOptions.Ends[0];
+            Advance = SceneOptions.Advances.FirstOrDefault(a => a.Value == scene.Advance) ?? SceneOptions.Advances[0];
+            _sceneIsMusical = scene.Steps.Any(s => s.Fade.Unit != DurationUnit.Seconds || s.Hold.Unit != DurationUnit.Seconds);
+            _sceneHasEffects = scene.Steps.Any(s => s.Effects.Count > 0);
+            var code = scene.AdvanceMultiplier is 2 or 4 ? 100 + scene.AdvanceMultiplier : Math.Max(1, scene.AdvanceEvery);
+            Frequency = SceneOptions.Frequencies.FirstOrDefault(f => f.Value == code) ?? new Choice<int>(code, $"÷ {code} (un sur {code})");
+            Quantize = SceneOptions.Quantizes.FirstOrDefault(q => q.Value == scene.Quantize) ?? SceneOptions.Quantizes[0];
+            EnergySpeed = scene.EnergySpeed;
+            HasOwnClock = scene.OwnBpm is not null;
+            OwnBpm = scene.OwnBpm is { } own ? (decimal)own : 120;
             FadeInSeconds = scene.FadeIn is { } fadeIn ? (decimal)fadeIn.ToSeconds(120) : null;
             FadeOutSeconds = scene.FadeOut is { } fadeOut ? (decimal)fadeOut.ToSeconds(120) : null;
             Notes = scene.Notes;
+            RefreshRhythmView();
             var layerName = _runtime.Project.Layers.Layers.FirstOrDefault(l => l.Id == scene.LayerId)?.Name ?? "?";
             Summary = string.Create(CultureInfo.CurrentCulture, $"Couche {layerName} · {scene.Steps.Count} étape(s){(scene.VisibleInLive ? string.Empty : " · masquée du Live")}");
 
@@ -438,6 +595,7 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             StepFadeSeconds = (decimal)step.Fade.ToSeconds(120);
             StepHoldSeconds = (decimal)step.Hold.ToSeconds(120);
             StepHueFade = step.HueFade;
+            StepAutoAdvance = step.AutoAdvance;
             FillStepValues(step);
             FillWizardPalettes();
         }

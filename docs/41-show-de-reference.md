@@ -137,7 +137,7 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 | P4 | Palettes (§5, hors thèmes), scènes statiques et chenillards simples (§7) | Rendu simulateur puis matériel |
 | P5 | Couches (§6), flashs, ambiance, positions calibrées, disposition Live, affectation APC mini | **Jalon 1** : soirée manuelle avec ce show |
 | P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) — **fait le 2026-09-28** : 10 scènes « Phase P6 » (couches Effets et Mouvements), dont un piège (grand cercle ramené par la zone interdite) ; 6 thèmes dans `palettes.json` ; trames de référence `P6-scenes.txt` | Rendu |
-| P7 | Versions « au temps » / « sur kick » / « selon l'énergie » | Synchro sur morceaux au choix |
+| P7 | Scènes « Phase P7 » — **fait le 2026-09-30** : 8 scènes (*Un PAR par temps*, *Couleur à chaque mesure*, *Flash sur le kick*, *Cercle calé sur la mesure*, *Mouvement lent à 30 BPM*, *Départ à la mesure*, *Calibration de latence*, *Lyres allumées (sans les PAR)*), trames de référence `P7-scenes.txt` (tempo fixe 120 BPM) ; la vitesse selon l'énergie se règle scène par scène | Synchro sur morceaux au choix ([guide P7](demos/P7-audio-tempo.md)) |
 | P8 | Séquences (§8), shows génériques et par style (§9) | Répétition au simulateur |
 | P9 | Base musicale d'amorçage (artistes par famille), thèmes par style | Styles détectés sur une playlist |
 | P10 | Réglages du Directeur (§10), métadonnées des shows | **Jalon 2** : soirée automatique |

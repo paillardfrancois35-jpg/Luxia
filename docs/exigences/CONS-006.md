@@ -17,9 +17,9 @@
 
 ## Réalisation
 
-- `src/Dmx.Messaging/Commands/OverrideChannelsCommand.cs`
-- `src/Dmx.UI.Controls/Fader.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.Messaging/Commands/OverrideChannelsCommand.cs`
+- `src/Luxia.UI.Controls/Fader.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

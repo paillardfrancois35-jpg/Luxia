@@ -17,13 +17,13 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs`
-- `src/Dmx.Engine/TestPattern.cs`
-- `src/Dmx.Messaging/Commands/TestOutputCommand.cs`
-- `src/Dmx.Messaging/Commands/TestPatternMode.cs`
-- `src/Dmx.UI.Modules.Outputs/DriverStatusViewModel.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`
-- `src/Dmx.UI.Modules.Outputs/OutputsViewModel.cs`
+- `src/Luxia.Core/Settings/Preferences.cs`
+- `src/Luxia.Engine/TestPattern.cs`
+- `src/Luxia.Messaging/Commands/TestOutputCommand.cs`
+- `src/Luxia.Messaging/Commands/TestPatternMode.cs`
+- `src/Luxia.UI.Modules.Outputs/DriverStatusViewModel.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`
+- `src/Luxia.UI.Modules.Outputs/OutputsViewModel.cs`
 
 ## Tests
 

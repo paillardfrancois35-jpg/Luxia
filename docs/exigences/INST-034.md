@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- Non fait côté écran. `src/Dmx.Patch/Model/SelectionItem.cs` porte déjà un numéro de cellule (0 = appareil entier) ; `FixtureDecoder` décode les cellules séparément (utilisé par le simulateur).
+- Non fait côté écran. `src/Luxia.Patch/Model/SelectionItem.cs` porte déjà un numéro de cellule (0 = appareil entier) ; `FixtureDecoder` décode les cellules séparément (utilisé par le simulateur).
 - P6 : écran Installation, sélections manuelles : boutons « En cellules » (chaque barre devient ses sections, chaque effet multi-têtes ses têtes, dans l'ordre du modèle ; une cellule déjà précisée n'est pas doublée) et « Par appareil » (regroupe) ; les autres opérations (inverser, pairs, moitiés…) s'appliquent ensuite aux cellules. `SelectionRules.ExpandCells` / `CollapseCells`. Barre d'opérations passée en `WrapPanel` (11 boutons).
 - Pour un effet, la case « Cellules » du panneau Effets fait la même chose sans créer de sélection (EFF-008).
 

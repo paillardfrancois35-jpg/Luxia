@@ -20,7 +20,7 @@ la case survolée est visuellement encadrée.
 
 ## Réalisation
 
-- `src/Dmx.UI.Controls/OutputMonitor.cs` : `InvalidateVisual()` au changement de case survolée, cadre dessiné aussitôt (`HoverPen`). Le numéro de canal + la valeur étaient déjà affichés sans délai (`HoverText`, hors info-bulle standard) : seul le cadre manquait.
+- `src/Luxia.UI.Controls/OutputMonitor.cs` : `InvalidateVisual()` au changement de case survolée, cadre dessiné aussitôt (`HoverPen`). Le numéro de canal + la valeur étaient déjà affichés sans délai (`HoverText`, hors info-bulle standard) : seul le cadre manquait.
 
 ## Tests
 

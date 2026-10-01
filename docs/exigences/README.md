@@ -87,6 +87,36 @@
 <!-- INDEX:DEBUT -->
 | Fiche | Titre | Phase | Pri. | Statut |
 |---|---|---|---|---|
+| [AUD-001](AUD-001.md) | Capture du son joué par le PC | P7 | I | Validé |
+| [AUD-002](AUD-002.md) | Suivi du changement de périphérique par défaut | P7 | I | Validé |
+| [AUD-003](AUD-003.md) | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | P7 | M | Validé |
+| [AUD-004](AUD-004.md) | L'analyse est indépendante du volume | P7 | I | Validé |
+| [AUD-005](AUD-005.md) | Détection du silence | P7 | I | Validé |
+| [AUD-006](AUD-006.md) | L'analyse audio fonctionne dans son propre fil d'exécution | P7 | I | Validé |
+| [AUD-007](AUD-007.md) | Charge CPU de l'analyse < 5 % d'un cœur | P7 | M | Validé |
+| [AUD-020](AUD-020.md) | Estimation du tempo dans une plage réglable | P7 | I | Validé |
+| [AUD-021](AUD-021.md) | Suivi de la phase | P7 | I | Validé |
+| [AUD-022](AUD-022.md) | Indice de confiance | P7 | I | Validé |
+| [AUD-023](AUD-023.md) | Correction d'octave | P7 | I | Validé |
+| [AUD-024](AUD-024.md) | Détection du premier temps de la mesure | P7 | I | Partiel |
+| [AUD-025](AUD-025.md) | Tap tempo | P7 | I | Validé |
+| [AUD-026](AUD-026.md) | Changement de morceau | P7 | I | Validé |
+| [AUD-027](AUD-027.md) | Décalage de latence global réglable ± 250 ms | P7 | I | Validé |
+| [AUD-028](AUD-028.md) | Le BPM corrigé par l'utilisateur | P7 | M | Non réalisé |
+| [AUD-029](AUD-029.md) | Mesures à 4 temps par défaut | P7 | M | Validé |
+| [AUD-040](AUD-040.md) | Détection des attaques dans deux bandes | P7 | I | Validé |
+| [AUD-041](AUD-041.md) | Chaque impulsion porte une force | P7 | I | Validé |
+| [AUD-042](AUD-042.md) | Seuil de sensibilité et temps mort minimal entre deux impulsions réglables globalement | P7 | I | Validé |
+| [AUD-043](AUD-043.md) | Latence de détection < 60 ms | P7 | M | Validé |
+| [AUD-044](AUD-044.md) | Bande médiums | P7 | S | Non réalisé |
+| [AUD-060](AUD-060.md) | Mesure continue de l'énergie perçue | P7 | I | Validé |
+| [AUD-061](AUD-061.md) | Niveaux discrets avec hystérésis | P7 | I | Validé |
+| [AUD-062](AUD-062.md) | Détection de Break | P7 | I | Validé |
+| [AUD-063](AUD-063.md) | Détection de montée | P7 | M | Réalisé |
+| [AUD-064](AUD-064.md) | Tendance | P7 | M | Validé |
+| [AUD-080](AUD-080.md) | Écran Audio | P7 | I | Validé |
+| [AUD-081](AUD-081.md) | Réglages | P7 | I | Validé |
+| [AUD-082](AUD-082.md) | Enregistrement de l'analyse | P7 | M | Non réalisé |
 | [BIB-001](BIB-001.md) | Modèle de données complet d'un appareil | P2 | I | Réalisé |
 | [BIB-002](BIB-002.md) | Au moins un mode ; définitions de canaux partagées | P2 | I | Réalisé |
 | [BIB-003](BIB-003.md) | Attribut 16 bits = un seul attribut sur deux canaux | P2 | I | Réalisé |
@@ -141,6 +171,9 @@
 | [CMD-024](CMD-024.md) | Commande TesterSortie | P0 | — | Réalisé |
 | [CMD-030](CMD-030.md) | Commande Fumée | P5 | I | Validé |
 | [CMD-031](CMD-031.md) | Commande RéglerDimmerGroupe | ERG2 | I | Réalisé |
+| [CMD-040](CMD-040.md) | Commande TapTempo | P7 | I | Validé |
+| [CMD-041](CMD-041.md) | Commande ChoisirSourceTempo | P7 | I | Validé |
+| [CMD-042](CMD-042.md) | Commande AjusterTempo | P7 | I | Validé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -225,6 +258,11 @@
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
+| [EVT-020](EVT-020.md) | Événement Temps | P7 | I | Partiel |
+| [EVT-021](EVT-021.md) | Événement Impulsion | P7 | I | Partiel |
+| [EVT-022](EVT-022.md) | Événement ÉnergieChangée | P7 | I | Réalisé |
+| [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Réalisé |
+| [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Partiel |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -236,11 +274,15 @@
 | [GEN-020](GEN-020.md) | Valeurs internes normalisées 0-1 | P2 | I | Réalisé |
 | [GEN-021](GEN-021.md) | Affichage dans l'unité la plus parlante | P2 | I | Réalisé |
 | [GEN-022](GEN-022.md) | Couleurs logiques converties selon les émetteurs | P4 | I | Réalisé |
-| [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Partiel |
+| [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Réalisé |
+| [GEN-024](GEN-024.md) | Mesure à 4 temps | P7 | I | Réalisé |
+| [GEN-026](GEN-026.md) | Tempo en BPM, bornes et plages | P7 | I | Réalisé |
 | [GEN-030](GEN-030.md) | Tick à 40 Hz (25-44 Hz) | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
 | [GEN-033](GEN-033.md) | Horloges injectables | P4 | I | Réalisé |
+| [GEN-034](GEN-034.md) | L'horloge musicale continue de battre au dernier tempo connu si le signal audio disparaît | P7 | I | Validé |
+| [GEN-035](GEN-035.md) | Un décalage de latence global | P7 | M | Validé |
 | [GEN-040](GEN-040.md) | Chaîne de rendu appliquée dans l'ordre, à chaque tick | P4 | I | Réalisé |
 | [GEN-041](GEN-041.md) | Blackout et Grand Master sur les seules intensités | P4 | I | Validé |
 | [GEN-042](GEN-042.md) | Surcharges brutes soumises au blackout et à la sûreté | P4 | I | Réalisé |
@@ -342,6 +384,8 @@
 | [LIVE-009](LIVE-009.md) | Journal défilant des derniers événements | P5 | M | Réalisé |
 | [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Validé |
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
+| [LIVE-020](LIVE-020.md) | Affichage du tempo à l'écran de jeu | P7 | I | Réalisé |
+| [LIVE-021](LIVE-021.md) | Commandes de tempo à l'écran de jeu | P7 | I | Réalisé |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
@@ -367,7 +411,11 @@
 | [MOT-013](MOT-013.md) | Modes de boucle | P4 | I | Validé |
 | [MOT-014](MOT-014.md) | Fin de scène : arrêt, maintien, enchaînement | P4 | I | Validé |
 | [MOT-015](MOT-015.md) | Vitesse de lecture | P4 | I | Validé |
+| [MOT-016](MOT-016.md) | Durées musicales | P7 | I | Validé |
+| [MOT-017](MOT-017.md) | Avance à l'événement | P7 | I | Validé |
+| [MOT-018](MOT-018.md) | Quantification du lancement | P7 | M | Validé |
 | [MOT-019](MOT-019.md) | Pas à pas : étape suivante / précédente | P4 | M | Réalisé |
+| [MOT-020](MOT-020.md) | Une scène peut suivre l'horloge principale ou une horloge fixe propre | P7 | M | Validé |
 | [MOT-030](MOT-030.md) | Fondu croisé dans une couche exclusive | P4 | I | Validé |
 | [MOT-031](MOT-031.md) | Fusion entre couches et modes d'intensité | P4 | I | Réalisé |
 | [MOT-032](MOT-032.md) | Attribut non touché = valeur par défaut | P4 | I | Validé |
@@ -383,6 +431,7 @@
 | [MOT-054](MOT-054.md) | Interpolation des couleurs sans teintes « sales » | P4 | M | Validé |
 | [MOT-060](MOT-060.md) | Un effet calcule, pour chaque membre de sa sélection, une valeur = f | P6 | I | Validé |
 | [MOT-061](MOT-061.md) | Effet relatif | P6 | I | Validé |
+| [MOT-062](MOT-062.md) | Vitesse d'effet en Hz ou en temps musicaux | P7 | I | Validé |
 | [MOT-063](MOT-063.md) | Un effet entre et sort avec le poids de sa scène | P6 | M | Réalisé |
 | [MOT-070](MOT-070.md) | Blackout | P4 | I | Validé |
 | [MOT-071](MOT-071.md) | Grand Master | P4 | I | Validé |
@@ -417,6 +466,7 @@
 | [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
 | [SCN-004](SCN-004.md) | Modification groupée des durées | P4 | I | Réalisé |
 | [SCN-005](SCN-005.md) | Paramètres de lecture d'une scène | P4 | I | Réalisé |
+| [SCN-006](SCN-006.md) | Paramètres musicaux d'une scène | P7 | I | Réalisé |
 | [SCN-007](SCN-007.md) | Cibles : appareil, cellule, sélection | P4 | I | Validé |
 | [SCN-008](SCN-008.md) | Valeur directe, palette ou plage | P4 | I | Réalisé |
 | [SCN-009](SCN-009.md) | Drapeau « Visible en Live » | P4 | I | Réalisé |
@@ -435,6 +485,9 @@
 | [SCN-037](SCN-037.md) | Enregistrer depuis la sortie | P4 | M | Réalisé |
 | [SCN-038](SCN-038.md) | Copier / coller, miroir | P4 | M | Réalisé |
 | [SCN-039](SCN-039.md) | Annuler / rétablir dans l'éditeur de scènes | P4 | I | Validé |
+| [SCN-050](SCN-050.md) | Les paramètres ci-dessus sont réglables par scène | P7 | I | Partiel |
+| [SCN-051](SCN-051.md) | Modulation par l'énergie | P7 | M | Partiel |
+| [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Réalisé |
 | [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
 | [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
 | [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |
@@ -445,6 +498,7 @@
 | [SIM-008](SIM-008.md) | Zones interdites et repères du lieu | P3 | M | Non réalisé |
 | [SIM-009](SIM-009.md) | Appareils identifiés et en erreur mis en évidence | P3 | M | Réalisé |
 | [SIM-010](SIM-010.md) | Sélection au clic / au lasso | P3 | M | Réalisé |
+| [SIM-011](SIM-011.md) | Bandeau musical du simulateur | P7 | M | Partiel |
 | [SIM-012](SIM-012.md) | Protection photosensible (strobe) | P3 | I | Réalisé |
 | [SIM-013](SIM-013.md) | Vue de face | P3 | S | Non réalisé |
 | [SORT-001](SORT-001.md) | Univers vers plusieurs pilotes | P0 | I | Réalisé |

@@ -3,6 +3,7 @@ using System.Globalization;
 using Luxia.Core.Dmx;
 using Luxia.Core.Time;
 using Luxia.Engine.Model;
+using Luxia.Engine.Timing;
 using Luxia.Messaging.Commands;
 using Luxia.Messaging.Events;
 using Microsoft.Extensions.Logging;
@@ -24,7 +25,7 @@ namespace Luxia.Engine;
 /// (soumises au blackout, GEN-042) · puis test de sortie (D21) · 9 sûreté : zones interdites sur les paramètres, strobe et fumée
 /// sur les octets finaux, pour qu'aucune surcharge ni aucun test ne les contourne (GEN-042, MOT-080 à 083).
 /// </remarks>
-public sealed class RenderEngine : ICommandSink
+public sealed partial class RenderEngine : ICommandSink
 {
     private const int CommandLogCapacity = 500;
 
@@ -52,7 +53,12 @@ public sealed class RenderEngine : ICommandSink
     private long _sequence;
     private long _sequenceAtTickStart;
     private TimeSpan? _lastTick;
-    private double _bpm = 120;
+    private readonly MusicalClock _tempo = new();
+    private readonly TickEvents _events = new();
+    private readonly List<PendingLaunch> _quantized = [];
+    private PendingSceneLaunch[] _publishedPending = [];
+    private IAudioFeed? _audioFeed;
+    private TempoInfo _publishedTempo = TempoInfo.Default;
 
     // Modèle courant et tableaux alignés sur ses paramètres (réalloués seulement au chargement d'un modèle).
     private ShowModel _show = ShowModel.Empty;
@@ -137,14 +143,17 @@ public sealed class RenderEngine : ICommandSink
     public TestPatternState TestState => _testPattern.State;
 
     /// <summary>
-    /// Tempo utilisé pour convertir les durées musicales (GEN-023). Fixe (120 BPM par défaut) jusqu'à l'horloge
-    /// musicale de P7 (MOT-016).
+    /// Tempo utilisé pour convertir les durées musicales (GEN-023, MOT-016) : celui de l'horloge musicale (120 BPM fixes
+    /// par défaut). L'écrire revient à choisir la source Fixe ; les commandes CMD-040 à 042 règlent l'horloge en service.
     /// </summary>
     public double Bpm
     {
-        get => Volatile.Read(ref _bpm);
-        set => Volatile.Write(ref _bpm, Math.Clamp(value, 20, 400));
+        get => _tempo.Bpm;
+        set => _tempo.SetFixed(value);
     }
+
+    /// <summary>Horloge musicale (lecture seule pour les autres composants ; réglée par commandes).</summary>
+    internal MusicalClock Tempo => _tempo;
 
     /// <summary>Dernier état publié (mis à jour à la fin de chaque tick).</summary>
     public EngineSnapshot Snapshot
@@ -183,12 +192,16 @@ public sealed class RenderEngine : ICommandSink
         var elapsed = _lastTick is { } last ? Math.Max(0, (now - last).TotalSeconds) : 0;
         _lastTick = now;
         _sequenceAtTickStart = _sequence;
+        _tempo.Advance(elapsed);
+        ReadAudio();
 
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))
         {
             Apply(item.Command, item.ReceivedAt, now);
         }
+
+        LaunchDueQuantized(now);
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
         // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
@@ -281,7 +294,7 @@ public sealed class RenderEngine : ICommandSink
 
     private void Apply(Command command, TimeSpan receivedAt, TimeSpan now)
     {
-        var rejection = ApplyCore(command, now);
+        var rejection = ApplyCore(command, now, receivedAt);
         var entry = new CommandLogEntry(receivedAt, now, command, rejection);
         Log(entry);
         CommandApplied?.Invoke(entry);
@@ -293,7 +306,7 @@ public sealed class RenderEngine : ICommandSink
         }
     }
 
-    private string? ApplyCore(Command command, TimeSpan now)
+    private string? ApplyCore(Command command, TimeSpan now, TimeSpan receivedAt)
     {
         switch (command)
         {
@@ -377,6 +390,50 @@ public sealed class RenderEngine : ICommandSink
             case SetSceneSpeedCommand speed:
                 return SetSceneSpeed(speed);
 
+            case TapTempoCommand:
+                _tempo.Tap(receivedAt.TotalSeconds, Math.Max(0, (now - receivedAt).TotalSeconds));
+                return null;
+
+            case SetTempoSourceCommand source:
+                if (source.Bpm is { } fixedBpm)
+                {
+                    if (fixedBpm < MusicalClock.MinBpm || fixedBpm > MusicalClock.MaxBpm)
+                    {
+                        return $"BPM hors de {MusicalClock.MinBpm:0} à {MusicalClock.MaxBpm:0}";
+                    }
+
+                    _tempo.SetFixed(fixedBpm);
+                }
+                else
+                {
+                    _tempo.UseSource(source.Source);
+                }
+
+                return null;
+
+            case AdjustTempoCommand adjust:
+                switch (adjust.Adjustment)
+                {
+                    case TempoAdjustment.TimesTwo:
+                        _tempo.Scale(2);
+                        break;
+                    case TempoAdjustment.DivideByTwo:
+                        _tempo.Scale(0.5);
+                        break;
+                    case TempoAdjustment.AddBpm:
+                        _tempo.Nudge(adjust.Value);
+                        break;
+                    default:
+                        _tempo.ResyncBar();
+                        break;
+                }
+
+                return null;
+
+            case SetTempoLatencyCommand latency:
+                _tempo.SetLatency(latency.Seconds);
+                return null;
+
             case ShowStepCommand show:
                 return ShowStep(show);
 
@@ -458,6 +515,12 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
+        if (command.StopIfPlaying && _quantized.RemoveAll(q => q.SceneId == scene.Id) > 0)
+        {
+            // Une seconde pression sur une scène qui attend son instant musical annule l'attente (MOT-018).
+            return null;
+        }
+
         if (command.StopIfPlaying)
         {
             // Bascule (LIVE-003) : décidée ici, sur l'état exact du moteur, pas sur celui qu'affiche l'écran.
@@ -476,6 +539,14 @@ public sealed class RenderEngine : ICommandSink
                 _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", scene.Name, command.Origin);
                 return null;
             }
+        }
+
+        if (!command.Immediate && QuantizeTarget(scene.Quantize) is { } target)
+        {
+            // MOT-018 : la scène attend le prochain temps, la prochaine mesure ou la prochaine phrase.
+            _quantized.RemoveAll(q => q.SceneId == scene.Id);
+            _quantized.Add(new PendingLaunch(command, scene.Id, target));
+            return null;
         }
 
         Launch(scene, layerIndex, command.Fade?.TotalSeconds, command.Origin, command.Solo, null, now);
@@ -523,7 +594,7 @@ public sealed class RenderEngine : ICommandSink
     private void Launch(EngineScene scene, int layerIndex, double? fade, CommandOrigin origin, bool solo, Playback? replaced, TimeSpan now, bool flash = false)
     {
         var layer = _show.Layers[layerIndex];
-        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed) };
+        var playback = new Playback(scene, layerIndex, ++_sequence, origin, solo) { Flash = flash, SessionSeed = unchecked((ulong)Seed), Clock = _tempo, Events = _events };
         playback.Bind(scene, _show);
 
         // Lectures remplacées : toute la couche si elle est exclusive (MOT-030), sinon une lecture de la même scène.
@@ -608,12 +679,13 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        var cancelled = CancelQuantized(s => s?.Id == command.SceneId) > 0;
         if (found)
         {
             _logger.LogInformation("Scène « {Scene} » arrêtée (origine {Origine})", _show.Scene(command.SceneId)?.Name, command.Origin);
         }
 
-        return found ? null : "la scène ne joue pas";
+        return found || cancelled ? null : "la scène ne joue pas";
     }
 
     private string? StopLayer(StopLayerCommand command)
@@ -628,6 +700,11 @@ public sealed class RenderEngine : ICommandSink
             }
         }
 
+        CancelQuantized(s =>
+        {
+            var index = s is null ? -1 : LayerIndexFor(s.LayerId, fallback: false);
+            return index >= 0 && (layerIndex >= 0 ? index == layerIndex : command.Everything || !_show.Layers[index].KeepOnStopAll);
+        });
         foreach (var playback in _playbacks)
         {
             // « Tout arrêter » épargne les couches protégées (Ambiance par défaut), sauf demande expresse (COU-007).
@@ -721,7 +798,7 @@ public sealed class RenderEngine : ICommandSink
             return "aucune couche pour jouer la scène";
         }
 
-        var playback = new Playback(scene, layerIndex, ++_sequence, command.Origin, false) { Flash = true, SessionSeed = unchecked((ulong)Seed) };
+        var playback = new Playback(scene, layerIndex, ++_sequence, command.Origin, false) { Flash = true, SessionSeed = unchecked((ulong)Seed), Clock = _tempo, Events = _events };
         playback.Bind(scene, _show);
         playback.Pin(step, Bpm);
         _shownStep = playback;
@@ -1235,6 +1312,8 @@ public sealed class RenderEngine : ICommandSink
             _publishedSmoking = _safety.ManualSmoke;
             _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
+            _publishedPending = _quantized.Count == 0 ? [] : [.. _quantized.Select(q => new PendingSceneLaunch(q.SceneId, Math.Max(0, q.TargetBeat - _tempo.EffectivePosition)))];
+            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds);
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
             Array.Copy(_overrides, _publishedOverrides, _overrides.Length);
@@ -1284,6 +1363,8 @@ public sealed class RenderEngine : ICommandSink
             Smoking = _publishedSmoking,
             SmokeRestSeconds = _publishedSmokeRest,
             GrandMaster = _publishedGrandMaster,
+            Tempo = _publishedTempo,
+            PendingLaunches = _publishedPending,
             ActiveLimits = _publishedLimits,
         };
     }
@@ -1317,6 +1398,9 @@ public sealed class RenderEngine : ICommandSink
             _logCount = Math.Min(_logCount + 1, CommandLogCapacity);
         }
     }
+
+    /// <summary>Lancement quantifié en attente de son instant musical (MOT-018).</summary>
+    private sealed record PendingLaunch(LaunchSceneCommand Command, Guid SceneId, double TargetBeat);
 
     /// <summary>Chargement d'un modèle, transporté par la file des commandes pour être appliqué entre deux ticks.</summary>
     private sealed record LoadShowRequest(ShowModel Show) : Command(CommandOrigin.Tool);

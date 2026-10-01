@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.Output/OutputDriverStatus.cs`
+- `src/Luxia.Output/OutputDriverStatus.cs`
 
 ## Tests
 

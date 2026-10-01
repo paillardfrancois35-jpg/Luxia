@@ -39,7 +39,7 @@ AppBuilder.Configure<App>()
     .SetupWithoutStarting();
 
 var clock = new VirtualClock();
-var runtime = new LuxiaRuntime(new DataPaths(Path.Combine(root, "Documents"), Path.Combine(root, "AppData")), NullLoggerFactory.Instance, new NoSerialPorts(), clock);
+var runtime = new LuxiaRuntime(new DataPaths(Path.Combine(root, "Documents"), Path.Combine(root, "AppData")), NullLoggerFactory.Instance, new NoSerialPorts(), clock, null, new SyntheticSources());
 runtime.Project.Open(project);
 var vm = new MainWindowViewModel(runtime, new NoDialogs());
 // Taille facultative (3e et 4e arguments) : vérifier un écran de portable (1366 × 768) ou plein HD.
@@ -231,6 +231,20 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Installation.Install
     }
 }
 
+// Écran Audio « en écoute » (essai P7, décision 2) : une musique synthétique (kick, caisse claire, charleston, basse à 124 BPM) est jouée en temps réel.
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Audio.AudioViewModel) is { Page: Luxia.UI.Modules.Audio.AudioViewModel audio } audioPage)
+{
+    vm.SelectedPage = audioPage;
+    runtime.SetAudioMode(true);
+    for (var i = 0; i < 400; i++)
+    {
+        Tick(1);
+        Thread.Sleep(25);
+    }
+
+    Capture("Audio - en écoute");
+}
+
 // Pas de fermeture par le cycle de vie Avalonia en mode sans écran : on s'arrête directement une fois les images écrites.
 Environment.Exit(0);
 return 0;
@@ -256,4 +270,93 @@ internal sealed class NoDialogs : IDialogService
 
     public Task<IReadOnlyList<string>> PickFilesAsync(string title, bool allowMultiple, params string[] extensions) =>
         Task.FromResult<IReadOnlyList<string>>([]);
+}
+
+/// <summary>Source de son synthétique : un morceau à 124 BPM joué en temps réel (kick, caisse claire, charleston, basse).</summary>
+internal sealed class SyntheticSources : Luxia.Audio.IAudioSourceFactory
+{
+    public Luxia.Audio.IAudioSource CreateLoopback() => new SyntheticSource();
+
+    public Luxia.Audio.IAudioSource Create(string? deviceId) => new SyntheticSource();
+
+    public IReadOnlyList<Luxia.Audio.AudioDeviceInfo> Devices() => [new("synthese", "Haut-parleurs (synthétique)", false)];
+}
+
+/// <summary>Voir <see cref="SyntheticSources"/>.</summary>
+internal sealed class SyntheticSource : Luxia.Audio.IAudioSource
+{
+    private const int Rate = 44100;
+    private const double Bpm = 124;
+    private readonly Random _noise = new(7);
+    private Thread? _thread;
+    private volatile bool _run;
+
+    public string Name => "Haut-parleurs (synthétique)";
+
+    public int SampleRate => Rate;
+
+    public event EventHandler<Luxia.Audio.AudioBlock>? BlockAvailable;
+
+    public event EventHandler<Exception?>? Stopped
+    {
+        add { }
+        remove { }
+    }
+
+    public void StartCapture()
+    {
+        _run = true;
+        _thread = new Thread(Loop) { IsBackground = true, Name = "synthese" };
+        _thread.Start();
+    }
+
+    public void StopCapture() => _run = false;
+
+    public void Dispose() => _run = false;
+
+    private void Loop()
+    {
+        const int block = 882; // 20 ms
+        var buffer = new float[block];
+        long position = 0;
+        var started = System.Diagnostics.Stopwatch.StartNew();
+        while (_run)
+        {
+            for (var i = 0; i < block; i++)
+            {
+                buffer[i] = Sample((position + i) / (double)Rate);
+            }
+
+            position += block;
+            BlockAvailable?.Invoke(this, new Luxia.Audio.AudioBlock(buffer.AsMemory(0, block)));
+            var wait = (int)((position * 1000.0 / Rate) - started.ElapsedMilliseconds);
+            if (wait > 0)
+            {
+                Thread.Sleep(wait);
+            }
+        }
+    }
+
+    private float Sample(double t)
+    {
+        var beat = 60.0 / Bpm;
+        var inBeat = t % beat;
+        var beatNumber = (long)(t / beat);
+        var value = 0.0;
+        // Kick à chaque temps : sinus qui descend de 110 à 45 Hz.
+        value += 0.7 * Math.Sin(2 * Math.PI * (45 * inBeat + (65 * (1 - Math.Exp(-inBeat * 30)) / 30 * 0) + (65 / 30.0 * (1 - Math.Exp(-30 * inBeat))))) * Math.Exp(-inBeat * 14);
+        // Caisse claire sur les temps 2 et 4 : bruit.
+        if (beatNumber % 2 == 1)
+        {
+            value += 0.35 * ((_noise.NextDouble() * 2) - 1) * Math.Exp(-inBeat * 22);
+        }
+
+        // Charleston sur les contretemps : bruit bref.
+        var off = (t + (beat / 2)) % beat;
+        value += 0.15 * ((_noise.NextDouble() * 2) - 1) * Math.Exp(-off * 60);
+        // Basse tenue sur la fondamentale, qui monte d'une quarte toutes les quatre mesures.
+        var note = (beatNumber / 16) % 2 == 0 ? 55.0 : 73.4;
+        value += 0.25 * Math.Sin(2 * Math.PI * note * t) * (0.6 + (0.4 * Math.Exp(-inBeat * 4)));
+        return (float)Math.Clamp(value * 0.7, -1, 1);
+    }
 }

@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.Output/Arduino/ArduinoOutputDriver.cs`
+- `src/Luxia.Output/Arduino/ArduinoOutputDriver.cs`
 
 ## Tests
 

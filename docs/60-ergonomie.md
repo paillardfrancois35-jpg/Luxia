@@ -189,6 +189,27 @@ lieux évidents au lieu d'un sélecteur de modes :
 - **Dimmers de groupe** : arbre de groupes (Installation › Gestion des dimmers), règle proportionnelle, seconde platine MIDI (doc 18b).
 - Verrou soirée : la fenêtre d'édition ne s'ouvre pas ; jouer, arrêter et retoucher les dimmers restent permis.
 
+### 4.10 Tempo, écran Audio et volet « Au rythme » (essai P7, lot ergonomique)
+
+Décisions de l'utilisateur à l'essai de P7 (2026-10-01) ; analyse : [chantiers/analyse-ergonomique-p7.md](chantiers/analyse-ergonomique-p7.md) §9.
+
+- **Un seul interrupteur « 🎧 Audio »** dans le bloc BPM : gris = tempo réglé à la main, bleu = l'horloge suit la musique écoutée. Il remplace
+  la case « Écoute », le bouton « Fixer » et l'étiquette de source. L'écran Audio porte la même case (même réglage, pas deux).
+- **Audio actif** : le champ BPM, TAP, − et + sont grisés (le tempo vient du son) ; **×2, ÷ 2 et « 1 ici » restent actifs** (ils corrigent
+  l'analyse). La **confiance** (vert / orange / rouge) s'affiche à droite de l'interrupteur, à largeur fixe.
+- **BPM saisissable** : taper une valeur puis **Entrée** (ou quitter le champ) fixe le tempo ; l'affichage ne l'écrase pas pendant la frappe.
+- **TAP s'allume** un instant à chaque frappe, au bouton comme à la touche **T**.
+- **Rappel du tempo en lecture seule** (BPM + quatre voyants, le 1 en orange) dans le **Simulateur** et l'écran **Audio** : même composant
+  (`TempoGlance`), même présentation partout.
+- **Écran Audio en une page** à 1920 × 1080, sans défilement : à gauche le direct (écoute, tempo, énergie, événements) ; à droite les
+  **niveaux en colonnes verticales** et, **repliés**, Réglages et Calibration.
+- **Volet « Au rythme »** : on ne montre que ce qui sert. La **fréquence** n'apparaît que si un événement fait avancer l'étape ; l'**horloge
+  propre** si la scène est musicale ; la **vitesse selon l'énergie** quand la durée des étapes ou des effets en dépend. L'en-tête résume
+  l'essentiel (« Au rythme : étapes sur le temps, ×2 · démarrage à la prochaine mesure »).
+- **Fréquence** (remplace « Tous les N ») : ×4, ×2, ×1, ÷ 2, ÷ 4, ÷ 8. ×2 et ×4 passent deux ou quatre étapes par temps (ou par mesure) ; ÷
+  n'en passe qu'une toutes les N fois ; ×2 et ×4 n'existent pas pour les impulsions des basses et des aigus.
+- **Reporté** : titre du morceau (avec P9), mesure à trois temps (avec P8, GEN-025).
+
 ## 5. Composants communs (catalogue)
 
 Tous dans `Luxia.UI.Controls`, dessinés en 2D Avalonia, chacun avec son test et sa capture dans une **galerie** (écran de
@@ -360,6 +381,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-10-01 | §4.10 : interrupteur Audio du bloc BPM, écran Audio en une page, volet « Au rythme » simplifié et fréquence ÷8 à ×4 (lot ergonomique de P7). |
 | 2026-09-29 | §4.9 : écran de jeu et fenêtre d'édition (chantier « Contrôle 2 »), qui remplace le modèle à trois modes du §4.1 ; tailles minimales des cibles (§4.5). |
 | 2026-09-28 | **Chantier validé** par l'utilisateur (1.005.237), fusionné dans `main`, étiquette `v1.005`. |
 | 2026-09-28 | Essai de l'écran Contrôle par l'utilisateur, au matériel (guide §0 à §7, 1.005.192 → 1.005.226) : corrections au fil de l'eau (ERG-001, 013, 014, 016, 017, 018, 019, 023) ; ERG-025 scènes resserrées, ERG-026 Stop / Tout stopper, ERG-027 marges ; choix C12 à C14. |
