@@ -1,6 +1,6 @@
 # Guide de re-vérification P7 – troisième série (mini-guide)
 
-> Version à essayer : **1.009.096** (annoncée par la discussion de développement). Ne reprend que les trois corrections issues de la
+> Version à essayer : **1.009.099** (annoncée par la discussion de développement). Ne reprend que les trois corrections issues de la
 > re-vérification 2. Résultats : lignes à ajouter (ajout seul) à la fin de [essais/P7-resultats.md](../essais/P7-resultats.md), même grille ✅ / ❌ / 💡.
 
 | # | Exemple | À faire | À observer |

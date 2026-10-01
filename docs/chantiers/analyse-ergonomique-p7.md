@@ -177,7 +177,7 @@ Passage de chaque ligne du §3 à ✅ (fait et vu à l'essai), ❌ (refusée) ou
 | E6 | ✅ | Confiance en couleur à droite de l'interrupteur (E2) |
 | E7 | ⏳ | Le résumé de l'en-tête « Au rythme » aide ; l'horloge à 120 BPM fixes n'est toujours pas signalée sur la scène |
 | E8 | ⏳ | Info-bulle du départ quantifié à vérifier |
-| E9 | ✅ | Volet résumé en tête, éléments masqués, fréquence ÷ 8 à × 4 (E9 à E12) ; en-tête complet et info-bulle corrigés en 1.009.096 |
+| E9 | ✅ | Volet résumé en tête, éléments masqués, fréquence ÷ 8 à × 4 (E9 à E12) ; en-tête complet et info-bulle corrigés en 1.009.099 |
 | E10 | ⏳ | La barre de phase reste dans le panneau Tempo de l'écran Audio |
 | E11 | ⏳ | États vides toujours muets |
 | E12 | ⏳ | Calibration : état du bouton et mesure automatique non faits |
