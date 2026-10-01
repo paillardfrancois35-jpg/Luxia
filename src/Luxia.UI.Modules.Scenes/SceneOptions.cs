@@ -41,6 +41,20 @@ public static class SceneOptions
         new(StepAdvanceMode.TreblePulse, "Sur les aigus (caisse claire)"),
     ];
 
+    /// <summary>
+    /// Fréquence des étapes (essai P7, décision 5) : le code est le nombre d'événements entre deux étapes (1, 2, 4, 8) ou, à partir de 100,
+    /// le nombre d'étapes par temps ou par mesure (102 = ×2, 104 = ×4).
+    /// </summary>
+    public static IReadOnlyList<Choice<int>> Frequencies { get; } =
+    [
+        new(104, "×4 (quatre fois plus vite)"),
+        new(102, "×2 (deux fois plus vite)"),
+        new(1, "×1 (à chaque événement)"),
+        new(2, "÷ 2 (un sur deux)"),
+        new(4, "÷ 4 (un sur quatre)"),
+        new(8, "÷ 8 (un sur huit)"),
+    ];
+
     /// <summary>Quantification du lancement (MOT-018).</summary>
     public static IReadOnlyList<Choice<LaunchQuantize>> Quantizes { get; } =
     [

@@ -31,6 +31,12 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
     [ObservableProperty]
     private string _hoverText = "Survolez un appareil.";
 
+    [ObservableProperty]
+    private string _bpmText = "—";
+
+    [ObservableProperty]
+    private int _beatInBar;
+
     /// <summary>Crée l'écran.</summary>
     public SimulatorViewModel(LuxiaRuntime runtime)
     {
@@ -62,6 +68,11 @@ public sealed partial class SimulatorViewModel : ViewModelBase, IRefreshable
     {
         OnPropertyChanged(nameof(Source));
         OnPropertyChanged(nameof(IsPreview));
+
+        // Rappel du tempo (essai P7) : on voit le rythme que suivent les effets sans quitter le simulateur.
+        var tempo = _runtime.Engine.Snapshot.Tempo;
+        BpmText = tempo.Bpm.ToString("0.#", System.Globalization.CultureInfo.CurrentCulture);
+        BeatInBar = tempo.BeatInBar;
         if (!HasProject)
         {
             return;

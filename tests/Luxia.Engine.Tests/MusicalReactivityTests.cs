@@ -17,7 +17,7 @@ public sealed class MusicalReactivityTests
         _layer = _show.Layer("Tout", 1);
     }
 
-    private EngineScene TwoSteps(StepAdvanceMode advance = StepAdvanceMode.Beat, int every = 1, LaunchQuantize quantize = LaunchQuantize.None, double? ownBpm = null) =>
+    private EngineScene TwoSteps(StepAdvanceMode advance = StepAdvanceMode.Beat, int every = 1, LaunchQuantize quantize = LaunchQuantize.None, double? ownBpm = null, int multiplier = 1) =>
         _show.Scene(new EngineScene
         {
             Id = Guid.NewGuid(),
@@ -25,6 +25,7 @@ public sealed class MusicalReactivityTests
             LayerId = _layer.Id,
             Advance = advance,
             AdvanceEvery = every,
+            AdvanceMultiplier = multiplier,
             Quantize = quantize,
             OwnBpm = ownBpm,
             Steps = [Step(0, 60, V(_par["r"], 1)), Step(0, 60, V(_par["g"], 1))],
@@ -54,6 +55,21 @@ public sealed class MusicalReactivityTests
         engine.Run(atSeconds - 0.05);
         engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
         engine.Run(0.05);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
+    }
+
+    [Theory]
+    [InlineData(StepAdvanceMode.Beat, 2, 0.25)]
+    [InlineData(StepAdvanceMode.Beat, 4, 0.125)]
+    [InlineData(StepAdvanceMode.Bar, 4, 0.5)]
+    [Trait("Exigence", "MOT-017")]
+    public void Step_WithAMultiplier_AdvancesSeveralTimesPerBeatOrBar(StepAdvanceMode mode, int multiplier, double atSeconds)
+    {
+        var (engine, scene) = Play(TwoSteps(advance: mode, multiplier: multiplier));
+
+        engine.Run(atSeconds - 0.05);
+        engine.Playback(scene)!.Value.StepIndex.ShouldBe(0);
+        engine.Run(0.06);
         engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
     }
 

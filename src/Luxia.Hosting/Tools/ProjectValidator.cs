@@ -292,6 +292,11 @@ public static class ProjectValidator
                 yield return Warning(file, where, "advanceEvery", "nombre d'événements hors de 1 à 64 : il sera borné (MOT-017)");
             }
 
+            if (scene.AdvanceMultiplier is not (1 or 2 or 4))
+            {
+                yield return Warning(file, where, "advanceMultiplier", "multiplicateur de fréquence autre que 1, 2 ou 4 : il sera ramené à 1 (MOT-017)");
+            }
+
             if (scene.OwnBpm is { } ownBpm && (ownBpm < 20 || ownBpm > 400))
             {
                 yield return Warning(file, where, "ownBpm", "tempo propre hors de 20 à 400 BPM : il sera borné (MOT-020)");
