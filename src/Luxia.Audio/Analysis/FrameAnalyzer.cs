@@ -146,6 +146,7 @@ internal sealed class FrameAnalyzer
             Math.Sqrt(bass),
             Math.Sqrt(mid),
             Math.Sqrt(treble),
-            silent);
+            silent,
+            gain);
     }
 }

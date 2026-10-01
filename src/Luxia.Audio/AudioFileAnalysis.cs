@@ -38,7 +38,13 @@ public static class AudioFileAnalysis
     /// <param name="maxSeconds">Durée maximale analysée (0 = tout le fichier).</param>
     /// <param name="skipSeconds">Début ignoré (introductions, silence).</param>
     /// <param name="trace">Reçoit l'état de l'analyse chaque seconde (diagnostic).</param>
-    public static FileAnalysis Analyze(string path, double maxSeconds = 0, double skipSeconds = 0, Action<double, AnalysisState>? trace = null)
+    /// <param name="fine">Reçoit, toutes les 512 échantillons, l'instant, l'état et les impulsions (basses, aigus) reconnues (diagnostic).</param>
+    public static FileAnalysis Analyze(
+        string path,
+        double maxSeconds = 0,
+        double skipSeconds = 0,
+        Action<double, AnalysisState>? trace = null,
+        Action<double, AnalysisState, int, int>? fine = null)
     {
         using var reader = new MediaFoundationReader(path);
         ISampleProvider samples = reader.ToSampleProvider();
@@ -57,6 +63,11 @@ public static class AudioFileAnalysis
         }
 
         var analyzer = new AudioAnalyzer(44100);
+        if (double.TryParse(Environment.GetEnvironmentVariable("LUXIA_SENS"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var sens))
+        {
+            analyzer.PulseSensitivity = sens;
+        }
+
         var events = new List<AudioEvent>();
         analyzer.EventRaised += events.Add;
         var bassTotal = 0;
@@ -83,12 +94,17 @@ public static class AudioFileAnalysis
             total += read;
             if (start < read)
             {
-                analyzer.Push(block.AsSpan(start, read - start));
-                var (bass, treble) = analyzer.TakePulses();
-                bassTotal += bass;
-                trebleTotal += treble;
-                energySum += analyzer.State.Energy;
-                energyCount++;
+                for (var offset = start; offset < read; offset += 512)
+                {
+                    var length = Math.Min(512, read - offset);
+                    analyzer.Push(block.AsSpan(offset, length));
+                    var (bass, treble) = analyzer.TakePulses();
+                    bassTotal += bass;
+                    trebleTotal += treble;
+                    energySum += analyzer.State.Energy;
+                    energyCount++;
+                    fine?.Invoke(((total - read) + offset + length - skip) / 44100.0, analyzer.State, bass, treble);
+                }
             }
 
             var seconds = (total - skip) / 44100.0;

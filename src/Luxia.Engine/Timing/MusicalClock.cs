@@ -35,6 +35,9 @@ public sealed class MusicalClock
     private bool _audioLocked;
     private int _barMismatch;
     private bool _barManual;
+    private double _audioScale = 1;
+    private double _lastRawBpm;
+    private int _silentTicks;
 
     /// <summary>Confiance minimale de l'analyse pour que l'horloge la suive ; en dessous, elle garde son tempo (AUD-022, GEN-034).</summary>
     public const double MinAudioConfidence = 0.3;
@@ -48,7 +51,7 @@ public sealed class MusicalClock
     /// <summary>Indice de confiance du tempo (0 à 1) : 1 pour Fixe et Tap, celui de l'analyse pour Audio (AUD-022).</summary>
     public double Confidence => Volatile.Read(ref _confidence);
 
-    /// <summary>Décalage de latence global en secondes (±0,25 s, GEN-035, AUD-027).</summary>
+    /// <summary>Décalage de latence global en secondes (±0,5 s, GEN-035, AUD-027).</summary>
     public double LatencySeconds => Volatile.Read(ref _latency);
 
     /// <summary>Position depuis l'origine, en temps (fractions comprises), sans décalage de latence.</summary>
@@ -125,6 +128,8 @@ public sealed class MusicalClock
         _audioLocked = false;
         _barMismatch = 0;
         _barManual = false;
+        _audioScale = 1;
+        _lastRawBpm = 0;
     }
 
     /// <summary>
@@ -135,19 +140,45 @@ public sealed class MusicalClock
     public void FollowAudio(in AudioReading reading)
     {
         Volatile.Write(ref _confidence, reading.Live ? reading.Confidence : 0);
-        if (!reading.Live || reading.Bpm <= 0 || reading.Confidence < MinAudioConfidence || !reading.HasGrid)
+        if (!reading.Live)
+        {
+            // Plus de son depuis une seconde et demie : le prochain morceau repart sans correction d'octave.
+            if (++_silentTicks >= 60)
+            {
+                _audioScale = 1;
+                _lastRawBpm = 0;
+            }
+
+            return;
+        }
+
+        _silentTicks = 0;
+        if (reading.Bpm <= 0 || reading.Confidence < MinAudioConfidence || !reading.HasGrid)
         {
             return;
         }
 
-        var jump = Math.Abs(reading.Bpm - Bpm) / Bpm > 0.06;
+        // Correction d'octave de l'utilisateur (×2, ÷2) : elle s'applique au tempo entendu et tient jusqu'au prochain morceau.
+        // Si l'analyse change elle-même d'octave (rapport 2, 1/2, 3/2 ou 2/3), la correction s'ajuste pour garder le même tempo.
+        if (_lastRawBpm > 0)
+        {
+            var ratio = reading.Bpm / _lastRawBpm;
+            if (Math.Abs(ratio - 1) > 0.15)
+            {
+                _audioScale = IsOctaveRatio(ratio) ? _audioScale / ratio : 1;
+            }
+        }
+
+        _lastRawBpm = reading.Bpm;
+        var heard = reading.Bpm * _audioScale;
+        var jump = Math.Abs(heard - Bpm) / Bpm > 0.06;
         if (jump)
         {
             // Nouveau morceau : le « 1 » posé à la main pour le précédent ne vaut plus.
             _barManual = false;
         }
 
-        Volatile.Write(ref _bpm, Math.Clamp(jump || !_audioLocked ? reading.Bpm : Bpm + (0.15 * (reading.Bpm - Bpm)), MinBpm, MaxBpm));
+        Volatile.Write(ref _bpm, Math.Clamp(jump || !_audioLocked ? heard : Bpm + (0.15 * (heard - Bpm)), MinBpm, MaxBpm));
 
         var fraction = _position - Math.Floor(_position);
         var error = reading.BeatPhase - fraction;
@@ -216,6 +247,7 @@ public sealed class MusicalClock
     {
         Volatile.Write(ref _bpm, Math.Clamp(Bpm * factor, MinBpm, MaxBpm));
         _taps.Clear();
+        RememberManualTempo();
     }
 
     /// <summary>Ajoute (ou retire) des BPM au tempo courant (CMD-042).</summary>
@@ -223,6 +255,31 @@ public sealed class MusicalClock
     {
         Volatile.Write(ref _bpm, Math.Clamp(Bpm + deltaBpm, MinBpm, MaxBpm));
         _taps.Clear();
+        RememberManualTempo();
+    }
+
+    /// <summary>En source Audio, un réglage manuel du tempo devient un facteur appliqué au tempo entendu (il ne dure pas qu'un tick).</summary>
+    private void RememberManualTempo()
+    {
+        if (Source == TempoSourceKind.Audio && _lastRawBpm > 0)
+        {
+            _audioScale = Bpm / _lastRawBpm;
+        }
+    }
+
+    private static readonly double[] OctaveRatios = [2.0, 0.5, 1.5, 2.0 / 3];
+
+    private static bool IsOctaveRatio(double ratio)
+    {
+        foreach (var known in OctaveRatios)
+        {
+            if (Math.Abs((ratio / known) - 1) <= 0.05)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>« Le 1 est maintenant » (AUD-024) : le temps en cours devient le premier d'une mesure.</summary>
@@ -237,11 +294,11 @@ public sealed class MusicalClock
         _barManual = true;
     }
 
-    /// <summary>Décalage de latence global (GEN-035), borné à ±250 ms.</summary>
+    /// <summary>Décalage de latence global (GEN-035), borné à ±500 ms (un micro Bluetooth ajoute 300 à 500 ms, essai P7).</summary>
     public void SetLatency(double seconds)
     {
         var before = EffectivePosition;
-        Volatile.Write(ref _latency, Math.Clamp(seconds, -0.25, 0.25));
+        Volatile.Write(ref _latency, Math.Clamp(seconds, -0.5, 0.5));
         _shift += EffectivePosition - before;
     }
 }

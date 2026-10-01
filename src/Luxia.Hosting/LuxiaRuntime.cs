@@ -101,7 +101,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             Engine.SetAudioFeed(Audio);
         }
 
-        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencySeconds));
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencyFor(Preferences.Current.Audio.DeviceId)));
 
         // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
         PendingResume = ReadPendingResume();
@@ -131,6 +131,12 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         else
         {
             Audio.Stop();
+
+            // Sans écoute, la source Audio n'a plus de sens : le tempo reste celui d'avant, devenu fixe (l'état affiché doit être l'état réel).
+            if (Engine.Snapshot.Tempo.Source == Messaging.Commands.TempoSourceKind.Audio)
+            {
+                Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Fixed));
+            }
         }
 
         Preferences.Update(p => p with { Audio = p.Audio with { Listen = listen } });
@@ -141,6 +147,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     {
         Audio?.SetDevice(deviceId);
         Preferences.Update(p => p with { Audio = p.Audio with { DeviceId = deviceId } });
+
+        // La latence suit le périphérique : celle de son dernier réglage (0 pour un périphérique encore jamais calibré).
+        Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.User, Preferences.Current.Audio.LatencyFor(deviceId)));
     }
 
     /// <summary>Applique et mémorise les réglages de l'analyse (AUD-081).</summary>
@@ -158,7 +167,10 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
                 MinBpm = tuning.MinBpm,
                 MaxBpm = tuning.MaxBpm,
                 PreferredBpm = tuning.PreferredBpm,
-                LatencySeconds = Math.Clamp(latencySeconds, -0.25, 0.25),
+                LatencySeconds = p.Audio.DeviceId is null ? Math.Clamp(latencySeconds, -0.5, 0.5) : p.Audio.LatencySeconds,
+                LatencyByDevice = p.Audio.DeviceId is null
+                    ? p.Audio.LatencyByDevice
+                    : new Dictionary<string, double>(p.Audio.LatencyByDevice) { [p.Audio.DeviceId] = Math.Clamp(latencySeconds, -0.5, 0.5) },
             },
         });
     }

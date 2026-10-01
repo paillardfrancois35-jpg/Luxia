@@ -13,6 +13,7 @@ return arguments.Command switch
     "midi" => Commands.Midi(arguments),
     "audio" => AudioCommands.Analyse(arguments),
     "audio-ecoute" => AudioCommands.Listen(arguments),
+    "audio-diag" => AudioCommands.Diagnose(arguments),
     "lancer" => await Commands.RunAsync(arguments).ConfigureAwait(false),
     "endurance" => await Commands.EnduranceAsync(arguments).ConfigureAwait(false),
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),

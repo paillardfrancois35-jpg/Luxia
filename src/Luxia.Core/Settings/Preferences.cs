@@ -49,7 +49,7 @@ public sealed record AudioPreferences
     public string? DeviceId { get; init; }
 
     /// <summary>Sensibilité des impulsions, de 0 à 1 (AUD-042).</summary>
-    public double PulseSensitivity { get; init; } = 0.5;
+    public double PulseSensitivity { get; init; } = 0.6;
 
     /// <summary>Lissage de l'énergie en secondes (AUD-060).</summary>
     public double EnergySmoothingSeconds { get; init; } = 2;
@@ -63,8 +63,18 @@ public sealed record AudioPreferences
     /// <summary>Centre de la préférence d'octave, en BPM (AUD-023).</summary>
     public double PreferredBpm { get; init; } = 118;
 
-    /// <summary>Décalage de latence global en secondes (GEN-035, AUD-027), de −0,25 à +0,25.</summary>
+    /// <summary>Décalage de latence du son joué par le PC en secondes (GEN-035, AUD-027), de −0,5 à +0,5.</summary>
     public double LatencySeconds { get; init; }
+
+    /// <summary>
+    /// Latence propre à chaque périphérique choisi, par identifiant (un micro Bluetooth n'a pas le retard d'une boucle de sortie) :
+    /// le réglage suit le périphérique quand on en change (essai P7, exemple 18).
+    /// </summary>
+    public IReadOnlyDictionary<string, double> LatencyByDevice { get; init; } = new Dictionary<string, double>();
+
+    /// <summary>Latence à appliquer pour un périphérique (<c>null</c> = le son joué par le PC).</summary>
+    public double LatencyFor(string? deviceId) =>
+        deviceId is not null && LatencyByDevice.TryGetValue(deviceId, out var value) ? value : deviceId is null ? LatencySeconds : 0;
 }
 
 /// <summary>Configuration des sorties (SORT-001, SORT-006).</summary>

@@ -13,7 +13,7 @@ public sealed record AudioTuning
     public double PreferredBpm { get; init; } = 118;
 
     /// <summary>Sensibilité des impulsions de 0 (exigeant) à 1 (sensible).</summary>
-    public double PulseSensitivity { get; init; } = 0.5;
+    public double PulseSensitivity { get; init; } = 0.6;
 
     /// <summary>Temps mort des impulsions des basses, en secondes.</summary>
     public double BassDeadSeconds { get; init; } = 0.25;

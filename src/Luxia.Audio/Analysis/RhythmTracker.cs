@@ -9,7 +9,8 @@ namespace Luxia.Audio.Analysis;
 internal sealed class RhythmTracker
 {
     private const double WindowSeconds = 8;
-    private const double MinimumSeconds = 4;
+    private const double MinimumSeconds = 3;
+    private const int VoteCapacity = 16;
     private const double UpdateSeconds = 0.25;
     private const double LocalMeanSeconds = 0.4;
 
@@ -33,6 +34,10 @@ internal sealed class RhythmTracker
     private long _gridIndex;
     private long _accumulatedIndex = long.MinValue;
     private int _misses;
+    private readonly (double Bpm, double Confidence)[] _votes = new (double, double)[VoteCapacity];
+    private int _voteCount;
+    private int _voteNext;
+    private double _heldBpm;
     private double _bpm;
     private double _confidence;
 
@@ -84,6 +89,9 @@ internal sealed class RhythmTracker
         Array.Clear(_flux);
         Array.Clear(_bass);
         Array.Clear(_classScore);
+        // Le tempo tenu survit à la remise à zéro : une reprise après une pause garde son tempo tant que l'écoute n'est pas sûre d'un autre.
+        _voteCount = 0;
+        _voteNext = 0;
         _frames = 0;
         _sinceUpdate = 0;
         _hasGrid = false;
@@ -148,6 +156,7 @@ internal sealed class RhythmTracker
             return false;
         }
 
+        Stabilize(bpm, confidence, out bpm, out confidence);
         _confidence = confidence;
         if (_bpm <= 0 || Math.Abs(bpm - _bpm) / _bpm > 0.06)
         {
@@ -160,6 +169,71 @@ internal sealed class RhythmTracker
         _bpm = _bpm <= 0 || !_hasGrid ? bpm : _bpm + (0.3 * (bpm - _bpm));
         TrackBeats(available);
         return true;
+    }
+
+    /// <summary>
+    /// Stabilise l'estimation : les dernières estimations (4 s) votent par grappes de ± 3 % pondérées par leur confiance ;
+    /// la grappe la plus lourde donne le tempo (moyenne pondérée) et sa part du total donne la solidité. Un tempo déjà tenu ne
+    /// cède la place à un autre que devant au moins six estimations concordantes et 70 % des voix : une reprise après une
+    /// pause, une introduction sans rythme ou un passage ambigu ne font plus « chuter » le BPM.
+    /// </summary>
+    private void Stabilize(double raw, double confidence, out double bpm, out double stableConfidence)
+    {
+        _votes[_voteNext] = (raw, confidence);
+        _voteNext = (_voteNext + 1) % VoteCapacity;
+        _voteCount = Math.Min(VoteCapacity, _voteCount + 1);
+
+        var bestWeight = -1.0;
+        var bestSum = 0.0;
+        var bestCount = 0;
+        double total = 0;
+        for (var i = 0; i < _voteCount; i++)
+        {
+            total += _votes[i].Confidence;
+        }
+
+        for (var i = 0; i < _voteCount; i++)
+        {
+            double weight = 0;
+            double sum = 0;
+            var count = 0;
+            for (var j = 0; j < _voteCount; j++)
+            {
+                if (Math.Abs((_votes[j].Bpm / _votes[i].Bpm) - 1) <= 0.03)
+                {
+                    weight += _votes[j].Confidence;
+                    sum += _votes[j].Bpm * _votes[j].Confidence;
+                    count++;
+                }
+            }
+
+            if (weight > bestWeight)
+            {
+                bestWeight = weight;
+                bestSum = sum;
+                bestCount = count;
+            }
+        }
+
+        var cluster = bestWeight > 1e-9 ? bestSum / bestWeight : raw;
+        var support = total > 1e-9 ? bestWeight / total : 0;
+        var clusterConfidence = bestCount == 0 ? 0 : bestWeight / bestCount;
+        var solidity = clusterConfidence * (0.5 + (0.5 * support));
+
+        if (_heldBpm > 0 && Math.Abs((cluster / _heldBpm) - 1) > 0.04 && (bestCount < 6 || support < 0.7))
+        {
+            // Pas assez sûr pour quitter le tempo tenu : on le garde, avec une confiance qui ne dépasse pas celle de l'estimation.
+            bpm = _heldBpm;
+            stableConfidence = Math.Min(_confidence, Math.Max(solidity, 0.2));
+            return;
+        }
+
+        bpm = cluster;
+        stableConfidence = Math.Clamp(solidity, 0, 1);
+        if (bestCount >= 3 && support >= 0.5)
+        {
+            _heldBpm = cluster;
+        }
     }
 
     /// <summary>Copie les <paramref name="count"/> dernières trames de l'anneau, retire leur moyenne locale et ne garde que les hausses.</summary>

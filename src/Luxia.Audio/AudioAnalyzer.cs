@@ -149,7 +149,7 @@ public sealed class AudioAnalyzer
         }
 
         var pulses = 0;
-        if (_bassPulses.Process(features.BassFlux, out var bassStrength))
+        if (_bassPulses.Process(features.Bass, out var bassStrength))
         {
             Interlocked.Increment(ref _bassCount);
             _bassTotal++;
@@ -157,7 +157,7 @@ public sealed class AudioAnalyzer
             pulses++;
         }
 
-        if (_treblePulses.Process(features.TrebleFlux, out var trebleStrength))
+        if (_treblePulses.Process(features.Treble, out var trebleStrength))
         {
             Interlocked.Increment(ref _trebleCount);
             _trebleTotal++;

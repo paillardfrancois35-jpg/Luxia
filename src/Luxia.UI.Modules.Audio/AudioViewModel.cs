@@ -35,6 +35,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     private readonly LuxiaRuntime _runtime;
     private readonly Action<Action> _post;
     private bool _devicesRequested;
+    private string? _shownNotice;
     private long _bassSeen;
     private long _trebleSeen;
     private int _dirty;
@@ -193,6 +194,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
             return;
         }
 
+        ShowNotice(audio);
         var state = audio.State;
         var live = Listening && !state.Silent;
         Level = live ? Meter(state.Level) : 0;
@@ -262,6 +264,11 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         }
 
         _runtime.SetAudioDevice(value.Id);
+
+        // La latence est celle du périphérique choisi.
+        _loading = true;
+        LatencyMilliseconds = (decimal)Math.Round(_runtime.Preferences.Current.Audio.LatencyFor(value.Id) * 1000);
+        _loading = false;
         Message = value.Id is null ? "Écoute du son joué par le PC." : $"Écoute de « {value.Label} ».";
     }
 
@@ -364,6 +371,31 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ResetLatency() => LatencyMilliseconds = 0;
 
+    /// <summary>
+    /// Un changement de périphérique ou une erreur se reconnecte en une fraction de seconde : l'état seul passe inaperçu. L'avis
+    /// reste donc affiché une douzaine de secondes (essai P7, exemple 15).
+    /// </summary>
+    private void ShowNotice(AudioListener audio)
+    {
+        if (audio.Notice is { } notice && audio.NoticeAgeSeconds < 12)
+        {
+            if (_shownNotice != notice)
+            {
+                _shownNotice = notice;
+                Message = notice;
+            }
+        }
+        else if (_shownNotice is not null)
+        {
+            if (Message == _shownNotice)
+            {
+                Message = null;
+            }
+
+            _shownNotice = null;
+        }
+    }
+
     private static double Meter(double value) => Math.Clamp(Math.Sqrt(Math.Max(0, value)) * 1.4, 0, 1);
 
     private static double Decay(double current, long count, ref long seen, double strength)
@@ -416,7 +448,7 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         MinBpm = (decimal)prefs.MinBpm;
         MaxBpm = (decimal)prefs.MaxBpm;
         PreferredBpm = (decimal)prefs.PreferredBpm;
-        LatencyMilliseconds = (decimal)Math.Round(prefs.LatencySeconds * 1000);
+        LatencyMilliseconds = (decimal)Math.Round(prefs.LatencyFor(prefs.DeviceId) * 1000);
         _loading = false;
     }
 

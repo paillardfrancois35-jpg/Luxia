@@ -110,7 +110,7 @@ public sealed class MusicalClockTests
     {
         var clock = new MusicalClock();
         clock.SetLatency(1);
-        clock.LatencySeconds.ShouldBe(0.25);
+        clock.LatencySeconds.ShouldBe(0.5);
         clock.SetLatency(0.25);
         clock.EffectivePosition.ShouldBe(0.5, 1e-9);
         clock.BeatPosition.ShouldBe(0);
@@ -282,6 +282,80 @@ public sealed class MusicalClockTests
         }
 
         (clock.BeatIndex - restart).ShouldBeGreaterThan(3, "deux secondes à 90 BPM = 3 temps ; le désaccord a été corrigé en plus");
+    }
+
+    private static MusicalClock AudioClock(double raw, int ticks)
+    {
+        var clock = new MusicalClock();
+        clock.UseSource(TempoSourceKind.Audio);
+        FeedRaw(clock, raw, ticks);
+        return clock;
+    }
+
+    private static void FeedRaw(MusicalClock clock, double raw, int ticks)
+    {
+        for (var i = 0; i < ticks; i++)
+        {
+            clock.Advance(0.025);
+            clock.FollowAudio(new AudioReading(true, raw, 0.9, true, clock.BeatPosition - Math.Floor(clock.BeatPosition), 0, 0, 0));
+        }
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-023")]
+    public void Audio_TimesTwo_IsKeptWhileTheSameSongPlays()
+    {
+        var clock = AudioClock(64, 40);
+        clock.Bpm.ShouldBe(64, 0.5);
+
+        clock.Scale(2);
+        FeedRaw(clock, 64, 80);
+
+        clock.Bpm.ShouldBe(128, 0.5);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-023")]
+    public void Audio_TimesTwo_FollowsTheAnalysisWhenItChangesOctaveItself()
+    {
+        var clock = AudioClock(64, 40);
+        clock.Scale(2);
+        FeedRaw(clock, 64, 20);
+
+        // L'analyse bascule d'elle-même à 128 : la correction de l'utilisateur ne doit pas doubler une seconde fois.
+        FeedRaw(clock, 128, 80);
+
+        clock.Bpm.ShouldBe(128, 0.5);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-026")]
+    public void Audio_NewSong_DropsTheOctaveCorrection()
+    {
+        var clock = AudioClock(64, 40);
+        clock.Scale(2);
+        FeedRaw(clock, 64, 20);
+
+        FeedRaw(clock, 140, 40);
+
+        clock.Bpm.ShouldBe(140, 0.5);
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-005")]
+    public void Audio_OctaveCorrection_DoesNotSurviveASilence()
+    {
+        var clock = AudioClock(64, 40);
+        clock.Scale(2);
+        for (var i = 0; i < 70; i++)
+        {
+            clock.Advance(0.025);
+            clock.FollowAudio(new AudioReading(false, 0, 0, false, 0, 0, 0, 0));
+        }
+
+        FeedRaw(clock, 64, 80);
+
+        clock.Bpm.ShouldBe(64, 1);
     }
 
     [Fact]

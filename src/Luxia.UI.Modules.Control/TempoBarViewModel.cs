@@ -67,6 +67,7 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     private bool _canListen;
 
     private bool _refreshing;
+    private string? _loggedNotice;
 
     /// <summary>Crée le bloc sur le moteur en service.</summary>
     public TempoBarViewModel(LuxiaRuntime runtime, JournalPanelViewModel journal)
@@ -107,6 +108,12 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         IsAudio = tempo.Source == TempoSourceKind.Audio;
         Listening = _runtime.Audio?.IsListening ?? false;
         AudioStatus = _runtime.Audio?.Status ?? "Pas d'écoute dans cette configuration";
+        if (_runtime.Audio is { Notice: { } notice } audio && audio.NoticeAgeSeconds < 12 && _loggedNotice != notice)
+        {
+            // Changement de périphérique, reprise, erreur : une ligne au Journal de l'écran de jeu (essai P7, exemple 15).
+            _loggedNotice = notice;
+            _journal.Log("🎧 " + notice);
+        }
         _refreshing = false;
     }
 

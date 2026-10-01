@@ -11,6 +11,11 @@ namespace Luxia.Audio;
 /// Une erreur de capture ou un changement de périphérique ne touche ni le moteur ni l'interface : l'écoute se reconnecte
 /// toute seule (AUD-002, AUD-006) et le moteur garde son dernier tempo (GEN-034).
 /// </summary>
+/// <remarks>
+/// Règle de verrouillage (essai P7) : le verrou ne protège que l'état de l'écoute. **Une source n'est jamais arrêtée ni
+/// libérée en le tenant** : le fil de capture peut attendre ce verrou dans <c>OnBlock</c> pendant que <c>Dispose</c> attend
+/// la fin de ce fil, ce qui bloquerait tout. On la détache sous le verrou (<c>Detach</c>), puis on la libère dehors.
+/// </remarks>
 public sealed class AudioListener : IAudioFeed, IDisposable
 {
     private const double StaleSeconds = 0.6;
@@ -19,12 +24,14 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private readonly ILogger _logger;
     private readonly object _gate = new();
     private readonly Timer _watchdog;
+    private readonly ConcurrentQueue<AudioEvent> _recent = new();
     private IAudioSource? _source;
     private AudioAnalyzer? _analyzer;
     private Timer? _retry;
     private Snapshot _snapshot = new(AnalysisState.None, 0);
-    private readonly ConcurrentQueue<AudioEvent> _recent = new();
     private long _lastData;
+    private long _noticeStamp;
+    private int _failures;
     private bool _wanted;
     private bool _disposed;
 
@@ -44,30 +51,17 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     /// <summary>Périphérique choisi (AUD-003) ; <c>null</c> = le son joué par le PC, sur la sortie par défaut.</summary>
     public string? DeviceId { get; private set; }
 
-    /// <summary>Choisit le périphérique à écouter ; l'écoute en cours se reconnecte dessus.</summary>
-    public void SetDevice(string? deviceId)
-    {
-        lock (_gate)
-        {
-            if (DeviceId == deviceId)
-            {
-                return;
-            }
-
-            DeviceId = deviceId;
-            if (_wanted && !_disposed)
-            {
-                Disconnect();
-                Connect();
-            }
-        }
-    }
-
-    /// <summary>Périphériques proposés (sorties à écouter et entrées).</summary>
-    public IReadOnlyList<AudioDeviceInfo> Devices() => _factory.Devices();
-
     /// <summary>Texte d'état pour l'écran : périphérique écouté, reconnexion ou erreur.</summary>
     public string Status { get; private set; } = "Écoute arrêtée";
+
+    /// <summary>
+    /// Dernier événement à signaler à l'utilisateur (changement de périphérique, reprise, erreur) ; il reste affichable
+    /// <see cref="NoticeAgeSeconds"/> secondes, car la reconnexion est trop rapide pour que l'état seul se remarque.
+    /// </summary>
+    public string? Notice { get; private set; }
+
+    /// <summary>Âge de <see cref="Notice"/> en secondes (<see cref="double.MaxValue"/> s'il n'y en a pas).</summary>
+    public double NoticeAgeSeconds => _noticeStamp == 0 ? double.MaxValue : Stopwatch.GetElapsedTime(_noticeStamp).TotalSeconds;
 
     /// <summary>Dernier état de l'analyse.</summary>
     public AnalysisState State => Volatile.Read(ref _snapshot).State;
@@ -81,10 +75,45 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     /// <summary>Levé (sur le fil de capture) à chaque événement musical (EVT-022, EVT-023).</summary>
     public event EventHandler<AudioEvent>? EventRaised;
 
+    /// <summary>Levé quand <see cref="Status"/> ou l'état d'écoute change (sur un fil quelconque).</summary>
+    public event EventHandler? StatusChanged;
+
+    /// <summary>Périphériques proposés (sorties à écouter et entrées).</summary>
+    public IReadOnlyList<AudioDeviceInfo> Devices() => _factory.Devices();
+
+    /// <summary>Choisit le périphérique à écouter ; l'écoute en cours se reconnecte dessus.</summary>
+    public void SetDevice(string? deviceId)
+    {
+        IAudioSource? old = null;
+        var reconnect = false;
+        lock (_gate)
+        {
+            if (DeviceId == deviceId)
+            {
+                return;
+            }
+
+            DeviceId = deviceId;
+            if (_wanted && !_disposed)
+            {
+                old = Detach();
+                reconnect = true;
+            }
+        }
+
+        Release(old);
+        if (reconnect)
+        {
+            Connect();
+        }
+    }
+
     /// <summary>Change les réglages de l'analyse (sensibilité, temps morts, lissage, octave), effectifs tout de suite.</summary>
     public void Tune(AudioTuning tuning)
     {
         ArgumentNullException.ThrowIfNull(tuning);
+        IAudioSource? old = null;
+        var reconnect = false;
         lock (_gate)
         {
             var rangeChanged = tuning.MinBpm != Tuning.MinBpm || tuning.MaxBpm != Tuning.MaxBpm;
@@ -97,14 +126,17 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             if (rangeChanged && _source is not null && _wanted && !_disposed)
             {
                 // La plage de tempo se règle à la création de l'analyse : on se reconnecte pour l'appliquer.
-                Disconnect();
-                Connect();
+                old = Detach();
+                reconnect = true;
             }
         }
-    }
 
-    /// <summary>Levé quand <see cref="Status"/> ou l'état d'écoute change (sur un fil quelconque).</summary>
-    public event EventHandler? StatusChanged;
+        Release(old);
+        if (reconnect)
+        {
+            Connect();
+        }
+    }
 
     /// <summary>Démarre l'écoute du son joué par le PC.</summary>
     public void Start()
@@ -117,24 +149,35 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             }
 
             _wanted = true;
-            Connect();
-            _watchdog.Change(250, 250);
+            _failures = 0;
+        }
+
+        Connect();
+        lock (_gate)
+        {
+            if (!_disposed && _wanted)
+            {
+                _watchdog.Change(250, 250);
+            }
         }
     }
 
     /// <summary>Arrête l'écoute.</summary>
     public void Stop()
     {
+        IAudioSource? old;
         lock (_gate)
         {
             _wanted = false;
             _watchdog.Change(Timeout.Infinite, Timeout.Infinite);
             _retry?.Dispose();
             _retry = null;
-            Disconnect();
+            old = Detach();
             Volatile.Write(ref _snapshot, new Snapshot(AnalysisState.None, 0));
-            SetStatus("Écoute arrêtée");
         }
+
+        Release(old);
+        SetStatus("Écoute arrêtée");
     }
 
     /// <inheritdoc />
@@ -160,6 +203,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
+        IAudioSource? old;
         lock (_gate)
         {
             if (_disposed)
@@ -171,47 +215,35 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             _wanted = false;
             _watchdog.Dispose();
             _retry?.Dispose();
-            Disconnect();
+            old = Detach();
         }
+
+        Release(old);
     }
 
-    private void Connect()
-    {
-        try
-        {
-            var source = _factory.Create(DeviceId);
-            _analyzer = new AudioAnalyzer(source.SampleRate, Tuning.MinBpm, Tuning.MaxBpm);
-            Apply(_analyzer);
-            _analyzer.EventRaised += OnAudioEvent;
-            _source = source;
-            source.BlockAvailable += OnBlock;
-            source.Stopped += OnStopped;
-            source.StartCapture();
-            _lastData = Stopwatch.GetTimestamp();
-            SetStatus($"Écoute : {source.Name}");
-            _logger.LogInformation("Écoute du son du PC : {Peripherique} à {Frequence} Hz", source.Name, source.SampleRate);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Écoute du son impossible");
-            Disconnect();
-            SetStatus("Écoute impossible : " + ex.Message + " (nouvel essai dans 2 s)");
-            ScheduleRetry(2000);
-        }
-    }
-
-    private void Disconnect()
+    /// <summary>Détache la source courante (verrou tenu par l'appelant) ; à libérer ensuite avec <see cref="Release"/>, hors verrou.</summary>
+    private IAudioSource? Detach()
     {
         var source = _source;
         _source = null;
         _analyzer = null;
+        if (source is not null)
+        {
+            source.BlockAvailable -= OnBlock;
+            source.Stopped -= OnStopped;
+        }
+
+        return source;
+    }
+
+    /// <summary>Arrête et libère une source détachée. À appeler **sans** tenir le verrou (voir les remarques de la classe).</summary>
+    private void Release(IAudioSource? source)
+    {
         if (source is null)
         {
             return;
         }
 
-        source.BlockAvailable -= OnBlock;
-        source.Stopped -= OnStopped;
         try
         {
             source.StopCapture();
@@ -221,26 +253,125 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             _logger.LogDebug(ex, "Arrêt de la capture");
         }
 
-        source.Dispose();
+        try
+        {
+            source.Dispose();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Libération de la source audio");
+        }
     }
+
+    private void Connect()
+    {
+        IAudioSource? source = null;
+        try
+        {
+            source = _factory.Create(DeviceId);
+            bool unused;
+            lock (_gate)
+            {
+                // Arrêtée, libérée ou déjà reconnectée entre-temps : cette source n'a plus lieu d'être.
+                unused = !_wanted || _disposed || _source is not null;
+                if (!unused)
+                {
+                    var analyzer = new AudioAnalyzer(source.SampleRate, Tuning.MinBpm, Tuning.MaxBpm);
+                    Apply(analyzer);
+                    analyzer.EventRaised += OnAudioEvent;
+                    _analyzer = analyzer;
+                    _source = source;
+                    source.BlockAvailable += OnBlock;
+                    source.Stopped += OnStopped;
+                    _lastData = Stopwatch.GetTimestamp();
+                }
+            }
+
+            if (unused)
+            {
+                Release(source);
+                return;
+            }
+
+            source.StartCapture();
+            var recovered = _failures > 0;
+            _failures = 0;
+            SetStatus($"Écoute : {source.Name}");
+            if (recovered)
+            {
+                SetNotice($"Écoute reprise sur « {source.Name} »");
+            }
+
+            _logger.LogInformation("Écoute du son du PC : {Peripherique} à {Frequence} Hz", source.Name, source.SampleRate);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Écoute du son impossible");
+            IAudioSource? failed;
+            lock (_gate)
+            {
+                failed = ReferenceEquals(_source, source) ? Detach() : null;
+            }
+
+            Release(failed ?? source);
+            _failures++;
+            SetStatus("Écoute impossible : " + ex.Message);
+            SetNotice("Écoute impossible : " + ex.Message + (DeviceId is not null && ex is UnauthorizedAccessException ? " (autorisez l'accès au micro : Paramètres Windows → Confidentialité → Microphone → applications de bureau)" : string.Empty));
+            ScheduleRetry(RetryDelay());
+        }
+    }
+
+    /// <summary>Temporisation croissante (2, 5 puis 10 s) : un périphérique absent ne remplit pas le journal.</summary>
+    private int RetryDelay() => _failures <= 1 ? 2000 : _failures == 2 ? 5000 : 10000;
 
     private void ScheduleRetry(int milliseconds)
     {
-        _retry?.Dispose();
-        _retry = new Timer(
-            _ =>
+        lock (_gate)
+        {
+            if (!_wanted || _disposed)
             {
-                lock (_gate)
+                return;
+            }
+
+            _retry?.Dispose();
+            _retry = new Timer(
+                _ =>
                 {
-                    if (_wanted && !_disposed && _source is null)
+                    bool again;
+                    lock (_gate)
+                    {
+                        again = _wanted && !_disposed && _source is null;
+                    }
+
+                    if (again)
                     {
                         Connect();
                     }
-                }
-            },
-            null,
-            milliseconds,
-            Timeout.Infinite);
+                },
+                null,
+                milliseconds,
+                Timeout.Infinite);
+        }
+    }
+
+    private void Apply(AudioAnalyzer analyzer)
+    {
+        analyzer.PulseSensitivity = Tuning.PulseSensitivity;
+        analyzer.BassDeadSeconds = Tuning.BassDeadSeconds;
+        analyzer.TrebleDeadSeconds = Tuning.TrebleDeadSeconds;
+        analyzer.EnergySmoothingSeconds = Tuning.EnergySmoothingSeconds;
+        analyzer.PreferredBpm = Tuning.PreferredBpm;
+    }
+
+    private void OnAudioEvent(AudioEvent audioEvent)
+    {
+        _recent.Enqueue(audioEvent);
+        while (_recent.Count > 30)
+        {
+            _recent.TryDequeue(out _);
+        }
+
+        EventRaised?.Invoke(this, audioEvent);
     }
 
     private void OnBlock(object? sender, AudioBlock block)
@@ -257,20 +388,24 @@ public sealed class AudioListener : IAudioFeed, IDisposable
                 analyzer.Push(block.Samples.Span);
                 _lastData = Stopwatch.GetTimestamp();
                 Publish(analyzer);
+                return;
             }
             catch (Exception ex)
             {
                 // AUD-006 : une erreur d'analyse ne doit jamais remonter au fil de capture (ni au moteur, ni à l'interface).
                 _logger.LogError(ex, "Erreur d'analyse audio : l'écoute redémarre");
-                Disconnect();
-                SetStatus("Erreur d'analyse : " + ex.Message + " (reconnexion…)");
-                ScheduleRetry(2000);
             }
         }
+
+        // Erreur d'analyse : on repart sur une source neuve (hors verrou pour la libérer).
+        HandleStop(sender, new InvalidOperationException("erreur d'analyse"));
     }
 
-    private void OnStopped(object? sender, Exception? error)
+    private void OnStopped(object? sender, Exception? error) => HandleStop(sender, error);
+
+    private void HandleStop(object? sender, Exception? error)
     {
+        IAudioSource? old;
         lock (_gate)
         {
             if (!ReferenceEquals(sender, _source))
@@ -278,17 +413,27 @@ public sealed class AudioListener : IAudioFeed, IDisposable
                 return;
             }
 
-            Disconnect();
-            if (!_wanted || _disposed)
-            {
-                return;
-            }
-
-            // AUD-002 : changement de périphérique (pas d'erreur) : on se rebranche vite ; AUD-006 : erreur : on réessaie.
-            SetStatus(error is null ? "Changement de périphérique audio : reconnexion…" : "Écoute interrompue : " + error.Message + " (reconnexion…)");
-            _logger.LogWarning(error, "Capture audio arrêtée ({Motif})", error is null ? "changement de périphérique" : "erreur");
-            ScheduleRetry(error is null ? 300 : 2000);
+            old = Detach();
         }
+
+        Release(old);
+        bool wanted;
+        lock (_gate)
+        {
+            wanted = _wanted && !_disposed;
+        }
+
+        if (!wanted)
+        {
+            return;
+        }
+
+        // AUD-002 : changement de périphérique (pas d'erreur) : on se rebranche vite ; AUD-006 : erreur : on réessaie.
+        var message = error is null ? "Changement de périphérique audio : reconnexion…" : "Écoute interrompue : " + error.Message + " (reconnexion…)";
+        SetStatus(message);
+        SetNotice(message);
+        _logger.LogWarning(error, "Capture audio arrêtée ({Motif})", error is null ? "changement de périphérique" : "erreur");
+        ScheduleRetry(error is null ? 300 : 2000);
     }
 
     /// <summary>Sans bloc depuis un moment (rien ne joue : la boucle WASAPI ne livre rien), on fait entendre du silence à l'analyse.</summary>
@@ -318,26 +463,6 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         }
     }
 
-    private void Apply(AudioAnalyzer analyzer)
-    {
-        analyzer.PulseSensitivity = Tuning.PulseSensitivity;
-        analyzer.BassDeadSeconds = Tuning.BassDeadSeconds;
-        analyzer.TrebleDeadSeconds = Tuning.TrebleDeadSeconds;
-        analyzer.EnergySmoothingSeconds = Tuning.EnergySmoothingSeconds;
-        analyzer.PreferredBpm = Tuning.PreferredBpm;
-    }
-
-    private void OnAudioEvent(AudioEvent audioEvent)
-    {
-        _recent.Enqueue(audioEvent);
-        while (_recent.Count > 30)
-        {
-            _recent.TryDequeue(out _);
-        }
-
-        EventRaised?.Invoke(this, audioEvent);
-    }
-
     private void Publish(AudioAnalyzer analyzer)
     {
         var state = analyzer.State;
@@ -352,6 +477,13 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private void SetStatus(string status)
     {
         Status = status;
+        StatusChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void SetNotice(string notice)
+    {
+        Notice = notice;
+        _noticeStamp = Stopwatch.GetTimestamp();
         StatusChanged?.Invoke(this, EventArgs.Empty);
     }
 

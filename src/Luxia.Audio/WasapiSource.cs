@@ -12,7 +12,7 @@ namespace Luxia.Audio;
 public sealed class WasapiSource : IAudioSource, IMMNotificationClient
 {
     private readonly MMDeviceEnumerator _enumerator = new();
-    private readonly IWaveIn _capture;
+    private IWaveIn _capture;
     private readonly bool _followsDefault;
     private readonly MMDevice _device;
     private float[] _mono = new float[4096];
@@ -26,11 +26,23 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
         _followsDefault = deviceId is null;
         _device = deviceId is null ? _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia) : _enumerator.GetDevice(deviceId);
         Name = _device.FriendlyName;
-        _capture = _device.DataFlow == DataFlow.Capture ? new WasapiCapture(_device) : new WasapiLoopbackCapture(_device);
+        _capture = CreateCapture(eventSync: true);
         SampleRate = _capture.WaveFormat.SampleRate;
-        _capture.DataAvailable += OnData;
-        _capture.RecordingStopped += OnStopped;
         _enumerator.RegisterEndpointNotificationCallback(this);
+    }
+
+    /// <summary>
+    /// Une entrée (micro, ligne) se capture sur événement, par blocs de 10 ms, au lieu des blocs d'environ 60 ms du mode par
+    /// défaut : 50 ms de moins en moyenne entre le son et son analyse (essai P7, exemple 18). La boucle d'une sortie garde le mode par défaut.
+    /// </summary>
+    private IWaveIn CreateCapture(bool eventSync)
+    {
+        IWaveIn capture = _device.DataFlow == DataFlow.Capture
+            ? (eventSync ? new WasapiCapture(_device, true, 30) : new WasapiCapture(_device))
+            : new WasapiLoopbackCapture(_device);
+        capture.DataAvailable += OnData;
+        capture.RecordingStopped += OnStopped;
+        return capture;
     }
 
     /// <inheritdoc />
@@ -46,7 +58,22 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     public event EventHandler<Exception?>? Stopped;
 
     /// <inheritdoc />
-    public void StartCapture() => _capture.StartRecording();
+    public void StartCapture()
+    {
+        try
+        {
+            _capture.StartRecording();
+        }
+        catch (Exception) when (_device.DataFlow == DataFlow.Capture)
+        {
+            // Certains périphériques refusent le mode sur événement : on retombe sur le mode par défaut.
+            _capture.DataAvailable -= OnData;
+            _capture.RecordingStopped -= OnStopped;
+            _capture.Dispose();
+            _capture = CreateCapture(eventSync: false);
+            _capture.StartRecording();
+        }
+    }
 
     /// <inheritdoc />
     public void StopCapture()
