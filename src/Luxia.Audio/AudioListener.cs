@@ -45,7 +45,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         ArgumentNullException.ThrowIfNull(logger);
         _factory = factory;
         _logger = logger;
-        _watchdog = new Timer(_ => Watch(), null, Timeout.Infinite, Timeout.Infinite);
+        _watchdog = new Timer(_ => Guard(Watch), null, Timeout.Infinite, Timeout.Infinite);
     }
 
     /// <summary>L'écoute est demandée (même si le périphérique est en cours de reconnexion).</summary>
@@ -350,16 +350,19 @@ public sealed class AudioListener : IAudioFeed, IDisposable
             _retry = new Timer(
                 _ =>
                 {
-                    bool again;
-                    lock (_gate)
+                    Guard(() =>
                     {
-                        again = _wanted && !_disposed && _source is null;
-                    }
+                        bool again;
+                        lock (_gate)
+                        {
+                            again = _wanted && !_disposed && _source is null;
+                        }
 
-                    if (again)
-                    {
-                        Connect();
-                    }
+                        if (again)
+                        {
+                            Connect();
+                        }
+                    });
                 },
                 null,
                 milliseconds,
@@ -460,6 +463,19 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     }
 
     /// <summary>Sans bloc depuis un moment (rien ne joue : la boucle WASAPI ne livre rien), on fait entendre du silence à l'analyse.</summary>
+    /// <summary>Aucune exception ne doit sortir d'un timer : elle arrêterait l'application (essai P7, plantage 1.009.090).</summary>
+    private void Guard(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur dans un contrôle périodique de l'écoute");
+        }
+    }
+
     private void Watch()
     {
         // Une fois par seconde : la sortie par défaut de Windows a-t-elle changé ? La notification du système n'arrive pas toujours

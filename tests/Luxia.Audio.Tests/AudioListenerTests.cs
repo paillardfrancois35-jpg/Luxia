@@ -14,7 +14,13 @@ public sealed class AudioListenerTests
 
         public int SampleRate => Rate;
 
-        public string? FollowedDefaultId { get; init; }
+        public string? FollowedDefaultId => ThrowWhenDisposed ? throw new InvalidCastException("périphérique libéré") : _followed;
+
+        public bool ThrowWhenDisposed { get; init; }
+
+        private readonly string? _followed;
+
+        public FakeSource(string? followed = null) => _followed = followed;
 
         public bool Started { get; private set; }
 
@@ -49,6 +55,8 @@ public sealed class AudioListenerTests
 
         public string? DefaultId { get; set; }
 
+        public bool ThrowWhenDisposed { get; init; }
+
         public string? DefaultOutputId() => DefaultId;
 
         public List<string?> Requested { get; } = [];
@@ -65,7 +73,7 @@ public sealed class AudioListenerTests
                 throw new InvalidOperationException("périphérique absent");
             }
 
-            var source = new FakeSource { FollowedDefaultId = deviceId is null ? DefaultId : null };
+            var source = new FakeSource(deviceId is null ? DefaultId : null) { ThrowWhenDisposed = ThrowWhenDisposed };
             Created.Add(source);
             return source;
         }
@@ -127,6 +135,38 @@ public sealed class AudioListenerTests
         factory.Created[1].Started.ShouldBeTrue();
         listener.Notice.ShouldNotBeNull();
         listener.Notice.ShouldContain("Changement de périphérique");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-006")]
+    public async Task RapidStartStop_WithASourceThatFailsOnceReleased_NeverThrowsOutOfATimer()
+    {
+        // Plantage 1.009.090 : le contrôle périodique lisait l'identifiant d'un périphérique libéré par un arrêt concurrent.
+        var unhandled = new List<Exception>();
+        void Handler(object? s, UnhandledExceptionEventArgs e) => unhandled.Add((Exception)e.ExceptionObject);
+        AppDomain.CurrentDomain.UnhandledException += Handler;
+        try
+        {
+            var factory = new FakeFactory { DefaultId = "casque", ThrowWhenDisposed = true };
+            using var listener = new AudioListener(factory, NullLogger.Instance);
+            for (var i = 0; i < 3; i++)
+            {
+                listener.Start();
+                await Task.Delay(1400, TestContext.Current.CancellationToken);
+                listener.Stop();
+            }
+
+            // La source lève à chaque lecture de son identifiant (périphérique COM libéré) : le contrôle périodique doit l'encaisser.
+            listener.Start();
+            await Task.Delay(1400, TestContext.Current.CancellationToken);
+            listener.IsListening.ShouldBeTrue();
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.UnhandledException -= Handler;
+        }
+
+        unhandled.ShouldBeEmpty();
     }
 
     [Fact]

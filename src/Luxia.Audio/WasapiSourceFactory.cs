@@ -20,7 +20,7 @@ public sealed class WasapiSourceFactory : IAudioSourceFactory
             using var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             return device.ID;
         }
-        catch (System.Runtime.InteropServices.COMException)
+        catch (Exception ex) when (ex is System.Runtime.InteropServices.COMException or InvalidCastException or ObjectDisposedException)
         {
             return null;
         }

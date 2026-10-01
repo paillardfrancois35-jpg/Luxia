@@ -15,6 +15,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     private IWaveIn _capture;
     private readonly bool _followsDefault;
     private readonly MMDevice _device;
+    private readonly string _deviceId;
     private float[] _mono = new float[4096];
     private bool _disposed;
     private bool _stopping;
@@ -25,6 +26,8 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     {
         _followsDefault = deviceId is null;
         _device = deviceId is null ? _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia) : _enumerator.GetDevice(deviceId);
+        // Identifiant lu une fois : le périphérique COM peut être libéré par un arrêt concurrent, on ne l'interroge plus ensuite.
+        _deviceId = _device.ID;
         Name = _device.FriendlyName;
         _capture = CreateCapture(eventSync: true);
         SampleRate = _capture.WaveFormat.SampleRate;
@@ -52,7 +55,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     public int SampleRate { get; }
 
     /// <inheritdoc />
-    public string? FollowedDefaultId => _followsDefault ? _device.ID : null;
+    public string? FollowedDefaultId => _followsDefault ? _deviceId : null;
 
     /// <inheritdoc />
     public event EventHandler<AudioBlock>? BlockAvailable;
@@ -86,9 +89,9 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
         {
             _capture.StopRecording();
         }
-        catch (InvalidOperationException)
+        catch (Exception ex) when (ex is InvalidOperationException or InvalidCastException or ObjectDisposedException or System.Runtime.InteropServices.COMException)
         {
-            // Déjà arrêtée.
+            // Déjà arrêtée ou libérée : rien à faire (appelé aussi depuis les notifications du système).
         }
     }
 
@@ -120,7 +123,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     /// <inheritdoc />
     public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
     {
-        if (_followsDefault && flow == DataFlow.Render && role == Role.Multimedia && defaultDeviceId != _device.ID && !_stopping)
+        if (_followsDefault && flow == DataFlow.Render && role == Role.Multimedia && defaultDeviceId != _deviceId && !_stopping)
         {
             // AUD-002 : on s'arrête proprement ; l'écoute se rebranche sur le nouveau périphérique par défaut.
             StopCapture();
@@ -130,7 +133,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     /// <inheritdoc />
     public void OnDeviceStateChanged(string deviceId, DeviceState newState)
     {
-        if (deviceId == _device.ID && newState != DeviceState.Active && !_stopping)
+        if (deviceId == _deviceId && newState != DeviceState.Active && !_stopping)
         {
             StopCapture();
         }
@@ -144,7 +147,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     /// <inheritdoc />
     public void OnDeviceRemoved(string deviceId)
     {
-        if (deviceId == _device.ID && !_stopping)
+        if (deviceId == _deviceId && !_stopping)
         {
             StopCapture();
         }
