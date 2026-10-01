@@ -18,8 +18,8 @@
   Wonderland*). *Summer* : 12 s d'après `audio-diag` (24 s ici, la colonne exige de rester dans ± 2 % jusqu'à la fin).
   Avant correction : 15 à 30 s sur ces morceaux.
 - **Impulsions des basses** (`audio-diag`) : de 0,8 à 2,3 par seconde selon le morceau (2,3 à 2,6 **partout** avant) ; dans les passages sans basses
-  0,0 à 0,3 par seconde (1,9 à 2,6 avant) ; part sur les temps jusqu'à 85 à 95 % pour les kicks réguliers (*Boogie Wonderland*, *bad guy*, *Summer*),
-  plus basse quand la grille de temps est calée sur un autre instrument (*Sandstorm*, rap).
+  0,0 à 0,3 par seconde (1,9 à 2,6 avant) ; part sur les temps de 60 à 75 % pour les kicks réguliers (*Boogie Wonderland* 75 %, *Gasolina* 72 %, *Another One Bites The Dust* 71 %, *Summer* 66 %),
+  27 à 40 % quand la grille de temps est calée sur un autre instrument que le kick (*Sandstorm*, *HUMBLE*, *24K Magic*) : piste d'amélioration (caler la grille sur les kicks).
 - **Énergie** : « Explosif » 0 à 40 % du temps (80 % avant), changements de niveau 1 à 7 par minute (4 à 12 avant).
 - **Break et drop** : *Animals* : break à 17,7 s, drop à 21,0 s (la pause réelle) ; *Glue* 119 s → 133 s ; *Summer* break à 163 s, drop à 184 s ;
   le rap (*HUMBLE*) et *bad guy* en donnent beaucoup (arrêts brefs). Pas d'annotation des drops : critère AUD-062 (≥ 80 % à ± 1 temps) non mesuré.
