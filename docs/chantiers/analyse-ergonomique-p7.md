@@ -139,11 +139,25 @@ développement** (règle du chantier « Contrôle 2 »), sur le même principe q
 | 6 | **Rappel du BPM et des voyants** dans le **Simulateur** (lecture seule) | Oui, même composant que le bloc de l'écran Audio | à faire |
 | 7 | **Volet « Au rythme »** : revoir toutes les règles | Réglages inopérants masqués + phrase de résumé | ✅ **Décidé le 2026-10-01** : seuls les réglages qui agissent sont affichés selon « Étape suivante » ; une phrase d'en-tête résume la scène (« Change d'étape à chaque mesure, démarre au début de la prochaine mesure ») ; « La vitesse suit l'énergie » n'apparaît pas quand les étapes suivent les temps |
 | 8 | **Facteur de rythme dans les deux sens** (÷ 8 … × 4) sans changer le BPM affiché | Par scène, à la place de « Tous les N » | ✅ **Décidé le 2026-10-01** : volet « Au rythme » : liste **Fréquence** (÷ 8, ÷ 4, ÷ 2, × 1, × 2, × 4 par temps ou par mesure ; ÷ seulement pour les impulsions) à la place du champ « Tous les N » ; le moteur devra compter des sous-temps (× 2, × 4) ; migration des anciennes scènes (« Tous les N » = ÷ N) |
-| 9 | **Mesure à 3 temps** (valses) | Aujourd'hui 4 temps fixes ; prévu en P8 (GEN-025) pour la séquence ou le morceau ; détecter 3/4 automatiquement est un autre travail | ❓ |
+| 9 | **Mesure à 3 temps** (valses) | Attendre P8 | ✅ **Décidé le 2026-10-01** : **attendre P8** (GEN-025 : mesure par séquence et par show) ; un réglage par scène ferait double emploi ; en attendant, les scènes « à chaque mesure » comptent 4 temps (« 1 ici » recale le premier temps) ; détection automatique du 3/4 : à étudier avec la base musicale de P9 |
 | 10 | Autres idées de l'analyse : durées en temps / mesures dans les Propriétés (E2), Plein feu (E1), looks de démonstration (E16), pad de tap sur l'APC (E14) | Reprises après les neuf ci-dessus | ⏳ |
 
 ### 9.3 Faits simples à réaliser sans attendre une décision
 
 Touche T allumant TAP, Entrée = Fixer (jusqu'à la refonte du bloc), rappel du tempo dans le Simulateur : à faire dans la prochaine
 version, avec les décisions 1 à 3.
+
+### 9.4 Décisions prises le 2026-10-01 (récapitulatif)
+
+| N° | Décision |
+|---|---|
+| 1 | Bouton Audio à bascule ; Audio actif : champ BPM, TAP, + et − grisés ; ×2, ÷ 2 et « 1 ici » gardés ; confiance à droite ; plus de libellé de source ni de case Écoute |
+| 2 | Écran Audio sur une page : direct à gauche, niveaux verticaux à droite, réglages et calibration repliables ; maquette avant développement |
+| 3 | Titre du morceau : avec P9 |
+| 4 | Volet « Au rythme » : réglages inopérants masqués, phrase de résumé en tête |
+| 5 | Facteur de rythme par scène (÷ 8 … × 4) à la place de « Tous les N » |
+| 6 (idées 4, 5, 6) | Touche T qui allume TAP, Entrée = Fixer, rappel du BPM dans le Simulateur : à faire sans autre décision |
+| 7 | Mesure à 3 temps : avec P8 (GEN-025) |
+
+**Reste à planifier** (lot « Ergonomie P7 », avant la validation de P7 ou juste après, au choix de l'utilisateur) : bloc BPM (1), écran Audio sur maquette (2), volet « Au rythme » et sous-temps du moteur (4 et 5), faits simples (6). Hors liste : durées en temps / mesures dans les Propriétés (E2), badge Plein feu (E1), looks de démonstration (E16), pad de tap APC (E14).
 
