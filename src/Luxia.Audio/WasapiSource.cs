@@ -175,8 +175,7 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
     {
         var format = _capture.WaveFormat;
         var channels = Math.Max(1, format.Channels);
-        var bytesPerSample = format.BitsPerSample / 8;
-        var frames = e.BytesRecorded / (bytesPerSample * channels);
+        var frames = e.BytesRecorded / ((format.BitsPerSample / 8) * channels);
         if (frames <= 0)
         {
             return;
@@ -188,27 +187,8 @@ public sealed class WasapiSource : IAudioSource, IMMNotificationClient
         }
 
         var standard = format is WaveFormatExtensible extensible ? extensible.ToStandardWaveFormat() : format;
-        var floatFormat = standard.Encoding == WaveFormatEncoding.IeeeFloat;
-        var buffer = e.Buffer;
-        for (var i = 0; i < frames; i++)
-        {
-            float sum = 0;
-            for (var c = 0; c < channels; c++)
-            {
-                var offset = ((i * channels) + c) * bytesPerSample;
-                sum += floatFormat && bytesPerSample == 4
-                    ? BitConverter.ToSingle(buffer, offset)
-                    : bytesPerSample == 2
-                        ? BitConverter.ToInt16(buffer, offset) / 32768f
-                        : bytesPerSample == 3
-                            ? (((buffer[offset] << 8) | (buffer[offset + 1] << 16) | (buffer[offset + 2] << 24)) >> 8) / 8388608f
-                            : BitConverter.ToInt32(buffer, offset) / 2147483648f;
-            }
-
-            _mono[i] = sum / channels;
-        }
-
-        BlockAvailable?.Invoke(this, new AudioBlock(_mono.AsMemory(0, frames)));
+        var count = PcmMixer.ToMono(e.Buffer, e.BytesRecorded, channels, format.BitsPerSample, standard.Encoding == WaveFormatEncoding.IeeeFloat, _mono);
+        BlockAvailable?.Invoke(this, new AudioBlock(_mono.AsMemory(0, count)));
     }
 
     private void OnStopped(object? sender, StoppedEventArgs e) => Stopped?.Invoke(this, e.Exception);

@@ -275,6 +275,43 @@ public sealed class MusicalReactivityTests
         engine.Playback(scene).ShouldBeNull();
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_StopLayerOrStopAll_CancelsThePendingLaunch(bool everything)
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Bar);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Engine.Snapshot.PendingLaunches.Count.ShouldBe(1);
+
+        engine.Send(everything ? new StopLayerCommand(CommandOrigin.User, Everything: true) : new StopLayerCommand(CommandOrigin.User, _layer.Id));
+        engine.Tick();
+        engine.Engine.Snapshot.PendingLaunches.ShouldBeEmpty();
+        engine.Run(3);
+        engine.Playback(scene).ShouldBeNull("la scène en attente ne démarre plus");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-018")]
+    public void Quantize_ReloadingTheShow_DropsAPendingLaunchWhoseSceneIsGone()
+    {
+        var scene = TwoSteps(advance: StepAdvanceMode.Duration, quantize: LaunchQuantize.Bar);
+        var engine = new EngineHarness(_show.Build());
+        engine.Run(0.3);
+        engine.Launch(scene);
+        engine.Tick();
+        engine.Engine.Snapshot.PendingLaunches.Count.ShouldBe(1);
+
+        engine.Engine.LoadShow(new ShowBuilder().Build());
+        engine.Run(3);
+
+        engine.Engine.Snapshot.PendingLaunches.ShouldBeEmpty();
+    }
+
     [Fact]
     [Trait("Exigence", "MOT-062")]
     public void MusicalEffect_CycleStartsOnTheClock_NotOnTheLaunch()

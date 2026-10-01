@@ -185,7 +185,7 @@ public sealed class MusicalClock
         // tempo d'origine ramenait les voyants au rythme de la musique (essai P7, exemple 28 b).
         var scaled = Math.Abs(_audioScale - 1) > 0.01;
         var fraction = _position - Math.Floor(_position);
-        var error = 0.0;
+        double error;
         if (!scaled)
         {
             error = reading.BeatPhase - fraction;

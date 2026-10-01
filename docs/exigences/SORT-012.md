@@ -18,8 +18,8 @@
 ## Réalisation
 
 - `firmware/arduino-dmx/arduino-dmx.ino`
-- `src/Dmx.Output/Arduino/ISerialPortProvider.cs`
-- `src/Dmx.Output/Arduino/SystemSerialPortProvider.cs`
+- `src/Luxia.Output/Arduino/ISerialPortProvider.cs`
+- `src/Luxia.Output/Arduino/SystemSerialPortProvider.cs`
 
 ## Tests
 

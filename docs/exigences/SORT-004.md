@@ -17,10 +17,10 @@
 
 ## Réalisation
 
-- `src/Dmx.Messaging/Events/OutputEvents.cs`
-- `src/Dmx.Output/OutputDriverStatus.cs`
-- `src/Dmx.UI.Modules.Outputs/DriverStatusViewModel.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`
+- `src/Luxia.Messaging/Events/OutputEvents.cs`
+- `src/Luxia.Output/OutputDriverStatus.cs`
+- `src/Luxia.UI.Modules.Outputs/DriverStatusViewModel.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`
 
 ## Tests
 

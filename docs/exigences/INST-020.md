@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `DeleteFixtureAsync`, confirmation (GEN-103).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `DeleteFixtureAsync`, confirmation (GEN-103).
 
 ## Tests
 

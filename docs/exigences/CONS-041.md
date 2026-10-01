@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Controls/OutputMonitor.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.UI.Controls/OutputMonitor.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

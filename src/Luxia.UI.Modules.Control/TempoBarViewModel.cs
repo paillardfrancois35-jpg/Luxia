@@ -37,9 +37,6 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     private int _beatInBar = 1;
 
     [ObservableProperty]
-    private string _barText = "Mesure 1";
-
-    [ObservableProperty]
     private bool _audioOn;
 
     [ObservableProperty]
@@ -109,7 +106,6 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         AudioOn = tempo.Source == TempoSourceKind.Audio;
         ManualEnabled = !AudioOn;
         BeatInBar = tempo.BeatInBar;
-        BarText = $"Mesure {tempo.Bar}";
         OnPropertyChanged(nameof(SourceText));
         OnPropertyChanged(nameof(Beat1));
         OnPropertyChanged(nameof(Beat2));

@@ -40,3 +40,4 @@
 | 2026-09-27 | Utilisateur | Test | v1.004.066 : ↑/↓ sur le master de la couche encadrée et Page ↑/↓ sur le Grand Master ok. Défaut d'affichage : le pourcentage « saute » (20 → 10 → 20) à chaque pas, quelle que soit la vitesse. |
 | 2026-09-27 | Claude | Développement | Même course écran / moteur que LIVE-003 : la relecture du moteur avant le traitement de la commande réaffichait l'ancienne valeur. `EngineEcho` (Luxia.UI.Controls) : la valeur réglée à l'écran est gardée jusqu'à sa confirmation par le moteur (au plus 10 relectures) ; appliqué au master de couche du Live et au Grand Master de l'en-tête. Test `LayerMaster_RefreshBeforeTheEngineTick_DoesNotJumpBack` (échoue sans la correction : 80, 90, 80). |
 | 2026-09-27 | Utilisateur | Test | v1.004.068 : plus de saut d'affichage. |
+| 2026-09-28 | Utilisateur | Validation | Validé avec la phase P5 (v1.005, 2026-09-28) ; entrée ajoutée à l'audit de fin de P7 : le statut Validé n'avait pas son entrée de validation. |

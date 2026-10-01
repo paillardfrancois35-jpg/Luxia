@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/PatchedFixture.cs` : `Name`, `Number`, `Color`.
-- `src/Dmx.Patch/Rules/PatchRules.cs` : `PlanMultiple` attribue le numéro à la création.
+- `src/Luxia.Patch/Model/PatchedFixture.cs` : `Name`, `Number`, `Color`.
+- `src/Luxia.Patch/Rules/PatchRules.cs` : `PlanMultiple` attribue le numéro à la création.
 - Repris dans la barre d'univers (INST-003), le moniteur de sortie (CONS-043) et le simulateur (SIM-001).
 
 ## Tests

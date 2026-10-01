@@ -204,7 +204,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-001 | `Blackout` | actif / inactif | Moteur | P4 |
 | CMD-002 | `RéglerGrandMaster` | niveau 0-1 | Moteur | P4 |
 | CMD-003 | `Figer` | actif / inactif | Moteur | P5 |
-| CMD-010 | `LancerScène` | scène, couche (optionnel si unique), temps de fondu (optionnel), solo, `StopIfPlaying` (bascule : arrête si la scène joue, tranché par le moteur — P5, LIVE-003) | Moteur | P4 |
+| CMD-010 | `LancerScène` | scène, couche (optionnel si unique), temps de fondu (optionnel), solo, `StopIfPlaying` (bascule : arrête si la scène joue, tranché par le moteur — P5, LIVE-003), `Immediate` (interne : relance sans quantification, utilisée par le moteur à l'échéance d'un départ quantifié, MOT-018) | Moteur | P4 |
 | CMD-011 | `ArrêterScène` | scène, temps de fondu (optionnel) | Moteur | P4 |
 | CMD-012 | `ArrêterCouche` | couche, temps de fondu | Moteur | P5 |
 | CMD-013 | `RéglerMasterCouche` | couche, niveau 0-1 | Moteur | P5 |
@@ -221,7 +221,8 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-031 | `RéglerDimmerGroupe` | groupe, niveau 0-1 | Moteur | ERG2 |
 | CMD-040 | `TapTempo` | — | Audio / Horloge | P7 |
 | CMD-041 | `ChoisirSourceTempo` | audio / tap / fixe (+ BPM) | Horloge | P7 |
-| CMD-042 | `AjusterTempo` | ×2, ÷2, ±1 BPM, recaler la phase | Horloge | P7 |
+| CMD-042 | `AjusterTempo` | ×2, ÷2, ± valeur en BPM, « 1 ici » (le temps en cours devient le premier de la mesure) | Horloge | P7 |
+| CMD-043 | `RégleLatenceTempo` | décalage en secondes (± 0,5) appliqué aux événements musicaux ; l'écoute le mémorise par périphérique | Horloge | P7 |
 | CMD-050 | `LancerShow` / `ArrêterShow` | show | Show | P8 |
 | CMD-051 | `ForcerTransition` | show, transition | Show | P8 |
 | CMD-060 | `ModeAuto` | actif / inactif | Directeur | P10 |
@@ -272,7 +273,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | GEN-023 | I | P4 | Les durées sont exprimées **soit en secondes** (résolution 1 ms), **soit en temps musicaux** (temps, fraction de temps, mesures). Le choix se fait par durée (étape, fondu, effet). | Test : étape de « 2 temps » à 120 BPM dure 1,000 s ; à 90 BPM 1,333 s. |
 | GEN-024 | I | P7 | La mesure par défaut est à **4 temps**. | — |
 | GEN-025 | S | P8 | Les mesures à **3 temps** (valse, musiques de bal) sont prises en charge par séquence et par show. | Test : séquence 3/4 → une mesure = 3 temps. |
-| GEN-026 | I | P7 | Le tempo est exprimé en **BPM** (décimal, précision 0,1), borné à une plage réglable (par défaut 60-200). | — |
+| GEN-026 | I | P7 | Le tempo est exprimé en **BPM** (décimal, précision 0,1), borné par le moteur à **20-400 BPM** ; l'écoute explore une plage réglable à l'écran Audio (par défaut 70-180). | — |
 
 ---
 

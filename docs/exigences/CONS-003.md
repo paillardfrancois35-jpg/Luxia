@@ -17,12 +17,12 @@
 
 ## Réalisation
 
-- `src/Dmx.Engine/ChannelOverrides.cs`
-- `src/Dmx.Engine/RenderEngine.cs`
-- `src/Dmx.Messaging/Commands/OverrideChannelsCommand.cs`
-- `src/Dmx.Messaging/Commands/ReleaseOverridesCommand.cs`
-- `src/Dmx.UI.Controls/Fader.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.Engine/ChannelOverrides.cs`
+- `src/Luxia.Engine/RenderEngine.cs`
+- `src/Luxia.Messaging/Commands/OverrideChannelsCommand.cs`
+- `src/Luxia.Messaging/Commands/ReleaseOverridesCommand.cs`
+- `src/Luxia.UI.Controls/Fader.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

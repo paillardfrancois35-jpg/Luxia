@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs` : `OutputPreferences.Assignments` (SORT-006, réalisé en P0).
-- `src/Dmx.Patch/Model/Installation.cs` : ne contient que le numéro et le nom des univers, aucune référence à un pilote.
+- `src/Luxia.Core/Settings/Preferences.cs` : `OutputPreferences.Assignments` (SORT-006, réalisé en P0).
+- `src/Luxia.Patch/Model/Installation.cs` : ne contient que le numéro et le nom des univers, aucune référence à un pilote.
 
 ## Tests
 

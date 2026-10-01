@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/PatchRules.cs` : `FindFreeAddress`.
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `SuggestAddressCommand` (bouton « Libre »).
+- `src/Luxia.Patch/Rules/PatchRules.cs` : `FindFreeAddress`.
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `SuggestAddressCommand` (bouton « Libre »).
 
 ## Tests
 

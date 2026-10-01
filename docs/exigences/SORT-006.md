@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs`
+- `src/Luxia.Core/Settings/Preferences.cs`
 
 ## Tests
 

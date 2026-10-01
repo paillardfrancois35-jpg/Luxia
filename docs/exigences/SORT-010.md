@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Output/Arduino/ArduinoOutputDriver.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`
+- `src/Luxia.Output/Arduino/ArduinoOutputDriver.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`
 
 ## Tests
 

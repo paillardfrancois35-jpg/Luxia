@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Controls/Fader.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.UI.Controls/Fader.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
 
 ## Tests
 

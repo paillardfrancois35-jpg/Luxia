@@ -92,6 +92,17 @@ Une **matrice exigences ↔ tests** est tenue à jour au fil du développement (
 identifiant, priorité, phase, test(s) associé(s), statut (non commencé / en cours / validé). Une phase n'est close que si toutes
 ses exigences I sont validées.
 
+### 7.1 Correspondance des tests audio et tempo (P7)
+
+| Test prévu | Réalisé par |
+|---|---|
+| T-AUD-01 (analyse sur signaux synthétiques) | `AnalyzerTests`, `PulseAndEnergyTests` (`tests/Luxia.Audio.Tests`) |
+| T-AUD-02 (jeu de test annoté) | `luxia-headless audio` ; rapport chiffré [essais/P7-audio-rapport.md](essais/P7-audio-rapport.md) (troisième édition) |
+| T-AUD-03 (horloge musicale) | `MusicalClockTests` (`tests/Luxia.Engine.Tests`) |
+| T-AUD-04 (écoute, scènes au temps) | `AudioListenerTests`, `MusicalReactivityTests`, `ReferenceShowP7Tests` (trames de référence `P7-scenes.txt`) |
+| T-AUD-05 (essai à la main) | Guides [P7](demos/P7-audio-tempo.md) et re-vérifications ; résultats [essais/P7-resultats.md](essais/P7-resultats.md) |
+| T-AUD-06 (6 h de capture continue) | **Non fait** : 1 h sur le matériel avant validation, 6 h avec P10 (GEN-092) ; `AudioListenerHardwareTests` (catégorie « Materiel ») pour l'essai court |
+
 ## 8. Démonstrations et non-régression
 
 Les exemples livrés à chaque phase (doc 40 §7) font partie des tests : chaque exemple est rejoué automatiquement en temps virtuel

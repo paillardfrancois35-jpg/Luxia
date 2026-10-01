@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs`
-- `src/Dmx.Output/OutputRouter.cs`
+- `src/Luxia.Core/Settings/Preferences.cs`
+- `src/Luxia.Output/OutputRouter.cs`
 
 ## Tests
 

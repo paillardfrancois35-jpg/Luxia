@@ -1,5 +1,5 @@
-using Avalonia.Input.Platform;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 
 namespace Luxia.UI.Modules.Control.Views;

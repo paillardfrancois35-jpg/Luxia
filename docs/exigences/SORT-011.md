@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Settings/Preferences.cs`
-- `src/Dmx.Output/Arduino/ArduinoOutputDriver.cs`
+- `src/Luxia.Core/Settings/Preferences.cs`
+- `src/Luxia.Output/Arduino/ArduinoOutputDriver.cs`
 
 ## Tests
 

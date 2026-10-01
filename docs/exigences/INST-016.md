@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/FixtureUpdateImpact.cs` : `ForModeChange` (canaux perdus/gagnés par nom).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `ChangeModeAsync`, confirmation (GEN-103) si impact non vide.
+- `src/Luxia.Patch/Rules/FixtureUpdateImpact.cs` : `ForModeChange` (canaux perdus/gagnés par nom).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `ChangeModeAsync`, confirmation (GEN-103) si impact non vide.
 
 ## Tests
 

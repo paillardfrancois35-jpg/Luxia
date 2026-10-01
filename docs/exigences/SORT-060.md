@@ -17,11 +17,11 @@
 
 ## Réalisation
 
-- `src/Dmx.Output/Drivers/RecorderOutputDriver.cs`
-- `src/Dmx.Output/Recording/RecordingFormat.cs`
-- `src/Dmx.Output/Recording/RecordingReader.cs`
-- `src/Dmx.Output/Recording/RecordingWriter.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`
+- `src/Luxia.Output/Drivers/RecorderOutputDriver.cs`
+- `src/Luxia.Output/Recording/RecordingFormat.cs`
+- `src/Luxia.Output/Recording/RecordingReader.cs`
+- `src/Luxia.Output/Recording/RecordingWriter.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`
 
 ## Tests
 

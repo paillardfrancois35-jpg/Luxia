@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `CreateSelectionCommand` (cases à cocher dans la liste du patch, onglet « Univers et patch »).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `CreateSelectionCommand` (cases à cocher dans la liste du patch, onglet « Univers et patch »).
 
 ## Tests
 

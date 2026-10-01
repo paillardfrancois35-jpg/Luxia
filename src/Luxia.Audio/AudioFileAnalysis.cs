@@ -63,11 +63,6 @@ public static class AudioFileAnalysis
         }
 
         var analyzer = new AudioAnalyzer(44100);
-        if (double.TryParse(Environment.GetEnvironmentVariable("LUXIA_SENS"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var sens))
-        {
-            analyzer.PulseSensitivity = sens;
-        }
-
         var events = new List<AudioEvent>();
         analyzer.EventRaised += events.Add;
         var bassTotal = 0;

@@ -17,12 +17,12 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Snapshots/ConsoleSnapshot.cs`
-- `src/Dmx.Hosting/DmxRuntime.cs`
-- `src/Dmx.Messaging/Commands/OverrideChannelsCommand.cs`
-- `src/Dmx.UI.Modules.Console/ConsoleView.axaml`
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs`
-- `src/Dmx.UI.Modules.Console/SnapshotViewModel.cs`
+- `src/Luxia.Core/Snapshots/ConsoleSnapshot.cs`
+- `src/Luxia.Hosting/LuxiaRuntime.cs`
+- `src/Luxia.Messaging/Commands/OverrideChannelsCommand.cs`
+- `src/Luxia.UI.Modules.Console/ConsoleView.axaml`
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs`
+- `src/Luxia.UI.Modules.Console/SnapshotViewModel.cs`
 
 ## Tests
 

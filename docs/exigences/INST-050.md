@@ -17,10 +17,10 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/Venue.cs` : `VenueSet` (lieu « Générique » par défaut).
-- `src/Dmx.Patch/VenueStore.cs` : `lieux.json`.
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `CreateVenueCommand`, `DuplicateVenueCommand`, `ActivateVenueCommand`, `DeleteVenueAsync` (renommer : champ `Name` de la ligne, enregistré avec « Enregistrer le lieu »).
-- `src/Dmx.UI.Modules.Installation/VenueRowViewModel.cs` (`IsActive`) et `InstallationView.axaml` : le lieu actif est mis en évidence dans la liste (point vert + « (actif) »).
+- `src/Luxia.Patch/Model/Venue.cs` : `VenueSet` (lieu « Générique » par défaut).
+- `src/Luxia.Patch/VenueStore.cs` : `lieux.json`.
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `CreateVenueCommand`, `DuplicateVenueCommand`, `ActivateVenueCommand`, `DeleteVenueAsync` (renommer : champ `Name` de la ligne, enregistré avec « Enregistrer le lieu »).
+- `src/Luxia.UI.Modules.Installation/VenueRowViewModel.cs` (`IsActive`) et `InstallationView.axaml` : le lieu actif est mis en évidence dans la liste (point vert + « (actif) »).
 
 ## Tests
 

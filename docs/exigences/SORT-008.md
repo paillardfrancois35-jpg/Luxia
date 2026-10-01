@@ -17,11 +17,11 @@
 
 ## Réalisation
 
-- `src/Dmx.Messaging/Commands/TestOutputCommand.cs` : `HeldChannels`.
-- `src/Dmx.Engine/TestPattern.cs` : maintien à la valeur de test, exclusions toujours respectées.
-- `src/Dmx.Core/Settings/Preferences.cs` : `TestOutputPreferences.HeldChannels`.
-- `src/Dmx.Hosting/DmxRuntime.cs` : validation et transmission.
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`, `OutputsViewModel.cs` : champ « Canaux maintenus ».
+- `src/Luxia.Messaging/Commands/TestOutputCommand.cs` : `HeldChannels`.
+- `src/Luxia.Engine/TestPattern.cs` : maintien à la valeur de test, exclusions toujours respectées.
+- `src/Luxia.Core/Settings/Preferences.cs` : `TestOutputPreferences.HeldChannels`.
+- `src/Luxia.Hosting/LuxiaRuntime.cs` : validation et transmission.
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`, `OutputsViewModel.cs` : champ « Canaux maintenus ».
 
 ## Tests
 

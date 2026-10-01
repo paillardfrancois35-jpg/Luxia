@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Controls/UniverseBar.cs` : nouveau contrôle, 512 cases proportionnelles, coloré par appareil patché (couleur de l'appareil), chevauchement encadré en rouge, canaux libres en gris sombre, nom au survol (`ChannelHovered`).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : `UniverseBarSegments`, recalculés à chaque modification du patch pour l'univers affiché.
+- `src/Luxia.UI.Controls/UniverseBar.cs` : nouveau contrôle, 512 cases proportionnelles, coloré par appareil patché (couleur de l'appareil), chevauchement encadré en rouge, canaux libres en gris sombre, nom au survol (`ChannelHovered`).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : `UniverseBarSegments`, recalculés à chaque modification du patch pour l'univers affiché.
 
 ## Tests
 

@@ -45,6 +45,7 @@ public sealed class AudioAnalyzer
         _energy = new EnergyTracker(_frames.FrameRate);
         _publishEvery = Math.Max(1, (int)(_frames.FrameRate / 40));
         _onFrame = OnFrame;
+        _raise = e => EventRaised?.Invoke(e);
     }
 
     /// <summary>Levé (sur le fil qui appelle <see cref="Push"/>) à chaque événement musical : silence, break, drop, montée, niveau.</summary>
@@ -117,6 +118,7 @@ public sealed class AudioAnalyzer
         Publish();
     }
 
+    private readonly Action<AudioEvent> _raise;
     private readonly double[] _upperRecent = new double[5];
     private int _upperIndex;
     private double _upperAverage;
@@ -179,7 +181,7 @@ public sealed class AudioAnalyzer
         }
 
         _rhythm.Add(features.Flux, features.BassFlux);
-        _energy.Process(features, pulses, _rhythm.Bpm, e => EventRaised?.Invoke(e));
+        _energy.Process(features, pulses, _rhythm.Bpm, _raise);
         if (++_sincePublish >= _publishEvery)
         {
             _sincePublish = 0;

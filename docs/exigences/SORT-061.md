@@ -17,11 +17,11 @@
 
 ## Réalisation
 
-- `src/Dmx.Hosting/DmxRuntime.cs`
-- `src/Dmx.Output/Drivers/RecorderOutputDriver.cs`
-- `src/Dmx.Output/OutputRouter.cs`
-- `src/Dmx.UI.Modules.Outputs/OutputsView.axaml`
-- `src/Dmx.UI.Modules.Outputs/OutputsViewModel.cs`
+- `src/Luxia.Hosting/LuxiaRuntime.cs`
+- `src/Luxia.Output/Drivers/RecorderOutputDriver.cs`
+- `src/Luxia.Output/OutputRouter.cs`
+- `src/Luxia.UI.Modules.Outputs/OutputsView.axaml`
+- `src/Luxia.UI.Modules.Outputs/OutputsViewModel.cs`
 
 ## Tests
 

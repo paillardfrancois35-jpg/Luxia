@@ -57,9 +57,6 @@ internal sealed class FrameAnalyzer
     /// <summary>Fréquence d'échantillonnage du son entrant.</summary>
     public int SampleRate { get; }
 
-    /// <summary>Échantillons entre deux trames.</summary>
-    public int Hop => _hop;
-
     /// <summary>Trames produites par seconde.</summary>
     public double FrameRate => (double)SampleRate / _hop;
 

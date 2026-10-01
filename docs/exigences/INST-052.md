@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Model/FixturePlacement.cs` : `Absent`.
-- `src/Dmx.UI.Modules.Simulator/SimulatorViewModel.cs` : un appareil absent (ou non placé) n'apparaît pas au simulateur.
+- `src/Luxia.Patch/Model/FixturePlacement.cs` : `Absent`.
+- `src/Luxia.UI.Modules.Simulator/SimulatorViewModel.cs` : un appareil absent (ou non placé) n'apparaît pas au simulateur.
 
 ## Tests
 

@@ -182,10 +182,20 @@ Liste vivante, alimentée à chaque fois qu'un même type d'erreur se reproduit.
   l'espace de noms `Luxia.UI.Modules.Control`, plus le type `Avalonia.Controls.Control` (erreur CS0118). Écrire
   `Avalonia.Controls.Control` dans ce module. (Rencontré le 2026-09-28.)
 
+- **HTP : une scène d'intensité pleine masque les autres.** « Plein feu » tient tous les appareils à 100 % sur la couche Intensité (la plus haute valeur l'emporte) : un chenillard ou un flash d'intensité sur les mêmes appareils n'a aucun effet visible. Pour essayer un effet, utiliser une scène qui n'allume que ce qu'il faut (« Lyres allumées (sans les PAR) »). (Essai P7.)
+- **Tout ce qui parle à Windows (COM, WASAPI, Bluetooth) est lent et peut échouer à tout moment.** Énumérer les périphériques (0,4 à 1 s), ouvrir une capture, arrêter une boucle sur un casque Bluetooth : jamais sur le chemin de démarrage ni sur le fil de l'interface, et jamais en attendant la fin d'un arrêt. (Essai P7 : démarrage ralenti, changement de sortie non suivi.)
+- **Un objet COM libéré lève une `InvalidCastException`, pas une `ObjectDisposedException`.** Lire `MMDevice.ID` après un arrêt concurrent a fait tomber l'application (1.009.090). Lire une fois ce dont on a besoin à la création et le garder (`WasapiSource._deviceId`). (Essai P7.)
+- **Aucune exception ne doit sortir d'un timer ni d'un fil de fond** : l'application s'arrête (« FTL »). Tout rappel de `System.Threading.Timer` passe par un garde-fou qui journalise (`AudioListener.Guard`). Vérifier aussi les abonnés d'événements appelés depuis un fil de capture. (Essai P7.)
+- **Arrêter une source depuis son propre fil de capture l'attend elle-même.** `StopRecording` joint le fil de capture : appelé depuis `DataAvailable` ou un abonné, il se bloque. Libérer une source hors verrou et hors de son fil (`Task.Run`). (Essai P7.)
+- **Une liste plafonnée ne se suit pas par son nombre d'éléments.** La liste d'événements de l'écran Audio (30 récents) ne se rafraîchissait plus une fois pleine : suivre un compteur total. (Essai P7, drop « jamais vu ».)
+- **Un état de saisie lié au focus ne doit pas être remis à faux par la validation.** Le champ BPM gardait le focus après Entrée : le rafraîchissement (20 fois par seconde) écrasait la frappe suivante. L'état « saisie en cours » suit le focus. (Essai P7, E3.)
+- **Recréer une liste d'éléments défilants remet le défilement en haut.** Mémoriser la position par colonne et la rétablir une fois le contenu mesuré (`ColumnsPanelView.OnColumnAttached`). (Essai P7.)
+
 ## 12. Historique
 
 | Date | Modification |
 |---|---|
+| 2026-10-02 | §11 : pièges de P7 (HTP, Windows lent, objet COM libéré, exception dans un timer, arrêt depuis son propre fil, liste plafonnée, état de saisie et focus, défilement perdu). |
 | 2026-09-29 | §11 : mesure de durée sous charge → meilleure de plusieurs séries. |
 | 2026-09-28 | §2 : échanges avec l'utilisateur toujours en français. |
 | 2026-09-28 | §11 : numéro de compilation partagé avec le prototype (lire la version de `LuXia.dll`). |

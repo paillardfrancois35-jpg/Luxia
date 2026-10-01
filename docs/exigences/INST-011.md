@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Patch/Rules/PatchRules.cs` : `PlanMultiple` (adresses consécutives + écart, numérotation).
-- `src/Dmx.UI.Modules.Installation/InstallationViewModel.cs` : champs « Quantité » et « Écart » du formulaire d'ajout.
+- `src/Luxia.Patch/Rules/PatchRules.cs` : `PlanMultiple` (adresses consécutives + écart, numérotation).
+- `src/Luxia.UI.Modules.Installation/InstallationViewModel.cs` : champs « Quantité » et « Écart » du formulaire d'ajout.
 
 ## Tests
 

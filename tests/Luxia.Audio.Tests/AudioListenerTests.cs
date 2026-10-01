@@ -126,10 +126,7 @@ public sealed class AudioListenerTests
 
         // Windows change la sortie par défaut sans prévenir la source (essai P7, exemple 15) : l'écoute le voit seule.
         factory.DefaultId = "haut-parleurs";
-        for (var i = 0; i < 40 && factory.Created.Count < 2; i++)
-        {
-            await Task.Delay(100, TestContext.Current.CancellationToken);
-        }
+        await WaitAsync(() => factory.Created.Count == 2 && factory.Created[1].Started, 6000);
 
         factory.Created.Count.ShouldBe(2);
         factory.Created[1].Started.ShouldBeTrue();

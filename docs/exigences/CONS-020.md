@@ -17,13 +17,13 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/ConsoleViewModel.cs` : `IsDeviceMode`, `DeviceFixtures` (un `FixtureFadersViewModel` par appareil patché de l'univers affiché, trié par adresse — CONS-060, GEN-004).
-- `src/Dmx.UI.Modules.Console/ConsoleView.axaml` : bascule « Mode : Canaux / Appareils », panneau des groupes.
-- `src/Dmx.UI.Modules.Console/FixtureFadersView.axaml` : bandeau nom + bouton Identifier ajouté (partagé avec le test en direct de la bibliothèque).
+- `src/Luxia.UI.Modules.Console/ConsoleViewModel.cs` : `IsDeviceMode`, `DeviceFixtures` (un `FixtureFadersViewModel` par appareil patché de l'univers affiché, trié par adresse — CONS-060, GEN-004).
+- `src/Luxia.UI.Modules.Console/ConsoleView.axaml` : bascule « Mode : Canaux / Appareils », panneau des groupes.
+- `src/Luxia.UI.Modules.Console/FixtureFadersView.axaml` : bandeau nom + bouton Identifier ajouté (partagé avec le test en direct de la bibliothèque).
 
 ## Tests
 
-- `ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheRealChannel`
+- `ConsoleViewModelTests.DeviceMode_BuildsOneGroupPerPatchedFixture_AndFaderOverridesTheAttribute`
 
 ## Historique
 

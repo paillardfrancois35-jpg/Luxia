@@ -17,8 +17,8 @@
 
 ## Réalisation
 
-- `src/Dmx.Core/Dmx/IFrameSink.cs`
-- `src/Dmx.Output/OutputDriver.cs`
+- `src/Luxia.Core/Dmx/IFrameSink.cs`
+- `src/Luxia.Output/OutputDriver.cs`
 
 ## Tests
 

@@ -47,7 +47,7 @@ Musique jouée **sur ce PC** (Deezer, YouTube Music ou VLC), volume confortable.
 | 15 | Changement de périphérique | Passer du casque aux enceintes (ou l'inverse) pendant l'écoute | Message « Changement de périphérique… », puis l'écoute reprend toute seule en quelques secondes |
 | 16 | Changer de morceau | Baisser le son, lancer **tout de suite** un autre morceau d'un autre tempo | LuXia retrouve le nouveau tempo en moins de 8-10 s ; l'horloge garde l'ancien pendant ce temps |
 | 17 | Pause | Mettre le morceau en pause 5 s, puis le relancer | « silence » dans les événements ; l'horloge continue au dernier tempo, se recale à la reprise |
-| 18 | Micro USB | Écran Audio → Périphérique → *Entrée : <micro USB>* ; jouer un morceau près du micro | Le tempo se trouve, en général moins précis ; noter la confiance |
+| 18 | Micro USB | Écran Audio → Périphérique → *Entrée : <micro USB>* ; jouer un morceau près du micro | Le tempo se trouve, en général moins précis ; noter la confiance. Si Windows refuse le micro : « Écoute impossible », à autoriser dans Paramètres Windows → Confidentialité → Microphone → applications de bureau ; la première ouverture de la liste des périphériques peut prendre une seconde |
 
 ## 4. Impulsions, énergie et événements (lot 4)
 

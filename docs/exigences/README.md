@@ -275,6 +275,8 @@
 | [GEN-021](GEN-021.md) | Affichage dans l'unité la plus parlante | P2 | I | Réalisé |
 | [GEN-022](GEN-022.md) | Couleurs logiques converties selon les émetteurs | P4 | I | Réalisé |
 | [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Réalisé |
+| [GEN-024](GEN-024.md) | Mesure à 4 temps | P7 | I | Réalisé |
+| [GEN-026](GEN-026.md) | Tempo en BPM, bornes et plages | P7 | I | Réalisé |
 | [GEN-030](GEN-030.md) | Tick à 40 Hz (25-44 Hz) | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-032](GEN-032.md) | Calculs sur le temps écoulé réel | P4 | I | Réalisé |
@@ -382,6 +384,8 @@
 | [LIVE-009](LIVE-009.md) | Journal défilant des derniers événements | P5 | M | Réalisé |
 | [LIVE-010](LIVE-010.md) | Alerte non bloquante et visible si la sortie est déconnectée ou si un module est en erreur | P5 | I | Validé |
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
+| [LIVE-020](LIVE-020.md) | Affichage du tempo à l'écran de jeu | P7 | I | Réalisé |
+| [LIVE-021](LIVE-021.md) | Commandes de tempo à l'écran de jeu | P7 | I | Réalisé |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
@@ -462,6 +466,7 @@
 | [SCN-003](SCN-003.md) | Durées d'une étape et courbe | P4 | I | Validé |
 | [SCN-004](SCN-004.md) | Modification groupée des durées | P4 | I | Réalisé |
 | [SCN-005](SCN-005.md) | Paramètres de lecture d'une scène | P4 | I | Réalisé |
+| [SCN-006](SCN-006.md) | Paramètres musicaux d'une scène | P7 | I | Réalisé |
 | [SCN-007](SCN-007.md) | Cibles : appareil, cellule, sélection | P4 | I | Validé |
 | [SCN-008](SCN-008.md) | Valeur directe, palette ou plage | P4 | I | Réalisé |
 | [SCN-009](SCN-009.md) | Drapeau « Visible en Live » | P4 | I | Réalisé |
@@ -493,6 +498,7 @@
 | [SIM-008](SIM-008.md) | Zones interdites et repères du lieu | P3 | M | Non réalisé |
 | [SIM-009](SIM-009.md) | Appareils identifiés et en erreur mis en évidence | P3 | M | Réalisé |
 | [SIM-010](SIM-010.md) | Sélection au clic / au lasso | P3 | M | Réalisé |
+| [SIM-011](SIM-011.md) | Bandeau musical du simulateur | P7 | M | Partiel |
 | [SIM-012](SIM-012.md) | Protection photosensible (strobe) | P3 | I | Réalisé |
 | [SIM-013](SIM-013.md) | Vue de face | P3 | S | Non réalisé |
 | [SORT-001](SORT-001.md) | Univers vers plusieurs pilotes | P0 | I | Réalisé |

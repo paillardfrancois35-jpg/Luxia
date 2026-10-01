@@ -17,7 +17,7 @@
 
 ## Réalisation
 
-- `src/Dmx.UI.Modules.Console/FixtureFadersView.axaml`, `FixtureChannelViewModel.cs` : fader + `RangeBar` + boutons de plages (repris de BIB-060/061), un widget par **canal** (pas encore par attribut composite).
+- `src/Luxia.UI.Modules.Console/FixtureFadersView.axaml`, `FixtureChannelViewModel.cs` : fader + `RangeBar` + boutons de plages (repris de BIB-060/061), un widget par **canal** (pas encore par attribut composite).
 
 ## Tests
 
