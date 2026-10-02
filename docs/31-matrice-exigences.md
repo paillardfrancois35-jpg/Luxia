@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7 P8` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -198,7 +198,7 @@
 | [GEN-012](exigences/GEN-012.md) | M | Commande refusée : événement avec le motif | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
 | [GEN-013](exigences/GEN-013.md) | I | Publication non bloquante des événements | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
 | [GEN-022](exigences/GEN-022.md) | I | Couleurs logiques converties selon les émetteurs | Réalisé | ColorConversionTests.LedBar_24Channels_ColorOnWholeFixture_ReachesEverySection<br>ColorConversionTests.Rgb_Par_TakesColorDirectly |
-| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Réalisé | MusicalClockTests.Clock_Fixed120_CountsBeatsAndBars<br>ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
+| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Réalisé | EditBenchPanelsTests.Properties_SceneFades_AcceptBeatsAndStayEmptyWhenCleared<br>EditBenchPanelsTests.Properties_StepDurations_InBeatsAndBars_AreSavedInTheirUnit<br>EditBenchPanelsTests.Properties_Wizard_GeneratesStepsInBeats<br>MusicalClockTests.Clock_Fixed120_CountsBeatsAndBars<br>(+1) |
 | [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
 | [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
 | [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
@@ -476,7 +476,7 @@
 | [GEN-035](exigences/GEN-035.md) | M | Un décalage de latence global | Validé | MusicalClockTests.Latency_AdvancesTheEventsAndIsBounded |
 | [LIVE-020](exigences/LIVE-020.md) | I | Affichage du tempo à l'écran de jeu | Réalisé |  |
 | [LIVE-021](exigences/LIVE-021.md) | I | Commandes de tempo à l'écran de jeu | Réalisé |  |
-| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Validé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
+| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Validé | EditBenchPanelsTests.Properties_StepDurations_InBeatsAndBars_AreSavedInTheirUnit<br>MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
 | [MOT-017](exigences/MOT-017.md) | I | Avance à l'événement | Validé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio<br>MusicalReactivityTests.Step_AutoAdvance_MakesAShortFlash_WhileTheNextStepWaitsForTheEvent<br>MusicalReactivityTests.Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges<br>MusicalReactivityTests.Step_OnBassPulses_AdvancesOnTheKicks_NotOnTheBeats<br>(+3) |
 | [MOT-018](exigences/MOT-018.md) | M | Quantification du lancement | Validé | MusicalReactivityTests.Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting<br>MusicalReactivityTests.Quantize_Beat_OnTheBeat_StartsImmediately<br>MusicalReactivityTests.Quantize_Phrase4_WaitsSixteenBeats<br>MusicalReactivityTests.Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt<br>(+3) |
 | [MOT-020](exigences/MOT-020.md) | M | Une scène peut suivre l'horloge principale ou une horloge fixe propre | Validé | MusicalReactivityTests.OwnClock_MusicalDurationsUseTheSceneTempo<br>MusicalReactivityTests.OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster<br>ReferenceShowP7Tests.SlowMovement_FollowsItsOwnTempo_WhateverTheMainClock |
@@ -486,3 +486,33 @@
 | [SCN-051](exigences/SCN-051.md) | M | Modulation par l'énergie | Partiel | MusicalReactivityTests.EnergySpeed_MakesTheSceneFasterWhenTheMusicIsMoreEnergetic |
 | [SCN-052](exigences/SCN-052.md) | M | En l'absence de signal audio | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio |
 | [SIM-011](exigences/SIM-011.md) | M | Bandeau musical du simulateur | Partiel |  |
+
+## P8 – 23 exigences, 0 couvertes par des tests automatiques
+
+> Sans fiche : 23
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [GEN-025](exigences/GEN-025.md) | S | (fiche manquante) | Sans fiche |  |
+| [GEN-134](exigences/GEN-134.md) | M | (fiche manquante) | Sans fiche |  |
+| [LIVE-023](exigences/LIVE-023.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-001](exigences/SHOW-001.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-002](exigences/SHOW-002.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-003](exigences/SHOW-003.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-004](exigences/SHOW-004.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-005](exigences/SHOW-005.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-006](exigences/SHOW-006.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-007](exigences/SHOW-007.md) | M | (fiche manquante) | Sans fiche |  |
+| [SHOW-008](exigences/SHOW-008.md) | S | (fiche manquante) | Sans fiche |  |
+| [SHOW-020](exigences/SHOW-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-021](exigences/SHOW-021.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-022](exigences/SHOW-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-023](exigences/SHOW-023.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-024](exigences/SHOW-024.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-025](exigences/SHOW-025.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-026](exigences/SHOW-026.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-027](exigences/SHOW-027.md) | I | (fiche manquante) | Sans fiche |  |
+| [SHOW-028](exigences/SHOW-028.md) | M | (fiche manquante) | Sans fiche |  |
+| [SHOW-029](exigences/SHOW-029.md) | M | (fiche manquante) | Sans fiche |  |
+| [SHOW-030](exigences/SHOW-030.md) | M | (fiche manquante) | Sans fiche |  |
+| [SHOW-031](exigences/SHOW-031.md) | S | (fiche manquante) | Sans fiche |  |
