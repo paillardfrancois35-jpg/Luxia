@@ -1,5 +1,5 @@
-<Project>
-  <!-- Réglages communs à tous les projets (doc 03 §4). -->
+﻿<Project>
+  <!-- RÃ©glages communs Ã  tous les projets (doc 03 Â§4). -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -17,15 +17,15 @@
     <Product>LuXia</Product>
     <Version>1.010</Version>
     <!--
-      GEN-119 : pendant le développement d'un passage non encore validé, l'application affiche « v<LuxiaDevVersion>.NNN »,
-      NNN augmentant à chaque compilation (cible LuxiaBuildNumber de Luxia.App), comme les étiquettes v1.0NN.MMM (doc 03 §7).
-      À la validation : Version = cette valeur, LuxiaDevVersion vidé.
+      GEN-119 : pendant le dÃ©veloppement d'un passage non encore validÃ©, l'application affiche Â« v<LuxiaDevVersion>.NNN Â»,
+      NNN augmentant Ã  chaque compilation (cible LuxiaBuildNumber de Luxia.App), comme les Ã©tiquettes v1.0NN.MMM (doc 03 Â§7).
+      Ã€ la validation : Version = cette valeur, LuxiaDevVersion vidÃ©.
     -->
-    <LuxiaDevVersion></LuxiaDevVersion>
+    <LuxiaDevVersion>1.011</LuxiaDevVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
-  <!-- Projets de tests : documentation XML non exigée. -->
+  <!-- Projets de tests : documentation XML non exigÃ©e. -->
   <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS1591</NoWarn>

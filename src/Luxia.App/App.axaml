@@ -38,6 +38,23 @@
     <Style Selector="ComboBox /template/ ScrollViewer:not(:luxia)">
       <Setter Property="AllowAutoHide" Value="False" />
     </Style>
+    <!-- Début de P9 (doc 99, analyse P8 E9 : « la liste change de largeur et de position, c'est perturbant ») : la liste dépliée a
+         une largeur fixe de 300 px quels que soient le champ et la longueur des textes (le modèle Fluent y ajoute la largeur du
+         champ comme minimum : un champ plus large que 300 px garde sa propre largeur) et une hauteur maximale unique ; les textes
+         trop longs sont coupés par « … » et lisibles en entier dans l'info-bulle de la ligne. -->
+    <Style Selector="ComboBox">
+      <Setter Property="MaxDropDownHeight" Value="320" />
+    </Style>
+    <Style Selector="ComboBox /template/ Border#PopupBorder:not(:luxia)">
+      <Setter Property="Width" Value="300" />
+    </Style>
+    <Style Selector="ComboBox /template/ Popup#PART_Popup:not(:luxia)">
+      <Setter Property="Placement" Value="BottomEdgeAlignedLeft" />
+    </Style>
+    <Style Selector="ComboBoxItem TextBlock">
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+      <Setter Property="ToolTip.Tip" Value="{Binding $self.Text}" />
+    </Style>
     <Style Selector="ComboBoxItem">
       <Setter Property="Foreground" Value="#F0F6FC" />
     </Style>
