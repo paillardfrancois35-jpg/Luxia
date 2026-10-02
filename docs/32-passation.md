@@ -303,6 +303,21 @@
   Remarque du contrôle : la liste dépliée d'une liste déroulante change de largeur et de position selon les textes : à fixer en tête
   de la phase suivante (doc 99).
 
+- **P9 « Lecture & Style » en cours** (branche `p9/lecture-style`, version de développement **1.011**, démarrée le 2026-10-02).
+  Cadrage : questions **Q48 à Q52** toutes validées « comme recommandé » (base de départ livrée ; le changement de titre réel
+  devient la source prioritaire de « au morceau suivant » avec repli sur l'écoute — révise D38 ; pas de nouvel écran : bloc dans
+  l'écran de jeu + fenêtre « Base musicale » à deux onglets ; outil d'enrichissement en ligne en dernier lot, optionnel ; PoC-3
+  sur le poste de l'utilisateur). MUS-004 (publicités) **abandonnée** (Q43). Découpage en 7 lots, **option A** : lot 1 puis essai
+  PoC-3 avec l'utilisateur, ensuite lots 2 à 7 en autonomie et essai complet en fin de phase (discussion test, doc 33).
+  **Fait** : lot 0 (largeur fixe des listes déroulantes : 300 px, alignée à gauche, texte coupé + info-bulle, mesure dans
+  `luxia-captures`) ; lot 1 (projet `Luxia.Media` + `Luxia.Media.Windows`, EVT-040 / 041, sonde `luxia-headless media`, 13 tests ;
+  **l'application, `luxia-headless` et `luxia-captures` passent en TFM `net10.0-windows10.0.19041.0`**). **Reste** : essai PoC-3
+  ([guide](demos/P9-poc3-sonde.md), [résultats](essais/P9-poc3.md)), lots 2 (normalisation), 3 (base et identification),
+  4 (écran de jeu : morceau, style, correction, journal), 5 (fenêtre Base musicale), 6 (enrichissement en ligne), 7 (contenu,
+  guide, revue globale, analyse ergonomique, validation).
+  **Piège vécu** : sous Windows PowerShell 5.1, `Get-Content … | Set-Content -Encoding utf8` a double-encodé `Directory.Build.props`
+  (lu en ANSI) ; pour modifier un fichier, utiliser l'outil Edit ou lire / écrire explicitement en UTF-8 sans BOM.
+
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.
 

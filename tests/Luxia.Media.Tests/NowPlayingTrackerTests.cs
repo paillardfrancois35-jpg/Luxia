@@ -24,6 +24,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     public void Dispose() => _tracker.Dispose();
 
     [Fact]
+    [Trait("Exigence", "MUS-006")]
     public void NoSession_NothingPlays_NoEvent()
     {
         // MUS-006 : sans application qui s'annonce, le système fonctionne (état « aucune lecture »).
@@ -38,6 +39,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-002")]
     public void NewTrack_IsPublishedOnceAfterTheStabilization()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -62,6 +64,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-002")]
     public void TitleThatFlickers_IsNotPublished()
     {
         _source.Set(Session("Chrome", "Titre A", "Artiste", MediaPlayback.Playing));
@@ -78,6 +81,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "EVT-040")]
     public void TrackChange_ReportsThePreviousTrack()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -91,6 +95,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-002")]
     public void EmptyTitle_DuringATransition_KeepsTheCurrentTrack()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -103,6 +108,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-001")]
     public void TwoPlayingSessions_TheLastStartedIsFollowed()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -119,6 +125,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-001")]
     public void NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen()
     {
         _source.Set(
@@ -143,6 +150,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "EVT-041")]
     public void Pause_RaisesPlaybackChanged_AndResumeToo()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -157,6 +165,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-006")]
     public void SessionDisappears_RaisesTrackChangedWithoutTrack()
     {
         _source.Set(Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
@@ -172,6 +181,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-003")]
     public void Position_IsInterpolatedWhilePlayingAndFrozenInPause()
     {
         var session = Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing) with
@@ -196,6 +206,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-003")]
     public void Position_StaysWithinTheDurationAndHonoursTheRate()
     {
         var session = Session("VLC", "Titre V", "Artiste V", MediaPlayback.Playing) with
@@ -215,6 +226,7 @@ public sealed class NowPlayingTrackerTests : IDisposable
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-003")]
     public void PlayerWithoutPosition_GivesNoPosition()
     {
         _source.Set(Session("Chrome", "Titre A", "Artiste A", MediaPlayback.Playing));

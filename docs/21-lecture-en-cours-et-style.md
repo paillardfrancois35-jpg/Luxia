@@ -134,7 +134,15 @@ Outil **séparé** (`Luxia.Tools.MusicEnrich`), lancé explicitement, jamais en 
 Sur 100 titres réels de vos soirées : taux de familles correctes proposées par chaque source en ligne et par l'IA locale ;
 temps de traitement. Détermine les sources retenues pour l'outil d'enrichissement.
 
-## 6. Tests
+## 6. Notes de réalisation (P9)
+
+| Sujet | Réalisation |
+|---|---|
+| Lecture en cours (lot 1) | Projet `Luxia.Media` : `NowPlayingTracker` (choix de la session : la dernière démarrée parmi celles qui jouent, sinon la suivie, sinon la dernière active ; changement de morceau publié après **1 s** de stabilité ; titre vide ignoré ; position interpolée selon la vitesse de lecture) sur une source abstraite `IMediaSessionSource`. Adaptateur `Luxia.Media.Windows` (API de contrôle des médias de Windows, relecture groupée après chaque événement du système + toutes les 5 s). Événements `TrackChanged` (EVT-040) et `PlaybackChanged` (EVT-041) sur le bus. Sonde `luxia-headless media` (PoC-3, [guide](demos/P9-poc3-sonde.md)). |
+| Plateforme | `Luxia.Media.Windows` cible `net10.0-windows10.0.19041.0` (projection de l'API Windows) ; l'application, `luxia-headless` et `luxia-captures` aussi. Les autres projets restent en `net10.0`. |
+| Écarts | MUS-004 (publicités) **abandonnée** (Q43). La miniature (MUS-003) n'est pas lue. |
+
+## 7. Tests
 
 | Test | Type | Contenu |
 |---|---|---|

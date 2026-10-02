@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7 P8` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7 P8 P9` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -516,3 +516,33 @@
 | [SHOW-029](exigences/SHOW-029.md) | M | Variables simples du show | Validé | ReferenceShowP8Tests.CoupletRefrainDrop_EndOfTheSong_LeadsToTheFinal_AndTheNextSongToTheIntro<br>ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
 | [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |
+
+## P9 – 23 exigences, 4 couvertes par des tests automatiques
+
+> Abandonné : 1 · Partiel : 2 · Réalisé : 2 · Sans fiche : 18
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [GEN-111](exigences/GEN-111.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-121](exigences/GEN-121.md) | I | (fiche manquante) | Sans fiche |  |
+| [LIVE-022](exigences/LIVE-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
+| [MUS-002](exigences/MUS-002.md) | I | Événements MorceauChangé | Réalisé | NowPlayingTrackerTests.EmptyTitle_DuringATransition_KeepsTheCurrentTrack<br>NowPlayingTrackerTests.NewTrack_IsPublishedOnceAfterTheStabilization<br>NowPlayingTrackerTests.TitleThatFlickers_IsNotPublished |
+| [MUS-003](exigences/MUS-003.md) | I | Extraction titre, artiste, album, miniature, durée et position estimée | Partiel | NowPlayingTrackerTests.PlayerWithoutPosition_GivesNoPosition<br>NowPlayingTrackerTests.Position_IsInterpolatedWhilePlayingAndFrozenInPause<br>NowPlayingTrackerTests.Position_StaysWithinTheDurationAndHonoursTheRate |
+| [MUS-004](exigences/MUS-004.md) | I | Détection des publicités | Abandonné |  |
+| [MUS-005](exigences/MUS-005.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-006](exigences/MUS-006.md) | M | Si aucune application ne fournit d'informations, le système fonctionne quand même | Partiel | NowPlayingTrackerTests.NoSession_NothingPlays_NoEvent<br>NowPlayingTrackerTests.SessionDisappears_RaisesTrackChangedWithoutTrack |
+| [MUS-007](exigences/MUS-007.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-020](exigences/MUS-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-021](exigences/MUS-021.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-022](exigences/MUS-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-023](exigences/MUS-023.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-024](exigences/MUS-024.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-025](exigences/MUS-025.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-026](exigences/MUS-026.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-027](exigences/MUS-027.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-028](exigences/MUS-028.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-029](exigences/MUS-029.md) | S | (fiche manquante) | Sans fiche |  |
+| [MUS-040](exigences/MUS-040.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-041](exigences/MUS-041.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-042](exigences/MUS-042.md) | M | (fiche manquante) | Sans fiche |  |

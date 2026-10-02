@@ -212,7 +212,8 @@ LuXia.sln
 │   ├── Luxia.Engine             Moteur de rendu temps réel : horloge, scènes, étapes, fondus, effets, couches, fusion, masters.
 │   ├── Luxia.Output             Abstraction des sorties + pilotes : Arduino série, Art-Net, sACN, Nulle, Enregistreur.
 │   ├── Luxia.Audio              Capture audio (boucle système / entrée), analyse : tempo, impulsions, énergie.
-│   ├── Luxia.Media              Lecture en cours (API Windows).
+│   ├── Luxia.Media              Lecture en cours : choix de la session, événements, position estimée (sans dépendance à Windows).
+│   ├── Luxia.Media.Windows      Adaptateur de l'API Windows de contrôle des médias (seul projet de bibliothèque à cibler une plateforme Windows).
 │   ├── Luxia.Music              Identification de style : normalisation titres, rapprochement flou, API, cache.
 │   ├── Luxia.Show               Séquenceur de show (Grafcet), séquences en mesures, Directeur automatique.
 │   ├── Luxia.Persistence        Lecture/écriture des fichiers (bibliothèque, installation, lieux, show), migrations de format.

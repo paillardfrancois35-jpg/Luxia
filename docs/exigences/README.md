@@ -268,6 +268,8 @@
 | [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Validé |
 | [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Réalisé |
 | [EVT-030](EVT-030.md) | Événement ÉtapeShowActivée, publié par Show, reçu par Live, Journal | P8 | I | Validé |
+| [EVT-040](EVT-040.md) | Événement MorceauChangé | P9 | I | Partiel |
+| [EVT-041](EVT-041.md) | Événement LectureDémarrée / LectureEnPause, publié par Lecture en cours, reçu par Directeu | P9 | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -459,6 +461,11 @@
 | [MOT-101](MOT-101.md) | Événements de scène et de refus | P4 | I | Réalisé |
 | [MOT-102](MOT-102.md) | Instantané de reprise | P5 | M | Réalisé |
 | [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Validé |
+| [MUS-001](MUS-001.md) | Lecture des sessions média du système | P9 | I | Réalisé |
+| [MUS-002](MUS-002.md) | Événements MorceauChangé | P9 | I | Réalisé |
+| [MUS-003](MUS-003.md) | Extraction titre, artiste, album, miniature, durée et position estimée | P9 | I | Partiel |
+| [MUS-004](MUS-004.md) | Détection des publicités | P9 | I | Abandonné |
+| [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Partiel |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
