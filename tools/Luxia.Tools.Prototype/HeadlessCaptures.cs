@@ -33,7 +33,8 @@ internal static class HeadlessCaptures
             }
 
             // Chantier « Contrôle 2 » (ERG-032 à ERG-039) : écran de jeu, fenêtre d'édition, gestion des dimmers.
-            foreach (var mockup in Mockups.Controle2Mockups.All)
+            // P8 « Show & séquences » (Q44 solution C, Q45) : colonne Shows, bandeau, éditeurs de séquence et de show.
+            foreach (var mockup in Mockups.Controle2Mockups.All.Concat(Mockups.ShowMockups.All))
             {
                 var window2 = mockup.Create();
                 window2.Show();
