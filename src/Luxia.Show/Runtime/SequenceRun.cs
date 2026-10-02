@@ -253,6 +253,13 @@ internal sealed class SequenceRun
         var end = block.Start + block.Length;
         var wrap = Definition.End == SequenceEnd.Loop && end >= Definition.Bars - Epsilon;
         var exclusive = host.Show.Layer(layerId)?.Exclusive ?? true;
+
+        // Bloc qui couvre tout le passage : en boucle, il se relaie à lui-même (sa scène continue).
+        if (wrap && block.Start < Epsilon)
+        {
+            return true;
+        }
+
         foreach (var (otherTrack, other) in _blocks)
         {
             if (otherTrack != track || ReferenceEquals(other, block))

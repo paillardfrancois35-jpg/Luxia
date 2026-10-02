@@ -29,7 +29,7 @@ temps** que la couche Effets (têtes décalées du multi-têtes, vague des PAR),
 |---|---|---|---|---|---|
 | *Montée 16 mesures* | séquence | Pistes par couche, relais au même instant, **rampe** de niveau, fumée, départ à la mesure | 32 s, une fois | oui | Bleu qui monte de 30 à 100 % (16 s) ; mesure 9 : chenillard des PAR, cercle des lyres, **segments des barres** ; mesure 13 : strobe, blanc chaud, **arc-en-ciel des barres** ; fumée sur la dernière mesure |
 | *Barres et multi-têtes 8 mesures* | séquence | **Barres et effet multi-têtes en vedette**, deux couches d'effets ensemble | 16 s, en boucle | oui | PAR en bleu et lyres au plafond en fond ; **têtes décalées** du multi-têtes tout du long ; barres : **segments** 8 s puis **arc-en-ciel** 8 s ; flash blanc sur le dernier temps |
-| *Groove 8 mesures* | séquence | **Boucle** sans coupure | 16 s, en boucle | oui | Une couleur par mesure, vague sur les PAR, lyres au centre puis en huit |
+| *Groove 8 mesures* | séquence | **Boucle** sans coupure | 16 s, en boucle | oui | PAR : **une couleur différente à chaque mesure** et, en même temps, une **vague d'intensité** de gauche à droite (10 → 100 %, 2 s) ; lyres au centre puis en huit ; le reste du parc à 100 % |
 | *Break calme 8 mesures* | séquence | Ambiance douce (UV) | 16 s, une fois | oui | 50 %, bleu, lyres au plafond, UV |
 | *Explosion drop 4 mesures* | séquence | **Flash** d'un temps, strobe puis multi-têtes | 8 s, une fois | oui | Flash blanc, strobe des PAR 4 s puis **têtes décalées** ; **segments des barres** tout du long ; chenillard, cercle, fumée |
 | *Pulsation couleurs (double temps)* | séquence | **Vitesse « double »** (SHOW-008) | 4 s par tour, en boucle | oui | Rouge, ambre, bleu, ambre : une couleur toutes les secondes (2 temps) au lieu de toutes les 2 s |
@@ -46,7 +46,7 @@ temps** que la couche Effets (têtes décalées du multi-têtes, vague des PAR),
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
 | 1 | Montée 16 mesures | Cliquer *Montée 16 mesures* dans la colonne Shows | Elle part **à la mesure suivante** (le bouton dit « attend la mesure ») ; bouton : « mesure N / 16 » et barre d'avancement ; bandeau : « séquence « Montée 16 mesures » N / 16 » ; déroulé du catalogue ; tout s'éteint à la fin |
-| 2 | Groove 8 mesures | Lancer *Groove 8 mesures* ; attendre 20 s ; recliquer | Elle **reprend au début sans coupure** ; second clic = arrêt (ses scènes s'arrêtent) |
+| 2 | Groove 8 mesures | Lancer *Groove 8 mesures* ; attendre 20 s ; recliquer | Les PAR changent de couleur à chaque mesure **et** ondulent en intensité ; elle **reprend au début sans coupure** (pas de noir, la couleur suit son cours) ; second clic = arrêt (ses scènes s'arrêtent) |
 | 3 | Tempo | Relancer *Groove* ; changer le tempo (×2, ÷2, TAP) | La séquence suit tout de suite le nouveau tempo |
 | 4 | Barres et multi-têtes | Lancer *Barres et multi-têtes 8 mesures* ; regarder les **barres** et l'**effet multi-têtes** | Les têtes du multi-têtes bougent décalées pendant que les barres font leurs segments puis leur arc-en-ciel ; les deux continuent ensemble (couches Effets et Libre) ; flash à la fin de chaque tour |
 | 4b | Double temps | Lancer *Pulsation couleurs (double temps)* ; puis ✎ dessus, **Vitesse** = « normale », **▶ Jouer** dans la fenêtre | Une couleur par seconde ; en « normale », une toutes les 2 s. Fermer la fenêtre par **Annuler** |

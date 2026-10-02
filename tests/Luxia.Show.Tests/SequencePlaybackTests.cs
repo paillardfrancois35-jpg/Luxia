@@ -96,6 +96,23 @@ public sealed class SequencePlaybackTests
     }
 
     [Fact]
+    [Trait("Exigence", "SHOW-005")]
+    public void Loop_ABlockCoveringThePass_KeepsItsSceneAcrossTheLoop()
+    {
+        var h = new SequencerHarness();
+        var a = h.Scene("A", h.Colors);
+        var sequence = new Sequence { Name = "Boucle", Bars = 2, End = SequenceEnd.Loop, Quantize = ShowQuantize.None, Tracks = [Track(h.Colors.Id, Block(0, 2, a.Id))] };
+        h.Sequences.Add(sequence);
+        h.Load(120);
+
+        h.Send(new LaunchSequenceCommand(CommandOrigin.Tool, sequence.Id));
+        h.RunTo(8.5);
+        h.Sequencer.State.Sequences.ShouldHaveSingleItem().Loops.ShouldBe(2);
+        h.Playing(a).ShouldBeTrue();
+        h.Starts(a).Count.ShouldBe(1, "le bloc se relaie à lui-même : ni arrêt ni relance au rebouclage");
+    }
+
+    [Fact]
     [Trait("Exigence", "SHOW-003")]
     public void SameSceneOnConsecutiveBlocks_IsNotInterrupted()
     {
