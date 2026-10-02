@@ -9,7 +9,7 @@ namespace Luxia.Media;
 /// </summary>
 /// <remarks>
 /// Règle de choix : parmi les sessions en lecture, la dernière démarrée ; sinon la session suivie jusque-là si elle existe
-/// encore ; sinon la dernière qui a joué. Un titre vide (transition d'un lecteur) ne compte pas comme un changement.
+/// encore ; sinon la dernière qui a joué depuis le démarrage (une session restée en pause n'est jamais choisie). Un titre vide (transition d'un lecteur) ne compte pas comme un changement.
 /// Les événements sont levés hors du verrou, sur le fil qui a appelé <see cref="Poll"/>.
 /// </remarks>
 public sealed class NowPlayingTracker : IDisposable
@@ -256,9 +256,14 @@ public sealed class NowPlayingTracker : IDisposable
             return _selectedId;
         }
 
-        return sessions.Count == 0
-            ? null
-            : sessions.OrderByDescending(s => _lastActive.GetValueOrDefault(s.Id, DateTimeOffset.MinValue)).First().Id;
+        // Plus personne ne joue et la session suivie a disparu (Deezer ferme la sienne peu après une pause) : seule une session qui a
+        // joué pendant cette exécution peut la remplacer. Une session restée en pause depuis avant n'est pas « la musique en cours » :
+        // la prendre ferait annoncer un faux changement de morceau (essai PoC-3 : Chrome en pause après Deezer).
+        return sessions
+            .Where(s => _lastActive.ContainsKey(s.Id))
+            .OrderByDescending(s => _lastActive[s.Id])
+            .Select(s => s.Id)
+            .FirstOrDefault();
     }
 
     /// <summary>Met à jour le morceau stabilisé ; renvoie vrai s'il a changé.</summary>

@@ -143,11 +143,40 @@ public sealed class NowPlayingTrackerTests : IDisposable
         _tracker.Current.Playing.ShouldBeFalse();
         _tracker.Current.Track!.Title.ShouldBe("Titre A");
 
-        // Deezer se ferme : on retombe sur la session restante.
+        // Deezer se ferme : VLC, en pause depuis avant et jamais vu en lecture, ne devient pas « le morceau en cours » (plus de morceau).
         _source.Set(Session("VLC", "Titre V", "Artiste V", MediaPlayback.Paused));
         PollFor(2);
-        _tracker.SelectedSessionId.ShouldBe("VLC");
+        _tracker.SelectedSessionId.ShouldBeNull();
+        _tracker.Current.ShouldBe(NowPlayingState.None);
+        _changes[^1].Track.ShouldBeNull();
     }
+
+    [Fact]
+    [Trait("Exigence", "MUS-001")]
+    public void SessionThatPlayedEarlier_TakesOverWhenTheFollowedOneDisappears()
+    {
+        _source.Set(Session("Chrome", "Titre C", "Artiste C", MediaPlayback.Playing));
+        PollFor(2);
+        _source.Set(Session("Chrome", "Titre C", "Artiste C", MediaPlayback.Playing), Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Playing));
+        PollFor(2);
+        _source.Set(Session("Chrome", "Titre C", "Artiste C", MediaPlayback.Paused), Session("Deezer", "Titre A", "Artiste A", MediaPlayback.Paused));
+        PollFor(2);
+        _tracker.SelectedSessionId.ShouldBe("Deezer");
+
+        // Deezer ferme sa session après la pause : Chrome a joué avant, il peut reprendre la main (dernier actif).
+        _source.Set(Session("Chrome", "Titre C", "Artiste C", MediaPlayback.Paused));
+        PollFor(2);
+
+        _tracker.SelectedSessionId.ShouldBe("Chrome");
+    }
+
+    [Theory]
+    [InlineData("Chrome", "Chrome")]
+    [InlineData("Spotify.exe", "Spotify")]
+    [InlineData("Deezer.62021768415AF_q7m17pa7q8kj0", "Deezer")]
+    [InlineData("Microsoft.ZuneMusic_8wekyb3d8bbwe!Microsoft.ZuneMusic", "Microsoft.ZuneMusic_8wekyb3d8bbwe")]
+    public void FriendlyName_ShortensTheApplicationIdentifier(string appId, string expected) =>
+        MediaApps.FriendlyName(appId).ShouldBe(expected);
 
     [Fact]
     [Trait("Exigence", "EVT-041")]

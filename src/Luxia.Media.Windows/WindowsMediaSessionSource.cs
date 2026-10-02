@@ -77,13 +77,6 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
         }
     }
 
-    private static string FriendlyName(string appId)
-    {
-        // « Chrome », « Spotify.exe », « Microsoft.ZuneMusic_8wekyb3d8bbwe!Microsoft.ZuneMusic » : le nom court, sans « .exe ».
-        var name = appId.Split('!')[0];
-        return name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ? name[..^4] : name;
-    }
-
     private async Task InitializeAsync()
     {
         try
@@ -247,7 +240,7 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
             var duration = timeline is null ? TimeSpan.Zero : timeline.EndTime - timeline.StartTime;
             return new MediaSessionInfo(
                 id,
-                FriendlyName(id),
+                MediaApps.FriendlyName(id),
                 properties?.Title ?? string.Empty,
                 properties?.Artist ?? string.Empty,
                 properties?.AlbumTitle ?? string.Empty,
