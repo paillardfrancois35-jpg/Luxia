@@ -487,31 +487,31 @@
 | [SCN-052](exigences/SCN-052.md) | M | En l'absence de signal audio | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio |
 | [SIM-011](exigences/SIM-011.md) | M | Bandeau musical du simulateur | Partiel |  |
 
-## P8 – 23 exigences, 16 couvertes par des tests automatiques
+## P8 – 23 exigences, 20 couvertes par des tests automatiques
 
-> Non réalisé : 2 · Partiel : 5 · Reporté : 1 · Réalisé : 13 · Sans fiche : 2
+> Partiel : 1 · Reporté : 1 · Réalisé : 21
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [GEN-025](exigences/GEN-025.md) | S | Les mesures à 3 temps | Reporté |  |
-| [GEN-134](exigences/GEN-134.md) | M | (fiche manquante) | Sans fiche |  |
-| [LIVE-023](exigences/LIVE-023.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-001](exigences/SHOW-001.md) | I | Une séquence a une longueur en mesures, une mesure | Partiel | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>ShowRulesTests.Sequence_SceneOnTheWrongTrack_AndBlocksOutOfBounds_AreReported<br>ShowRulesTests.Stores_RoundTrip_SequencesAndShows |
-| [SHOW-002](exigences/SHOW-002.md) | I | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | Non réalisé |  |
+| [GEN-134](exigences/GEN-134.md) | M | Un guide de conception | Réalisé |  |
+| [LIVE-023](exigences/LIVE-023.md) | I | Zone Show | Réalisé | SequencingScreensTests.Band_ForcesATransition_AtTheNextBar<br>SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-001](exigences/SHOW-001.md) | I | Une séquence a une longueur en mesures, une mesure | Partiel | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>SequencingScreensTests.NewSequence_DropMoveResize_UndoAndValidate<br>ShowRulesTests.Sequence_SceneOnTheWrongTrack_AndBlocksOutOfBounds_AreReported<br>ShowRulesTests.Stores_RoundTrip_SequencesAndShows |
+| [SHOW-002](exigences/SHOW-002.md) | I | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | Réalisé | SequencingScreensTests.NewSequence_DropMoveResize_UndoAndValidate<br>SequencingScreensTests.SequenceEditor_Cancel_LeavesTheProjectUntouched |
 | [SHOW-003](exigences/SHOW-003.md) | I | Sur une piste, un bloc lance sa scène dans la couche de la piste au début du bloc et l'arr | Réalisé | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack<br>SequencePlaybackTests.SameSceneOnConsecutiveBlocks_IsNotInterrupted |
 | [SHOW-004](exigences/SHOW-004.md) | I | Blocs d'actions en plus des scènes | Réalisé | ReferenceShowP8Tests.Rise_RampsTheColorsLayerOverEightBars<br>SequencePlaybackTests.FlashAndBlackoutBlocks_LastTheirBlock<br>SequencePlaybackTests.LayerLevelRamp_OverFourBars |
 | [SHOW-005](exigences/SHOW-005.md) | I | Modes de lecture | Réalisé | SequencePlaybackTests.Launch_IsQuantizedToTheNextBar<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack |
-| [SHOW-006](exigences/SHOW-006.md) | I | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | Partiel | SequencePlaybackTests.SequenceCommands_AreRejectedWithoutSequencer |
-| [SHOW-007](exigences/SHOW-007.md) | M | Aperçu | Partiel |  |
+| [SHOW-006](exigences/SHOW-006.md) | I | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | Réalisé | SequencePlaybackTests.SequenceCommands_AreRejectedWithoutSequencer<br>SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-007](exigences/SHOW-007.md) | M | Aperçu | Réalisé | SequencingScreensTests.ShowEditor_BlindTrial_RunsOnThePreviewOnly_WithSimulatedMusic |
 | [SHOW-008](exigences/SHOW-008.md) | S | Variation de la vitesse relative | Réalisé | SequencePlaybackTests.DoubleTime_PlaysTwiceAsFast |
-| [SHOW-020](exigences/SHOW-020.md) | I | Éditeur graphique | Non réalisé | ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd |
+| [SHOW-020](exigences/SHOW-020.md) | I | Éditeur graphique | Réalisé | SequencingScreensTests.Lock_RefusesTheEditors<br>SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate<br>ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd |
 | [SHOW-021](exigences/SHOW-021.md) | I | Actions continues, mémorisées, impulsionnelles | Réalisé | ShowExecutionTests.Launch_ActivatesTheInitialStepAndPlaysItsScenes<br>ShowExecutionTests.PlaySequence_RunsWhileTheStepIsActive_AndSequenceEndedMovesOn<br>ShowExecutionTests.PulseActions_FlashAndShortBlackout_EndOnTheirOwn<br>ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
-| [SHOW-022](exigences/SHOW-022.md) | I | Réceptivités du §3 | Réalisé | ShowExecutionTests.Conditions_TimeEnergyStyleTempoSongAndLogic<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.ManualTransition_IsOnlyForced_AtItsQuantization<br>ShowExecutionTests.RandomCondition_DrawsOncePerBar<br>(+1) |
+| [SHOW-022](exigences/SHOW-022.md) | I | Réceptivités du §3 | Réalisé | SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate<br>ShowExecutionTests.Conditions_TimeEnergyStyleTempoSongAndLogic<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.ManualTransition_IsOnlyForced_AtItsQuantization<br>(+2) |
 | [SHOW-023](exigences/SHOW-023.md) | I | Exécution conforme aux règles R1 à R6 | Réalisé | ReferenceShowP8Tests.EveryP8SequenceAndShow_ReplaysExactlyAsReference<br>ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.EndOfShow_HoldsStopsOrRestarts<br>(+4) |
 | [SHOW-024](exigences/SHOW-024.md) | I | Validation à l'édition | Réalisé | ReferenceShowP8Tests.Pitfall_IsRefused_AndNothingLights<br>ReferenceShowP8Tests.ReferenceShow_P8_ContentIsThere_AndOnlyThePitfallIsAnError<br>ShowExecutionTests.ShowWithAnImmediateLoop_IsRefusedAtLaunch<br>ShowRulesTests.DeletedSceneAndUnknownReferences_AreErrors<br>(+6) |
 | [SHOW-025](exigences/SHOW-025.md) | I | Un seul show principal actif à la fois | Réalisé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside |
-| [SHOW-026](exigences/SHOW-026.md) | I | Supervision | Partiel |  |
-| [SHOW-027](exigences/SHOW-027.md) | I | Mode simulation dans l'éditeur | Partiel | ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps |
+| [SHOW-026](exigences/SHOW-026.md) | I | Supervision | Réalisé | SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-027](exigences/SHOW-027.md) | I | Mode simulation dans l'éditeur | Réalisé | SequencingScreensTests.ShowEditor_BlindTrial_RunsOnThePreviewOnly_WithSimulatedMusic<br>ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps |
 | [SHOW-028](exigences/SHOW-028.md) | M | Tirage pondéré | Réalisé | WeightedDrawTests.AvoidRepeat_NeverTakesTheSameBranchTwiceInARow<br>WeightedDrawTests.Distribution_FollowsTheWeights_Within2Percent |
 | [SHOW-029](exigences/SHOW-029.md) | M | Variables simples du show | Réalisé | ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |

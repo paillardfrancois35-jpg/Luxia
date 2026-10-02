@@ -2,11 +2,11 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Non réalisé |
+| **Statut** | Réalisé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
-| **Remarque** | Modèle et exécution prêts (divergences OU / ET, macro-étapes) ; éditeur par cartes et diagramme automatique (Q45) au lot 5. |
+| **Remarque** | Éditeur par cartes et diagramme dessiné automatiquement (Q45) ; combinaisons ET / OU / NON affichées, modifiées dans le fichier. |
 | **Liens** | — |
 
 ## Description
@@ -19,11 +19,17 @@
 
 - src/Luxia.Show/Model/ShowDefinition.cs
 - src/Luxia.Show/Runtime/ShowRun.cs
+- src/Luxia.UI.Modules.Control/Sequencing/ShowEditorViewModel.cs
+- src/Luxia.UI.Modules.Control/Sequencing/StepCardViewModel.cs
+- src/Luxia.UI.Modules.Control/Views/ShowDiagram.cs
+- src/Luxia.UI.Modules.Control/Views/ShowEditorWindow.axaml
 
 ## Tests
 
 - ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin
 - ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd
+- SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate
+- SequencingScreensTests.Lock_RefusesTheEditors
 
 ## Historique
 
@@ -31,3 +37,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 1, 2 et 4 : maquette 12 soumise ; `shows.json` (doc 50 §12h) ; l'exemple du doc 20 §3.4 est écrit dans le show de référence (*Couplet / Refrain / Drop*, `722853b`). |
+| 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : cartes (identifiant, nom, initiale, macro-étape, tirage au sort, actions, transitions avec étapes amont et aval — plusieurs = ET —, condition, quantification, poids, priorité) ; diagramme en rangées depuis les étapes initiales, retours en pointillés ; l'exemple du §3.4 se construit (show de référence). Écart : les réceptivités combinées se modifient dans le fichier. |

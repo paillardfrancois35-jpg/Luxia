@@ -210,6 +210,18 @@ Décisions de l'utilisateur à l'essai de P7 (2026-10-01) ; analyse : [chantiers
   n'en passe qu'une toutes les N fois ; ×2 et ×4 n'existent pas pour les impulsions des basses et des aigus.
 - **Reporté** : titre du morceau (avec P9), mesure à trois temps (avec P8, GEN-025).
 
+### 4.11 Shows et séquences (P8, Q44 solution C, Q45 ; maquettes 9 à 12)
+
+- **Jouer** : une colonne **« ▶ Shows »** à gauche des couches, mêmes gestes que les scènes (clic = lancer / arrêter, bande ✎ = éditer,
+  clic droit = Éditer, Renommer, Dupliquer, Supprimer) ; un seul show principal à la fois (le nouveau remplace l'ancien).
+- **Superviser** : un **bandeau « Show en cours »** sous le bloc BPM, présent seulement quand un show ou une séquence joue : étape
+  active, prochaines transitions (orange quand elle va partir), séquence en cours, **⏭ Forcer ▾**, **■ Arrêter**, **▾ Détail** (parcours,
+  actions de l'étape, chaque transition avec son état et son bouton Forcer, show secondaire).
+- **Éditer** : fenêtres non bloquantes, même charte que la fenêtre d'édition des scènes (brouillon, Appliquer / Annuler / Valider,
+  Ctrl+Z, case Aveugle, croix qui demande avant de perdre un brouillon). Séquence : bibliothèque à gauche (glisser-déposer), frise au
+  centre (grille mesure / temps / ½ temps, zoom, Suppr), propriétés à droite. Show : cartes à gauche (une par étape, ses transitions
+  dessous), diagramme dessiné automatiquement à droite, panneau « Essai sans musique » en bas.
+
 ## 5. Composants communs (catalogue)
 
 Tous dans `Luxia.UI.Controls`, dessinés en 2D Avalonia, chacun avec son test et sa capture dans une **galerie** (écran de

@@ -351,6 +351,7 @@
 | [GEN-131](GEN-131.md) | Outil de validation d'un projet | P4 | I | Validé |
 | [GEN-132](GEN-132.md) | Outil qui joue une scène et la résume | P4 | M | Validé |
 | [GEN-133](GEN-133.md) | Contenu généré rangé à part, jamais écrasant | P4 | I | Réalisé |
+| [GEN-134](GEN-134.md) | Un guide de conception | P8 | M | Réalisé |
 | [INST-001](INST-001.md) | Un ou plusieurs univers, numérotés et nommables | P3 | I | Réalisé |
 | [INST-002](INST-002.md) | Lien univers → pilotes dans les préférences | P3 | I | Réalisé |
 | [INST-003](INST-003.md) | Vue barre d'univers | P3 | I | Réalisé |
@@ -392,6 +393,7 @@
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-020](LIVE-020.md) | Affichage du tempo à l'écran de jeu | P7 | I | Réalisé |
 | [LIVE-021](LIVE-021.md) | Commandes de tempo à l'écran de jeu | P7 | I | Réalisé |
+| [LIVE-023](LIVE-023.md) | Zone Show | P8 | I | Réalisé |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
 | [LIVE-060](LIVE-060.md) | L'écran Live se rafraîchit à ≥ 20 images/s sans affecter le moteur | P5 | I | Réalisé |
@@ -495,21 +497,21 @@
 | [SCN-051](SCN-051.md) | Modulation par l'énergie | P7 | M | Partiel |
 | [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Réalisé |
 | [SHOW-001](SHOW-001.md) | Une séquence a une longueur en mesures, une mesure | P8 | I | Partiel |
-| [SHOW-002](SHOW-002.md) | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | P8 | I | Non réalisé |
+| [SHOW-002](SHOW-002.md) | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | P8 | I | Réalisé |
 | [SHOW-003](SHOW-003.md) | Sur une piste, un bloc lance sa scène dans la couche de la piste au début du bloc et l'arr | P8 | I | Réalisé |
 | [SHOW-004](SHOW-004.md) | Blocs d'actions en plus des scènes | P8 | I | Réalisé |
 | [SHOW-005](SHOW-005.md) | Modes de lecture | P8 | I | Réalisé |
-| [SHOW-006](SHOW-006.md) | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | P8 | I | Partiel |
-| [SHOW-007](SHOW-007.md) | Aperçu | P8 | M | Partiel |
+| [SHOW-006](SHOW-006.md) | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | P8 | I | Réalisé |
+| [SHOW-007](SHOW-007.md) | Aperçu | P8 | M | Réalisé |
 | [SHOW-008](SHOW-008.md) | Variation de la vitesse relative | P8 | S | Réalisé |
-| [SHOW-020](SHOW-020.md) | Éditeur graphique | P8 | I | Non réalisé |
+| [SHOW-020](SHOW-020.md) | Éditeur graphique | P8 | I | Réalisé |
 | [SHOW-021](SHOW-021.md) | Actions continues, mémorisées, impulsionnelles | P8 | I | Réalisé |
 | [SHOW-022](SHOW-022.md) | Réceptivités du §3 | P8 | I | Réalisé |
 | [SHOW-023](SHOW-023.md) | Exécution conforme aux règles R1 à R6 | P8 | I | Réalisé |
 | [SHOW-024](SHOW-024.md) | Validation à l'édition | P8 | I | Réalisé |
 | [SHOW-025](SHOW-025.md) | Un seul show principal actif à la fois | P8 | I | Réalisé |
-| [SHOW-026](SHOW-026.md) | Supervision | P8 | I | Partiel |
-| [SHOW-027](SHOW-027.md) | Mode simulation dans l'éditeur | P8 | I | Partiel |
+| [SHOW-026](SHOW-026.md) | Supervision | P8 | I | Réalisé |
+| [SHOW-027](SHOW-027.md) | Mode simulation dans l'éditeur | P8 | I | Réalisé |
 | [SHOW-028](SHOW-028.md) | Tirage pondéré | P8 | M | Réalisé |
 | [SHOW-029](SHOW-029.md) | Variables simples du show | P8 | M | Réalisé |
 | [SHOW-030](SHOW-030.md) | Métadonnées du show pour le Directeur | P8 | M | Réalisé |

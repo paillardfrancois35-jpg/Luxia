@@ -2,11 +2,11 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Non réalisé |
+| **Statut** | Réalisé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 2.2 Exigences](../20-show-et-sequences.md) |
-| **Remarque** | Éditeur de séquence (glisser-déposer, grille magnétique) : maquette 11, lot 5 d'interface après validation des maquettes. |
+| **Remarque** | Frise des pistes en mesures, glisser-déposer depuis la bibliothèque, déplacer / allonger à la souris, grille mesure / temps / ½ temps. |
 | **Liens** | — |
 
 ## Description
@@ -17,11 +17,14 @@
 
 ## Réalisation
 
-- —
+- src/Luxia.UI.Modules.Control/Sequencing/SequenceEditorViewModel.cs
+- src/Luxia.UI.Modules.Control/Views/SequenceTimeline.cs
+- src/Luxia.UI.Modules.Control/Views/SequenceEditorWindow.axaml
 
 ## Tests
 
-- —
+- SequencingScreensTests.NewSequence_DropMoveResize_UndoAndValidate
+- SequencingScreensTests.SequenceEditor_Cancel_LeavesTheProjectUntouched
 
 ## Historique
 
@@ -29,3 +32,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 2.2 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 1 : maquette 11 (`docs/maquettes/maquette-11-edition-sequence.png`) soumise à l'utilisateur ; le modèle (début et durée en mesures décimales, grille mesure / temps / ½ temps = 1, 0,25, 0,125) est prêt. |
+| 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : fenêtre d'édition d'une séquence (maquette 11) en brouillon ; une scène lâchée sur la piste d'une autre couche va sur la piste de sa couche (D39) ; le glisser-déposer est mené par la fenêtre (pas de l'API de glisser-déposer du système). À vérifier à l'essai (exemple 12). |

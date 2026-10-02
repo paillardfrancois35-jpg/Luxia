@@ -6,7 +6,7 @@
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
-| **Remarque** | valider (références, étape initiale, étapes atteignables, boucle sans condition, macro-étape récursive, conditions) ; un show fautif est refusé au lancement ; affichage dans l'éditeur au lot 5. |
+| **Remarque** | valider ; refus au lancement d'un show fautif ; problèmes affichés en direct sous la frise ou le diagramme de l'éditeur. |
 | **Liens** | — |
 
 ## Description
@@ -19,6 +19,7 @@
 
 - src/Luxia.Show/Rules/ShowRules.cs
 - src/Luxia.Hosting/Tools/ProjectValidator.cs
+- src/Luxia.UI.Modules.Control/Sequencing/DraftEditorViewModel.cs (`Issues`)
 
 ## Tests
 
@@ -35,3 +36,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 2 et 4 (`683cfc8`, `722853b`) : étape inatteignable en avertissement (le show joue quand même). |
+| 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : l'éditeur valide le brouillon à chaque geste (⛔ erreur, ⚠ avertissement). |
