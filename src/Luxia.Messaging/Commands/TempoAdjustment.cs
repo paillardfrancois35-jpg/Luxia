@@ -15,6 +15,6 @@ public enum TempoAdjustment
     /// <summary>« Le 1 est maintenant » : le temps en cours devient le premier de la mesure (AUD-024).</summary>
     ResyncBar,
 
-    /// <summary>Revenir au tempo entendu par l'écoute : oublie les corrections ×2, ÷ 2, ± 1 du morceau en cours (essai P8).</summary>
+    /// <summary>Revenir au tempo entendu par l'écoute : oublie la correction ×2, ÷ 2, ± 1, gardée sinon d'un morceau à l'autre (essai P8).</summary>
     FollowHeard,
 }

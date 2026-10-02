@@ -297,7 +297,7 @@ public sealed class MusicalClock
     /// </summary>
     public double HeardBpm => Source == TempoSourceKind.Audio ? _lastRawBpm : 0;
 
-    /// <summary>Revient au tempo entendu : les corrections ×2, ÷ 2, ± 1 du morceau en cours sont oubliées (essai P8, CMD-042).</summary>
+    /// <summary>Revient au tempo entendu : la correction ×2, ÷ 2, ± 1 (gardée sinon d'un morceau à l'autre) est oubliée (essai P8, CMD-042).</summary>
     public void FollowHeard()
     {
         _audioScale = 1;

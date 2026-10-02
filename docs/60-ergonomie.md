@@ -130,7 +130,8 @@ les créations en plusieurs champs (nouvel appareil, nouvelle scène à partir d
 
 Jeton de couleur unique par sens (défini une fois dans `App.axaml`, jamais en dur dans un écran) :
 accent (sélection) bleu, joue = couleur de la scène, surcharge live jaune, édition vert, aveugle bleu clair, sûreté orange,
-danger / blackout / enregistrement rouge, texte secondaire gris. Deux tailles de texte dans les panneaux (normal, secondaire),
+danger / blackout / enregistrement rouge, texte secondaire gris. Problèmes d'un brouillon (essai P8) : **erreur ⛔ rouge franc**
+(empêche de jouer), **avertissement ⚠ jaune** (n'empêche rien) ; jetons `ControlColors.Error` et `ControlColors.Warning`. Deux tailles de texte dans les panneaux (normal, secondaire),
 une pour les titres ; espacement sur une grille de 4 px ; largeurs de champs selon doc 03 §11.
 
 **Tailles minimales des cibles** (ERG-035, demande de l'utilisateur : « éléments trop petits »), à vérifier en 1366 × 768 :

@@ -125,11 +125,13 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         ConfidenceText = AudioOn ? $"{tempo.Confidence * 100:0} %" : string.Empty;
         ConfidenceColor = tempo.Confidence >= 0.7 ? BeatOn : tempo.Confidence >= 0.3 ? "#D29922" : "#F85149";
 
-        // Essai P8 : tempo entendu (0 sans écoute) à côté du tempo courant ; différents (×2, ÷ 2, ± 1) : surligné, un clic y revient.
+        // Essai P8 : tempo entendu (0 sans écoute) à côté du tempo courant ; différents (×2, ÷ 2) : surligné, un clic y revient.
+        // Arrondi au BPM (l'analyse varie de quelques dixièmes d'une trame à l'autre) ; écart d'au moins 3 % (le lissage du
+        // tempo courant laisse un petit retard qui ne doit pas allumer le bouton).
         var heard = AudioOn ? tempo.HeardBpm : 0;
-        HeardText = heard.ToString("0.#", CultureInfo.CurrentCulture);
+        HeardText = heard.ToString("0", CultureInfo.CurrentCulture);
         CanFollowHeard = heard > 0;
-        HeardDiffers = heard > 0 && Math.Abs(heard - tempo.Bpm) >= 0.5;
+        HeardDiffers = heard > 0 && Math.Abs((tempo.Bpm / heard) - 1) >= 0.03;
         AudioStatus = AudioOn && _runtime.Audio?.Status is { } status ? status : "Écoute du son du PC et suivi du tempo";
         if (_flashLeft > 0 && --_flashLeft == 0)
         {
@@ -239,7 +241,7 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     [RelayCommand]
     private void Decrease() => Adjust(TempoAdjustment.AddBpm, -1, "tempo −1 BPM");
 
-    /// <summary>Clic sur le tempo entendu : le tempo courant y revient (oublie ×2, ÷ 2, ± 1 du morceau en cours, essai P8).</summary>
+    /// <summary>Clic sur le tempo entendu : le tempo courant y revient (oublie la correction ×2, ÷ 2, gardée sinon d'un morceau à l'autre, essai P8).</summary>
     [RelayCommand]
     private void FollowHeard() => Adjust(TempoAdjustment.FollowHeard, 0, "retour au tempo entendu");
 
