@@ -1,0 +1,494 @@
+{
+  "formatVersion": 1,
+  "shows": [
+    {
+      "id": "8b000008-0000-4000-8000-000000000001",
+      "name": "Couplet / Refrain / Drop",
+      "color": "#DB61A2",
+      "category": "Phase P8",
+      "notes": "Exemple du doc 20 §3.4 : l'intro attend une énergie « Groove », le couplet joue « Groove 8 mesures » ; au drop, le refrain ; à la montée, « Montée 16 mesures » ; au break (ou après 16 mesures de refrain) retour au couplet ; au troisième refrain, le final, qui reste.",
+      "role": "main",
+      "styles": [
+        "Électro",
+        "House"
+      ],
+      "energyMin": 1,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "variables": [
+        {
+          "name": "refrains",
+          "initial": 0
+        }
+      ],
+      "steps": [
+        {
+          "id": "0",
+          "name": "Intro",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "name": "Couplet",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000002"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "name": "Montée",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "name": "Refrain",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000003"
+            },
+            {
+              "kind": "flash",
+              "sceneId": "47bbdf76-6852-5165-a945-69afcf0b4ca7",
+              "seconds": 0.5
+            },
+            {
+              "kind": "variable",
+              "variable": "refrains",
+              "operation": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "name": "Final",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "energyLevel",
+            "min": 1,
+            "max": 3
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "drop"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "buildUp"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "drop"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "sequenceEnded",
+            "sequenceId": "8a000008-0000-4000-8000-000000000001"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "variable",
+            "variable": "refrains",
+            "comparison": "atLeast",
+            "value": 3
+          },
+          "quantize": "phrase8"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "break"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 16,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000002",
+      "name": "Tirage au sort (variantes)",
+      "color": "#E3B341",
+      "category": "Phase P8",
+      "notes": "Doc 20 §3.4, branche 2a / 2b : toutes les 8 mesures, variante A (60 %) ou B (40 %), jamais deux fois la même de suite ; chaque variante dure 8 mesures puis revient à la base.",
+      "role": "main",
+      "styles": [],
+      "energyMin": 1,
+      "energyMax": 2,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "1",
+          "name": "Base",
+          "initial": true,
+          "choice": "random",
+          "avoidRepeat": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a7f7e17c-9715-575f-b474-cd5a0be5e316"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        },
+        {
+          "id": "2a",
+          "name": "Variante A",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "id": "2b",
+          "name": "Variante B",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000003"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "2a"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar",
+          "weight": 60
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "2b"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar",
+          "weight": 40
+        },
+        {
+          "from": [
+            "2a"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2b"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000003",
+      "name": "Ambiance UV et fumée (secondaire)",
+      "color": "#8957E5",
+      "category": "Phase P8",
+      "notes": "Show secondaire (SHOW-031) : joue en parallèle du show principal. UV en continu ; à chaque phrase de 8 mesures, une chance sur deux d'une rafale de fumée de 3 s (limiteur de fumée toujours actif).",
+      "role": "main",
+      "secondary": true,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "uv",
+          "name": "UV",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5"
+            }
+          ]
+        },
+        {
+          "id": "fumee",
+          "name": "Fumée",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5"
+            },
+            {
+              "kind": "smoke",
+              "seconds": 3
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "uv"
+          ],
+          "to": [
+            "fumee"
+          ],
+          "condition": {
+            "kind": "random",
+            "value": 0.5,
+            "every": "phrase8"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "fumee"
+          ],
+          "to": [
+            "uv"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000004",
+      "name": "Piège : boucle sans condition",
+      "color": "#F85149",
+      "category": "Phase P8",
+      "notes": "Exemple piège (DEMO-4) : deux étapes qui se renvoient l'une à l'autre sans condition ni quantification. « valider » le signale en erreur et LuXia refuse de le lancer (SHOW-024).",
+      "role": "main",
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "a",
+          "name": "Bleu",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "name": "Rouge",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "dfaf4fe6-0451-5e60-9a8a-effc3ae11981"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "a"
+          ],
+          "to": [
+            "b"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "b"
+          ],
+          "to": [
+            "a"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "none"
+        }
+      ]
+    }
+  ]
+}

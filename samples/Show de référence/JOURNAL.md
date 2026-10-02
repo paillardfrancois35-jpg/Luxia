@@ -223,3 +223,25 @@ luxia-headless audio tests/assets/audio --rapport rapport.md           # rapport
 
 `ReferenceShowP7Tests` : chaque scène « Phase P7 » rejouée 6 s à 120 BPM fixes et comparée à `tests/assets/golden/P7-scenes.txt` ;
 un PAR par temps, tempo du scénario, départ quantifié à la mesure, horloge propre indépendante du tempo principal.
+
+## Phase P8 – Show & séquences (2026-10-02)
+
+| Élément | Fichier | Contenu |
+|---|---|---|
+| Séquences « Phase P8 » | `séquences.json` | *Montée 16 mesures* (bleu 8 mesures, chenillard 4, blanc chaud 4 ; lyres en 3 positions puis cercle à la mesure ; vague puis strobe sur les PAR ; **rampe du niveau de la couche Couleurs** de 30 à 100 % sur 8 mesures ; fumée sur la dernière mesure), *Groove 8 mesures* (en boucle : une couleur par mesure, vague, lyres au centre puis en huit), *Break calme 8 mesures* (50 %, bleu, plafond, UV), *Explosion drop 4 mesures* (flash d'un temps, strobe 2 mesures puis vague, chenillard, cercle, fumée) |
+| Shows « Phase P8 » | `shows.json` | *Couplet / Refrain / Drop* (exemple du doc 20 §3.4 : intro → couplet à l'énergie Groove → refrain au drop, montée, retour au break ou après 16 mesures, final au 3e refrain, qui reste), *Tirage au sort (variantes)* (variante A 60 % / B 40 % toutes les 8 mesures, jamais deux fois la même), *Ambiance UV et fumée (secondaire)* (en parallèle du show principal : UV, une chance sur deux d'une rafale de fumée à chaque phrase de 8 mesures), **piège** *Boucle sans condition* (refusé au lancement, erreur de `valider`) |
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --sequence "Montée 16 mesures" --duree 34 --pas 1
+luxia-headless jouer "samples/Show de référence" --show "Tirage au sort (variantes)" --duree 120 --pas 4
+luxia-headless scenario "samples/Show de référence" mon-scenario.txt   # verbes show, sequence, forcer, simuler drop|break|montee, energie 40, style "Électro"
+```
+
+### Non-régression
+
+`ReferenceShowP8Tests` : chaque séquence « Phase P8 » rejouée sur toute sa longueur et chaque show (sauf le piège) 50 s au
+métronome avec la même suite d'événements simulés (énergie, drop, break, montée), comparés à `tests/assets/golden/P8-shows.txt` ;
+rampe de la couche Couleurs ; piège refusé.

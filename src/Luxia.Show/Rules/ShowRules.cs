@@ -55,6 +55,22 @@ public static class ShowRules
         return [.. Validate(sequences, shows, scenes, layers).Where(i => i.File == ShowStore.FileName && i.Item.StartsWith(ShowItem(show), StringComparison.Ordinal))];
     }
 
+    /// <summary>
+    /// Défaut qui empêche de jouer le show (SHOW-024) : aucune étape initiale, ou boucle de transitions immédiates (le show tournerait
+    /// sans fin) ; <c>null</c> s'il est jouable. Le séquenceur refuse de lancer un show fautif.
+    /// </summary>
+    public static string? BlockingProblem(ShowDefinition show)
+    {
+        ArgumentNullException.ThrowIfNull(show);
+        if (!show.Steps.Any(s => s.Initial))
+        {
+            return "aucune étape initiale";
+        }
+
+        var ids = show.Steps.Select(s => s.Id).Where(id => !string.IsNullOrWhiteSpace(id)).ToHashSet(StringComparer.Ordinal);
+        return CheckGraph(show, ids).FirstOrDefault(i => i.Severity == IssueSeverity.Error)?.Message;
+    }
+
     /// <summary>Désignation d'une séquence dans les messages.</summary>
     public static string SequenceItem(Sequence sequence) => $"séquence « {sequence?.Name} »";
 
@@ -115,7 +131,8 @@ public static class ShowRules
                     yield return issue;
                 }
 
-                if (b > 0 && ordered[b - 1].Start + ordered[b - 1].Length > block.Start + 1e-9)
+                // Sur une piste de couche, deux scènes ne jouent pas ensemble ; sur la piste d'actions, les actions peuvent se superposer.
+                if (track.LayerId is not null && b > 0 && ordered[b - 1].Start + ordered[b - 1].Length > block.Start + 1e-9)
                 {
                     yield return Warning(SequenceStore.FileName, blockItem, "start", "chevauche le bloc précédent de la piste : il le remplace à son début");
                 }

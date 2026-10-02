@@ -287,6 +287,23 @@ public sealed class ShowExecutionTests
     }
 
     [Fact]
+    [Trait("Exigence", "SHOW-024")]
+    public void ShowWithAnImmediateLoop_IsRefusedAtLaunch()
+    {
+        var h = new SequencerHarness();
+        var show = new ShowDefinition
+        {
+            Name = "Piège",
+            Steps = [Step("a", true), Step("b")],
+            Transitions = [T("a", "b", When(ConditionKind.Always)), T("b", "a", When(ConditionKind.Always))],
+        };
+        Start(show, h);
+
+        h.Engine.CommandLog().Single(e => e.Command is LaunchShowCommand).Rejection.ShouldBe("le show « Piège » ne peut pas jouer : boucle sans condition (a → b → a) : le show tournerait sans fin ; ajoutez une condition ou une quantification");
+        h.Sequencer.State.Shows.ShouldBeEmpty();
+    }
+
+    [Fact]
     [Trait("Exigence", "SHOW-021")]
     public void PulseActions_FlashAndShortBlackout_EndOnTheirOwn()
     {

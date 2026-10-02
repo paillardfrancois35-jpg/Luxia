@@ -235,9 +235,9 @@ public sealed class Sequencer : ISequencer
             return "show inconnu";
         }
 
-        if (!definition.Steps.Any(s => s.Initial))
+        if (Rules.ShowRules.BlockingProblem(definition) is { } problem)
         {
-            return $"le show « {definition.Name} » n'a pas d'étape initiale";
+            return $"le show « {definition.Name} » ne peut pas jouer : {problem}";
         }
 
         if (_shows.FirstOrDefault(s => s.Definition.Id == definition.Id && !s.Stopped) is { } running)

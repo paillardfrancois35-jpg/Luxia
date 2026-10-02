@@ -1,0 +1,277 @@
+{
+  "formatVersion": 1,
+  "sequences": [
+    {
+      "id": "8a000008-0000-4000-8000-000000000001",
+      "name": "Montée 16 mesures",
+      "color": "#F0883E",
+      "category": "Phase P8",
+      "notes": "Doc 20 §2.1 : 8 mesures de couleurs lentes, puis le chenillard et le cercle, 4 mesures de strobe ; le niveau de la couche Couleurs monte de 30 à 100 % sur les 8 premières mesures (la couche Intensité n'y joue rien : « Plein feu » masquerait la montée), fumée sur la dernière.",
+      "bars": 16,
+      "end": "stop",
+      "quantize": "bar",
+      "speed": 1,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "start": 8,
+              "length": 4,
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "start": 12,
+              "length": 4,
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000003",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "464a4cf5-7bcb-58ef-affa-4f196b4f1aeb"
+            },
+            {
+              "start": 8,
+              "length": 8,
+              "sceneId": "e44450d6-535b-5fef-bf50-3cbfe66fbfe0"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000005",
+          "blocks": [
+            {
+              "start": 8,
+              "length": 4,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000001"
+            },
+            {
+              "start": 12,
+              "length": 4,
+              "sceneId": "a789a9ab-05f5-5e25-bda6-fa081565d449"
+            }
+          ]
+        },
+        {
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "action": {
+                "kind": "layerLevel",
+                "layerId": "7c1a0001-0000-4000-8000-000000000002",
+                "from": 0.3,
+                "to": 1
+              }
+            },
+            {
+              "start": 15,
+              "length": 1,
+              "action": {
+                "kind": "smoke"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8a000008-0000-4000-8000-000000000002",
+      "name": "Groove 8 mesures",
+      "color": "#3FB950",
+      "category": "Phase P8",
+      "notes": "En boucle : une couleur par mesure, vague sur les PAR, lyres au centre puis en huit.",
+      "bars": 8,
+      "end": "loop",
+      "quantize": "bar",
+      "speed": 1,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000001",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "a7f7e17c-9715-575f-b474-cd5a0be5e316"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000003",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            },
+            {
+              "start": 4,
+              "length": 4,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000005",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000001"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8a000008-0000-4000-8000-000000000003",
+      "name": "Break calme 8 mesures",
+      "color": "#1F6FEB",
+      "category": "Phase P8",
+      "notes": "Intensité à 50 %, bleu, lyres au plafond, UV.",
+      "bars": 8,
+      "end": "stop",
+      "quantize": "bar",
+      "speed": 1,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000001",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000003",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000006",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8a000008-0000-4000-8000-000000000004",
+      "name": "Explosion drop 4 mesures",
+      "color": "#F85149",
+      "category": "Phase P8",
+      "notes": "Flash blanc d'un temps, strobe pendant 2 mesures puis vague, chenillard et cercle des lyres, fumée sur la première mesure.",
+      "bars": 4,
+      "end": "stop",
+      "quantize": "bar",
+      "speed": 1,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000001",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000003",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000005",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 2,
+              "sceneId": "a789a9ab-05f5-5e25-bda6-fa081565d449"
+            },
+            {
+              "start": 2,
+              "length": 2,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "blocks": [
+            {
+              "start": 0,
+              "length": 0.25,
+              "action": {
+                "kind": "flash",
+                "sceneId": "47bbdf76-6852-5165-a945-69afcf0b4ca7"
+              }
+            },
+            {
+              "start": 0,
+              "length": 1,
+              "action": {
+                "kind": "smoke"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
