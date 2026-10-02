@@ -36,6 +36,11 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     private bool _started;
     private bool _stopped;
     private bool _previewActive;
+    private bool _previewOwnTempo;
+    private Luxia.Show.Model.Sequence? _sequenceDraft;
+    private Luxia.Show.Model.ShowDefinition? _showDraft;
+    private bool _sequenceDraftPreviewOnly;
+    private bool _showDraftPreviewOnly;
     private MidiLayout _midiLayout = MidiLayout.Empty;
     private Timer? _background;
     private int _backgroundTicks;
@@ -84,6 +89,14 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Project.OpenLast();
         Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
 
+        // D37 : séquenceur de shows et de séquences, un par moteur (l'aperçu sert aux essais en aveugle de la fenêtre d'édition).
+        Sequencer = new Luxia.Show.Runtime.Sequencer(Engine.Seed);
+        PreviewSequencer = new Luxia.Show.Runtime.Sequencer(Engine.Seed);
+        Engine.SetSequencer(Sequencer);
+        Preview.SetSequencer(PreviewSequencer);
+        Show.Compiled += (_, _) => LoadSequencing();
+        LoadSequencing();
+
         // Contrôleurs MIDI : mêmes colonnes et mêmes boutons que l'écran Live, relus à chaque recompilation.
         Show.Compiled += (_, _) => _midiLayout = BuildMidiLayout();
         _midiLayout = BuildMidiLayout();
@@ -109,6 +122,12 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
     }
+
+    /// <summary>Séquenceur de shows et de séquences du moteur (D37) : son état sert à la supervision (SHOW-026).</summary>
+    public Luxia.Show.Runtime.Sequencer Sequencer { get; }
+
+    /// <summary>Séquenceur du moteur d'aperçu (essais en aveugle d'un show ou d'une séquence).</summary>
+    public Luxia.Show.Runtime.Sequencer PreviewSequencer { get; }
 
     /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
     public Audio.AudioListener? Audio { get; }
@@ -721,13 +740,62 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         };
     }
 
+    /// <summary>
+    /// Brouillon d'une séquence ouverte dans sa fenêtre d'édition (P8) : les séquenceurs le jouent à la place de la version enregistrée ;
+    /// seulement celui de l'aperçu si <paramref name="previewOnly"/> (case Aveugle). <c>null</c> = plus de brouillon.
+    /// </summary>
+    public void SetSequenceDraft(Luxia.Show.Model.Sequence? sequence, bool previewOnly)
+    {
+        _sequenceDraft = sequence;
+        _sequenceDraftPreviewOnly = previewOnly;
+        LoadSequencing();
+    }
+
+    /// <summary>Brouillon d'un show ouvert dans sa fenêtre d'édition (P8), comme <see cref="SetSequenceDraft"/>.</summary>
+    public void SetShowDraft(Luxia.Show.Model.ShowDefinition? show, bool previewOnly)
+    {
+        _showDraft = show;
+        _showDraftPreviewOnly = previewOnly;
+        LoadSequencing();
+    }
+
+    /// <summary>
+    /// L'aperçu garde son propre tempo (métronome d'un essai en aveugle) au lieu de suivre celui du moteur de sortie.
+    /// </summary>
+    public bool PreviewOwnTempo
+    {
+        get => Volatile.Read(ref _previewOwnTempo);
+        set => Volatile.Write(ref _previewOwnTempo, value);
+    }
+
+    // Après chaque recompilation (ouverture, modification) : séquences et shows du projet aux deux séquenceurs, avec le brouillon
+    // en cours d'édition s'il y en a un.
+    private void LoadSequencing()
+    {
+        var sequences = Project.Sequences;
+        var shows = Project.Shows;
+        // Les deux fenêtres (séquence, show) peuvent être ouvertes ensemble : chaque brouillon a sa propre case Aveugle.
+        var draftSequences = _sequenceDraft is { } sequence
+            ? sequences with { Sequences = [.. sequences.Sequences.Where(s => s.Id != sequence.Id), sequence] }
+            : sequences;
+        var draftShows = _showDraft is { } show
+            ? shows with { Shows = [.. shows.Shows.Where(s => s.Id != show.Id), show] }
+            : shows;
+        Sequencer.Load(_sequenceDraftPreviewOnly ? sequences : draftSequences, _showDraftPreviewOnly ? shows : draftShows);
+        PreviewSequencer.Load(draftSequences, draftShows);
+    }
+
     private void TickEngines()
     {
         Engine.Tick();
         if (PreviewActive)
         {
             // L'aperçu (aveugle, édition) suit le tempo du moteur : les durées musicales y ont la même valeur.
-            Preview.Bpm = Engine.Bpm;
+            if (!PreviewOwnTempo)
+            {
+                Preview.Bpm = Engine.Bpm;
+            }
+
             Preview.Tick();
         }
     }

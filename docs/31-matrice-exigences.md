@@ -1,6 +1,6 @@
 # 31 – Matrice exigences ↔ tests
 
-> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7` (doc 30 §7). Ne pas modifier à la main.
+> Générée par `python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7 P8` (doc 30 §7). Ne pas modifier à la main.
 > Le **statut** vient de la fiche de chaque exigence (`docs/exigences/<ID>.md`), qui fait foi et porte l'historique ;
 > la colonne Tests liste les tests qui portent `[Trait("Exigence", …)]`.
 
@@ -187,7 +187,7 @@
 
 ## P4 – 87 exigences, 71 couvertes par des tests automatiques
 
-> Partiel : 4 · Réalisé : 48 · Validé : 35
+> Partiel : 4 · Réalisé : 47 · Validé : 36
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
@@ -198,7 +198,7 @@
 | [GEN-012](exigences/GEN-012.md) | M | Commande refusée : événement avec le motif | Réalisé | LayerMergeTests.UnknownScene_IsRejected_WithEventAndLogEntry |
 | [GEN-013](exigences/GEN-013.md) | I | Publication non bloquante des événements | Réalisé | EnginePerformanceTests.SlowSubscriber_DoesNotDelayTicks |
 | [GEN-022](exigences/GEN-022.md) | I | Couleurs logiques converties selon les émetteurs | Réalisé | ColorConversionTests.LedBar_24Channels_ColorOnWholeFixture_ReachesEverySection<br>ColorConversionTests.Rgb_Par_TakesColorDirectly |
-| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Réalisé | MusicalClockTests.Clock_Fixed120_CountsBeatsAndBars<br>ScenePlaybackTests.MusicalDuration_TwoBeats_DependsOnTempo |
+| [GEN-023](exigences/GEN-023.md) | I | Durées en secondes ou en temps musicaux | Validé | EditBenchPanelsTests.Properties_SceneFades_AcceptBeatsAndStayEmptyWhenCleared<br>EditBenchPanelsTests.Properties_StepDurations_InBeatsAndBars_AreSavedInTheirUnit<br>EditBenchPanelsTests.Properties_Wizard_GeneratesStepsInBeats<br>MusicalClockTests.Clock_Fixed120_CountsBeatsAndBars<br>(+1) |
 | [GEN-032](exigences/GEN-032.md) | I | Calculs sur le temps écoulé réel | Réalisé | RenderEngineTests.TestPattern_WalksChannelsUsingElapsedTime<br>ScenePlaybackTests.IrregularTicks_FadeStillEndsOnTime<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps |
 | [GEN-033](exigences/GEN-033.md) | I | Horloges injectables | Réalisé |  |
 | [GEN-040](exigences/GEN-040.md) | I | Chaîne de rendu appliquée dans l'ordre, à chaque tick | Réalisé | RenderChainTests.Untouched_Parameter_EmitsChannelDefault |
@@ -214,16 +214,16 @@
 | [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
 | [GEN-119](exigences/GEN-119.md) | M | Numéro de compilation affiché en développement | Réalisé |  |
 | [GEN-130](exigences/GEN-130.md) | I | Format des fichiers documenté | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
-| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ReferenceShowP5Tests.ReferenceShow_P5_ContentIsThere<br>(+3) |
-| [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording |
+| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ReferenceShowP5Tests.ReferenceShow_P5_ContentIsThere<br>(+4) |
+| [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps<br>ShowScenarioTests.Scenario_ReportsUnknownShowsAndBadSimulations |
 | [GEN-133](exigences/GEN-133.md) | I | Contenu généré rangé à part, jamais écrasant | Réalisé | SceneImportTests.Merge_AddsNewScenes_NeverOverwrites_AndCategorizes |
 | [MOT-001](exigences/MOT-001.md) | I | Ordre de la boucle de rendu | Réalisé |  |
 | [MOT-002](exigences/MOT-002.md) | I | Budget de 5 ms par tick | Réalisé | EnginePerformanceTests.Tick_With100Fixtures20Layers40Playbacks_StaysUnderFiveMilliseconds_WithoutAllocating |
 | [MOT-003](exigences/MOT-003.md) | I | Fil d'exécution dédié, sans opération bloquante | Réalisé |  |
 | [MOT-004](exigences/MOT-004.md) | I | Déterminisme : aléatoire à graine journalisée | Réalisé | EffectTests.RandomShape_SameSeed_SameValues_MembersDiffer<br>ScenePlaybackTests.LoopRandom_NeverRepeatsCurrentStep_AndIsReproducibleWithSeed |
 | [MOT-010](exigences/MOT-010.md) | I | Étape = fondu d'entrée + maintien | Validé | ScenePlaybackTests.Step_FadeOneSecond_HoldTwo_NextStepAtThreeSeconds |
-| [MOT-011](exigences/MOT-011.md) | I | Interpolation des attributs continus selon la courbe | Validé | ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps<br>ScenePlaybackTests.SCurve_IsSmoothAtBothEnds_AndCrossesHalfWayInTheMiddle<br>ScenePlaybackTests.StepChange_InterpolatesFromPreviousStepValue |
-| [MOT-012](exigences/MOT-012.md) | I | Attributs discrets : bascule franche | Validé | ReferenceShowP4Tests.ColorWheel_OnlyEverShowsSlotMedians<br>ScenePlaybackTests.DiscreteAttribute_SwitchesFrankly_AtChosenPoint |
+| [MOT-011](exigences/MOT-011.md) | I | Interpolation des attributs continus selon la courbe | Validé | EditBenchPanelsTests.Properties_StepCurveAndSwitch_AreSaved_AndReadBack<br>ScenePlaybackTests.LinearFade_ZeroToFullInTwoSeconds_EightyRegularSteps<br>ScenePlaybackTests.SCurve_IsSmoothAtBothEnds_AndCrossesHalfWayInTheMiddle<br>ScenePlaybackTests.StepChange_InterpolatesFromPreviousStepValue |
+| [MOT-012](exigences/MOT-012.md) | I | Attributs discrets : bascule franche | Validé | EditBenchPanelsTests.Properties_StepCurveAndSwitch_AreSaved_AndReadBack<br>ReferenceShowP4Tests.ColorWheel_OnlyEverShowsSlotMedians<br>ScenePlaybackTests.DiscreteAttribute_SwitchesFrankly_AtChosenPoint |
 | [MOT-013](exigences/MOT-013.md) | I | Modes de boucle | Validé | ScenePlaybackTests.LoopCount_PlaysNPasses<br>ScenePlaybackTests.LoopInfinite_WrapsAround<br>ScenePlaybackTests.LoopOnce_ThenStops<br>ScenePlaybackTests.LoopPingPong_GoesBackAndForth<br>(+1) |
 | [MOT-014](exigences/MOT-014.md) | I | Fin de scène : arrêt, maintien, enchaînement | Validé | ScenePlaybackTests.EndChain_LaunchesNextSceneInSameLayer<br>ScenePlaybackTests.EndHold_StaysOnLastStep<br>ScenePlaybackTests.EndStop_FadesOutWithSceneFadeOut |
 | [MOT-015](exigences/MOT-015.md) | I | Vitesse de lecture | Validé | EffectTests.SceneSpeed_DoublesEffectSpeed<br>ScenePlaybackTests.Speed_Doubled_MakesStepsTwiceShorter<br>ScenesViewModelTests.Speed_IncreasedStepByStep_WhilePlaying_AppliesLive_WithoutError |
@@ -287,7 +287,7 @@
 |---|---|---|---|---|
 | [BIB-101](exigences/BIB-101.md) | I | Plage « Pas de strobe » du LPC008S, du LPC120 et de la LCB803 | Validé | SafetyCompilerTests.StrobeChannels_OfReferenceRig_UseTheNoStrobeRanges<br>SafetyTests.Strobe_ValueInNoStrobeRange_IsNeverCounted |
 | [CONS-061](exigences/CONS-061.md) | S | Une page de console peut être affectée aux faders d'un APC mini | Reporté (chantier ergonomie) |  |
-| [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Validé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder |
+| [COU-001](exigences/COU-001.md) | I | Créer, renommer, réordonner | Validé | LayersEditorViewModelTests.AddRenameReorderSave_UpdatesPrioritiesAndFile<br>LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused<br>LayersEditorViewModelTests.Editor_ListsDefaultLayers_InPriorityOrder<br>LayersEditorViewModelTests.GameScreen_OpensTheLayersEditor_ExceptUnderTheEveningLock |
 | [COU-002](exigences/COU-002.md) | I | Une scène appartient à une couche | Réalisé | LayersEditorViewModelTests.Delete_LayerWithScenes_IsRefused |
 | [COU-003](exigences/COU-003.md) | I | Exclusivité | Validé | LayerMergeTests.TwoLaunches_InSameTick_SameExclusiveLayer_LastOneWins<br>ReferenceShowP5Tests.Layers_IntensityTimesColor_LightThePars_ColorAloneDoesNot |
 | [COU-004](exigences/COU-004.md) | I | Couche non exclusive | Réalisé |  |
@@ -444,16 +444,16 @@
 | [AUD-002](exigences/AUD-002.md) | I | Suivi du changement de périphérique par défaut | Validé | AudioListenerTests.DefaultOutputChange_WithoutSystemNotification_ReconnectsAndWarns<br>AudioListenerTests.DeviceChange_LeavesAVisibleNotice_ThenTheRecoveryOne<br>AudioListenerTests.DeviceChange_ReconnectsOnTheNewDevice |
 | [AUD-003](exigences/AUD-003.md) | M | Choix manuel d'un périphérique de sortie à écouter, ou d'une entrée | Validé | AudioViewModelTests.ChoosingTheMicrophone_IsRememberedAndUsedByTheListening |
 | [AUD-004](exigences/AUD-004.md) | I | L'analyse est indépendante du volume | Validé | AnalyzerTests.Silence_OnlyNoiseFloor_GivesNoTempoAndNoGrid<br>AnalyzerTests.Tempo_DoesNotDependOnTheVolume<br>PulseAndEnergyTests.Energy_DoesNotDependOnTheVolume |
-| [AUD-005](exigences/AUD-005.md) | I | Détection du silence | Validé | AnalyzerTests.Silence_IsDetected_AndResetsTheTracking<br>AudioListenerTests.Listening_AfterAPauseWithoutBlocks_ComesBackWhenTheMusicReturns<br>AudioListenerTests.Listening_WithoutBlocks_IsNotLive<br>MusicalClockTests.Audio_OctaveCorrection_DoesNotSurviveASilence<br>(+1) |
+| [AUD-005](exigences/AUD-005.md) | I | Détection du silence | Validé | AnalyzerTests.Silence_IsDetected_AndResetsTheTracking<br>AudioListenerTests.Listening_AfterAPauseWithoutBlocks_ComesBackWhenTheMusicReturns<br>AudioListenerTests.Listening_WithoutBlocks_IsNotLive<br>MusicalClockTests.Audio_OctaveCorrection_SurvivesASilence<br>(+1) |
 | [AUD-006](exigences/AUD-006.md) | I | L'analyse audio fonctionne dans son propre fil d'exécution | Validé | AudioListenerHardwareTests.ToggleWhileSoundPlays_DoesNotHang<br>AudioListenerTests.AFailingEventSubscriber_NeverStopsTheListening<br>AudioListenerTests.CaptureError_DoesNotThrow_AndRetries<br>AudioListenerTests.RapidStartStop_WithASourceThatFailsOnceReleased_NeverThrowsOutOfATimer<br>(+2) |
 | [AUD-007](exigences/AUD-007.md) | M | Charge CPU de l'analyse < 5 % d'un cœur | Validé | AnalyzerTests.Analysis_OfOneMinuteOfSound_TakesAFewPercentOfRealTime |
 | [AUD-020](exigences/AUD-020.md) | I | Estimation du tempo dans une plage réglable | Validé | AnalyzerTests.Tempo_OfASyntheticGroove_IsFoundWithinOnePercent<br>AudioFileAnalysisTests.WavOfKicksAt120_IsAnalysedAt120_WithPulses<br>AudioViewModelTests.GameSwitch_FollowsTheMusic_GreysTheManualControls_AndKeepsTheCorrections<br>MusicalClockTests.Audio_Source_FollowsTheTempoAndThePhaseOfTheFeed<br>(+2) |
 | [AUD-021](exigences/AUD-021.md) | I | Suivi de la phase | Validé | AnalyzerTests.BeatPhase_IsConsistentWithTheKicks |
 | [AUD-022](exigences/AUD-022.md) | I | Indice de confiance | Validé |  |
-| [AUD-023](exigences/AUD-023.md) | I | Correction d'octave | Validé | MusicalClockTests.Audio_TimesTwo_BeatsFollowTheDoubledTempo_NotTheMusicsOwn<br>MusicalClockTests.Audio_TimesTwo_FollowsTheAnalysisWhenItChangesOctaveItself<br>MusicalClockTests.Audio_TimesTwo_IsKeptWhileTheSameSongPlays<br>MusicalClockTests.Scale_DoublesAndHalves_WithinBounds<br>(+1) |
+| [AUD-023](exigences/AUD-023.md) | I | Correction d'octave | Validé | MusicalClockTests.Audio_FollowHeard_ForgetsTheCorrections_AndGivesTheMusicsTempoBack<br>MusicalClockTests.Audio_TimesTwo_BeatsFollowTheDoubledTempo_NotTheMusicsOwn<br>MusicalClockTests.Audio_TimesTwo_FollowsTheAnalysisWhenItChangesOctaveItself<br>MusicalClockTests.Audio_TimesTwo_IsKeptWhileTheSameSongPlays<br>(+2) |
 | [AUD-024](exigences/AUD-024.md) | I | Détection du premier temps de la mesure | Partiel | AnalyzerTests.Downbeat_FromAnAccentedFirstBeat_IsKnown<br>MusicalClockTests.Audio_Downbeat_ThatDisagreesForASecond_MovesTheBarPosition<br>MusicalClockTests.ManualBarResync_IsNotOverruledByTheGuessedDownbeat_UntilANewSong<br>MusicalClockTests.ResyncBar_MakesTheCurrentBeatTheFirstOfABar<br>(+1) |
 | [AUD-025](exigences/AUD-025.md) | I | Tap tempo | Validé | MusicalClockTests.Tap_FourTapsAtHalfSecond_Gives120<br>MusicalClockTests.Tap_SnapsThePhaseToTheTap<br>MusicalClockTests.Tap_ThreeTaps_DoNotChangeTheTempoYet<br>MusicalClockTests.Tap_TwoSecondsWithoutTap_RestartsTheCount<br>(+4) |
-| [AUD-026](exigences/AUD-026.md) | I | Changement de morceau | Validé | AnalyzerTests.NewSong_AfterASilence_IsFoundInUnderEightSeconds<br>MusicalClockTests.Audio_NewSong_DropsTheOctaveCorrection<br>MusicalClockTests.Audio_Source_SnapsToANewSongTempo |
+| [AUD-026](exigences/AUD-026.md) | I | Changement de morceau | Validé | AnalyzerTests.NewSong_AfterASilence_IsFoundInUnderEightSeconds<br>MusicalClockTests.Audio_NewSong_KeepsTheOctaveCorrection_UntilTheHeardTempoIsClicked<br>MusicalClockTests.Audio_Source_SnapsToANewSongTempo |
 | [AUD-027](exigences/AUD-027.md) | I | Décalage de latence global réglable ± 250 ms | Validé | AudioViewModelTests.Calibration_WithoutTheScene_ExplainsWhere |
 | [AUD-028](exigences/AUD-028.md) | M | Le BPM corrigé par l'utilisateur | Non réalisé |  |
 | [AUD-029](exigences/AUD-029.md) | M | Mesures à 4 temps par défaut | Validé |  |
@@ -476,7 +476,7 @@
 | [GEN-035](exigences/GEN-035.md) | M | Un décalage de latence global | Validé | MusicalClockTests.Latency_AdvancesTheEventsAndIsBounded |
 | [LIVE-020](exigences/LIVE-020.md) | I | Affichage du tempo à l'écran de jeu | Réalisé |  |
 | [LIVE-021](exigences/LIVE-021.md) | I | Commandes de tempo à l'écran de jeu | Réalisé |  |
-| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Validé | MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
+| [MOT-016](exigences/MOT-016.md) | I | Durées musicales | Validé | EditBenchPanelsTests.Properties_StepDurations_InBeatsAndBars_AreSavedInTheirUnit<br>MusicalClockTests.Step_SecondsHold_IgnoresTheTempoChange<br>MusicalClockTests.Step_TempoHalvedMidStep_RemainingMusicalTimeDoubles<br>ReferenceShowP7Tests.OnePerBeat_FollowsAScenarioTempoChange |
 | [MOT-017](exigences/MOT-017.md) | I | Avance à l'événement | Validé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio<br>MusicalReactivityTests.Step_AutoAdvance_MakesAShortFlash_WhileTheNextStepWaitsForTheEvent<br>MusicalReactivityTests.Step_EventAdvance_IgnoresTheHoldDuration_AndFollowsTempoChanges<br>MusicalReactivityTests.Step_OnBassPulses_AdvancesOnTheKicks_NotOnTheBeats<br>(+3) |
 | [MOT-018](exigences/MOT-018.md) | M | Quantification du lancement | Validé | MusicalReactivityTests.Quantize_Bar_LaunchWaitsForTheNextBar_AndIsPublishedWhileWaiting<br>MusicalReactivityTests.Quantize_Beat_OnTheBeat_StartsImmediately<br>MusicalReactivityTests.Quantize_Phrase4_WaitsSixteenBeats<br>MusicalReactivityTests.Quantize_PressingAgain_CancelsTheWait_AndStopCancelsIt<br>(+3) |
 | [MOT-020](exigences/MOT-020.md) | M | Une scène peut suivre l'horloge principale ou une horloge fixe propre | Validé | MusicalReactivityTests.OwnClock_MusicalDurationsUseTheSceneTempo<br>MusicalReactivityTests.OwnClock_ScenePlaysAtItsOwnTempo_WhileTheMainClockIsFaster<br>ReferenceShowP7Tests.SlowMovement_FollowsItsOwnTempo_WhateverTheMainClock |
@@ -486,3 +486,33 @@
 | [SCN-051](exigences/SCN-051.md) | M | Modulation par l'énergie | Partiel | MusicalReactivityTests.EnergySpeed_MakesTheSceneFasterWhenTheMusicIsMoreEnergetic |
 | [SCN-052](exigences/SCN-052.md) | M | En l'absence de signal audio | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio |
 | [SIM-011](exigences/SIM-011.md) | M | Bandeau musical du simulateur | Partiel |  |
+
+## P8 – 23 exigences, 20 couvertes par des tests automatiques
+
+> Partiel : 1 · Reporté : 1 · Réalisé : 1 · Validé : 20
+
+| Exigence | Pri. | Titre | Statut | Tests automatiques |
+|---|---|---|---|---|
+| [GEN-025](exigences/GEN-025.md) | S | Les mesures à 3 temps | Reporté |  |
+| [GEN-134](exigences/GEN-134.md) | M | Un guide de conception | Validé |  |
+| [LIVE-023](exigences/LIVE-023.md) | I | Zone Show | Validé | SequencingScreensTests.Band_ForcesATransition_AtTheNextBar<br>SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-001](exigences/SHOW-001.md) | I | Une séquence a une longueur en mesures, une mesure | Partiel | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>SequencingScreensTests.NewSequence_DropMoveResize_UndoAndValidate<br>ShowRulesTests.Sequence_SceneOnTheWrongTrack_AndBlocksOutOfBounds_AreReported<br>ShowRulesTests.Stores_RoundTrip_SequencesAndShows |
+| [SHOW-002](exigences/SHOW-002.md) | I | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | Validé | SequencingScreensTests.NewSequence_DropMoveResize_UndoAndValidate<br>SequencingScreensTests.SequenceEditor_Cancel_LeavesTheProjectUntouched |
+| [SHOW-003](exigences/SHOW-003.md) | I | Sur une piste, un bloc lance sa scène dans la couche de la piste au début du bloc et l'arr | Validé | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack<br>SequencePlaybackTests.SameSceneOnConsecutiveBlocks_IsNotInterrupted |
+| [SHOW-004](exigences/SHOW-004.md) | I | Blocs d'actions en plus des scènes | Validé | ReferenceShowP8Tests.Rise_RampsTheColorsLayerOverEightBars<br>SequencePlaybackTests.FlashAndBlackoutBlocks_LastTheirBlock<br>SequencePlaybackTests.LayerLevelRamp_OverFourBars |
+| [SHOW-005](exigences/SHOW-005.md) | I | Modes de lecture | Validé | SequencePlaybackTests.Launch_IsQuantizedToTheNextBar<br>SequencePlaybackTests.Loop_ABlockCoveringThePass_KeepsItsSceneAcrossTheLoop<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack |
+| [SHOW-006](exigences/SHOW-006.md) | I | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | Validé | SequencePlaybackTests.SequenceCommands_AreRejectedWithoutSequencer<br>SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-007](exigences/SHOW-007.md) | M | Aperçu | Validé | SequencingScreensTests.MetronomeOnTheOutput_GivesTheLiveTempoBack_WhenTheEditorCloses<br>SequencingScreensTests.ShowEditor_BlindTrial_RunsOnThePreviewOnly_WithSimulatedMusic |
+| [SHOW-008](exigences/SHOW-008.md) | S | Variation de la vitesse relative | Validé | SequencePlaybackTests.DoubleTime_PlaysTwiceAsFast |
+| [SHOW-020](exigences/SHOW-020.md) | I | Éditeur graphique | Validé | SequencingScreensTests.BothEditorsOpen_KeepTheirOwnDrafts<br>SequencingScreensTests.Lock_RefusesTheEditors<br>SequencingScreensTests.ReopeningTheProject_AbandonsTheDraft<br>SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate<br>(+3) |
+| [SHOW-021](exigences/SHOW-021.md) | I | Actions continues, mémorisées, impulsionnelles | Validé | ShowExecutionTests.Launch_ActivatesTheInitialStepAndPlaysItsScenes<br>ShowExecutionTests.PlaySequence_RunsWhileTheStepIsActive_AndSequenceEndedMovesOn<br>ShowExecutionTests.PulseActions_FlashAndShortBlackout_EndOnTheirOwn<br>ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
+| [SHOW-022](exigences/SHOW-022.md) | I | Réceptivités du §3 | Validé | AudioListenerTests.SilenceAndResume_ReachTheEngine_AsCuesReadOnce<br>ReferenceShowP8Tests.CoupletRefrainDrop_EndOfTheSong_LeadsToTheFinal_AndTheNextSongToTheIntro<br>SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate<br>ShowExecutionTests.Conditions_TimeEnergyStyleTempoSongAndLogic<br>(+4) |
+| [SHOW-023](exigences/SHOW-023.md) | I | Exécution conforme aux règles R1 à R6 | Validé | ReferenceShowP8Tests.EveryP8SequenceAndShow_ReplaysExactlyAsReference<br>ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.EditingAPlayingShow_KeepsArmedTransitions_AndUpdatesTheActiveStep<br>(+5) |
+| [SHOW-024](exigences/SHOW-024.md) | I | Validation à l'édition | Validé | ReferenceShowP8Tests.Pitfall_IsRefused_AndNothingLights<br>ReferenceShowP8Tests.ReferenceShow_P8_ContentIsThere_AndOnlyThePitfallIsAnError<br>SequencingScreensTests.Validate_AShowWithAnError_AsksFirst_AndLeavesTheErrorInTheJournal<br>ShowExecutionTests.ShowWithAnImmediateLoop_IsRefusedAtLaunch<br>(+7) |
+| [SHOW-025](exigences/SHOW-025.md) | I | Un seul show principal actif à la fois | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside |
+| [SHOW-026](exigences/SHOW-026.md) | I | Supervision | Validé | SequencingScreensTests.ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt |
+| [SHOW-027](exigences/SHOW-027.md) | I | Mode simulation dans l'éditeur | Validé | SequencingScreensTests.ShowEditor_BlindTrial_RunsOnThePreviewOnly_WithSimulatedMusic<br>ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps |
+| [SHOW-028](exigences/SHOW-028.md) | M | Tirage pondéré | Validé | WeightedDrawTests.AvoidRepeat_NeverTakesTheSameBranchTwiceInARow<br>WeightedDrawTests.Distribution_FollowsTheWeights_Within2Percent |
+| [SHOW-029](exigences/SHOW-029.md) | M | Variables simples du show | Validé | ReferenceShowP8Tests.CoupletRefrainDrop_EndOfTheSong_LeadsToTheFinal_AndTheNextSongToTheIntro<br>ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
+| [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
+| [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |

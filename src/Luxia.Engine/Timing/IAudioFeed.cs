@@ -13,11 +13,13 @@ namespace Luxia.Engine.Timing;
 /// <param name="BassPulses">Impulsions des basses depuis la lecture précédente.</param>
 /// <param name="TreblePulses">Impulsions des aigus depuis la lecture précédente.</param>
 /// <param name="Energy">Énergie perçue (0 à 1, signal C).</param>
-public readonly record struct AudioReading(bool Live, double Bpm, double Confidence, bool HasGrid, double BeatPhase, int BarBeat, int BassPulses, int TreblePulses, double Energy = 0);
+/// <param name="EnergyLevel">Niveau d'énergie : 0 Calme, 1 Groove, 2 Énergique, 3 Explosif (AUD-061).</param>
+/// <param name="Cues">Événements musicaux (drop, break, montée, silence, reprise) depuis la lecture précédente (D38).</param>
+public readonly record struct AudioReading(bool Live, double Bpm, double Confidence, bool HasGrid, double BeatPhase, int BarBeat, int BassPulses, int TreblePulses, double Energy = 0, int EnergyLevel = 0, MusicCues Cues = MusicCues.None);
 
 /// <summary>Source de lectures audio pour le moteur ; appelée par le fil du moteur à chaque tick, sans jamais bloquer.</summary>
 public interface IAudioFeed
 {
-    /// <summary>Lecture courante ; les compteurs d'impulsions repartent de zéro à chaque appel.</summary>
+    /// <summary>Lecture courante ; les compteurs d'impulsions et les événements repartent de zéro à chaque appel.</summary>
     AudioReading Read();
 }

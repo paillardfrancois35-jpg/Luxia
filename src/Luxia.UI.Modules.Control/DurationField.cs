@@ -1,8 +1,9 @@
+using System.Globalization;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Luxia.Engine.Model;
 using Luxia.UI.Controls;
 
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>
 /// Saisie d'une durée : une quantité et son unité (secondes, temps, mesures ; GEN-023). Facultative pour un fondu
@@ -26,6 +27,22 @@ public sealed partial class DurationField : ViewModelBase
 
     /// <summary>Durée saisie ; <c>null</c> si la case est vide.</summary>
     public Duration? Value => Amount is { } amount ? new Duration((double)Math.Max(0, amount), Unit.Value) : null;
+
+    /// <summary>
+    /// Fondu et maintien d'une étape écrits dans leur unité, pour la bande d'étapes : « 0,5 + 2 s », « 0 + 2 temps »,
+    /// « 0,5 s + 1 mesure » (E2).
+    /// </summary>
+    public static string Describe(Duration fade, Duration hold) => fade.Unit == hold.Unit
+        ? string.Create(CultureInfo.CurrentCulture, $"{fade.Value:0.##} + {Describe(hold)}")
+        : $"{Describe(fade)} + {Describe(hold)}";
+
+    /// <summary>Une durée écrite dans son unité : « 0,5 s », « 2 temps », « 1 mesure », « 4 mesures ».</summary>
+    public static string Describe(Duration duration) => duration.Unit switch
+    {
+        DurationUnit.Beats => string.Create(CultureInfo.CurrentCulture, $"{duration.Value:0.##} temps"),
+        DurationUnit.Bars => string.Create(CultureInfo.CurrentCulture, $"{duration.Value:0.##} mesure{(duration.Value > 1 ? "s" : string.Empty)}"),
+        _ => string.Create(CultureInfo.CurrentCulture, $"{duration.Value:0.##} s"),
+    };
 
     /// <summary>Affiche une durée sans lever <see cref="Edited"/>.</summary>
     public void Load(Duration? duration)

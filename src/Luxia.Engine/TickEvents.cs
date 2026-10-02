@@ -17,4 +17,10 @@ internal sealed class TickEvents
 
     /// <summary>Un signal audio exploitable est présent (pas de silence, capture active).</summary>
     public bool AudioLive { get; set; }
+
+    /// <summary>Niveau d'énergie (0 Calme à 3 Explosif).</summary>
+    public int EnergyLevel { get; set; }
+
+    /// <summary>Événements musicaux du tick (D38).</summary>
+    public Timing.MusicCues Cues { get; set; }
 }

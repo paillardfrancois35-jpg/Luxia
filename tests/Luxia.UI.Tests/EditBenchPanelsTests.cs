@@ -1,3 +1,4 @@
+using Luxia.Engine.Model;
 using Luxia.Fixtures.Model;
 using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
@@ -313,7 +314,7 @@ public sealed class EditBenchPanelsTests : IAsyncLifetime
         _vm.Session.EditStep.ShouldBe(1);
         _vm.Properties.Steps.Count.ShouldBe(steps + 1);
 
-        _vm.Properties.StepHoldSeconds = 3;
+        _vm.Properties.StepHold.Amount = 3;
         _vm.Flush();
         Scene("Chenillard doux").Steps[1].Hold.ToSeconds(120).ShouldBe(3);
 
@@ -324,6 +325,97 @@ public sealed class EditBenchPanelsTests : IAsyncLifetime
 
         _vm.Undo();
         Scene("Chenillard doux").Steps.Count.ShouldBe(steps + 1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-011")]
+    [Trait("Exigence", "MOT-012")]
+    public void Properties_StepCurveAndSwitch_AreSaved_AndReadBack()
+    {
+        // Lot 7 de P8 : réglés dans l'écran Scènes jusqu'à son retrait, désormais dans les Propriétés de l'étape.
+        var scene = Scene("Chenillard 4 couleurs");
+        _vm.Session.ChooseScene(scene.Id);
+
+        _vm.Properties.StepCurve = PropertiesPanelViewModel.Curves.Single(c => c.Value == FadeCurve.SCurve);
+        _vm.Properties.StepSwitch = PropertiesPanelViewModel.Switches.Single(c => c.Value == DiscreteSwitch.Middle);
+        _vm.Flush();
+
+        var step = Scene("Chenillard 4 couleurs").Steps[0];
+        step.Curve.ShouldBe(FadeCurve.SCurve);
+        step.Switch.ShouldBe(DiscreteSwitch.Middle);
+
+        _vm.Session.ChooseStep(1);
+        _vm.Properties.StepCurve.Value.ShouldBe(Scene("Chenillard 4 couleurs").Steps[1].Curve);
+        _vm.Session.ChooseStep(0);
+        _vm.Properties.StepCurve.Value.ShouldBe(FadeCurve.SCurve);
+        _vm.Properties.StepSwitch.Value.ShouldBe(DiscreteSwitch.Middle);
+    }
+
+    [Fact]
+    [Trait("Exigence", "GEN-023")]
+    [Trait("Exigence", "MOT-016")]
+    public void Properties_StepDurations_InBeatsAndBars_AreSavedInTheirUnit()
+    {
+        var scene = Scene("Chenillard 4 couleurs");
+        _vm.Session.ChooseScene(scene.Id);
+
+        _vm.Properties.StepHold.Amount = 2;
+        _vm.Properties.StepHold.Unit = DurationField.Units.Single(u => u.Value == DurationUnit.Beats);
+        _vm.Properties.StepFade.Amount = 1;
+        _vm.Properties.StepFade.Unit = DurationField.Units.Single(u => u.Value == DurationUnit.Bars);
+        _vm.Flush();
+
+        var step = Scene("Chenillard 4 couleurs").Steps[0];
+        step.Hold.ShouldBe(Duration.FromBeats(2), "E2 : la durée garde son unité, elle suivra le tempo");
+        step.Fade.ShouldBe(new Duration(1, DurationUnit.Bars));
+        step.Hold.ToSeconds(90).ShouldBe(1.333, 0.001);
+
+        // Relue telle quelle (et non convertie en secondes à 120 BPM).
+        _vm.Session.ChooseStep(1);
+        _vm.Session.ChooseStep(0);
+        _vm.Properties.StepHold.Amount.ShouldBe(2);
+        _vm.Properties.StepHold.Unit.Value.ShouldBe(DurationUnit.Beats);
+        _vm.Properties.Steps[0].TimesText.ShouldBe("1 mesure + 2 temps");
+        _vm.Properties.Steps[0].HoldSeconds.ShouldBe(1, 0.001, "largeur de la bande au tempo courant (120)");
+
+        _vm.Undo();
+        Scene("Chenillard 4 couleurs").Steps[0].Fade.Unit.ShouldBe(DurationUnit.Seconds, "un réglage = une annulation");
+    }
+
+    [Fact]
+    [Trait("Exigence", "GEN-023")]
+    public void Properties_SceneFades_AcceptBeatsAndStayEmptyWhenCleared()
+    {
+        var scene = Scene("Chenillard 4 couleurs");
+        _vm.Session.ChooseScene(scene.Id);
+
+        _vm.Properties.FadeIn.Amount = 4;
+        _vm.Properties.FadeIn.Unit = DurationField.Units.Single(u => u.Value == DurationUnit.Beats);
+        _vm.Flush();
+        Scene("Chenillard 4 couleurs").FadeIn.ShouldBe(Duration.FromBeats(4));
+
+        _vm.Properties.FadeIn.Amount = null;
+        _vm.Flush();
+        Scene("Chenillard 4 couleurs").FadeIn.ShouldBeNull("vide = le fondu de la première étape");
+    }
+
+    [Fact]
+    [Trait("Exigence", "GEN-023")]
+    public void Properties_Wizard_GeneratesStepsInBeats()
+    {
+        var scene = Scene("Chenillard 4 couleurs");
+        _vm.Session.ChooseScene(scene.Id);
+        _vm.Plan.OnSelectionRequested(new FixtureSelectionRequest([Id("PAR 1"), Id("PAR 2")], false));
+        foreach (var chip in _vm.Properties.WizardPalettes.Take(2))
+        {
+            chip.IsChecked = true;
+        }
+
+        _vm.Properties.WizardHold.Amount = 1;
+        _vm.Properties.WizardHold.Unit = DurationField.Units.Single(u => u.Value == DurationUnit.Beats);
+        _vm.Properties.GenerateStepsCommand.Execute(null);
+
+        Scene("Chenillard 4 couleurs").Steps.ShouldAllBe(s => s.Hold == Duration.FromBeats(1));
     }
 
     [Fact]

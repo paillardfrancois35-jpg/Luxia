@@ -1,0 +1,1042 @@
+{
+  "formatVersion": 1,
+  "shows": [
+    {
+      "id": "8b000008-0000-4000-8000-000000000001",
+      "name": "Couplet / Refrain / Drop",
+      "color": "#DB61A2",
+      "category": "Phase P8",
+      "notes": "Exemple du doc 20 §3.4 : l'intro attend une énergie « Groove », le couplet joue « Groove 8 mesures » ; au drop, le refrain ; à la montée, « Montée 16 mesures » ; au break (ou après 16 mesures de refrain) retour au couplet ; au troisième refrain, le final. Fin du morceau (silence), où que l'on soit : le final ; quand le son reprend (morceau suivant), retour à l'intro, compteur de refrains remis à zéro (essai P8, ex. 13).",
+      "role": "main",
+      "styles": [
+        "Électro",
+        "House"
+      ],
+      "energyMin": 1,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "variables": [
+        {
+          "name": "refrains",
+          "initial": 0
+        }
+      ],
+      "steps": [
+        {
+          "id": "0",
+          "name": "Intro",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            },
+            {
+              "kind": "variable",
+              "variable": "refrains",
+              "operation": "set",
+              "value": 0
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "name": "Couplet",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000002"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "name": "Montée",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "name": "Refrain",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "flash",
+              "sceneId": "47bbdf76-6852-5165-a945-69afcf0b4ca7",
+              "seconds": 0.5
+            },
+            {
+              "kind": "variable",
+              "variable": "refrains",
+              "operation": "add",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "name": "Final",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "energyLevel",
+            "min": 1,
+            "max": 3
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "drop"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "buildUp"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "drop"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "sequenceEnded",
+            "sequenceId": "8a000008-0000-4000-8000-000000000001"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "variable",
+            "variable": "refrains",
+            "comparison": "atLeast",
+            "value": 3
+          },
+          "quantize": "phrase8"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "break"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 16,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "resumed"
+          },
+          "quantize": "none"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000002",
+      "name": "Tirage au sort (variantes)",
+      "color": "#E3B341",
+      "category": "Phase P8",
+      "notes": "Doc 20 §3.4, branche 2a / 2b : toutes les 8 mesures, variante A (60 % : chenillard des PAR, têtes décalées du multi-têtes, segments des barres, huit des lyres) ou B (40 % : tout en bleu, arc-en-ciel des barres, cercle des lyres), jamais deux fois la même de suite ; chaque variante dure 8 mesures puis revient à la base.",
+      "role": "main",
+      "styles": [],
+      "energyMin": 1,
+      "energyMax": 2,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "1",
+          "name": "Base",
+          "initial": true,
+          "choice": "random",
+          "avoidRepeat": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a7f7e17c-9715-575f-b474-cd5a0be5e316"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        },
+        {
+          "id": "2a",
+          "name": "Variante A : multi-têtes et segments",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "id": "2b",
+          "name": "Variante B : arc-en-ciel des barres",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "2a"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar",
+          "weight": 60
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "2b"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar",
+          "weight": 40
+        },
+        {
+          "from": [
+            "2a"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2b"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000003",
+      "name": "Ambiance UV et fumée (secondaire)",
+      "color": "#8957E5",
+      "category": "Phase P8",
+      "notes": "Show secondaire (SHOW-031) : joue en parallèle du show principal. UV en continu ; à chaque phrase de 8 mesures, une chance sur deux d'une rafale de fumée de 3 s (limiteur de fumée toujours actif).",
+      "role": "main",
+      "secondary": true,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "uv",
+          "name": "UV",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5"
+            }
+          ]
+        },
+        {
+          "id": "fumee",
+          "name": "Fumée",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "f4cfb0ab-2023-545e-8f02-1ecc721b82b5"
+            },
+            {
+              "kind": "smoke",
+              "seconds": 3
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "uv"
+          ],
+          "to": [
+            "fumee"
+          ],
+          "condition": {
+            "kind": "random",
+            "value": 0.5,
+            "every": "phrase8"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "fumee"
+          ],
+          "to": [
+            "uv"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000004",
+      "name": "Piège : boucle sans condition",
+      "color": "#F85149",
+      "category": "Phase P8",
+      "notes": "Exemple piège (DEMO-4) : deux étapes qui se renvoient l'une à l'autre sans condition ni quantification. « valider » le signale en erreur et LuXia refuse de le lancer (SHOW-024).",
+      "role": "main",
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "a",
+          "name": "Bleu",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "name": "Rouge",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "dfaf4fe6-0451-5e60-9a8a-effc3ae11981"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "a"
+          ],
+          "to": [
+            "b"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "b"
+          ],
+          "to": [
+            "a"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "none"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000005",
+      "name": "Visite guidée (sans musique)",
+      "color": "#3FB950",
+      "category": "Phase P8",
+      "notes": "Démonstration qui avance toute seule, au tempo de l'horloge, sans musique ni simulation : chaque étape dure un nombre de mesures ou attend la fin de sa séquence. Ouverture 4 mesures, Groove 8 mesures (PAR et lyres), Barres et multi-têtes 8 mesures, Break calme jusqu'à sa fin, Explosion jusqu'à sa fin, Final 4 mesures, puis retour à l'ouverture (≈ 1 min 30 s par tour à 120 BPM).",
+      "role": "waiting",
+      "styles": [],
+      "energyMin": 0,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "0",
+          "name": "Ouverture",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "id": "1",
+          "name": "Groove",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000002"
+            }
+          ]
+        },
+        {
+          "id": "1b",
+          "name": "Barres et multi-têtes",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000006"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "name": "Break",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000003"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "name": "Explosion",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000004"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "name": "Final",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 4,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "1b"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1b"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "sequenceEnded",
+            "sequenceId": "8a000008-0000-4000-8000-000000000003"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "sequenceEnded",
+            "sequenceId": "8a000008-0000-4000-8000-000000000004"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 4,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000007",
+      "name": "Bloc refrain (macro-étape)",
+      "color": "#BC4CE0",
+      "category": "Phase P8",
+      "notes": "Sous-show réutilisable, joué par la macro-étape de « Branches parallèles et macro-étape » : 4 mesures de têtes décalées (multi-têtes) et d'arc-en-ciel des barres, puis 2 mesures de strobe des PAR en blanc (avec un flash de 0,5 s au début), puis il se termine (ce qui libère la macro-étape). Lancé seul, il joue une fois et tient sa dernière étape.",
+      "role": "main",
+      "styles": [],
+      "energyMin": 1,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "r0",
+          "name": "Multi-têtes et barres",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            }
+          ]
+        },
+        {
+          "id": "r1",
+          "name": "Éclat",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000006"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a789a9ab-05f5-5e25-bda6-fa081565d449"
+            },
+            {
+              "kind": "flash",
+              "sceneId": "47bbdf76-6852-5165-a945-69afcf0b4ca7",
+              "seconds": 0.5
+            }
+          ]
+        },
+        {
+          "id": "r2",
+          "name": "Fin du bloc",
+          "actions": []
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "r0"
+          ],
+          "to": [
+            "r1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 4,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "r1"
+          ],
+          "to": [
+            "r2"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 2,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "8b000008-0000-4000-8000-000000000006",
+      "name": "Branches parallèles et macro-étape",
+      "color": "#58A6FF",
+      "category": "Phase P8",
+      "notes": "Démonstration du Grafcet complet, sans musique : après l'intro, deux branches en parallèle (divergence en ET) — la branche « couleurs » (une couleur par mesure sur les PAR, puis les segments des barres après 8 mesures) et la branche « mouvements » (cercle, puis huit des lyres après 4 mesures) ; quand les deux sont arrivées (convergence en ET), la macro-étape joue « Bloc refrain (macro-étape) » (multi-têtes et barres) ; à sa fin, le final, puis reprise au début.",
+      "role": "main",
+      "styles": [],
+      "energyMin": 0,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "restart",
+      "steps": [
+        {
+          "id": "0",
+          "name": "Intro",
+          "initial": true,
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "id": "c1",
+          "name": "Couleurs : une par mesure",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a7f7e17c-9715-575f-b474-cd5a0be5e316"
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "name": "Barres : segments",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
+            }
+          ]
+        },
+        {
+          "id": "m1",
+          "name": "Mouvements : cercle",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "e44450d6-535b-5fef-bf50-3cbfe66fbfe0"
+            }
+          ]
+        },
+        {
+          "id": "m2",
+          "name": "Mouvements : huit",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "id": "r",
+          "name": "Refrain (macro)",
+          "macroShowId": "8b000008-0000-4000-8000-000000000007",
+          "actions": []
+        },
+        {
+          "id": "f",
+          "name": "Final",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            },
+            {
+              "kind": "play",
+              "sceneId": "1f473870-bb44-5b17-b61f-e9a73ddf743f"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "c1",
+            "m1"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 2,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "c1"
+          ],
+          "to": [
+            "c2"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "m1"
+          ],
+          "to": [
+            "m2"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 4,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "c2",
+            "m2"
+          ],
+          "to": [
+            "r"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "r"
+          ],
+          "to": [
+            "f"
+          ],
+          "condition": {
+            "kind": "always"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "f"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 4,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        }
+      ]
+    }
+  ]
+}

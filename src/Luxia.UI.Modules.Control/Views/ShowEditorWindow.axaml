@@ -1,0 +1,273 @@
+<v:SequencingWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="using:Luxia.UI.Modules.Control.Views"
+        xmlns:sq="using:Luxia.UI.Modules.Control.Sequencing"
+        x:Class="Luxia.UI.Modules.Control.Views.ShowEditorWindow"
+        x:DataType="sq:ShowEditorViewModel"
+        Title="{Binding WindowTitle}"
+        Width="1500" Height="900" MinWidth="1000" MinHeight="620"
+        WindowStartupLocation="CenterOwner" Background="#0D1117">
+  <Window.Styles>
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.action">
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="MinWidth" Value="110" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.mini">
+      <Setter Property="Padding" Value="6,0" />
+      <Setter Property="MinHeight" Value="26" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="ComboBox, NumericUpDown, TextBox">
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+    <Panel DockPanel.Dock="Top">
+      <Border Background="{Binding ModeColor}" Opacity="0.16" />
+      <Border BorderBrush="{Binding ModeColor}" BorderThickness="0,0,0,2" Padding="14,8">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Border Background="{Binding ModeColor}" CornerRadius="10" Padding="10,2" VerticalAlignment="Center">
+            <TextBlock Text="BROUILLON" Foreground="#0D1117" FontWeight="Bold" FontSize="12" />
+          </Border>
+          <Border Width="22" Height="22" CornerRadius="4" Background="{Binding ItemColor}" VerticalAlignment="Center" />
+          <TextBox Text="{Binding Name}" FontSize="17" FontWeight="SemiBold" MinWidth="260" ToolTip.Tip="Nom du show" />
+          <TextBlock Text="— show · Appliquer écrit sans fermer ; Annuler revient à l'état d'origine." Foreground="#8B949E" VerticalAlignment="Center" />
+          <Border Background="#D29922" CornerRadius="10" Padding="8,1" IsVisible="{Binding HasChanges}" VerticalAlignment="Center">
+            <TextBlock Text="modifié" Foreground="#0D1117" FontSize="12" />
+          </Border>
+          <TextBlock Text="{Binding Message}" Foreground="#D29922" VerticalAlignment="Center" />
+        </StackPanel>
+      </Border>
+    </Panel>
+
+    <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="12,8">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+          <Button Classes="action" Content="Appliquer" Command="{Binding ApplyCommand}" ToolTip.Tip="Écrire le show dans le projet sans fermer" />
+          <Button Classes="action" Content="Annuler" Command="{Binding CancelCommand}" ToolTip.Tip="Revenir à l'état d'origine et fermer" />
+          <Button Classes="action" Content="Valider" Background="#3FB950" Foreground="#0D1117" FontWeight="Bold" Command="{Binding ValidateCommand}" ToolTip.Tip="Écrire le show et fermer" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <CheckBox Content="👁 Aveugle" IsChecked="{Binding IsBlind}" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding SafetyText}" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" MaxWidth="420" TextWrapping="Wrap" />
+          <TextBlock Text="À la fin du show :" Classes="label" Margin="16,0,0,0" />
+          <ComboBox ItemsSource="{x:Static sq:ShowOptions.Ends}" SelectedItem="{Binding AtEnd}" Width="210"
+                    ToolTip.Tip="Quand toutes les étapes actives n'ont plus de transition qui en part" />
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="660,*">
+      <!-- Cartes : une par étape, ses transitions dessous (Q45). -->
+      <Border BorderBrush="#30363D" BorderThickness="0,0,1,0">
+        <DockPanel Margin="10">
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="+ étape" MinHeight="32" Command="{Binding AddStepCommand}" ToolTip.Tip="Nouvelle étape à la fin ; reliez-la par une transition" />
+            <TextBlock Text="Branches en parallèle : plusieurs étapes dans « vers » (2a, 2b) · Macro-étape : choisir un show dans la carte" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="480" />
+          </StackPanel>
+          <Expander DockPanel.Dock="Bottom" Header="Pour le pilote automatique (P10) et variables" Margin="0,8,0,0" HorizontalAlignment="Stretch">
+            <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+              <TextBlock Classes="label" Text="Rôle" />
+              <ComboBox Grid.Column="1" ItemsSource="{x:Static sq:ShowOptions.Roles}" SelectedItem="{Binding Role}" Width="200" />
+              <TextBlock Grid.Row="1" Classes="label" Text="Styles visés" />
+              <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Styles}" PlaceholderText="Électro, House (vide : tous)" />
+              <TextBlock Grid.Row="2" Classes="label" Text="Énergie" />
+              <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding EnergyMin}" Width="140" />
+                <TextBlock Text="à" Classes="label" />
+                <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding EnergyMax}" Width="140" />
+              </StackPanel>
+              <TextBlock Grid.Row="3" Classes="label" Text="Poids" />
+              <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Weight}" Minimum="0.1" Maximum="100" Increment="0.5" FormatString="0.#" Width="125" HorizontalAlignment="Left" />
+              <CheckBox Grid.Row="4" Grid.Column="1" Content="Show secondaire (joue en parallèle du show principal)" IsChecked="{Binding Secondary}" />
+              <TextBlock Grid.Row="5" Classes="label" Text="Variables" />
+              <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Variables}" PlaceholderText="refrains, couplets (des compteurs, à 0 au lancement)" />
+            </Grid>
+          </Expander>
+          <ScrollViewer x:Name="CardsScroll">
+            <ItemsControl x:Name="CardsList" ItemsSource="{Binding Cards}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="sq:StepCardViewModel">
+                  <Border Background="#161B22" CornerRadius="8" Padding="12,8" Margin="0,0,0,10"
+                          BorderBrush="{Binding IsActive, Converter={x:Static v:SequencingConverters.ActiveColor}}"
+                          BorderThickness="{Binding IsActive, Converter={x:Static v:SequencingConverters.ActiveBorder}}">
+                    <StackPanel Spacing="6">
+                      <DockPanel>
+                        <Button DockPanel.Dock="Right" Classes="mini" Content="Supprimer l'étape" Foreground="#F85149" Command="{Binding DeleteCommand}" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                          <TextBox Text="{Binding IdText, UpdateSourceTrigger=LostFocus}" Width="56" FontWeight="Bold" ToolTip.Tip="Identifiant court (« 0 », « 2a ») : les transitions s'y réfèrent" />
+                          <TextBox Text="{Binding Name}" Width="230" FontSize="15" FontWeight="SemiBold" PlaceholderText="Nom de l'étape" />
+                          <CheckBox Content="initiale" IsChecked="{Binding Initial}" ToolTip.Tip="Le show commence par les étapes initiales" />
+                          <Border Background="#39C5CF" CornerRadius="10" Padding="8,1" IsVisible="{Binding IsActive}" VerticalAlignment="Center">
+                            <TextBlock Text="active (essai)" Foreground="#0D1117" FontSize="11" />
+                          </Border>
+                        </StackPanel>
+                      </DockPanel>
+                      <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="Macro-étape" Classes="label" />
+                        <ComboBox ItemsSource="{Binding Editor.MacroChoices}" SelectedItem="{Binding Macro}" Width="240"
+                                  ToolTip.Tip="L'étape joue un autre show ; ses transitions attendent que ce show soit arrivé à sa fin" />
+                      </StackPanel>
+
+                      <TextBlock Text="Pendant l'étape" Classes="label" />
+                      <ItemsControl ItemsSource="{Binding Actions}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="sq:ActionRow">
+                            <DockPanel Margin="0,1">
+                              <Button DockPanel.Dock="Right" Classes="mini" Content="✕" ToolTip.Tip="Retirer l'action" Command="{Binding RemoveCommand}" />
+                              <TextBlock Text="{Binding Text, StringFormat='• {0}'}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            </DockPanel>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                      <WrapPanel>
+                        <ComboBox ItemsSource="{x:Static sq:ShowOptions.Actions}" SelectedItem="{Binding NewKind}" Width="250" Margin="0,0,6,4" />
+                        <ComboBox ItemsSource="{Binding NewTargets}" SelectedItem="{Binding NewTarget}" Width="200" Margin="0,0,6,4" IsVisible="{Binding NewNeedsTarget}" />
+                        <NumericUpDown Value="{Binding NewValue}" Minimum="0" Maximum="100" Increment="0.5" FormatString="0.##" Width="130" Margin="0,0,4,4" IsVisible="{Binding NewNeedsValue}" />
+                        <TextBlock Text="{Binding NewValueUnit}" Classes="label" Margin="0,0,6,4" IsVisible="{Binding NewNeedsValue}" />
+                        <Button Content="+ action" Classes="mini" Margin="0,0,0,4" Command="{Binding AddActionCommand}" />
+                      </WrapPanel>
+
+                      <DockPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8">
+                          <CheckBox Content="tirage au sort" IsChecked="{Binding Random}" FontSize="12"
+                                    ToolTip.Tip="Si plusieurs transitions sont vraies en même temps : tirage selon leur poids (sinon, la première dans l'ordre)" />
+                          <CheckBox Content="éviter la même" IsChecked="{Binding AvoidRepeat}" IsEnabled="{Binding Random}" FontSize="12"
+                                    ToolTip.Tip="Ne pas tirer deux fois de suite la même transition" />
+                        </StackPanel>
+                        <TextBlock Text="Transitions (la première vraie l'emporte, dans l'ordre)" Classes="label" />
+                      </DockPanel>
+                      <ItemsControl ItemsSource="{Binding Transitions}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate x:DataType="sq:TransitionRowViewModel">
+                            <Border Background="#0D1117" CornerRadius="5" Padding="8,5" Margin="0,0,0,4">
+                              <StackPanel Spacing="4">
+                                <WrapPanel>
+                                  <TextBlock Text="{Binding Rank}" Classes="label" Margin="0,0,6,4" />
+                                  <TextBlock Text="┼" Foreground="#8B949E" Margin="0,0,6,4" VerticalAlignment="Center" />
+                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Conditions}" SelectedItem="{Binding Kind}" Width="210" Margin="0,0,6,4" IsVisible="{Binding IsSimple}" />
+                                  <TextBlock Text="combinaison (ET / OU / NON) : à modifier dans le fichier" Classes="label" Margin="0,0,6,4" IsVisible="{Binding IsComposite}" />
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsDuration}">
+                                    <NumericUpDown Value="{Binding DurationValue}" Minimum="0" Maximum="9999" Increment="1" FormatString="0.##" Width="130" />
+                                    <ComboBox ItemsSource="{x:Static sq:ShowOptions.DurationUnits}" SelectedItem="{Binding DurationUnit}" Width="110" />
+                                  </StackPanel>
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsPercent}">
+                                    <NumericUpDown Value="{Binding Percent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" Width="105" />
+                                    <TextBlock Text="%" Classes="label" />
+                                  </StackPanel>
+                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Every}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsEvery}" ToolTip.Tip="Un tirage à chaque…" />
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsLevels}">
+                                    <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding LevelMin}" Width="120" />
+                                    <TextBlock Text="à" Classes="label" />
+                                    <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding LevelMax}" Width="120" />
+                                  </StackPanel>
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsTempo}">
+                                    <NumericUpDown Value="{Binding TempoMin}" Minimum="20" Maximum="400" FormatString="0" Width="105" />
+                                    <TextBlock Text="à" Classes="label" />
+                                    <NumericUpDown Value="{Binding TempoMax}" Minimum="20" Maximum="400" FormatString="0" Width="105" />
+                                    <TextBlock Text="BPM" Classes="label" />
+                                  </StackPanel>
+                                  <ComboBox ItemsSource="{Binding $parent[Window].((sq:ShowEditorViewModel)DataContext).SceneChoices}" SelectedItem="{Binding Scene}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsScene}" />
+                                  <ComboBox ItemsSource="{Binding $parent[Window].((sq:ShowEditorViewModel)DataContext).SequenceChoices}" SelectedItem="{Binding Sequence}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsSequence}" />
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsCount}">
+                                    <NumericUpDown Value="{Binding Count}" Minimum="1" Maximum="999" FormatString="0" Width="105" />
+                                    <TextBlock Text="fois" Classes="label" />
+                                  </StackPanel>
+                                  <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsVariable}">
+                                    <TextBox Text="{Binding Variable}" Width="110" PlaceholderText="variable" />
+                                    <ComboBox ItemsSource="{x:Static sq:ShowOptions.Comparisons}" SelectedItem="{Binding Comparison}" Width="70" />
+                                    <NumericUpDown Value="{Binding Number}" Minimum="-999" Maximum="999" FormatString="0.##" Width="130" />
+                                  </StackPanel>
+                                  <TextBox Text="{Binding Styles}" Width="180" Margin="0,0,6,4" PlaceholderText="Électro, House" IsVisible="{Binding ShowsStyles}" />
+                                  <TextBlock Text="vers" Classes="label" Margin="0,0,4,4" />
+                                  <TextBox Text="{Binding To, UpdateSourceTrigger=LostFocus}" Width="70" Margin="0,0,6,4" ToolTip.Tip="Étape(s) aval ; plusieurs, séparées par des virgules = branches en parallèle (ET)" />
+                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Quantize}" Width="230" Margin="0,0,6,4"
+                                            ToolTip.Tip="Quand la condition devient vraie, la transition attend cette frontière musicale" />
+                                  <TextBlock Text="poids" Classes="label" Margin="0,0,4,4" />
+                                  <NumericUpDown Value="{Binding Weight}" Minimum="0.01" Maximum="1000" Increment="10" FormatString="0.##" Width="130" Margin="0,0,6,4"
+                                                 ToolTip.Tip="Pour le tirage au sort (cochez « tirage au sort » sur la carte)" />
+                                  <TextBlock Text="depuis" Classes="label" Margin="0,0,4,4" />
+                                  <TextBox Text="{Binding From, UpdateSourceTrigger=LostFocus}" Width="60" Margin="0,0,6,4" ToolTip.Tip="Étape(s) amont ; plusieurs = attendre qu'elles soient toutes actives (convergence en ET)" />
+                                  <Button Classes="mini" Content="↑" Margin="0,0,2,4" Command="{Binding MoveUpCommand}" ToolTip.Tip="Plus prioritaire" />
+                                  <Button Classes="mini" Content="↓" Margin="0,0,2,4" Command="{Binding MoveDownCommand}" ToolTip.Tip="Moins prioritaire" />
+                                  <Button Classes="mini" Content="✕" Margin="0,0,0,4" Command="{Binding DeleteCommand}" ToolTip.Tip="Supprimer la transition" />
+                                </WrapPanel>
+                                <TextBlock Text="{Binding Summary}" FontSize="11" Foreground="#39C5CF" TextWrapping="Wrap" />
+                              </StackPanel>
+                            </Border>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                      <Button Content="+ transition" Classes="mini" HorizontalAlignment="Left" Command="{Binding AddTransitionCommand}" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+
+      <!-- Diagramme, problèmes, essai sans musique -->
+      <DockPanel Grid.Column="1" Margin="12">
+        <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#D29922" BorderThickness="1" CornerRadius="8" Padding="12,8" Margin="0,8,0,0"
+                DataContext="{Binding Simulation}" x:DataType="sq:SimulationViewModel">
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="Essai sans musique" FontWeight="SemiBold" FontSize="14" />
+              <TextBlock Text="le show joue au tempo choisi ; les boutons provoquent les événements musicaux" Classes="label" />
+            </StackPanel>
+            <WrapPanel>
+              <Button Content="▶ Jouer le show" Background="#D29922" Foreground="#0D1117" FontWeight="SemiBold" MinHeight="32" Margin="0,0,6,4" Command="{Binding PlayCommand}" />
+              <Button Content="■" MinHeight="32" Margin="0,0,12,4" Command="{Binding StopCommand}" />
+              <CheckBox Content="métronome" IsChecked="{Binding UseMetronome}" Margin="0,0,6,4" ToolTip.Tip="Coché : l'essai impose ce tempo à l'horloge (sinon, celui du direct)" />
+              <NumericUpDown Value="{Binding MetronomeBpm}" Minimum="20" Maximum="400" FormatString="0" Width="110" Margin="0,0,4,4" IsEnabled="{Binding UseMetronome}" />
+              <TextBlock Text="{Binding TempoText}" Classes="label" Margin="0,0,12,4" />
+              <Button Content="Drop" MinHeight="32" Margin="0,0,4,4" Command="{Binding CueCommand}" CommandParameter="drop" />
+              <Button Content="Break" MinHeight="32" Margin="0,0,4,4" Command="{Binding CueCommand}" CommandParameter="break" />
+              <Button Content="Montée" MinHeight="32" Margin="0,0,4,4" Command="{Binding CueCommand}" CommandParameter="montee" />
+              <Button Content="Silence" MinHeight="32" Margin="0,0,4,4" Command="{Binding CueCommand}" CommandParameter="silence" />
+              <Button Content="Morceau suivant" MinHeight="32" Margin="0,0,4,4" Command="{Binding CueCommand}" CommandParameter="morceau" />
+            </WrapPanel>
+            <WrapPanel>
+              <TextBlock Text="Énergie" Classes="label" Margin="0,0,6,4" />
+              <Button Content="Calme" Classes="mini" Margin="0,0,4,4" Command="{Binding EnergyCommand}" CommandParameter="0" />
+              <Button Content="Groove" Classes="mini" Margin="0,0,4,4" Command="{Binding EnergyCommand}" CommandParameter="1" />
+              <Button Content="Énergique" Classes="mini" Margin="0,0,4,4" Command="{Binding EnergyCommand}" CommandParameter="2" />
+              <Button Content="Explosif" Classes="mini" Margin="0,0,4,4" Command="{Binding EnergyCommand}" CommandParameter="3" />
+              <Button Content="celle de l'écoute" Classes="mini" Margin="0,0,16,4" Command="{Binding EnergyCommand}" CommandParameter="ecoute" />
+              <TextBlock Text="Style" Classes="label" Margin="0,0,6,4" />
+              <TextBox Text="{Binding Style}" Width="160" Margin="0,0,0,4" PlaceholderText="(aucun)" ToolTip.Tip="Style simulé (la détection des styles viendra en P9)" />
+            </WrapPanel>
+            <TextBlock Text="{Binding Status}" Foreground="#39C5CF" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+        <!-- Problèmes du brouillon : erreur ⛔ en rouge (refusée au lancement), avertissement ⚠ en jaune (essai P8, ex. 16c). -->
+        <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding IssueRows}" Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="sq:IssueRow">
+              <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="12" TextWrapping="Wrap" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+          <TextBlock Text="Diagramme" FontSize="14" FontWeight="SemiBold" />
+          <TextBlock Text="dessiné automatiquement · clic sur une étape = montrer sa carte" Classes="label" />
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <v:ShowDiagram x:Name="Diagram" Nodes="{Binding Nodes}" Edges="{Binding Edges}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </ScrollViewer>
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</v:SequencingWindow>

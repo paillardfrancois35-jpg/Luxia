@@ -130,7 +130,8 @@ les créations en plusieurs champs (nouvel appareil, nouvelle scène à partir d
 
 Jeton de couleur unique par sens (défini une fois dans `App.axaml`, jamais en dur dans un écran) :
 accent (sélection) bleu, joue = couleur de la scène, surcharge live jaune, édition vert, aveugle bleu clair, sûreté orange,
-danger / blackout / enregistrement rouge, texte secondaire gris. Deux tailles de texte dans les panneaux (normal, secondaire),
+danger / blackout / enregistrement rouge, texte secondaire gris. Problèmes d'un brouillon (essai P8) : **erreur ⛔ rouge franc**
+(empêche de jouer), **avertissement ⚠ jaune** (n'empêche rien) ; jetons `ControlColors.Error` et `ControlColors.Warning`. Deux tailles de texte dans les panneaux (normal, secondaire),
 une pour les titres ; espacement sur une grille de 4 px ; largeurs de champs selon doc 03 §11.
 
 **Tailles minimales des cibles** (ERG-035, demande de l'utilisateur : « éléments trop petits »), à vérifier en 1366 × 768 :
@@ -209,6 +210,18 @@ Décisions de l'utilisateur à l'essai de P7 (2026-10-01) ; analyse : [chantiers
 - **Fréquence** (remplace « Tous les N ») : ×4, ×2, ×1, ÷ 2, ÷ 4, ÷ 8. ×2 et ×4 passent deux ou quatre étapes par temps (ou par mesure) ; ÷
   n'en passe qu'une toutes les N fois ; ×2 et ×4 n'existent pas pour les impulsions des basses et des aigus.
 - **Reporté** : titre du morceau (avec P9), mesure à trois temps (avec P8, GEN-025).
+
+### 4.11 Shows et séquences (P8, Q44 solution C, Q45 ; maquettes 9 à 12)
+
+- **Jouer** : une colonne **« ▶ Shows »** à gauche des couches, mêmes gestes que les scènes (clic = lancer / arrêter, bande ✎ = éditer,
+  clic droit = Éditer, Renommer, Dupliquer, Supprimer) ; un seul show principal à la fois (le nouveau remplace l'ancien).
+- **Superviser** : un **bandeau « Show en cours »** sous le bloc BPM, présent seulement quand un show ou une séquence joue : étape
+  active, prochaines transitions (orange quand elle va partir), séquence en cours, **⏭ Forcer ▾**, **■ Arrêter**, **▾ Détail** (parcours,
+  actions de l'étape, chaque transition avec son état et son bouton Forcer, show secondaire).
+- **Éditer** : fenêtres non bloquantes, même charte que la fenêtre d'édition des scènes (brouillon, Appliquer / Annuler / Valider,
+  Ctrl+Z, case Aveugle, croix qui demande avant de perdre un brouillon). Séquence : bibliothèque à gauche (glisser-déposer), frise au
+  centre (grille mesure / temps / ½ temps, zoom, Suppr), propriétés à droite. Show : cartes à gauche (une par étape, ses transitions
+  dessous), diagramme dessiné automatiquement à droite, panneau « Essai sans musique » en bas.
 
 ## 5. Composants communs (catalogue)
 
@@ -366,7 +379,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 | C2 | **8 couches par défaut** : ajout de **« Libre »** (★, priorité 7, sans famille attendue) avant Flashs (ERG-008) | L'APC a 8 faders de couche : le 8e ne servait à rien ; l'utilisateur pensait à une colonne pour « un seul équipement particulier ». Les couches restent en nombre libre (COU-001) | Fenêtre Couches… (renommer, supprimer) |
 | C3 | Les couches vides restent affichées | Une colonne = un fader de l'APC : repère fixe | `live.json` (couches masquées) |
 | C4 | En édition des zones, le bandeau passe en **ZONES** : « zones du lieu, valables pour toutes les scènes » | Les zones n'appartiennent pas à la scène : ne pas laisser croire qu'elles s'y écrivent | — |
-| C5 | Contrôle arrive comme **nouvel écran, en tête** ; Live et Scènes restent en place jusqu'à la validation à l'exploitation, puis seront retirés | Rien de ce qui est validé ne disparaît avant que le remplaçant ait fait ses preuves | Retrait des anciens écrans |
+| C5 | Contrôle arrive comme **nouvel écran, en tête** ; Live et Scènes restent en place jusqu'à la validation à l'exploitation, puis seront retirés | Rien de ce qui est validé ne disparaît avant que le remplaçant ait fait ses preuves | Retrait des anciens écrans : **reporté** au lot 7 de P8 (2026-10-02, décision de l'utilisateur) : Scènes et Live portent encore des fonctions validées absentes de l'écran de jeu (liste au doc 99) ; en préparation, « Couches… », la courbe de fondu et la bascule des attributs discrets sont passées dans l'écran de jeu |
 | C6 | Le sélecteur **LIVE / ÉDITION / AVEUGLE** est dans l'en-tête de l'écran Contrôle, pas de la fenêtre (écart au §4.1) | Seul Contrôle règle des appareils selon ce mode ; les autres écrans n'en ont pas l'usage tant qu'ils existent | Déplacement dans l'en-tête de la fenêtre quand Live / Scènes disparaîtront |
 | C7 | ÉDITION : l'étape choisie est **montrée sur la sortie** (ses valeurs par-dessus les scènes) ; chaque réglage s'y écrit ; un geste (glisser, molette) = **une** entrée d'annulation, écrite 0,5 s après le dernier mouvement | C'est « ce qu'on voit = ce qui est enregistré » ; écrire à chaque pixel de glisser saturerait le disque et l'historique | — |
 | C8 | LIVE : les surcharges restent quand on change de mode (F2) ; « Libérer » agit sur la sélection, « Libérer tout » sur tout | Une intervention voulue ne s'efface pas toute seule | — |

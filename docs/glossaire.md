@@ -72,8 +72,10 @@
 | **Brouillon** | Draft | Copie d'une scène en cours d'édition dans la fenêtre d'édition : rien n'est écrit avant **Appliquer** ou **Valider** ; **Annuler** revient à l'état d'origine. |
 | **Couche** | Layer / Playback group | Conteneur de scènes exclusives, avec priorité et master. *(anciennement « groupe de scènes »)* |
 | **Cycle** (d'un effet) | Period / Cycle | Un tour complet de la forme ; sa durée fixe la vitesse (Hz = 1 / durée). |
+| **Bloc** (de séquence) | Clip / Block | Une scène ou une action posée sur une piste de séquence, avec son début et sa durée en mesures (« Arc-en-ciel, mesure 9, 4 mesures »). |
 | **Décalage** (phase) | Phase spread / Offset | Retard d'un membre à l'autre dans le cycle : 0 = tous ensemble, 360° = un cycle réparti. |
 | **Dimmer de groupe** | Group dimmer | Niveau (0-100 %) d'un groupe, appliqué **après** les couches : l'intensité de ses appareils est multipliée par le niveau de chaque groupe, de la racine au sien (règle proportionnelle). Retouche en direct, jamais enregistrée. |
+| **Divergence OU / ET** | Selection / Parallel divergence | Dans un show : **OU** = plusieurs transitions possibles depuis une étape, une seule est prise (la première vraie, ou un tirage au sort pondéré) ; **ET** = plusieurs branches activées en même temps (couleurs et mouvements à des rythmes différents), qui se rejoignent ensuite. |
 | **Effet (généré)** | Effect / FX | Modulation calculée (sinus, cercle, chenillard…) appliquée à une sélection avec décalage de phase. |
 | **Étape** | Step | État d'une scène + durée de maintien + durée de fondu. |
 | **Étape de show** | Show step | Étape du graphe de show : active des actions (lancer scènes, régler masters…). |
@@ -81,13 +83,17 @@
 | **Fondu** | Fade | Transition progressive d'une valeur vers une autre. |
 | **Fondu croisé** | Crossfade | Transition simultanée sortie de l'ancienne scène / entrée de la nouvelle. |
 | **Forme** (d'un effet) | Shape / Waveform | Ce que parcourt un effet pendant un cycle : sinus, carré, cercle, huit, arc-en-ciel… |
+| **Grafcet** | SFC (Sequential function chart) | Schéma d'automatisme fait d'**étapes** (ce qui est actif) reliées par des **transitions** (conditions de passage). Le show de LuXia en reprend les règles. |
 | **Groupe (de dimmer)** | Fixture group / Dimmer group | Ensemble d'appareils rangé dans un **arbre** (un appareil dans un seul groupe ; les autres sont dans le groupe implicite « Non assigné »). Un groupe peut avoir un **dimmer** : un niveau réglé en direct, multiplié le long de l'arbre. Distinct d'une *sélection* (ordre, cellules). |
+| **Macro-étape** | Macro step | Étape de show qui contient un sous-show réutilisable (« Bloc refrain ») : elle est active tant que son sous-show n'est pas arrivé à sa fin. |
 | **Membre** (d'un effet) | Member | Appareil ou cellule qui reçoit l'effet, dans l'ordre de la cible. |
 | **Molette** | Dial / Encoder | Réglage rotatif de l'interface (vitesse, taille, décalage), tourné en glissant ou à la molette de la souris. |
 | **Niveau de couche** | Layer level | Fader d'une couche : multiplie ce qu'elle envoie (anciennement « master » de couche). |
 | **Palette** | Palette / Preset | Valeur d'attribut nommée et réutilisable (couleur, position, faisceau, intensité). Les scènes y font référence. |
 | **Phase / Décalage** | Phase / Spread | Décalage temporel d'un effet entre les appareils d'une sélection. |
 | **Programmeur** | Programmer | Espace de travail où l'on règle les attributs avant de les enregistrer. |
+| **Piste** (de séquence) | Track | Ligne d'une séquence : une couche (on n'y pose que ses scènes) ou la piste d'actions (niveaux, fumée, flash, noir). |
+| **Réceptivité** | Transition condition | Condition de passage d'une transition de show : après 16 mesures, au drop, énergie haute, bouton… ; combinable en ET / OU / NON et calée sur le temps, la mesure ou la phrase (quantification). |
 | **Scène** | Scene / Cue / Chase | Suite d'une ou plusieurs étapes. Une scène à une étape en boucle = une « cue » ; à plusieurs étapes = un « chase ». |
 | **Séquence** | Sequence | Enchaînement temporel de scènes sur des pistes, exprimé en mesures ou en secondes. *(anciennement « méga-scène »)* |
 | **Show** | Show | Graphe d'étapes et de transitions (de type Grafcet) qui pilote couches, scènes et séquences. |

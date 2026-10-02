@@ -40,7 +40,11 @@ public static class ProjectValidator
         var (looks, looksMessage) = LookStore.Load(folder);
         var (effects, effectsMessage) = EffectLibraryStore.Load(folder);
         var (groups, groupsMessage) = GroupStore.Load(folder);
+        var (sequences, sequencesMessage) = Show.SequenceStore.Load(folder);
+        var (shows, showsMessage) = Show.ShowStore.Load(folder);
         AddLoadMessage(issues, GroupStore.FileName, groupsMessage);
+        AddLoadMessage(issues, Show.SequenceStore.FileName, sequencesMessage);
+        AddLoadMessage(issues, Show.ShowStore.FileName, showsMessage);
         AddLoadMessage(issues, LookStore.FileName, looksMessage);
         AddLoadMessage(issues, EffectLibraryStore.FileName, effectsMessage);
         AddLoadMessage(issues, InstallationStore.FileName, installationMessage);
@@ -63,6 +67,9 @@ public static class ProjectValidator
         issues.AddRange(CheckMidi(midi, scenes, layers));
         issues.AddRange(CheckLooks(looks, scenes, layers));
         issues.AddRange(CheckEffects(scenes, effects));
+
+        // SHOW-024 : séquences et shows (références, étape initiale, étapes atteignables, boucle sans condition).
+        issues.AddRange(Show.Rules.ShowRules.Validate(sequences, shows, scenes, layers));
         return issues;
     }
 

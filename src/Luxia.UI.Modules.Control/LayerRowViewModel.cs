@@ -4,7 +4,7 @@ using Luxia.Engine.Model;
 using Luxia.Scenes.Model;
 using Luxia.UI.Controls;
 
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>Une couche dans l'éditeur de couches (doc 17 §1.2, COU-001).</summary>
 public sealed partial class LayerRowViewModel : ViewModelBase

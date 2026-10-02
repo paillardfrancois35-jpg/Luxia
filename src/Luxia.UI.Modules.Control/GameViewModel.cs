@@ -15,6 +15,7 @@ namespace Luxia.UI.Modules.Control;
 public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 {
     private readonly LuxiaRuntime _runtime;
+    private readonly IDialogService _dialogs;
 
     [ObservableProperty]
     private string? _message;
@@ -50,6 +51,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(dialogs);
+        _dialogs = dialogs;
         _runtime = runtime;
 
         // La session sert ici au verrou soirée et à l'annulation des opérations sur les scènes (nouvelle, dupliquer,
@@ -61,6 +63,15 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
         Tempo = new TempoBarViewModel(runtime, Journal);
         Editor = new EditorViewModel(runtime, dialogs, Journal);
+        SequenceEditor = new Sequencing.SequenceEditorViewModel(runtime, dialogs, Journal);
+        ShowEditor = new Sequencing.ShowEditorViewModel(runtime, dialogs, Journal);
+        Band = new Sequencing.ShowBandViewModel(runtime, Journal);
+        Columns.Shows.Edited = () => SequenceEditor.EditedId ?? ShowEditor.EditedId;
+        Columns.Shows.EditShowRequested += (_, id) => EditShow(id);
+        Columns.Shows.EditSequenceRequested += (_, id) => EditSequence(id);
+        Columns.Shows.MessageRaised += (_, text) => Message = text;
+        SequenceEditor.Closed += (_, _) => Columns.Shows.Refresh();
+        ShowEditor.Closed += (_, _) => Columns.Shows.Refresh();
         Editor.Closed += (_, _) => EditedSceneId = null;
         Columns.EditRequested += (_, id) => Edit(id);
         Columns.MessageChanged += (_, _) => Message = Columns.Message;
@@ -101,6 +112,74 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     /// <summary>Fenêtre d'édition d'une scène (brouillon, ERG-033) : ouverte par la bande ✎.</summary>
     public EditorViewModel Editor { get; }
 
+    /// <summary>Fenêtre d'édition d'une séquence (P8).</summary>
+    public Sequencing.SequenceEditorViewModel SequenceEditor { get; }
+
+    /// <summary>Fenêtre d'édition d'un show (P8).</summary>
+    public Sequencing.ShowEditorViewModel ShowEditor { get; }
+
+    /// <summary>Bandeau « Show en cours » (SHOW-026).</summary>
+    public Sequencing.ShowBandViewModel Band { get; }
+
+    /// <summary>La fenêtre d'édition d'une séquence doit s'afficher.</summary>
+    public event EventHandler? SequenceEditRequested;
+
+    /// <summary>La fenêtre d'édition d'un show doit s'afficher.</summary>
+    public event EventHandler? ShowEditRequested;
+
+    /// <summary>
+    /// Éditeur de couches (COU-001), venu de l'ancien écran Scènes (lot 7 de P8) ; <c>null</c> sans projet ou sous le verrou
+    /// soirée (le message dit pourquoi).
+    /// </summary>
+    public LayersEditorViewModel? CreateLayersEditor()
+    {
+        if (Session.IsLocked)
+        {
+            Message = ControlSession.LockedReason;
+            return null;
+        }
+
+        return _runtime.Project.Folder is null ? null : new LayersEditorViewModel(_runtime, _dialogs);
+    }
+
+    /// <summary>Ouvre une séquence dans sa fenêtre d'édition.</summary>
+    public void EditSequence(Guid id)
+    {
+        if (Session.IsLocked)
+        {
+            Message = ControlSession.LockedReason;
+            return;
+        }
+
+        if (_runtime.Project.Sequences.Sequences.FirstOrDefault(s => s.Id == id) is not { } sequence)
+        {
+            return;
+        }
+
+        Message = SequenceEditor.Open(sequence);
+        SequenceEditRequested?.Invoke(this, EventArgs.Empty);
+        Columns.Shows.Refresh();
+    }
+
+    /// <summary>Ouvre un show dans sa fenêtre d'édition.</summary>
+    public void EditShow(Guid id)
+    {
+        if (Session.IsLocked)
+        {
+            Message = ControlSession.LockedReason;
+            return;
+        }
+
+        if (_runtime.Project.Shows.Shows.FirstOrDefault(s => s.Id == id) is not { } show)
+        {
+            return;
+        }
+
+        Message = ShowEditor.Open(show);
+        ShowEditRequested?.Invoke(this, EventArgs.Empty);
+        Columns.Shows.Refresh();
+    }
+
     /// <summary>
     /// La fenêtre d'édition doit être montrée (ou ramenée au premier plan) pour cette scène. Le verrou soirée et les autres
     /// refus sont déjà traités ici : rien n'est levé si l'édition n'est pas permise.
@@ -139,6 +218,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     public void Refresh()
     {
         Columns.Refresh();
+        Band.Refresh();
         Dimmers.Refresh();
         Tempo.Refresh();
         Journal.Refresh();
@@ -180,7 +260,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     [RelayCommand]
     private void ToggleLock()
     {
-        if (!Session.IsLocked && Editor.IsOpen)
+        if (!Session.IsLocked && (Editor.IsOpen || SequenceEditor.IsOpen || ShowEditor.IsOpen))
         {
             Message = "Fermez d'abord la fenêtre d'édition (Valider ou Annuler) avant de poser le verrou soirée.";
             return;

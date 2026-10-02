@@ -1,14 +1,12 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-02, **P7 validée** (branche `p7/audio-tempo` fusionnée dans `main`,
-> `v1.009`). **Prochaine étape : P8 « Show & séquences »**, en commençant par les durées en secondes / temps / mesures dans les Propriétés (E2, [doc 40](40-feuille-de-route.md)) ;
-> résultats de P7 : [résultats](essais/P7-resultats.md), [revue de fin de phase](chantiers/revue-fin-p7.md). Restent à décider
-> (analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md),
-> [de code](chantiers/analyse-code-fin-controle-2.md)) : notifications colorées, retrait des écrans Live et Scènes, retrait du
-> mode LIVE de la session d'édition, glisser-déposer des groupes, apprentissage MIDI. Essai du chantier : guide
-> [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md), résultats [essais/ERG2-resultats.md](essais/ERG2-resultats.md). Sources du chantier :
-> [chantiers/ergonomie-sujet-2.md](chantiers/ergonomie-sujet-2.md), [chantiers/analyse-ergonomique-fin-P6.md](chantiers/analyse-ergonomique-fin-P6.md), Q37 et Q38 (doc 01), doc 60 §4.9.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-02, **P8 validée** (branche
+> `p8/show-sequences` fusionnée dans `main`, étiquette `v1.010`, [guide](demos/P8-show-et-sequences.md),
+> [résultats](essais/P8-resultats.md), [analyse ergonomique](chantiers/analyse-ergonomique-p8.md)). **Prochaine étape : P9
+> « Lecture & Style »** ([doc 40](40-feuille-de-route.md)). En attente, décidés par l'utilisateur (doc 99) : largeur fixe des listes
+> déroulantes (à faire en tête de la phase suivante), refonte de l'éditeur de show (discussion dédiée), fonctions à porter dans
+> l'écran de jeu avant de retirer les écrans Scènes et Live, « pourquoi ça ne s'allume pas », sélection du Journal pendant le jeu.
 
 ## 1. Où en est-on
 
@@ -23,6 +21,7 @@
 | Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
 | Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P7 – Audio et tempo | Validée | `p7/audio-tempo` (fusionnée dans `main`, `v1.009`) | [demos/P7-audio-tempo.md](demos/P7-audio-tempo.md) | ✅ 2026-10-02, matériel réel (essai, re-vérifications 1 à 3, lot ergonomique ; [résultats](essais/P7-resultats.md)) ; bloc BPM et écoute essayés à la main par l'utilisateur pendant le développement (« très correct, impressionnant ») |
+| P8 – Show & séquences | Validée | `p8/show-sequences` (fusionnée dans `main`, `v1.010`) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ✅ 2026-10-02, matériel réel, essai en discussion test (v1.010.079 → .104, [résultats](essais/P8-resultats.md)) puis contrôle final (1.010.116) ; réserves : ex. 5, 6, 7 non refaits après les correctifs, fumée non testée |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -243,6 +242,67 @@
 - **Essais de P7 (2026-10-01)** : essai 1.009.065, re-vérification 1.009.077, lot ergonomique (interrupteur Audio, écran Audio en une page, volet « Au rythme » et fréquence ÷ 8 à × 4), re-vérification 2 (1.009.090 et 1.009.092) ; correctifs : sortie par défaut de Windows suivie par l'écoute, liste d'événements, voyants après ×2, kicks (claquement exigé), flash bref (`autoAdvance`), plantage de la bascule Audio (accès COM d'un périphérique libéré) puis, en 1.009.099, saisie du BPM, position des colonnes, en-tête du volet. Détail : [résultats](essais/P7-resultats.md), guides [re-vérification 2](demos/P7-audio-tempo-reverification-2.md) et [3](demos/P7-audio-tempo-reverification-3.md), revue ergonomique [§10](chantiers/analyse-ergonomique-p7.md). Tout est fait : validation du 2026-10-02, fusion dans `main`, étiquette `v1.009`.
 - **Pré-analyses de P7 (2026-10-01), à reprendre à la fin de la phase** : [code](chantiers/analyse-code-p7.md) (C1 à C17), [documentation](chantiers/analyse-docs-p7.md) (D1 à D19), [ergonomie](chantiers/analyse-ergonomique-p7.md) (E1 à E19 et décisions demandées). Trouvés et corrigés avant l'essai : le « 1 ici » écrasé par l'écoute, le chenillard masqué par *Plein feu*, le démarrage ralenti par l'énumération audio. **Avant de retirer l'écran Scènes** : porter le choix d'unité (s / temps / mesures) dans les Propriétés (C17, E2).
 
+- **P8 développée le 2026-10-02** (branche `p8/show-sequences`, version **1.010**). Cadrage : Q44 (solution C : colonne « Shows » + bandeau
+  « Show en cours » sur l'écran de jeu, fenêtres d'édition en brouillon), Q45 (cartes + diagramme automatique), Q46 (mesure à 3 temps
+  reportée, GEN-025), Q47 (retrait de Live et Scènes au dernier lot, après l'essai) ; maquettes 9 à 12 validées ; décisions **D37**
+  (projet `Luxia.Show`, séquenceur appelé dans le tick du moteur par `ISequencer`), **D38** (événements musicaux par `IAudioFeed`,
+  EVT-020 / 021 non publiés, simulation CMD-053), **D39** (règles des séquences et des shows ; R6 précisée : un show **tient** sa dernière
+  étape par défaut). Livré, un commit par lot :
+  0. **E2** : durées en s / temps / mesures dans les Propriétés de la fenêtre d'édition (GEN-023, MOT-016).
+  1. **Maquettes** 9 à 12 (`LuXia-Prototype --maquettes`).
+  2. **Données** : `séquences.json`, `shows.json`, validation SHOW-024 dans `valider`, schémas, doc 50 §12g / §12h.
+  3. **Séquences** dans le moteur (blocs au temps près, relais, boucle, rampes, flash, noir, fumée, demi / double temps).
+  4. **Shows** (R1 à R6, ET / OU, macro-étapes, tirage pondéré, variables, transitions armées et forcées), séquenceur dans `LuxiaRuntime`
+     (sortie et aperçu), « Tout arrêter » arrête aussi les shows, scénario (`show`, `sequence`, `forcer`, `simuler`, `energie`, `style`),
+     `luxia-headless jouer --show / --sequence` ; contenu « Phase P8 » du show de référence (4 séquences, 4 shows dont un piège refusé
+     au lancement), trames `P8-shows.txt`.
+  5. **Interface** : colonne « Shows », bandeau « Show en cours », fenêtres d'édition d'une séquence (frise, glisser-déposer) et d'un show
+     (cartes, diagramme, essai sans musique), journal des étapes.
+  6. **Documentation** : guide P8, `essais/P8-resultats.md`, doc 51 (guide de conception des shows, GEN-134), doc 20 §6, doc 60 §4.11, fiches.
+  **Relecture avant l'essai (2026-10-02, demande de l'utilisateur)** : fiches et historique contrôlés (34 fiches de P8, plus GEN-131,
+  GEN-133, EVT-023, MOT-002 complétées), audit sans nouveau problème, analyseurs de code mort propres ; défauts trouvés et corrigés avec
+  tests : brouillons des deux éditeurs qui s'effaçaient l'un l'autre, transitions armées oubliées en modifiant un show qui joue (et étape
+  active non mise à jour, sous-show de macro-étape non mis à jour), « ■ Stop » qui arrêtait le show secondaire, brouillon gardé après
+  réouverture du projet, cartes reconstruites à chaque lettre (identifiant, étapes amont), Aveugle qui arrêtait l'essai du mauvais côté ;
+  code mort retiré ; deux tests ajoutés (EVT-024, signaux de l'écoute). Idées notées au doc 99 (réceptivités combinées à l'écran, boucles
+  d'une scène).
+  **Exemples ajoutés et seconde relecture (2026-10-02)** : *Pulsation couleurs (double temps)*, *Visite guidée (sans musique)*,
+  *Branches parallèles et macro-étape* et son sous-show *Bloc refrain (macro-étape)* ; guide P8 réécrit avec un **catalogue des
+  exemples** (§1 : ce que chacun démontre, durée, ce qu'on doit voir) et 17 essais ; trames `P8-shows.txt` régénérées. Relecture
+  limitée aux points importants : macro-étape (le parent coupait les scènes reprises par son sous-show) et métronome de l'essai sur la
+  sortie (l'horloge du direct restait en tempo fixe) corrigés et testés ; reprise d'un show après arrêt brutal notée au doc 99.
+  Les échecs des tests de temps pendant que le poste de l'utilisateur est chargé sont à ignorer (consigne du 2026-10-02).
+  Tests : 948, tous verts, 0 avertissement (test de performance du moteur fiabilisé, doc 03 §11). **Restent** : essai en discussion test,
+  lot 7 (retrait des écrans Live et Scènes : déplacer d'abord `SceneOptions`, `DurationField`, `Choice` dans le module Contrôle),
+  revue globale de fin de phase (`python tools/audit-documentation.py`), validation, fusion, `v1.010`. Statuts laissés « Partiel » :
+  EVT-020 / 021 (décision D38, à confirmer à la validation), SHOW-001 (mesure à 3 temps reportée).
+  **Pendant l'essai** : correctif 2a/2b (*Groove* refaite, bloc qui couvre tout le passage relayé à lui-même au rebouclage, `75d4401`).
+  **Trace TEMPORAIRE (exemple 13, demande de l'utilisateur)** : bouton « ● Démarrer / ■ Arrêter la trace » en tête de la colonne
+  Shows, fichier `Documents\LuXia\Journaux\trace-show-AAAAMMJJ-HHmmss.csv` (`src/Luxia.Hosting/ShowTrace.cs`,
+  `LuxiaRuntime.Trace`, `ShowsColumnViewModel.ToggleTrace`, test `ShowTrace_WritesStates_StepsWithReasonAndQuantize`).
+  **À retirer au lot 7**, après la re-vérification de l'exemple 13 : chercher « TEMPORAIRE (essai P8, exemple 13) ».
+  **Essai terminé (2026-10-02, v1.010.079 → .091)**, tous les exemples déroulés ; corrections de fin d'essai : strobe de « Éclat »
+  (contenu : PAR sans couleur), champs numériques de toute l'interface (flèches 24 px par un style global de `App.axaml`,
+  largeurs calculées), Valider avec une erreur (confirmation, ligne ⛔ au Journal, rouge / jaune), liste des conditions agrandie,
+  chemin de la trace au Journal, *Couplet / Refrain / Drop* (silence → Final, reprise du son → Intro), guide (Tirage
+  Base → A ou B → Base, flash d'un temps, « erreur = refusé au lancement »). **Hors liste, demandé pendant l'essai** : bloc BPM,
+  bouton « entendu » (tempo de l'analyse, orange s'il diffère, un clic y revient, `TempoAdjustment.FollowHeard`) ; la correction
+  ×2 / ÷ 2 est **gardée** d'un morceau à l'autre et après un silence (décision de l'utilisateur, AUD-023).
+  **Ergonomie** : [analyse de fin de P8](chantiers/analyse-ergonomique-p8.md) ; refonte de l'éditeur de show en discussion dédiée
+  ([cahier des charges](chantiers/refonte-editeur-show.md)). **Réserves de validation** : exemples 5, 6, 7 non refaits en .085 ;
+  fumée non testée (appareil non branché).
+  **Re-vérification v1.010.104** : ex. 8, 13, 15, 16c, 3d ✅. **Décisions de fin de phase** (2026-10-02) : E2 (vocabulaire
+  « sans condition (dès l'entrée dans l'étape) » / « Sans attendre le temps ») et E6 (listes déroulantes contrastées, barre de
+  défilement visible, style global) faits dans P8 ; E1 (refonte de l'éditeur de show), E3 (« pourquoi ça ne s'allume pas »), E7
+  (sélection du Journal) plus tard (doc 99). **Lot 7** : trace temporaire retirée ; le retrait des écrans Scènes et Live est
+  **reporté** (fonctions validées encore absentes de l'écran de jeu, liste au doc 99, choix de l'utilisateur) ; en préparation,
+  types partagés et éditeur de couches dans `Luxia.UI.Modules.Control` (l'écran Scènes s'appuie dessus), bouton « Couches… » dans
+  l'en-tête de l'écran de jeu, courbe de fondu et bascule des attributs discrets dans les Propriétés de l'étape.
+  **Validée par l'utilisateur le 2026-10-02** (contrôle 1.010.116) : fiches de P8 « Validé » (SHOW-001 « Partiel » : 3/4 reporté ;
+  SHOW-030 « Réalisé » : attend le Directeur ; EVT-020 / 021 « Partiel » : décision D38), fusion dans `main`, étiquette `v1.010`.
+  Remarque du contrôle : la liste dépliée d'une liste déroulante change de largeur et de position selon les textes : à fixer en tête
+  de la phase suivante (doc 99).
+
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.
 
@@ -268,6 +328,7 @@
 | `Luxia.Patch` | Installation (patch, univers, sélections), lieux, **groupes d'appareils** (`groupes.json`), copie de bibliothèque du projet (GEN-053), décodage pour le simulateur | `Installation`, `PatchRules`, `AutoSelections`, `SelectionRules`, `Venue`, `FixtureGroup`, `GroupRules`, `GroupEdits`, `ProjectFixtureLibrary`, `FixtureDecoder` |
 | `Luxia.Scenes` | Scènes (effets compris), palettes (thèmes compris), couches, bibliothèque d'effets (fichiers `scènes.json`, `palettes.json`, `couches.json`, `effets.json`) ; compilation vers le moteur ; couleurs ; règles du programmeur ; assistants ; rapports d'utilisation ; import | `ShowCompiler`, `EffectCompiler`, `ValueResolver`, `PatchContext`, `ColorConversion`, `ProgrammerRules`, `EffectRules`, `SceneWizards`, `DefaultEffects`, `SceneUsage`, `SceneImport` |
 | `Luxia.Midi` | Contrôleurs APC mini (D30) : profils en données, traduction en commandes, LED, reprise douce, ports `winmm`, branchement à chaud | `MidiService`, `MidiController`, `ControllerProfiles`, `WinMmMidiPorts`, `MidiSettings` (`midi.json`) |
+| `Luxia.Show` | Séquences et shows (doc 20, D37) : modèle, fichiers `séquences.json` / `shows.json`, validation, séquenceur appelé par le moteur à chaque tick, état de supervision | `Sequencer` (`Load`, `State`), `Runtime/SequenceRun`, `Runtime/ShowRun`, `Rules/ShowRules`, `Rules/ShowTexts`, `SequenceStore`, `ShowStore` |
 | `Luxia.Audio` | Écoute de la musique (doc 19, D34) : FFT, flux spectral, tempo, temps, impulsions, énergie, événements ; capture WASAPI (NAudio), `AudioListener` (reconnexion), analyse de fichiers | `AudioAnalyzer`, `AudioListener`, `AnalysisState`, `WasapiSource`, `AudioFileAnalysis`, `Analysis/RhythmTracker`, `Analysis/EnergyTracker` |
 | `Luxia.Hosting` | Assemblage (D20), journal, session de projet, recompilation du moteur, moteur d'aperçu, outils sans interface, versions du projet, reprise, MIDI | `LuxiaRuntime` (`Engine`, `Preview`, `Midi`, `PendingResume`), `ProjectSession`, `ShowService`, `ProjectVersions`, `Tools/ProjectValidator`, `Tools/ScenarioRunner` |
 | `Luxia.UI.Controls` | Fader, **molette**, dessin d'effet, moniteur, barre de plages, barre d'univers, simulateur 2D, grille Pan/Tilt, sélecteur de couleur, historique annuler / rétablir, dialogues | `Fader`, `Dial`, `EffectPreview`, `OutputMonitor`, `UniverseBar`, `SimulatorCanvas`, `RangeBar`, `UndoHistory` |
@@ -289,7 +350,7 @@ Tests : un projet par module + `Luxia.Integration.Tests` (rejeu du show de réf�
 dotnet build Luxia.sln
 dotnet test --solution Luxia.sln -- --filter-not-trait "Categorie=Materiel"
 dotnet format Luxia.sln --verify-no-changes
-python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7
+python tools/matrice-exigences.py P0 P1 P2 P3 P4 P5 ERG P6 ERG2 P7 P8
 dotnet run --project tools/Luxia.Tools.Headless -- audio tests/assets/audio --rapport rapport.md   # analyse du jeu de test audio
 python tools/fiche-exigences.py spec.json   # crée / met à jour des fiches (voir l'en-tête du script)
 dotnet run --project src/Luxia.App -- "samples/Show de référence"
@@ -367,3 +428,5 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-30 | Contrôle 2 | Essai en discussion test (1.007.080), deux revérifications (1.007.092, 1.007.101), corrections au fil de l'essai avec leurs fiches ; analyses ergonomique et de code de fin de chantier ; option 125 % / 150 % masquée ; `ControlViewModel` purgé et renommé `EditBenchViewModel`. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.007`.** Prochaine étape : P7. |
 | 2026-09-30 | P7 | Audio et tempo développés sur `p7/audio-tempo` (1.009) en cinq lots (horloge, scènes au rythme, écoute, impulsions / énergie / écran Audio, contenu et documentation) ; 41 morceaux analysés (rapport chiffré). **En attente de l'essai de l'utilisateur en discussion test.** |
 | 2026-09-30 | Effets | Mini-lot « familles d'effets » (1.008) : doc 16b (principe de fonctionnement des effets, plusieurs effets par étape), formes limitées à la famille, type affiché, « (modifié) » (EFF-012). Reste : estomper les modèles selon les capacités des appareils. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.008`.** Prochaine étape : P7. |
+| 2026-10-02 | P8 | Show & séquences développés sur `p8/show-sequences` (1.010) : E2, maquettes 9 à 12, données, séquenceur dans le moteur, shows, interface (colonne Shows, bandeau, éditeurs), contenu et documentation (guide P8, doc 51). 940 tests. **En attente de l'essai en discussion test**, puis retrait de Live et Scènes et revue de fin de phase. |
+| 2026-10-02 | P8 | **P8 validée** : essai en discussion test (v1.010.079 → .104), corrections, lot 7 (trace retirée, retrait de Scènes et Live reporté), analyse ergonomique (E2, E6 faits), contrôle final 1.010.116 ; fusion dans `main`, étiquette `v1.010`. 955 tests. |

@@ -601,6 +601,92 @@ change pas les scènes). Schéma : [`schemas/effets.schema.json`](schemas/effets
 }
 ```
 
+## 12g. Projet : `séquences.json` (format 1)
+
+Séquences en mesures (doc 20 §2, SHOW-001 à SHOW-008, D39). Facultatif : sans fichier, aucune séquence. Écrit par la fenêtre
+d'édition ou par une IA de conception. Schéma : [`schemas/sequences.schema.json`](schemas/sequences.schema.json).
+
+```json
+{
+  "formatVersion": 1,
+  "sequences": [
+    { "id": "…", "name": "Montée 16 mesures", "color": "#F0883E", "bars": 16, "end": "stop", "quantize": "bar", "speed": 1,
+      "tracks": [
+        { "layerId": "<id de la couche Couleurs>", "blocks": [
+            { "start": 0, "length": 8, "sceneId": "<id de Bleu lent>" },
+            { "start": 8, "length": 4, "sceneId": "<id d'Arc-en-ciel>" },
+            { "start": 12, "length": 4, "sceneId": "<id de Blanc>", "end": "keep" } ] },
+        { "blocks": [
+            { "start": 12, "length": 4, "action": { "kind": "layerLevel", "layerId": "<id de Couleurs>", "from": 1, "to": 0.4 } },
+            { "start": 15, "length": 1, "action": { "kind": "smoke" } } ] }
+      ] }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `bars` | Longueur en mesures (mesure à **4 temps** ; la mesure à 3 temps, GEN-025, est reportée) |
+| `end` | `stop` : une fois ; `loop` : reprend au début, sans coupure des scènes qui continuent |
+| `quantize` | Frontière attendue avant de démarrer : `none`, `beat`, `bar` (défaut), `phrase4`, `phrase8`, `phrase16` |
+| `speed` | Vitesse relative : `0.5` demi-temps, `1`, `2` double temps (SHOW-008) |
+| `tracks[].layerId` | Couche de la piste : on n'y pose **que des scènes de cette couche** (erreur sinon). Absent = **piste d'actions** |
+| `blocks[].start`, `length` | En **mesures décimales** depuis le début (0 = mesure 1 ; 8,25 = mesure 9, temps 2) |
+| `blocks[].sceneId` | Scène lancée au début du bloc ; à la fin elle s'arrête (fondu de sortie de la scène), sauf si un bloc de la même piste commence au même instant (relais par le fondu croisé de la couche, pas de noir ; même scène = elle continue) ou si `end` vaut `keep` |
+| `blocks[].action.kind` | `layerLevel` (niveau d'une couche, rampe de `from` — absent : le niveau courant — à `to` sur le bloc, puis le niveau reste), `grandMaster` (idem), `smoke` (rafale de la durée du bloc, limiteur de fumée toujours actif), `flash` (flash de `sceneId` pendant le bloc), `blackout` (noir pendant le bloc) |
+
+`valider` signale : couche ou scène inconnue, scène posée sur la piste d'une autre couche, bloc hors de la séquence ou de
+durée nulle, blocs qui se chevauchent (le suivant remplace le précédent), action sans cible.
+
+## 12h. Projet : `shows.json` (format 1)
+
+Shows : graphes d'étapes et de transitions de type Grafcet (doc 20 §3, SHOW-020 à SHOW-031, D39). Facultatif : sans
+fichier, aucun show. Schéma : [`schemas/shows.schema.json`](schemas/shows.schema.json). Exemple réduit (doc 20 §3.4) :
+
+```json
+{
+  "formatVersion": 1,
+  "shows": [
+    { "id": "…", "name": "Couplet / Refrain / Drop", "role": "main", "styles": ["Électro"], "energyMin": 1, "energyMax": 3,
+      "atEnd": "restart", "variables": [ { "name": "refrains", "initial": 0 } ],
+      "steps": [
+        { "id": "0", "name": "Intro", "initial": true, "actions": [ { "kind": "play", "sceneId": "<Bleu lent>" } ] },
+        { "id": "1", "name": "Couplet", "actions": [ { "kind": "playSequence", "sequenceId": "<Groove 8 mesures>" } ] },
+        { "id": "3", "name": "Refrain", "actions": [
+            { "kind": "play", "sceneId": "<Arc-en-ciel rapide>" },
+            { "kind": "flash", "sceneId": "<Flash blanc>", "seconds": 0.5 },
+            { "kind": "variable", "variable": "refrains", "operation": "add", "value": 1 } ] },
+        { "id": "5", "name": "Final", "actions": [ { "kind": "play", "sceneId": "<Plein feu>" } ] }
+      ],
+      "transitions": [
+        { "from": ["0"], "to": ["1"], "condition": { "kind": "energyLevel", "min": 1 }, "quantize": "bar" },
+        { "from": ["1"], "to": ["3"], "condition": { "kind": "drop" } },
+        { "from": ["3"], "to": ["5"], "condition": { "kind": "variable", "variable": "refrains", "comparison": "atLeast", "value": 3 }, "quantize": "phrase8" },
+        { "from": ["3"], "to": ["1"], "condition": { "kind": "break" }, "quantize": "bar" },
+        { "from": ["5"], "to": ["0"], "condition": { "kind": "after", "duration": { "value": 16, "unit": "bars" } } }
+      ] }
+  ]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `role`, `styles`, `energyMin` / `energyMax` (niveaux 0 Calme à 3 Explosif), `weight`, `maxMinutes` | Pour le Directeur (SHOW-030, doc 22) ; sans effet sur le jeu |
+| `secondary` | Show secondaire (SHOW-031) : joue en parallèle du show principal ; lancer un show principal arrête le précédent (SHOW-025) |
+| `atEnd` | Quand toutes les étapes actives sont des fins (sans transition sortante, R6) : `hold` (défaut : le show tient ses dernières étapes, leurs scènes continuent, jusqu'à ce qu'on l'arrête), `stop` (il s'arrête, ses scènes avec) ou `restart` (il reprend aux étapes initiales) |
+| `variables` | Compteurs du show (SHOW-029), remis à `initial` au lancement |
+| `steps[].id` | Identifiant **court et lisible**, unique dans le show (« 0 », « 2a ») ; les transitions s'y réfèrent |
+| `steps[].macroShowId` | Macro-étape : ce show est joué tant que l'étape est active ; ses transitions sortantes attendent qu'il soit arrivé à sa fin |
+| `steps[].choice`, `avoidRepeat` | Plusieurs transitions vraies au même instant depuis l'étape : `priority` (la première dans l'ordre de `transitions`) ou `random` (tirage selon `weight`, sans reprendre deux fois de suite la même si `avoidRepeat`) |
+| `steps[].actions[].kind` | **Continues** (tant que l'étape est active ; pas de coupure si l'étape suivante rejoue la même, R5) : `play` (scène), `playSequence`. **Mémorisées** (à l'activation, elles restent) : `launch`, `launchSequence`, `stop`, `stopSequence`, `stopLayer`, `layerLevel` (`value` 0-1), `speed` (`value` = multiplicateur). **Impulsionnelles** (une fois) : `flash` (`seconds`), `smoke` (`seconds`), `blackout` (`seconds`), `variable` (`operation` `add` ou `set`, `value`) |
+| `transitions[].from` / `to` | Plusieurs étapes amont = convergence en ET (toutes actives) ; plusieurs étapes aval = divergence en ET (activées ensemble) |
+| `transitions[].condition.kind` | `always`, `manual` (seulement forcée), `after` (`duration` en `seconds`, `beats` ou `bars` depuis l'activation de l'étape), `sceneEnded`, `sequenceEnded`, `sequenceLoops` (`count`), `drop`, `break`, `buildUp`, `silence`, `resumed`, `songChanged` (avant P9 : reprise après un silence ou saut de tempo, D38), `energyAbove` / `energyBelow` (franchissement du seuil `value` 0-1), `energyLevel` (`min` / `max` 0-3), `style` (`styles` ; en P8, style simulé), `tempo` (`min` / `max` BPM), `random` (`value` = probabilité à chaque frontière `every`), `variable` (`variable`, `comparison`, `value`), `all` / `any` / `not` (`conditions`) |
+| `transitions[].quantize` | Frontière musicale du franchissement : la condition devenue vraie **arme** la transition, qui part à la frontière suivante si ses étapes amont sont toujours actives |
+
+`valider` signale (SHOW-024) : aucune étape initiale, identifiant en double, étape inatteignable (avertissement), boucle de
+transitions toujours vraies et non quantifiées (le show tournerait sans fin dans un même instant : erreur), scène, séquence,
+couche, show de macro-étape ou variable inconnus, macro-étape qui se contient elle-même, conditions incomplètes.
+
 ## 12e. Projet : dossier `Versions`
 
 Copies des fichiers JSON du projet (GEN-055, D31), `Versions\AAAAMMJJ-HHMMSS\` avec un `motif.txt` : toutes les
@@ -655,6 +741,7 @@ seule scène (GEN-132).
 | 2026-09-28 | `compactScenes` des préférences (ERG-025) ; capture d'un look sans `grandMaster` (C13). |
 | 2026-09-28 | P6 : `effects` et `hueFade` des étapes (§10.1), palettes `theme` avec `colors` (PAL-010, thèmes par défaut ajoutés à un projet qui n'en a aucun), `effets.json` (§12d-ter) ; schémas mis à jour ; champs facultatifs : format 1 inchangé, sans migration. |
 | 2026-09-29 | `groupes.json` (ERG-036, ERG-037, CMD-031) : arbre des groupes d'appareils et dimmers de groupe. |
+| 2026-10-02 | P8 : `séquences.json` (§12g) et `shows.json` (§12h), schémas `sequences.schema.json` et `shows.schema.json` (D39). |
 | 2026-10-01 | Section `audio` des préférences (écoute du son, périphérique choisi, sensibilité des impulsions, lissage de l'énergie, plage et préférence de tempo, latence du son du PC et **latence par périphérique** `latencyByDevice`, ±0,5 s) ; AUD-081, AUD-003. Champs absents = valeurs par défaut (format inchangé). |
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |

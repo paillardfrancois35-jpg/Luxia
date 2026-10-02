@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:sq="using:Luxia.UI.Modules.Control.Sequencing"
              x:Class="Luxia.UI.Modules.Control.Views.ColumnsPanelView"
              x:DataType="vm:ColumnsPanelViewModel">
   <UserControl.Styles>
@@ -29,6 +30,13 @@
       <Setter Property="MaxLines" Value="2" />
     </Style>
     <!-- Mode resserré (essai 1.005.226) : une ligne, environ moitié moins haut ; texte d'état masqué (la fine barre d'avancement reste). -->
+    <Style Selector="DockPanel.compact Border.play">
+      <Setter Property="MinHeight" Value="26" />
+      <Setter Property="Padding" Value="8,3,6,3" />
+    </Style>
+    <Style Selector="DockPanel.compact TextBlock.state">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
     <Style Selector="ItemsControl.compact Border.play">
       <Setter Property="MinHeight" Value="26" />
       <Setter Property="Padding" Value="8,3,6,3" />
@@ -61,7 +69,96 @@
   <!-- ERG-030 (essai P6) : les en-têtes de couche restent en haut, chaque colonne fait défiler ses scènes ; le défilement
        horizontal (colonnes trop nombreuses) déplace en-têtes et scènes ensemble. -->
   <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-    <DockPanel x:Name="Board" HorizontalAlignment="Left" MinWidth="{Binding MinWidth}">
+    <DockPanel x:Name="Board" Classes.compact="{Binding IsCompact}" HorizontalAlignment="Left" MinWidth="{Binding MinWidth}">
+      <!-- Colonne « Shows » (P8, Q44 solution C, maquette 9) : shows puis séquences, mêmes gestes que les scènes. -->
+      <Border DockPanel.Dock="Left" Width="{x:Static vm:ColumnsPanelViewModel.ShowsWidth}" Background="#161B22" CornerRadius="8" Padding="6" Margin="0,0,6,0"
+              DataContext="{Binding Shows}" x:DataType="sq:ShowsColumnViewModel">
+        <DockPanel>
+          <Border DockPanel.Dock="Top" BorderBrush="#39C5CF" BorderThickness="0,3,0,0" Padding="2,6,2,6"
+                  ToolTip.Tip="Shows : enchaînements d'étapes qui réagissent à la musique (un seul show principal à la fois). Séquences : scènes posées sur des pistes, en mesures.">
+            <StackPanel Spacing="2">
+              <TextBlock Text="▶  Shows" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" />
+              <TextBlock Text="un show à la fois : le nouveau remplace l'ancien" FontSize="10" Foreground="#8B949E" TextWrapping="Wrap" TextAlignment="Center" />
+            </StackPanel>
+          </Border>
+          <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+            <StackPanel Spacing="5">
+              <TextBlock Text="SHOWS" FontSize="10" FontWeight="SemiBold" Foreground="#8B949E" />
+              <ItemsControl ItemsSource="{Binding Shows}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Classes="scenes" Spacing="5" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="sq:ShowItemViewModel">
+                    <Border CornerRadius="7" BorderBrush="#3FB950" BorderThickness="{Binding OutlineThickness}">
+                      <DockPanel>
+                        <Button DockPanel.Dock="Right" Width="30" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                                IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                ToolTip.Tip="Ouvrir la fenêtre d'édition"
+                                Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).Shows.EditCommand}" CommandParameter="{Binding}" />
+                        <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0" CornerRadius="6,0,0,6"
+                                PointerPressed="OnShowPressed" ContextRequested="OnShowContext" ToolTip.ShowDelay="600">
+                          <ToolTip.Tip>
+                            <StackPanel Spacing="3" MaxWidth="320">
+                              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                              <TextBlock Text="{Binding State}" FontSize="12" TextWrapping="Wrap" />
+                              <TextBlock Text="Clic : lancer / arrêter · ✎ : éditer · clic droit : menu" FontSize="11" Foreground="#8B949E" />
+                            </StackPanel>
+                          </ToolTip.Tip>
+                          <DockPanel>
+                            <ProgressBar DockPanel.Dock="Bottom" Minimum="0" Maximum="1" Value="{Binding Progress}" Height="3" MinHeight="3"
+                                         Foreground="{Binding TextColor}" Background="Transparent" Opacity="0.45" IsVisible="{Binding ShowsProgress}" />
+                            <TextBlock Classes="state" DockPanel.Dock="Bottom" Text="{Binding State}" FontSize="11" Foreground="{Binding TextColor}" Opacity="0.8" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                          </DockPanel>
+                        </Border>
+                      </DockPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Button Content="+ show" MinHeight="32" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="#8B949E"
+                      IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}"
+                      ToolTip.Tip="Nouveau show, ouvert aussitôt dans sa fenêtre d'édition" Command="{Binding NewShowCommand}" />
+              <TextBlock Text="SÉQUENCES" FontSize="10" FontWeight="SemiBold" Foreground="#8B949E" Margin="0,8,0,0" />
+              <ItemsControl ItemsSource="{Binding Sequences}">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Classes="scenes" Spacing="5" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="sq:ShowItemViewModel">
+                    <Border CornerRadius="7" BorderBrush="#3FB950" BorderThickness="{Binding OutlineThickness}">
+                      <DockPanel>
+                        <Button DockPanel.Dock="Right" Width="30" Classes="editband" Content="✎" Padding="0" CornerRadius="0,6,6,0" Background="{Binding EditBandFill}"
+                                IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                ToolTip.Tip="Ouvrir la fenêtre d'édition"
+                                Command="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).Shows.EditCommand}" CommandParameter="{Binding}" />
+                        <Border Classes="play" Background="{Binding Fill}" BorderBrush="{Binding Color}" BorderThickness="4,0,0,0" CornerRadius="6,0,0,6"
+                                PointerPressed="OnShowPressed" ContextRequested="OnShowContext" ToolTip.ShowDelay="600">
+                          <ToolTip.Tip>
+                            <StackPanel Spacing="3" MaxWidth="320">
+                              <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                              <TextBlock Text="{Binding State}" FontSize="12" TextWrapping="Wrap" />
+                              <TextBlock Text="Clic : lancer / arrêter · ✎ : éditer · clic droit : menu" FontSize="11" Foreground="#8B949E" />
+                            </StackPanel>
+                          </ToolTip.Tip>
+                          <DockPanel>
+                            <ProgressBar DockPanel.Dock="Bottom" Minimum="0" Maximum="1" Value="{Binding Progress}" Height="3" MinHeight="3"
+                                         Foreground="{Binding TextColor}" Background="Transparent" Opacity="0.45" IsVisible="{Binding ShowsProgress}" />
+                            <TextBlock Classes="state" DockPanel.Dock="Bottom" Text="{Binding State}" FontSize="11" Foreground="{Binding TextColor}" Opacity="0.8" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Classes="name" Text="{Binding Name}" FontSize="13" Foreground="{Binding TextColor}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                          </DockPanel>
+                        </Border>
+                      </DockPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Button Content="+ séquence" MinHeight="32" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="#8B949E"
+                      IsVisible="{Binding $parent[UserControl].((vm:ColumnsPanelViewModel)DataContext).CanEdit}"
+                      ToolTip.Tip="Nouvelle séquence de 8 mesures, ouverte aussitôt dans sa fenêtre d'édition" Command="{Binding NewSequenceCommand}" />
+            </StackPanel>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
       <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Columns}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>

@@ -23,8 +23,10 @@ public sealed class ReferenceShowP4Tests
     public void ReferenceShow_P4_IsValid_WithoutAnyProblem()
     {
         // Seul avertissement admis : « Lyres sur 3 positions » (P4, couche Mouvements) allume et colore les lyres pour
-        // être visible seule ; il illustre l'avertissement « hors famille » de COU-008 (non bloquant).
+        // être visible seule ; il illustre l'avertissement « hors famille » de COU-008 (non bloquant). Le piège de P8
+        // (shows.json) est contrôlé par ReferenceShowP8Tests.
         ProjectValidator.Validate(Folder)
+            .Where(i => i.File != Show.ShowStore.FileName)
             .ShouldAllBe(i => i.Severity == IssueSeverity.Warning && i.Message.Contains("COU-008") && i.Item.Contains("Lyres sur 3 positions"));
         var content = ProjectFiles.Load(Folder);
         content.Scenes.Scenes.Count(s => s.Category == "Phase P4").ShouldBe(10);

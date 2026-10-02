@@ -85,6 +85,42 @@ public partial class ColumnsPanelView : UserControl
         }
     }
 
+    private static Sequencing.ShowItemViewModel? ShowOf(object? sender) => (sender as Avalonia.Controls.Control)?.DataContext as Sequencing.ShowItemViewModel;
+
+    // Colonne « Shows » : clic = lancer ou arrêter (bascule tranchée par le séquenceur).
+    private void OnShowPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (ShowOf(sender) is { } item && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        {
+            ViewModel?.Shows.Press(item);
+            e.Handled = true;
+        }
+    }
+
+    // Clic droit d'un show ou d'une séquence : mêmes verbes que pour une scène (doc 60 §4.4).
+    private void OnShowContext(object? sender, ContextRequestedEventArgs e)
+    {
+        if (sender is not Avalonia.Controls.Control control || ShowOf(sender) is not { } item || ViewModel is not { } vm)
+        {
+            return;
+        }
+
+        var shows = vm.Shows;
+        var menu = new ContextMenu
+        {
+            Items =
+            {
+                new MenuItem { Header = item.IsShow ? "✎ Éditer ce show" : "✎ Éditer cette séquence", Command = shows.EditCommand, CommandParameter = item, IsEnabled = vm.CanEdit },
+                new MenuItem { Header = "Renommer…", Command = shows.RenameCommand, CommandParameter = item, IsEnabled = vm.CanEdit },
+                new MenuItem { Header = "Dupliquer", Command = shows.DuplicateCommand, CommandParameter = item, IsEnabled = vm.CanEdit },
+                new Separator(),
+                new MenuItem { Header = "Supprimer…", IsEnabled = vm.CanEdit, Foreground = new SolidColorBrush(Color.Parse("#F85149")), Command = shows.DeleteCommand, CommandParameter = item },
+            },
+        };
+        menu.Open(control);
+        e.Handled = true;
+    }
+
     // Clic droit (doc 60 §4.4) : mêmes verbes, même ordre partout ; menu construit à l'ouverture (couleurs, couches).
     private void OnSceneContext(object? sender, ContextRequestedEventArgs e)
     {

@@ -195,6 +195,9 @@ public sealed partial class RenderEngine : ICommandSink
         _tempo.Advance(elapsed);
         ReadAudio();
 
+        // Le séquenceur peut agir dès les commandes de ce tick (lancer un show, une séquence) : il voit déjà l'instant et la musique.
+        Host.Begin(now, Signals());
+
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))
         {
@@ -202,6 +205,9 @@ public sealed partial class RenderEngine : ICommandSink
         }
 
         LaunchDueQuantized(now);
+
+        // D37 : shows et séquences évoluent ici, après les commandes et avant l'avancement des scènes.
+        TickSequencer(now);
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
         // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
@@ -243,6 +249,7 @@ public sealed partial class RenderEngine : ICommandSink
         }
 
         Publish();
+        PublishTempoChange(now);
         Interlocked.Increment(ref _tickCount);
     }
 
@@ -357,6 +364,12 @@ public sealed partial class RenderEngine : ICommandSink
                 return StopScene(stop);
 
             case StopLayerCommand stopLayer:
+                // « Tout arrêter » (écran, MIDI) arrête aussi shows et séquences : sinon un show relancerait ses scènes (D37).
+                if (stopLayer.LayerId is null && stopLayer.Origin != CommandOrigin.Show && Volatile.Read(ref _sequencer) is not null)
+                {
+                    ApplySequencer(new StopShowCommand(stopLayer.Origin, KeepSecondary: !stopLayer.Everything));
+                }
+
                 return StopLayer(stopLayer);
 
             case SetLayerMasterCommand layerMaster:
@@ -423,6 +436,9 @@ public sealed partial class RenderEngine : ICommandSink
                     case TempoAdjustment.AddBpm:
                         _tempo.Nudge(adjust.Value);
                         break;
+                    case TempoAdjustment.FollowHeard:
+                        _tempo.FollowHeard();
+                        break;
                     default:
                         _tempo.ResyncBar();
                         break;
@@ -436,6 +452,13 @@ public sealed partial class RenderEngine : ICommandSink
 
             case ShowStepCommand show:
                 return ShowStep(show);
+
+            case SequencerCommand sequencer:
+                return ApplySequencer(sequencer);
+
+            case SimulateMusicCommand simulate:
+                Simulate(simulate);
+                return null;
 
             case TestOutputCommand test:
                 if (test.Universe < 1 || test.Universe > _frames.Length)
@@ -1313,7 +1336,7 @@ public sealed partial class RenderEngine : ICommandSink
             _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
             _publishedPending = _quantized.Count == 0 ? [] : [.. _quantized.Select(q => new PendingSceneLaunch(q.SceneId, Math.Max(0, q.TargetBeat - _tempo.EffectivePosition)))];
-            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds);
+            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds, _tempo.HeardBpm);
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
             Array.Copy(_overrides, _publishedOverrides, _overrides.Length);

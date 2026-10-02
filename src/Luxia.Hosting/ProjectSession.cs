@@ -6,6 +6,8 @@ using Luxia.Persistence;
 using Luxia.Scenes;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
+using Luxia.Show;
+using Luxia.Show.Model;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -158,6 +160,8 @@ public sealed class ProjectSession
             messages.Add(effectsMessage);
         }
 
+        var (sequences, shows) = LoadSequencing(folder, messages);
+
         Folder = folder;
         Info = report.Info;
         Console = console;
@@ -172,6 +176,8 @@ public sealed class ProjectSession
         Looks = looks;
         Groups = groups;
         Effects = effects;
+        Sequences = sequences;
+        Shows = shows;
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         Messages = messages;
         _preferences.Update(p => p with { LastProjectPath = folder });
@@ -307,6 +313,34 @@ public sealed class ProjectSession
         Info = ProjectStore.Save(folder, Info!);
     }
 
+    /// <summary>Séquences du projet (<c>séquences.json</c>, SHOW-001).</summary>
+    public SequenceSet Sequences { get; private set; } = new();
+
+    /// <summary>Shows du projet (<c>shows.json</c>, SHOW-020).</summary>
+    public ShowSet Shows { get; private set; } = new();
+
+    /// <summary>Remplace les séquences, les enregistre et les donne au séquenceur (SHOW-001).</summary>
+    public void SaveSequences(SequenceSet sequences)
+    {
+        ArgumentNullException.ThrowIfNull(sequences);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        SequenceStore.Save(folder, sequences);
+        Sequences = sequences;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
+    /// <summary>Remplace les shows, les enregistre et les donne au séquenceur (SHOW-020).</summary>
+    public void SaveShows(ShowSet shows)
+    {
+        ArgumentNullException.ThrowIfNull(shows);
+        var folder = Folder ?? throw new InvalidOperationException("Aucun projet ouvert.");
+        ShowStore.Save(folder, shows);
+        Shows = shows;
+        Info = ProjectStore.Save(folder, Info!);
+        NotifyShowDataChanged();
+    }
+
     /// <summary>Remplace les réglages du Live et les enregistre (doc 18).</summary>
     public void SaveLive(LiveSettings live)
     {
@@ -349,6 +383,7 @@ public sealed class ProjectSession
         Looks = looks;
         Groups = groups;
         Effects = effects;
+        (Sequences, Shows) = LoadSequencing(folder, messages);
         messages.AddRange(new[] { liveMessage, midiMessage, looksMessage, groupsMessage, effectsMessage }.OfType<string>());
         FixtureLibrary = new ProjectFixtureLibrary(folder);
         _logger.LogInformation("Scènes, palettes et couches relues : {Scenes} scènes, {Palettes} palettes", Scenes.Scenes.Count, Palettes.Palettes.Count);
@@ -358,6 +393,14 @@ public sealed class ProjectSession
 
     /// <summary>Signale une modification de ce que joue le moteur (ex. copie d'un modèle mise à jour, GEN-053).</summary>
     public void NotifyShowDataChanged() => ShowDataChanged?.Invoke(this, EventArgs.Empty);
+
+    private static (SequenceSet, ShowSet) LoadSequencing(string folder, List<string> messages)
+    {
+        var (sequences, sequencesMessage) = SequenceStore.Load(folder);
+        var (shows, showsMessage) = ShowStore.Load(folder);
+        messages.AddRange(new[] { sequencesMessage, showsMessage }.OfType<string>());
+        return (sequences, shows);
+    }
 
     private static (SceneSet, PaletteSet, LayerSet, SafetySettings) LoadShowParts(string folder, List<string> messages)
     {

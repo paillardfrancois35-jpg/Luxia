@@ -3085,6 +3085,503 @@
           ]
         }
       ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000001",
+      "name": "Barres : arc-en-ciel (couche Libre)",
+      "color": "#D2A8FF",
+      "category": "Phase P8",
+      "notes": "Copie de « Arc-en-ciel sur les barres (cellules) » (P6) rangée dans la couche Libre : elle joue en même temps qu'une scène de la couche Effets (l'effet multi-têtes, la vague des PAR), ce que deux scènes de la même couche exclusive ne peuvent pas faire.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000007",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "BeamZ LCB803"
+                }
+              },
+              "attribute": "intensity",
+              "level": 1
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000003",
+              "name": "Arc-en-ciel",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byModel",
+                    "model": "BeamZ LCB803"
+                  }
+                }
+              ],
+              "shape": "rainbow",
+              "period": {
+                "value": 4,
+                "unit": "seconds"
+              },
+              "perCell": true,
+              "spread": 360
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000002",
+      "name": "Barres : chenillard des segments (couche Libre)",
+      "color": "#F85149",
+      "category": "Phase P8",
+      "notes": "Copie de « Chenillard des segments (on/off) » (P6) rangée dans la couche Libre : elle joue en même temps qu'une scène de la couche Effets (l'effet multi-têtes, la vague des PAR), ce que deux scènes de la même couche exclusive ne peuvent pas faire.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000007",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byModel",
+                  "model": "BeamZ LCB803"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000004",
+              "name": "Chenillard",
+              "targets": [
+                {
+                  "cell": 0,
+                  "auto": {
+                    "kind": "byModel",
+                    "model": "BeamZ LCB803"
+                  }
+                }
+              ],
+              "shape": "square",
+              "period": {
+                "value": 1.6,
+                "unit": "seconds"
+              },
+              "perCell": true,
+              "spread": 360,
+              "dutyCycle": 0.125
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000003",
+      "name": "Plein feu sauf les PAR",
+      "color": "#E3B341",
+      "category": "Phase P8",
+      "notes": "Couche Intensité : tous les appareils à 100 % sauf les quatre PAR, dont l'intensité est laissée à la vague (« Vague d'intensité des PAR »). Les intensités se combinent au plus haut (HTP) : un PAR déjà à 100 % par une autre couche ne pourrait pas onduler.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000001",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "a02f87cc-8f92-5b90-9af4-deefe83e68de",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "41125b7f-3348-5ec2-a9ab-18aaaf177f66",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "6c3d353d-218e-5902-b165-b31626a27f7d",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "f2e729d1-585b-5f85-8919-79efa6eba341",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "c58c8e40-21f6-5d28-80bf-dc4230557bf0",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "d8aa4fab-b25f-5a75-927f-65381d097b08",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "a1e1a6f1-5746-5c85-9aaa-3f622e9ade19",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "f688d1e8-37e2-5a4f-b4b1-60c1d764f10c",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            },
+            {
+              "target": {
+                "fixtureId": "05a33efe-38be-57cd-853c-5695750bf6f0",
+                "cell": 0
+              },
+              "attribute": "intensity",
+              "level": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000004",
+      "name": "Couleur à chaque mesure (couleur seule)",
+      "color": "#D29922",
+      "category": "Phase P8",
+      "notes": "Copie de « Couleur à chaque mesure » (P7) sans intensité : les PAR changent de couleur au début de chaque mesure (rouge, bleu, ambre, vert) ; leur intensité vient d'une autre couche (la vague de « Groove 8 mesures »).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000003"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000007"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000009"
+            }
+          ]
+        },
+        {
+          "fade": {
+            "value": 0.15,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "fixtureId": "743c5068-fe12-5d88-980c-db6cf1fe5ef8",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "2088fa7c-c3d0-5387-9ee3-7f5a445dea62",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "242c361d-79e2-54c4-9d00-6617e4e1d139",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            },
+            {
+              "target": {
+                "fixtureId": "268997d7-d91d-5ff2-9e0e-6ba60b5aedba",
+                "cell": 0
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000006"
+            }
+          ]
+        }
+      ],
+      "advance": "bar",
+      "advanceEvery": 1
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000005",
+      "name": "Vague d'intensité des PAR (sans couleur)",
+      "color": "#58A6FF",
+      "category": "Phase P8",
+      "notes": "Copie de « Vague sur les PAR » (P6) sans la palette Bleu : sinus d'intensité de 2 s, de 10 à 100 %, décalé d'un PAR à l'autre (« PAR gauche → droite »). La couche Effets passe au-dessus des Couleurs : sans couleur, elle laisse voir celle de la couche Couleurs. À combiner avec une intensité qui ne met pas déjà les PAR à 100 %.",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000005",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [],
+          "effects": [
+            {
+              "id": "6e6f0007-0000-4000-8000-000000000001",
+              "name": "Vague",
+              "targets": [
+                {
+                  "cell": 0,
+                  "selectionId": "c8e491d0-0f5a-51df-967b-f09789e342a4"
+                }
+              ],
+              "shape": "sine",
+              "period": {
+                "value": 2,
+                "unit": "seconds"
+              },
+              "spread": 360,
+              "size": 0.9,
+              "center": 0.55
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000006",
+      "name": "Blanc sur tous les PAR (couleur seule)",
+      "color": "#F0F6FC",
+      "category": "Phase P8",
+      "notes": "Couche Couleurs : PAR et gros PAR en blanc, sans intensité. Donne une couleur au strobe des PAR (« Strobe PAR » n'ouvre que l'obturateur : sans couleur, un PAR à LED reste noir).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

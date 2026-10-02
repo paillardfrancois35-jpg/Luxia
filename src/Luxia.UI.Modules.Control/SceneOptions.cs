@@ -1,6 +1,6 @@
 using Luxia.Engine.Model;
 
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>Listes de choix en français de l'éditeur de scènes.</summary>
 public static class SceneOptions
@@ -58,7 +58,7 @@ public static class SceneOptions
     /// <summary>Quantification du lancement (MOT-018).</summary>
     public static IReadOnlyList<Choice<LaunchQuantize>> Quantizes { get; } =
     [
-        new(LaunchQuantize.None, "Tout de suite"),
+        new(LaunchQuantize.None, "Sans attendre le temps"),
         new(LaunchQuantize.Beat, "Au prochain temps"),
         new(LaunchQuantize.Bar, "À la prochaine mesure"),
         new(LaunchQuantize.Phrase4, "À la prochaine phrase (4 mesures)"),

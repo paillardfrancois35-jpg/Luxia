@@ -54,6 +54,10 @@ void Tick(int count = 2)
     {
         clock.Advance(TimeSpan.FromMilliseconds(25));
         runtime.Engine.Tick();
+        if (runtime.PreviewActive)
+        {
+            runtime.Preview.Tick();
+        }
     }
 
     vm.Refresh();
@@ -122,6 +126,14 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Tick(10);
     game.Editor.Refresh();
     Capture("Édition - brouillon", editor);
+
+    // E2 : durées en temps ou en mesures dans les Propriétés (brouillon annulé ensuite).
+    work.Properties.StepHold.Amount = 2;
+    work.Properties.StepHold.Unit = Luxia.UI.Modules.Control.DurationField.Units[1];
+    work.Flush();
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - durées en temps", editor);
     game.Editor.Cancel();
     game.Editor.Open(SceneNamed("Lyres sur 3 positions").Id);
     editor.Present(null);
@@ -133,6 +145,73 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     game.Editor.Refresh();
     Capture("Édition - aveugle", editor);
     game.Editor.Cancel();
+
+    // P8 : un show joue (bandeau « Show en cours », replié puis déplié), puis les fenêtres d'édition d'une séquence et d'un show.
+    var user = Luxia.Messaging.Commands.CommandOrigin.User;
+    runtime.Engine.Send(new Luxia.Messaging.Commands.StopLayerCommand(user, Everything: true));
+    Tick(4);
+    var demoShow = runtime.Project.Shows.Shows.First(x => x.Name == "Couplet / Refrain / Drop");
+    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchShowCommand(user, demoShow.Id));
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Energy: 0.45));
+    Tick(240);
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Luxia.Messaging.Commands.SimulatedCue.Drop));
+    Tick(120);
+    Capture("Contrôle - show en cours");
+    game.Band.ToggleCommand.Execute(null);
+    Tick(4);
+    Capture("Contrôle - show en cours, détail");
+    game.Band.ToggleCommand.Execute(null);
+    runtime.Engine.Send(new Luxia.Messaging.Commands.StopShowCommand(user));
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Energy: double.NaN));
+    Tick(4);
+
+    // L'écran de jeu ouvre lui-même la fenêtre (✎) : on la retrouve pour la capturer.
+    game.EditSequence(runtime.Project.Sequences.Sequences.First(x => x.Name == "Montée 16 mesures").Id);
+    Luxia.UI.Modules.Control.Views.SequencingWindow.Present(game.SequenceEditor, () => new Luxia.UI.Modules.Control.Views.SequenceEditorWindow(), null);
+    var sequenceWindow = Luxia.UI.Modules.Control.Views.SequencingWindow.Of(game.SequenceEditor)!;
+    sequenceWindow.Width = 1440;
+    sequenceWindow.Height = 860;
+    game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(0, 1));
+    Tick(10);
+    Capture("Édition - séquence", sequenceWindow);
+
+    // Bloc d'action « niveau de couche » (rampe 30 → 100 %) : champs numériques du panneau « Bloc choisi » (essai 15).
+    game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(3, 0));
+    Tick(4);
+    Capture("Édition - séquence, bloc de niveau", sequenceWindow);
+
+    // Liste déroulante dépliée (analyse ergonomique de P8, E6) : fond contrasté, barre de défilement visible.
+    var unitCombo = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(sequenceWindow).OfType<ComboBox>().First(c => c.IsVisible && c.ItemCount > 2);
+    unitCombo.IsDropDownOpen = true;
+    Tick(2);
+    Capture("Liste déroulante dépliée", sequenceWindow);
+    unitCombo.IsDropDownOpen = false;
+    game.SequenceEditor.Cancel();
+
+    game.EditShow(demoShow.Id);
+    Luxia.UI.Modules.Control.Views.SequencingWindow.Present(game.ShowEditor, () => new Luxia.UI.Modules.Control.Views.ShowEditorWindow(), null);
+    var showWindow = Luxia.UI.Modules.Control.Views.SequencingWindow.Of(game.ShowEditor)!;
+    showWindow.Width = 1500;
+    showWindow.Height = 900;
+    game.ShowEditor.IsBlind = true;
+    game.ShowEditor.Simulation.UseMetronome = true;
+    game.ShowEditor.Simulation.PlayCommand.Execute(null);
+    game.ShowEditor.Simulation.EnergyCommand.Execute("1");
+    Tick(240);
+    game.ShowEditor.Simulation.CueCommand.Execute("drop");
+    Tick(120);
+    game.ShowEditor.Refresh();
+    Tick(4);
+    Capture("Édition - show", showWindow);
+    if (Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(showWindow).OfType<ComboBox>().FirstOrDefault(c => c.IsVisible && c.ItemCount == 19) is { } conditions)
+    {
+        // Liste longue (19 conditions) : hauteur standard, barre de défilement visible (E6).
+        conditions.IsDropDownOpen = true;
+        Tick(2);
+        Capture("Liste déroulante longue", showWindow);
+        conditions.IsDropDownOpen = false;
+    }
+    game.ShowEditor.Cancel();
 }
 
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.
@@ -176,15 +255,6 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
 
     Capture("Scènes - lyre sélectionnée");
 
-    // Éditeur de couches (COU-001), fenêtre à part.
-    if (scenes.CreateLayersEditor() is { } editor)
-    {
-        var layers = new LayersWindow { DataContext = editor };
-        layers.Show();
-        Capture("Couches", layers);
-        layers.Close();
-    }
-
     // Zones interdites (INST-053), fenêtre à part, avec une zone d'exemple sur la lyre sélectionnée.
     if (scenes.CreateZonesEditor() is { } zonesEditor)
     {
@@ -194,6 +264,16 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
         Capture("Zones interdites", zones);
         zones.Close();
     }
+}
+
+// Éditeur de couches (COU-001), ouvert par « Couches… » de l'en-tête de l'écran de jeu (aussi depuis l'écran Scènes).
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewModel) is { Page: Luxia.UI.Modules.Control.GameViewModel layersGame }
+    && layersGame.CreateLayersEditor() is { } layersEditor)
+{
+    var layers = new Luxia.UI.Modules.Control.Views.LayersWindow { DataContext = layersEditor };
+    layers.Show();
+    Capture("Couches", layers);
+    layers.Close();
 }
 
 // Onglet « Gestion des dimmers » (ERG-036) : un arbre d'exemple sur le parc du projet, dimmers réglés pour voir les niveaux.

@@ -113,7 +113,7 @@ public sealed class GamePanelsTests : IAsyncLifetime
         var scene = _host.Runtime.Project.Scenes.Scenes.Single(s => s.Name == "Ma couleur libre");
         scene.LayerId.ShouldBe(LayerSet.FreeLayerId);
         _vm.Editor.SceneId.ShouldBe(scene.Id, "une scène créée s'ouvre aussitôt dans la fenêtre d'édition");
-        _vm.Columns.Columns.Single(c => c.Layer.Name == "Libre").Scenes.ShouldHaveSingleItem();
+        _vm.Columns.Columns.Single(c => c.Layer.Name == "Libre").Scenes.ShouldContain(b => b.Scene.Id == scene.Id, "la scène apparaît dans la colonne de sa couche");
 
         _vm.Editor.Cancel();
         _vm.Undo();

@@ -223,3 +223,26 @@ luxia-headless audio tests/assets/audio --rapport rapport.md           # rapport
 
 `ReferenceShowP7Tests` : chaque scène « Phase P7 » rejouée 6 s à 120 BPM fixes et comparée à `tests/assets/golden/P7-scenes.txt` ;
 un PAR par temps, tempo du scénario, départ quantifié à la mesure, horloge propre indépendante du tempo principal.
+
+## Phase P8 – Show & séquences (2026-10-02)
+
+| Élément | Fichier | Contenu |
+|---|---|---|
+| Séquences « Phase P8 » | `séquences.json` | *Montée 16 mesures* (bleu 8 mesures, chenillard 4, blanc chaud 4 ; lyres en 3 positions puis cercle à la mesure ; vague puis strobe sur les PAR ; **rampe du niveau de la couche Couleurs** de 30 à 100 % sur 8 mesures ; fumée sur la dernière mesure), *Groove 8 mesures* (en boucle : une couleur par mesure, vague, lyres au centre puis en huit), *Break calme 8 mesures* (50 %, bleu, plafond, UV), *Explosion drop 4 mesures* (flash d'un temps, strobe 2 mesures puis vague, chenillard, cercle, fumée), *Pulsation couleurs (double temps)* (vitesse « double », en boucle), *Barres et multi-têtes 8 mesures* (têtes décalées et barres ensemble). Barres présentes aussi dans *Montée* et *Explosion*, multi-têtes dans *Explosion* |
+| Scènes « Phase P8 » | `scènes.json` | *Barres : arc-en-ciel (couche Libre)*, *Barres : chenillard des segments (couche Libre)* : copies des scènes de P6 rangées dans la couche Libre, pour jouer en même temps que la couche Effets (multi-têtes, vague des PAR). Après l'essai 2a/2b (v1.010.079, PAR restés bleus et fixes dans *Groove*) : *Plein feu sauf les PAR* (Intensité), *Couleur à chaque mesure (couleur seule)* (Couleurs), *Vague d'intensité des PAR (sans couleur)* (Effets) ; *Groove* les utilise, *Montée* prend la vague sans couleur. La vague de P6 imposait le bleu (la couche Effets passe au-dessus des Couleurs) et les intensités se combinent au plus haut : un PAR déjà à 100 % ne peut pas onduler Après l'essai 8 : *Blanc sur tous les PAR (couleur seule)*, ajouté à l'étape « Éclat » de *Bloc refrain* (le strobe n'ouvre que l'obturateur : sans couleur, les PAR restaient noirs). Après l'essai 13 : *Couplet / Refrain / Drop* passe au Final au silence (fin du morceau) depuis Couplet, Refrain et Montée, et revient à l'Intro à la reprise du son (compteur de refrains remis à zéro) |
+| Shows « Phase P8 » | `shows.json` | *Couplet / Refrain / Drop* (exemple du doc 20 §3.4 : intro → couplet à l'énergie Groove → refrain au drop, montée, retour au break ou après 16 mesures, final au 3e refrain, qui reste), *Tirage au sort (variantes)* (variante A 60 % / B 40 % toutes les 8 mesures, jamais deux fois la même), *Ambiance UV et fumée (secondaire)* (en parallèle du show principal : UV, une chance sur deux d'une rafale de fumée à chaque phrase de 8 mesures), *Visite guidée (sans musique)* (avance seule : durées en mesures et fins de séquences), *Branches parallèles et macro-étape* (divergence et convergence en ET, macro-étape jouant *Bloc refrain (macro-étape)*), **piège** *Boucle sans condition* (refusé au lancement, erreur de `valider`) |
+
+### Comment rejouer / vérifier sans matériel
+
+```bash
+luxia-headless valider "samples/Show de référence"
+luxia-headless jouer "samples/Show de référence" --sequence "Montée 16 mesures" --duree 34 --pas 1
+luxia-headless jouer "samples/Show de référence" --show "Tirage au sort (variantes)" --duree 120 --pas 4
+luxia-headless scenario "samples/Show de référence" mon-scenario.txt   # verbes show, sequence, forcer, simuler drop|break|montee, energie 40, style "Électro"
+```
+
+### Non-régression
+
+`ReferenceShowP8Tests` : chaque séquence « Phase P8 » rejouée sur toute sa longueur et chaque show (sauf le piège) 50 s au
+métronome avec la même suite d'événements simulés (énergie, drop, break, montée), comparés à `tests/assets/golden/P8-shows.txt` ;
+rampe de la couche Couleurs ; piège refusé.

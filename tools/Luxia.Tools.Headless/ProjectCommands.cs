@@ -35,6 +35,27 @@ internal static class ProjectCommands
         }
 
         var content = ProjectFiles.Load(folder);
+        var (sequences, _) = Show.SequenceStore.Load(folder);
+        var (shows, _) = Show.ShowStore.Load(folder);
+
+        // GEN-132 : « jouer » une séquence ou un show (P8), au métronome (--tempo, 120 BPM par défaut), sans musique.
+        if ((args.Get("show") ?? args.Get("sequence")) is { } key)
+        {
+            var isShow = args.Get("show") is not null;
+            var items = isShow ? shows.Shows.Select(x => (x.Id, x.Name)) : sequences.Sequences.Select(x => (x.Id, x.Name));
+            var found = items.FirstOrDefault(i => string.Equals(i.Name, key, StringComparison.CurrentCultureIgnoreCase) || i.Id.ToString() == key);
+            if (found.Id == Guid.Empty)
+            {
+                Console.Error.WriteLine($"{(isShow ? "Show" : "Séquence")} introuvable : « {key} ». Disponibles : {string.Join(", ", items.Select(i => i.Name))}");
+                return 2;
+            }
+
+            var tempo = args.Get("tempo") ?? "120";
+            var text = $"0 tempo {tempo}\n0 {(isShow ? "show" : "sequence")} {found.Id}\n";
+            var played = Hosting.Tools.Scenario.Parse(text, content.Scenes, content.Layers, out _, sequences, shows);
+            return Report(ScenarioRunner.Run(content, played, Duration(args, 30), Recording(args), Sample(args), sequences: sequences, shows: shows));
+        }
+
         var name = args.Get("scene");
         var scene = content.Scenes.Scenes.FirstOrDefault(s => string.Equals(s.Name, name, StringComparison.CurrentCultureIgnoreCase) || s.Id.ToString() == name);
         if (scene is null)
@@ -60,13 +81,15 @@ internal static class ProjectCommands
         }
 
         var content = ProjectFiles.Load(folder);
-        var scenario = Hosting.Tools.Scenario.Parse(File.ReadAllText(args.Positional[1]), content.Scenes, content.Layers, out var errors);
+        var (sequences, _) = Show.SequenceStore.Load(folder);
+        var (shows, _) = Show.ShowStore.Load(folder);
+        var scenario = Hosting.Tools.Scenario.Parse(File.ReadAllText(args.Positional[1]), content.Scenes, content.Layers, out var errors, sequences, shows);
         foreach (var error in errors)
         {
             Console.Error.WriteLine(error);
         }
 
-        return errors.Count > 0 ? 1 : Report(ScenarioRunner.Run(content, scenario, Duration(args, 60), Recording(args), Sample(args)));
+        return errors.Count > 0 ? 1 : Report(ScenarioRunner.Run(content, scenario, Duration(args, 60), Recording(args), Sample(args), sequences: sequences, shows: shows));
     }
 
     private static int Report(ScenarioReport report)

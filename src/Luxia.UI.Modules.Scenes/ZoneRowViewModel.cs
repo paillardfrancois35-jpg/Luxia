@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Luxia.Patch.Model;
 using Luxia.UI.Controls;
 
+using Luxia.UI.Modules.Control;
+
 namespace Luxia.UI.Modules.Scenes;
 
 /// <summary>Une zone interdite dans l'éditeur (bornes en % de Pan et de Tilt).</summary>

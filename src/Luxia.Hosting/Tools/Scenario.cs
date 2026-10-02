@@ -1,6 +1,7 @@
 using System.Globalization;
 using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
+using Luxia.Show.Model;
 
 namespace Luxia.Hosting.Tools;
 
@@ -16,6 +17,10 @@ namespace Luxia.Hosting.Tools;
 /// <c>master-couche "couche" 50</c> (%), <c>flash "scène" appui|relache</c> (CMD-014), <c>figer oui|non [suspendre]</c>
 /// (CMD-003), <c>fumee appui|relache</c> ou <c>fumee rafale 3</c> (s, CMD-030), <c>canal 180 255</c> (surcharge brute de
 /// l'univers 1, pour éprouver les limites de sûreté), <c>liberer-canaux</c>, <c>fin</c> (arrête le déroulé à cet instant).
+/// P8 (shows et séquences, mode simulation) : <c>show "show"</c>, <c>arreter-show ["show"]</c>, <c>sequence "séquence"</c>,
+/// <c>arreter-sequence "séquence"</c>, <c>forcer "show" 2 [immediat]</c> (la 2e transition du show, CMD-051),
+/// <c>simuler drop|break|montee|silence|reprise|morceau</c>, <c>energie 60</c> (%) ou <c>energie ecoute</c>,
+/// <c>style "Électro"</c> (CMD-053).
 /// </remarks>
 public sealed class Scenario
 {
@@ -40,9 +45,13 @@ public sealed class Scenario
     /// <param name="scenes">Scènes du projet.</param>
     /// <param name="layers">Couches du projet.</param>
     /// <param name="errors">Lignes refusées, avec leur numéro et le motif.</param>
-    public static Scenario Parse(string text, SceneSet scenes, LayerSet layers, out IReadOnlyList<string> errors)
+    /// <param name="sequences">Séquences du projet (verbes de P8).</param>
+    /// <param name="shows">Shows du projet (verbes de P8).</param>
+    public static Scenario Parse(string text, SceneSet scenes, LayerSet layers, out IReadOnlyList<string> errors, SequenceSet? sequences = null, ShowSet? shows = null)
     {
         ArgumentNullException.ThrowIfNull(text);
+        sequences ??= new SequenceSet();
+        shows ??= new ShowSet();
         ArgumentNullException.ThrowIfNull(scenes);
         ArgumentNullException.ThrowIfNull(layers);
         var problems = new List<string>();
@@ -166,6 +175,55 @@ public sealed class Scenario
                     error = layer is null ? "couche inconnue" : null;
                     command = layer is not null && Number(rest, 1, out var level, ref error) ? new SetLayerMasterCommand(CommandOrigin.Tool, layer.Id, level / 100) : null;
                     break;
+                case "show":
+                    command = Named(rest, shows.Shows.Select(x => (x.Id, x.Name)), "show", out error) is { } show ? new LaunchShowCommand(CommandOrigin.Tool, show) : null;
+                    break;
+                case "arreter-show":
+                    command = rest.Count == 0
+                        ? new StopShowCommand(CommandOrigin.Tool)
+                        : Named(rest, shows.Shows.Select(x => (x.Id, x.Name)), "show", out error) is { } stoppedShow ? new StopShowCommand(CommandOrigin.Tool, stoppedShow) : null;
+                    break;
+                case "sequence":
+                    command = Named(rest, sequences.Sequences.Select(x => (x.Id, x.Name)), "séquence", out error) is { } sequence ? new LaunchSequenceCommand(CommandOrigin.Tool, sequence) : null;
+                    break;
+                case "arreter-sequence":
+                    command = Named(rest, sequences.Sequences.Select(x => (x.Id, x.Name)), "séquence", out error) is { } stoppedSequence ? new StopSequenceCommand(CommandOrigin.Tool, stoppedSequence) : null;
+                    break;
+                case "forcer":
+                    command = Named(rest, shows.Shows.Select(x => (x.Id, x.Name)), "show", out error) is { } forced && Number(rest, 1, out var rank, ref error) && rank >= 1
+                        ? new ForceTransitionCommand(CommandOrigin.Tool, forced, (int)rank - 1, rest.Skip(2).Any(w => w.Equals("immediat", StringComparison.OrdinalIgnoreCase)))
+                        : null;
+                    error ??= command is null ? "forcer \"show\" <rang de la transition, à partir de 1> [immediat]" : null;
+                    break;
+                case "simuler":
+                    var cue = rest.FirstOrDefault()?.ToLowerInvariant() switch
+                    {
+                        "drop" => SimulatedCue.Drop,
+                        "break" => SimulatedCue.Break,
+                        "montee" => SimulatedCue.BuildUp,
+                        "silence" => SimulatedCue.Silence,
+                        "reprise" => SimulatedCue.Resumed,
+                        "morceau" => SimulatedCue.SongChanged,
+                        _ => SimulatedCue.None,
+                    };
+                    command = cue == SimulatedCue.None ? null : new SimulateMusicCommand(CommandOrigin.Tool, cue);
+                    error = command is null ? "simuler drop|break|montee|silence|reprise|morceau" : null;
+                    break;
+                case "energie":
+                    if (rest.FirstOrDefault()?.Equals("ecoute", StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        command = new SimulateMusicCommand(CommandOrigin.Tool, Energy: double.NaN);
+                    }
+                    else
+                    {
+                        command = Number(rest, 0, out var energy, ref error) ? new SimulateMusicCommand(CommandOrigin.Tool, Energy: energy / 100) : null;
+                    }
+
+                    break;
+                case "style":
+                    command = rest.Count > 0 ? new SimulateMusicCommand(CommandOrigin.Tool, Style: rest[0]) : null;
+                    error = command is null ? "style \"nom du style\"" : null;
+                    break;
                 case "fin":
                     end = at;
                     continue;
@@ -202,6 +260,29 @@ public sealed class Scenario
             : scenes.Scenes.FirstOrDefault(s => string.Equals(s.Name, key, StringComparison.CurrentCultureIgnoreCase));
         error = scene is null ? $"scène inconnue « {key} »" : null;
         return scene?.Id;
+    }
+
+    private static Guid? Named(List<string> words, IEnumerable<(Guid Id, string Name)> items, string kind, out string? error)
+    {
+        error = null;
+        if (words.Count == 0)
+        {
+            error = $"{kind} attendu(e)";
+            return null;
+        }
+
+        var key = words[0];
+        var list = items.ToList();
+        var found = Guid.TryParse(key, out var id)
+            ? list.FirstOrDefault(i => i.Id == id)
+            : list.FirstOrDefault(i => string.Equals(i.Name, key, StringComparison.CurrentCultureIgnoreCase));
+        if (found.Id == Guid.Empty)
+        {
+            error = $"{kind} inconnu(e) « {key} »";
+            return null;
+        }
+
+        return found.Id;
     }
 
     private static Guid? LayerOf(List<string> words, LayerSet layers, out string? error)

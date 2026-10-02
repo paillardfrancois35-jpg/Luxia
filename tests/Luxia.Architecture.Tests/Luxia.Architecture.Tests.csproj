@@ -11,6 +11,7 @@
     <ProjectReference Include="../../src/Luxia.Core/Luxia.Core.csproj" />
     <ProjectReference Include="../../src/Luxia.Messaging/Luxia.Messaging.csproj" />
     <ProjectReference Include="../../src/Luxia.Engine/Luxia.Engine.csproj" />
+    <ProjectReference Include="../../src/Luxia.Show/Luxia.Show.csproj" />
     <ProjectReference Include="../../src/Luxia.Output/Luxia.Output.csproj" />
     <ProjectReference Include="../../src/Luxia.Persistence/Luxia.Persistence.csproj" />
     <ProjectReference Include="../../src/Luxia.Hosting/Luxia.Hosting.csproj" />

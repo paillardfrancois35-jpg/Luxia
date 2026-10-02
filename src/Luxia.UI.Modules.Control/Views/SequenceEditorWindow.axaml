@@ -1,0 +1,224 @@
+<v:SequencingWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="using:Luxia.UI.Modules.Control.Views"
+        xmlns:sq="using:Luxia.UI.Modules.Control.Sequencing"
+        xmlns:sc="using:Luxia.UI.Modules.Control"
+        x:Class="Luxia.UI.Modules.Control.Views.SequenceEditorWindow"
+        x:DataType="sq:SequenceEditorViewModel"
+        Title="{Binding WindowTitle}"
+        Width="1440" Height="860" MinWidth="1000" MinHeight="620"
+        WindowStartupLocation="CenterOwner" Background="#0D1117">
+  <Window.Styles>
+    <Style Selector="Border.section">
+      <Setter Property="Background" Value="#161B22" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="12,8" />
+      <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+    <Style Selector="TextBlock.label">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="#8B949E" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.title">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,0,0,6" />
+    </Style>
+    <Style Selector="Button.action">
+      <Setter Property="MinHeight" Value="40" />
+      <Setter Property="MinWidth" Value="110" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Border.libitem">
+      <Setter Property="Background" Value="#21262D" />
+      <Setter Property="CornerRadius" Value="4" />
+      <Setter Property="Padding" Value="8,4" />
+      <Setter Property="Margin" Value="0,0,0,3" />
+      <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Border.libitem:pointerover">
+      <Setter Property="Background" Value="#30363D" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+    <!-- Titre : on travaille sur un brouillon (même charte que la fenêtre d'édition des scènes). -->
+    <Panel DockPanel.Dock="Top">
+      <Border Background="{Binding ModeColor}" Opacity="0.16" />
+      <Border BorderBrush="{Binding ModeColor}" BorderThickness="0,0,0,2" Padding="14,8">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <Border Background="{Binding ModeColor}" CornerRadius="10" Padding="10,2" VerticalAlignment="Center">
+            <TextBlock Text="BROUILLON" Foreground="#0D1117" FontWeight="Bold" FontSize="12" />
+          </Border>
+          <Border Width="22" Height="22" CornerRadius="4" Background="{Binding ItemColor}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding ItemName}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" />
+          <TextBlock Text="— séquence · Appliquer écrit sans fermer ; Annuler revient à l'état d'origine." Foreground="#8B949E" VerticalAlignment="Center" />
+          <Border Background="#D29922" CornerRadius="10" Padding="8,1" IsVisible="{Binding HasChanges}" VerticalAlignment="Center">
+            <TextBlock Text="modifié" Foreground="#0D1117" FontSize="12" />
+          </Border>
+          <TextBlock Text="{Binding Message}" Foreground="#D29922" VerticalAlignment="Center" />
+        </StackPanel>
+      </Border>
+    </Panel>
+
+    <!-- Pied : aveugle, tempo de l'essai, Appliquer / Annuler / Valider. -->
+    <Border DockPanel.Dock="Bottom" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0" Padding="12,8">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+          <Button Classes="action" Content="Appliquer" Command="{Binding ApplyCommand}" ToolTip.Tip="Écrire la séquence dans le projet sans fermer" />
+          <Button Classes="action" Content="Annuler" Command="{Binding CancelCommand}" ToolTip.Tip="Revenir à l'état d'origine et fermer" />
+          <Button Classes="action" Content="Valider" Background="#3FB950" Foreground="#0D1117" FontWeight="Bold" Command="{Binding ValidateCommand}" ToolTip.Tip="Écrire la séquence et fermer" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+          <CheckBox Content="👁 Aveugle" IsChecked="{Binding IsBlind}" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding SafetyText}" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" MaxWidth="420" TextWrapping="Wrap" />
+          <StackPanel Orientation="Horizontal" Spacing="6" DataContext="{Binding Simulation}" x:DataType="sq:SimulationViewModel" Margin="16,0,0,0">
+            <TextBlock Text="Tempo de l'essai :" Classes="label" />
+            <CheckBox Content="métronome" IsChecked="{Binding UseMetronome}" ToolTip.Tip="Coché : l'essai impose ce tempo à l'horloge (sinon, celui du direct)" />
+            <NumericUpDown Value="{Binding MetronomeBpm}" Minimum="20" Maximum="400" Increment="1" FormatString="0" Width="110" IsEnabled="{Binding UseMetronome}" />
+            <TextBlock Text="{Binding TempoText}" Classes="label" />
+          </StackPanel>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <Grid ColumnDefinitions="250,*,410">
+      <!-- Bibliothèque : scènes par couche, puis actions ; on les glisse sur la frise. -->
+      <Border BorderBrush="#30363D" BorderThickness="0,0,1,0">
+        <DockPanel Margin="10">
+          <TextBox DockPanel.Dock="Top" Text="{Binding Search}" PlaceholderText="🔍 Chercher une scène" Margin="0,0,0,8" />
+          <TextBlock DockPanel.Dock="Bottom" Text="Glissez un élément sur la frise : une scène va sur la piste de sa couche, une action sur la piste d'actions." TextWrapping="Wrap" FontSize="11" Foreground="#8B949E" Margin="0,8,0,0" />
+          <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Library}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="sq:LibraryGroup">
+                  <StackPanel Margin="0,0,0,6">
+                    <TextBlock Text="{Binding Title}" Foreground="{Binding Color}" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,3" />
+                    <ItemsControl ItemsSource="{Binding Items}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="sq:LibraryItem">
+                          <Border Classes="libitem" BorderBrush="{Binding Color}" BorderThickness="3,0,0,0" PointerPressed="OnLibraryPressed"
+                                  ToolTip.Tip="Glisser sur la frise">
+                            <TextBlock Text="{Binding Label, StringFormat='⠿  {0}'}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                          </Border>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+
+      <!-- Frise -->
+      <DockPanel Grid.Column="1" Margin="12">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+          <Button Content="▶ Jouer" MinHeight="32" Command="{Binding Simulation.PlayCommand}" ToolTip.Tip="Jouer le brouillon (au tempo du direct ou au métronome)" />
+          <Button Content="■" MinHeight="32" Command="{Binding Simulation.StopCommand}" ToolTip.Tip="Arrêter l'essai" />
+          <TextBlock Text="Grille :" Classes="label" Margin="10,0,0,0" />
+          <ComboBox ItemsSource="{x:Static sq:ShowOptions.Snaps}" SelectedItem="{Binding Snap}" Width="110" ToolTip.Tip="Les blocs s'aimantent à la mesure, au temps ou au demi-temps" />
+          <TextBlock Text="Zoom" Classes="label" Margin="10,0,0,0" />
+          <Button x:Name="ZoomOut" Content="−" MinHeight="32" Width="34" HorizontalContentAlignment="Center" />
+          <Button x:Name="ZoomIn" Content="+" MinHeight="32" Width="34" HorizontalContentAlignment="Center" />
+          <Button Content="Retirer le bloc" MinHeight="32" Foreground="#F85149" Command="{Binding DeleteBlockCommand}" IsVisible="{Binding HasSelection}" ToolTip.Tip="Retirer le bloc choisi (touche Suppr)" />
+        </StackPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding Simulation.Status}" Foreground="#D29922" Margin="0,0,0,6" TextTrimming="CharacterEllipsis" />
+        <!-- Problèmes du brouillon : erreur ⛔ en rouge (refusée au lancement), avertissement ⚠ en jaune (essai P8, ex. 16c). -->
+        <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding IssueRows}" Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="sq:IssueRow">
+              <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="12" TextWrapping="Wrap" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock DockPanel.Dock="Bottom" Text="Clic : choisir un bloc · glisser : le déplacer · bord droit : sa durée · Suppr : le retirer. Les blocs s'aimantent à la grille." FontSize="12" Foreground="#8B949E" Margin="0,8,0,0" />
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+          <v:SequenceTimeline x:Name="Timeline" Tracks="{Binding Tracks}" Blocks="{Binding Blocks}" Bars="{Binding Length}"
+                              Playhead="{Binding Simulation.PlayheadBars}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </ScrollViewer>
+      </DockPanel>
+
+      <!-- Propriétés de la séquence et du bloc choisi -->
+      <Border Grid.Column="2" BorderBrush="#30363D" BorderThickness="1,0,0,0">
+        <ScrollViewer>
+          <StackPanel Margin="10">
+            <Border Classes="section">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="title" Text="Séquence" />
+                <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+                  <TextBlock Classes="label" Text="Nom" />
+                  <TextBox Grid.Column="1" Text="{Binding Name}" />
+                  <TextBlock Grid.Row="1" Classes="label" Text="Longueur" />
+                  <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                    <NumericUpDown Value="{Binding Bars}" Minimum="0.25" Maximum="256" Increment="1" FormatString="0.##" Width="130" />
+                    <TextBlock Text="mesures (4 temps)" Classes="label" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="2" Classes="label" Text="À la fin" />
+                  <CheckBox Grid.Row="2" Grid.Column="1" Content="reprendre au début (boucle)" IsChecked="{Binding Loop}" />
+                  <TextBlock Grid.Row="3" Classes="label" Text="Démarrage" />
+                  <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Quantize}" HorizontalAlignment="Stretch"
+                            ToolTip.Tip="La séquence attend cette frontière musicale pour démarrer" />
+                  <TextBlock Grid.Row="4" Classes="label" Text="Vitesse" />
+                  <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static sq:ShowOptions.Speeds}" SelectedItem="{Binding Speed}" HorizontalAlignment="Stretch"
+                            ToolTip.Tip="½ temps : deux fois plus lente ; double : deux fois plus rapide" />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="section" BorderBrush="#E6EDF3" BorderThickness="{Binding HasSelection, Converter={x:Static v:SequencingConverters.SelectionBorder}}">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="title" Text="{Binding SelectedTitle}" TextWrapping="Wrap" />
+                <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6" IsVisible="{Binding HasSelection}">
+                  <TextBlock Classes="label" Text="Scène" IsVisible="{Binding SelectedIsScene}" />
+                  <ComboBox Grid.Column="1" ItemsSource="{Binding BlockScenes}" SelectedItem="{Binding BlockScene}" HorizontalAlignment="Stretch" IsVisible="{Binding SelectedIsScene}" />
+                  <TextBlock Grid.Row="1" Classes="label" Text="Début" />
+                  <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                    <TextBlock Text="mes." Classes="label" ToolTip.Tip="mesure" />
+                    <NumericUpDown Value="{Binding BlockStartBar}" Minimum="1" Maximum="256" Increment="1" FormatString="0" Width="105" />
+                    <TextBlock Text="temps" Classes="label" />
+                    <NumericUpDown Value="{Binding BlockStartBeat}" Minimum="1" Maximum="4.5" Increment="0.5" FormatString="0.#" Width="105" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="2" Classes="label" Text="Durée" />
+                  <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                    <NumericUpDown Value="{Binding BlockLength}" Minimum="0.125" Maximum="256" Increment="1" FormatString="0.###" Width="130" />
+                    <ComboBox ItemsSource="{x:Static sq:ShowOptions.LengthUnits}" SelectedItem="{Binding BlockUnitBars}" Width="110" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="3" Classes="label" Text="À la fin" IsVisible="{Binding SelectedIsScene}" />
+                  <CheckBox Grid.Row="3" Grid.Column="1" Content="la scène continue après le bloc" IsChecked="{Binding BlockKeep}" IsVisible="{Binding SelectedIsScene}"
+                            ToolTip.Tip="Sinon elle s'arrête à la fin du bloc, sauf si le bloc suivant de la piste prend le relais au même instant" />
+                  <TextBlock Grid.Row="4" Classes="label" Text="Couche" IsVisible="{Binding SelectedIsLayerLevel}" />
+                  <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding LayerChoices}" SelectedItem="{Binding ActionLayer}" HorizontalAlignment="Stretch" IsVisible="{Binding SelectedIsLayerLevel}" />
+                  <TextBlock Grid.Row="5" Classes="label" Text="Niveau" IsVisible="{Binding SelectedIsLevel}" />
+                  <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Spacing="4" IsVisible="{Binding SelectedIsLevel}">
+                    <NumericUpDown Value="{Binding ActionFrom}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="105" PlaceholderText="actuel"
+                                   ToolTip.Tip="Niveau au début du bloc (vide : le niveau du moment)" />
+                    <TextBlock Text="→" Classes="label" />
+                    <NumericUpDown Value="{Binding ActionTo}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="105" ToolTip.Tip="Niveau à la fin du bloc ; il reste ensuite" />
+                    <TextBlock Text="%" Classes="label" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="6" Classes="label" Text="Scène" IsVisible="{Binding SelectedIsFlash}" />
+                  <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding SceneChoices}" SelectedItem="{Binding ActionScene}" HorizontalAlignment="Stretch" IsVisible="{Binding SelectedIsFlash}" />
+                  <TextBlock Grid.Row="7" Grid.ColumnSpan="2" FontSize="11" Foreground="#8B949E" TextWrapping="Wrap" IsVisible="{Binding SelectedIsScene}"
+                             Text="Si un autre bloc suit sur la même piste, il prend le relais par le fondu croisé de la couche (pas de noir)." />
+                </Grid>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="section">
+              <StackPanel Spacing="4">
+                <TextBlock Classes="title" Text="Où la lancer" />
+                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#8B949E"
+                           Text="Bouton dans la colonne « Shows » de l'écran de jeu, ou action « jouer la séquence » d'une étape de show." />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </DockPanel>
+</v:SequencingWindow>
