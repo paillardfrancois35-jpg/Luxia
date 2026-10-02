@@ -105,7 +105,7 @@ public static class ShowTexts
         return (min, max) switch
         {
             (_, >= 3) when min > 0 => $"énergie ≥ {EnergyName(min)}",
-            (<= 0, _) when max < 3 => $"énergie ≤ {EnergyName(max)}",
+            ( <= 0, _) when max < 3 => $"énergie ≤ {EnergyName(max)}",
             _ when min == max => $"énergie {EnergyName(min)}",
             _ => $"énergie de {EnergyName(min)} à {EnergyName(max)}",
         };
