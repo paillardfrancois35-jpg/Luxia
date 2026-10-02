@@ -152,7 +152,7 @@ public sealed class StepStrip : Control
             context.FillRectangle(gradient, new Rect(bar.X, bar.Y, fadeWidth, bar.Height));
             context.FillRectangle(new SolidColorBrush(color), new Rect(bar.X + fadeWidth, bar.Y, bar.Width - fadeWidth, bar.Height));
 
-            var times = Text(string.Create(CultureInfo.CurrentCulture, $"{item.FadeSeconds:0.##} + {item.HoldSeconds:0.##} s"), 10, SecondaryBrush, false);
+            var times = Text(item.TimesText ?? string.Create(CultureInfo.CurrentCulture, $"{item.FadeSeconds:0.##} + {item.HoldSeconds:0.##} s"), 10, SecondaryBrush, false);
             using (context.PushClip(cell.Deflate(4)))
             {
                 context.DrawText(times, new Point(cell.X + 6, cell.Y + 38));

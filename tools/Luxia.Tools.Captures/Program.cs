@@ -122,6 +122,14 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Tick(10);
     game.Editor.Refresh();
     Capture("Édition - brouillon", editor);
+
+    // E2 : durées en temps ou en mesures dans les Propriétés (brouillon annulé ensuite).
+    work.Properties.StepHold.Amount = 2;
+    work.Properties.StepHold.Unit = Luxia.UI.Modules.Scenes.DurationField.Units[1];
+    work.Flush();
+    Tick(10);
+    game.Editor.Refresh();
+    Capture("Édition - durées en temps", editor);
     game.Editor.Cancel();
     game.Editor.Open(SceneNamed("Lyres sur 3 positions").Id);
     editor.Present(null);

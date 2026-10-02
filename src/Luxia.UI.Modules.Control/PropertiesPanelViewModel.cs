@@ -87,12 +87,6 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private decimal _ownBpm = 120;
 
     [ObservableProperty]
-    private decimal? _fadeInSeconds;
-
-    [ObservableProperty]
-    private decimal? _fadeOutSeconds;
-
-    [ObservableProperty]
     private string? _notes;
 
     [ObservableProperty]
@@ -108,12 +102,6 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     private string? _stepName;
 
     [ObservableProperty]
-    private decimal _stepFadeSeconds;
-
-    [ObservableProperty]
-    private decimal _stepHoldSeconds = 1;
-
-    [ObservableProperty]
     private bool _stepHueFade;
 
     [ObservableProperty]
@@ -121,12 +109,6 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     [ObservableProperty]
     private Choice<string> _wizard = Wizards[0];
-
-    [ObservableProperty]
-    private decimal _wizardHoldSeconds = 1;
-
-    [ObservableProperty]
-    private decimal _wizardFadeSeconds;
 
     [ObservableProperty]
     private string? _wizardMessage;
@@ -144,6 +126,12 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(session);
         _runtime = runtime;
         _session = session;
+        WizardHold.Load(Duration.FromSeconds(1));
+        WizardFade.Load(Duration.Zero);
+        FadeIn.Edited += (_, _) => Update(s => s with { FadeIn = FadeIn.Value }, "Fondu d'entrée");
+        FadeOut.Edited += (_, _) => Update(s => s with { FadeOut = FadeOut.Value }, "Fondu de sortie");
+        StepFade.Edited += (_, _) => UpdateStep(s => s with { Fade = StepFade.Value ?? Duration.Zero }, "Fondu de l'étape");
+        StepHold.Edited += (_, _) => UpdateStep(s => s with { Hold = StepHold.Value ?? Duration.Zero }, "Maintien de l'étape");
         session.Changed += (_, _) => Load();
         Load();
     }
@@ -156,6 +144,24 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
     /// écrire dedans (question de l'utilisateur, essai 1.005.198).
     /// </summary>
     public bool ShowsModeHint => _session.Mode == EditMode.Live && !_session.IsLocked;
+
+    /// <summary>Fondu d'entrée de la scène, en secondes, temps ou mesures (E2) ; vide = celui de la première étape.</summary>
+    public DurationField FadeIn { get; } = new();
+
+    /// <summary>Fondu de sortie de la scène (E2) ; vide = arrêt immédiat.</summary>
+    public DurationField FadeOut { get; } = new();
+
+    /// <summary>Fondu de l'étape choisie, en secondes, temps ou mesures (E2, GEN-023).</summary>
+    public DurationField StepFade { get; } = new();
+
+    /// <summary>Maintien de l'étape choisie (E2, GEN-023).</summary>
+    public DurationField StepHold { get; } = new();
+
+    /// <summary>Maintien des étapes générées par l'assistant (E2).</summary>
+    public DurationField WizardHold { get; } = new();
+
+    /// <summary>Fondu des étapes générées par l'assistant (E2).</summary>
+    public DurationField WizardFade { get; } = new();
 
     /// <summary>Couches proposées.</summary>
     public ObservableCollection<Choice<Guid>> Layers { get; } = [];
@@ -275,8 +281,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         }
 
         var palettes = WizardPalettes.Where(p => p.IsChecked).Select(p => p.PaletteId).ToList();
-        var hold = Duration.FromSeconds((double)Math.Max(0, WizardHoldSeconds));
-        var fade = Duration.FromSeconds((double)Math.Max(0, WizardFadeSeconds));
+        var hold = WizardHold.Value ?? Duration.Zero;
+        var fade = WizardFade.Value ?? Duration.Zero;
         IReadOnlyList<SceneStep> steps = Wizard.Value switch
         {
             "alternate" when palettes.Count >= 2 => SceneWizards.Alternate(members, palettes[0], palettes[1], hold, fade),
@@ -473,17 +479,9 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
         }
     }
 
-    partial void OnFadeInSecondsChanged(decimal? value) => Update(s => s with { FadeIn = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu d'entrée");
-
-    partial void OnFadeOutSecondsChanged(decimal? value) => Update(s => s with { FadeOut = value is { } v ? Duration.FromSeconds((double)Math.Max(0, v)) : null }, "Fondu de sortie");
-
     partial void OnNotesChanged(string? value) => Update(s => s with { Notes = string.IsNullOrWhiteSpace(value) ? null : value }, "Notes");
 
     partial void OnStepNameChanged(string? value) => UpdateStep(s => s with { Name = string.IsNullOrWhiteSpace(value) ? null : value.Trim() }, "Nom de l'étape");
-
-    partial void OnStepFadeSecondsChanged(decimal value) => UpdateStep(s => s with { Fade = Duration.FromSeconds((double)Math.Max(0, value)) }, "Fondu de l'étape");
-
-    partial void OnStepHoldSecondsChanged(decimal value) => UpdateStep(s => s with { Hold = Duration.FromSeconds((double)Math.Max(0, value)) }, "Maintien de l'étape");
 
     partial void OnStepAutoAdvanceChanged(bool value) => UpdateStep(s => s with { AutoAdvance = value }, value ? "Étape brève au rythme" : "Étape au rythme jusqu'à l'événement");
 
@@ -575,25 +573,28 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             EnergySpeed = scene.EnergySpeed;
             HasOwnClock = scene.OwnBpm is not null;
             OwnBpm = scene.OwnBpm is { } own ? (decimal)own : 120;
-            FadeInSeconds = scene.FadeIn is { } fadeIn ? (decimal)fadeIn.ToSeconds(120) : null;
-            FadeOutSeconds = scene.FadeOut is { } fadeOut ? (decimal)fadeOut.ToSeconds(120) : null;
+            FadeIn.Load(scene.FadeIn);
+            FadeOut.Load(scene.FadeOut);
             Notes = scene.Notes;
             RefreshRhythmView();
             var layerName = _runtime.Project.Layers.Layers.FirstOrDefault(l => l.Id == scene.LayerId)?.Name ?? "?";
             Summary = string.Create(CultureInfo.CurrentCulture, $"Couche {layerName} · {scene.Steps.Count} étape(s){(scene.VisibleInLive ? string.Empty : " · masquée du Live")}");
 
+            // Largeurs de la bande au tempo courant ; durées écrites dans leur unité (E2).
+            var bpm = _runtime.Engine.Snapshot.Tempo.Bpm is > 0 and var live ? live : 120;
             Steps = [.. scene.Steps.Select((s, i) => new StepStripItem(
                 string.Create(CultureInfo.CurrentCulture, $"{i + 1}{(s.Name is { } n ? " · " + n : string.Empty)}"),
-                s.Fade.ToSeconds(120),
-                s.Hold.ToSeconds(120),
+                s.Fade.ToSeconds(bpm),
+                s.Hold.ToSeconds(bpm),
                 StepColor(s),
-                false))];
+                false,
+                DurationField.Describe(s.Fade, s.Hold)))];
             SelectedStep = _session.EditStep;
             var step = scene.Steps[Math.Clamp(_session.EditStep, 0, scene.Steps.Count - 1)];
             StepTitle = string.Create(CultureInfo.CurrentCulture, $"Étape {_session.EditStep + 1}{(step.Name is { } name ? " · " + name : string.Empty)}");
             StepName = step.Name;
-            StepFadeSeconds = (decimal)step.Fade.ToSeconds(120);
-            StepHoldSeconds = (decimal)step.Hold.ToSeconds(120);
+            StepFade.Load(step.Fade);
+            StepHold.Load(step.Hold);
             StepHueFade = step.HueFade;
             StepAutoAdvance = step.AutoAdvance;
             FillStepValues(step);

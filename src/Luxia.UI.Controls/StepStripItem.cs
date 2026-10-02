@@ -6,4 +6,5 @@ namespace Luxia.UI.Controls;
 /// <param name="HoldSeconds">Maintien, en secondes.</param>
 /// <param name="Color">Couleur « #RRGGBB » représentative (la couleur réglée dans l'étape), ou nulle.</param>
 /// <param name="IsPlaying">L'étape joue en ce moment.</param>
-public sealed record StepStripItem(string Label, double FadeSeconds, double HoldSeconds, string? Color, bool IsPlaying);
+/// <param name="TimesText">Durées écrites dans leur unité (« 0 + 2 temps ») ; nul : les secondes.</param>
+public sealed record StepStripItem(string Label, double FadeSeconds, double HoldSeconds, string? Color, bool IsPlaying, string? TimesText = null);
