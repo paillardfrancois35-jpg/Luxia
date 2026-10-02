@@ -49,6 +49,7 @@ internal static class Commands
                   Code de retour 1 s'il y a au moins une erreur.
 
               jouer dossier --scene "nom" [--duree 10] [--pas 0.25] [--enregistrer fichier.dmxrec]
+              jouer dossier --show "nom" | --sequence "nom" [--tempo 120] [--duree 30] : un show ou une séquence au métronome (P8)
                   GEN-132 : joue une scène en temps virtuel et résume qui s'allume, en quelle couleur, où, et quand.
 
               scenario dossier fichier.txt [--duree 60] [--pas 0.25] [--enregistrer fichier.dmxrec]

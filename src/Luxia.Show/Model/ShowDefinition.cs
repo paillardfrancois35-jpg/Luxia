@@ -46,7 +46,7 @@ public sealed record ShowDefinition
     public bool Secondary { get; init; }
 
     /// <summary>Ce qui se passe quand toutes les étapes actives sont des fins (R6).</summary>
-    public ShowEnd AtEnd { get; init; } = ShowEnd.Stop;
+    public ShowEnd AtEnd { get; init; } = ShowEnd.Hold;
 
     /// <summary>Variables du show (compteurs, SHOW-029).</summary>
     public IReadOnlyList<ShowVariable> Variables { get; init; } = [];
@@ -77,10 +77,13 @@ public enum ShowRole
     Opening,
 }
 
-/// <summary>Fin d'un show (R6).</summary>
+/// <summary>Fin d'un show (R6) : toutes ses étapes actives n'ont plus de transition sortante.</summary>
 public enum ShowEnd
 {
-    /// <summary>Le show s'arrête.</summary>
+    /// <summary>Le show tient ses dernières étapes (leurs scènes continuent) jusqu'à ce qu'on l'arrête (D39).</summary>
+    Hold,
+
+    /// <summary>Le show s'arrête, et ses scènes avec.</summary>
     Stop,
 
     /// <summary>Le show reprend à ses étapes initiales.</summary>

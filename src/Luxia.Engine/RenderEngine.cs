@@ -364,6 +364,12 @@ public sealed partial class RenderEngine : ICommandSink
                 return StopScene(stop);
 
             case StopLayerCommand stopLayer:
+                // « Tout arrêter » (écran, MIDI) arrête aussi shows et séquences : sinon un show relancerait ses scènes (D37).
+                if (stopLayer.LayerId is null && stopLayer.Origin != CommandOrigin.Show && Volatile.Read(ref _sequencer) is not null)
+                {
+                    ApplySequencer(new StopShowCommand(stopLayer.Origin));
+                }
+
                 return StopLayer(stopLayer);
 
             case SetLayerMasterCommand layerMaster:

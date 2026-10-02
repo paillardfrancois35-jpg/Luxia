@@ -56,7 +56,7 @@
           "weight": { "type": "number", "exclusiveMinimum": 0 },
           "maxMinutes": { "type": ["number", "null"], "exclusiveMinimum": 0 },
           "secondary": { "type": "boolean", "description": "joue en parallèle du show principal (SHOW-031)" },
-          "atEnd": { "enum": ["stop", "restart"] },
+          "atEnd": { "enum": ["hold", "stop", "restart"], "description": "fin du show : tenir les dernières étapes (défaut), s'arrêter, reprendre au début" },
           "variables": {
             "type": "array",
             "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "initial": { "type": "number" } } }

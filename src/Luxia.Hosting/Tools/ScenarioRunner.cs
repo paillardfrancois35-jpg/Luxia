@@ -29,13 +29,17 @@ public static class ScenarioRunner
     /// <param name="recording">Fichier <c>.dmxrec</c> de l'univers 1 à écrire, ou <c>null</c>.</param>
     /// <param name="sampleEvery">Pas du résumé (0,25 s par défaut).</param>
     /// <param name="rateHz">Cadence du moteur.</param>
+    /// <param name="sequences">Séquences du projet (P8) ; le séquenceur est branché s'il y a des séquences ou des shows.</param>
+    /// <param name="shows">Shows du projet (P8).</param>
     public static ScenarioReport Run(
         ProjectContent content,
         Scenario scenario,
         TimeSpan duration,
         string? recording = null,
         TimeSpan? sampleEvery = null,
-        double rateHz = DmxConstants.DefaultTickRateHz)
+        double rateHz = DmxConstants.DefaultTickRateHz,
+        Show.Model.SequenceSet? sequences = null,
+        Show.Model.ShowSet? shows = null)
     {
         ArgumentNullException.ThrowIfNull(content);
         ArgumentNullException.ThrowIfNull(scenario);
@@ -46,6 +50,13 @@ public static class ScenarioRunner
         var bus = new InlineBus();
         var engine = new RenderEngine(sink, clock, bus: bus, seed: 1);
         engine.LoadShow(compiled.Model);
+        if (sequences is not null || shows is not null)
+        {
+            // GEN-132 : le même outil joue une séquence ou un show, en temps virtuel, avec les événements musicaux du scénario.
+            var sequencer = new Show.Runtime.Sequencer(1);
+            sequencer.Load(sequences ?? new Show.Model.SequenceSet(), shows ?? new Show.Model.ShowSet());
+            engine.SetSequencer(sequencer);
+        }
 
         using var writer = recording is null ? null : new RecordingWriter(File.Create(recording), 1, rateHz, DateTime.UtcNow);
         var end = scenario.End is { } stop && stop < duration ? stop : duration;
@@ -68,10 +79,21 @@ public static class ScenarioRunner
 
             engine.Tick();
             frames++;
-            foreach (var limit in bus.Drain())
+            foreach (var evt in bus.Drain())
             {
-                // MOT-083 : chaque intervention d'un limiteur apparaît dans le résumé (une fois par épisode).
-                lines.Add($"{Time(limit.At)}  ⚠ sûreté : {limit.Label} — {limit.Detail}");
+                switch (evt)
+                {
+                    case SafetyLimitReached limit:
+                        // MOT-083 : chaque intervention d'un limiteur apparaît dans le résumé (une fois par épisode).
+                        lines.Add($"{Time(limit.At)}  ⚠ sûreté : {limit.Label} — {limit.Detail}");
+                        break;
+                    case Messaging.Events.ShowStepActivated step:
+                        lines.Add($"{Time(step.At)}  ◆ show « {step.ShowName} » : étape {step.StepId}{(string.IsNullOrWhiteSpace(step.StepName) ? string.Empty : $" « {step.StepName} »")} ({step.Reason})");
+                        break;
+                    case Messaging.Events.ShowStateChanged { Running: false } stopped:
+                        lines.Add($"{Time(stopped.At)}  ◆ show « {stopped.ShowName} » arrêté");
+                        break;
+                }
             }
 
             writer?.Append(sink.Frame, now);
@@ -146,21 +168,21 @@ public static class ScenarioRunner
     /// <summary>Bus synchrone : le déroulé est en temps virtuel, sans fil d'abonnés.</summary>
     private sealed class InlineBus : IEventBus
     {
-        private readonly List<SafetyLimitReached> _limits = [];
+        private readonly List<object> _limits = [];
 
         public void Publish<TEvent>(TEvent evt)
             where TEvent : class
         {
-            if (evt is SafetyLimitReached limit)
+            if (evt is SafetyLimitReached or Messaging.Events.ShowStepActivated or Messaging.Events.ShowStateChanged)
             {
-                _limits.Add(limit);
+                _limits.Add(evt);
             }
         }
 
         public IDisposable Subscribe<TEvent>(Action<TEvent> handler)
             where TEvent : class => throw new NotSupportedException();
 
-        public List<SafetyLimitReached> Drain()
+        public List<object> Drain()
         {
             var result = _limits.ToList();
             _limits.Clear();

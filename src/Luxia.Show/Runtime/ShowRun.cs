@@ -208,7 +208,8 @@ internal sealed class ShowRun
             steps,
             transitions,
             [.. _path],
-            [.. _variables.Select(v => (v.Key, v.Value))]);
+            [.. _variables.Select(v => (v.Key, v.Value))],
+            Ended);
     }
 
     // ------------------------------------------------------------------ évolution
@@ -394,8 +395,13 @@ internal sealed class ShowRun
             return;
         }
 
-        if (_depth > 0)
+        if (_depth > 0 || Definition.AtEnd == ShowEnd.Hold)
         {
+            if (!Ended)
+            {
+                _sequencer.Changed();
+            }
+
             Ended = true;
             return;
         }

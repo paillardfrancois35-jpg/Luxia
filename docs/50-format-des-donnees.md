@@ -673,7 +673,7 @@ fichier, aucun show. Schéma : [`schemas/shows.schema.json`](schemas/shows.schem
 |---|---|
 | `role`, `styles`, `energyMin` / `energyMax` (niveaux 0 Calme à 3 Explosif), `weight`, `maxMinutes` | Pour le Directeur (SHOW-030, doc 22) ; sans effet sur le jeu |
 | `secondary` | Show secondaire (SHOW-031) : joue en parallèle du show principal ; lancer un show principal arrête le précédent (SHOW-025) |
-| `atEnd` | Quand toutes les étapes actives sont des fins (sans transition sortante, R6) : `stop` ou `restart` (reprend aux étapes initiales) |
+| `atEnd` | Quand toutes les étapes actives sont des fins (sans transition sortante, R6) : `hold` (défaut : le show tient ses dernières étapes, leurs scènes continuent, jusqu'à ce qu'on l'arrête), `stop` (il s'arrête, ses scènes avec) ou `restart` (il reprend aux étapes initiales) |
 | `variables` | Compteurs du show (SHOW-029), remis à `initial` au lancement |
 | `steps[].id` | Identifiant **court et lisible**, unique dans le show (« 0 », « 2a ») ; les transitions s'y réfèrent |
 | `steps[].macroShowId` | Macro-étape : ce show est joué tant que l'étape est active ; ses transitions sortantes attendent qu'il soit arrivé à sa fin |

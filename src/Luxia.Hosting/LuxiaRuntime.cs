@@ -84,6 +84,14 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Project.OpenLast();
         Show = new ShowService(Project, [Engine, Preview], loggers.CreateLogger<ShowService>());
 
+        // D37 : séquenceur de shows et de séquences, un par moteur (l'aperçu sert aux essais en aveugle de la fenêtre d'édition).
+        Sequencer = new Luxia.Show.Runtime.Sequencer(Engine.Seed);
+        PreviewSequencer = new Luxia.Show.Runtime.Sequencer(Engine.Seed);
+        Engine.SetSequencer(Sequencer);
+        Preview.SetSequencer(PreviewSequencer);
+        Show.Compiled += (_, _) => LoadSequencing();
+        LoadSequencing();
+
         // Contrôleurs MIDI : mêmes colonnes et mêmes boutons que l'écran Live, relus à chaque recompilation.
         Show.Compiled += (_, _) => _midiLayout = BuildMidiLayout();
         _midiLayout = BuildMidiLayout();
@@ -109,6 +117,12 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Library = new Fixtures.FixtureLibrary(paths.Library, loggers.CreateLogger<Fixtures.FixtureLibrary>());
         Library.Load();
     }
+
+    /// <summary>Séquenceur de shows et de séquences du moteur (D37) : son état sert à la supervision (SHOW-026).</summary>
+    public Luxia.Show.Runtime.Sequencer Sequencer { get; }
+
+    /// <summary>Séquenceur du moteur d'aperçu (essais en aveugle d'un show ou d'une séquence).</summary>
+    public Luxia.Show.Runtime.Sequencer PreviewSequencer { get; }
 
     /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
     public Audio.AudioListener? Audio { get; }
@@ -719,6 +733,13 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             Dimmers = [.. Patch.Rules.GroupRules.Layout(project.Groups).Where(n => n.Group.HasDimmer).Select(n => new MidiDimmerSlot(n.Group.Id, n.Group.Name))],
             DimmerController = project.Midi.DimmerController,
         };
+    }
+
+    // Après chaque recompilation (ouverture, modification) : séquences et shows du projet aux deux séquenceurs.
+    private void LoadSequencing()
+    {
+        Sequencer.Load(Project.Sequences, Project.Shows);
+        PreviewSequencer.Load(Project.Sequences, Project.Shows);
     }
 
     private void TickEngines()

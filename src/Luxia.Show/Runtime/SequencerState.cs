@@ -26,6 +26,7 @@ public sealed record SequencerState(IReadOnlyList<ShowStatus> Shows, IReadOnlyLi
 /// <param name="Transitions">Transitions validées (étapes amont actives), en attente de leur condition ou armées.</param>
 /// <param name="Path">Dernières étapes activées, de la plus ancienne à la plus récente.</param>
 /// <param name="Variables">Variables du show et leur valeur.</param>
+/// <param name="Ended">Arrivé à sa fin : il tient ses dernières étapes (R6, D39).</param>
 public sealed record ShowStatus(
     Guid ShowId,
     string Name,
@@ -34,7 +35,8 @@ public sealed record ShowStatus(
     IReadOnlyList<StepStatus> ActiveSteps,
     IReadOnlyList<TransitionStatus> Transitions,
     IReadOnlyList<string> Path,
-    IReadOnlyList<(string Name, double Value)> Variables);
+    IReadOnlyList<(string Name, double Value)> Variables,
+    bool Ended = false);
 
 /// <summary>Une étape active.</summary>
 /// <param name="Id">Identifiant (« 2a »).</param>
