@@ -79,6 +79,11 @@
             <StackPanel Spacing="2">
               <TextBlock Text="▶  Shows" FontWeight="SemiBold" FontSize="14" HorizontalAlignment="Center" />
               <TextBlock Text="un show à la fois : le nouveau remplace l'ancien" FontSize="10" Foreground="#8B949E" TextWrapping="Wrap" TextAlignment="Center" />
+              <!-- TEMPORAIRE (essai P8, exemple 13) : trace de mise au point des shows, à retirer après l'essai. -->
+              <ToggleButton IsChecked="{Binding IsTracing, Mode=OneWay}" Command="{Binding ToggleTraceCommand}" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" FontSize="11" Margin="0,4,0,0"
+                            Content="{Binding TraceLabel}"
+                            ToolTip.Tip="Temporaire (essai) : enregistre tempo, mesure, énergie, détections, étapes et transitions du show dans Documents, LuXia, Journaux (trace-show-….csv)" />
             </StackPanel>
           </Border>
           <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">

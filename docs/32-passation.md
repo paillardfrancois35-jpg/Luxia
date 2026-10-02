@@ -280,6 +280,12 @@
   lot 7 (retrait des écrans Live et Scènes : déplacer d'abord `SceneOptions`, `DurationField`, `Choice` dans le module Contrôle),
   revue globale de fin de phase (`python tools/audit-documentation.py`), validation, fusion, `v1.010`. Statuts laissés « Partiel » :
   EVT-020 / 021 (décision D38, à confirmer à la validation), SHOW-001 (mesure à 3 temps reportée).
+  **Pendant l'essai** : correctif 2a/2b (*Groove* refaite, bloc qui couvre tout le passage relayé à lui-même au rebouclage, `75d4401`).
+  **Trace TEMPORAIRE (exemple 13, demande de l'utilisateur)** : bouton « ● Démarrer / ■ Arrêter la trace » en tête de la colonne
+  Shows, fichier `Documents\LuXia\Journaux\trace-show-AAAAMMJJ-HHmmss.csv` (`src/Luxia.Hosting/ShowTrace.cs`,
+  `LuxiaRuntime.Trace`, `ShowsColumnViewModel.ToggleTrace`, test `ShowTrace_WritesStates_StepsWithReasonAndQuantize`).
+  **À retirer après l'essai** (au plus tard au lot 7) : chercher « TEMPORAIRE (essai P8, exemple 13) ». Anomalie ouverte : strobe
+  de l'étape « Éclat » perçu ≈ 1 s au lieu de 4 s (exemple 8).
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.

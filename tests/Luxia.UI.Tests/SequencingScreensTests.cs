@@ -76,6 +76,34 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         _game.Band.IsVisible.ShouldBeFalse();
     }
 
+    // TEMPORAIRE (essai P8, exemple 13) : à retirer avec la trace.
+    [Fact]
+    public async Task ShowTrace_WritesStates_StepsWithReasonAndQuantize()
+    {
+        var shows = _game.Columns.Shows;
+        shows.ToggleTraceCommand.Execute(null);
+        shows.IsTracing.ShouldBeTrue();
+        shows.TraceLabel.ShouldBe("■ Arrêter la trace");
+        var file = _host.Runtime.Trace.FilePath!;
+        Path.GetDirectoryName(file).ShouldBe(_host.Paths.Logs);
+
+        shows.Press(ShowItem("Couplet / Refrain / Drop"));
+        Run(4);
+        _game.Band.ForceCommand.Execute(_game.Band.Transitions[0]);
+        Thread.Sleep(300);
+        Run(84);
+        await _host.Runtime.Bus.FlushAsync();
+        Thread.Sleep(700);
+        shows.ToggleTraceCommand.Execute(null);
+        shows.IsTracing.ShouldBeFalse();
+
+        var lines = await File.ReadAllLinesAsync(file);
+        lines[0].ShouldStartWith("heure;temps moteur (s);type;BPM");
+        lines.ShouldContain(l => l.Contains(";état;", StringComparison.Ordinal) && l.Contains("Couplet / Refrain / Drop", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains(";étape;", StringComparison.Ordinal) && l.Contains("→ 1 Couplet ; motif : forcée ; quantification : à la prochaine mesure", StringComparison.Ordinal));
+        lines[^1].ShouldContain("trace arrêtée");
+    }
+
     [Fact]
     [Trait("Exigence", "CMD-051")]
     [Trait("Exigence", "LIVE-023")]

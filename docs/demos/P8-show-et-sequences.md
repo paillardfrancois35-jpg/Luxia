@@ -68,7 +68,7 @@ temps** que la couche Effets (têtes décalées du multi-têtes, vague des PAR),
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
 | 12 | Couplet / Refrain / Drop, sans musique | ✎ sur *Couplet / Refrain / Drop* ; cocher **👁 Aveugle** et **métronome** ; **▶ Jouer le show** ; boutons **Groove**, puis **Drop**, **Break**, **Montée**, **Drop**… | La sortie sur scène **ne change pas** (Simulateur seulement) ; la carte et le **diagramme** de l'étape active se colorent ; « Étape active / Ensuite » suit ; après un Drop, le refrain arrive **à la mesure suivante** ; au 3e refrain : Final. **Annuler** ferme sans rien changer |
-| 13 | Couplet / Refrain / Drop, avec musique | Lancer un morceau électro sur le PC, **🎧 Audio** allumé ; lancer le show | Couplet quand l'énergie atteint « Groove », refrain aux drops réels, retour aux breaks (selon la détection de P7) |
+| 13 | Couplet / Refrain / Drop, avec musique | Lancer un morceau électro sur le PC, **🎧 Audio** allumé ; en tête de la colonne Shows, **● Démarrer la trace** (bouton temporaire) ; lancer le show ; à la fin, **■ Arrêter la trace** : le message donne le fichier `Documents\LuXia\Journaux\trace-show-….csv`, à transmettre à la discussion dev (tempo, mesure, énergie, détections, étapes, transitions avec motif et quantification) | Couplet quand l'énergie atteint « Groove », refrain aux drops réels, retour aux breaks (selon la détection de P7) |
 
 ## 5. Créer soi-même
 

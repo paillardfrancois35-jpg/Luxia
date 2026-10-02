@@ -29,6 +29,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     private readonly ISerialPortProvider _serialPorts;
     private readonly Lock _lock = new();
     private ArduinoOutputDriver? _arduino;
+    private ShowTrace? _trace;
     private volatile RecorderOutputDriver? _recorder;
     private Dictionary<Guid, string> _names = [];
     private readonly ILogger _uiLogger;
@@ -131,6 +132,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
     public Audio.AudioListener? Audio { get; }
+
+    /// <summary>TEMPORAIRE (essai P8, exemple 13) : trace de mise au point des shows, à retirer après l'essai.</summary>
+    public ShowTrace Trace => _trace ??= new ShowTrace(this);
 
     /// <summary>
     /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
@@ -531,6 +535,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
         WriteResume(clean: true);
         Midi?.Dispose();
+        _trace?.Dispose();
         Audio?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();

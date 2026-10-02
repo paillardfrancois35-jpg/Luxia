@@ -102,6 +102,31 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
             : new LaunchSequenceCommand(CommandOrigin.User, item.Id, StopIfPlaying: true));
     }
 
+    /// <summary>TEMPORAIRE (essai P8, exemple 13) : la trace de mise au point des shows enregistre.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TraceLabel))]
+    public partial bool IsTracing { get; set; }
+
+    /// <summary>TEMPORAIRE (essai P8, exemple 13) : texte du bouton de la trace.</summary>
+    public string TraceLabel => IsTracing ? "■ Arrêter la trace" : "● Démarrer la trace";
+
+    /// <summary>TEMPORAIRE (essai P8, exemple 13) : démarre ou arrête la trace (<see cref="ShowTrace"/>), à retirer après l'essai.</summary>
+    [RelayCommand]
+    private void ToggleTrace()
+    {
+        if (_runtime.Trace.IsRunning)
+        {
+            _runtime.Trace.Stop();
+            MessageRaised?.Invoke(this, $"Trace arrêtée : {_runtime.Trace.FilePath}");
+        }
+        else
+        {
+            MessageRaised?.Invoke(this, $"Trace en cours : {_runtime.Trace.Start()}");
+        }
+
+        IsTracing = _runtime.Trace.IsRunning;
+    }
+
     /// <summary>Bande ✎ : ouvrir la fenêtre d'édition.</summary>
     [RelayCommand]
     public void Edit(ShowItemViewModel? item)
