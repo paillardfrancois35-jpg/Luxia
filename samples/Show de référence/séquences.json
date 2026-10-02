@@ -6,7 +6,7 @@
       "name": "Montée 16 mesures",
       "color": "#F0883E",
       "category": "Phase P8",
-      "notes": "Doc 20 §2.1 : 8 mesures de couleurs lentes, puis le chenillard et le cercle, 4 mesures de strobe ; le niveau de la couche Couleurs monte de 30 à 100 % sur les 8 premières mesures (la couche Intensité n'y joue rien : « Plein feu » masquerait la montée), fumée sur la dernière.",
+      "notes": "Doc 20 §2.1 : 8 mesures de couleurs lentes, puis le chenillard et le cercle, 4 mesures de strobe ; le niveau de la couche Couleurs monte de 30 à 100 % sur les 8 premières mesures (la couche Intensité n'y joue rien : « Plein feu » masquerait la montée), fumée sur la dernière. Les barres entrent à la mesure 9 (chenillard des segments) puis passent à l'arc-en-ciel à la mesure 13.",
       "bars": 16,
       "end": "stop",
       "quantize": "bar",
@@ -80,6 +80,21 @@
               "action": {
                 "kind": "smoke"
               }
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000007",
+          "blocks": [
+            {
+              "start": 8,
+              "length": 4,
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
+            },
+            {
+              "start": 12,
+              "length": 4,
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
             }
           ]
         }
@@ -201,7 +216,7 @@
       "name": "Explosion drop 4 mesures",
       "color": "#F85149",
       "category": "Phase P8",
-      "notes": "Flash blanc d'un temps, strobe pendant 2 mesures puis vague, chenillard et cercle des lyres, fumée sur la première mesure.",
+      "notes": "Flash blanc d'un temps, strobe des PAR pendant 2 mesures puis têtes décalées de l'effet multi-têtes, chenillard des segments des barres tout du long, chenillard des PAR et cercle des lyres, fumée sur la première mesure.",
       "bars": 4,
       "end": "stop",
       "quantize": "bar",
@@ -248,7 +263,7 @@
             {
               "start": 2,
               "length": 2,
-              "sceneId": "6e6f0006-0000-4000-8000-000000000001"
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
             }
           ]
         },
@@ -268,6 +283,16 @@
               "action": {
                 "kind": "smoke"
               }
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000007",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
             }
           ]
         }
@@ -316,6 +341,86 @@
               "start": 3,
               "length": 1,
               "sceneId": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "8a000008-0000-4000-8000-000000000006",
+      "name": "Barres et multi-têtes 8 mesures",
+      "color": "#A371F7",
+      "category": "Phase P8",
+      "notes": "Les barres et l'effet multi-têtes en vedette, PAR en bleu fixe et lyres au plafond en fond : têtes décalées (couche Effets) pendant 8 mesures ; en même temps, les barres (couche Libre) : chenillard des segments 4 mesures, puis arc-en-ciel 4 mesures ; un flash blanc d'un temps sur le dernier temps. En boucle.",
+      "bars": 8,
+      "end": "loop",
+      "quantize": "bar",
+      "speed": 1,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000001",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000003",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000005",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 8,
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000007",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
+            },
+            {
+              "start": 4,
+              "length": 4,
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "blocks": [
+            {
+              "start": 7.75,
+              "length": 0.25,
+              "action": {
+                "kind": "flash",
+                "sceneId": "47bbdf76-6852-5165-a945-69afcf0b4ca7"
+              }
             }
           ]
         }

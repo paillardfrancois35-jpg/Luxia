@@ -80,7 +80,11 @@
             },
             {
               "kind": "play",
-              "sceneId": "6e6f0006-0000-4000-8000-000000000003"
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
             },
             {
               "kind": "flash",
@@ -228,7 +232,7 @@
       "name": "Tirage au sort (variantes)",
       "color": "#E3B341",
       "category": "Phase P8",
-      "notes": "Doc 20 §3.4, branche 2a / 2b : toutes les 8 mesures, variante A (60 %) ou B (40 %), jamais deux fois la même de suite ; chaque variante dure 8 mesures puis revient à la base.",
+      "notes": "Doc 20 §3.4, branche 2a / 2b : toutes les 8 mesures, variante A (60 % : chenillard des PAR, têtes décalées du multi-têtes, segments des barres, huit des lyres) ou B (40 % : tout en bleu, arc-en-ciel des barres, cercle des lyres), jamais deux fois la même de suite ; chaque variante dure 8 mesures puis revient à la base.",
       "role": "main",
       "styles": [],
       "energyMin": 1,
@@ -259,7 +263,7 @@
         },
         {
           "id": "2a",
-          "name": "Variante A",
+          "name": "Variante A : multi-têtes et segments",
           "actions": [
             {
               "kind": "play",
@@ -271,13 +275,21 @@
             },
             {
               "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
+            },
+            {
+              "kind": "play",
               "sceneId": "6e6f0006-0000-4000-8000-000000000009"
             }
           ]
         },
         {
           "id": "2b",
-          "name": "Variante B",
+          "name": "Variante B : arc-en-ciel des barres",
           "actions": [
             {
               "kind": "play",
@@ -289,11 +301,11 @@
             },
             {
               "kind": "play",
-              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
             },
             {
               "kind": "play",
-              "sceneId": "6e6f0006-0000-4000-8000-000000000003"
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
             }
           ]
         }
@@ -495,7 +507,7 @@
       "name": "Visite guidée (sans musique)",
       "color": "#3FB950",
       "category": "Phase P8",
-      "notes": "Démonstration qui avance toute seule, au tempo de l'horloge, sans musique ni simulation : chaque étape dure un nombre de mesures ou attend la fin de sa séquence. Ouverture 4 mesures, Groove 8 mesures, Break calme jusqu'à sa fin, Explosion jusqu'à sa fin, Final 4 mesures, puis reprise au début (≈ 1 min 20 s par tour à 120 BPM).",
+      "notes": "Démonstration qui avance toute seule, au tempo de l'horloge, sans musique ni simulation : chaque étape dure un nombre de mesures ou attend la fin de sa séquence. Ouverture 4 mesures, Groove 8 mesures (PAR et lyres), Barres et multi-têtes 8 mesures, Break calme jusqu'à sa fin, Explosion jusqu'à sa fin, Final 4 mesures, puis retour à l'ouverture (≈ 1 min 30 s par tour à 120 BPM).",
       "role": "waiting",
       "styles": [],
       "energyMin": 0,
@@ -529,6 +541,16 @@
             {
               "kind": "playSequence",
               "sequenceId": "8a000008-0000-4000-8000-000000000002"
+            }
+          ]
+        },
+        {
+          "id": "1b",
+          "name": "Barres et multi-têtes",
+          "actions": [
+            {
+              "kind": "playSequence",
+              "sequenceId": "8a000008-0000-4000-8000-000000000006"
             }
           ]
         },
@@ -593,6 +615,22 @@
             "1"
           ],
           "to": [
+            "1b"
+          ],
+          "condition": {
+            "kind": "after",
+            "duration": {
+              "value": 8,
+              "unit": "bars"
+            }
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1b"
+          ],
+          "to": [
             "2"
           ],
           "condition": {
@@ -653,7 +691,7 @@
       "name": "Bloc refrain (macro-étape)",
       "color": "#BC4CE0",
       "category": "Phase P8",
-      "notes": "Sous-show réutilisable, joué par la macro-étape de « Branches parallèles et macro-étape » : 4 mesures d'arc-en-ciel, puis 2 mesures de flash et strobe, puis il se termine (ce qui libère la macro-étape). Lancé seul, il joue une fois et tient sa dernière étape.",
+      "notes": "Sous-show réutilisable, joué par la macro-étape de « Branches parallèles et macro-étape » : 4 mesures de têtes décalées (multi-têtes) et d'arc-en-ciel des barres, puis 2 mesures de flash et strobe, puis il se termine (ce qui libère la macro-étape). Lancé seul, il joue une fois et tient sa dernière étape.",
       "role": "main",
       "styles": [],
       "energyMin": 1,
@@ -663,7 +701,7 @@
       "steps": [
         {
           "id": "r0",
-          "name": "Arc-en-ciel",
+          "name": "Multi-têtes et barres",
           "initial": true,
           "actions": [
             {
@@ -672,7 +710,11 @@
             },
             {
               "kind": "play",
-              "sceneId": "6e6f0006-0000-4000-8000-000000000003"
+              "sceneId": "6e6f0006-0000-4000-8000-000000000005"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
             },
             {
               "kind": "play",
@@ -745,7 +787,7 @@
       "name": "Branches parallèles et macro-étape",
       "color": "#58A6FF",
       "category": "Phase P8",
-      "notes": "Démonstration du Grafcet complet, sans musique : après l'intro, deux branches en parallèle (divergence en ET) — les couleurs changent après 8 mesures, les mouvements après 4 ; quand les deux branches sont arrivées (convergence en ET), la macro-étape joue « Bloc refrain (macro-étape) » ; à sa fin, le final, puis reprise au début.",
+      "notes": "Démonstration du Grafcet complet, sans musique : après l'intro, deux branches en parallèle (divergence en ET) — la branche « couleurs » (une couleur par mesure sur les PAR, puis les segments des barres après 8 mesures) et la branche « mouvements » (cercle, puis huit des lyres après 4 mesures) ; quand les deux sont arrivées (convergence en ET), la macro-étape joue « Bloc refrain (macro-étape) » (multi-têtes et barres) ; à sa fin, le final, puis reprise au début.",
       "role": "main",
       "styles": [],
       "energyMin": 0,
@@ -788,7 +830,7 @@
         },
         {
           "id": "c2",
-          "name": "Couleurs : chenillard",
+          "name": "Barres : segments",
           "actions": [
             {
               "kind": "play",
@@ -796,7 +838,7 @@
             },
             {
               "kind": "play",
-              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+              "sceneId": "5ce00008-0000-4000-8000-000000000002"
             }
           ]
         },

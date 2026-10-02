@@ -21,18 +21,23 @@ temporelle, à la frontière musicale choisie (temps, mesure, phrase). À 120 BP
 
 ## 1. Catalogue des exemples (catégorie « Phase P8 » du show de référence)
 
+Tout le parc y passe : PAR, gros PAR, **barres** (cellules), **effet multi-têtes**, lyres, UV, fumée. Les barres ont deux scènes
+« Phase P8 » rangées dans la couche **Libre** (*Barres : arc-en-ciel*, *Barres : chenillard des segments*) : elles jouent **en même
+temps** que la couche Effets (têtes décalées du multi-têtes, vague des PAR), ce qu'une seule couche exclusive ne permet pas.
+
 | Exemple | Type | Démontre | Durée à 120 BPM | Sans musique ? | Ce qu'on doit voir |
 |---|---|---|---|---|---|
-| *Montée 16 mesures* | séquence | Pistes par couche, relais au même instant, **rampe** de niveau, fumée, départ à la mesure | 32 s, une fois | oui | Bleu qui monte de 30 à 100 % (16 s) ; mesure 9 : chenillard + cercle des lyres ; mesure 13 : strobe + blanc chaud ; fumée sur la dernière mesure |
+| *Montée 16 mesures* | séquence | Pistes par couche, relais au même instant, **rampe** de niveau, fumée, départ à la mesure | 32 s, une fois | oui | Bleu qui monte de 30 à 100 % (16 s) ; mesure 9 : chenillard des PAR, cercle des lyres, **segments des barres** ; mesure 13 : strobe, blanc chaud, **arc-en-ciel des barres** ; fumée sur la dernière mesure |
+| *Barres et multi-têtes 8 mesures* | séquence | **Barres et effet multi-têtes en vedette**, deux couches d'effets ensemble | 16 s, en boucle | oui | PAR en bleu et lyres au plafond en fond ; **têtes décalées** du multi-têtes tout du long ; barres : **segments** 8 s puis **arc-en-ciel** 8 s ; flash blanc sur le dernier temps |
 | *Groove 8 mesures* | séquence | **Boucle** sans coupure | 16 s, en boucle | oui | Une couleur par mesure, vague sur les PAR, lyres au centre puis en huit |
 | *Break calme 8 mesures* | séquence | Ambiance douce (UV) | 16 s, une fois | oui | 50 %, bleu, lyres au plafond, UV |
-| *Explosion drop 4 mesures* | séquence | **Flash** d'un temps, strobe puis vague | 8 s, une fois | oui | Flash blanc, strobe 4 s, chenillard, cercle, fumée |
+| *Explosion drop 4 mesures* | séquence | **Flash** d'un temps, strobe puis multi-têtes | 8 s, une fois | oui | Flash blanc, strobe des PAR 4 s puis **têtes décalées** ; **segments des barres** tout du long ; chenillard, cercle, fumée |
 | *Pulsation couleurs (double temps)* | séquence | **Vitesse « double »** (SHOW-008) | 4 s par tour, en boucle | oui | Rouge, ambre, bleu, ambre : une couleur toutes les secondes (2 temps) au lieu de toutes les 2 s |
-| *Visite guidée (sans musique)* | show | Un show **qui avance seul** : durées en mesures, **fin d'une séquence** | ≈ 60 s par tour | **oui, idéal pour commencer** | Ouverture (8 s) → Groove (16 s) → Break (jusqu'à sa fin) → Explosion (jusqu'à sa fin) → Final (8 s) → Ouverture… |
-| *Branches parallèles et macro-étape* | show | **Divergence et convergence en ET**, **macro-étape** (sous-show) | ≈ 42 s par tour | **oui** | Intro (4 s) ; **deux étapes actives à la fois** (couleurs, mouvements), les mouvements changent à 12 s, les couleurs à 20 s ; puis le sous-show *Bloc refrain* (arc-en-ciel 8 s, éclat 4 s) ; final 8 s ; reprise |
-| *Bloc refrain (macro-étape)* | show | Le **sous-show** utilisé par l'exemple précédent | 12 s puis tient | oui | Arc-en-ciel et cercle, puis strobe et flash ; reste sur « Fin du bloc », où plus rien ne s'allume : c'est voulu, cette fin « libère » la macro-étape |
-| *Couplet / Refrain / Drop* | show | **Événements musicaux** (énergie, drop, break, montée), **quantification**, **compteur** de refrains | selon la musique | avec la simulation (exemple 12) | Intro → Couplet quand l'énergie atteint « Groove » → Refrain au drop (flash) → … → Final au 3e refrain |
-| *Tirage au sort (variantes)* | show | **Tirage pondéré**, « jamais deux fois la même » | 16 s par branche | oui | Base, puis variante A ou B toutes les 8 mesures, jamais deux fois la même de suite |
+| *Visite guidée (sans musique)* | show | Un show **qui avance seul** : durées en mesures, **fin d'une séquence** ; tout le parc | ≈ 1 min 30 s par tour | **oui, idéal pour commencer** | Ouverture (8 s) → Groove, PAR et lyres (16 s) → **Barres et multi-têtes** (16 s) → Break (jusqu'à sa fin) → Explosion (jusqu'à sa fin) → Final (8 s) → Ouverture… |
+| *Branches parallèles et macro-étape* | show | **Divergence et convergence en ET**, **macro-étape** (sous-show) | ≈ 42 s par tour | **oui** | Intro (4 s) ; **deux étapes actives à la fois** : couleurs des PAR une par mesure / cercle des lyres ; les lyres passent au huit à 12 s, les **barres** prennent le relais (segments) à 20 s ; puis le sous-show *Bloc refrain* (**multi-têtes et arc-en-ciel des barres** 8 s, éclat 4 s) ; final 8 s ; reprise |
+| *Bloc refrain (macro-étape)* | show | Le **sous-show** utilisé par l'exemple précédent | 12 s puis tient | oui | Têtes décalées, arc-en-ciel des barres et cercle, puis strobe et flash ; reste sur « Fin du bloc », où plus rien ne s'allume : c'est voulu, cette fin « libère » la macro-étape |
+| *Couplet / Refrain / Drop* | show | **Événements musicaux** (énergie, drop, break, montée), **quantification**, **compteur** de refrains | selon la musique | avec la simulation (exemple 12) | Intro → Couplet quand l'énergie atteint « Groove » → Refrain au drop (flash ; tout le parc : chenillard des PAR, cercle, **multi-têtes**, **arc-en-ciel des barres**) → … → Final au 3e refrain |
+| *Tirage au sort (variantes)* | show | **Tirage pondéré**, « jamais deux fois la même » | 16 s par branche | oui | Base (couleur par mesure), puis toutes les 8 mesures **A** (chenillard des PAR, **multi-têtes**, **segments des barres**, huit des lyres) ou **B** (tout en bleu, **arc-en-ciel des barres**, cercle), jamais deux fois la même de suite |
 | *Ambiance UV et fumée (secondaire)* | show | **Show secondaire** en parallèle | en continu | oui | UV ; une chance sur deux d'une rafale de fumée toutes les 8 mesures |
 | *Piège : boucle sans condition* | show | **Refus** d'un show fautif (SHOW-024) | — | — | Rien ne s'allume ; refus au Journal |
 
@@ -43,7 +48,8 @@ temporelle, à la frontière musicale choisie (temps, mesure, phrase). À 120 BP
 | 1 | Montée 16 mesures | Cliquer *Montée 16 mesures* dans la colonne Shows | Elle part **à la mesure suivante** (le bouton dit « attend la mesure ») ; bouton : « mesure N / 16 » et barre d'avancement ; bandeau : « séquence « Montée 16 mesures » N / 16 » ; déroulé du catalogue ; tout s'éteint à la fin |
 | 2 | Groove 8 mesures | Lancer *Groove 8 mesures* ; attendre 20 s ; recliquer | Elle **reprend au début sans coupure** ; second clic = arrêt (ses scènes s'arrêtent) |
 | 3 | Tempo | Relancer *Groove* ; changer le tempo (×2, ÷2, TAP) | La séquence suit tout de suite le nouveau tempo |
-| 4 | Double temps | Lancer *Pulsation couleurs (double temps)* ; puis ✎ dessus, **Vitesse** = « normale », **▶ Jouer** dans la fenêtre | Une couleur par seconde ; en « normale », une toutes les 2 s. Fermer la fenêtre par **Annuler** |
+| 4 | Barres et multi-têtes | Lancer *Barres et multi-têtes 8 mesures* ; regarder les **barres** et l'**effet multi-têtes** | Les têtes du multi-têtes bougent décalées pendant que les barres font leurs segments puis leur arc-en-ciel ; les deux continuent ensemble (couches Effets et Libre) ; flash à la fin de chaque tour |
+| 4b | Double temps | Lancer *Pulsation couleurs (double temps)* ; puis ✎ dessus, **Vitesse** = « normale », **▶ Jouer** dans la fenêtre | Une couleur par seconde ; en « normale », une toutes les 2 s. Fermer la fenêtre par **Annuler** |
 
 ## 3. Shows sans musique
 
@@ -53,7 +59,7 @@ temporelle, à la frontière musicale choisie (temps, mesure, phrase). À 120 BP
 | 6 | Bandeau déplié | Pendant la visite, **▾ Détail** | Parcours (0 → 1 → 2…), étape active et ce qu'elle joue, la transition possible avec son état (« vraie dans N mesure(s) », puis « part dans N temps ») et son bouton **⏭ Forcer** |
 | 7 | Forcer | **⏭ Forcer ▾** → la transition proposée | L'étape suivante arrive **à la mesure suivante**, sans attendre sa condition ; Journal : « (forcée) » |
 | 8 | Branches en parallèle | Lancer *Branches parallèles et macro-étape* | Après l'intro, le bandeau montre **deux étapes actives** (« Couleurs : une par mesure, Mouvements : cercle ») ; à 12 s seuls les mouvements changent, à 20 s les couleurs ; puis « Refrain (macro) » : le sous-show *Bloc refrain* joue (le détail montre ses étapes) ; puis Final ; reprise |
-| 9 | Tirage au sort | Lancer *Tirage au sort (variantes)*, laisser 2 minutes | Variante A ou B toutes les 16 s, **jamais deux fois la même de suite** (A, B, A… ou B, A, B…) |
+| 9 | Tirage au sort | Lancer *Tirage au sort (variantes)*, laisser 2 minutes | Variante A (multi-têtes + segments des barres) ou B (arc-en-ciel des barres, tout en bleu) toutes les 16 s, **jamais deux fois la même de suite** ; le bandeau dit laquelle |
 | 10 | Show secondaire | Lancer *Visite guidée*, puis *Ambiance UV et fumée (secondaire)* ; puis **■ Stop** ; puis **■ Tout stopper** | Les deux jouent ; bandeau : « en parallèle : « Ambiance… » » ; **■ Stop** arrête la visite mais **garde** l'ambiance (comme les couches protégées) ; **■ Tout stopper** arrête tout |
 | 11 | Piège | Cliquer *Piège : boucle sans condition* | **Rien ne s'allume** ; Journal : « ✕ commande refusée : … boucle sans condition (a → b → a) » |
 

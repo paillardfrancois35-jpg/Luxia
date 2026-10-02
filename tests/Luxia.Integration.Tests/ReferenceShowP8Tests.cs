@@ -27,7 +27,7 @@ public sealed class ReferenceShowP8Tests
     {
         var (sequences, _) = SequenceStore.Load(Folder);
         var (shows, _) = ShowStore.Load(Folder);
-        sequences.Sequences.Count(s => s.Category == "Phase P8").ShouldBe(5);
+        sequences.Sequences.Count(s => s.Category == "Phase P8").ShouldBe(6);
         shows.Shows.Count(s => s.Category == "Phase P8").ShouldBe(7);
         shows.Shows.Single(s => s.Name == "Ambiance UV et fumée (secondaire)").Secondary.ShouldBeTrue();
 

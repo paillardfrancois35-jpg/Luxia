@@ -56,7 +56,7 @@ public sealed class SequencingScreensTests : IAsyncLifetime
     public void ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt()
     {
         _game.Columns.Shows.Shows.Count.ShouldBe(7);
-        _game.Columns.Shows.Sequences.Count.ShouldBe(5);
+        _game.Columns.Shows.Sequences.Count.ShouldBe(6);
         _game.Band.IsVisible.ShouldBeFalse("rien ne joue : pas de bandeau");
 
         _game.Columns.Shows.Press(ShowItem("Couplet / Refrain / Drop"));
