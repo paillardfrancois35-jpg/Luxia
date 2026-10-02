@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Plateforme Windows : la sonde de la lecture en cours (commande « media ») utilise l'API de contrôle des médias de Windows. -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AssemblyName>luxia-headless</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../src/Luxia.Media.Windows/Luxia.Media.Windows.csproj" />
     <ProjectReference Include="../../src/Luxia.Hosting/Luxia.Hosting.csproj" />
     <ProjectReference Include="../../src/Luxia.Audio/Luxia.Audio.csproj" />
   </ItemGroup>

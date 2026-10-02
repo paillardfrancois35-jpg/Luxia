@@ -59,7 +59,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     /// <param name="clock">Horloge ; réelle par défaut.</param>
     /// <param name="midiPorts">Ports MIDI (APC mini, doc 18b) ; <c>null</c> = pas de contrôleur (outils, tests).</param>
     /// <param name="audioSources">Sources audio (son joué par le PC, doc 19) ; <c>null</c> = pas d'écoute (outils, tests).</param>
-    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null, Audio.IAudioSourceFactory? audioSources = null)
+    /// <param name="mediaSessions">Sessions média de Windows (lecture en cours, doc 21) ; <c>null</c> = pas de lecture en cours (outils, tests).</param>
+    public LuxiaRuntime(DataPaths paths, ILoggerFactory loggers, ISerialPortProvider? serialPorts = null, IClock? clock = null, IMidiPorts? midiPorts = null, Audio.IAudioSourceFactory? audioSources = null, Media.IMediaSessionSource? mediaSessions = null)
     {
         ArgumentNullException.ThrowIfNull(paths);
         ArgumentNullException.ThrowIfNull(loggers);
@@ -114,6 +115,16 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             Engine.SetAudioFeed(Audio);
         }
 
+        // Lecture en cours (doc 21 §2) : le titre joué sur le PC, publié sur le bus (EVT-040, EVT-041) ; le suivi démarre avec le runtime.
+        if (mediaSessions is not null)
+        {
+            NowPlaying = new Media.NowPlayingTracker(mediaSessions, loggers.CreateLogger<Media.NowPlayingTracker>());
+            NowPlaying.TrackChanged += (_, change) => Bus.Publish(change.Track is { } t
+                ? new Messaging.Events.TrackChanged(t.Title, t.Artist, t.Album, t.App, t.Duration, Clock.Now)
+                : new Messaging.Events.TrackChanged(string.Empty, string.Empty, string.Empty, string.Empty, TimeSpan.Zero, Clock.Now));
+            NowPlaying.PlaybackChanged += (_, playing) => Bus.Publish(new Messaging.Events.PlaybackChanged(playing, Clock.Now));
+        }
+
         Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencyFor(Preferences.Current.Audio.DeviceId)));
 
         // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
@@ -131,6 +142,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Écoute de la musique (doc 19) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
     public Audio.AudioListener? Audio { get; }
+
+    /// <summary>Lecture en cours de Windows (titre, artiste, position : doc 21 §2) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
+    public Media.NowPlayingTracker? NowPlaying { get; }
 
     /// <summary>
     /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
@@ -323,6 +337,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
             Loop.Start();
             Midi?.Start();
+            NowPlaying?.Start();
             if (Preferences.Current.Audio.Listen && Audio is { } listener)
             {
                 // Le mode Audio mémorisé revient tel quel : écoute et tempo suivi. L'ouverture de la capture (0,4 à 0,5 s)
@@ -532,6 +547,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         WriteResume(clean: true);
         Midi?.Dispose();
         Audio?.Dispose();
+        NowPlaying?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
         var blackout = new DmxFrame();

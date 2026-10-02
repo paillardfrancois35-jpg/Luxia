@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Lecture en cours (doc 21 §2) : choix de la session média, événements de changement de morceau, position estimée. Aucune
+       dépendance à Windows : la source des sessions est une interface (adaptateur dans Luxia.Media.Windows). -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Media.Tests" />
+  </ItemGroup>
+
+</Project>

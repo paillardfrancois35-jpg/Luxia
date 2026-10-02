@@ -5,6 +5,8 @@
     sans ouvrir LuXia (verrou mono-instance, GEN-115) ni avoir d'écran : piège des champs trop étroits (doc 03 §11).
   -->
   <PropertyGroup>
+    <!-- Plateforme Windows, comme l'application qu'il référence (lecture en cours de Windows). -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
