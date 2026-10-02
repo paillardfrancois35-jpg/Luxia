@@ -195,6 +195,9 @@ public sealed partial class RenderEngine : ICommandSink
         _tempo.Advance(elapsed);
         ReadAudio();
 
+        // Le séquenceur peut agir dès les commandes de ce tick (lancer un show, une séquence) : il voit déjà l'instant et la musique.
+        Host.Begin(now, elapsed, Signals());
+
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))
         {
@@ -202,6 +205,9 @@ public sealed partial class RenderEngine : ICommandSink
         }
 
         LaunchDueQuantized(now);
+
+        // D37 : shows et séquences évoluent ici, après les commandes et avant l'avancement des scènes.
+        TickSequencer(now, elapsed);
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
         // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
@@ -243,6 +249,7 @@ public sealed partial class RenderEngine : ICommandSink
         }
 
         Publish();
+        PublishTempoChange(now);
         Interlocked.Increment(ref _tickCount);
     }
 
@@ -436,6 +443,13 @@ public sealed partial class RenderEngine : ICommandSink
 
             case ShowStepCommand show:
                 return ShowStep(show);
+
+            case SequencerCommand sequencer:
+                return ApplySequencer(sequencer);
+
+            case SimulateMusicCommand simulate:
+                Simulate(simulate);
+                return null;
 
             case TestOutputCommand test:
                 if (test.Universe < 1 || test.Universe > _frames.Length)

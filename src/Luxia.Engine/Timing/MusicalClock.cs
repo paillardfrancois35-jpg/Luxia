@@ -37,10 +37,22 @@ public sealed class MusicalClock
     private bool _barManual;
     private double _audioScale = 1;
     private double _lastRawBpm;
+    private bool _songChanged;
     private int _silentTicks;
 
     /// <summary>Confiance minimale de l'analyse pour que l'horloge la suive ; en dessous, elle garde son tempo (AUD-022, GEN-034).</summary>
     public const double MinAudioConfidence = 0.3;
+
+    /// <summary>
+    /// Renvoie vrai une fois si un saut du tempo entendu (plus de 15 % hors rapport d'octave) a signalé un nouveau morceau
+    /// depuis l'appel précédent (D38).
+    /// </summary>
+    public bool TakeSongChange()
+    {
+        var changed = _songChanged;
+        _songChanged = false;
+        return changed;
+    }
 
     /// <summary>Tempo courant en temps par minute.</summary>
     public double Bpm => Volatile.Read(ref _bpm);
@@ -165,7 +177,11 @@ public sealed class MusicalClock
             var ratio = reading.Bpm / _lastRawBpm;
             if (Math.Abs(ratio - 1) > 0.15)
             {
-                _audioScale = IsOctaveRatio(ratio) ? _audioScale / ratio : 1;
+                var octave = IsOctaveRatio(ratio);
+                _audioScale = octave ? _audioScale / ratio : 1;
+
+                // D38 : un saut de tempo hors rapport d'octave signale un nouveau morceau (avant la lecture en cours de P9).
+                _songChanged |= !octave;
             }
         }
 

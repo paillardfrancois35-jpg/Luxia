@@ -25,6 +25,8 @@ public sealed partial class RenderEngine
             _events.BassPulses = 0;
             _events.TreblePulses = 0;
             _events.Energy = 0;
+            _events.EnergyLevel = 0;
+            _events.Cues = _tempo.TakeSongChange() ? MusicCues.SongChanged : MusicCues.None;
             return;
         }
 
@@ -33,10 +35,20 @@ public sealed partial class RenderEngine
         _events.BassPulses = reading.BassPulses;
         _events.TreblePulses = reading.TreblePulses;
         _events.Energy = reading.Energy;
+        _events.EnergyLevel = reading.EnergyLevel;
         if (_tempo.Source == TempoSourceKind.Audio)
         {
             _tempo.FollowAudio(reading);
         }
+
+        // D38 : morceau changé (avant P9) = reprise après un silence, ou saut du tempo entendu (relevé par l'horloge).
+        var cues = reading.Cues;
+        if ((cues & MusicCues.Resumed) != 0 || _tempo.TakeSongChange())
+        {
+            cues |= MusicCues.SongChanged;
+        }
+
+        _events.Cues = cues;
     }
 
     /// <summary>Position de l'horloge (en temps) où démarrer une scène quantifiée ; <c>null</c> = tout de suite.</summary>

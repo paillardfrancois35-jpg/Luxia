@@ -32,6 +32,7 @@ public sealed class AudioListener : IAudioFeed, IDisposable
     private long _lastData;
     private long _noticeStamp;
     private long _eventTotal;
+    private int _cues;
     private int _failures;
     private int _watchTicks;
     private int _checking;
@@ -202,7 +203,8 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         var live = Volatile.Read(ref _wanted) && !state.Silent && age < StaleSeconds;
         if (!live || state.Bpm <= 0)
         {
-            return new AudioReading(false, state.Bpm, 0, false, 0, 0, 0, 0);
+            // Le silence et la reprise passent quand même au séquenceur (D38) : « morceau changé » commence par un silence.
+            return new AudioReading(false, state.Bpm, 0, false, 0, 0, 0, 0, Cues: (MusicCues)Interlocked.Exchange(ref _cues, 0));
         }
 
         // La phase publiée date de la fin du dernier bloc : on l'avance du temps écoulé depuis (horloge prédictive).
@@ -210,7 +212,8 @@ public sealed class AudioListener : IAudioFeed, IDisposable
         var phase = beats - Math.Floor(beats);
         var bar = state.BarBeat == 0 ? 0 : (((state.BarBeat - 1) + (int)Math.Floor(beats)) % 4) + 1;
         var (bass, treble) = Volatile.Read(ref _analyzer)?.TakePulses() ?? (0, 0);
-        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, bass, treble, state.Energy);
+        var cues = (MusicCues)Interlocked.Exchange(ref _cues, 0);
+        return new AudioReading(true, state.Bpm, state.Confidence, state.HasGrid, phase, bar, bass, treble, state.Energy, (int)state.EnergyLevel, cues);
     }
 
     /// <inheritdoc />
@@ -381,6 +384,17 @@ public sealed class AudioListener : IAudioFeed, IDisposable
 
     private void OnAudioEvent(AudioEvent audioEvent)
     {
+        // D38 : drop, break, montée, silence et reprise sont retenus jusqu'à la lecture suivante du moteur.
+        var cue = audioEvent.Kind switch
+        {
+            AudioEventKind.Drop => MusicCues.Drop,
+            AudioEventKind.Break => MusicCues.Break,
+            AudioEventKind.BuildUp => MusicCues.BuildUp,
+            AudioEventKind.Silence => MusicCues.Silence,
+            AudioEventKind.Resumed => MusicCues.Resumed,
+            _ => MusicCues.None,
+        };
+        Interlocked.Or(ref _cues, (int)cue);
         _recent.Enqueue(audioEvent);
         Interlocked.Increment(ref _eventTotal);
         while (_recent.Count > 30)
