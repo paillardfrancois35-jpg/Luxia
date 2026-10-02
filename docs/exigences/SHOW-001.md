@@ -34,3 +34,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 2.2 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 2 et 3 (`683cfc8`, `4c87f9e`) : `séquences.json` (doc 50 §12g), longueur en mesures décimales, pistes de couche (seules les scènes de la couche, erreur sinon) et piste d'actions. Mesure à 4 temps seulement : GEN-025 reportée (Q46, l'utilisateur ne joue pas de valses). |
 | 2026-10-02 | Utilisateur | Test | Ex. 1 *Montée 16 mesures* (v1.010.079, revu en .085) : départ à la mesure, avancement « mesure N / 16 », déroulé du catalogue ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). Reste « Partiel » : mesure à 3 temps reportée (GEN-025, Q46). |

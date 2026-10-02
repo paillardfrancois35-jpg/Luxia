@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | S |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 2.2 Exigences](../20-show-et-sequences.md) |
@@ -31,3 +31,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 3 (`4c87f9e`). |
 | 2026-10-02 | Claude | Développement | Exemple *Pulsation couleurs (double temps)* ajouté au show de référence (guide P8, exemple 4). |
 | 2026-10-02 | Utilisateur | Test | Ex. 4b *Pulsation couleurs (double temps)* (v1.010.079, revu en .085) ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 4b. |

@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -47,3 +47,4 @@
 | 2026-10-02 | Claude | Correction | Liste des conditions assez haute pour ses 19 choix. Refonte de l'éditeur de show : discussion dédiée après P8 (cahier des charges `chantiers/refonte-editeur-show.md`). |
 | 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104 : les 19 conditions visibles ✅ ; demande : listes déroulantes de toute l'application sur un fond neutre et contrasté, barre de défilement visible, hauteur standard (analyse ergonomique de P8, E6). |
 | 2026-10-02 | Claude | Développement | Analyse ergonomique de P8, E2 (décision de l'utilisateur) : condition « aussitôt » renommée « sans condition (dès l'entrée dans l'étape) », quantification « Tout de suite » renommée « Sans attendre le temps » (aussi pour le départ d'une scène) ; la liste des conditions revient à la hauteur standard, avec barre de défilement visible (E6). |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 8, 16, 16c ; refonte ergonomique de l'éditeur prévue en discussion dédiée (doc 99). |

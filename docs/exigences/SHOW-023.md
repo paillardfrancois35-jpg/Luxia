@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -37,3 +37,4 @@
 | 2026-10-02 | Claude | Développement | Relecture de fin de développement (avant l'essai) : modifier un show pendant qu'il joue (essai dans l'éditeur) ne fait plus oublier les transitions armées inchangées (un drop retenu jusqu'à la mesure), applique tout de suite les actions continues de l'étape active, et met à jour le sous-show d'une macro-étape. Test `ShowExecutionTests.EditingAPlayingShow_KeepsArmedTransitions_AndUpdatesTheActiveStep`. |
 | 2026-10-02 | Claude | Développement | Exemple *Visite guidée (sans musique)* ajouté au show de référence : un show qui avance seul (durées en mesures, fins de séquences), pour l'essai sans musique (guide P8, exemple 5). |
 | 2026-10-02 | Utilisateur | Test | Ex. 5 *Visite guidée* (v1.010.079) : étapes par durée et par fin de séquence, reprise après le final ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 5, 8. |

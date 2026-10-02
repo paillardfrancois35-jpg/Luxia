@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -36,3 +36,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`) : `Sequencer.State` ; maquettes 9 et 10 (bandeau « Show en cours », Q44 solution C). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : maquettes 9 et 10. |
 | 2026-10-02 | Utilisateur | Test | Ex. 6 bandeau déplié (v1.010.079) : parcours, étape active, transitions en attente ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 6 (v1.010.079 ; non refait après les correctifs). |

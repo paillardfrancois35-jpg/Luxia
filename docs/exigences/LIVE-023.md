@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 18 – 4. Exigences – musique et automatique](../18-live.md) |
@@ -32,3 +32,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 4. Exigences – musique et automatique). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : l'écran Live sera retiré à la fin de P8 (Q47) ; sa « zone Show » est dans l'écran de jeu. |
 | 2026-10-02 | Utilisateur | Test | Ex. 5 à 7 : bandeau « Show en cours » ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). bandeau « Show en cours » (ex. 5 à 7, v1.010.079 ; non refaits après les correctifs, non touchés). |

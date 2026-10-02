@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -36,3 +36,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`). |
 | 2026-10-02 | Claude | Développement | Relecture : cocher « Aveugle » pendant un essai arrêtait l'essai sur l'aperçu au lieu de la sortie ; corrigé (l'essai s'arrête du côté qu'on quitte). |
 | 2026-10-02 | Utilisateur | Test | Ex. 12 (v1.010.085) : boutons Drop, Break, Montée, énergie ; carte et diagramme suivent ✅ ; interface jugée très complexe 💡. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 12. |

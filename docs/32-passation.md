@@ -1,16 +1,12 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-02, **P8 développée** (branche
-> `p8/show-sequences`, version 1.010, [guide](demos/P8-show-et-sequences.md), en attente de l'essai en discussion test ; ensuite
-> retrait des écrans Live et Scènes, Q47, puis revue de fin de phase). Avant : **P7 validée** (branche `p7/audio-tempo` fusionnée dans `main`,
-> `v1.009`). **Prochaine étape : P8 « Show & séquences »**, en commençant par les durées en secondes / temps / mesures dans les Propriétés (E2, [doc 40](40-feuille-de-route.md)) ;
-> résultats de P7 : [résultats](essais/P7-resultats.md), [revue de fin de phase](chantiers/revue-fin-p7.md). Restent à décider
-> (analyses de fin de chantier : [ergonomique](chantiers/analyse-ergonomique-fin-controle-2.md),
-> [de code](chantiers/analyse-code-fin-controle-2.md)) : notifications colorées, retrait des écrans Live et Scènes, retrait du
-> mode LIVE de la session d'édition, glisser-déposer des groupes, apprentissage MIDI. Essai du chantier : guide
-> [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md), résultats [essais/ERG2-resultats.md](essais/ERG2-resultats.md). Sources du chantier :
-> [chantiers/ergonomie-sujet-2.md](chantiers/ergonomie-sujet-2.md), [chantiers/analyse-ergonomique-fin-P6.md](chantiers/analyse-ergonomique-fin-P6.md), Q37 et Q38 (doc 01), doc 60 §4.9.
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-02, **P8 validée** (branche
+> `p8/show-sequences` fusionnée dans `main`, étiquette `v1.010`, [guide](demos/P8-show-et-sequences.md),
+> [résultats](essais/P8-resultats.md), [analyse ergonomique](chantiers/analyse-ergonomique-p8.md)). **Prochaine étape : P9
+> « Lecture & Style »** ([doc 40](40-feuille-de-route.md)). En attente, décidés par l'utilisateur (doc 99) : largeur fixe des listes
+> déroulantes (à faire en tête de la phase suivante), refonte de l'éditeur de show (discussion dédiée), fonctions à porter dans
+> l'écran de jeu avant de retirer les écrans Scènes et Live, « pourquoi ça ne s'allume pas », sélection du Journal pendant le jeu.
 
 ## 1. Où en est-on
 
@@ -25,7 +21,7 @@
 | Chantier ergonomique – écran Contrôle | Validé | `ergo/analyse` (fusionnée dans `main`, `v1.005`) | [demos/ERG-controle.md](demos/ERG-controle.md) | ✅ 2026-09-28, matériel réel, guide §0 à §7 (1.005.192 → 1.005.237) |
 | Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P7 – Audio et tempo | Validée | `p7/audio-tempo` (fusionnée dans `main`, `v1.009`) | [demos/P7-audio-tempo.md](demos/P7-audio-tempo.md) | ✅ 2026-10-02, matériel réel (essai, re-vérifications 1 à 3, lot ergonomique ; [résultats](essais/P7-resultats.md)) ; bloc BPM et écoute essayés à la main par l'utilisateur pendant le développement (« très correct, impressionnant ») |
-| P8 – Show & séquences | Développée | `p8/show-sequences` (1.010) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ⏳ essai en discussion test ([résultats](essais/P8-resultats.md)) |
+| P8 – Show & séquences | Validée | `p8/show-sequences` (fusionnée dans `main`, `v1.010`) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ✅ 2026-10-02, matériel réel, essai en discussion test (v1.010.079 → .104, [résultats](essais/P8-resultats.md)) puis contrôle final (1.010.116) ; réserves : ex. 5, 6, 7 non refaits après les correctifs, fumée non testée |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -302,7 +298,10 @@
   **reporté** (fonctions validées encore absentes de l'écran de jeu, liste au doc 99, choix de l'utilisateur) ; en préparation,
   types partagés et éditeur de couches dans `Luxia.UI.Modules.Control` (l'écran Scènes s'appuie dessus), bouton « Couches… » dans
   l'en-tête de l'écran de jeu, courbe de fondu et bascule des attributs discrets dans les Propriétés de l'étape.
-  **Restent** : court contrôle de l'utilisateur, validation, fusion, `v1.010`.
+  **Validée par l'utilisateur le 2026-10-02** (contrôle 1.010.116) : fiches de P8 « Validé » (SHOW-001 « Partiel » : 3/4 reporté ;
+  SHOW-030 « Réalisé » : attend le Directeur ; EVT-020 / 021 « Partiel » : décision D38), fusion dans `main`, étiquette `v1.010`.
+  Remarque du contrôle : la liste dépliée d'une liste déroulante change de largeur et de position selon les textes : à fixer en tête
+  de la phase suivante (doc 99).
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.
@@ -430,3 +429,4 @@ Modèle de message pour ouvrir une discussion :
 | 2026-09-30 | P7 | Audio et tempo développés sur `p7/audio-tempo` (1.009) en cinq lots (horloge, scènes au rythme, écoute, impulsions / énergie / écran Audio, contenu et documentation) ; 41 morceaux analysés (rapport chiffré). **En attente de l'essai de l'utilisateur en discussion test.** |
 | 2026-09-30 | Effets | Mini-lot « familles d'effets » (1.008) : doc 16b (principe de fonctionnement des effets, plusieurs effets par étape), formes limitées à la famille, type affiché, « (modifié) » (EFF-012). Reste : estomper les modèles selon les capacités des appareils. **Validé par l'utilisateur, fusionné dans `main`, étiquette `v1.008`.** Prochaine étape : P7. |
 | 2026-10-02 | P8 | Show & séquences développés sur `p8/show-sequences` (1.010) : E2, maquettes 9 à 12, données, séquenceur dans le moteur, shows, interface (colonne Shows, bandeau, éditeurs), contenu et documentation (guide P8, doc 51). 940 tests. **En attente de l'essai en discussion test**, puis retrait de Live et Scènes et revue de fin de phase. |
+| 2026-10-02 | P8 | **P8 validée** : essai en discussion test (v1.010.079 → .104), corrections, lot 7 (trace retirée, retrait de Scènes et Live reporté), analyse ergonomique (E2, E6 faits), contrôle final 1.010.116 ; fusion dans `main`, étiquette `v1.010`. 955 tests. |

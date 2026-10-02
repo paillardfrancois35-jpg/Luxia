@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 2.2 Exigences](../20-show-et-sequences.md) |
@@ -35,3 +35,4 @@
 | 2026-10-02 | Claude | Développement | P8 lots 3 et 4 (`4c87f9e`, `d46142e`). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : boutons de la colonne « Shows » (le « Live » est l'écran de jeu depuis « Contrôle 2 »). |
 | 2026-10-02 | Utilisateur | Test | Colonne « Shows » : un clic lance, un second arrête (ex. 1, 2e) ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). colonne Shows. |

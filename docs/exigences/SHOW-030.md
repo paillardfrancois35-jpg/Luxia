@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 2 (`683cfc8`). |
+| 2026-10-02 | Utilisateur | Validation | Phase P8 validée (v1.010) ; métadonnées saisies et enregistrées, leur usage attend le Directeur (P10) : reste « Réalisé ». |

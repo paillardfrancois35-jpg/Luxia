@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -40,3 +40,4 @@
 | 2026-10-02 | Utilisateur | Test | Ex. 11 piège refusé au lancement ✅ ; ex. 16c (v1.010.091) : Valider enregistre et ferme un show en erreur sans prévenir ❌ ; erreur ⛔ et avertissement ⚠ de teintes trop proches. |
 | 2026-10-02 | Claude | Correction | Valider avec une erreur demande « Enregistrer avec des erreurs ? » (Non : la fenêtre reste ouverte) ; chaque erreur enregistrée laisse une ligne ⛔ au Journal ; erreurs en rouge franc, avertissements en jaune. |
 | 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104, ex. 16c : erreur ⛔ rouge, avertissement ⚠ jaune, confirmation à Valider, ligne au Journal ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 11, 16c. |

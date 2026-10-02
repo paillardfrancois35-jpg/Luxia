@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P8 |
 | **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
@@ -37,3 +37,4 @@
 | 2026-10-02 | Utilisateur | Test | Ex. 13 avec musique (v1.010.091, morceau « Animals », traces CSV) : couplet, montée, refrain aux drops, retour aux breaks ✅ ; 3e refrain coupé par un break puis silence : le Final n'arrive jamais 💡. |
 | 2026-10-02 | Claude | Correction | *Couplet / Refrain / Drop* : « au silence » mène au Final depuis Couplet, Refrain et Montée ; « à la reprise du son » ramène du Final à l'Intro, qui remet le compteur de refrains à zéro. |
 | 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104, ex. 13 avec musique (trace `trace-show-20261002-215237.csv`) : Final au silence, retour à l'Intro au morceau suivant, deux fois de suite ✅. |
+| 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 12, 13 avec musique (Final au silence, retour à l'Intro). |

@@ -31,6 +31,7 @@
 | **E7** | Basse | Sélectionner le texte du Journal est difficile pendant qu'un show joue (le Journal se rafraîchit) | Figer le défilement quand une ligne est sélectionnée | petit | ✅ décidé : plus tard (doc 99) |
 
 | **E8** | Moyenne | Lot 7 (retrait de Scènes et Live, Q47) : l'inventaire montre des fonctions validées absentes de l'écran de jeu (6 pour Scènes, les actions permanentes pour Live) | Retrait **reporté** ; liste à porter au doc 99 ; en préparation : « Couches… » dans l'en-tête de l'écran de jeu, courbe de fondu et bascule des attributs discrets dans les Propriétés de l'étape | moyen | ✅ décidé le 2026-10-02 : garder Scènes et Live pour v1.010 |
+| **E9** | Moyenne | Contrôle final (1.010.116) : la liste dépliée change de largeur et de position selon les textes (« c'est perturbant ») | Taille fixe de la liste dépliée, textes longs coupés, même règle partout | petit | ✅ décidé : en tête de la phase suivante (doc 99) |
 
 ## 3. Re-vérification (v1.010.104)
 
