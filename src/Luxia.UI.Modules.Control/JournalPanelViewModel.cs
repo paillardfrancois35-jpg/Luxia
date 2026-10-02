@@ -21,11 +21,13 @@ public sealed class JournalPanelViewModel : ViewModelBase
     public JournalPanelViewModel(LuxiaRuntime runtime)
     {
         ArgumentNullException.ThrowIfNull(runtime);
-        runtime.Bus.Subscribe<SceneStarted>(e => Log($"▶ {e.SceneName} ({(e.Origin == CommandOrigin.Midi ? "MIDI" : e.Origin == CommandOrigin.User ? "utilisateur" : e.Origin.ToString())})"));
+        runtime.Bus.Subscribe<SceneStarted>(e => Log($"▶ {e.SceneName} ({(e.Origin == CommandOrigin.Midi ? "MIDI" : e.Origin == CommandOrigin.User ? "utilisateur" : e.Origin == CommandOrigin.Show ? "show" : e.Origin.ToString())})"));
         runtime.Bus.Subscribe<SceneStopped>(e => Log($"■ {e.SceneName}"));
         runtime.Bus.Subscribe<SafetyLimitReached>(e => Log($"⚠ {e.Label.Split(" – ")[0]} : {e.Detail}"));
         runtime.Bus.Subscribe<OutputStateChanged>(e => Log($"⇄ {e.DriverName} : {e.State}"));
         runtime.Bus.Subscribe<CommandRejected>(e => Log($"✕ commande refusée : {e.Reason}"));
+        runtime.Bus.Subscribe<ShowStepActivated>(e => Log($"◆ show « {e.ShowName} » : étape {e.StepId}{(string.IsNullOrWhiteSpace(e.StepName) ? string.Empty : $" « {e.StepName} »")} ({e.Reason})"));
+        runtime.Bus.Subscribe<ShowStateChanged>(e => Log(e.Running ? $"▶ show « {e.ShowName} »" : $"■ show « {e.ShowName} »"));
     }
 
     /// <summary>Lignes, la plus récente en tête.</summary>

@@ -40,17 +40,24 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
         runtime.Project.ShowDataChanged += (_, _) => Rebuild();
         session.Changed += (_, _) => OnPropertyChanged(nameof(CanEdit));
         _isCompact = runtime.Preferences.Current.CompactScenes;
+        Shows = new Sequencing.ShowsColumnViewModel(runtime, dialogs);
         Rebuild();
     }
 
     /// <summary>L'édition des scènes est permise (pas de verrou soirée).</summary>
     public bool CanEdit => !_session.IsLocked;
 
+    /// <summary>Colonne « Shows » : shows et séquences du projet (Q44 solution C).</summary>
+    public Sequencing.ShowsColumnViewModel Shows { get; }
+
     /// <summary>Colonnes de couches.</summary>
     public ObservableCollection<ControlColumnViewModel> Columns { get; } = [];
 
     /// <summary>Largeur minimale de la grille des colonnes (défilement horizontal en dessous).</summary>
-    public double MinWidth => Columns.Count * 120;
+    public double MinWidth => (Columns.Count * 120) + ShowsWidth;
+
+    /// <summary>Largeur de la colonne « Shows ».</summary>
+    public static double ShowsWidth => 176;
 
     /// <summary>Dernier message (clic refusé…), ou nul.</summary>
     public string? Message { get; private set; }
@@ -87,6 +94,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
     public void Refresh()
     {
         var snapshot = _runtime.Engine.Snapshot;
+        Shows.Refresh();
         foreach (var column in Columns)
         {
             var playing = false;
@@ -351,6 +359,7 @@ public sealed partial class ColumnsPanelViewModel : ViewModelBase
             Columns.Add(column);
         }
 
+        Shows.Rebuild();
         OnPropertyChanged(nameof(MinWidth));
         OnPropertyChanged(nameof(Layers));
         MarkEditTarget();

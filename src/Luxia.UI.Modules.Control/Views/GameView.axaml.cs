@@ -37,6 +37,29 @@ public partial class GameView : UserControl
             menu.ShowAt(panelsButton);
         };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
+
+        // Forcer ▾ : une entrée par transition possible du show principal, construite au clic (SHOW-026, CMD-051).
+        var forceButton = this.FindControl<Button>("ForceButton")!;
+        forceButton.Click += (_, _) =>
+        {
+            if (ViewModel is not { } vm)
+            {
+                return;
+            }
+
+            var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+            foreach (var transition in vm.Band.Transitions)
+            {
+                menu.Items.Add(new MenuItem { Header = $"{transition.Condition} → {transition.Target}", Command = vm.Band.ForceCommand, CommandParameter = transition });
+            }
+
+            if (menu.Items.Count == 0)
+            {
+                menu.Items.Add(new MenuItem { Header = "Aucune transition possible depuis l'étape active", IsEnabled = false });
+            }
+
+            menu.ShowAt(forceButton);
+        };
         // Saisie du BPM : l'affichage ne l'écrase pas pendant la frappe ; la valeur est appliquée en quittant le champ (Entrée l'applique aussi).
         var bpmBox = this.FindControl<TextBox>("BpmBox")!;
         bpmBox.GotFocus += (_, _) => ViewModel?.Tempo.BeginEdit();
@@ -71,6 +94,8 @@ public partial class GameView : UserControl
     // ouvrait sa propre fenêtre d'édition (essai 1.007.080 : deux fenêtres, puis trois…).
     private EventHandler<Guid>? _editHandler;
     private EventHandler<string>? _panelHandler;
+    private EventHandler? _sequenceHandler;
+    private EventHandler? _showHandler;
 
     private void Subscribe()
     {
@@ -93,6 +118,12 @@ public partial class GameView : UserControl
         };
         vm.EditRequested += _editHandler;
         vm.PanelRequested += _panelHandler;
+
+        // P8 : fenêtres d'édition d'une séquence et d'un show, non bloquantes, une de chaque.
+        _sequenceHandler = (_, _) => SequencingWindow.Present(vm.SequenceEditor, () => new SequenceEditorWindow(), TopLevel.GetTopLevel(this) as Window);
+        _showHandler = (_, _) => SequencingWindow.Present(vm.ShowEditor, () => new ShowEditorWindow(), TopLevel.GetTopLevel(this) as Window);
+        vm.SequenceEditRequested += _sequenceHandler;
+        vm.ShowEditRequested += _showHandler;
     }
 
     private void Unsubscribe()
@@ -108,10 +139,22 @@ public partial class GameView : UserControl
             {
                 vm.PanelRequested -= _panelHandler;
             }
+
+            if (_sequenceHandler is not null)
+            {
+                vm.SequenceEditRequested -= _sequenceHandler;
+            }
+
+            if (_showHandler is not null)
+            {
+                vm.ShowEditRequested -= _showHandler;
+            }
         }
 
         _editHandler = null;
         _panelHandler = null;
+        _sequenceHandler = null;
+        _showHandler = null;
     }
 
     private bool IsShown() => TopLevel.GetTopLevel(this) is not null;

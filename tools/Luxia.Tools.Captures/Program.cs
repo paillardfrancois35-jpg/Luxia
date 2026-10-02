@@ -54,6 +54,10 @@ void Tick(int count = 2)
     {
         clock.Advance(TimeSpan.FromMilliseconds(25));
         runtime.Engine.Tick();
+        if (runtime.PreviewActive)
+        {
+            runtime.Preview.Tick();
+        }
     }
 
     vm.Refresh();
@@ -141,6 +145,53 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     game.Editor.Refresh();
     Capture("Édition - aveugle", editor);
     game.Editor.Cancel();
+
+    // P8 : un show joue (bandeau « Show en cours », replié puis déplié), puis les fenêtres d'édition d'une séquence et d'un show.
+    var user = Luxia.Messaging.Commands.CommandOrigin.User;
+    runtime.Engine.Send(new Luxia.Messaging.Commands.StopLayerCommand(user, Everything: true));
+    Tick(4);
+    var demoShow = runtime.Project.Shows.Shows.First(x => x.Name == "Couplet / Refrain / Drop");
+    runtime.Engine.Send(new Luxia.Messaging.Commands.LaunchShowCommand(user, demoShow.Id));
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Energy: 0.45));
+    Tick(240);
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Luxia.Messaging.Commands.SimulatedCue.Drop));
+    Tick(120);
+    Capture("Contrôle - show en cours");
+    game.Band.ToggleCommand.Execute(null);
+    Tick(4);
+    Capture("Contrôle - show en cours, détail");
+    game.Band.ToggleCommand.Execute(null);
+    runtime.Engine.Send(new Luxia.Messaging.Commands.StopShowCommand(user));
+    runtime.Engine.Send(new Luxia.Messaging.Commands.SimulateMusicCommand(user, Energy: double.NaN));
+    Tick(4);
+
+    // L'écran de jeu ouvre lui-même la fenêtre (✎) : on la retrouve pour la capturer.
+    game.EditSequence(runtime.Project.Sequences.Sequences.First(x => x.Name == "Montée 16 mesures").Id);
+    Luxia.UI.Modules.Control.Views.SequencingWindow.Present(game.SequenceEditor, () => new Luxia.UI.Modules.Control.Views.SequenceEditorWindow(), null);
+    var sequenceWindow = Luxia.UI.Modules.Control.Views.SequencingWindow.Of(game.SequenceEditor)!;
+    sequenceWindow.Width = 1440;
+    sequenceWindow.Height = 860;
+    game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(0, 1));
+    Tick(10);
+    Capture("Édition - séquence", sequenceWindow);
+    game.SequenceEditor.Cancel();
+
+    game.EditShow(demoShow.Id);
+    Luxia.UI.Modules.Control.Views.SequencingWindow.Present(game.ShowEditor, () => new Luxia.UI.Modules.Control.Views.ShowEditorWindow(), null);
+    var showWindow = Luxia.UI.Modules.Control.Views.SequencingWindow.Of(game.ShowEditor)!;
+    showWindow.Width = 1500;
+    showWindow.Height = 900;
+    game.ShowEditor.IsBlind = true;
+    game.ShowEditor.Simulation.UseMetronome = true;
+    game.ShowEditor.Simulation.PlayCommand.Execute(null);
+    game.ShowEditor.Simulation.EnergyCommand.Execute("1");
+    Tick(240);
+    game.ShowEditor.Simulation.CueCommand.Execute("drop");
+    Tick(120);
+    game.ShowEditor.Refresh();
+    Tick(4);
+    Capture("Édition - show", showWindow);
+    game.ShowEditor.Cancel();
 }
 
 // Écran Live « en jeu » : couches combinées, strobe limité, zone interdite, figé, palette rapide.

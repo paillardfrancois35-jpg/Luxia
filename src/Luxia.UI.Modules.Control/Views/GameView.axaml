@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Luxia.UI.Modules.Control"
+             xmlns:sq="using:Luxia.UI.Modules.Control.Sequencing"
              xmlns:dockc="using:Dock.Avalonia.Controls"
              x:Class="Luxia.UI.Modules.Control.Views.GameView"
              x:DataType="vm:GameViewModel"
@@ -84,6 +85,92 @@
         <TextBlock Text="●" Foreground="{Binding Beat4}" FontSize="16" VerticalAlignment="Center" />
       </StackPanel>
     </Border>
+
+    <!-- Bandeau « Show en cours » (P8, Q44 solution C, maquettes 9 et 10) : visible seulement quand un show ou une séquence joue. -->
+    <StackPanel DockPanel.Dock="Top" DataContext="{Binding Band}" x:DataType="sq:ShowBandViewModel" IsVisible="{Binding IsVisible}">
+      <Panel>
+        <Border Background="{Binding Color}" Opacity="0.12" />
+        <Border BorderBrush="{Binding Color}" BorderThickness="0,1,0,1" Padding="10,4" MinHeight="42">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <Button x:Name="ForceButton" Classes="target" Content="⏭ Forcer ▾" IsVisible="{Binding HasShow}"
+                      ToolTip.Tip="Franchir tout de suite une des transitions possibles (à sa frontière musicale)" />
+              <Button Classes="target" Content="■ Arrêter" Foreground="#F85149" Command="{Binding StopCommand}"
+                      ToolTip.Tip="Arrêter le show (ses scènes s'arrêtent avec leur fondu), ou les séquences en cours" />
+              <Button Classes="target" Content="{Binding ExpandText}" Command="{Binding ToggleCommand}" IsVisible="{Binding HasShow}"
+                      ToolTip.Tip="Étape active, transitions en attente avec leur compte à rebours, show en parallèle" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" ClipToBounds="True">
+              <TextBlock Text="▶" Foreground="{Binding Color}" FontSize="15" VerticalAlignment="Center" />
+              <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center" />
+              <Border Background="{Binding Color}" CornerRadius="10" Padding="8,1" IsVisible="{Binding HasShow}" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Steps}" Foreground="#0D1117" FontSize="12" />
+              </Border>
+              <TextBlock Text="{Binding Since}" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" />
+              <TextBlock Text="· ensuite :" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" IsVisible="{Binding HasShow}" />
+              <ItemsControl ItemsSource="{Binding Next}" VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="6" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="sq:BandTransition">
+                    <Border BorderBrush="{Binding Dot}" BorderThickness="1" CornerRadius="10" Padding="8,1">
+                      <TextBlock Text="{Binding Compact}" Foreground="{Binding Dot}" FontSize="12" />
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Text="{Binding SequenceText}" Foreground="#8B949E" FontSize="12" VerticalAlignment="Center" />
+            </StackPanel>
+          </DockPanel>
+        </Border>
+      </Panel>
+      <Border IsVisible="{Binding IsExpanded}" Background="#161B22" BorderBrush="{Binding Color}" BorderThickness="0,0,0,1" Padding="12,6">
+        <StackPanel Spacing="6">
+          <TextBlock Text="{Binding PathText, StringFormat='Parcours : {0}'}" FontSize="12" Foreground="#8B949E" />
+          <Grid ColumnDefinitions="380,*">
+            <ItemsControl ItemsSource="{Binding ActiveSteps}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="sq:BandStep">
+                  <Border BorderBrush="#39C5CF" BorderThickness="2" CornerRadius="8" Padding="10,6" Margin="0,0,10,6" Background="#21262D">
+                    <StackPanel Spacing="3">
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="Étape active" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding Id}" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                      </StackPanel>
+                      <TextBlock Text="{Binding Actions}" FontSize="12" TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <StackPanel Grid.Column="1" Spacing="4">
+              <TextBlock Text="Transitions qui partent de l'étape (la première vraie l'emporte)" FontSize="12" Foreground="#8B949E" />
+              <ItemsControl ItemsSource="{Binding Transitions}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate x:DataType="sq:BandTransition">
+                    <Border Background="#21262D" CornerRadius="6" Padding="10,3" Margin="0,0,0,4">
+                      <DockPanel>
+                        <Button DockPanel.Dock="Right" Content="⏭ Forcer" MinHeight="28" Padding="10,0" FontSize="12"
+                                Command="{Binding $parent[UserControl].((vm:GameViewModel)DataContext).Band.ForceCommand}" CommandParameter="{Binding}"
+                                ToolTip.Tip="Franchir cette transition comme si sa condition était vraie (à sa frontière musicale)" />
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                          <TextBlock Text="●" Foreground="{Binding Dot}" />
+                          <TextBlock Text="{Binding Condition}" FontWeight="SemiBold" />
+                          <TextBlock Text="{Binding Target, StringFormat='→ {0}'}" Foreground="#39C5CF" />
+                          <TextBlock Text="{Binding Quantize}" FontSize="12" Foreground="#8B949E" />
+                          <TextBlock Text="{Binding State}" FontSize="12" Foreground="{Binding Dot}" />
+                        </StackPanel>
+                      </DockPanel>
+                    </Border>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <TextBlock Text="{Binding SecondaryText}" FontSize="12" Foreground="#8B949E" TextWrapping="Wrap" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </StackPanel>
 
     <!-- Retouches en direct : le seul rappel d'état de l'écran de jeu. Sa place est réservée en permanence : qu'il apparaisse ou
          disparaisse, rien ne bouge (essai 1.007.080 : la mise en page sautait sous la souris et le fader tenu clignotait). -->
