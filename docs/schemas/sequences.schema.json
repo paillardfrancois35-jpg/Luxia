@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/sequences.schema.json",
+  "title": "LuXia – séquences.json (format 1)",
+  "description": "Séquences en mesures (doc 50 §12g, doc 20 §2, SHOW-001 à SHOW-008). Positions et durées en mesures décimales (mesure à 4 temps : 0,25 = un temps) ; 0 = début de la mesure 1.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "sequences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "category": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] },
+          "bars": { "type": "number", "exclusiveMinimum": 0, "description": "longueur en mesures (8 par défaut)" },
+          "end": { "enum": ["stop", "loop"], "description": "s'arrêter (défaut) ou reprendre au début" },
+          "quantize": { "enum": ["none", "beat", "bar", "phrase4", "phrase8", "phrase16"], "description": "frontière attendue avant de démarrer (bar par défaut)" },
+          "speed": { "type": "number", "minimum": 0.25, "maximum": 4, "description": "0,5 = demi-temps, 1 = normale, 2 = double temps (SHOW-008)" },
+          "tracks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "layerId": { "type": ["string", "null"], "format": "uuid", "description": "couche de la piste ; absent = piste d'actions" },
+                "blocks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "start": { "type": "number", "minimum": 0, "description": "début, en mesures depuis le début de la séquence" },
+                      "length": { "type": "number", "exclusiveMinimum": 0, "description": "durée, en mesures" },
+                      "sceneId": { "type": ["string", "null"], "format": "uuid", "description": "scène de la couche de la piste" },
+                      "end": { "enum": ["stop", "keep"], "description": "arrêter la scène à la fin du bloc (défaut) ou la laisser jouer" },
+                      "action": {
+                        "type": ["object", "null"],
+                        "description": "action d'un bloc de la piste d'actions",
+                        "required": ["kind"],
+                        "properties": {
+                          "kind": { "enum": ["layerLevel", "grandMaster", "smoke", "flash", "blackout"] },
+                          "layerId": { "type": ["string", "null"], "format": "uuid" },
+                          "sceneId": { "type": ["string", "null"], "format": "uuid" },
+                          "from": { "type": ["number", "null"], "minimum": 0, "maximum": 1, "description": "niveau au début ; absent = niveau courant" },
+                          "to": { "type": "number", "minimum": 0, "maximum": 1, "description": "niveau à la fin (rampe), puis il reste" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

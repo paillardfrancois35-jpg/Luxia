@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/shows.schema.json",
+  "title": "LuXia – shows.json (format 1)",
+  "description": "Shows : graphes d'étapes et de transitions de type Grafcet (doc 50 §12h, doc 20 §3, SHOW-020 à SHOW-031).",
+  "type": "object",
+  "required": ["formatVersion"],
+  "$defs": {
+    "duration": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number", "minimum": 0 },
+        "unit": { "enum": ["seconds", "beats", "bars"] }
+      }
+    },
+    "quantize": { "enum": ["none", "beat", "bar", "phrase4", "phrase8", "phrase16"] },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": ["always", "manual", "after", "sceneEnded", "sequenceEnded", "sequenceLoops", "drop", "break", "buildUp", "silence", "resumed", "songChanged", "energyAbove", "energyBelow", "energyLevel", "style", "tempo", "random", "variable", "all", "any", "not"]
+        },
+        "duration": { "$ref": "#/$defs/duration", "description": "after : durée d'activité de l'étape" },
+        "value": { "type": "number", "description": "seuil d'énergie (0-1), probabilité (0-1), valeur comparée d'une variable" },
+        "min": { "type": ["number", "null"], "description": "niveau d'énergie (0-3) ou tempo (BPM)" },
+        "max": { "type": ["number", "null"] },
+        "sceneId": { "type": ["string", "null"], "format": "uuid" },
+        "sequenceId": { "type": ["string", "null"], "format": "uuid" },
+        "count": { "type": "integer", "minimum": 1, "description": "sequenceLoops : nombre de passages" },
+        "styles": { "type": "array", "items": { "type": "string" } },
+        "every": { "$ref": "#/$defs/quantize", "description": "random : un tirage à chaque temps, mesure ou phrase" },
+        "variable": { "type": ["string", "null"] },
+        "comparison": { "enum": ["atLeast", "atMost", "equalTo", "notEqualTo"] },
+        "conditions": { "type": "array", "items": { "$ref": "#/$defs/condition" }, "description": "all / any : au moins une ; not : exactement une" }
+      }
+    }
+  },
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "shows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "steps"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "category": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] },
+          "role": { "enum": ["main", "transition", "waiting", "slow", "opening"] },
+          "styles": { "type": "array", "items": { "type": "string" } },
+          "energyMin": { "type": "integer", "minimum": 0, "maximum": 3 },
+          "energyMax": { "type": "integer", "minimum": 0, "maximum": 3 },
+          "weight": { "type": "number", "exclusiveMinimum": 0 },
+          "maxMinutes": { "type": ["number", "null"], "exclusiveMinimum": 0 },
+          "secondary": { "type": "boolean", "description": "joue en parallèle du show principal (SHOW-031)" },
+          "atEnd": { "enum": ["stop", "restart"] },
+          "variables": {
+            "type": "array",
+            "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "initial": { "type": "number" } } }
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id"],
+              "properties": {
+                "id": { "type": "string", "description": "identifiant court et lisible, unique dans le show (« 0 », « 2a »)" },
+                "name": { "type": "string" },
+                "initial": { "type": "boolean" },
+                "macroShowId": { "type": ["string", "null"], "format": "uuid", "description": "macro-étape : show joué tant que l'étape est active" },
+                "choice": { "enum": ["priority", "random"], "description": "plusieurs transitions vraies : la première, ou tirage pondéré" },
+                "avoidRepeat": { "type": "boolean" },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["kind"],
+                    "properties": {
+                      "kind": { "enum": ["play", "playSequence", "launch", "launchSequence", "stop", "stopSequence", "stopLayer", "layerLevel", "speed", "flash", "smoke", "blackout", "variable"] },
+                      "sceneId": { "type": ["string", "null"], "format": "uuid" },
+                      "sequenceId": { "type": ["string", "null"], "format": "uuid" },
+                      "layerId": { "type": ["string", "null"], "format": "uuid" },
+                      "value": { "type": "number" },
+                      "seconds": { "type": "number", "exclusiveMinimum": 0 },
+                      "variable": { "type": ["string", "null"] },
+                      "operation": { "enum": ["add", "set"] }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "transitions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["from", "to"],
+              "properties": {
+                "from": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "to": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "condition": { "$ref": "#/$defs/condition" },
+                "quantize": { "$ref": "#/$defs/quantize" },
+                "weight": { "type": "number", "exclusiveMinimum": 0 },
+                "label": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
