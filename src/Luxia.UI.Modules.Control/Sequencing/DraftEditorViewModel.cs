@@ -74,6 +74,9 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
         Dialogs = dialogs;
         Journal = journal;
         Simulation = new SimulationViewModel(runtime, () => IsBlind, PlayCommandFor);
+
+        // Projet ouvert ou créé pendant l'édition : le brouillon appartient à l'ancien projet, il ne doit jamais y être écrit.
+        runtime.Project.Changed += (_, _) => Abandon();
     }
 
     /// <summary>Application.</summary>
@@ -319,8 +322,8 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
             return;
         }
 
-        // Ce qui jouait à l'essai s'arrête : l'essai continue de l'autre côté (sortie ou aperçu) si on le relance.
-        Simulation.StopOn(!value);
+        // Ce qui jouait à l'essai, de l'autre côté, s'arrête (en passant en aveugle : sur la sortie) ; on le relance du nouveau côté.
+        Simulation.StopOn(output: value);
         Runtime.PreviewActive = value;
         PushDraft(Draft, value);
         Runtime.TraceUi("Édition", value ? "aveugle" : "sortie");

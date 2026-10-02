@@ -223,7 +223,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-041 | `ChoisirSourceTempo` | audio / tap / fixe (+ BPM) | Horloge | P7 |
 | CMD-042 | `AjusterTempo` | ×2, ÷2, ± valeur en BPM, « 1 ici » (le temps en cours devient le premier de la mesure) | Horloge | P7 |
 | CMD-043 | `RégleLatenceTempo` | décalage en secondes (± 0,5) appliqué aux événements musicaux ; l'écoute le mémorise par périphérique | Horloge | P7 |
-| CMD-050 | `LancerShow` / `ArrêterShow` | show | Show | P8 |
+| CMD-050 | `LancerShow` / `ArrêterShow` | show (bascule possible) ; arrêt d'un show, ou de tous les shows et séquences (en gardant les shows secondaires pour « ■ Stop », qui épargne aussi les couches protégées) | Show | P8 |
 | CMD-051 | `ForcerTransition` | show, transition | Show | P8 |
 | CMD-052 | `LancerSéquence` / `ArrêterSéquence` | séquence | Show | P8 |
 | CMD-053 | `SimulerMusique` | événement (drop, break, montée, silence, reprise, morceau changé), énergie simulée ou rendue à l'écoute, style simulé (mode simulation, SHOW-027 ; D38) | Moteur, Show | P8 |

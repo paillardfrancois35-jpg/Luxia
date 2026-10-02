@@ -116,6 +116,26 @@ public sealed class AudioListenerTests
     }
 
     [Fact]
+    [Trait("Exigence", "EVT-023")]
+    [Trait("Exigence", "SHOW-022")]
+    public void SilenceAndResume_ReachTheEngine_AsCuesReadOnce()
+    {
+        // D38 : les événements musicaux passent au moteur par la lecture, une seule fois chacun (le séquenceur de shows s'en sert).
+        var factory = new FakeFactory();
+        using var listener = new AudioListener(factory, NullLogger.Instance);
+        listener.Start();
+        factory.Created[0].Emit(Kicks(124, 12));
+        _ = listener.Read();
+
+        factory.Created[0].Emit(new float[Rate * 2]);
+        (listener.Read().Cues & Luxia.Engine.Timing.MusicCues.Silence).ShouldNotBe(Luxia.Engine.Timing.MusicCues.None);
+        listener.Read().Cues.ShouldBe(Luxia.Engine.Timing.MusicCues.None, "lu une fois");
+
+        factory.Created[0].Emit(Kicks(124, 4));
+        (listener.Read().Cues & Luxia.Engine.Timing.MusicCues.Resumed).ShouldNotBe(Luxia.Engine.Timing.MusicCues.None);
+    }
+
+    [Fact]
     [Trait("Exigence", "AUD-002")]
     public async Task DefaultOutputChange_WithoutSystemNotification_ReconnectsAndWarns()
     {

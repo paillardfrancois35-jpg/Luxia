@@ -24,9 +24,6 @@ public interface ISequencerHost
     /// <summary>Instant du tick (horloge du moteur).</summary>
     TimeSpan Now { get; }
 
-    /// <summary>Secondes écoulées depuis le tick précédent.</summary>
-    double Elapsed { get; }
-
     /// <summary>Tempo de l'horloge musicale.</summary>
     double Bpm { get; }
 

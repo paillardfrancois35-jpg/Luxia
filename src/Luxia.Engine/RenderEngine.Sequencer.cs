@@ -47,11 +47,11 @@ public sealed partial class RenderEngine
         }
     }
 
-    private void TickSequencer(TimeSpan now, double elapsed)
+    private void TickSequencer(TimeSpan now)
     {
         var sequencer = Volatile.Read(ref _sequencer);
         var host = Host;
-        host.Begin(now, elapsed, Signals());
+        host.Begin(now, Signals());
         _simulatedCues = MusicCues.None;
         if (sequencer is null)
         {
@@ -147,8 +147,6 @@ public sealed partial class RenderEngine
     {
         public TimeSpan Now { get; private set; }
 
-        public double Elapsed { get; private set; }
-
         public double Bpm => engine._tempo.Bpm;
 
         public double BeatPosition => engine._tempo.EffectivePosition;
@@ -159,10 +157,9 @@ public sealed partial class RenderEngine
 
         public double GrandMaster => engine._grandMaster;
 
-        public void Begin(TimeSpan now, double elapsed, MusicSignals music)
+        public void Begin(TimeSpan now, MusicSignals music)
         {
             Now = now;
-            Elapsed = elapsed;
             Music = music;
         }
 

@@ -428,4 +428,23 @@ public sealed class MusicalClockTests
         engine.Run(0.1);
         engine.Playback(scene)!.Value.StepIndex.ShouldBe(1);
     }
+
+    [Fact]
+    [Trait("Exigence", "EVT-024")]
+    public void TempoChanged_IsPublished_OnlyForARealChange()
+    {
+        var bus = new CapturingBus();
+        var engine = new EngineHarness(new ShowBuilder().Build(), bus: bus);
+        engine.Tick();
+        bus.Of<Messaging.Events.TempoChanged>().ShouldHaveSingleItem().Bpm.ShouldBe(120);
+
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Fixed, 120.5));
+        engine.Run(0.5);
+        bus.Of<Messaging.Events.TempoChanged>().Count.ShouldBe(1, "moins de 1 BPM : rien");
+
+        engine.Send(new SetTempoSourceCommand(CommandOrigin.Tool, TempoSourceKind.Fixed, 128));
+        engine.Run(0.5);
+        bus.Of<Messaging.Events.TempoChanged>()[^1].Bpm.ShouldBe(128);
+        bus.Of<Messaging.Events.TempoChanged>().Count.ShouldBe(2, "un seul événement, pas un par tick");
+    }
 }

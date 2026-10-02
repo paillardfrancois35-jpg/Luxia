@@ -26,6 +26,7 @@
 - ShowExecutionTests.EndOfShow_HoldsStopsOrRestarts
 - ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd
 - ReferenceShowP8Tests.EveryP8SequenceAndShow_ReplaysExactlyAsReference
+- ShowExecutionTests.EditingAPlayingShow_KeepsArmedTransitions_AndUpdatesTheActiveStep
 
 ## Historique
 
@@ -33,3 +34,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`). Décision prise au développement (D39 précisée) : R6 telle quelle arrêtait le show dès qu'il atteignait une étape finale, ses scènes avec (une étape « Final » n'aurait rien joué) ; par défaut le show **tient** ses dernières étapes jusqu'à ce qu'on l'arrête, « s'arrêter » et « reprendre au début » restent au choix. |
+| 2026-10-02 | Claude | Développement | Relecture de fin de développement (avant l'essai) : modifier un show pendant qu'il joue (essai dans l'éditeur) ne fait plus oublier les transitions armées inchangées (un drop retenu jusqu'à la mesure), applique tout de suite les actions continues de l'étape active, et met à jour le sous-show d'une macro-étape. Test `ShowExecutionTests.EditingAPlayingShow_KeepsArmedTransitions_AndUpdatesTheActiveStep`. |

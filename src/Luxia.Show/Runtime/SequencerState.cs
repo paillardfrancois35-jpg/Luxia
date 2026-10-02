@@ -42,10 +42,9 @@ public sealed record ShowStatus(
 /// <param name="Id">Identifiant (« 2a »).</param>
 /// <param name="Name">Nom.</param>
 /// <param name="SinceBeats">Temps écoulés depuis son activation.</param>
-/// <param name="SinceSeconds">Secondes écoulées depuis son activation.</param>
 /// <param name="Actions">Actions de l'étape, en clair.</param>
 /// <param name="Macro">Sous-show d'une macro-étape, s'il joue.</param>
-public sealed record StepStatus(string Id, string Name, double SinceBeats, double SinceSeconds, IReadOnlyList<string> Actions, ShowStatus? Macro);
+public sealed record StepStatus(string Id, string Name, double SinceBeats, IReadOnlyList<string> Actions, ShowStatus? Macro);
 
 /// <summary>Une transition validée (ses étapes amont sont actives).</summary>
 /// <param name="Index">Rang dans le show (pour la forcer, CMD-051).</param>

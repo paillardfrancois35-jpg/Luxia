@@ -240,7 +240,7 @@ public sealed partial class ShowEditorViewModel : DraftEditorViewModel<ShowDefin
         ShowRules.Validate(item, Runtime.Project.Sequences, Runtime.Project.Shows with { Shows = [.. Runtime.Project.Shows.Shows.Where(s => s.Id != item.Id), item] }, Runtime.Project.Scenes, Runtime.Project.Layers);
 
     /// <inheritdoc />
-    protected override void PushDraft(ShowDefinition? item, bool previewOnly) => Runtime.SetSequencingDraft(null, item, previewOnly);
+    protected override void PushDraft(ShowDefinition? item, bool previewOnly) => Runtime.SetShowDraft(item, previewOnly);
 
     /// <inheritdoc />
     protected override SequencerCommand PlayCommandFor(bool stopping) => stopping

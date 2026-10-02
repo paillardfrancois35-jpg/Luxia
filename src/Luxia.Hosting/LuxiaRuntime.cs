@@ -39,7 +39,8 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     private bool _previewOwnTempo;
     private Luxia.Show.Model.Sequence? _sequenceDraft;
     private Luxia.Show.Model.ShowDefinition? _showDraft;
-    private bool _draftPreviewOnly;
+    private bool _sequenceDraftPreviewOnly;
+    private bool _showDraftPreviewOnly;
     private MidiLayout _midiLayout = MidiLayout.Empty;
     private Timer? _background;
     private int _backgroundTicks;
@@ -740,14 +741,21 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     }
 
     /// <summary>
-    /// Brouillon d'une séquence ou d'un show ouvert dans sa fenêtre d'édition (P8) : les séquenceurs le jouent à la place de la version
-    /// enregistrée ; seulement celui de l'aperçu si <paramref name="previewOnly"/> (case Aveugle). <c>null</c> = plus de brouillon.
+    /// Brouillon d'une séquence ouverte dans sa fenêtre d'édition (P8) : les séquenceurs le jouent à la place de la version enregistrée ;
+    /// seulement celui de l'aperçu si <paramref name="previewOnly"/> (case Aveugle). <c>null</c> = plus de brouillon.
     /// </summary>
-    public void SetSequencingDraft(Luxia.Show.Model.Sequence? sequence, Luxia.Show.Model.ShowDefinition? show, bool previewOnly)
+    public void SetSequenceDraft(Luxia.Show.Model.Sequence? sequence, bool previewOnly)
     {
         _sequenceDraft = sequence;
+        _sequenceDraftPreviewOnly = previewOnly;
+        LoadSequencing();
+    }
+
+    /// <summary>Brouillon d'un show ouvert dans sa fenêtre d'édition (P8), comme <see cref="SetSequenceDraft"/>.</summary>
+    public void SetShowDraft(Luxia.Show.Model.ShowDefinition? show, bool previewOnly)
+    {
         _showDraft = show;
-        _draftPreviewOnly = previewOnly;
+        _showDraftPreviewOnly = previewOnly;
         LoadSequencing();
     }
 
@@ -766,13 +774,14 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
     {
         var sequences = Project.Sequences;
         var shows = Project.Shows;
+        // Les deux fenêtres (séquence, show) peuvent être ouvertes ensemble : chaque brouillon a sa propre case Aveugle.
         var draftSequences = _sequenceDraft is { } sequence
             ? sequences with { Sequences = [.. sequences.Sequences.Where(s => s.Id != sequence.Id), sequence] }
             : sequences;
         var draftShows = _showDraft is { } show
             ? shows with { Shows = [.. shows.Shows.Where(s => s.Id != show.Id), show] }
             : shows;
-        Sequencer.Load(_draftPreviewOnly ? sequences : draftSequences, _draftPreviewOnly ? shows : draftShows);
+        Sequencer.Load(_sequenceDraftPreviewOnly ? sequences : draftSequences, _showDraftPreviewOnly ? shows : draftShows);
         PreviewSequencer.Load(draftSequences, draftShows);
     }
 

@@ -11,7 +11,7 @@ namespace Luxia.Show.Tests;
 
 /// <summary>
 /// Moteur réel en temps virtuel (40 Hz) avec le séquenceur branché : quatre couches (Couleurs exclusive, Mouvements, Effets,
-/// Ambiance non exclusive) et des scènes à une étape, sans appareil (on observe les lectures et les événements).
+/// Ambiance non exclusive et protégée de « Stop », comme dans un projet) et des scènes à une étape, sans appareil (on observe les lectures et les événements).
 /// </summary>
 internal sealed class SequencerHarness
 {
@@ -22,7 +22,7 @@ internal sealed class SequencerHarness
         Colors = Layer("Couleurs", 1);
         Movements = Layer("Mouvements", 2);
         Effects = Layer("Effets", 3);
-        Atmosphere = Layer("Ambiance", 4, exclusive: false);
+        Atmosphere = Layer("Ambiance", 4, exclusive: false, protectedLayer: true);
         Sequencer = new Sequencer(seed);
         Engine = new RenderEngine(new NullSink(), Clock, 1, null, Bus, seed);
         Engine.SetSequencer(Sequencer);
@@ -117,9 +117,9 @@ internal sealed class SequencerHarness
     public IReadOnlyList<string> ActiveSteps(ShowDefinition show) =>
         [.. Sequencer.State.Shows.FirstOrDefault(s => s.ShowId == show.Id)?.ActiveSteps.Select(s => s.Id) ?? []];
 
-    private EngineLayer Layer(string name, int priority, bool exclusive = true)
+    private EngineLayer Layer(string name, int priority, bool exclusive = true, bool protectedLayer = false)
     {
-        var layer = new EngineLayer { Id = Guid.NewGuid(), Name = name, Priority = priority, Exclusive = exclusive, CrossFade = Duration.Zero };
+        var layer = new EngineLayer { Id = Guid.NewGuid(), Name = name, Priority = priority, Exclusive = exclusive, CrossFade = Duration.Zero, KeepOnStopAll = protectedLayer };
         Layers.Add(layer);
         return layer;
     }

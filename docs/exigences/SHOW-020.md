@@ -30,6 +30,8 @@
 - ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd
 - SequencingScreensTests.ShowEditor_AddStepAndTransition_RenameStep_Validate
 - SequencingScreensTests.Lock_RefusesTheEditors
+- SequencingScreensTests.BothEditorsOpen_KeepTheirOwnDrafts
+- SequencingScreensTests.ReopeningTheProject_AbandonsTheDraft
 
 ## Historique
 
@@ -38,3 +40,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 1, 2 et 4 : maquette 12 soumise ; `shows.json` (doc 50 §12h) ; l'exemple du doc 20 §3.4 est écrit dans le show de référence (*Couplet / Refrain / Drop*, `722853b`). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : cartes (identifiant, nom, initiale, macro-étape, tirage au sort, actions, transitions avec étapes amont et aval — plusieurs = ET —, condition, quantification, poids, priorité) ; diagramme en rangées depuis les étapes initiales, retours en pointillés ; l'exemple du §3.4 se construit (show de référence). Écart : les réceptivités combinées se modifient dans le fichier. |
+| 2026-10-02 | Claude | Développement | Relecture : les fenêtres de séquence et de show ouvertes ensemble effaçaient le brouillon l'une de l'autre dans les séquenceurs (`SetSequenceDraft` / `SetShowDraft` séparés) ; un projet rouvert pendant l'édition abandonne le brouillon (il ne peut plus être écrit dans un autre projet) ; identifiant d'étape, étapes amont et aval écrits en quittant le champ (la carte se reconstruisait à chaque lettre et le champ perdait le curseur). |

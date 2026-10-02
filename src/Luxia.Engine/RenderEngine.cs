@@ -196,7 +196,7 @@ public sealed partial class RenderEngine : ICommandSink
         ReadAudio();
 
         // Le séquenceur peut agir dès les commandes de ce tick (lancer un show, une séquence) : il voit déjà l'instant et la musique.
-        Host.Begin(now, elapsed, Signals());
+        Host.Begin(now, Signals());
 
         // GEN-010 / GEN-011 : commandes appliquées au tick suivant leur réception, dans l'ordre d'arrivée.
         while (_pending.TryDequeue(out var item))
@@ -207,7 +207,7 @@ public sealed partial class RenderEngine : ICommandSink
         LaunchDueQuantized(now);
 
         // D37 : shows et séquences évoluent ici, après les commandes et avant l'avancement des scènes.
-        TickSequencer(now, elapsed);
+        TickSequencer(now);
 
         // GEN-032 : les scènes avancent du temps réellement écoulé, pas d'un nombre de ticks.
         // MOT-073 : figé avec lectures suspendues → elles n'avancent plus.
@@ -367,7 +367,7 @@ public sealed partial class RenderEngine : ICommandSink
                 // « Tout arrêter » (écran, MIDI) arrête aussi shows et séquences : sinon un show relancerait ses scènes (D37).
                 if (stopLayer.LayerId is null && stopLayer.Origin != CommandOrigin.Show && Volatile.Read(ref _sequencer) is not null)
                 {
-                    ApplySequencer(new StopShowCommand(stopLayer.Origin));
+                    ApplySequencer(new StopShowCommand(stopLayer.Origin, KeepSecondary: !stopLayer.Everything));
                 }
 
                 return StopLayer(stopLayer);

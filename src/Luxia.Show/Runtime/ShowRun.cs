@@ -140,10 +140,20 @@ internal sealed class ShowRun
     /// <summary>Remplace la définition (projet modifié) : les étapes qui existent encore restent actives.</summary>
     public void Replace(ShowDefinition definition, ISequencerHost host)
     {
+        // Une transition inchangée (même objet : l'éditeur ne recrée que ce qu'il modifie) garde son attente : un drop retenu
+        // jusqu'à la mesure ne se perd pas parce qu'on retouche le show pendant son essai.
+        var previous = Definition;
         Definition = definition;
-        _armed.Clear();
-        _forced.Clear();
-        _forcedNow.Clear();
+        foreach (var index in _armed.Keys.Concat(_forced).Concat(_forcedNow).Distinct().ToList())
+        {
+            if (index >= definition.Transitions.Count || index >= previous.Transitions.Count || !ReferenceEquals(previous.Transitions[index], definition.Transitions[index]))
+            {
+                _armed.Remove(index);
+                _forced.Remove(index);
+                _forcedNow.Remove(index);
+            }
+        }
+
         foreach (var id in _active.Keys.Where(id => definition.Steps.All(s => s.Id != id)).ToList())
         {
             _active[id].Sub?.Stop(host);
@@ -152,7 +162,25 @@ internal sealed class ShowRun
 
         foreach (var (id, active) in _active.ToList())
         {
-            _active[id] = active with { Step = definition.Steps.First(s => s.Id == id) };
+            var step = definition.Steps.First(s => s.Id == id);
+            var sub = active.Sub;
+            var macro = sub is null ? null : _sequencer.FindShow(sub.Definition.Id);
+            if (sub is not null && (step.MacroShowId != sub.Definition.Id || macro is null))
+            {
+                // Macro-étape qui change de show (ou dont le show a disparu) : l'ancien sous-show s'arrête, le nouveau démarre.
+                sub.Stop(host);
+                sub = step.MacroShowId is { } id2 && _depth < MaxDepth && _sequencer.FindShow(id2) is { } fresh ? new ShowRun(fresh, _sequencer, _depth + 1) : null;
+            }
+            else if (sub is not null && macro is not null)
+            {
+                sub.Replace(macro, host);
+            }
+            else if (step.MacroShowId is { } added && _depth < MaxDepth && _sequencer.FindShow(added) is { } show)
+            {
+                sub = new ShowRun(show, _sequencer, _depth + 1);
+            }
+
+            _active[id] = active with { Step = step, Sub = sub };
         }
 
         foreach (var variable in definition.Variables.Where(v => !_variables.ContainsKey(v.Name)))
@@ -164,6 +192,11 @@ internal sealed class ShowRun
         {
             _started = false;
         }
+        else if (_started)
+        {
+            // Les actions continues de l'étape active suivent la modification tout de suite (essai dans l'éditeur).
+            ApplyContinuous(host);
+        }
     }
 
     /// <summary>État lisible pour la supervision.</summary>
@@ -174,7 +207,6 @@ internal sealed class ShowRun
                 a.Step.Id,
                 a.Step.Name,
                 host.BeatPosition - a.Beat,
-                (host.Now - a.At).TotalSeconds,
                 [.. a.Step.Actions.Select(x => ShowTexts.Describe(x, names))],
                 a.Sub?.Status(host, names)))
             .ToList();

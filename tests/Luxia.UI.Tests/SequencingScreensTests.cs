@@ -212,4 +212,35 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         _game.ShowEditor.IsOpen.ShouldBeFalse();
         _game.Message.ShouldBe(ControlSession.LockedReason);
     }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-020")]
+    public void BothEditorsOpen_KeepTheirOwnDrafts()
+    {
+        var show = _host.Runtime.Project.Shows.Shows.Single(s => s.Name == "Tirage au sort (variantes)");
+        _game.EditShow(show.Id);
+        _game.ShowEditor.Name = "Tirage retouché";
+        _game.EditSequence(_host.Runtime.Project.Sequences.Sequences[0].Id);
+        _game.SequenceEditor.Bars = 12;
+
+        _host.Runtime.Engine.Send(new Messaging.Commands.LaunchShowCommand(Messaging.Commands.CommandOrigin.User, show.Id));
+        Run(4);
+
+        _host.Runtime.Sequencer.State.MainShow!.Name.ShouldBe("Tirage retouché", "le brouillon du show reste joué quand l'éditeur de séquence change le sien");
+    }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-020")]
+    public void ReopeningTheProject_AbandonsTheDraft()
+    {
+        var show = _host.Runtime.Project.Shows.Shows[0];
+        _game.EditShow(show.Id);
+        _game.ShowEditor.Name = "Ne doit pas être écrit";
+
+        _host.Runtime.Project.Open(_host.ProjectFolder).ShouldBeTrue();
+
+        _game.ShowEditor.IsOpen.ShouldBeFalse();
+        _host.Runtime.Project.Shows.Shows.ShouldNotContain(s => s.Name == "Ne doit pas être écrit");
+    }
 }
+

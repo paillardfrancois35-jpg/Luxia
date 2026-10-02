@@ -447,4 +447,57 @@ public sealed class ShowExecutionTests
         h.ActiveSteps(show).ShouldBe(["1"], "en 30 mesures, une chance sur deux finit par sortir");
         h.Bus.Of<ShowStepActivated>()[^1].At.TotalSeconds.ShouldSatisfyAllConditions(t => (t % 2.0).ShouldBeLessThan(0.03));
     }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-023")]
+    public void EditingAPlayingShow_KeepsArmedTransitions_AndUpdatesTheActiveStep()
+    {
+        var h = new SequencerHarness();
+        var blue = h.Scene("Bleu", h.Colors);
+        var circle = h.Scene("Cercle", h.Movements);
+        var show = new ShowDefinition
+        {
+            Name = "Essai",
+            Steps = [Step("1", true, Play(blue)), Step("3")],
+            Transitions = [T("1", "3", When(ConditionKind.Drop), ShowQuantize.Bar)],
+        };
+        Start(show, h);
+        h.RunTo(0.5);
+        h.Send(new SimulateMusicCommand(CommandOrigin.Tool, SimulatedCue.Drop));
+        h.Tick();
+
+        // Retouche pendant l'essai : l'étape active joue aussi le cercle ; la transition (même objet) reste armée.
+        var edited = show with { Steps = [Step("1", true, Play(blue), Play(circle)), show.Steps[1]] };
+        h.Sequencer.Load(new SequenceSet(), new ShowSet { Shows = [edited] });
+        h.Tick();
+        h.Playing(circle).ShouldBeTrue();
+        h.RunTo(2.05);
+        h.ActiveSteps(show).ShouldBe(["3"], "le drop retenu part à la mesure malgré la retouche");
+    }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-031")]
+    public void Stop_KeepsSecondaryShows_ButStopEverythingDoesNot()
+    {
+        var h = new SequencerHarness();
+        var blue = h.Scene("Bleu", h.Colors);
+        var uv = h.Scene("UV", h.Atmosphere);
+        var main = new ShowDefinition { Name = "Principal", Steps = [Step("0", true, Play(blue))] };
+        var ambiance = new ShowDefinition { Name = "Ambiance", Secondary = true, Steps = [Step("0", true, Play(uv))] };
+        h.Shows.AddRange([main, ambiance]);
+        h.Load(120);
+        h.Send(new LaunchShowCommand(CommandOrigin.Tool, main.Id));
+        h.Send(new LaunchShowCommand(CommandOrigin.Tool, ambiance.Id));
+        h.Run(0.1);
+
+        h.Send(new StopLayerCommand(CommandOrigin.Tool));
+        h.Run(0.1);
+        h.Sequencer.State.Shows.Select(s => s.Name).ShouldBe(["Ambiance"], "« ■ Stop » épargne le show secondaire");
+        h.Playing(uv).ShouldBeTrue();
+
+        h.Send(new StopLayerCommand(CommandOrigin.Tool, Everything: true));
+        h.Run(0.1);
+        h.Sequencer.State.Shows.ShouldBeEmpty();
+    }
 }
+

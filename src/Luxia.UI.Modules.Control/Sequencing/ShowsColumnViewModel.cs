@@ -256,7 +256,7 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
 public sealed partial class ShowItemViewModel : ViewModelBase
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(Fill), nameof(TextColor))]
+    [NotifyPropertyChangedFor(nameof(Fill), nameof(TextColor), nameof(ShowsProgress))]
     private bool _isActive;
 
     [ObservableProperty]
@@ -307,8 +307,8 @@ public sealed partial class ShowItemViewModel : ViewModelBase
     /// <summary>Contour quand l'objet est ouvert.</summary>
     public Avalonia.Thickness OutlineThickness => new(IsEditTarget ? 2 : 0);
 
-    /// <summary>Barre d'avancement (séquence).</summary>
-    public bool ShowsProgress => !IsShow;
+    /// <summary>Barre d'avancement : une séquence qui joue.</summary>
+    public bool ShowsProgress => !IsShow && IsActive;
 
     private static double Luminance(string hex)
     {

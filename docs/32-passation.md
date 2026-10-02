@@ -263,7 +263,14 @@
   5. **Interface** : colonne « Shows », bandeau « Show en cours », fenêtres d'édition d'une séquence (frise, glisser-déposer) et d'un show
      (cartes, diagramme, essai sans musique), journal des étapes.
   6. **Documentation** : guide P8, `essais/P8-resultats.md`, doc 51 (guide de conception des shows, GEN-134), doc 20 §6, doc 60 §4.11, fiches.
-  Tests : 940, tous verts, 0 avertissement (test de performance du moteur fiabilisé, doc 03 §11). **Restent** : essai en discussion test,
+  **Relecture avant l'essai (2026-10-02, demande de l'utilisateur)** : fiches et historique contrôlés (34 fiches de P8, plus GEN-131,
+  GEN-133, EVT-023, MOT-002 complétées), audit sans nouveau problème, analyseurs de code mort propres ; défauts trouvés et corrigés avec
+  tests : brouillons des deux éditeurs qui s'effaçaient l'un l'autre, transitions armées oubliées en modifiant un show qui joue (et étape
+  active non mise à jour, sous-show de macro-étape non mis à jour), « ■ Stop » qui arrêtait le show secondaire, brouillon gardé après
+  réouverture du projet, cartes reconstruites à chaque lettre (identifiant, étapes amont), Aveugle qui arrêtait l'essai du mauvais côté ;
+  code mort retiré ; deux tests ajoutés (EVT-024, signaux de l'écoute). Idées notées au doc 99 (réceptivités combinées à l'écran, boucles
+  d'une scène).
+  Tests : 946, tous verts, 0 avertissement (test de performance du moteur fiabilisé, doc 03 §11). **Restent** : essai en discussion test,
   lot 7 (retrait des écrans Live et Scènes : déplacer d'abord `SceneOptions`, `DurationField`, `Choice` dans le module Contrôle),
   revue globale de fin de phase (`python tools/audit-documentation.py`), validation, fusion, `v1.010`. Statuts laissés « Partiel » :
   EVT-020 / 021 (décision D38, à confirmer à la validation), SHOW-001 (mesure à 3 temps reportée).

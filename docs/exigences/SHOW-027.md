@@ -34,3 +34,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 3 et 4 (`4c87f9e`, `d46142e`) : drop, break, montée, silence, reprise, morceau changé, énergie imposée, style simulé ; l'exemple du §3.4 est testé sans musique. |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`). |
+| 2026-10-02 | Claude | Développement | Relecture : cocher « Aveugle » pendant un essai arrêtait l'essai sur l'aperçu au lieu de la sortie ; corrigé (l'essai s'arrête du côté qu'on quitte). |

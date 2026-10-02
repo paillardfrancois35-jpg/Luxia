@@ -69,7 +69,7 @@ public sealed class Sequencer : ISequencer
             case LaunchShowCommand launch:
                 return LaunchShow(host, launch);
             case StopShowCommand stop:
-                StopShows(host, stop.ShowId);
+                StopShows(host, stop.ShowId, stop.KeepSecondary);
                 return null;
             case ForceTransitionCommand force:
                 return _shows.FirstOrDefault(s => s.Definition.Id == force.ShowId && !s.Stopped) is { } run
@@ -268,9 +268,9 @@ public sealed class Sequencer : ISequencer
         return null;
     }
 
-    private void StopShows(ISequencerHost host, Guid? id)
+    private void StopShows(ISequencerHost host, Guid? id, bool keepSecondary)
     {
-        foreach (var run in _shows.Where(s => !s.Stopped && (id is null || s.Definition.Id == id)))
+        foreach (var run in _shows.Where(s => !s.Stopped && (id is null ? !(keepSecondary && s.Definition.Secondary) : s.Definition.Id == id)))
         {
             run.Stop(host);
             host.Publish(new ShowStateChanged(run.Definition.Id, run.Definition.Name, false, host.Now));

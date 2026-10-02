@@ -105,7 +105,7 @@
                       <DockPanel>
                         <Button DockPanel.Dock="Right" Classes="mini" Content="Supprimer l'étape" Foreground="#F85149" Command="{Binding DeleteCommand}" />
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                          <TextBox Text="{Binding IdText}" Width="56" FontWeight="Bold" ToolTip.Tip="Identifiant court (« 0 », « 2a ») : les transitions s'y réfèrent" />
+                          <TextBox Text="{Binding IdText, UpdateSourceTrigger=LostFocus}" Width="56" FontWeight="Bold" ToolTip.Tip="Identifiant court (« 0 », « 2a ») : les transitions s'y réfèrent" />
                           <TextBox Text="{Binding Name}" Width="230" FontSize="15" FontWeight="SemiBold" PlaceholderText="Nom de l'étape" />
                           <CheckBox Content="initiale" IsChecked="{Binding Initial}" ToolTip.Tip="Le show commence par les étapes initiales" />
                           <Border Background="#39C5CF" CornerRadius="10" Padding="8,1" IsVisible="{Binding IsActive}" VerticalAlignment="Center">
@@ -190,14 +190,14 @@
                                   </StackPanel>
                                   <TextBox Text="{Binding Styles}" Width="180" Margin="0,0,6,4" PlaceholderText="Électro, House" IsVisible="{Binding ShowsStyles}" />
                                   <TextBlock Text="vers" Classes="label" Margin="0,0,4,4" />
-                                  <TextBox Text="{Binding To}" Width="70" Margin="0,0,6,4" ToolTip.Tip="Étape(s) aval ; plusieurs, séparées par des virgules = branches en parallèle (ET)" />
+                                  <TextBox Text="{Binding To, UpdateSourceTrigger=LostFocus}" Width="70" Margin="0,0,6,4" ToolTip.Tip="Étape(s) aval ; plusieurs, séparées par des virgules = branches en parallèle (ET)" />
                                   <ComboBox ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Quantize}" Width="230" Margin="0,0,6,4"
                                             ToolTip.Tip="Quand la condition devient vraie, la transition attend cette frontière musicale" />
                                   <TextBlock Text="poids" Classes="label" Margin="0,0,4,4" />
                                   <NumericUpDown Value="{Binding Weight}" Minimum="0.01" Maximum="1000" Increment="10" FormatString="0.##" Width="90" Margin="0,0,6,4"
                                                  ToolTip.Tip="Pour le tirage au sort (cochez « tirage au sort » sur la carte)" />
                                   <TextBlock Text="depuis" Classes="label" Margin="0,0,4,4" />
-                                  <TextBox Text="{Binding From}" Width="60" Margin="0,0,6,4" ToolTip.Tip="Étape(s) amont ; plusieurs = attendre qu'elles soient toutes actives (convergence en ET)" />
+                                  <TextBox Text="{Binding From, UpdateSourceTrigger=LostFocus}" Width="60" Margin="0,0,6,4" ToolTip.Tip="Étape(s) amont ; plusieurs = attendre qu'elles soient toutes actives (convergence en ET)" />
                                   <Button Classes="mini" Content="↑" Margin="0,0,2,4" Command="{Binding MoveUpCommand}" ToolTip.Tip="Plus prioritaire" />
                                   <Button Classes="mini" Content="↓" Margin="0,0,2,4" Command="{Binding MoveDownCommand}" ToolTip.Tip="Moins prioritaire" />
                                   <Button Classes="mini" Content="✕" Margin="0,0,0,4" Command="{Binding DeleteCommand}" ToolTip.Tip="Supprimer la transition" />

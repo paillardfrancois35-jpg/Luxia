@@ -19,7 +19,9 @@ public sealed record LaunchShowCommand(CommandOrigin Origin, Guid ShowId, bool S
 /// <summary>CMD-050 <c>ArrêterShow</c> : arrête un show, ou tous (<paramref name="ShowId"/> nul), avec le fondu de ses scènes.</summary>
 /// <param name="Origin">Origine.</param>
 /// <param name="ShowId">Show ; <c>null</c> = tous les shows et toutes les séquences.</param>
-public sealed record StopShowCommand(CommandOrigin Origin, Guid? ShowId = null) : SequencerCommand(Origin);
+/// <param name="KeepSecondary">Avec <paramref name="ShowId"/> nul : les shows secondaires continuent (« ■ Stop », qui épargne aussi les
+/// couches protégées).</param>
+public sealed record StopShowCommand(CommandOrigin Origin, Guid? ShowId = null, bool KeepSecondary = false) : SequencerCommand(Origin);
 
 /// <summary>
 /// CMD-051 <c>ForcerTransition</c> : franchit une transition d'un show qui joue, comme si sa condition était vraie (à sa
