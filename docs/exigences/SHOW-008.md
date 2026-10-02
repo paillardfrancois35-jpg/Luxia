@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 2.2 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 3 (`4c87f9e`). |
+| 2026-10-02 | Claude | Développement | Exemple *Pulsation couleurs (double temps)* ajouté au show de référence (guide P8, exemple 4). |

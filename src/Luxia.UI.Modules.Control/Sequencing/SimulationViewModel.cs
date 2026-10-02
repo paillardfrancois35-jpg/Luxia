@@ -21,6 +21,7 @@ public sealed partial class SimulationViewModel : ViewModelBase
     private readonly Func<bool> _blind;
     private readonly Func<bool, SequencerCommand> _play;
     private bool _releasing;
+    private (TempoSourceKind Source, double Bpm)? _liveTempo;
 
     [ObservableProperty]
     private bool _useMetronome;
@@ -67,6 +68,13 @@ public sealed partial class SimulationViewModel : ViewModelBase
     {
         if (UseMetronome)
         {
+            // Sur la sortie, le métronome change l'horloge du direct : on retient sa source et son tempo pour les rendre à la fin.
+            if (!_blind() && _liveTempo is null)
+            {
+                var tempo = _runtime.Engine.Snapshot.Tempo;
+                _liveTempo = (tempo.Source, tempo.Bpm);
+            }
+
             _runtime.PreviewOwnTempo = _blind();
             Target.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Fixed, (double)Math.Clamp(MetronomeBpm, 20, 400)));
         }
@@ -132,6 +140,19 @@ public sealed partial class SimulationViewModel : ViewModelBase
     public void Release()
     {
         _runtime.PreviewOwnTempo = false;
+        if (_liveTempo is { } live)
+        {
+            // L'horloge du direct retrouve ce qu'elle suivait avant l'essai (la musique écoutée, par exemple).
+            // Un tempo donné passe l'horloge en fixe : on rend d'abord le tempo, puis la source (Tap, Audio).
+            _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, TempoSourceKind.Fixed, live.Bpm));
+            if (live.Source != TempoSourceKind.Fixed)
+            {
+                _runtime.Engine.Send(new SetTempoSourceCommand(CommandOrigin.User, live.Source));
+            }
+
+            _liveTempo = null;
+        }
+
         foreach (var engine in new[] { _runtime.Engine, _runtime.Preview })
         {
             engine.Send(new SimulateMusicCommand(CommandOrigin.User, Energy: double.NaN, Style: string.Empty));

@@ -272,6 +272,54 @@
           ]
         }
       ]
+    },
+    {
+      "id": "8a000008-0000-4000-8000-000000000005",
+      "name": "Pulsation couleurs (double temps)",
+      "color": "#FF7B72",
+      "category": "Phase P8",
+      "notes": "Vitesse « double » (SHOW-008) : une couleur par mesure de la séquence, donc une toutes les deux temps de l'horloge ; 4 mesures en boucle = 2 mesures réelles. En repassant la vitesse à « normale » dans la fenêtre d'édition, la même séquence va deux fois moins vite. Les PAR restent à 100 % (Plein feu) pendant que la couleur change.",
+      "bars": 4,
+      "end": "loop",
+      "quantize": "bar",
+      "speed": 2,
+      "tracks": [
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000001",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 4,
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "layerId": "7c1a0001-0000-4000-8000-000000000002",
+          "blocks": [
+            {
+              "start": 0,
+              "length": 1,
+              "sceneId": "dfaf4fe6-0451-5e60-9a8a-effc3ae11981"
+            },
+            {
+              "start": 1,
+              "length": 1,
+              "sceneId": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7"
+            },
+            {
+              "start": 2,
+              "length": 1,
+              "sceneId": "a4a9c5de-e456-54cb-8c0a-93ce0140c588"
+            },
+            {
+              "start": 3,
+              "length": 1,
+              "sceneId": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

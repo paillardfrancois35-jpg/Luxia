@@ -27,8 +27,8 @@ public sealed class ReferenceShowP8Tests
     {
         var (sequences, _) = SequenceStore.Load(Folder);
         var (shows, _) = ShowStore.Load(Folder);
-        sequences.Sequences.Count(s => s.Category == "Phase P8").ShouldBe(4);
-        shows.Shows.Count(s => s.Category == "Phase P8").ShouldBe(4);
+        sequences.Sequences.Count(s => s.Category == "Phase P8").ShouldBe(5);
+        shows.Shows.Count(s => s.Category == "Phase P8").ShouldBe(7);
         shows.Shows.Single(s => s.Name == "Ambiance UV et fumée (secondaire)").Secondary.ShouldBeTrue();
 
         // DEMO-4 : le piège est la seule erreur des fichiers de P8.

@@ -32,12 +32,12 @@ public sealed class EnginePerformanceTests
         // Temps retenu = la meilleure série (jusqu'à 5) : la charge des autres suites ne peut que ralentir le tick, jamais
         // l'accélérer ; mesuré le 2026-09-29 : ≈ 1 ms seul, jusqu'à 5,7 ms en pleine série complète (docs/03 §11).
         // P8 : avec un projet de tests de plus, la charge de la série complète dure plus longtemps que cinq séries ; au-delà, une
-        // série par seconde pendant au plus 30 s (la charge des autres suites finit par retomber), seuil inchangé.
+        // série par seconde pendant au plus 90 s, la durée d'une série complète (la charge des autres suites finit par retomber), seuil inchangé.
         var watch = new Stopwatch();
         var best = double.MaxValue;
         long allocated = 0;
         var deadline = Stopwatch.StartNew();
-        for (var attempt = 0; best >= 5 && (attempt < 5 || deadline.Elapsed < TimeSpan.FromSeconds(30)); attempt++)
+        for (var attempt = 0; best >= 5 && (attempt < 5 || deadline.Elapsed < TimeSpan.FromSeconds(90)); attempt++)
         {
             if (attempt >= 5)
             {

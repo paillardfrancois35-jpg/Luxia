@@ -551,7 +551,8 @@ internal sealed class ShowRun
         foreach (var scene in _playedScenes.Where(s => !scenes.Contains(s)).ToList())
         {
             _playedScenes.Remove(scene);
-            if (host.IsPlaying(scene) && !_sequencer.WantedElsewhere(scene, this))
+            // Une scène reprise par le sous-show d'une macro-étape (ou par un autre show) continue.
+            if (host.IsPlaying(scene) && !_sequencer.WantedElsewhere(scene, this) && !_active.Values.Any(x => x.Sub?.Plays(scene) == true))
             {
                 host.Execute(new StopSceneCommand(CommandOrigin.Show, scene));
             }

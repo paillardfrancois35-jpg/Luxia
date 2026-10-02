@@ -176,9 +176,32 @@ public sealed class ShowExecutionTests
         h.Sequencer.State.MainShow!.ActiveSteps.ShouldHaveSingleItem().Macro!.ActiveSteps.ShouldHaveSingleItem().Id.ShouldBe("r0");
         h.RunTo(1.5);
         h.ActiveSteps(show).ShouldBe(["m"]);
+        h.Starts(chorus).Count.ShouldBe(1, "le sous-show joue sa scène sans coupure");
         h.RunTo(2.2);
         h.ActiveSteps(show).ShouldBe(["x"], "sous-show arrivé à sa fin : la transition sortante est validée");
         h.Playing(chorus).ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-020")]
+    public void MacroStep_KeepsAScene_ThatItsSubShowAlsoPlays()
+    {
+        var h = new SequencerHarness();
+        var full = h.Scene("Plein feu", h.Colors);
+        var block = new ShowDefinition { Name = "Bloc", Steps = [Step("r0", true, Play(full))] };
+        var show = new ShowDefinition
+        {
+            Name = "Parent",
+            Steps = [Step("0", true, Play(full)), new ShowStep { Id = "m", MacroShowId = block.Id }],
+            Transitions = [T("0", "m", After(1, DurationUnit.Beats))],
+        };
+        h.Shows.Add(block);
+        Start(show, h);
+        h.RunTo(1.0);
+
+        h.ActiveSteps(show).ShouldBe(["m"]);
+        h.Playing(full).ShouldBeTrue("le parent ne coupe pas la scène que son sous-show reprend");
+        h.Starts(full).Count.ShouldBe(1);
     }
 
     [Fact]

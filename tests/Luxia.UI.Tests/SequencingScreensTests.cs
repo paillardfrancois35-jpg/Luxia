@@ -55,8 +55,8 @@ public sealed class SequencingScreensTests : IAsyncLifetime
     [Trait("Exigence", "SHOW-026")]
     public void ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt()
     {
-        _game.Columns.Shows.Shows.Count.ShouldBe(4);
-        _game.Columns.Shows.Sequences.Count.ShouldBe(4);
+        _game.Columns.Shows.Shows.Count.ShouldBe(7);
+        _game.Columns.Shows.Sequences.Count.ShouldBe(5);
         _game.Band.IsVisible.ShouldBeFalse("rien ne joue : pas de bandeau");
 
         _game.Columns.Shows.Press(ShowItem("Couplet / Refrain / Drop"));
@@ -88,6 +88,15 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         Run(84);
 
         _game.Band.Steps.ShouldBe("Couplet", "forcée à la mesure suivante (2 s à 120 BPM)");
+
+        // Le bus livre les événements sur son propre fil : la ligne du Journal arrive un peu après (attente bornée).
+        var waited = System.Diagnostics.Stopwatch.StartNew();
+        while (!_game.Journal.Lines.Any(l => l.Contains("étape 1 « Couplet » (forcée)", StringComparison.Ordinal)) && waited.Elapsed < TimeSpan.FromSeconds(2))
+        {
+            Thread.Sleep(20);
+            _game.Journal.Refresh();
+        }
+
         _game.Journal.Lines.ShouldContain(l => l.Contains("étape 1 « Couplet » (forcée)"));
     }
 
@@ -241,6 +250,28 @@ public sealed class SequencingScreensTests : IAsyncLifetime
 
         _game.ShowEditor.IsOpen.ShouldBeFalse();
         _host.Runtime.Project.Shows.Shows.ShouldNotContain(s => s.Name == "Ne doit pas être écrit");
+    }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-007")]
+    public void MetronomeOnTheOutput_GivesTheLiveTempoBack_WhenTheEditorCloses()
+    {
+        _host.Runtime.Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Fixed, 97));
+        _host.Runtime.Engine.Send(new Messaging.Commands.SetTempoSourceCommand(Messaging.Commands.CommandOrigin.User, Messaging.Commands.TempoSourceKind.Tap));
+        Run(2);
+        _game.EditSequence(_host.Runtime.Project.Sequences.Sequences[0].Id);
+        var simulation = _game.SequenceEditor.Simulation;
+        simulation.UseMetronome = true;
+        simulation.MetronomeBpm = 140;
+        simulation.PlayCommand.Execute(null);
+        Run(2);
+        _host.Runtime.Engine.Snapshot.Tempo.Bpm.ShouldBe(140);
+
+        _game.SequenceEditor.CancelCommand.Execute(null);
+        Run(2);
+
+        _host.Runtime.Engine.Snapshot.Tempo.Bpm.ShouldBe(97, 0.01);
+        _host.Runtime.Engine.Snapshot.Tempo.Source.ShouldBe(Messaging.Commands.TempoSourceKind.Tap);
     }
 }
 

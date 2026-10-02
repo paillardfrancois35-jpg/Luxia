@@ -270,7 +270,13 @@
   réouverture du projet, cartes reconstruites à chaque lettre (identifiant, étapes amont), Aveugle qui arrêtait l'essai du mauvais côté ;
   code mort retiré ; deux tests ajoutés (EVT-024, signaux de l'écoute). Idées notées au doc 99 (réceptivités combinées à l'écran, boucles
   d'une scène).
-  Tests : 946, tous verts, 0 avertissement (test de performance du moteur fiabilisé, doc 03 §11). **Restent** : essai en discussion test,
+  **Exemples ajoutés et seconde relecture (2026-10-02)** : *Pulsation couleurs (double temps)*, *Visite guidée (sans musique)*,
+  *Branches parallèles et macro-étape* et son sous-show *Bloc refrain (macro-étape)* ; guide P8 réécrit avec un **catalogue des
+  exemples** (§1 : ce que chacun démontre, durée, ce qu'on doit voir) et 17 essais ; trames `P8-shows.txt` régénérées. Relecture
+  limitée aux points importants : macro-étape (le parent coupait les scènes reprises par son sous-show) et métronome de l'essai sur la
+  sortie (l'horloge du direct restait en tempo fixe) corrigés et testés ; reprise d'un show après arrêt brutal notée au doc 99.
+  Les échecs des tests de temps pendant que le poste de l'utilisateur est chargé sont à ignorer (consigne du 2026-10-02).
+  Tests : 948, tous verts, 0 avertissement (test de performance du moteur fiabilisé, doc 03 §11). **Restent** : essai en discussion test,
   lot 7 (retrait des écrans Live et Scènes : déplacer d'abord `SceneOptions`, `DurationField`, `Choice` dans le module Contrôle),
   revue globale de fin de phase (`python tools/audit-documentation.py`), validation, fusion, `v1.010`. Statuts laissés « Partiel » :
   EVT-020 / 021 (décision D38, à confirmer à la validation), SHOW-001 (mesure à 3 temps reportée).
