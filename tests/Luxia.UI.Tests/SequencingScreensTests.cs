@@ -76,6 +76,29 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         _game.Band.IsVisible.ShouldBeFalse();
     }
 
+    [Fact]
+    [Trait("Exigence", "SHOW-024")]
+    public void Validate_AShowWithAnError_AsksFirst_AndLeavesTheErrorInTheJournal()
+    {
+        var trap = _host.Runtime.Project.Shows.Shows.Single(s => s.Name == "Piège : boucle sans condition");
+        _game.EditShow(trap.Id);
+        var editor = _game.ShowEditor;
+        editor.HasErrors.ShouldBeTrue();
+        editor.IssueRows[0].Text.ShouldStartWith("⛔");
+        editor.IssueRows[0].Color.ShouldBe(ControlColors.Error);
+
+        _host.Dialogs.ConfirmAnswer = false;
+        editor.ValidateCommand.Execute(null);
+        editor.IsOpen.ShouldBeTrue("Non : la fenêtre reste ouverte pour corriger");
+        _host.Dialogs.Confirmations.ShouldContain(m => m.Contains("refusé au lancement", StringComparison.Ordinal));
+
+        _host.Dialogs.ConfirmAnswer = true;
+        editor.ValidateCommand.Execute(null);
+        editor.IsOpen.ShouldBeFalse();
+        _game.Journal.Refresh();
+        _game.Journal.Lines.ShouldContain(l => l.Contains("⛔ « Piège : boucle sans condition » enregistré(e) avec une erreur", StringComparison.Ordinal));
+    }
+
     // TEMPORAIRE (essai P8, exemple 13) : à retirer avec la trace.
     [Fact]
     public async Task ShowTrace_WritesStates_StepsWithReasonAndQuantize()
@@ -96,6 +119,8 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         Thread.Sleep(700);
         shows.ToggleTraceCommand.Execute(null);
         shows.IsTracing.ShouldBeFalse();
+        _game.Journal.Refresh();
+        _game.Journal.Lines.ShouldContain(l => l.EndsWith("Trace arrêtée : " + file, StringComparison.Ordinal));
 
         var lines = await File.ReadAllLinesAsync(file);
         lines[0].ShouldStartWith("heure;temps moteur (s);type;BPM");
@@ -192,7 +217,7 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         _game.EditShow(show.Id);
         var editor = _game.ShowEditor;
         editor.Cards.Count.ShouldBe(5);
-        editor.Nodes.Single(n => n.Id == "5").Row.ShouldBe(3, "Final : trois transitions après l'intro");
+        editor.Nodes.Single(n => n.Id == "5").Row.ShouldBe(2, "Final : deux transitions après l'intro (Couplet, puis au silence)");
 
         editor.AddStepCommand.Execute(null);
         var card = editor.Cards[^1];

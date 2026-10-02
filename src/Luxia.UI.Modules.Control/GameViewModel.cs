@@ -68,6 +68,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Columns.Shows.EditShowRequested += (_, id) => EditShow(id);
         Columns.Shows.EditSequenceRequested += (_, id) => EditSequence(id);
         Columns.Shows.MessageRaised += (_, text) => Message = text;
+        Columns.Shows.JournalRaised += (_, text) => Journal.Log(text);
         SequenceEditor.Closed += (_, _) => Columns.Shows.Refresh();
         ShowEditor.Closed += (_, _) => Columns.Shows.Refresh();
         Editor.Closed += (_, _) => EditedSceneId = null;

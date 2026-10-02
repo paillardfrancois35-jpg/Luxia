@@ -31,3 +31,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 4. Exigences – musique et automatique). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : l'écran Live sera retiré à la fin de P8 (Q47) ; sa « zone Show » est dans l'écran de jeu. |
+| 2026-10-02 | Utilisateur | Test | Ex. 5 à 7 : bandeau « Show en cours » ✅. |

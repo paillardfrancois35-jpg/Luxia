@@ -49,6 +49,33 @@ public sealed class ReferenceShowP8Tests
     }
 
     [Fact]
+    [Trait("Exigence", "SHOW-022")]
+    [Trait("Exigence", "SHOW-029")]
+    public void CoupletRefrainDrop_EndOfTheSong_LeadsToTheFinal_AndTheNextSongToTheIntro()
+    {
+        // Essai P8, ex. 13 : 3e refrain coupé par un break (fin du morceau), puis silence, puis morceau suivant.
+        const string script = """
+            0 show "Couplet / Refrain / Drop"
+            1 energie 40
+            3 simuler drop
+            7 simuler break
+            9 simuler drop
+            13 simuler break
+            15 simuler drop
+            17 simuler break
+            21 simuler silence
+            25 simuler reprise
+            """;
+        var lines = Report(script, 28).Lines.Where(l => l.Contains('◆', StringComparison.Ordinal)).ToList();
+
+        var final = lines.FindIndex(l => l.Contains("étape 5 « Final »", StringComparison.Ordinal));
+        final.ShouldBeGreaterThan(0, "le silence mène au final, même quand le 3e refrain a été coupé par un break");
+        lines[final - 1].ShouldContain("étape 1 « Couplet »");
+        lines.Skip(final + 1).ShouldContain(l => l.Contains("étape 0 « Intro »", StringComparison.Ordinal), "le son reprend : retour à l'intro");
+        lines.Last().ShouldContain("étape 1 « Couplet »", Case.Sensitive, "compteur remis à zéro : l'intro repart vers le couplet");
+    }
+
+    [Fact]
     [Trait("Exigence", "SHOW-024")]
     public void Pitfall_IsRefused_AndNothingLights()
     {

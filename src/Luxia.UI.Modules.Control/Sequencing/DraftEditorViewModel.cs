@@ -118,7 +118,20 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
     public bool HasErrors => Issues.Any(i => i.Severity == Fixtures.Rules.IssueSeverity.Error);
 
     /// <summary>Texte des problèmes (une ligne par problème), vide s'il n'y en a pas.</summary>
-    public string IssuesText => string.Join(Environment.NewLine, Issues.Select(i => $"{(i.Severity == Fixtures.Rules.IssueSeverity.Error ? "⛔" : "⚠")} {i.Item.Replace(ItemLabel + ", ", string.Empty, StringComparison.Ordinal)} – {i.Message}"));
+    public string IssuesText => string.Join(Environment.NewLine, IssueRows.Select(r => r.Text));
+
+    /// <summary>
+    /// Problèmes à afficher, chacun dans la teinte de sa gravité (essai P8, ex. 16c) : erreur ⛔ en rouge franc (refusée au
+    /// lancement), avertissement ⚠ en jaune (n'empêche rien).
+    /// </summary>
+    public IReadOnlyList<IssueRow> IssueRows => Issues
+        .OrderBy(i => i.Severity == Fixtures.Rules.IssueSeverity.Error ? 0 : 1)
+        .Select(i => i.Severity == Fixtures.Rules.IssueSeverity.Error
+            ? new IssueRow($"⛔ {Short(i)}", ControlColors.Error)
+            : new IssueRow($"⚠ {Short(i)}", ControlColors.Warning))
+        .ToList();
+
+    private string Short(CompileIssue issue) => $"{issue.Item.Replace(ItemLabel + ", ", string.Empty, StringComparison.Ordinal)} – {issue.Message}";
 
     /// <summary>La fenêtre s'est fermée (validée, annulée, abandonnée).</summary>
     public event EventHandler? Closed;
@@ -199,17 +212,40 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
         _original = Draft;
         Message = HasErrors ? "Enregistré, mais avec des erreurs : voir la liste des problèmes." : null;
         Journal?.Log($"✔ « {NameOf(Draft)} » appliqué(e)");
+
+        // Essai P8, ex. 16c : l'erreur reste lisible au Journal après la fermeture de la fenêtre.
+        foreach (var issue in Issues.Where(i => i.Severity == Fixtures.Rules.IssueSeverity.Error))
+        {
+            Journal?.Log($"⛔ « {NameOf(Draft)} » enregistré(e) avec une erreur, refusé(e) au lancement : {Short(issue)}");
+        }
+
         Runtime.TraceUi("Édition", $"appliquer « {NameOf(Draft)} »");
         Publish();
     }
 
-    /// <summary>Écrit le brouillon et ferme.</summary>
+    /// <summary>
+    /// Écrit le brouillon et ferme ; avec une erreur (refusée au lancement, SHOW-024), demande d'abord confirmation (essai P8,
+    /// ex. 16c) : Non laisse la fenêtre ouverte pour corriger.
+    /// </summary>
     [RelayCommand]
-    public void Validate()
+    public async Task ValidateAsync()
     {
         if (!IsOpen)
         {
             return;
+        }
+
+        if (HasErrors)
+        {
+            var errors = Issues.Count(i => i.Severity == Fixtures.Rules.IssueSeverity.Error);
+            var save = await Dialogs.ConfirmAsync(
+                "Enregistrer avec des erreurs ?",
+                $"« {ItemName} » contient {errors} erreur(s) ⛔ : tant qu'elles restent, ce {Kind} sera refusé au lancement.{Environment.NewLine}{Environment.NewLine}Enregistrer quand même et fermer ? (Non : la fenêtre reste ouverte pour corriger.)").ConfigureAwait(true);
+            if (!save || !IsOpen)
+            {
+                Message = "Pas enregistré : corrigez les erreurs ⛔, ou validez à nouveau pour enregistrer quand même.";
+                return;
+            }
         }
 
         Apply();
@@ -344,6 +380,7 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
         Issues = Validate(Draft);
         OnPropertyChanged(nameof(Issues));
         OnPropertyChanged(nameof(IssuesText));
+        OnPropertyChanged(nameof(IssueRows));
         OnPropertyChanged(nameof(HasErrors));
         OnPropertyChanged(nameof(WindowTitle));
         OnPropertyChanged(nameof(EditedId));
@@ -374,3 +411,8 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
         Closed?.Invoke(this, EventArgs.Empty);
     }
 }
+
+/// <summary>Un problème du brouillon, dans la teinte de sa gravité.</summary>
+/// <param name="Text">Texte, avec son icône (⛔ erreur, ⚠ avertissement).</param>
+/// <param name="Color">Teinte.</param>
+public sealed record IssueRow(string Text, string Color);

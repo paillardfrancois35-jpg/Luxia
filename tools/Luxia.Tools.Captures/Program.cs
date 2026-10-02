@@ -174,6 +174,11 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(0, 1));
     Tick(10);
     Capture("Édition - séquence", sequenceWindow);
+
+    // Bloc d'action « niveau de couche » (rampe 30 → 100 %) : champs numériques du panneau « Bloc choisi » (essai 15).
+    game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(3, 0));
+    Tick(4);
+    Capture("Édition - séquence, bloc de niveau", sequenceWindow);
     game.SequenceEditor.Cancel();
 
     game.EditShow(demoShow.Id);

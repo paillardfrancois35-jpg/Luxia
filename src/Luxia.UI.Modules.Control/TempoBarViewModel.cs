@@ -55,6 +55,15 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     private string _confidenceColor = "#F85149";
 
     [ObservableProperty]
+    private string _heardText = "0";
+
+    [ObservableProperty]
+    private bool _canFollowHeard;
+
+    [ObservableProperty]
+    private bool _heardDiffers;
+
+    [ObservableProperty]
     private string _audioStatus = "Écoute du son du PC et suivi du tempo";
 
     private bool _refreshing;
@@ -115,6 +124,12 @@ public sealed partial class TempoBarViewModel : ViewModelBase
         // Confiance : vert à partir de 70 %, orange de 30 à 70 %, rouge en dessous (l'horloge garde alors son tempo, AUD-022).
         ConfidenceText = AudioOn ? $"{tempo.Confidence * 100:0} %" : string.Empty;
         ConfidenceColor = tempo.Confidence >= 0.7 ? BeatOn : tempo.Confidence >= 0.3 ? "#D29922" : "#F85149";
+
+        // Essai P8 : tempo entendu (0 sans écoute) à côté du tempo courant ; différents (×2, ÷ 2, ± 1) : surligné, un clic y revient.
+        var heard = AudioOn ? tempo.HeardBpm : 0;
+        HeardText = heard.ToString("0.#", CultureInfo.CurrentCulture);
+        CanFollowHeard = heard > 0;
+        HeardDiffers = heard > 0 && Math.Abs(heard - tempo.Bpm) >= 0.5;
         AudioStatus = AudioOn && _runtime.Audio?.Status is { } status ? status : "Écoute du son du PC et suivi du tempo";
         if (_flashLeft > 0 && --_flashLeft == 0)
         {
@@ -223,6 +238,10 @@ public sealed partial class TempoBarViewModel : ViewModelBase
     /// <summary>−1 BPM.</summary>
     [RelayCommand]
     private void Decrease() => Adjust(TempoAdjustment.AddBpm, -1, "tempo −1 BPM");
+
+    /// <summary>Clic sur le tempo entendu : le tempo courant y revient (oublie ×2, ÷ 2, ± 1 du morceau en cours, essai P8).</summary>
+    [RelayCommand]
+    private void FollowHeard() => Adjust(TempoAdjustment.FollowHeard, 0, "retour au tempo entendu");
 
     /// <summary>« 1 ici » : le temps en cours devient le premier de la mesure (AUD-024).</summary>
     [RelayCommand]

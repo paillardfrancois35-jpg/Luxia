@@ -88,7 +88,7 @@
                 <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding EnergyMax}" Width="140" />
               </StackPanel>
               <TextBlock Grid.Row="3" Classes="label" Text="Poids" />
-              <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Weight}" Minimum="0.1" Maximum="100" Increment="0.5" FormatString="0.#" Width="120" HorizontalAlignment="Left" />
+              <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Weight}" Minimum="0.1" Maximum="100" Increment="0.5" FormatString="0.#" Width="125" HorizontalAlignment="Left" />
               <CheckBox Grid.Row="4" Grid.Column="1" Content="Show secondaire (joue en parallèle du show principal)" IsChecked="{Binding Secondary}" />
               <TextBlock Grid.Row="5" Classes="label" Text="Variables" />
               <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Variables}" PlaceholderText="refrains, couplets (des compteurs, à 0 au lancement)" />
@@ -133,7 +133,7 @@
                       <WrapPanel>
                         <ComboBox ItemsSource="{x:Static sq:ShowOptions.Actions}" SelectedItem="{Binding NewKind}" Width="250" Margin="0,0,6,4" />
                         <ComboBox ItemsSource="{Binding NewTargets}" SelectedItem="{Binding NewTarget}" Width="200" Margin="0,0,6,4" IsVisible="{Binding NewNeedsTarget}" />
-                        <NumericUpDown Value="{Binding NewValue}" Minimum="0" Maximum="100" Increment="0.5" FormatString="0.##" Width="100" Margin="0,0,4,4" IsVisible="{Binding NewNeedsValue}" />
+                        <NumericUpDown Value="{Binding NewValue}" Minimum="0" Maximum="100" Increment="0.5" FormatString="0.##" Width="130" Margin="0,0,4,4" IsVisible="{Binding NewNeedsValue}" />
                         <TextBlock Text="{Binding NewValueUnit}" Classes="label" Margin="0,0,6,4" IsVisible="{Binding NewNeedsValue}" />
                         <Button Content="+ action" Classes="mini" Margin="0,0,0,4" Command="{Binding AddActionCommand}" />
                       </WrapPanel>
@@ -155,14 +155,15 @@
                                 <WrapPanel>
                                   <TextBlock Text="{Binding Rank}" Classes="label" Margin="0,0,6,4" />
                                   <TextBlock Text="┼" Foreground="#8B949E" Margin="0,0,6,4" VerticalAlignment="Center" />
-                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Conditions}" SelectedItem="{Binding Kind}" Width="210" Margin="0,0,6,4" IsVisible="{Binding IsSimple}" />
+                                  <!-- Essai P8, ex. 16c : liste assez haute pour ses 19 choix (« à la main seulement » et « aussitôt » étaient cachés en bas). -->
+                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Conditions}" SelectedItem="{Binding Kind}" Width="210" Margin="0,0,6,4" IsVisible="{Binding IsSimple}" MaxDropDownHeight="680" />
                                   <TextBlock Text="combinaison (ET / OU / NON) : à modifier dans le fichier" Classes="label" Margin="0,0,6,4" IsVisible="{Binding IsComposite}" />
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsDuration}">
-                                    <NumericUpDown Value="{Binding DurationValue}" Minimum="0" Maximum="9999" Increment="1" FormatString="0.##" Width="100" />
+                                    <NumericUpDown Value="{Binding DurationValue}" Minimum="0" Maximum="9999" Increment="1" FormatString="0.##" Width="130" />
                                     <ComboBox ItemsSource="{x:Static sq:ShowOptions.DurationUnits}" SelectedItem="{Binding DurationUnit}" Width="110" />
                                   </StackPanel>
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsPercent}">
-                                    <NumericUpDown Value="{Binding Percent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" Width="100" />
+                                    <NumericUpDown Value="{Binding Percent}" Minimum="0" Maximum="100" Increment="5" FormatString="0" Width="105" />
                                     <TextBlock Text="%" Classes="label" />
                                   </StackPanel>
                                   <ComboBox ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Every}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsEvery}" ToolTip.Tip="Un tirage à chaque…" />
@@ -172,21 +173,21 @@
                                     <ComboBox ItemsSource="{x:Static sq:ShowOptions.EnergyLevels}" SelectedItem="{Binding LevelMax}" Width="120" />
                                   </StackPanel>
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsTempo}">
-                                    <NumericUpDown Value="{Binding TempoMin}" Minimum="20" Maximum="400" FormatString="0" Width="90" />
+                                    <NumericUpDown Value="{Binding TempoMin}" Minimum="20" Maximum="400" FormatString="0" Width="105" />
                                     <TextBlock Text="à" Classes="label" />
-                                    <NumericUpDown Value="{Binding TempoMax}" Minimum="20" Maximum="400" FormatString="0" Width="90" />
+                                    <NumericUpDown Value="{Binding TempoMax}" Minimum="20" Maximum="400" FormatString="0" Width="105" />
                                     <TextBlock Text="BPM" Classes="label" />
                                   </StackPanel>
                                   <ComboBox ItemsSource="{Binding $parent[Window].((sq:ShowEditorViewModel)DataContext).SceneChoices}" SelectedItem="{Binding Scene}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsScene}" />
                                   <ComboBox ItemsSource="{Binding $parent[Window].((sq:ShowEditorViewModel)DataContext).SequenceChoices}" SelectedItem="{Binding Sequence}" Width="200" Margin="0,0,6,4" IsVisible="{Binding ShowsSequence}" />
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsCount}">
-                                    <NumericUpDown Value="{Binding Count}" Minimum="1" Maximum="999" FormatString="0" Width="90" />
+                                    <NumericUpDown Value="{Binding Count}" Minimum="1" Maximum="999" FormatString="0" Width="105" />
                                     <TextBlock Text="fois" Classes="label" />
                                   </StackPanel>
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsVariable}">
                                     <TextBox Text="{Binding Variable}" Width="110" PlaceholderText="variable" />
                                     <ComboBox ItemsSource="{x:Static sq:ShowOptions.Comparisons}" SelectedItem="{Binding Comparison}" Width="70" />
-                                    <NumericUpDown Value="{Binding Number}" Minimum="-999" Maximum="999" FormatString="0.##" Width="90" />
+                                    <NumericUpDown Value="{Binding Number}" Minimum="-999" Maximum="999" FormatString="0.##" Width="130" />
                                   </StackPanel>
                                   <TextBox Text="{Binding Styles}" Width="180" Margin="0,0,6,4" PlaceholderText="Électro, House" IsVisible="{Binding ShowsStyles}" />
                                   <TextBlock Text="vers" Classes="label" Margin="0,0,4,4" />
@@ -194,7 +195,7 @@
                                   <ComboBox ItemsSource="{x:Static sq:ShowOptions.Quantizes}" SelectedItem="{Binding Quantize}" Width="230" Margin="0,0,6,4"
                                             ToolTip.Tip="Quand la condition devient vraie, la transition attend cette frontière musicale" />
                                   <TextBlock Text="poids" Classes="label" Margin="0,0,4,4" />
-                                  <NumericUpDown Value="{Binding Weight}" Minimum="0.01" Maximum="1000" Increment="10" FormatString="0.##" Width="90" Margin="0,0,6,4"
+                                  <NumericUpDown Value="{Binding Weight}" Minimum="0.01" Maximum="1000" Increment="10" FormatString="0.##" Width="130" Margin="0,0,6,4"
                                                  ToolTip.Tip="Pour le tirage au sort (cochez « tirage au sort » sur la carte)" />
                                   <TextBlock Text="depuis" Classes="label" Margin="0,0,4,4" />
                                   <TextBox Text="{Binding From, UpdateSourceTrigger=LostFocus}" Width="60" Margin="0,0,6,4" ToolTip.Tip="Étape(s) amont ; plusieurs = attendre qu'elles soient toutes actives (convergence en ET)" />
@@ -252,7 +253,14 @@
             <TextBlock Text="{Binding Status}" Foreground="#39C5CF" TextWrapping="Wrap" />
           </StackPanel>
         </Border>
-        <TextBlock DockPanel.Dock="Bottom" Text="{Binding IssuesText}" Foreground="#F0883E" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0" />
+        <!-- Problèmes du brouillon : erreur ⛔ en rouge (refusée au lancement), avertissement ⚠ en jaune (essai P8, ex. 16c). -->
+        <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding IssueRows}" Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="sq:IssueRow">
+              <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="12" TextWrapping="Wrap" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
           <TextBlock Text="Diagramme" FontSize="14" FontWeight="SemiBold" />
           <TextBlock Text="dessiné automatiquement · clic sur une étape = montrer sa carte" Classes="label" />

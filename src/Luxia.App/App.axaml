@@ -19,6 +19,14 @@
     <FluentTheme />
     <!-- E4 : panneaux ancrables et détachables de l'écran Contrôle (bibliothèque Dock). -->
     <dock:DockFluentTheme />
+    <!-- Essai P8 (ex. 15, lisibilité) : flèches des champs numériques plus étroites (≈ 24 px au lieu de ≈ 34), pour laisser
+         la place au nombre ; chaque champ est en plus assez large pour sa plus longue valeur. La pseudo-classe jamais posée
+         « :not(:luxia) » donne au style la priorité d'un déclencheur, au-dessus de la largeur minimale fixée par le modèle Fluent. -->
+    <Style Selector="NumericUpDown /template/ ButtonSpinner /template/ RepeatButton:not(:luxia)">
+      <Setter Property="MinWidth" Value="24" />
+      <Setter Property="Width" Value="24" />
+      <Setter Property="Padding" Value="0" />
+    </Style>
     <!-- SORT-065 : voyant rouge qui clignote pendant un enregistrement de trames. -->
     <Style Selector="Ellipse.rec">
       <Setter Property="Fill" Value="#F85149" />

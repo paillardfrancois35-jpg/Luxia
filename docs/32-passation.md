@@ -284,8 +284,18 @@
   **Trace TEMPORAIRE (exemple 13, demande de l'utilisateur)** : bouton « ● Démarrer / ■ Arrêter la trace » en tête de la colonne
   Shows, fichier `Documents\LuXia\Journaux\trace-show-AAAAMMJJ-HHmmss.csv` (`src/Luxia.Hosting/ShowTrace.cs`,
   `LuxiaRuntime.Trace`, `ShowsColumnViewModel.ToggleTrace`, test `ShowTrace_WritesStates_StepsWithReasonAndQuantize`).
-  **À retirer après l'essai** (au plus tard au lot 7) : chercher « TEMPORAIRE (essai P8, exemple 13) ». Anomalie ouverte : strobe
-  de l'étape « Éclat » perçu ≈ 1 s au lieu de 4 s (exemple 8).
+  **À retirer au lot 7**, après la re-vérification de l'exemple 13 : chercher « TEMPORAIRE (essai P8, exemple 13) ».
+  **Essai terminé (2026-10-02, v1.010.079 → .091)**, tous les exemples déroulés ; corrections de fin d'essai : strobe de « Éclat »
+  (contenu : PAR sans couleur), champs numériques de toute l'interface (flèches 24 px par un style global de `App.axaml`,
+  largeurs calculées), Valider avec une erreur (confirmation, ligne ⛔ au Journal, rouge / jaune), liste des conditions agrandie,
+  chemin de la trace au Journal, *Couplet / Refrain / Drop* (silence → Final, reprise du son → Intro), guide (Tirage
+  Base → A ou B → Base, flash d'un temps, « erreur = refusé au lancement »). **Hors liste, demandé pendant l'essai** : bloc BPM,
+  bouton « entendu » (tempo de l'analyse, orange s'il diffère, un clic y revient, `TempoAdjustment.FollowHeard`) ; la correction
+  ×2 / ÷ 2 est **gardée** d'un morceau à l'autre et après un silence (décision de l'utilisateur, AUD-023).
+  **Ergonomie** : [analyse de fin de P8](chantiers/analyse-ergonomique-p8.md) ; refonte de l'éditeur de show en discussion dédiée
+  ([cahier des charges](chantiers/refonte-editeur-show.md)). **Réserves de validation** : exemples 5, 6, 7 non refaits en .085 ;
+  fumée non testée (appareil non branché). **Restent** : re-vérification (ex. 8, 13, 15, 16c, tempo entendu), lot 7, revue de fin
+  de phase, validation, fusion, `v1.010`.
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.

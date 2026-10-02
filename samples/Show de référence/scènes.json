@@ -3543,6 +3543,45 @@
           ]
         }
       ]
+    },
+    {
+      "id": "5ce00008-0000-4000-8000-000000000006",
+      "name": "Blanc sur tous les PAR (couleur seule)",
+      "color": "#F0F6FC",
+      "category": "Phase P8",
+      "notes": "Couche Couleurs : PAR et gros PAR en blanc, sans intensité. Donne une couleur au strobe des PAR (« Strobe PAR » n'ouvre que l'obturateur : sans couleur, un PAR à LED reste noir).",
+      "visibleInLive": true,
+      "layerId": "7c1a0001-0000-4000-8000-000000000002",
+      "loop": "infinite",
+      "loopCount": 1,
+      "end": "stop",
+      "speed": 1,
+      "steps": [
+        {
+          "fade": {
+            "value": 0.0,
+            "unit": "seconds"
+          },
+          "hold": {
+            "value": 1.0,
+            "unit": "seconds"
+          },
+          "curve": "linear",
+          "switch": "start",
+          "values": [
+            {
+              "target": {
+                "cell": 0,
+                "auto": {
+                  "kind": "byCategory",
+                  "category": "par"
+                }
+              },
+              "paletteId": "9a1e0001-0000-4000-8000-000000000001"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

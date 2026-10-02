@@ -34,3 +34,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 2.2 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 3 et 4 (`4c87f9e`, `d46142e`). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : boutons de la colonne « Shows » (le « Live » est l'écran de jeu depuis « Contrôle 2 »). |
+| 2026-10-02 | Utilisateur | Test | Colonne « Shows » : un clic lance, un second arrête (ex. 1, 2e) ✅. |

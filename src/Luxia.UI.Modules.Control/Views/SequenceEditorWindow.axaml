@@ -128,7 +128,14 @@
           <Button Content="Retirer le bloc" MinHeight="32" Foreground="#F85149" Command="{Binding DeleteBlockCommand}" IsVisible="{Binding HasSelection}" ToolTip.Tip="Retirer le bloc choisi (touche Suppr)" />
         </StackPanel>
         <TextBlock DockPanel.Dock="Top" Text="{Binding Simulation.Status}" Foreground="#D29922" Margin="0,0,0,6" TextTrimming="CharacterEllipsis" />
-        <TextBlock DockPanel.Dock="Bottom" Text="{Binding IssuesText}" Foreground="#F0883E" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0" />
+        <!-- Problèmes du brouillon : erreur ⛔ en rouge (refusée au lancement), avertissement ⚠ en jaune (essai P8, ex. 16c). -->
+        <ItemsControl DockPanel.Dock="Bottom" ItemsSource="{Binding IssueRows}" Margin="0,8,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="sq:IssueRow">
+              <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontSize="12" TextWrapping="Wrap" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <TextBlock DockPanel.Dock="Bottom" Text="Clic : choisir un bloc · glisser : le déplacer · bord droit : sa durée · Suppr : le retirer. Les blocs s'aimantent à la grille." FontSize="12" Foreground="#8B949E" Margin="0,8,0,0" />
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
           <v:SequenceTimeline x:Name="Timeline" Tracks="{Binding Tracks}" Blocks="{Binding Blocks}" Bars="{Binding Length}"
@@ -148,7 +155,7 @@
                   <TextBox Grid.Column="1" Text="{Binding Name}" />
                   <TextBlock Grid.Row="1" Classes="label" Text="Longueur" />
                   <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="6">
-                    <NumericUpDown Value="{Binding Bars}" Minimum="0.25" Maximum="256" Increment="1" FormatString="0.##" Width="120" />
+                    <NumericUpDown Value="{Binding Bars}" Minimum="0.25" Maximum="256" Increment="1" FormatString="0.##" Width="130" />
                     <TextBlock Text="mesures (4 temps)" Classes="label" />
                   </StackPanel>
                   <TextBlock Grid.Row="2" Classes="label" Text="À la fin" />
@@ -172,13 +179,13 @@
                   <TextBlock Grid.Row="1" Classes="label" Text="Début" />
                   <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="4">
                     <TextBlock Text="mes." Classes="label" ToolTip.Tip="mesure" />
-                    <NumericUpDown Value="{Binding BlockStartBar}" Minimum="1" Maximum="256" Increment="1" FormatString="0" Width="96" />
+                    <NumericUpDown Value="{Binding BlockStartBar}" Minimum="1" Maximum="256" Increment="1" FormatString="0" Width="105" />
                     <TextBlock Text="temps" Classes="label" />
-                    <NumericUpDown Value="{Binding BlockStartBeat}" Minimum="1" Maximum="4.5" Increment="0.5" FormatString="0.#" Width="96" />
+                    <NumericUpDown Value="{Binding BlockStartBeat}" Minimum="1" Maximum="4.5" Increment="0.5" FormatString="0.#" Width="105" />
                   </StackPanel>
                   <TextBlock Grid.Row="2" Classes="label" Text="Durée" />
                   <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="4">
-                    <NumericUpDown Value="{Binding BlockLength}" Minimum="0.125" Maximum="256" Increment="1" FormatString="0.###" Width="110" />
+                    <NumericUpDown Value="{Binding BlockLength}" Minimum="0.125" Maximum="256" Increment="1" FormatString="0.###" Width="130" />
                     <ComboBox ItemsSource="{x:Static sq:ShowOptions.LengthUnits}" SelectedItem="{Binding BlockUnitBars}" Width="110" />
                   </StackPanel>
                   <TextBlock Grid.Row="3" Classes="label" Text="À la fin" IsVisible="{Binding SelectedIsScene}" />
@@ -188,10 +195,10 @@
                   <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding LayerChoices}" SelectedItem="{Binding ActionLayer}" HorizontalAlignment="Stretch" IsVisible="{Binding SelectedIsLayerLevel}" />
                   <TextBlock Grid.Row="5" Classes="label" Text="Niveau" IsVisible="{Binding SelectedIsLevel}" />
                   <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Spacing="4" IsVisible="{Binding SelectedIsLevel}">
-                    <NumericUpDown Value="{Binding ActionFrom}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="100" PlaceholderText="actuel"
+                    <NumericUpDown Value="{Binding ActionFrom}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="105" PlaceholderText="actuel"
                                    ToolTip.Tip="Niveau au début du bloc (vide : le niveau du moment)" />
                     <TextBlock Text="→" Classes="label" />
-                    <NumericUpDown Value="{Binding ActionTo}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="100" ToolTip.Tip="Niveau à la fin du bloc ; il reste ensuite" />
+                    <NumericUpDown Value="{Binding ActionTo}" Minimum="0" Maximum="100" Increment="10" FormatString="0" Width="105" ToolTip.Tip="Niveau à la fin du bloc ; il reste ensuite" />
                     <TextBlock Text="%" Classes="label" />
                   </StackPanel>
                   <TextBlock Grid.Row="6" Classes="label" Text="Scène" IsVisible="{Binding SelectedIsFlash}" />

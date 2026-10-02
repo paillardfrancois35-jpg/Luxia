@@ -29,3 +29,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`). |
+| 2026-10-02 | Utilisateur | Test | Ex. 12 et 13 : Final au 3e refrain ✅ ; compteur remis à zéro à l'Intro (correction de l'ex. 13). |

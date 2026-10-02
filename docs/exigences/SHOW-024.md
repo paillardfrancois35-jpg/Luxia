@@ -37,3 +37,5 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lots 2 et 4 (`683cfc8`, `722853b`) : étape inatteignable en avertissement (le show joue quand même). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : l'éditeur valide le brouillon à chaque geste (⛔ erreur, ⚠ avertissement). |
+| 2026-10-02 | Utilisateur | Test | Ex. 11 piège refusé au lancement ✅ ; ex. 16c (v1.010.091) : Valider enregistre et ferme un show en erreur sans prévenir ❌ ; erreur ⛔ et avertissement ⚠ de teintes trop proches. |
+| 2026-10-02 | Claude | Correction | Valider avec une erreur demande « Enregistrer avec des erreurs ? » (Non : la fenêtre reste ouverte) ; chaque erreur enregistrée laisse une ligne ⛔ au Journal ; erreurs en rouge franc, avertissements en jaune. |

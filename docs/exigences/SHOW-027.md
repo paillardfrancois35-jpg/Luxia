@@ -35,3 +35,4 @@
 | 2026-10-02 | Claude | Développement | P8 lots 3 et 4 (`4c87f9e`, `d46142e`) : drop, break, montée, silence, reprise, morceau changé, énergie imposée, style simulé ; l'exemple du §3.4 est testé sans musique. |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`). |
 | 2026-10-02 | Claude | Développement | Relecture : cocher « Aveugle » pendant un essai arrêtait l'essai sur l'aperçu au lieu de la sortie ; corrigé (l'essai s'arrête du côté qu'on quitte). |
+| 2026-10-02 | Utilisateur | Test | Ex. 12 (v1.010.085) : boutons Drop, Break, Montée, énergie ; carte et diagramme suivent ✅ ; interface jugée très complexe 💡. |

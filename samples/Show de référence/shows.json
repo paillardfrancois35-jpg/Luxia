@@ -6,7 +6,7 @@
       "name": "Couplet / Refrain / Drop",
       "color": "#DB61A2",
       "category": "Phase P8",
-      "notes": "Exemple du doc 20 §3.4 : l'intro attend une énergie « Groove », le couplet joue « Groove 8 mesures » ; au drop, le refrain ; à la montée, « Montée 16 mesures » ; au break (ou après 16 mesures de refrain) retour au couplet ; au troisième refrain, le final, qui reste.",
+      "notes": "Exemple du doc 20 §3.4 : l'intro attend une énergie « Groove », le couplet joue « Groove 8 mesures » ; au drop, le refrain ; à la montée, « Montée 16 mesures » ; au break (ou après 16 mesures de refrain) retour au couplet ; au troisième refrain, le final. Fin du morceau (silence), où que l'on soit : le final ; quand le son reprend (morceau suivant), retour à l'intro, compteur de refrains remis à zéro (essai P8, ex. 13).",
       "role": "main",
       "styles": [
         "Électro",
@@ -39,6 +39,12 @@
             {
               "kind": "play",
               "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            },
+            {
+              "kind": "variable",
+              "variable": "refrains",
+              "operation": "set",
+              "value": 0
             }
           ]
         },
@@ -224,6 +230,54 @@
             }
           },
           "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "silence"
+          },
+          "quantize": "none"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "resumed"
+          },
+          "quantize": "none"
         }
       ]
     },
@@ -691,7 +745,7 @@
       "name": "Bloc refrain (macro-étape)",
       "color": "#BC4CE0",
       "category": "Phase P8",
-      "notes": "Sous-show réutilisable, joué par la macro-étape de « Branches parallèles et macro-étape » : 4 mesures de têtes décalées (multi-têtes) et d'arc-en-ciel des barres, puis 2 mesures de flash et strobe, puis il se termine (ce qui libère la macro-étape). Lancé seul, il joue une fois et tient sa dernière étape.",
+      "notes": "Sous-show réutilisable, joué par la macro-étape de « Branches parallèles et macro-étape » : 4 mesures de têtes décalées (multi-têtes) et d'arc-en-ciel des barres, puis 2 mesures de strobe des PAR en blanc (avec un flash de 0,5 s au début), puis il se termine (ce qui libère la macro-étape). Lancé seul, il joue une fois et tient sa dernière étape.",
       "role": "main",
       "styles": [],
       "energyMin": 1,
@@ -729,6 +783,10 @@
             {
               "kind": "play",
               "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000006"
             },
             {
               "kind": "play",

@@ -303,6 +303,28 @@ public sealed class MusicalClockTests
 
     [Fact]
     [Trait("Exigence", "AUD-023")]
+    public void Audio_FollowHeard_ForgetsTheCorrections_AndGivesTheMusicsTempoBack()
+    {
+        var clock = AudioClock(90, 40);
+        clock.HeardBpm.ShouldBe(90, 0.01);
+
+        clock.Scale(2);
+        clock.Scale(2);
+        FeedRaw(clock, 90, 40);
+        clock.Bpm.ShouldBe(360, 1, "deux clics sur ×2 : ×4");
+        clock.HeardBpm.ShouldBe(90, 0.01, "le tempo entendu ne bouge pas");
+
+        clock.FollowHeard();
+        clock.Bpm.ShouldBe(90, 0.01);
+        FeedRaw(clock, 90, 80);
+        clock.Bpm.ShouldBe(90, 0.5, "la correction est oubliée pour la suite du morceau");
+
+        clock.UseSource(TempoSourceKind.Fixed);
+        clock.HeardBpm.ShouldBe(0, "hors source Audio, pas de tempo entendu");
+    }
+
+    [Fact]
+    [Trait("Exigence", "AUD-023")]
     public void Audio_TimesTwo_IsKeptWhileTheSameSongPlays()
     {
         var clock = AudioClock(64, 40);
@@ -370,20 +392,23 @@ public sealed class MusicalClockTests
 
     [Fact]
     [Trait("Exigence", "AUD-026")]
-    public void Audio_NewSong_DropsTheOctaveCorrection()
+    public void Audio_NewSong_KeepsTheOctaveCorrection_UntilTheHeardTempoIsClicked()
     {
         var clock = AudioClock(64, 40);
         clock.Scale(2);
         FeedRaw(clock, 64, 20);
 
-        FeedRaw(clock, 140, 40);
+        FeedRaw(clock, 70, 40);
+        clock.Bpm.ShouldBe(140, 0.5, "essai P8 : le coefficient ×2 est maintenu au morceau suivant");
 
-        clock.Bpm.ShouldBe(140, 0.5);
+        clock.FollowHeard();
+        FeedRaw(clock, 70, 40);
+        clock.Bpm.ShouldBe(70, 0.5);
     }
 
     [Fact]
     [Trait("Exigence", "AUD-005")]
-    public void Audio_OctaveCorrection_DoesNotSurviveASilence()
+    public void Audio_OctaveCorrection_SurvivesASilence()
     {
         var clock = AudioClock(64, 40);
         clock.Scale(2);
@@ -395,7 +420,7 @@ public sealed class MusicalClockTests
 
         FeedRaw(clock, 64, 80);
 
-        clock.Bpm.ShouldBe(64, 1);
+        clock.Bpm.ShouldBe(128, 1, "essai P8 : le coefficient est maintenu après un silence");
     }
 
     [Fact]

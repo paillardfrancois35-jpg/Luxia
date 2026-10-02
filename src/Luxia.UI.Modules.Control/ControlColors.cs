@@ -21,6 +21,12 @@ public static class ControlColors
     /// <summary>Zones du lieu.</summary>
     public const string Zones = "#F0883E";
 
+    /// <summary>Erreur : empêche de jouer (rouge franc).</summary>
+    public const string Error = "#FF5A52";
+
+    /// <summary>Avertissement : n'empêche rien (jaune).</summary>
+    public const string Warning = "#E3B341";
+
     /// <summary>Texte secondaire.</summary>
     public const string Secondary = "#8B949E";
 

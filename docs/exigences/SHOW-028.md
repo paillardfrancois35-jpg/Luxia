@@ -30,3 +30,4 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`) : 10 000 tirages à 60 / 40, part mesurée à ± 2 %. |
+| 2026-10-02 | Utilisateur | Test | Ex. 9 *Tirage au sort* (v1.010.085) ✅ ; le guide doit dire « Base → A ou B → Base » (corrigé au guide). |

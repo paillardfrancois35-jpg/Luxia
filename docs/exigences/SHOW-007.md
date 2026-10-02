@@ -34,3 +34,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`) : `luxia-headless jouer --sequence "nom" --tempo 120` ; l'aperçu dans la fenêtre d'édition (maquette 11) viendra au lot 5. |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : ▶ Jouer, case métronome, tête de lecture sur la frise ; en aveugle l'aperçu garde son propre tempo (`PreviewOwnTempo`). |
 | 2026-10-02 | Claude | Développement | Seconde relecture : un essai au métronome sur la sortie laissait l'horloge du direct en tempo fixe après la fermeture de l'éditeur (elle ne suivait plus la musique écoutée) ; l'éditeur rend désormais la source et le tempo d'avant l'essai. |
+| 2026-10-02 | Utilisateur | Test | Ex. 12 (v1.010.085) : essai au métronome, en aveugle ✅. |

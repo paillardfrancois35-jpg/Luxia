@@ -436,6 +436,9 @@ public sealed partial class RenderEngine : ICommandSink
                     case TempoAdjustment.AddBpm:
                         _tempo.Nudge(adjust.Value);
                         break;
+                    case TempoAdjustment.FollowHeard:
+                        _tempo.FollowHeard();
+                        break;
                     default:
                         _tempo.ResyncBar();
                         break;
@@ -1333,7 +1336,7 @@ public sealed partial class RenderEngine : ICommandSink
             _publishedSmokeRest = _safety.SmokeRestRemaining;
             _publishedGrandMaster = _grandMaster;
             _publishedPending = _quantized.Count == 0 ? [] : [.. _quantized.Select(q => new PendingSceneLaunch(q.SceneId, Math.Max(0, q.TargetBeat - _tempo.EffectivePosition)))];
-            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds);
+            _publishedTempo = new TempoInfo(_tempo.Bpm, _tempo.Source, _tempo.Confidence, _tempo.BeatInBar, _tempo.Bar, _tempo.Phase, _tempo.LatencySeconds, _tempo.HeardBpm);
             Array.Copy(_result, _publishedValues, _result.Length);
             Array.Copy(_sources, _publishedSources, _sources.Length);
             Array.Copy(_overrides, _publishedOverrides, _overrides.Length);

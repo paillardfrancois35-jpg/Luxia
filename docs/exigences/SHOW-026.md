@@ -35,3 +35,4 @@
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`) : `Sequencer.State` ; maquettes 9 et 10 (bandeau « Show en cours », Q44 solution C). |
 | 2026-10-02 | Claude | Développement | P8 lot 5 (`4ceb412`) : maquettes 9 et 10. |
+| 2026-10-02 | Utilisateur | Test | Ex. 6 bandeau déplié (v1.010.079) : parcours, étape active, transitions en attente ✅. |

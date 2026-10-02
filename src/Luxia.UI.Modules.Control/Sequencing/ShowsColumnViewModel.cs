@@ -47,6 +47,9 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
     /// <summary>Message à montrer (refus), ou nul.</summary>
     public event EventHandler<string>? MessageRaised;
 
+    /// <summary>Ligne à écrire au Journal de l'écran de jeu (copiable, contrairement au message de l'en-tête).</summary>
+    public event EventHandler<string>? JournalRaised;
+
     /// <summary>Refait la liste (projet ouvert ou modifié).</summary>
     public void Rebuild()
     {
@@ -117,11 +120,14 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
         if (_runtime.Trace.IsRunning)
         {
             _runtime.Trace.Stop();
-            MessageRaised?.Invoke(this, $"Trace arrêtée : {_runtime.Trace.FilePath}");
+            MessageRaised?.Invoke(this, "Trace arrêtée : chemin du fichier au Journal");
+            JournalRaised?.Invoke(this, $"Trace arrêtée : {_runtime.Trace.FilePath}");
         }
         else
         {
-            MessageRaised?.Invoke(this, $"Trace en cours : {_runtime.Trace.Start()}");
+            var file = _runtime.Trace.Start();
+            MessageRaised?.Invoke(this, "Trace en cours : chemin du fichier au Journal");
+            JournalRaised?.Invoke(this, $"Trace démarrée : {file}");
         }
 
         IsTracing = _runtime.Trace.IsRunning;

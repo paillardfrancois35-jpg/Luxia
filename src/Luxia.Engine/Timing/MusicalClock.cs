@@ -140,7 +140,6 @@ public sealed class MusicalClock
         _audioLocked = false;
         _barMismatch = 0;
         _barManual = false;
-        _audioScale = 1;
         _lastRawBpm = 0;
     }
 
@@ -154,10 +153,10 @@ public sealed class MusicalClock
         Volatile.Write(ref _confidence, reading.Live ? reading.Confidence : 0);
         if (!reading.Live)
         {
-            // Plus de son depuis une seconde et demie : le prochain morceau repart sans correction d'octave.
+            // Plus de son depuis une seconde et demie : le prochain morceau est comparé à neuf ; la correction ×2 / ÷ 2 de
+            // l'utilisateur, elle, est gardée (essai P8 : un coefficient maintenu jusqu'au clic sur le tempo entendu).
             if (++_silentTicks >= 60)
             {
-                _audioScale = 1;
                 _lastRawBpm = 0;
             }
 
@@ -170,15 +169,19 @@ public sealed class MusicalClock
             return;
         }
 
-        // Correction d'octave de l'utilisateur (×2, ÷2) : elle s'applique au tempo entendu et tient jusqu'au prochain morceau.
-        // Si l'analyse change elle-même d'octave (rapport 2, 1/2, 3/2 ou 2/3), la correction s'ajuste pour garder le même tempo.
+        // Correction d'octave de l'utilisateur (×2, ÷2) : un coefficient appliqué au tempo entendu, gardé d'un morceau à l'autre
+        // jusqu'au clic sur le tempo entendu (essai P8, FollowHeard). Si l'analyse change elle-même d'octave (rapport 2, 1/2, 3/2
+        // ou 2/3), la correction s'ajuste pour garder le même tempo.
         if (_lastRawBpm > 0)
         {
             var ratio = reading.Bpm / _lastRawBpm;
             if (Math.Abs(ratio - 1) > 0.15)
             {
                 var octave = IsOctaveRatio(ratio);
-                _audioScale = octave ? _audioScale / ratio : 1;
+                if (octave)
+                {
+                    _audioScale /= ratio;
+                }
 
                 // D38 : un saut de tempo hors rapport d'octave signale un nouveau morceau (avant la lecture en cours de P9).
                 _songChanged |= !octave;
@@ -287,6 +290,22 @@ public sealed class MusicalClock
         var snapped = Math.Round(atTap) + beatsAgo;
         _shift += snapped - _position;
         _position = snapped;
+    }
+
+    /// <summary>
+    /// Tempo entendu par l'écoute, avant les corrections ×2, ÷ 2, ± 1 (essai P8) : 0 hors source Audio ou sans tempo établi.
+    /// </summary>
+    public double HeardBpm => Source == TempoSourceKind.Audio ? _lastRawBpm : 0;
+
+    /// <summary>Revient au tempo entendu : les corrections ×2, ÷ 2, ± 1 du morceau en cours sont oubliées (essai P8, CMD-042).</summary>
+    public void FollowHeard()
+    {
+        _audioScale = 1;
+        _taps.Clear();
+        if (HeardBpm > 0)
+        {
+            Volatile.Write(ref _bpm, Math.Clamp(_lastRawBpm, MinBpm, MaxBpm));
+        }
     }
 
     /// <summary>×2 ou ÷2 (AUD-023, CMD-042).</summary>

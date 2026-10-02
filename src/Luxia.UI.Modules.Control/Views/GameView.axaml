@@ -24,6 +24,11 @@
       <Setter Property="Background" Value="#3FB950" />
       <Setter Property="TextElement.Foreground" Value="#0D1117" />
     </Style>
+    <!-- Essai P8 : tempo entendu ≠ tempo courant (×2, ÷ 2, ± 1) : bouton orange, un clic y revient. -->
+    <Style Selector="Button.differs /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#9A4D0A" />
+      <Setter Property="BorderBrush" Value="#F0883E" />
+    </Style>
     <!-- Cibles d'au moins 32 px de haut (ERG-035). -->
     <Style Selector="Button.target">
       <Setter Property="MinHeight" Value="34" />
@@ -65,6 +70,17 @@
                       HorizontalContentAlignment="Center" ToolTip.Tip="{Binding AudioStatus}" />
         <TextBlock Text="{Binding ConfidenceText}" Foreground="{Binding ConfidenceColor}" Width="44" FontSize="12" VerticalAlignment="Center"
                    ToolTip.Tip="Confiance dans le tempo détecté (vert : sûr, orange : moyen, rouge : incertain, l'horloge garde alors son tempo)" />
+        <!-- Essai P8 : tempo entendu par l'écoute (0 sans écoute), à gauche du tempo courant ; orange quand ils diffèrent (×2, ÷ 2,
+             ± 1) ; un clic ramène le tempo courant au tempo entendu. -->
+        <Button Classes="target" Classes.differs="{Binding HeardDiffers}" Width="70" Padding="0" HorizontalContentAlignment="Center"
+                Command="{Binding FollowHeardCommand}" IsEnabled="{Binding CanFollowHeard}"
+                ToolTip.Tip="Tempo entendu dans la musique (0 sans écoute). Orange : le tempo courant en diffère (×2, ÷ 2, + ou −) ; cliquer pour revenir au tempo de la musique">
+          <StackPanel Spacing="0">
+            <TextBlock Text="{Binding HeardText}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="entendu" FontSize="9" Foreground="#8B949E" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Button>
+        <TextBlock Text="→" Foreground="#8B949E" VerticalAlignment="Center" />
         <TextBox x:Name="BpmBox" Text="{Binding BpmInput}" Width="64" MinHeight="34" FontSize="16" FontWeight="SemiBold" HorizontalContentAlignment="Right"
                  VerticalContentAlignment="Center" IsEnabled="{Binding ManualEnabled}" ToolTip.Tip="Tempo en battements par minute : taper une valeur puis Entrée">
           <TextBox.KeyBindings>

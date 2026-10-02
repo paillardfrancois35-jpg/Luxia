@@ -221,7 +221,7 @@ Ces principes guident les arbitrages lorsqu'une exigence de module est ambiguë.
 | CMD-031 | `RéglerDimmerGroupe` | groupe, niveau 0-1 | Moteur | ERG2 |
 | CMD-040 | `TapTempo` | — | Audio / Horloge | P7 |
 | CMD-041 | `ChoisirSourceTempo` | audio / tap / fixe (+ BPM) | Horloge | P7 |
-| CMD-042 | `AjusterTempo` | ×2, ÷2, ± valeur en BPM, « 1 ici » (le temps en cours devient le premier de la mesure) | Horloge | P7 |
+| CMD-042 | `AjusterTempo` | ×2, ÷2, ± valeur en BPM, « 1 ici » (le temps en cours devient le premier de la mesure), retour au tempo entendu (essai P8 : oublie la correction ×2 / ÷ 2, sinon gardée d'un morceau à l'autre) | Horloge | P7 |
 | CMD-043 | `RégleLatenceTempo` | décalage en secondes (± 0,5) appliqué aux événements musicaux ; l'écoute le mémorise par périphérique | Horloge | P7 |
 | CMD-050 | `LancerShow` / `ArrêterShow` | show (bascule possible) ; arrêt d'un show, ou de tous les shows et séquences (en gardant les shows secondaires pour « ■ Stop », qui épargne aussi les couches protégées) | Show | P8 |
 | CMD-051 | `ForcerTransition` | show, transition | Show | P8 |
