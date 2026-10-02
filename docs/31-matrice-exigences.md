@@ -214,8 +214,8 @@
 | [GEN-118](exigences/GEN-118.md) | I | Enregistrement robuste aux refus passagers | Réalisé |  |
 | [GEN-119](exigences/GEN-119.md) | M | Numéro de compilation affiché en développement | Réalisé |  |
 | [GEN-130](exigences/GEN-130.md) | I | Format des fichiers documenté | Réalisé | ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem |
-| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ReferenceShowP5Tests.ReferenceShow_P5_ContentIsThere<br>(+3) |
-| [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording |
+| [GEN-131](exigences/GEN-131.md) | I | Outil de validation d'un projet | Validé | HeadlessToolsTests.Validate_MissingPalette_GivesFileObjectAndField<br>HeadlessToolsTests.Validate_UnreadableFile_IsReported<br>ReferenceShowP4Tests.ReferenceShow_P4_IsValid_WithoutAnyProblem<br>ReferenceShowP5Tests.ReferenceShow_P5_ContentIsThere<br>(+4) |
+| [GEN-132](exigences/GEN-132.md) | M | Outil qui joue une scène et la résume | Validé | HeadlessToolsTests.Run_Scene_SummarizesWhoLightsUp_AndWritesReplayableRecording<br>ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps<br>ShowScenarioTests.Scenario_ReportsUnknownShowsAndBadSimulations |
 | [GEN-133](exigences/GEN-133.md) | I | Contenu généré rangé à part, jamais écrasant | Réalisé | SceneImportTests.Merge_AddsNewScenes_NeverOverwrites_AndCategorizes |
 | [MOT-001](exigences/MOT-001.md) | I | Ordre de la boucle de rendu | Réalisé |  |
 | [MOT-002](exigences/MOT-002.md) | I | Budget de 5 ms par tick | Réalisé | EnginePerformanceTests.Tick_With100Fixtures20Layers40Playbacks_StaysUnderFiveMilliseconds_WithoutAllocating |
@@ -487,32 +487,32 @@
 | [SCN-052](exigences/SCN-052.md) | M | En l'absence de signal audio | Réalisé | MusicalReactivityTests.Step_AdvancesOnTheMusicalEvent_AndPulsesFallBackToBeatsWithoutAudio |
 | [SIM-011](exigences/SIM-011.md) | M | Bandeau musical du simulateur | Partiel |  |
 
-## P8 – 23 exigences, 0 couvertes par des tests automatiques
+## P8 – 23 exigences, 16 couvertes par des tests automatiques
 
-> Reporté : 1 · Sans fiche : 22
+> Non réalisé : 2 · Partiel : 5 · Reporté : 1 · Réalisé : 13 · Sans fiche : 2
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [GEN-025](exigences/GEN-025.md) | S | Les mesures à 3 temps | Reporté |  |
 | [GEN-134](exigences/GEN-134.md) | M | (fiche manquante) | Sans fiche |  |
 | [LIVE-023](exigences/LIVE-023.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-001](exigences/SHOW-001.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-002](exigences/SHOW-002.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-003](exigences/SHOW-003.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-004](exigences/SHOW-004.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-005](exigences/SHOW-005.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-006](exigences/SHOW-006.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-007](exigences/SHOW-007.md) | M | (fiche manquante) | Sans fiche |  |
-| [SHOW-008](exigences/SHOW-008.md) | S | (fiche manquante) | Sans fiche |  |
-| [SHOW-020](exigences/SHOW-020.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-021](exigences/SHOW-021.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-022](exigences/SHOW-022.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-023](exigences/SHOW-023.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-024](exigences/SHOW-024.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-025](exigences/SHOW-025.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-026](exigences/SHOW-026.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-027](exigences/SHOW-027.md) | I | (fiche manquante) | Sans fiche |  |
-| [SHOW-028](exigences/SHOW-028.md) | M | (fiche manquante) | Sans fiche |  |
-| [SHOW-029](exigences/SHOW-029.md) | M | (fiche manquante) | Sans fiche |  |
-| [SHOW-030](exigences/SHOW-030.md) | M | (fiche manquante) | Sans fiche |  |
-| [SHOW-031](exigences/SHOW-031.md) | S | (fiche manquante) | Sans fiche |  |
+| [SHOW-001](exigences/SHOW-001.md) | I | Une séquence a une longueur en mesures, une mesure | Partiel | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>ShowRulesTests.Sequence_SceneOnTheWrongTrack_AndBlocksOutOfBounds_AreReported<br>ShowRulesTests.Stores_RoundTrip_SequencesAndShows |
+| [SHOW-002](exigences/SHOW-002.md) | I | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | Non réalisé |  |
+| [SHOW-003](exigences/SHOW-003.md) | I | Sur une piste, un bloc lance sa scène dans la couche de la piste au début du bloc et l'arr | Réalisé | SequencePlaybackTests.Blocks_StartAndStopOnTheirBars_AtAnyTempo<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack<br>SequencePlaybackTests.SameSceneOnConsecutiveBlocks_IsNotInterrupted |
+| [SHOW-004](exigences/SHOW-004.md) | I | Blocs d'actions en plus des scènes | Réalisé | ReferenceShowP8Tests.Rise_RampsTheColorsLayerOverEightBars<br>SequencePlaybackTests.FlashAndBlackoutBlocks_LastTheirBlock<br>SequencePlaybackTests.LayerLevelRamp_OverFourBars |
+| [SHOW-005](exigences/SHOW-005.md) | I | Modes de lecture | Réalisé | SequencePlaybackTests.Launch_IsQuantizedToTheNextBar<br>SequencePlaybackTests.Loop_KeepsTheSceneWithoutRelaunch_AndHandsOverOnTheSameTrack |
+| [SHOW-006](exigences/SHOW-006.md) | I | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | Partiel | SequencePlaybackTests.SequenceCommands_AreRejectedWithoutSequencer |
+| [SHOW-007](exigences/SHOW-007.md) | M | Aperçu | Partiel |  |
+| [SHOW-008](exigences/SHOW-008.md) | S | Variation de la vitesse relative | Réalisé | SequencePlaybackTests.DoubleTime_PlaysTwiceAsFast |
+| [SHOW-020](exigences/SHOW-020.md) | I | Éditeur graphique | Non réalisé | ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.MacroStep_WaitsForItsSubShowToEnd |
+| [SHOW-021](exigences/SHOW-021.md) | I | Actions continues, mémorisées, impulsionnelles | Réalisé | ShowExecutionTests.Launch_ActivatesTheInitialStepAndPlaysItsScenes<br>ShowExecutionTests.PlaySequence_RunsWhileTheStepIsActive_AndSequenceEndedMovesOn<br>ShowExecutionTests.PulseActions_FlashAndShortBlackout_EndOnTheirOwn<br>ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
+| [SHOW-022](exigences/SHOW-022.md) | I | Réceptivités du §3 | Réalisé | ShowExecutionTests.Conditions_TimeEnergyStyleTempoSongAndLogic<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.ManualTransition_IsOnlyForced_AtItsQuantization<br>ShowExecutionTests.RandomCondition_DrawsOncePerBar<br>(+1) |
+| [SHOW-023](exigences/SHOW-023.md) | I | Exécution conforme aux règles R1 à R6 | Réalisé | ReferenceShowP8Tests.EveryP8SequenceAndShow_ReplaysExactlyAsReference<br>ShowExecutionTests.AndDivergenceAndConvergence_RunBranchesInParallel_ThenJoin<br>ShowExecutionTests.Drop_QuantizedOnTheBar_FiresAtTheNextBar_AndR5KeepsARepeatedScene<br>ShowExecutionTests.EndOfShow_HoldsStopsOrRestarts<br>(+4) |
+| [SHOW-024](exigences/SHOW-024.md) | I | Validation à l'édition | Réalisé | ReferenceShowP8Tests.Pitfall_IsRefused_AndNothingLights<br>ReferenceShowP8Tests.ReferenceShow_P8_ContentIsThere_AndOnlyThePitfallIsAnError<br>ShowExecutionTests.ShowWithAnImmediateLoop_IsRefusedAtLaunch<br>ShowRulesTests.DeletedSceneAndUnknownReferences_AreErrors<br>(+6) |
+| [SHOW-025](exigences/SHOW-025.md) | I | Un seul show principal actif à la fois | Réalisé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside |
+| [SHOW-026](exigences/SHOW-026.md) | I | Supervision | Partiel |  |
+| [SHOW-027](exigences/SHOW-027.md) | I | Mode simulation dans l'éditeur | Partiel | ShowScenarioTests.Scenario_PlaysAShowWithSimulatedDrop_AndSummarizesItsSteps |
+| [SHOW-028](exigences/SHOW-028.md) | M | Tirage pondéré | Réalisé | WeightedDrawTests.AvoidRepeat_NeverTakesTheSameBranchTwiceInARow<br>WeightedDrawTests.Distribution_FollowsTheWeights_Within2Percent |
+| [SHOW-029](exigences/SHOW-029.md) | M | Variables simples du show | Réalisé | ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant |
+| [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
+| [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Réalisé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside |

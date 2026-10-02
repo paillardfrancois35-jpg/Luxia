@@ -174,6 +174,10 @@
 | [CMD-040](CMD-040.md) | Commande TapTempo | P7 | I | Validé |
 | [CMD-041](CMD-041.md) | Commande ChoisirSourceTempo | P7 | I | Validé |
 | [CMD-042](CMD-042.md) | Commande AjusterTempo | P7 | I | Validé |
+| [CMD-050](CMD-050.md) | Commande LancerShow / ArrêterShow | P8 | I | Réalisé |
+| [CMD-051](CMD-051.md) | Commande ForcerTransition | P8 | I | Réalisé |
+| [CMD-052](CMD-052.md) | Commande LancerSéquence / ArrêterSéquence | P8 | I | Réalisé |
+| [CMD-053](CMD-053.md) | Commande SimulerMusique | P8 | I | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -262,7 +266,8 @@
 | [EVT-021](EVT-021.md) | Événement Impulsion | P7 | I | Partiel |
 | [EVT-022](EVT-022.md) | Événement ÉnergieChangée | P7 | I | Réalisé |
 | [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Réalisé |
-| [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Partiel |
+| [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Réalisé |
+| [EVT-030](EVT-030.md) | Événement ÉtapeShowActivée, publié par Show, reçu par Live, Journal | P8 | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -489,6 +494,26 @@
 | [SCN-050](SCN-050.md) | Les paramètres ci-dessus sont réglables par scène | P7 | I | Partiel |
 | [SCN-051](SCN-051.md) | Modulation par l'énergie | P7 | M | Partiel |
 | [SCN-052](SCN-052.md) | En l'absence de signal audio | P7 | M | Réalisé |
+| [SHOW-001](SHOW-001.md) | Une séquence a une longueur en mesures, une mesure | P8 | I | Partiel |
+| [SHOW-002](SHOW-002.md) | Placer des scènes sur les pistes par glisser-déposer, avec début et durée en mesures/temps | P8 | I | Non réalisé |
+| [SHOW-003](SHOW-003.md) | Sur une piste, un bloc lance sa scène dans la couche de la piste au début du bloc et l'arr | P8 | I | Réalisé |
+| [SHOW-004](SHOW-004.md) | Blocs d'actions en plus des scènes | P8 | I | Réalisé |
+| [SHOW-005](SHOW-005.md) | Modes de lecture | P8 | I | Réalisé |
+| [SHOW-006](SHOW-006.md) | Une séquence est lançable depuis le Live, une étape de show, ou le Directeur | P8 | I | Partiel |
+| [SHOW-007](SHOW-007.md) | Aperçu | P8 | M | Partiel |
+| [SHOW-008](SHOW-008.md) | Variation de la vitesse relative | P8 | S | Réalisé |
+| [SHOW-020](SHOW-020.md) | Éditeur graphique | P8 | I | Non réalisé |
+| [SHOW-021](SHOW-021.md) | Actions continues, mémorisées, impulsionnelles | P8 | I | Réalisé |
+| [SHOW-022](SHOW-022.md) | Réceptivités du §3 | P8 | I | Réalisé |
+| [SHOW-023](SHOW-023.md) | Exécution conforme aux règles R1 à R6 | P8 | I | Réalisé |
+| [SHOW-024](SHOW-024.md) | Validation à l'édition | P8 | I | Réalisé |
+| [SHOW-025](SHOW-025.md) | Un seul show principal actif à la fois | P8 | I | Réalisé |
+| [SHOW-026](SHOW-026.md) | Supervision | P8 | I | Partiel |
+| [SHOW-027](SHOW-027.md) | Mode simulation dans l'éditeur | P8 | I | Partiel |
+| [SHOW-028](SHOW-028.md) | Tirage pondéré | P8 | M | Réalisé |
+| [SHOW-029](SHOW-029.md) | Variables simples du show | P8 | M | Réalisé |
+| [SHOW-030](SHOW-030.md) | Métadonnées du show pour le Directeur | P8 | M | Réalisé |
+| [SHOW-031](SHOW-031.md) | Shows secondaires parallèles | P8 | S | Réalisé |
 | [SIM-001](SIM-001.md) | Affichage du plan du lieu actif | P3 | I | Réalisé |
 | [SIM-002](SIM-002.md) | Rendu 30 images/s sans ralentir le moteur | P3 | I | Réalisé |
 | [SIM-003](SIM-003.md) | Décodage des trames via le patch | P3 | I | Réalisé |

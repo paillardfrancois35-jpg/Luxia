@@ -1,0 +1,31 @@
+# SHOW-029 – Variables simples du show
+
+| Champ | Valeur |
+|---|---|
+| **Statut** | Réalisé |
+| **Priorité** | M |
+| **Phase** | P8 |
+| **Source** | [doc 20 – 3.5 Exigences](../20-show-et-sequences.md) |
+| **Remarque** | Variables numériques du show, modifiées par action, comparées dans les conditions. |
+| **Liens** | — |
+
+## Description
+
+> Variables simples du show (compteurs : « nombre de refrains joués ») utilisables dans les conditions.
+
+**Critère d'acceptation** : Après 3 refrains → variante finale.
+
+## Réalisation
+
+- src/Luxia.Show/Runtime/ShowRun.cs
+
+## Tests
+
+- ShowExecutionTests.Variables_CountChoruses_ThenTheFinalVariant
+
+## Historique
+
+| Date | Par | Type | Entrée |
+|---|---|---|---|
+| 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 20, 3.5 Exigences). |
+| 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`). |
