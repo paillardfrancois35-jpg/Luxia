@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using LayersWindow = Luxia.UI.Modules.Control.Views.LayersWindow;
 
 namespace Luxia.UI.Modules.Scenes;
 
@@ -20,20 +21,20 @@ public partial class ScenesView : UserControl
     private ScenesViewModel? ViewModel => DataContext as ScenesViewModel;
 
     private void OnLaunchClicked(object? sender, RoutedEventArgs e) =>
-        ViewModel?.LaunchCommand.Execute((sender as Control)?.Tag as SceneRowViewModel);
+        ViewModel?.LaunchCommand.Execute((sender as Avalonia.Controls.Control)?.Tag as SceneRowViewModel);
 
     private void OnStopClicked(object? sender, RoutedEventArgs e) =>
-        ViewModel?.StopCommand.Execute((sender as Control)?.Tag as SceneRowViewModel);
+        ViewModel?.StopCommand.Execute((sender as Avalonia.Controls.Control)?.Tag as SceneRowViewModel);
 
     private void OnStepPressed(object? sender, PointerPressedEventArgs e)
     {
         // Un clic sur la case à cocher de l'étape ne doit pas changer d'étape courante.
-        if (e.Source is Control source && source.FindAncestorOfType<CheckBox>(includeSelf: true) is not null)
+        if (e.Source is Avalonia.Controls.Control source && source.FindAncestorOfType<CheckBox>(includeSelf: true) is not null)
         {
             return;
         }
 
-        ViewModel?.Editor.SelectStepCommand.Execute((sender as Control)?.Tag as StepRowViewModel);
+        ViewModel?.Editor.SelectStepCommand.Execute((sender as Avalonia.Controls.Control)?.Tag as StepRowViewModel);
     }
 
     private async void OnLayersClicked(object? sender, RoutedEventArgs e)
@@ -60,5 +61,5 @@ public partial class ScenesView : UserControl
     }
 
     private void OnShortcutClicked(object? sender, RoutedEventArgs e) =>
-        ViewModel?.Programmer.SelectCommand.Execute((sender as Control)?.Tag as SelectionShortcut);
+        ViewModel?.Programmer.SelectCommand.Execute((sender as Avalonia.Controls.Control)?.Tag as SelectionShortcut);
 }

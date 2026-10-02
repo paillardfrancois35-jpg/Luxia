@@ -129,7 +129,7 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
 
     // E2 : durées en temps ou en mesures dans les Propriétés (brouillon annulé ensuite).
     work.Properties.StepHold.Amount = 2;
-    work.Properties.StepHold.Unit = Luxia.UI.Modules.Scenes.DurationField.Units[1];
+    work.Properties.StepHold.Unit = Luxia.UI.Modules.Control.DurationField.Units[1];
     work.Flush();
     Tick(10);
     game.Editor.Refresh();
@@ -179,6 +179,13 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     game.SequenceEditor.Select(new Luxia.UI.Modules.Control.Sequencing.BlockRef(3, 0));
     Tick(4);
     Capture("Édition - séquence, bloc de niveau", sequenceWindow);
+
+    // Liste déroulante dépliée (analyse ergonomique de P8, E6) : fond contrasté, barre de défilement visible.
+    var unitCombo = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(sequenceWindow).OfType<ComboBox>().First(c => c.IsVisible && c.ItemCount > 2);
+    unitCombo.IsDropDownOpen = true;
+    Tick(2);
+    Capture("Liste déroulante dépliée", sequenceWindow);
+    unitCombo.IsDropDownOpen = false;
     game.SequenceEditor.Cancel();
 
     game.EditShow(demoShow.Id);
@@ -196,6 +203,14 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     game.ShowEditor.Refresh();
     Tick(4);
     Capture("Édition - show", showWindow);
+    if (Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(showWindow).OfType<ComboBox>().FirstOrDefault(c => c.IsVisible && c.ItemCount == 19) is { } conditions)
+    {
+        // Liste longue (19 conditions) : hauteur standard, barre de défilement visible (E6).
+        conditions.IsDropDownOpen = true;
+        Tick(2);
+        Capture("Liste déroulante longue", showWindow);
+        conditions.IsDropDownOpen = false;
+    }
     game.ShowEditor.Cancel();
 }
 
@@ -240,15 +255,6 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
 
     Capture("Scènes - lyre sélectionnée");
 
-    // Éditeur de couches (COU-001), fenêtre à part.
-    if (scenes.CreateLayersEditor() is { } editor)
-    {
-        var layers = new LayersWindow { DataContext = editor };
-        layers.Show();
-        Capture("Couches", layers);
-        layers.Close();
-    }
-
     // Zones interdites (INST-053), fenêtre à part, avec une zone d'exemple sur la lyre sélectionnée.
     if (scenes.CreateZonesEditor() is { } zonesEditor)
     {
@@ -258,6 +264,16 @@ if (vm.Pages.FirstOrDefault(p => p.Page is ScenesViewModel) is { Page: ScenesVie
         Capture("Zones interdites", zones);
         zones.Close();
     }
+}
+
+// Éditeur de couches (COU-001), ouvert par « Couches… » de l'en-tête de l'écran de jeu (aussi depuis l'écran Scènes).
+if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewModel) is { Page: Luxia.UI.Modules.Control.GameViewModel layersGame }
+    && layersGame.CreateLayersEditor() is { } layersEditor)
+{
+    var layers = new Luxia.UI.Modules.Control.Views.LayersWindow { DataContext = layersEditor };
+    layers.Show();
+    Capture("Couches", layers);
+    layers.Close();
 }
 
 // Onglet « Gestion des dimmers » (ERG-036) : un arbre d'exemple sur le parc du projet, dimmers réglés pour voir les niveaux.

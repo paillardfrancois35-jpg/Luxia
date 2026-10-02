@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Luxia.Engine.Model;
 using Luxia.UI.Controls;
 
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>
 /// Saisie d'une durée : une quantité et son unité (secondes, temps, mesures ; GEN-023). Facultative pour un fondu

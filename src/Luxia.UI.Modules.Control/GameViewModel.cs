@@ -15,6 +15,7 @@ namespace Luxia.UI.Modules.Control;
 public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 {
     private readonly LuxiaRuntime _runtime;
+    private readonly IDialogService _dialogs;
 
     [ObservableProperty]
     private string? _message;
@@ -50,6 +51,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(dialogs);
+        _dialogs = dialogs;
         _runtime = runtime;
 
         // La session sert ici au verrou soirée et à l'annulation des opérations sur les scènes (nouvelle, dupliquer,
@@ -68,7 +70,6 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Columns.Shows.EditShowRequested += (_, id) => EditShow(id);
         Columns.Shows.EditSequenceRequested += (_, id) => EditSequence(id);
         Columns.Shows.MessageRaised += (_, text) => Message = text;
-        Columns.Shows.JournalRaised += (_, text) => Journal.Log(text);
         SequenceEditor.Closed += (_, _) => Columns.Shows.Refresh();
         ShowEditor.Closed += (_, _) => Columns.Shows.Refresh();
         Editor.Closed += (_, _) => EditedSceneId = null;
@@ -125,6 +126,21 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 
     /// <summary>La fenêtre d'édition d'un show doit s'afficher.</summary>
     public event EventHandler? ShowEditRequested;
+
+    /// <summary>
+    /// Éditeur de couches (COU-001), venu de l'ancien écran Scènes (lot 7 de P8) ; <c>null</c> sans projet ou sous le verrou
+    /// soirée (le message dit pourquoi).
+    /// </summary>
+    public LayersEditorViewModel? CreateLayersEditor()
+    {
+        if (Session.IsLocked)
+        {
+            Message = ControlSession.LockedReason;
+            return null;
+        }
+
+        return _runtime.Project.Folder is null ? null : new LayersEditorViewModel(_runtime, _dialogs);
+    }
 
     /// <summary>Ouvre une séquence dans sa fenêtre d'édition.</summary>
     public void EditSequence(Guid id)

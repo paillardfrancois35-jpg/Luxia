@@ -5,7 +5,7 @@ using Luxia.Hosting;
 using Luxia.Scenes.Model;
 using Luxia.UI.Controls;
 
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>
 /// Éditeur de couches (COU-001) : créer, renommer, réordonner (l'ordre donne les priorités), supprimer ; propriétés du

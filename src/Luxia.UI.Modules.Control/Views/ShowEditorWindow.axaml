@@ -155,8 +155,7 @@
                                 <WrapPanel>
                                   <TextBlock Text="{Binding Rank}" Classes="label" Margin="0,0,6,4" />
                                   <TextBlock Text="┼" Foreground="#8B949E" Margin="0,0,6,4" VerticalAlignment="Center" />
-                                  <!-- Essai P8, ex. 16c : liste assez haute pour ses 19 choix (« à la main seulement » et « aussitôt » étaient cachés en bas). -->
-                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Conditions}" SelectedItem="{Binding Kind}" Width="210" Margin="0,0,6,4" IsVisible="{Binding IsSimple}" MaxDropDownHeight="680" />
+                                  <ComboBox ItemsSource="{x:Static sq:ShowOptions.Conditions}" SelectedItem="{Binding Kind}" Width="210" Margin="0,0,6,4" IsVisible="{Binding IsSimple}" />
                                   <TextBlock Text="combinaison (ET / OU / NON) : à modifier dans le fichier" Classes="label" Margin="0,0,6,4" IsVisible="{Binding IsComposite}" />
                                   <StackPanel Orientation="Horizontal" Spacing="4" Margin="0,0,6,4" IsVisible="{Binding ShowsDuration}">
                                     <NumericUpDown Value="{Binding DurationValue}" Minimum="0" Maximum="9999" Increment="1" FormatString="0.##" Width="130" />

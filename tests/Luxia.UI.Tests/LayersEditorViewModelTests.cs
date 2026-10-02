@@ -1,6 +1,6 @@
 using Luxia.Engine.Model;
 using Luxia.Scenes.Model;
-using Luxia.UI.Modules.Scenes;
+using Luxia.UI.Modules.Control;
 
 namespace Luxia.UI.Tests;
 
@@ -24,6 +24,19 @@ public sealed class LayersEditorViewModelTests : IAsyncLifetime
     }
 
     public ValueTask DisposeAsync() => _host.DisposeAsync();
+
+    [Fact]
+    [Trait("Exigence", "COU-001")]
+    public void GameScreen_OpensTheLayersEditor_ExceptUnderTheEveningLock()
+    {
+        // Lot 7 de P8 : l'écran Scènes est retiré, « Couches… » est dans l'en-tête de l'écran de jeu.
+        var game = new GameViewModel(_host.Runtime, _host.Dialogs);
+        game.CreateLayersEditor().ShouldNotBeNull().Layers.Count.ShouldBe(8);
+
+        game.ToggleLockCommand.Execute(null);
+        game.CreateLayersEditor().ShouldBeNull();
+        game.Message.ShouldNotBeNullOrEmpty();
+    }
 
     [Fact]
     [Trait("Exigence", "COU-001")]

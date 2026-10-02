@@ -3,6 +3,9 @@
 > Cahier des charges – modules **Couches** (préfixe `COU`) et **Palettes** (préfixe `PAL`). Phase principale : **P5** (palettes de base dès **P4**).
 > Références : [15 §5 (fusion)](15-moteur-de-rendu.md), [16](16-scenes-et-effets.md), [13 (lieux)](13-installation-et-lieux.md).
 
+> **Depuis le lot 7 de P8 (2026-10-02)** : l'éditeur de couches (COU-001) s'ouvre aussi par le bouton **« Couches… »** de
+> l'en-tête de l'écran de jeu (Contrôle).
+
 ---
 
 ## 1. Couches

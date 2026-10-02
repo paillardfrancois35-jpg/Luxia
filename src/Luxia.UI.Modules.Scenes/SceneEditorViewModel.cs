@@ -9,6 +9,8 @@ using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
 
+using Luxia.UI.Modules.Control;
+
 namespace Luxia.UI.Modules.Scenes;
 
 /// <summary>

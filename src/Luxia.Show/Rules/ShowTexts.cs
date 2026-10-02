@@ -29,7 +29,7 @@ public static class ShowTexts
         string Name(Guid? id) => id is { } value ? names?.Invoke(value) ?? "?" : "?";
         return condition.Kind switch
         {
-            ConditionKind.Always => "aussitôt",
+            ConditionKind.Always => "sans condition",
             ConditionKind.Manual => "à la main",
             ConditionKind.After => $"après {Duration(condition.Duration ?? Engine.Model.Duration.Zero)}",
             ConditionKind.SceneEnded => $"fin de « {Name(condition.SceneId)} »",
@@ -55,7 +55,7 @@ public static class ShowTexts
         };
     }
 
-    /// <summary>Une quantification en clair (« à la prochaine mesure »), vide pour « tout de suite ».</summary>
+    /// <summary>Une quantification en clair (« à la prochaine mesure »), vide pour « sans attendre le temps ».</summary>
     public static string Quantize(ShowQuantize quantize) => quantize switch
     {
         ShowQuantize.Beat => "au prochain temps",

@@ -294,8 +294,15 @@
   ×2 / ÷ 2 est **gardée** d'un morceau à l'autre et après un silence (décision de l'utilisateur, AUD-023).
   **Ergonomie** : [analyse de fin de P8](chantiers/analyse-ergonomique-p8.md) ; refonte de l'éditeur de show en discussion dédiée
   ([cahier des charges](chantiers/refonte-editeur-show.md)). **Réserves de validation** : exemples 5, 6, 7 non refaits en .085 ;
-  fumée non testée (appareil non branché). **Restent** : re-vérification (ex. 8, 13, 15, 16c, tempo entendu), lot 7, revue de fin
-  de phase, validation, fusion, `v1.010`.
+  fumée non testée (appareil non branché).
+  **Re-vérification v1.010.104** : ex. 8, 13, 15, 16c, 3d ✅. **Décisions de fin de phase** (2026-10-02) : E2 (vocabulaire
+  « sans condition (dès l'entrée dans l'étape) » / « Sans attendre le temps ») et E6 (listes déroulantes contrastées, barre de
+  défilement visible, style global) faits dans P8 ; E1 (refonte de l'éditeur de show), E3 (« pourquoi ça ne s'allume pas »), E7
+  (sélection du Journal) plus tard (doc 99). **Lot 7** : trace temporaire retirée ; le retrait des écrans Scènes et Live est
+  **reporté** (fonctions validées encore absentes de l'écran de jeu, liste au doc 99, choix de l'utilisateur) ; en préparation,
+  types partagés et éditeur de couches dans `Luxia.UI.Modules.Control` (l'écran Scènes s'appuie dessus), bouton « Couches… » dans
+  l'en-tête de l'écran de jeu, courbe de fondu et bascule des attributs discrets dans les Propriétés de l'étape.
+  **Restent** : court contrôle de l'utilisateur, validation, fusion, `v1.010`.
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.

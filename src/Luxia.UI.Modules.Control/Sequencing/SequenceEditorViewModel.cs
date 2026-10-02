@@ -9,7 +9,6 @@ using Luxia.Scenes.Model;
 using Luxia.Show.Model;
 using Luxia.Show.Rules;
 using Luxia.UI.Controls;
-using Luxia.UI.Modules.Scenes;
 
 namespace Luxia.UI.Modules.Control.Sequencing;
 

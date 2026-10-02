@@ -47,9 +47,6 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
     /// <summary>Message à montrer (refus), ou nul.</summary>
     public event EventHandler<string>? MessageRaised;
 
-    /// <summary>Ligne à écrire au Journal de l'écran de jeu (copiable, contrairement au message de l'en-tête).</summary>
-    public event EventHandler<string>? JournalRaised;
-
     /// <summary>Refait la liste (projet ouvert ou modifié).</summary>
     public void Rebuild()
     {
@@ -103,34 +100,6 @@ public sealed partial class ShowsColumnViewModel : ViewModelBase
         _runtime.Engine.Send(item.IsShow
             ? new LaunchShowCommand(CommandOrigin.User, item.Id, StopIfPlaying: true)
             : new LaunchSequenceCommand(CommandOrigin.User, item.Id, StopIfPlaying: true));
-    }
-
-    /// <summary>TEMPORAIRE (essai P8, exemple 13) : la trace de mise au point des shows enregistre.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TraceLabel))]
-    public partial bool IsTracing { get; set; }
-
-    /// <summary>TEMPORAIRE (essai P8, exemple 13) : texte du bouton de la trace.</summary>
-    public string TraceLabel => IsTracing ? "■ Arrêter la trace" : "● Démarrer la trace";
-
-    /// <summary>TEMPORAIRE (essai P8, exemple 13) : démarre ou arrête la trace (<see cref="ShowTrace"/>), à retirer après l'essai.</summary>
-    [RelayCommand]
-    private void ToggleTrace()
-    {
-        if (_runtime.Trace.IsRunning)
-        {
-            _runtime.Trace.Stop();
-            MessageRaised?.Invoke(this, "Trace arrêtée : chemin du fichier au Journal");
-            JournalRaised?.Invoke(this, $"Trace arrêtée : {_runtime.Trace.FilePath}");
-        }
-        else
-        {
-            var file = _runtime.Trace.Start();
-            MessageRaised?.Invoke(this, "Trace en cours : chemin du fichier au Journal");
-            JournalRaised?.Invoke(this, $"Trace démarrée : {file}");
-        }
-
-        IsTracing = _runtime.Trace.IsRunning;
     }
 
     /// <summary>Bande ✎ : ouvrir la fenêtre d'édition.</summary>

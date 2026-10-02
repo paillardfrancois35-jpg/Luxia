@@ -44,13 +44,16 @@
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
           <Button Classes="target" Content="↶" FontSize="16" ToolTip.Tip="{Binding UndoText}" Command="{Binding UndoCommand}" />
           <Button Classes="target" Content="↷" FontSize="16" ToolTip.Tip="{Binding RedoText}" Command="{Binding RedoCommand}" />
+          <!-- Lot 7 de P8 : l'éditeur de couches, seul outil de l'ancien écran Scènes absent du Contrôle (COU-001). -->
+          <Button x:Name="LayersButton" Classes="target" Content="Couches…" Margin="10,0,0,0" IsEnabled="{Binding HasProject}"
+                  ToolTip.Tip="Créer, renommer, réordonner les couches (l'ordre donne les priorités), couche protégée de « Stop », fondu croisé, master" />
           <Button x:Name="PanelsButton" Classes="target" Content="Panneaux ▾" Margin="10,0,0,0" ToolTip.Tip="Réafficher un panneau fermé, ou le mettre au premier plan" />
           <Button x:Name="ResetLayoutButton" Classes="target" Content="Rétablir la disposition" ToolTip.Tip="Oublier la disposition enregistrée et revenir à celle livrée" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
           <Button Classes="target" Content="■ Stop" Foreground="#F85149"
                   Command="{Binding StopAllCommand}" CommandParameter="sauf-protegees"
-                  ToolTip.Tip="Arrêter toutes les scènes, sauf les couches protégées (Ambiance par défaut : fumée, UV…). Réglage : écran Scènes → Couches…, colonne « Protégée »." />
+                  ToolTip.Tip="Arrêter toutes les scènes, sauf les couches protégées (Ambiance par défaut : fumée, UV…). Réglage : bouton « Couches… » en haut à droite, colonne « Protégée »." />
           <Button Classes="target" Content="■ Tout stopper" Foreground="#F85149" Margin="0,0,10,0"
                   Command="{Binding StopAllCommand}" CommandParameter="tout"
                   ToolTip.Tip="Arrêter absolument toutes les scènes, couches protégées comprises (fin de soirée)" />

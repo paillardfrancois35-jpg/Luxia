@@ -9,7 +9,6 @@ using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
-using Luxia.UI.Modules.Scenes;
 
 namespace Luxia.UI.Modules.Control;
 
@@ -106,6 +105,12 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _stepAutoAdvance;
+
+    [ObservableProperty]
+    private Choice<FadeCurve> _stepCurve = SceneOptions.Curves[0];
+
+    [ObservableProperty]
+    private Choice<DiscreteSwitch> _stepSwitch = SceneOptions.Switches[0];
 
     [ObservableProperty]
     private Choice<string> _wizard = Wizards[0];
@@ -485,6 +490,16 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
 
     partial void OnStepAutoAdvanceChanged(bool value) => UpdateStep(s => s with { AutoAdvance = value }, value ? "Étape brève au rythme" : "Étape au rythme jusqu'à l'événement");
 
+    /// <summary>Courbes de fondu d'une étape (MOT-011), réglables ici depuis le retrait de l'écran Scènes (lot 7 de P8).</summary>
+    public static IReadOnlyList<Choice<FadeCurve>> Curves => SceneOptions.Curves;
+
+    /// <summary>Moment de bascule des attributs discrets (MOT-012), réglable ici depuis le lot 7 de P8.</summary>
+    public static IReadOnlyList<Choice<DiscreteSwitch>> Switches => SceneOptions.Switches;
+
+    partial void OnStepCurveChanged(Choice<FadeCurve> value) => UpdateStep(s => s with { Curve = value.Value }, "Courbe du fondu");
+
+    partial void OnStepSwitchChanged(Choice<DiscreteSwitch> value) => UpdateStep(s => s with { Switch = value.Value }, "Bascule des attributs discrets");
+
     partial void OnStepHueFadeChanged(bool value) => UpdateStep(s => s with { HueFade = value }, value ? "Fondu par la teinte" : "Fondu direct des couleurs");
 
     private void Update(Func<Scene, Scene> change, string description)
@@ -597,6 +612,8 @@ public sealed partial class PropertiesPanelViewModel : ViewModelBase
             StepHold.Load(step.Hold);
             StepHueFade = step.HueFade;
             StepAutoAdvance = step.AutoAdvance;
+            StepCurve = SceneOptions.Curves.FirstOrDefault(c => c.Value == step.Curve) ?? SceneOptions.Curves[0];
+            StepSwitch = SceneOptions.Switches.FirstOrDefault(c => c.Value == step.Switch) ?? SceneOptions.Switches[0];
             FillStepValues(step);
             FillWizardPalettes();
         }

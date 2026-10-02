@@ -6,7 +6,7 @@ namespace Luxia.Show.Model;
 /// </summary>
 public enum ShowQuantize
 {
-    /// <summary>Tout de suite.</summary>
+    /// <summary>Sans attendre le temps (aussitôt la condition vraie).</summary>
     None,
 
     /// <summary>Prochain temps.</summary>

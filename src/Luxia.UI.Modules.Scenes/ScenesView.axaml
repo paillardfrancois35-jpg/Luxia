@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Luxia.UI.Modules.Scenes"
+             xmlns:ctl="using:Luxia.UI.Modules.Control"
              x:Class="Luxia.UI.Modules.Scenes.ScenesView"
              x:DataType="vm:ScenesViewModel">
   <UserControl.Resources>
@@ -187,16 +188,16 @@
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Fondu d'entrée (vide = celui de l'étape 1)" />
-                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeIn}" x:DataType="vm:DurationField">
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeIn}" x:DataType="ctl:DurationField">
                     <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
-                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                    <ComboBox ItemsSource="{x:Static ctl:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
                   </StackPanel>
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Fondu de sortie (vide = immédiat)" />
-                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeOut}" x:DataType="vm:DurationField">
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding FadeOut}" x:DataType="ctl:DurationField">
                     <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
-                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                    <ComboBox ItemsSource="{x:Static ctl:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
                   </StackPanel>
                 </StackPanel>
                 <StackPanel Classes="field">
@@ -261,16 +262,16 @@
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Fondu d'entrée" />
-                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepFade}" x:DataType="vm:DurationField">
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepFade}" x:DataType="ctl:DurationField">
                     <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="600" Increment="0.5" FormatString="0.###" Width="150" />
-                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                    <ComboBox ItemsSource="{x:Static ctl:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
                   </StackPanel>
                 </StackPanel>
                 <StackPanel Classes="field">
                   <TextBlock Text="Maintien" />
-                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepHold}" x:DataType="vm:DurationField">
+                  <StackPanel Orientation="Horizontal" Spacing="4" DataContext="{Binding StepHold}" x:DataType="ctl:DurationField">
                     <NumericUpDown Value="{Binding Amount}" Minimum="0" Maximum="3600" Increment="0.5" FormatString="0.###" Width="150" />
-                    <ComboBox ItemsSource="{x:Static vm:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
+                    <ComboBox ItemsSource="{x:Static ctl:DurationField.Units}" SelectedItem="{Binding Unit}" Width="110" />
                   </StackPanel>
                 </StackPanel>
                 <StackPanel Classes="field">

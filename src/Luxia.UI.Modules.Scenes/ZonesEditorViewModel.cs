@@ -6,6 +6,8 @@ using Luxia.Hosting;
 using Luxia.Patch.Model;
 using Luxia.UI.Controls;
 
+using Luxia.UI.Modules.Control;
+
 namespace Luxia.UI.Modules.Scenes;
 
 /// <summary>

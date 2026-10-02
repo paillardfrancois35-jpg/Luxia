@@ -4,7 +4,6 @@ using Luxia.Messaging.Commands;
 using Luxia.Scenes.Model;
 using Luxia.UI.Controls;
 using Luxia.UI.Modules.Control;
-using Luxia.UI.Modules.Scenes;
 
 namespace Luxia.UI.Tests;
 
@@ -326,6 +325,30 @@ public sealed class EditBenchPanelsTests : IAsyncLifetime
 
         _vm.Undo();
         Scene("Chenillard doux").Steps.Count.ShouldBe(steps + 1);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MOT-011")]
+    [Trait("Exigence", "MOT-012")]
+    public void Properties_StepCurveAndSwitch_AreSaved_AndReadBack()
+    {
+        // Lot 7 de P8 : réglés dans l'écran Scènes jusqu'à son retrait, désormais dans les Propriétés de l'étape.
+        var scene = Scene("Chenillard 4 couleurs");
+        _vm.Session.ChooseScene(scene.Id);
+
+        _vm.Properties.StepCurve = PropertiesPanelViewModel.Curves.Single(c => c.Value == FadeCurve.SCurve);
+        _vm.Properties.StepSwitch = PropertiesPanelViewModel.Switches.Single(c => c.Value == DiscreteSwitch.Middle);
+        _vm.Flush();
+
+        var step = Scene("Chenillard 4 couleurs").Steps[0];
+        step.Curve.ShouldBe(FadeCurve.SCurve);
+        step.Switch.ShouldBe(DiscreteSwitch.Middle);
+
+        _vm.Session.ChooseStep(1);
+        _vm.Properties.StepCurve.Value.ShouldBe(Scene("Chenillard 4 couleurs").Steps[1].Curve);
+        _vm.Session.ChooseStep(0);
+        _vm.Properties.StepCurve.Value.ShouldBe(FadeCurve.SCurve);
+        _vm.Properties.StepSwitch.Value.ShouldBe(DiscreteSwitch.Middle);
     }
 
     [Fact]

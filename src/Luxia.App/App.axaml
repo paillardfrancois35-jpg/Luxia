@@ -27,6 +27,26 @@
       <Setter Property="Width" Value="24" />
       <Setter Property="Padding" Value="0" />
     </Style>
+    <!-- Analyse ergonomique de P8, E6 (« les combos, on les uniformise toutes ») : liste dépliée sur un fond neutre et contrasté
+         par rapport au fond de l'application, bordure claire, barre de défilement toujours visible (on devine qu'il y a d'autres
+         choix plus bas). Même astuce « :not(:luxia) » que ci-dessus : passer au-dessus des valeurs du modèle Fluent. -->
+    <Style Selector="ComboBox /template/ Border#PopupBorder:not(:luxia)">
+      <Setter Property="Background" Value="#3D444D" />
+      <Setter Property="BorderBrush" Value="#8B949E" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="ComboBox /template/ ScrollViewer:not(:luxia)">
+      <Setter Property="AllowAutoHide" Value="False" />
+    </Style>
+    <Style Selector="ComboBoxItem">
+      <Setter Property="Foreground" Value="#F0F6FC" />
+    </Style>
+    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#58616C" />
+    </Style>
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#1F6FEB" />
+    </Style>
     <!-- SORT-065 : voyant rouge qui clignote pendant un enregistrement de trames. -->
     <Style Selector="Ellipse.rec">
       <Setter Property="Fill" Value="#F85149" />

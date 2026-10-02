@@ -37,6 +37,13 @@ public partial class GameView : UserControl
             menu.ShowAt(panelsButton);
         };
         this.FindControl<Button>("ResetLayoutButton")!.Click += (_, _) => ResetLayout();
+        this.FindControl<Button>("LayersButton")!.Click += async (_, _) =>
+        {
+            if (ViewModel?.CreateLayersEditor() is { } editor && TopLevel.GetTopLevel(this) is Window owner)
+            {
+                await new LayersWindow { DataContext = editor }.ShowDialog(owner).ConfigureAwait(true);
+            }
+        };
 
         // Forcer ▾ : une entrée par transition possible du show principal, construite au clic (SHOW-026, CMD-051).
         var forceButton = this.FindControl<Button>("ForceButton")!;

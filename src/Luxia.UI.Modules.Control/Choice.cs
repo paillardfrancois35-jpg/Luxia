@@ -1,4 +1,4 @@
-namespace Luxia.UI.Modules.Scenes;
+namespace Luxia.UI.Modules.Control;
 
 /// <summary>Élément de liste déroulante : une valeur et son libellé français.</summary>
 /// <typeparam name="T">Type de valeur.</typeparam>

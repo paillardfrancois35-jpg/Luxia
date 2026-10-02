@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Luxia.UI.Modules.Control"
              xmlns:c="using:Luxia.UI.Controls"
-             xmlns:sc="using:Luxia.UI.Modules.Scenes"
+             xmlns:sc="using:Luxia.UI.Modules.Control"
              x:Class="Luxia.UI.Modules.Control.Views.PropertiesPanelView"
              x:DataType="vm:PropertiesPanelViewModel">
   <UserControl.Styles>
@@ -151,7 +151,7 @@
         <!-- Étape choisie -->
         <Expander Header="{Binding StepTitle}" IsExpanded="True">
           <StackPanel Spacing="6">
-            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+            <Grid ColumnDefinitions="120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
               <TextBlock Classes="label" Text="Nom de l'étape" />
               <TextBox Grid.Column="1" Text="{Binding StepName}" PlaceholderText="(sans nom)" />
               <TextBlock Grid.Row="1" Classes="label" Text="Fondu" />
@@ -166,6 +166,13 @@
             </StackPanel>
               <CheckBox Grid.Row="4" Grid.Column="1" Content="Brève : passe d'elle-même (au rythme)" IsChecked="{Binding StepAutoAdvance}" IsVisible="{Binding ShowFrequency}"
                         ToolTip.Tip="Quand la scène avance sur un événement musical : cette étape ne l'attend pas, elle passe à la suivante au bout de son fondu et de son maintien. Pour un flash bref sur un kick : étape allumée brève, puis étape éteinte qui attend le kick suivant." />
+              <!-- MOT-011, MOT-012 : réglés dans l'écran Scènes jusqu'à son retrait (lot 7 de P8). -->
+              <TextBlock Grid.Row="5" Classes="label" Text="Courbe du fondu" />
+              <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.Curves}" SelectedItem="{Binding StepCurve}" Width="150"
+                        ToolTip.Tip="Forme du fondu des attributs continus (intensité, couleur, position) : linéaire, en S (départ et arrivée en douceur), instantanée" />
+              <TextBlock Grid.Row="6" Classes="label" Text="Attributs discrets" />
+              <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static vm:PropertiesPanelViewModel.Switches}" SelectedItem="{Binding StepSwitch}" Width="150"
+                        ToolTip.Tip="Moment du fondu où basculent les attributs qui ne se fondent pas (gobo, roue de couleur, programmes) : au début, au milieu ou à la fin" />
               <CheckBox Grid.Row="3" Grid.Column="1" Content="Fondu par la teinte" IsChecked="{Binding StepHueFade}"
                         ToolTip.Tip="Pendant le fondu d'entrée de l'étape, les couleurs passent par la roue des teintes : rouge → vert passe par le jaune au lieu d'un brun terne (MOT-054)" />
             </Grid>

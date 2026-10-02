@@ -13,7 +13,6 @@ using Luxia.Scenes.Compilation;
 using Luxia.Scenes.Model;
 using Luxia.Scenes.Rules;
 using Luxia.UI.Controls;
-using Luxia.UI.Modules.Scenes;
 
 namespace Luxia.UI.Modules.Control;
 

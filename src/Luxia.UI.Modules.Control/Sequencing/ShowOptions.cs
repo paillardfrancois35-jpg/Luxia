@@ -1,6 +1,5 @@
 using Luxia.Engine.Model;
 using Luxia.Show.Model;
-using Luxia.UI.Modules.Scenes;
 
 namespace Luxia.UI.Modules.Control.Sequencing;
 
@@ -10,7 +9,7 @@ public static class ShowOptions
     /// <summary>Frontières musicales (démarrage d'une séquence, franchissement d'une transition).</summary>
     public static IReadOnlyList<Choice<ShowQuantize>> Quantizes { get; } =
     [
-        new(ShowQuantize.None, "Tout de suite"),
+        new(ShowQuantize.None, "Sans attendre le temps"),
         new(ShowQuantize.Beat, "Au prochain temps"),
         new(ShowQuantize.Bar, "À la prochaine mesure"),
         new(ShowQuantize.Phrase4, "À la prochaine phrase (4 mesures)"),
@@ -62,7 +61,7 @@ public static class ShowOptions
         new(ConditionKind.Style, "style"),
         new(ConditionKind.Tempo, "tempo entre…"),
         new(ConditionKind.Manual, "à la main seulement"),
-        new(ConditionKind.Always, "aussitôt"),
+        new(ConditionKind.Always, "sans condition (dès l'entrée dans l'étape)"),
     ];
 
     /// <summary>Niveaux d'énergie.</summary>
