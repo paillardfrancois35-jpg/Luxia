@@ -489,11 +489,11 @@
 
 ## P8 – 23 exigences, 0 couvertes par des tests automatiques
 
-> Sans fiche : 23
+> Reporté : 1 · Sans fiche : 22
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [GEN-025](exigences/GEN-025.md) | S | (fiche manquante) | Sans fiche |  |
+| [GEN-025](exigences/GEN-025.md) | S | Les mesures à 3 temps | Reporté |  |
 | [GEN-134](exigences/GEN-134.md) | M | (fiche manquante) | Sans fiche |  |
 | [LIVE-023](exigences/LIVE-023.md) | I | (fiche manquante) | Sans fiche |  |
 | [SHOW-001](exigences/SHOW-001.md) | I | (fiche manquante) | Sans fiche |  |

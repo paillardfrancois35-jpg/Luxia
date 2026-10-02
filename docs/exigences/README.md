@@ -276,6 +276,7 @@
 | [GEN-022](GEN-022.md) | Couleurs logiques converties selon les émetteurs | P4 | I | Réalisé |
 | [GEN-023](GEN-023.md) | Durées en secondes ou en temps musicaux | P4 | I | Réalisé |
 | [GEN-024](GEN-024.md) | Mesure à 4 temps | P7 | I | Réalisé |
+| [GEN-025](GEN-025.md) | Les mesures à 3 temps | P8 | S | Reporté |
 | [GEN-026](GEN-026.md) | Tempo en BPM, bornes et plages | P7 | I | Réalisé |
 | [GEN-030](GEN-030.md) | Tick à 40 Hz (25-44 Hz) | P0 | I | Réalisé, à valider sur matériel |
 | [GEN-031](GEN-031.md) | Gigue du tick < 5 ms | P0 | I | Réalisé, à valider sur matériel |
