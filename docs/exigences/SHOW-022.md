@@ -36,3 +36,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`) : une transition quantifiée est armée quand sa condition devient vraie et part à la frontière suivante (D39). Écart : « la scène X a bouclé N fois » n'est fait que pour les séquences (`sequenceLoops`). |
 | 2026-10-02 | Utilisateur | Test | Ex. 13 avec musique (v1.010.091, morceau « Animals », traces CSV) : couplet, montée, refrain aux drops, retour aux breaks ✅ ; 3e refrain coupé par un break puis silence : le Final n'arrive jamais 💡. |
 | 2026-10-02 | Claude | Correction | *Couplet / Refrain / Drop* : « au silence » mène au Final depuis Couplet, Refrain et Montée ; « à la reprise du son » ramène du Final à l'Intro, qui remet le compteur de refrains à zéro. |
+| 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104, ex. 13 avec musique (trace `trace-show-20261002-215237.csv`) : Final au silence, retour à l'Intro au morceau suivant, deux fois de suite ✅. |

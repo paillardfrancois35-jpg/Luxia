@@ -34,3 +34,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 4 (`d46142e`). Le verrou (« poser un verrou ») attend le Directeur (P10). |
 | 2026-10-02 | Utilisateur | Test | Ex. 8 (v1.010.085) : strobe de l'étape « Éclat » du *Bloc refrain* vu ≈ 1 s au lieu de 4 s ❌. |
 | 2026-10-02 | Claude | Correction | Contenu : l'étape jouait le strobe des PAR sans couleur (le strobe n'ouvre que l'obturateur : PAR à LED noirs hors flash de 0,5 s). Étape complétée de « Blanc sur tous les PAR (couleur seule) » ; la durée de l'étape (4 s) et le limiteur étaient corrects. |
+| 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104, ex. 8 : strobe blanc des PAR visible ≈ 4 s dans « Éclat » ✅. |

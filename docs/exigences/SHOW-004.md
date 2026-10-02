@@ -33,3 +33,4 @@
 | 2026-10-02 | Claude | Développement | P8 lot 3 (`4c87f9e`) : piste d'actions ; rampe de `from` (ou du niveau courant) à `to` sur la durée du bloc, le niveau reste ensuite. |
 | 2026-10-02 | Utilisateur | Test | Ex. 15 (v1.010.091) : bloc « Niveau de couche (rampe) » ✅ ; champ « Niveau » trop étroit, « 100 » lu « 10 » ❌. |
 | 2026-10-02 | Claude | Correction | Champs numériques de toute l'interface : flèches ramenées de 34 à 24 px (style global de l'application) et largeur de chaque champ calculée sur sa plus longue valeur (éditeurs de séquence et de show, Propriétés). |
+| 2026-10-02 | Utilisateur | Test | Re-vérification v1.010.104, ex. 15 : « Niveau » 0 → 100 en entier ; champs des Propriétés, de l'éditeur de show et de l'Installation lisibles ✅. |
