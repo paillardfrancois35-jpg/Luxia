@@ -19,7 +19,7 @@ public static class SeedData
         return Parse(reader.ReadToEnd());
     }
 
-    /// <summary>Lit un texte au format « Nom | famille[:poids], … | alias ; alias » (seule la famille dominante est gardée) (les lignes « # » sont des commentaires).</summary>
+    /// <summary>Lit un texte au format « Nom | famille[:poids], … | alias ; alias » (seule la famille dominante est gardée ; les lignes « # » sont des commentaires).</summary>
     /// <param name="text">Le texte.</param>
     /// <returns>Les artistes.</returns>
     public static ArtistSet Parse(string text)

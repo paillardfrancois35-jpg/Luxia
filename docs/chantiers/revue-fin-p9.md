@@ -42,3 +42,20 @@
 ## 4. Documentation mise à jour
 
 Doc 02 (CMD-062, CMD-063, D40), 03 (§11), 21 (§6 notes de réalisation), 20 (§6 révision de D38), 40, 41, 50 (§12i, §12j), 51 (§4, règle 8), 99 (idées VLC / VirtualDJ / Mixxx), 01 (Q43 révisée, Q48 à Q52), 32 (passation) ; schémas `normalisation`, `taxonomie`, `artistes`, `titres`, `corrections`, `aclasser`, `propositions` ; `samples/Show de référence/JOURNAL.md` ; guide d'essai [P9](../demos/P9-lecture-et-style.md), [PoC-3](../demos/P9-poc3-sonde.md) et fichiers de résultats [P9](../essais/P9-resultats.md), [PoC-3](../essais/P9-poc3.md).
+
+## Mise à jour du 2026-10-03 (après les deux essais, version 1.011 validée)
+
+Cette revue a été faite **avant** l'essai ; la refonte qui a suivi (modèle de données simplifié, fenêtre « Base musicale » en « liste + fiche », modales, show de démonstration) l'a rendue en partie caduque. Contrôles refaits sur le code livré (`v1.011`) :
+
+| Contrôle | Résultat |
+|---|---|
+| Compilation de la solution | 0 avertissement, 0 erreur |
+| Tests automatiques | **1 389**, tous verts (Music 333, UI 316, Engine 175, Fixtures 77, Integration 74, Scenes 70, Patch 60, Show 59, Architecture 51, Audio 42, Midi 39, Output 34, Persistence 19, Media 18, Core 13, Prototype 9) |
+| `dotnet format --verify-no-changes` | propre |
+| Analyseurs de code mort (IDE0051, 0052, 0059, 0060) | aucun signalement |
+| Code mort retiré | `ClassifyList`, `EveningJournal`, `PendingSet`, `MusicCsv`, `StyleCorrection`, `CorrectionSet`, `MusicBase.Correct`, la navigation différée de la Base musicale ; **`MusicBase.UpsertArtist`** (plus aucun appelant depuis la fin de l'import CSV) retiré à cette mise à jour |
+| Commentaires et documentation | recherche des termes périmés (`corrections.json`, `aclasser`, CSV, raccourcis, poids, source) : seules restent les mentions voulues (migration du format 1, doc 50) ; documents 01, 02 (D41), 21, 32, 33, 40, 41, 50, 60, glossaire, schémas, guide d'essai et fiches à jour |
+| Audit documentaire | aucun nouveau problème (restent les faux positifs connus GEN-030, GEN-031 et 2 liens d'exemple) |
+| Point R4 de cette revue (supposition de LuXia dans « À classer ») | **sans objet** : l'onglet « À classer » ne liste plus que les artistes « Inconnu » |
+
+Constat laissé ouvert, à traiter dans le chantier ergonomique et non ici : audit des écrans « liste + fiche » (Q59), voir [analyse-ergonomique-p9.md](analyse-ergonomique-p9.md).

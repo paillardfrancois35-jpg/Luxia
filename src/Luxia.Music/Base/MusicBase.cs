@@ -244,27 +244,6 @@ public sealed partial class MusicBase
         }
     }
 
-    /// <summary>Ajoute ou remplace un artiste (import, édition).</summary>
-    /// <param name="artist">Artiste.</param>
-    public void UpsertArtist(ArtistEntry artist)
-    {
-        ArgumentNullException.ThrowIfNull(artist);
-        lock (_gate)
-        {
-            var key = TextKey.Of(artist.Name);
-            if (_artistByKey.TryGetValue(key, out var index))
-            {
-                ReplaceArtist(index, artist);
-            }
-            else
-            {
-                AddArtist(artist);
-            }
-        }
-
-        Changed?.Invoke(this, EventArgs.Empty);
-    }
-
     /// <summary>Photographie des artistes pour l'enregistrement.</summary>
     /// <returns>Les artistes.</returns>
     public ArtistSet ToArtistSet()
