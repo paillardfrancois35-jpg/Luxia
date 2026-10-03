@@ -311,8 +311,7 @@
   PoC-3 avec l'utilisateur, ensuite lots 2 à 7 en autonomie et essai complet en fin de phase (discussion test, doc 33).
   **Fait** : lot 0 (largeur fixe des listes déroulantes : 300 px, alignée à gauche, texte coupé + info-bulle, mesure dans
   `luxia-captures`) ; lot 1 (projet `Luxia.Media` + `Luxia.Media.Windows`, EVT-040 / 041, sonde `luxia-headless media`, 13 tests ;
-  **l'application, `luxia-headless` et `luxia-captures` passent en TFM `net10.0-windows10.0.19041.0`**). **Reste** : essai PoC-3
-  ([guide](demos/P9-poc3-sonde.md), [résultats](essais/P9-poc3.md)), lots 2 (normalisation), 3 (base et identification),
+  **l'application, `luxia-headless` et `luxia-captures` passent en TFM `net10.0-windows10.0.19041.0`**). **Essai PoC-3 fait (2026-10-03)** : Deezer et YouTube Music ✅, VLC / VirtualDJ / Mixxx ❌ (aucun ne s'annonce à Windows ; synthèse au doc 99 et dans [résultats](essais/P9-poc3.md)) ; **sources retenues : Deezer et YouTube Music**, ne pas rouvrir les logiciels de DJ sans demande. **Reste** : lots 2 (normalisation), 3 (base et identification),
   4 (écran de jeu : morceau, style, correction, journal), 5 (fenêtre Base musicale), 6 (enrichissement en ligne), 7 (contenu,
   guide, revue globale, analyse ergonomique, validation).
   **Piège vécu** : sous Windows PowerShell 5.1, `Get-Content … | Set-Content -Encoding utf8` a double-encodé `Directory.Build.props`

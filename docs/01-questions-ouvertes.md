@@ -1,4 +1,4 @@
-﻿# Questions ouvertes – suivi
+# Questions ouvertes – suivi
 
 > Questions à trancher avant la rédaction du cahier des charges.
 > Statut : ⏳ en attente · 🟡 partiellement répondu · ✅ répondu.
@@ -71,7 +71,7 @@
 | Q40 | P7 – capture du son | Le son joué par le PC (boucle WASAPI) est la source principale ; le micro USB est une option de réglage (AUD-003) à tester au lot 4. Bibliothèque **NAudio** (MIT) derrière une interface `IAudioSource`. | ✅ | Utilisateur (2026-09-30) : musique jouée sur le PC ; « NAudio ok » ; micro USB disponible pour un essai. → D34. |
 | Q41 | P7 – algorithme et jeu de test | Algorithme **maison** (flux spectral, autocorrélation, boucle à verrouillage de phase) validé d'abord sur des signaux synthétiques, puis sur **dix morceaux réels** déposés dans `tests/assets/audio` (non versionnés), avec `annotations.csv`. | ✅ | Utilisateur (2026-09-30) : « ok » ; dépose des morceaux à faire avant le lot 3 (⏳ fichiers à recevoir). |
 | Q42 | P7 – réglages à l'écran | Bloc **BPM** dans la barre de l'écran de jeu (source, valeur, confiance, TAP, ×2, ÷2, compteur 1-2-3-4, touche T) + écran **Audio** séparé (AUD-080) avec la calibration. | ✅ | Utilisateur (2026-09-30) : « ok ». |
-| Q43 | Sources de lecture (P9 à P11) | Sources retenues : **Deezer, YouTube Music, VLC** (Windows expose titre, artiste, position) ; **pas de gestion des pubs** (abonnements payants) ; pas de logiciel DJ (OS2L / Ableton Link écartés, P12 si besoin). Temps forts : titres **en fichier joués avec VLC** (position précise, analyse préalable) ; streaming : écoute de répétition (empreinte). | ✅ | Utilisateur (2026-09-30). Ne bloque pas P7 ; repris en P9 à P11 (doc 99). |
+| Q43 | Sources de lecture (P9 à P11) | Sources retenues : **Deezer, YouTube Music, VLC** (Windows expose titre, artiste, position) ; **pas de gestion des pubs** (abonnements payants) ; pas de logiciel DJ (OS2L / Ableton Link écartés, P12 si besoin). Temps forts : titres **en fichier joués avec VLC** (position précise, analyse préalable) ; streaming : écoute de répétition (empreinte). | ✅ | Utilisateur (2026-09-30). Ne bloque pas P7 ; repris en P9 à P11 (doc 99). **Révisé le 2026-10-03 (PoC-3)** : VLC 3.0 ne s'annonce pas à Windows (écarté), VirtualDJ et Mixxx non plus (voir doc 99) ; **sources retenues pour P9 : Deezer et YouTube Music**. |
 
 ## Questions de développement – P8 « Show & séquences » (ouvertes le 2026-10-02)
 
