@@ -365,7 +365,7 @@
   imposé ou corrigé en cours de titre (Q61, moteur inchangé) ; **liste verrouillée pendant la modification d'une fiche** (Q60, charte doc 60 §4.11 règle 4, mémorisée) ; pastille de style,
   Corriger ▾ et Imposer ▾ encadrés ensemble ; « Saisir… » artiste avant titre ; essai sans musique : liste déroulante « Sans son », « Inconnu », puis les styles (Q63) et « Inconnu » en premier
   dans les listes de styles ; `luxia-enrich` distingue une requête sans réponse de « aucune proposition » ; guide, doc 33 (règle de précision des consignes), glossaire (MusicBrainz).
-  **Laissé de côté** : style « Jeux vidéos » (Q62, ⏳ « plus tard »). **Reste** : re-vérification rapide des points modifiés (ex. 7, 8, 9, 10, 14b, 21), puis **analyse ergonomique de fin de phase**
+  **Laissé de côté** : style « Jeux vidéos » (Q62, ⏳ « plus tard »). **Analyse ergonomique de fin de phase faite** : [chantiers/analyse-ergonomique-p9.md](chantiers/analyse-ergonomique-p9.md) (cadrage 1920 × 1080 ; Live ⏳ Q64 ; refonte Shows et séquences en 4 lots après `v1.011`). **Reste** : re-vérification rapide des points modifiés (ex. 7, 8, 9, 10, 14b, 21), puis **analyse ergonomique de fin de phase**
   (§5.6, à proposer), audit des autres écrans « liste + fiche » (Q59), gros fichier de base de l'utilisateur (Q57), validation et fusion `v1.011`.
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
