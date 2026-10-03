@@ -18,6 +18,7 @@
     <ProjectReference Include="../Luxia.Midi/Luxia.Midi.csproj" />
     <ProjectReference Include="../Luxia.Audio/Luxia.Audio.csproj" />
     <ProjectReference Include="../Luxia.Media/Luxia.Media.csproj" />
+    <ProjectReference Include="../Luxia.Music/Luxia.Music.csproj" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
     <PackageReference Include="Serilog.Extensions.Logging" />
     <PackageReference Include="Serilog.Sinks.File" />

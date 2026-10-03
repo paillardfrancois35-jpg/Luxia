@@ -23,7 +23,7 @@ public sealed class DependencyRulesTests
         ["Luxia.Midi"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Persistence"],
         ["Luxia.Media"] = [],
         ["Luxia.Music"] = ["Luxia.Core", "Luxia.Persistence"],
-        ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch", "Luxia.Scenes", "Luxia.Show", "Luxia.Midi", "Luxia.Audio", "Luxia.Media"],
+        ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch", "Luxia.Scenes", "Luxia.Show", "Luxia.Midi", "Luxia.Audio", "Luxia.Media", "Luxia.Music"],
     };
 
     public static TheoryData<string> Projects => [.. Allowed.Keys];

@@ -310,7 +310,7 @@ public sealed class NowPlayingTracker : IDisposable
         }
 
         var old = _published;
-        var track = new NowPlayingTrack(selected.Title.Trim(), selected.Artist.Trim(), selected.Album.Trim(), selected.App, selected.Duration);
+        var track = new NowPlayingTrack(selected.Title.Trim(), selected.Artist.Trim(), selected.Album.Trim(), selected.App, selected.Duration, selected.Genres);
         _published = track;
         _publishedKey = key;
         _candidateKey = null;

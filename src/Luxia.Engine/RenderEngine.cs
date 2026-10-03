@@ -460,6 +460,14 @@ public sealed partial class RenderEngine : ICommandSink
                 Simulate(simulate);
                 return null;
 
+            case ForceStyleCommand forced:
+                _forcedStyle = string.IsNullOrWhiteSpace(forced.Style) ? null : forced.Style.Trim();
+                return null;
+
+            case SetMusicContextCommand context:
+                SetMusicContext(context);
+                return null;
+
             case TestOutputCommand test:
                 if (test.Universe < 1 || test.Universe > _frames.Length)
                 {

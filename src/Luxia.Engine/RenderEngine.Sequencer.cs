@@ -16,6 +16,10 @@ public sealed partial class RenderEngine
     private MusicCues _simulatedCues;
     private double _simulatedEnergy = double.NaN;
     private string? _simulatedStyle;
+    private string? _forcedStyle;
+    private string? _detectedStyle;
+    private bool _mediaActive;
+    private int _trackChangedPending;
     private double _lastTempoBpm = double.NaN;
     private TempoSourceKind _lastTempoSource;
 
@@ -92,12 +96,35 @@ public sealed partial class RenderEngine
         }
     }
 
+    // CMD-064 : style détecté, changement de morceau réel et présence d'une lecture suivie (lecture en cours de Windows, P9).
+    private void SetMusicContext(SetMusicContextCommand command)
+    {
+        _detectedStyle = string.IsNullOrWhiteSpace(command.Style) ? null : command.Style.Trim();
+        _mediaActive = command.MediaActive;
+        if (command.TrackChanged)
+        {
+            Volatile.Write(ref _trackChangedPending, 1);
+        }
+    }
+
+    // Q49 : tant qu'un morceau est suivi par la lecture en cours, son changement de titre (réel) remplace la détection par l'écoute
+    // (reprise après silence, saut de tempo) ; sans lecture suivie, cette détection reste le repli.
+    private MusicCues WithTrackCue(MusicCues cues)
+    {
+        if (_mediaActive)
+        {
+            cues &= ~MusicCues.SongChanged;
+        }
+
+        return Interlocked.Exchange(ref _trackChangedPending, 0) != 0 ? cues | MusicCues.SongChanged : cues;
+    }
+
     private MusicSignals Signals()
     {
         var simulated = !double.IsNaN(_simulatedEnergy);
         var energy = simulated ? _simulatedEnergy : _events.Energy;
         var level = simulated ? LevelOf(energy) : _events.EnergyLevel;
-        return new MusicSignals(_events.AudioLive || simulated, energy, level, _events.Cues | _simulatedCues, _simulatedStyle);
+        return new MusicSignals(_events.AudioLive || simulated, energy, level, _events.Cues | _simulatedCues, _simulatedStyle ?? _forcedStyle ?? _detectedStyle);
     }
 
     // Seuils des niveaux d'énergie de l'écoute (doc 19 §10) : 0,30 / 0,52 / 0,72.

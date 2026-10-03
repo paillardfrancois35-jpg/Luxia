@@ -248,7 +248,8 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
                 hasTimeline ? timeline!.Position : null,
                 hasTimeline ? timeline!.LastUpdatedTime : null,
                 duration < TimeSpan.Zero ? TimeSpan.Zero : duration,
-                playbackInfo.PlaybackRate ?? 1.0);
+                playbackInfo.PlaybackRate ?? 1.0,
+                properties is null ? string.Empty : string.Join(";", properties.Genres));
         }
         catch (Exception ex)
         {

@@ -6,6 +6,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Seed/artistes-initiaux.txt" LogicalName="Luxia.Music.Seed.artistes-initiaux.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Luxia.Music.Tests" />
   </ItemGroup>
 

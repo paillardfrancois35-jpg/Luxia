@@ -6,7 +6,8 @@ namespace Luxia.Media;
 /// <param name="Album">Album brut.</param>
 /// <param name="App">Application source.</param>
 /// <param name="Duration">Durée ; zéro si inconnue.</param>
-public sealed record NowPlayingTrack(string Title, string Artist, string Album, string App, TimeSpan Duration);
+/// <param name="Genres">Genres donnés par le lecteur, séparés par « ; » (souvent vide).</param>
+public sealed record NowPlayingTrack(string Title, string Artist, string Album, string App, TimeSpan Duration, string Genres = "");
 
 /// <summary>État de la lecture en cours à un instant donné (MUS-003).</summary>
 /// <param name="Track">Morceau stabilisé ; <c>null</c> si aucune session ne fournit de titre (MUS-006).</param>

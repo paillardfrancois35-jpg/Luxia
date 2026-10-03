@@ -27,6 +27,7 @@ public enum MediaPlayback
 /// <param name="PositionUpdatedUtc">Instant de cette mise à jour ; <c>null</c> si inconnu.</param>
 /// <param name="Duration">Durée du morceau ; zéro si inconnue.</param>
 /// <param name="Rate">Vitesse de lecture (1 = normale).</param>
+/// <param name="Genres">Genres donnés par le lecteur, séparés par « ; » (souvent vide).</param>
 public sealed record MediaSessionInfo(
     string Id,
     string App,
@@ -37,4 +38,5 @@ public sealed record MediaSessionInfo(
     TimeSpan? Position,
     DateTimeOffset? PositionUpdatedUtc,
     TimeSpan Duration,
-    double Rate = 1.0);
+    double Rate = 1.0,
+    string Genres = "");

@@ -1,0 +1,175 @@
+# T-MUS-03 : taux d'identification sur des titres annotés à la main (famille attendue). Colonnes : application | artiste brut | titre brut | famille attendue
+# La famille « inconnu » désigne un artiste volontairement absent de la base de départ : il doit rester non identifié (pas de faux positif).
+Deezer	Queen	Don't Stop Me Now	rock
+Deezer	Queen	Bohemian Rhapsody (Remastered 2011)	rock
+Deezer	Daft Punk	One More Time	house
+Deezer	Stromae	Papaoutai	pop
+Deezer	Michel Sardou	Les lacs du Connemara	variete
+Deezer	Daniel Balavoine	Tous les cris les S.O.S.	variete
+Deezer	Johnny Hallyday	Que je t'aime	variete
+Deezer	Céline Dion	Pour que tu m'aimes encore	slow
+Deezer	Edith Piaf	La Vie en rose	variete
+Deezer	Mylène Farmer	Désenchantée	80s
+Deezer	David Guetta feat. Sia	Titanium	electro
+Deezer	Rihanna	We Found Love (feat. Calvin Harris)	pop
+Deezer	Calvin Harris, Rihanna	We Found Love	electro
+Deezer	Earth, Wind & Fire	September	disco
+Deezer	Simon & Garfunkel	The Sound of Silence	inconnu
+Deezer	AC/DC	Highway to Hell	rock
+Deezer	Guns N' Roses	Sweet Child O' Mine	rock
+Deezer	Mark Ronson	Uptown Funk (feat. Bruno Mars)	pop
+Deezer	Bruno Mars	24K Magic	pop
+Deezer	Kylie Minogue	Can't Get You out of My Head	pop
+Deezer	ABBA	Dancing Queen	disco
+Deezer	Boney M.	Rasputin	disco
+Deezer	Gloria Gaynor	I Will Survive	disco
+Deezer	Village People	Y.M.C.A.	disco
+Deezer	Bee Gees	Stayin' Alive	disco
+Deezer	Chic	Le Freak	disco
+Deezer	Pink Floyd	The Great Gig in the Sky	rock
+Deezer	Eagles	Hotel California (Live)	rock
+Deezer	Nirvana	Smells Like Teen Spirit	rock
+Deezer	Coldplay	Viva La Vida	rock
+Deezer	Adele	Someone Like You	slow
+Deezer	Ed Sheeran	Shape of You	pop
+Deezer	Imagine Dragons	Believer	rock
+Deezer	Avicii	Wake Me Up	electro
+Deezer	Swedish House Mafia	Don't You Worry Child (feat. John Martin)	electro
+Deezer	Robin Schulz	Sugar (feat. Francesco Yates)	house
+Deezer	The Weeknd	Blinding Lights	pop
+Deezer	Dua Lipa	Don't Start Now	pop
+Deezer	Lady Gaga	Bad Romance	pop
+Deezer	Madonna	Like a Prayer	80s
+Deezer	Michael Jackson	Billie Jean	80s
+Deezer	Prince	Kiss	80s
+Deezer	Whitney Houston	I Wanna Dance with Somebody (Who Loves Me)	pop
+Deezer	Cyndi Lauper	Girls Just Want to Have Fun	80s
+Deezer	A-ha	Take On Me	80s
+Deezer	Europe	The Final Countdown	rock
+Deezer	Survivor	Eye of the Tiger	rock
+Deezer	Bon Jovi	Livin' on a Prayer	rock
+Deezer	Journey	Don't Stop Believin'	rock
+Deezer	Toto	Africa	rock
+Deezer	Rick Astley	Never Gonna Give You Up	80s
+Deezer	Shakira	Hips Don't Lie (feat. Wyclef Jean)	latino
+Deezer	Daddy Yankee	Gasolina	latino
+Deezer	Luis Fonsi, Daddy Yankee	Despacito	latino
+Deezer	Pitbull	Give Me Everything (feat. Ne-Yo, Afrojack & Nayer)	latino
+Deezer	Enrique Iglesias	Bailando	latino
+Deezer	Gipsy Kings	Bamboleo	latino
+Deezer	Bob Marley & The Wailers	Three Little Birds	reggae
+Deezer	Bob Marley	Is This Love	reggae
+Deezer	Elton John	I'm Still Standing	slow
+Deezer	Moby	Porcelain (Extended Mix)	inconnu
+Deezer	Haddaway	What Is Love (7" Mix)	electro
+Deezer	2 Unlimited	No Limit	electro
+Deezer	Corona	The Rhythm of the Night	electro
+Deezer	Eiffel 65	Blue (Da Ba Dee)	electro
+Deezer	Gigi D'Agostino	L'amour toujours	electro
+Deezer	Jean-Jacques Goldman	Au bout de mes rêves	variete
+Deezer	Francis Cabrel	Je l'aime à mourir	variete
+Deezer	Renaud	Hexagone	variete
+Deezer	Indochine	L'aventurier	rock
+Deezer	Téléphone	Ça (c'est vraiment toi)	rock
+Deezer	Jacques Brel	Ne me quitte pas	variete
+Deezer	Charles Aznavour	La Bohème	variete
+Deezer	Claude François	Alexandrie Alexandra	variete
+Deezer	Patrick Sébastien	Les sardines	festif
+Deezer	Mireille Mathieu	La Paloma adieu	variete
+Deezer	Elvis Presley	Jailhouse Rock	rocknroll
+Deezer	Chuck Berry	Johnny B. Goode	rocknroll
+Deezer	Bill Haley & His Comets	Rock Around the Clock	rocknroll
+Deezer	Chubby Checker	Let's Twist Again	rocknroll
+Deezer	Gilbert Montagné	On va s'aimer	variete
+Deezer	Soprano	Mon Everest (feat. Marc Antoine)	hiphop
+Deezer	Jul	Tchikita	hiphop
+Deezer	Aya Nakamura	Djadja	hiphop
+Deezer	Angèle	Balance ton quoi	pop
+Deezer	Indila	Dernière danse	pop
+Deezer	Kendji Girac	Andalouse	latino
+Deezer	Kids United	On écrit sur les murs	pop
+Deezer	Pharrell Williams	Happy	pop
+Deezer	Lizzo	Truth Hurts (Explicit)	pop
+Deezer	Doja Cat	Say So	pop
+Deezer	Fleetwood Mac	Dreams	rock
+Deezer	Kavinsky	Nightcall	electro
+Deezer	Eminem	Lose Yourself	hiphop
+Deezer	Snoop Dogg	Drop It Like It's Hot	hiphop
+Deezer	Rihanna	Umbrella	pop
+Deezer	Beyoncé	Crazy in Love (feat. JAY-Z)	hiphop
+Deezer	Katy Perry	Firework	pop
+Deezer	Taylor Swift	Shake It Off	pop
+Deezer	Maroon 5	Moves Like Jagger	pop
+Deezer	Pink	Just Give Me a Reason	pop
+Deezer	Muse	Uprising	rock
+Deezer	Oasis	Wonderwall	rock
+Deezer	The Killers	Mr. Brightside	rock
+Deezer	Red Hot Chili Peppers	Californication	rock
+Deezer	Green Day	Boulevard of Broken Dreams	rock
+Deezer	Led Zeppelin	Whole Lotta Love	rock
+Deezer	Depeche Mode	Enjoy the Silence	80s
+Deezer	Duran Duran	Rio	80s
+Deezer	Wham!	Last Christmas	80s
+Deezer	Donna Summer	I Feel Love	disco
+Deezer	Stevie Wonder	Superstition	disco
+Deezer	James Brown	I Got You (I Feel Good)	disco
+Deezer	Kool & The Gang	Celebration	disco
+Deezer	Sister Sledge	We Are Family	disco
+Deezer	Ricky Martin	Livin' la Vida Loca	latino
+Deezer	Marc Anthony	Vivir Mi Vida	latino
+Deezer	Sean Paul	Temperature	reggae
+Deezer	UB40	Red Red Wine	reggae
+Deezer	Shaggy	Boombastic	reggae
+Deezer	Joe Dassin	Les Champs-Élysées	variete
+Deezer	Michel Polnareff	Lettre à France	variete
+Deezer	Alain Souchon	Foule sentimentale	variete
+Deezer	Serge Gainsbourg	Je t'aime moi non plus	variete
+Deezer	Dalida	Gigi l'amoroso	variete
+Deezer	Julien Doré	Chou wasabi	variete
+Deezer	Vianney	Je m'en vais	variete
+Deezer	Buddy Holly	That'll Be the Day	rocknroll
+Deezer	Little Richard	Tutti Frutti	rocknroll
+Deezer	Jerry Lee Lewis	Great Balls of Fire	rocknroll
+Deezer	Paul Mauriat	L'amour est bleu	bal
+Deezer	André Verchuren	La Polka du roi	bal
+Deezer	Richard Clayderman	Ballade pour Adeline	bal
+Deezer	Whitney Houston	I Will Always Love You	pop
+Deezer	Lionel Richie	Hello	slow
+Deezer	Bryan Adams	Everything I Do (I Do It for You)	slow
+Deezer	James Blunt	You're Beautiful	slow
+Deezer	Roxette	It Must Have Been Love	slow
+Chrome	Queen Official	Queen - Don't Stop Me Now (Official Video)	rock
+Chrome	QueenVEVO	Queen - Bohemian Rhapsody (Official Video Remastered)	rock
+Chrome	Queen - Topic	Bohemian Rhapsody	rock
+Chrome	Daft Punk - Topic	One More Time	house
+Chrome	Michel Sardou - Topic	Les lacs du Connemara	variete
+Chrome	Kokwak	Tous les cris les S.O.S. (Kokwak Hardstyle Remix) | Daniel Balavoine	variete
+Chrome	Pop Hits	Ed Sheeran - Shape of You [Official Music Video]	pop
+Chrome	Pop Hits	Adele - Someone Like You (Official Music Video)	slow
+Chrome	Rock Classics	AC/DC - Highway to Hell (Official Video)	rock
+Chrome	Rock Classics	Nirvana - Smells Like Teen Spirit (Official Music Video)	rock
+Chrome	EDM Channel	Avicii - Wake Me Up (Official Video)	electro
+Chrome	EDM Channel	David Guetta - Titanium ft. Sia (Official Video)	electro
+Chrome	Latino Hits	Luis Fonsi - Despacito ft. Daddy Yankee	latino
+Chrome	Latino Hits	Daddy Yankee - Gasolina (Video Oficial)	latino
+Chrome	Vieux Tubes	Claude François - Alexandrie Alexandra (Clip Officiel)	variete
+Chrome	Vieux Tubes	Johnny Hallyday - Que je t'aime (Audio Officiel)	variete
+Chrome	Vieux Tubes	Jean-Jacques Goldman - Au bout de mes rêves (Clip officiel)	variete
+Chrome	Disco	Gloria Gaynor - I Will Survive (Official Video)	disco
+Chrome	Disco	ABBA - Dancing Queen (Official Lyric Video)	disco
+Chrome	80s	A-ha - Take On Me (Official Video) [Remastered in 4K]	80s
+Chrome	80s	Rick Astley - Never Gonna Give You Up (Official Music Video)	80s
+Chrome		Daft Punk - One More Time	house
+Chrome		Queen | Don't Stop Me Now	rock
+Chrome	XYZ	Don't Stop Me Now | Queen	rock
+Chrome	Chaîne perso	Mon titre préféré (Official Video)	inconnu
+Lecteur multimédia		01 - Queen - Don't Stop Me Now.mp3	rock
+Lecteur multimédia		Daft Punk - One More Time.mp3	house
+Lecteur multimédia		Summer.mp3	inconnu
+Lecteur multimédia		24K Magic.flac	inconnu
+Lecteur multimédia		Gasolina.mp3	inconnu
+Deezer	Artiste Totalement Inconnu	Un titre qui n'existe pas	inconnu
+Deezer	Les Zéro Pointés	Chanson de test	inconnu
+Deezer	Quartet Imaginaire	Valse des imaginaires	inconnu
+Deezer	Holder, GameChops	Spider Dance	inconnu
+Deezer	Kokwak	Hardstyle Anthem	inconnu

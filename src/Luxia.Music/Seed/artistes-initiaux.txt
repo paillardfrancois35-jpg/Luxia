@@ -1,0 +1,478 @@
+# Base de départ (Q48) : artistes populaires en soirée, classés dans les familles du doc 21 §3.4. Source « initial » : modifiable et effaçable ;
+# les corrections faites en Live l'emportent toujours. Format : Nom | famille[:poids] [, famille[:poids]] | alias ; alias
+# Familles : electro, house, hiphop, pop, rock, 80s, disco, latino, variete, reggae, rocknroll, bal, festif, slow
+# --- Électro / Dance
+David Guetta | electro:0.7, pop:0.3 |
+Calvin Harris | electro:0.7, house:0.3 |
+Avicii | electro | Tim Bergling
+Martin Garrix | electro
+Swedish House Mafia | electro:0.6, house:0.4 | SHM
+Tiësto | electro:0.7, house:0.3 | Tiesto
+Alesso | electro
+Axwell | house:0.6, electro:0.4 | Axwell Λ Ingrosso
+Hardwell | electro
+Afrojack | electro
+Steve Aoki | electro
+Kygo | house:0.6, pop:0.4
+Zedd | electro:0.7, pop:0.3
+Marshmello | electro
+The Chainsmokers | electro:0.6, pop:0.4 | Chainsmokers
+Alan Walker | electro
+Dimitri Vegas & Like Mike | electro | Dimitri Vegas et Like Mike
+Armin van Buuren | electro | Armin Van Buuren
+Paul van Dyk | electro
+Robin Schulz | house:0.6, electro:0.4
+Lost Frequencies | house:0.6, electro:0.4
+Alle Farben | house
+Felix Jaehn | house:0.6, electro:0.4
+Major Lazer | electro:0.6, hiphop:0.2, reggae:0.2
+DJ Snake | electro:0.7, hiphop:0.3 | Dj Snake
+Vitalic | electro
+Justice | electro | Justice
+Kavinsky | electro:0.6, 80s:0.4
+Eiffel 65 | electro | Eiffel65
+Scooter | electro
+Haddaway | electro:0.7, festif:0.3
+2 Unlimited | electro | 2unlimited
+Snap! | electro | Snap
+Corona | electro | Corona
+Vengaboys | electro:0.6, festif:0.4
+Alice Deejay | electro
+Gigi D'Agostino | electro | Gigi Dagostino
+Lou Bega | latino:0.5, festif:0.5
+Basshunter | electro
+Darude | electro
+Modjo | house:0.6, disco:0.4
+Cascada | electro
+Ofenbach | house
+Purple Disco Machine | house:0.6, disco:0.4
+# --- House / Disco moderne
+Daft Punk | house:0.6, electro:0.4
+Bob Sinclar | house
+Cassius | house
+Mark Knopfler | rock:0.7, slow:0.3
+Faithless | house:0.6, electro:0.4
+Fatboy Slim | house:0.6, electro:0.4
+Camelphat | house
+Disclosure | house
+Duke Dumont | house
+Jax Jones | house
+Sigala | house
+Clean Bandit | house:0.6, pop:0.4
+Meduza | house
+Fisher | house
+Chris Lake | house
+Sam Smith | slow:0.5, pop:0.5
+Peggy Gou | house
+# --- Hip-hop / R'n'B
+Eminem | hiphop
+Drake | hiphop
+Kanye West | hiphop | Ye
+Jay-Z | hiphop | Jay Z; JAY-Z
+Snoop Dogg | hiphop | Snoop Doggy Dogg
+Dr. Dre | hiphop | Dr Dre
+50 Cent | hiphop | Fifty Cent
+Ice Cube | hiphop
+Notorious B.I.G. | hiphop | Notorious BIG; Biggie
+2Pac | hiphop | Tupac; 2 Pac
+Nelly | hiphop
+Ludacris | hiphop
+Pitbull | latino:0.5, hiphop:0.3, electro:0.2
+Flo Rida | hiphop:0.6, electro:0.4
+Black Eyed Peas | hiphop:0.5, pop:0.5 | The Black Eyed Peas
+Kendrick Lamar | hiphop
+Travis Scott | hiphop
+Post Malone | hiphop:0.6, pop:0.4
+Cardi B | hiphop
+Nicki Minaj | hiphop:0.6, pop:0.4
+Missy Elliott | hiphop
+Usher | hiphop:0.6, pop:0.4
+Beyoncé | hiphop:0.5, pop:0.5 | Beyonce
+Rihanna | pop:0.6, hiphop:0.4
+Chris Brown | hiphop
+Bruno Mars | pop:0.6, disco:0.4
+Aya Nakamura | hiphop:0.6, pop:0.4
+Booba | hiphop
+Gims | hiphop:0.5, variete:0.5 | Maître Gims; Maitre Gims
+Soprano | hiphop:0.5, variete:0.5
+Jul | hiphop
+PNL | hiphop
+Nekfeu | hiphop
+Orelsan | hiphop
+MC Solaar | hiphop | Mc Solaar
+IAM | hiphop
+Diam's | hiphop | Diams
+Black M | hiphop
+Vegedream | hiphop
+Ninho | hiphop
+Naps | hiphop
+SCH | hiphop
+Damso | hiphop
+Niska | hiphop
+# --- Pop
+Ed Sheeran | pop
+Adele | pop:0.5, slow:0.5
+Dua Lipa | pop:0.6, electro:0.4
+Lady Gaga | pop:0.6, electro:0.4
+Katy Perry | pop
+Taylor Swift | pop
+Justin Bieber | pop
+Ariana Grande | pop
+Miley Cyrus | pop
+Shawn Mendes | pop
+Harry Styles | pop
+Sia | pop
+Pink | pop:0.6, rock:0.4 | P!nk; Pink!
+Britney Spears | pop
+Christina Aguilera | pop
+Backstreet Boys | pop
+NSYNC | pop | *NSYNC
+Spice Girls | pop
+Destiny's Child | pop:0.6, hiphop:0.4 | Destinys Child
+Jennifer Lopez | pop:0.6, latino:0.4 | J.Lo; Jlo
+The Weeknd | pop:0.6, hiphop:0.4 | Weeknd
+Maroon 5 | pop
+OneRepublic | pop
+Imagine Dragons | pop:0.5, rock:0.5
+Coldplay | pop:0.5, rock:0.5
+Sam Fender | rock
+Lizzo | pop:0.5, hiphop:0.5
+Doja Cat | pop:0.5, hiphop:0.5
+Olivia Rodrigo | pop
+Billie Eilish | pop
+Ava Max | pop
+Tones and I | pop | Tones And I
+Pharrell Williams | pop:0.6, disco:0.4
+Jason Derulo | pop:0.6, hiphop:0.4
+Lady Gaga & Bradley Cooper | slow:0.6, pop:0.4
+Meghan Trainor | pop
+Anne-Marie | pop
+Lewis Capaldi | slow:0.6, pop:0.4
+Stromae | pop:0.5, electro:0.3, variete:0.2
+Indila | pop:0.5, variete:0.5
+Angèle | pop:0.6, variete:0.4 | Angele
+Louane | pop:0.6, variete:0.4
+Zaz | variete:0.6, pop:0.4
+Christine and the Queens | pop | Chris; Christine And The Queens
+Vitaa | pop:0.6, hiphop:0.4
+Amel Bent | pop
+Kids United | pop:0.5, festif:0.5
+Kendji Girac | latino:0.5, pop:0.5
+Slimane | variete:0.6, pop:0.4
+Julien Doré | variete:0.6, pop:0.4 | Julien Dore
+Calogero | variete:0.6, pop:0.4
+M. Pokora | pop | M Pokora; Matt Pokora
+Tal | pop
+Camille | variete
+# --- Rock
+Queen | rock:0.8, pop:0.2
+AC/DC | rock | ACDC; AC DC
+Led Zeppelin | rock
+Deep Purple | rock
+Guns N' Roses | rock | Guns N Roses; Guns and Roses
+Bon Jovi | rock:0.6, slow:0.2, 80s:0.2
+Aerosmith | rock
+Rolling Stones | rock | The Rolling Stones
+The Beatles | rock:0.6, rocknroll:0.4 | Beatles
+The Who | rock
+Pink Floyd | rock
+Eagles | rock:0.7, slow:0.3 | The Eagles
+Fleetwood Mac | rock:0.7, pop:0.3
+Nirvana | rock
+Foo Fighters | rock
+Green Day | rock
+Red Hot Chili Peppers | rock
+Metallica | rock
+Muse | rock
+Oasis | rock
+Blur | rock
+The Killers | rock:0.7, pop:0.3 | Killers
+Kings of Leon | rock
+Arctic Monkeys | rock
+Linkin Park | rock
+Bring Me the Horizon | rock
+System of a Down | rock
+The Police | rock:0.7, pop:0.3 | Police
+U2 | rock
+Dire Straits | rock:0.7, slow:0.3
+Supertramp | rock
+Status Quo | rock
+Toto | rock:0.6, 80s:0.4
+Journey | rock:0.6, 80s:0.4
+Survivor | rock:0.6, 80s:0.4
+Europe | rock:0.6, 80s:0.4
+Scorpions | rock
+Kiss | rock
+Van Halen | rock
+Def Leppard | rock
+Creedence Clearwater Revival | rock:0.7, rocknroll:0.3 | CCR
+ZZ Top | rock
+Lynyrd Skynyrd | rock
+Bruce Springsteen | rock
+Tom Petty | rock
+Simple Minds | 80s:0.6, rock:0.4
+Téléphone | rock | Telephone
+Indochine | rock:0.7, 80s:0.3
+Noir Désir | rock | Noir Desir
+Trust | rock
+Bijou | rock
+Starmania | variete
+Louise Attaque | rock
+Saez | rock
+Superbus | rock:0.6, pop:0.4
+Pulp | rock
+The Cranberries | rock:0.7, slow:0.3 | Cranberries
+Evanescence | rock
+Mötley Crüe | rock | Motley Crue
+Poison | rock
+Whitesnake | rock:0.6, slow:0.4
+Lenny Kravitz | rock:0.7, disco:0.3
+Måneskin | rock | Maneskin
+Wolfmother | rock
+The White Stripes | rock | White Stripes
+Gojira | rock
+# --- Années 80
+A-ha | 80s | Aha
+Duran Duran | 80s
+Depeche Mode | 80s
+Eurythmics | 80s
+Culture Club | 80s
+Spandau Ballet | 80s
+Simple Plan | rock
+Wham! | 80s | Wham
+George Michael | 80s:0.6, pop:0.4
+Madonna | 80s:0.5, pop:0.5
+Cyndi Lauper | 80s
+Michael Jackson | 80s:0.5, disco:0.3, pop:0.2
+Prince | 80s:0.5, disco:0.5
+Rick Astley | 80s
+Kylie Minogue | 80s:0.4, pop:0.6
+Bananarama | 80s
+Yazoo | 80s
+Pet Shop Boys | 80s
+Alphaville | 80s
+Nena | 80s
+Falco | 80s
+Modern Talking | 80s
+Sandra | 80s
+Samantha Fox | 80s
+Level 42 | 80s
+Billy Idol | 80s:0.6, rock:0.4
+Tears for Fears | 80s
+Phil Collins | 80s:0.5, slow:0.5
+Bonnie Tyler | 80s:0.5, slow:0.5
+Joe Cocker | rock:0.5, slow:0.5
+Dexys Midnight Runners | 80s
+Men at Work | 80s
+Soft Cell | 80s
+Visage | 80s
+Kajagoogoo | 80s
+Desireless | 80s
+Jean-Michel Jarre | 80s:0.5, electro:0.5
+Début de Soirée | 80s:0.5, festif:0.5 | Debut de Soiree
+Images | 80s
+Peter and Sloane | 80s
+Gold | 80s
+Les Rita Mitsouko | 80s | Rita Mitsouko
+Etienne Daho | 80s:0.6, variete:0.4 | Étienne Daho
+Mylène Farmer | 80s:0.5, variete:0.5 | Mylene Farmer
+Jeanne Mas | 80s
+Patrick Bruel | variete
+Jean-Jacques Goldman | variete:0.6, 80s:0.4 | JJ Goldman
+# --- Disco / Funk / Soul
+ABBA | disco:0.6, pop:0.4 | Abba
+Bee Gees | disco | Les Bee Gees
+Gloria Gaynor | disco
+Donna Summer | disco
+Chic | disco
+Earth, Wind & Fire | disco | Earth Wind And Fire; Earth Wind & Fire
+Kool & The Gang | disco | Kool And The Gang
+Village People | disco:0.6, festif:0.4
+Boney M. | disco:0.6, festif:0.4 | Boney M
+Sister Sledge | disco
+Diana Ross | disco:0.6, slow:0.4
+Stevie Wonder | disco:0.6, slow:0.4
+James Brown | disco
+Marvin Gaye | disco:0.6, slow:0.4
+Aretha Franklin | disco:0.6, slow:0.4
+Barry White | disco:0.5, slow:0.5
+Tina Turner | disco:0.5, rock:0.5
+The Jacksons | disco | Jackson 5; Jacksons
+Commodores | disco:0.5, slow:0.5
+Nile Rodgers | disco
+Sylvester | disco
+Chaka Khan | disco
+Anita Ward | disco
+Gibson Brothers | disco
+Cerrone | disco | Cerrone
+Patrick Hernandez | disco
+Claude François | disco:0.5, variete:0.5 | Claude Francois; Cloclo
+Sheila | disco:0.5, variete:0.5
+Alicia Keys | hiphop:0.5, slow:0.5
+Whitney Houston | pop:0.5, slow:0.5
+Mariah Carey | pop:0.5, slow:0.5
+Céline Dion | slow:0.6, variete:0.4 | Celine Dion
+Ray Charles | disco:0.5, rocknroll:0.5
+Otis Redding | disco:0.5, slow:0.5
+Sam Cooke | disco:0.5, slow:0.5
+# --- Latino
+Shakira | latino:0.7, pop:0.3
+Enrique Iglesias | latino:0.7, pop:0.3
+Ricky Martin | latino:0.7, pop:0.3
+Daddy Yankee | latino
+Don Omar | latino
+Wisin & Yandel | latino | Wisin Y Yandel
+J Balvin | latino
+Bad Bunny | latino
+Maluma | latino
+Luis Fonsi | latino
+Romeo Santos | latino
+Aventura | latino
+Marc Anthony | latino
+Celia Cruz | latino
+Gloria Estefan | latino
+Santana | latino:0.6, rock:0.4
+Gipsy Kings | latino | Gypsy Kings
+Los del Río | latino:0.5, festif:0.5 | Los Del Rio; Los Del Rio
+Carlos Santana | latino:0.6, rock:0.4
+Anitta | latino
+Karol G | latino
+Becky G | latino
+Sebastián Yatra | latino | Sebastian Yatra
+Manu Chao | latino:0.5, reggae:0.3, rock:0.2
+Kalash | reggae:0.5, hiphop:0.5
+Kassav' | latino:0.6, reggae:0.4 | Kassav
+Lorie | pop
+# --- Variété française
+Michel Sardou | variete
+Johnny Hallyday | variete:0.5, rocknroll:0.3, rock:0.2
+Jacques Brel | variete
+Georges Brassens | variete
+Charles Aznavour | variete
+Édith Piaf | variete | Edith Piaf
+Serge Gainsbourg | variete
+Dalida | variete:0.7, disco:0.3
+Joe Dassin | variete
+Michel Polnareff | variete
+Francis Cabrel | variete
+Renaud | variete
+Alain Souchon | variete
+Laurent Voulzy | variete
+Michel Berger | variete
+France Gall | variete
+Jean-Louis Aubert | variete:0.5, rock:0.5
+Mickey 3D | variete
+Daniel Balavoine | variete:0.6, 80s:0.4
+Gilbert Montagné | variete:0.6, 80s:0.4 | Gilbert Montagne
+Hervé Vilard | variete
+Mireille Mathieu | variete
+Sheryfa Luna | pop
+Bernard Lavilliers | variete
+Eddy Mitchell | rocknroll:0.5, variete:0.5
+Hubert-Félix Thiéfaine | rock:0.5, variete:0.5
+Vianney | variete:0.6, pop:0.4
+Gauvain Sers | variete
+Pierre Perret | variete
+Yves Montand | variete
+Nino Ferrer | variete
+Michel Delpech | variete
+Bénabar | variete | Benabar
+Raphaël | variete | Raphael
+Florent Pagny | variete
+Garou | variete:0.6, slow:0.4
+Patrick Fiori | variete:0.6, slow:0.4
+Hélène Ségara | slow:0.6, variete:0.4 | Helene Segara
+Lara Fabian | slow:0.6, variete:0.4
+Nolwenn Leroy | variete
+# --- Reggae / Dancehall
+Bob Marley | reggae | Bob Marley & The Wailers; Bob Marley And The Wailers
+Peter Tosh | reggae
+Jimmy Cliff | reggae
+UB40 | reggae
+Sean Paul | reggae:0.6, hiphop:0.4
+Shaggy | reggae:0.6, pop:0.4
+Shabba Ranks | reggae
+Damian Marley | reggae
+Tryo | reggae:0.6, variete:0.4
+Alpha Blondy | reggae
+Tiken Jah Fakoly | reggae
+Natty Dread | reggae
+Inner Circle | reggae
+Eddy Grant | reggae:0.5, pop:0.5
+Toots and the Maytals | reggae
+# --- Rock'n'roll / Rétro
+Elvis Presley | rocknroll
+Chuck Berry | rocknroll
+Little Richard | rocknroll
+Jerry Lee Lewis | rocknroll
+Bill Haley | rocknroll | Bill Haley & His Comets; Bill Haley And His Comets
+Buddy Holly | rocknroll
+Chubby Checker | rocknroll
+Eddie Cochran | rocknroll
+Fats Domino | rocknroll
+Gene Vincent | rocknroll
+The Beach Boys | rocknroll:0.6, pop:0.4 | Beach Boys
+Ben E. King | rocknroll:0.5, disco:0.5
+Les Chaussettes Noires | rocknroll
+Les Chats Sauvages | rocknroll
+Richard Anthony | rocknroll
+Dick Rivers | rocknroll
+Frank Alamo | rocknroll
+Dave | variete
+Sacha Distel | variete
+Claude Nougaro | variete
+# --- Bal / Traditionnel
+André Verchuren | bal | Andre Verchuren
+Yvette Horner | bal
+Aimable | bal
+Gus Viseur | bal
+Marcel Azzola | bal
+Jo Privat | bal
+Richard Clayderman | bal:0.5, slow:0.5
+Paul Mauriat | bal:0.5, slow:0.5
+Frank Michael | bal:0.5, slow:0.5
+Dave Brubeck | bal
+Los Paraguayos | bal
+Pascal Danel | variete
+Les Compagnons de la Chanson | variete
+Mireille | variete
+# --- Festif / Tubes de soirée
+Patrick Sébastien | festif | Patrick Sebastien
+Chantal Goya | festif
+Carlos | festif
+Annie Cordy | festif:0.6, variete:0.4
+Gérard Lenorman | variete | Gerard Lenorman
+Dorothée | festif
+Pinocchio | festif
+Les Musclés | festif
+Sabrina | festif
+La Bande à Basile | festif | La Bande A Basile
+Sacha Zucchero | festif
+Jean Roch | festif
+Eric Morena | festif
+Chocolat | festif
+Magic System | festif:0.6, latino:0.2, hiphop:0.2
+Alonzo | hiphop
+Les Forbans | festif:0.5, rocknroll:0.5
+# --- Slow / Ballade
+Whitney Houston & Kevin Costner | slow
+Elton John | slow:0.5, pop:0.3, rock:0.2
+Lionel Richie | slow
+Michael Bolton | slow
+Bryan Adams | slow:0.5, rock:0.5
+Celine Dion & Peabo Bryson | slow
+Roxette | slow:0.5, 80s:0.5
+Air Supply | slow
+Chris Isaak | slow
+Sade | slow
+Norah Jones | slow
+John Legend | slow
+Christina Perri | slow
+James Blunt | slow
+James Arthur | slow
+Passenger | slow
+Jessie J | pop
+Bruno Pelletier | slow
+Mika | pop
+Hozier | slow:0.6, rock:0.4
+Hans Zimmer | slow

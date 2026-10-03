@@ -26,7 +26,7 @@ public sealed partial class RenderEngine
             _events.TreblePulses = 0;
             _events.Energy = 0;
             _events.EnergyLevel = 0;
-            _events.Cues = _tempo.TakeSongChange() ? MusicCues.SongChanged : MusicCues.None;
+            _events.Cues = WithTrackCue(_tempo.TakeSongChange() ? MusicCues.SongChanged : MusicCues.None);
             return;
         }
 
@@ -48,7 +48,7 @@ public sealed partial class RenderEngine
             cues |= MusicCues.SongChanged;
         }
 
-        _events.Cues = cues;
+        _events.Cues = WithTrackCue(cues);
     }
 
     /// <summary>Position de l'horloge (en temps) où démarrer une scène quantifiée ; <c>null</c> = tout de suite.</summary>

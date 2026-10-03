@@ -125,6 +125,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
             NowPlaying.PlaybackChanged += (_, playing) => Bus.Publish(new Messaging.Events.PlaybackChanged(playing, Clock.Now));
         }
 
+        // Style du morceau en cours (P9, doc 21 §3) : identification du titre, style pour les shows, corrections en Live.
+        Music = new MusicStyleService(Project, Engine, Bus, Clock, NowPlaying, loggers.CreateLogger<MusicStyleService>());
+
         Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencyFor(Preferences.Current.Audio.DeviceId)));
 
         // GEN-095 : arrêt brutal lors de la dernière session, avec le même projet ouvert → reprise proposée.
@@ -145,6 +148,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Lecture en cours de Windows (titre, artiste, position : doc 21 §2) ; <c>null</c> si l'application n'en a pas (outils, tests).</summary>
     public Media.NowPlayingTracker? NowPlaying { get; }
+
+    /// <summary>Style du morceau en cours : identification, style imposé, corrections en Live (P9, doc 21).</summary>
+    public MusicStyleService Music { get; }
 
     /// <summary>
     /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
@@ -547,6 +553,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         WriteResume(clean: true);
         Midi?.Dispose();
         Audio?.Dispose();
+        Music.Dispose();
         NowPlaying?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();
