@@ -413,6 +413,8 @@ internal sealed class NoDialogs : IDialogService
 {
     public Task<bool> ConfirmAsync(string title, string message) => Task.FromResult(false);
 
+    public Task<SaveChoice> AskSaveAsync(string title, string message) => Task.FromResult(SaveChoice.Cancel);
+
     public Task ShowInfoAsync(string title, string message) => Task.CompletedTask;
 
     public Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null) => Task.FromResult<string?>(null);

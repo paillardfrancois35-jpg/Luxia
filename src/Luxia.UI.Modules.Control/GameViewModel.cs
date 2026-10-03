@@ -62,7 +62,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
         Tempo = new TempoBarViewModel(runtime, Journal);
-        NowPlaying = new NowPlayingBarViewModel(runtime, Journal);
+        NowPlaying = new NowPlayingBarViewModel(runtime, Journal, dialogs);
         Editor = new EditorViewModel(runtime, dialogs, Journal);
         SequenceEditor = new Sequencing.SequenceEditorViewModel(runtime, dialogs, Journal);
         ShowEditor = new Sequencing.ShowEditorViewModel(runtime, dialogs, Journal);

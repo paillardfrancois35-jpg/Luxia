@@ -9,8 +9,9 @@ public sealed partial class MusicBase
     /// <summary>Artistes dont le nom ou un alias contient ce texte (comparaison sur la forme normalisée), triés par nom.</summary>
     /// <param name="filter">Texte cherché ; vide = tous.</param>
     /// <param name="max">Nombre maximal d'artistes rendus.</param>
+    /// <param name="styleId">Seulement les artistes de ce style (« inconnu » pour ceux à classer) ; <c>null</c> = tous.</param>
     /// <returns>Les artistes.</returns>
-    public IReadOnlyList<ArtistEntry> SearchArtists(string? filter, int max = 500)
+    public IReadOnlyList<ArtistEntry> SearchArtists(string? filter, int max = 500, string? styleId = null)
     {
         var key = TextKey.Of(filter);
         lock (_gate)
@@ -18,6 +19,7 @@ public sealed partial class MusicBase
             return
             [
                 .. _artists.OfType<ArtistRecord>()
+                    .Where(a => styleId is null || string.Equals(a.Entry.Style, styleId, StringComparison.OrdinalIgnoreCase))
                     .Where(a => key.Length == 0 || a.Keys.Any(k => k.Contains(key, StringComparison.Ordinal)))
                     .Select(a => a.Entry)
                     .OrderBy(a => TextKey.Of(a.Name), StringComparer.Ordinal)
@@ -59,29 +61,160 @@ public sealed partial class MusicBase
         return true;
     }
 
-    /// <summary>Donne un style unique à un artiste (le crée au besoin).</summary>
+    /// <summary>Donne son style à un artiste (le crée au besoin).</summary>
     /// <param name="name">Nom de l'artiste.</param>
     /// <param name="familyId">Famille.</param>
-    /// <param name="source">Origine : « manuel » (défaut), « enrichissement »…</param>
-    public void SetArtistStyle(string name, string familyId, string source = "manuel")
+    public void SetArtistStyle(string name, string familyId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(familyId);
         lock (_gate)
         {
-            var key = TextKey.Of(name);
-            var styles = new Dictionary<string, double> { [familyId] = 1.0 };
-            if (_artistByKey.TryGetValue(key, out var index) && _artists[index] is { } existing)
+            if (_artistByKey.TryGetValue(TextKey.Of(name), out var index) && _artists[index] is { } existing)
             {
-                ReplaceArtist(index, existing.Entry with { Styles = styles, Source = source });
+                ReplaceArtist(index, existing.Entry with { Style = familyId });
             }
             else
             {
-                AddArtist(new ArtistEntry { Name = name.Trim(), Styles = styles, Source = source });
+                AddArtist(new ArtistEntry { Name = name.Trim(), Style = familyId });
             }
         }
 
         RaiseChanged();
+    }
+
+    /// <summary>
+    /// Un morceau d'un artiste absent de la base : l'artiste y est ajouté avec le style « Inconnu », pour être classé plus tard (filtre « Inconnu »
+    /// de l'écran Base musicale).
+    /// </summary>
+    /// <param name="name">Nom de l'artiste (nettoyé).</param>
+    /// <returns><c>true</c> si l'artiste a été ajouté, <c>false</c> s'il existait déjà ou si le nom est vide.</returns>
+    public bool InjectUnknownArtist(string name)
+    {
+        if (TextKey.Of(name).Length == 0)
+        {
+            return false;
+        }
+
+        lock (_gate)
+        {
+            if (_artistByKey.ContainsKey(TextKey.Of(name)))
+            {
+                return false;
+            }
+
+            AddArtist(new ArtistEntry { Name = name.Trim(), Style = Taxonomy.UnknownId });
+        }
+
+        RaiseChanged();
+        return true;
+    }
+
+    /// <summary>Donne un style propre à un titre (le crée au besoin) ; l'artiste est ajouté (« Inconnu ») s'il manque.</summary>
+    /// <param name="artist">Artiste.</param>
+    /// <param name="title">Titre.</param>
+    /// <param name="version">Clé de la version ; vide pour l'original.</param>
+    /// <param name="familyId">Famille.</param>
+    public void SetTitleStyle(string artist, string title, string? version, string familyId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(artist);
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(familyId);
+        lock (_gate)
+        {
+            if (!_artistByKey.ContainsKey(TextKey.Of(artist)))
+            {
+                AddArtist(new ArtistEntry { Name = artist.Trim(), Style = Taxonomy.UnknownId });
+            }
+
+            var artistKey = Canonical(TextKey.Of(artist));
+            var versionKey = version ?? string.Empty;
+            var titleKey = TextKey.Of(title);
+            var existing = _titlesByArtist.GetValueOrDefault(artistKey)?.FirstOrDefault(t => t.VersionKey == versionKey && t.Keys.Contains(titleKey));
+            if (existing is not null)
+            {
+                _titlesByArtist[artistKey].Remove(existing);
+            }
+
+            AddTitle(new TitleEntry { Artist = CanonicalName(artist), Title = existing?.Entry.Title ?? title, Aliases = existing?.Entry.Aliases ?? [], Version = versionKey.Length == 0 ? null : versionKey, Style = familyId, Bpm = existing?.Entry.Bpm });
+        }
+
+        RaiseChanged();
+    }
+
+    /// <summary>Artiste à qui appartient ce nom ou cet alias (comparaison sur la forme normalisée).</summary>
+    /// <param name="nameOrAlias">Nom ou alias.</param>
+    /// <returns>L'artiste, ou <c>null</c>.</returns>
+    public ArtistEntry? OwnerOf(string? nameOrAlias) => FindArtist(TextKey.Of(nameOrAlias));
+
+    /// <summary>
+    /// Enregistre la fiche d'un artiste d'un seul bloc (bouton Enregistrer de l'écran) : le crée (<paramref name="code"/> vide ; le code de <paramref name="entry"/> est gardé s'il est libre) ou le remplace,
+    /// avec ses alias et la liste complète de ses titres. Rien n'est modifié si un contrôle échoue.
+    /// </summary>
+    /// <param name="code">Code de l'artiste modifié ; vide pour un nouvel artiste.</param>
+    /// <param name="entry">Nom, alias et style.</param>
+    /// <param name="titles">Titres de l'artiste (leur artiste est ignoré).</param>
+    /// <returns>Un message d'erreur, ou <c>null</c> si la fiche est enregistrée.</returns>
+    public string? SaveArtist(string? code, ArtistEntry entry, IReadOnlyList<TitleEntry> titles)
+    {
+        ArgumentNullException.ThrowIfNull(entry);
+        ArgumentNullException.ThrowIfNull(titles);
+        var name = entry.Name.Trim();
+        var nameKey = TextKey.Of(name);
+        if (nameKey.Length == 0)
+        {
+            return "le nom de l'artiste est vide";
+        }
+
+        lock (_gate)
+        {
+            var index = -1;
+            if (!string.IsNullOrEmpty(code))
+            {
+                index = _artists.FindIndex(a => a?.Entry.Code == code);
+                if (index < 0)
+                {
+                    return "artiste introuvable (supprimé ailleurs ?)";
+                }
+            }
+
+            if (_artistByKey.TryGetValue(nameKey, out var nameOwner) && nameOwner != index)
+            {
+                return $"« {name} » est déjà le nom ou l'alias de « {_artists[nameOwner]!.Entry.Name} »";
+            }
+
+            foreach (var alias in entry.Aliases.Where(a => TextKey.Of(a).Length > 0))
+            {
+                if (_artistByKey.TryGetValue(TextKey.Of(alias), out var aliasOwner) && aliasOwner != index)
+                {
+                    return $"l'alias « {alias.Trim()} » appartient déjà à « {_artists[aliasOwner]!.Entry.Name} »";
+                }
+            }
+
+            if (_taxonomy.Families.All(f => !string.Equals(f.Id, entry.Style, StringComparison.OrdinalIgnoreCase)))
+            {
+                return $"style inconnu de la taxonomie : « {entry.Style} »";
+            }
+
+            if (index >= 0)
+            {
+                ReplaceArtist(index, entry);
+            }
+            else
+            {
+                AddArtist(entry with { Code = _artists.Any(x => x?.Entry.Code == entry.Code) ? string.Empty : entry.Code });
+            }
+
+            var record = _artists[_artistByKey[nameKey]]!;
+            _titlesByArtist.Remove(record.Key);
+            foreach (var title in titles.Where(t => TextKey.Of(t.Title).Length > 0))
+            {
+                AddTitle(title with { Artist = record.Entry.Name, Title = title.Title.Trim() });
+            }
+        }
+
+        RaiseChanged();
+        return null;
     }
 
     /// <summary>Ajoute un alias (autre orthographe) à un artiste.</summary>
@@ -117,7 +250,7 @@ public sealed partial class MusicBase
 
     /// <summary>
     /// Fusionne deux fiches du même artiste (doublon) : la fiche gardée reprend le nom retiré comme alias, ses alias, ses titres et,
-    /// si elle n'avait aucun style, celui de l'autre ; l'autre fiche disparaît.
+    /// si elle était « Inconnu », le style de l'autre ; l'autre fiche disparaît.
     /// </summary>
     /// <param name="keepName">Artiste gardé.</param>
     /// <param name="removeName">Artiste retiré.</param>
@@ -140,11 +273,11 @@ public sealed partial class MusicBase
                 .GroupBy(TextKey.Of)
                 .Select(g => g.First())
                 .ToList();
-            var styles = keep.Entry.Styles.Count > 0 ? keep.Entry.Styles : remove.Entry.Styles;
+            var style = keep.Entry.Style != Taxonomy.UnknownId ? keep.Entry.Style : remove.Entry.Style;
             var movedTitles = _titlesByArtist.GetValueOrDefault(remove.Key) ?? [];
             _titlesByArtist.Remove(remove.Key);
             Remove(removeIndex, remove);
-            ReplaceArtist(keepIndex, keep.Entry with { Aliases = aliases, Styles = styles });
+            ReplaceArtist(keepIndex, keep.Entry with { Aliases = aliases, Style = style });
             if (movedTitles.Count > 0)
             {
                 if (!_titlesByArtist.TryGetValue(keep.Key, out var list))

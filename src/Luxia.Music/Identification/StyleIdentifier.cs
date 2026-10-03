@@ -9,7 +9,7 @@ public enum IdentificationMethod
     /// <summary>Rien trouvé : famille « Inconnu ».</summary>
     None,
 
-    /// <summary>Correction faite en Live (prioritaire, confiance 1).</summary>
+    /// <summary>Style corrigé à la main sur le morceau en cours (confiance 1) ; rejoué plus tard, il est retrouvé comme n'importe quel titre ou artiste connu.</summary>
     Correction,
 
     /// <summary>Titre exact connu (0,95).</summary>
@@ -59,7 +59,7 @@ public sealed record IdentifierOptions
 
 /// <summary>
 /// Chaîne d'identification du style (doc 21 §3.3, MUS-021) : titre exact, titre approché, artiste exact ou alias, artiste approché,
-/// artistes invités, genre du lecteur, sinon inconnu. Une correction de l'utilisateur passe avant tout. Plusieurs lectures du titre
+/// artistes invités, genre du lecteur, sinon inconnu. Un titre dont le style est vide suit celui de son artiste. Plusieurs lectures du titre
 /// brut sont essayées (normalisation) ; la plus sûre l'emporte. Entièrement locale, sans réseau (MUS-022 : moins de 200 ms).
 /// </summary>
 public sealed class StyleIdentifier
@@ -109,16 +109,10 @@ public sealed class StyleIdentifier
         return best ?? StyleResult.Unknown;
     }
 
-    private static string DominantFamily(ArtistEntry artist, out double weight)
-    {
-        var top = artist.Styles.OrderByDescending(s => s.Value).FirstOrDefault();
-        weight = top.Value;
-        return top.Key ?? string.Empty;
-    }
-
     private StyleResult? Known(string familyId, double confidence, IdentificationMethod method, string detail)
     {
-        var family = _base.FamilyById(familyId);
+        // « Inconnu » n'est pas un résultat : un artiste injecté faute d'être connu ne doit pas masquer les repères suivants (genre du lecteur).
+        var family = familyId == Taxonomy.UnknownId ? null : _base.FamilyById(familyId);
         return family is null ? null : new StyleResult(family.Id, family.Name, confidence, method, detail);
     }
 
@@ -126,24 +120,6 @@ public sealed class StyleIdentifier
     {
         var versionKey = string.Join(' ', h.Versions);
         var threshold = _options.FuzzyThreshold;
-
-        // 0. Une correction de l'utilisateur est prioritaire, confiance 1.
-        if (h.Artist.Length > 0)
-        {
-            if (h.Title.Length > 0 && ExactTitle(h, versionKey) is { Source: "correction" } corrected && Known(corrected.Style, 1.0, IdentificationMethod.Correction, $"correction du titre « {corrected.Title} »") is { } c1)
-            {
-                return c1;
-            }
-
-            if (_base.FindArtist(h.Artist) is { Source: "correction" } artistCorrection)
-            {
-                var family = DominantFamily(artistCorrection, out _);
-                if (Known(family, 1.0, IdentificationMethod.Correction, $"correction de l'artiste {artistCorrection.Name}") is { } c2)
-                {
-                    return c2;
-                }
-            }
-        }
 
         StyleResult? result = null;
 
@@ -217,13 +193,8 @@ public sealed class StyleIdentifier
 
     private TitleEntry? ExactTitle(TrackHypothesis h, string versionKey) => _base.FindTitle(h.Artist, h.Title, versionKey);
 
-    private StyleResult? FromArtist(ArtistEntry artist, double confidence, IdentificationMethod method)
-    {
-        var family = DominantFamily(artist, out var weight);
-        // Un artiste aux styles partagés (rock 0,5 / pop 0,5) est moins sûr : la confiance baisse.
-        var adjusted = weight is > 0 and < 0.6 ? confidence - 0.1 : confidence;
-        return Known(family, adjusted, method, $"artiste {artist.Name}");
-    }
+    private StyleResult? FromArtist(ArtistEntry artist, double confidence, IdentificationMethod method) =>
+        Known(artist.Style, confidence, method, $"artiste {artist.Name}");
 
     private StyleResult? FromGenres(string genres)
     {

@@ -19,8 +19,8 @@ public sealed class BaseAndSessionTests
         var families = DefaultTaxonomy.Value.Families.Select(f => f.Id).ToHashSet();
 
         seed.Artists.Count.ShouldBeGreaterThanOrEqualTo(300);
-        seed.Artists.SelectMany(a => a.Styles.Keys).Distinct().ShouldBeSubsetOf(families);
-        seed.Artists.ShouldAllBe(a => a.Source == SeedData.Source && a.Styles.Count > 0);
+        seed.Artists.Select(a => a.Style).Distinct().ShouldBeSubsetOf(families);
+        seed.Artists.ShouldAllBe(a => a.Style != Taxonomy.UnknownId, "la base livrée est classée");
 
         var keys = seed.Artists.Select(a => TextKey.Of(a.Name)).ToList();
         keys.Distinct().Count().ShouldBe(keys.Count, "deux artistes de la base de départ ont le même nom");
@@ -28,11 +28,12 @@ public sealed class BaseAndSessionTests
 
     [Fact]
     [Trait("Exigence", "MUS-023")]
-    public void Taxonomy_Has14Families_FindableByIdNamePartOrLabel()
+    public void Taxonomy_Has14Families_PlusUnknown_FindableByIdNamePartOrLabel()
     {
         var musicBase = MusicStore.Default();
 
-        musicBase.Taxonomy.Families.Count.ShouldBe(14);
+        musicBase.Taxonomy.Families.Count.ShouldBe(15, "14 familles et « Inconnu », un style comme un autre");
+        musicBase.FindFamily("Inconnu")!.Id.ShouldBe("inconnu");
         musicBase.FindFamily("rock")!.Id.ShouldBe("rock");
         musicBase.FindFamily("Électro / Dance")!.Id.ShouldBe("electro");
         musicBase.FindFamily("Électro")!.Id.ShouldBe("electro");
@@ -99,14 +100,14 @@ public sealed class BaseAndSessionTests
     {
         var random = new Random(1234);
         string Word() => new string(Enumerable.Range(0, random.Next(4, 9)).Select(_ => (char)('a' + random.Next(26))).ToArray());
-        var families = DefaultTaxonomy.Value.Families.Select(f => f.Id).ToArray();
+        var families = DefaultTaxonomy.Value.Families.Select(f => f.Id).Where(id => id != Taxonomy.UnknownId).ToArray();
         var artists = Enumerable.Range(0, 10_000)
-            .Select(i => new ArtistEntry { Name = $"{Word()} {Word()} {i}", Styles = new Dictionary<string, double> { [families[i % families.Length]] = 1.0 } })
+            .Select(i => new ArtistEntry { Name = $"{Word()} {Word()} {i}", Style = families[i % families.Length] })
             .ToList();
         var titles = Enumerable.Range(0, 50_000)
             .Select(i => new TitleEntry { Artist = artists[i % artists.Count].Name, Title = $"{Word()} {Word()} {Word()}", Style = families[(i / 3) % families.Length] })
             .ToList();
-        var musicBase = new MusicBase(DefaultTaxonomy.Value, new ArtistSet { Artists = artists }, new TitleSet { Titles = titles }, new CorrectionSet());
+        var musicBase = new MusicBase(DefaultTaxonomy.Value, new ArtistSet { Artists = artists }, new TitleSet { Titles = titles });
         var identifier = new StyleIdentifier(musicBase);
 
         musicBase.ArtistCount.ShouldBe(10_000);
@@ -142,7 +143,7 @@ public sealed class BaseAndSessionTests
 
     [Fact]
     [Trait("Exigence", "MUS-021")]
-    public void Store_LoadsTheSeedWithoutFiles_AndRoundTripsCorrections()
+    public void Store_LoadsTheSeedWithoutFiles_AndRoundTripsEdits()
     {
         var folder = Path.Combine(Path.GetTempPath(), "luxia-music-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(folder);
@@ -154,15 +155,15 @@ public sealed class BaseAndSessionTests
 
             var session = new StyleSession(musicBase, Normalizer);
             session.Update("Titre quelconque", "Queen", "Deezer");
-            session.Correct(CorrectionScope.Title, "slow", DateTimeOffset.Parse("2026-10-03T21:00:00Z", CultureInfo.InvariantCulture)).ShouldBeNull();
+            session.Correct(CorrectionScope.Title, "slow").ShouldBeNull();
             MusicStore.Save(folder, musicBase);
 
             File.Exists(Path.Combine(folder, MusicStore.ArtistsFile)).ShouldBeTrue();
             var (reloaded, reloadMessages) = MusicStore.Load(folder);
             reloadMessages.ShouldBeEmpty();
-            reloaded.ToCorrectionSet().Corrections.Count.ShouldBe(1);
-            reloaded.ToCorrectionSet().Corrections[0].NewStyle.ShouldBe("slow");
-            reloaded.ToTitleSet().Titles.ShouldContain(t => t.Title == "Titre quelconque" && t.Source == "correction");
+            File.Exists(Path.Combine(folder, "corrections.json")).ShouldBeFalse("plus d'historique de corrections");
+            reloaded.ToTitleSet().Titles.ShouldContain(t => t.Title == "Titre quelconque" && t.Style == "slow");
+            reloaded.ToArtistSet().Artists.ShouldAllBe(a => a.Code.Length > 0, "chaque artiste a un code stable");
             new StyleIdentifier(reloaded).Identify(Normalizer.Normalize("Titre quelconque", "Queen", "Deezer")).FamilyId.ShouldBe("slow");
         }
         finally
@@ -269,13 +270,12 @@ public sealed class BaseAndSessionTests
         session.Base.Changed += (_, _) => changes++;
         session.Update("Radio Ga Ga", "Queen", "Deezer");
 
-        session.Correct(CorrectionScope.Artist, "Festif", DateTimeOffset.UnixEpoch).ShouldBeNull();
+        session.Correct(CorrectionScope.Artist, "Festif").ShouldBeNull();
 
         session.State.StyleName.ShouldBe("Festif / Tubes de soirée");
         session.State.Effective.Method.ShouldBe(IdentificationMethod.Correction);
         session.State.Effective.Confidence.ShouldBe(1);
         changes.ShouldBe(1);
-        session.Base.ToCorrectionSet().Corrections.Single().OldStyle.ShouldBe("rock");
 
         session.Update("Bohemian Rhapsody", "Queen", "Deezer");
 
@@ -289,7 +289,7 @@ public sealed class BaseAndSessionTests
         var session = new StyleSession(MusicStore.Default(), Normalizer);
         session.Update("Love of My Life", "Queen", "Deezer");
 
-        session.Correct(CorrectionScope.Title, "Slow", DateTimeOffset.UnixEpoch).ShouldBeNull();
+        session.Correct(CorrectionScope.Title, "Slow").ShouldBeNull();
         session.State.StyleName.ShouldBe("Slow / Ballade");
 
         session.Update("Radio Ga Ga", "Queen", "Deezer");
@@ -297,7 +297,7 @@ public sealed class BaseAndSessionTests
 
         session.Update("Love of My Life", "Queen", "Deezer");
         session.State.StyleName.ShouldBe("Slow / Ballade");
-        session.State.Effective.Method.ShouldBe(IdentificationMethod.Correction);
+        session.State.Effective.Method.ShouldBe(IdentificationMethod.ExactTitle, "rejoué, le titre est connu comme n'importe quel autre");
     }
 
     [Fact]
@@ -306,13 +306,13 @@ public sealed class BaseAndSessionTests
     {
         var session = new StyleSession(MusicStore.Default(), Normalizer);
 
-        session.Correct(CorrectionScope.Artist, "Rock", DateTimeOffset.UnixEpoch).ShouldNotBeNull();
+        session.Correct(CorrectionScope.Artist, "Rock").ShouldNotBeNull();
 
         session.Update("Summer", string.Empty, "Lecteur multimédia");
-        session.Correct(CorrectionScope.Artist, "Rock", DateTimeOffset.UnixEpoch).ShouldNotBeNull();
+        session.Correct(CorrectionScope.Artist, "Rock").ShouldNotBeNull();
 
         session.Update("Radio Ga Ga", "Queen", "Deezer");
-        session.Correct(CorrectionScope.Artist, "n'importe quoi", DateTimeOffset.UnixEpoch).ShouldNotBeNull();
+        session.Correct(CorrectionScope.Artist, "n'importe quoi").ShouldNotBeNull();
     }
 
     [Fact]
@@ -324,7 +324,7 @@ public sealed class BaseAndSessionTests
         var first = session.Update("Radio Ga Ga", "Queen", "Deezer").Serial;
         session.Force("Latino");
         session.State.Serial.ShouldBe(first, "un style imposé n'est pas un nouveau morceau");
-        session.Correct(CorrectionScope.Artist, "Festif", DateTimeOffset.UnixEpoch);
+        session.Correct(CorrectionScope.Artist, "Festif");
         session.State.Serial.ShouldBe(first, "une correction non plus");
 
         var second = session.Update("Radio Ga Ga", "Queen", "Deezer").Serial;
@@ -352,7 +352,7 @@ public sealed class BaseAndSessionTests
     {
         var session = new StyleSession(MusicStore.Default(), Normalizer);
         session.Update("Radio Ga Ga", "Queen", "Deezer");
-        var empty = new MusicBase(DefaultTaxonomy.Value, new ArtistSet(), new TitleSet(), new CorrectionSet());
+        var empty = new MusicBase(DefaultTaxonomy.Value, new ArtistSet(), new TitleSet());
 
         session.ReplaceBase(empty);
 

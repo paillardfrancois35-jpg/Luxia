@@ -1,17 +1,21 @@
-using System.Text;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace Luxia.UI.Modules.Control.Views;
 
 /// <summary>
-/// Fenêtre « Base musicale » (MUS-027 à MUS-029), ouverte depuis le bloc « Morceau en cours » : onglets Base et À classer, import et export
-/// CSV, raccourcis clavier de l'onglet À classer (1 à 9, 0, Q, W, E, R : une famille ; Entrée : passer).
+/// Fenêtre « Base musicale » (MUS-027 à MUS-029), ouverte depuis le bloc « Morceau en cours » : onglets Base (liste + fiche), À classer et
+/// Propositions, import et export JSON. Fermer la fenêtre avec une fiche modifiée pose la question Oui / Non / Annuler (doc 60).
 /// </summary>
 public partial class MusicBaseWindow : Window
 {
+    private static readonly FilePickerFileType JsonFiles = new("Fichier JSON") { Patterns = ["*.json"] };
+
+    private bool _closeConfirmed;
+
     /// <summary>Crée la fenêtre.</summary>
     public MusicBaseWindow()
     {
@@ -26,78 +30,79 @@ public partial class MusicBaseWindow : Window
 
             vm.ImportRequested += async (_, _) => await ImportAsync(vm).ConfigureAwait(true);
             vm.ExportRequested += async (_, _) => await ExportAsync(vm).ConfigureAwait(true);
-            this.FindControl<TextBlock>("ShortcutsText")!.Text = "Raccourcis : " + string.Join("   ", vm.Families.Select(f => $"{vm.KeyOf(f)} = {f.Name}"));
+            vm.FocusRequested += (_, row) => FocusFirstCell(vm, row);
         };
     }
 
     /// <inheritdoc />
-    protected override void OnKeyDown(KeyEventArgs e)
+    protected override void OnClosing(WindowClosingEventArgs e)
     {
         ArgumentNullException.ThrowIfNull(e);
-
-        // Les raccourcis ne valent que dans l'onglet « À classer » et hors d'un champ de texte.
-        if (DataContext is MusicBaseViewModel { SelectedTab: 1 } vm && FocusManager?.GetFocusedElement() is not TextBox)
+        if (!_closeConfirmed && DataContext is MusicBaseViewModel { IsModified: true } vm)
         {
-            if (e.Key == Key.Enter)
-            {
-                vm.SkipCommand.Execute(null);
-                e.Handled = true;
-                return;
-            }
-
-            var text = e.Key switch
-            {
-                >= Key.D0 and <= Key.D9 => ((char)('0' + (e.Key - Key.D0))).ToString(),
-                >= Key.NumPad0 and <= Key.NumPad9 => ((char)('0' + (e.Key - Key.NumPad0))).ToString(),
-                Key.Q or Key.W or Key.E or Key.R => e.Key.ToString(),
-                _ => null,
-            };
-            if (text is not null && e.KeyModifiers == KeyModifiers.None && vm.FamilyOfKey(text) is { } family)
-            {
-                vm.ClassifyCommand.Execute(family.Id);
-                e.Handled = true;
-                return;
-            }
+            // La question est asynchrone : on retient la fermeture, puis on la rejoue si l'utilisateur répond Oui ou Non.
+            e.Cancel = true;
+            _ = AskThenCloseAsync(vm);
         }
 
-        base.OnKeyDown(e);
+        base.OnClosing(e);
+    }
+
+    private async Task AskThenCloseAsync(MusicBaseViewModel vm)
+    {
+        if (await vm.CanLeaveAsync().ConfigureAwait(true))
+        {
+            _closeConfirmed = true;
+            Close();
+        }
+    }
+
+    // Le curseur va dans la première cellule de la ligne ajoutée (ou de la ligne vide qui existait déjà) ; Tab passe ensuite d'une cellule à l'autre.
+    private void FocusFirstCell(MusicBaseViewModel vm, object row)
+    {
+        var list = this.FindControl<ItemsControl>(row is EditableText ? "AliasList" : "TitleList");
+        var index = row is EditableText alias ? vm.Aliases.IndexOf(alias) : row is TitleRow title ? vm.TitleRows.IndexOf(title) : -1;
+        if (list is null || index < 0)
+        {
+            return;
+        }
+
+        // La ligne vient d'être ajoutée : son conteneur est créé au prochain passage de mise en page.
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                var box = list.ContainerFromIndex(index)?.GetVisualDescendants().OfType<TextBox>().FirstOrDefault();
+                box?.Focus();
+            },
+            DispatcherPriority.Loaded);
     }
 
     private async Task ImportAsync(MusicBaseViewModel vm)
     {
         var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Importer un fichier CSV (artistes, titres ou playlist)",
+            Title = "Importer un fichier JSON (styles, artistes, alias)",
             AllowMultiple = false,
-            FileTypeFilter = [new FilePickerFileType("Fichier CSV") { Patterns = ["*.csv", "*.txt"] }],
+            FileTypeFilter = [JsonFiles],
         }).ConfigureAwait(true);
-        if (files.Count == 0)
+        if (files.Count > 0 && files[0].TryGetLocalPath() is { } path)
         {
-            return;
+            vm.ImportFile(path);
         }
-
-        await using var stream = await files[0].OpenReadAsync().ConfigureAwait(true);
-        using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-        vm.ImportFile(await reader.ReadToEndAsync().ConfigureAwait(true));
     }
 
     private async Task ExportAsync(MusicBaseViewModel vm)
     {
         var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
         {
-            Title = "Exporter les artistes en CSV",
-            SuggestedFileName = "artistes.csv",
-            DefaultExtension = "csv",
-            FileTypeChoices = [new FilePickerFileType("Fichier CSV") { Patterns = ["*.csv"] }],
+            Title = "Exporter la base musicale en JSON",
+            SuggestedFileName = "base-musicale.json",
+            DefaultExtension = "json",
+            FileTypeChoices = [JsonFiles],
         }).ConfigureAwait(true);
-        if (file is null)
+        if (file?.TryGetLocalPath() is { } path)
         {
-            return;
+            vm.ExportFile(path);
         }
-
-        await using var stream = await file.OpenWriteAsync().ConfigureAwait(true);
-        stream.SetLength(0);
-        var bytes = new UTF8Encoding(encoderShouldEmitUTF8Identifier: true).GetPreamble().Concat(Encoding.UTF8.GetBytes(vm.ExportText())).ToArray();
-        await stream.WriteAsync(bytes).ConfigureAwait(true);
     }
 }

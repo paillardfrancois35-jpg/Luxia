@@ -1,6 +1,6 @@
 namespace Luxia.Music.Base;
 
-/// <summary>Taxonomie livrée avec l'application : les 14 familles du doc 21 §3.4 et leurs étiquettes de genre usuelles (MUS-023).</summary>
+/// <summary>Taxonomie livrée avec l'application : les 14 familles du doc 21 §3.4, la famille « Inconnu » (un style comme un autre : celui des artistes pas encore classés) et leurs étiquettes de genre usuelles (MUS-023).</summary>
 public static class DefaultTaxonomy
 {
     private static MusicFamily F(string id, string name, string[] labels) => new() { Id = id, Name = name, Labels = labels };
@@ -24,6 +24,7 @@ public static class DefaultTaxonomy
             F("bal", "Bal / Traditionnel", ["bal", "musette", "valse", "madison", "danse en ligne", "country", "accordeon", "traditionnel", "folk", "pasodoble", "tango", "java"]),
             F("festif", "Festif / Tubes de soirée", ["festif", "tube", "tubes de soiree", "chanson a boire", "karaoke", "party", "fete", "mariage", "danse collective"]),
             F("slow", "Slow / Ballade", ["slow", "ballade", "ballad", "love song", "romantique", "easy listening", "soft rock", "adult contemporary", "acoustique"]),
+            F(Taxonomy.UnknownId, Taxonomy.UnknownName, []),
         ],
     };
 }

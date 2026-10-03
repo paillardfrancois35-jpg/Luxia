@@ -103,7 +103,7 @@ public partial class GameView : UserControl
                 {
                     var item = new MenuItem { Header = family.Name };
                     var request = $"{scope}:{family.Id}";
-                    item.Click += (_, _) => bar.Correct(request);
+                    item.Click += async (_, _) => await bar.CorrectAsync(request).ConfigureAwait(true);
                     parent.Items.Add(item);
                 }
 

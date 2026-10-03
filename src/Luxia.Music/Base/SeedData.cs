@@ -4,12 +4,9 @@ using Luxia.Music.Normalization;
 
 namespace Luxia.Music.Base;
 
-/// <summary>Base de départ livrée avec l'application (Q48) : quelques centaines d'artistes populaires en soirée, source « initial ».</summary>
+/// <summary>Base de départ livrée avec l'application (Q48) : quelques centaines d'artistes populaires en soirée (un style chacun : le dominant).</summary>
 public static class SeedData
 {
-    /// <summary>Source des entrées de la base livrée.</summary>
-    public const string Source = "initial";
-
     private const string ResourceName = "Luxia.Music.Seed.artistes-initiaux.txt";
 
     /// <summary>Lit les artistes livrés.</summary>
@@ -22,7 +19,7 @@ public static class SeedData
         return Parse(reader.ReadToEnd());
     }
 
-    /// <summary>Lit un texte au format « Nom | famille[:poids], … | alias ; alias » (les lignes « # » sont des commentaires).</summary>
+    /// <summary>Lit un texte au format « Nom | famille[:poids], … | alias ; alias » (seule la famille dominante est gardée) (les lignes « # » sont des commentaires).</summary>
     /// <param name="text">Le texte.</param>
     /// <returns>Les artistes.</returns>
     public static ArtistSet Parse(string text)
@@ -43,18 +40,23 @@ public static class SeedData
                 continue;
             }
 
-            var styles = new Dictionary<string, double>(StringComparer.Ordinal);
-            foreach (var item in parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-            {
-                var pair = item.Split(':', 2);
-                var weight = pair.Length == 2 && double.TryParse(pair[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var w) ? w : 1.0;
-                styles[pair[0].Trim()] = Math.Clamp(weight, 0, 1);
-            }
+            // « Nom | famille[:poids], … » : un artiste n'a plus qu'un style, le plus pondéré (le premier à poids égal).
+            var style = parts[1].Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select((item, rank) =>
+                {
+                    var pair = item.Split(':', 2);
+                    var weight = pair.Length == 2 && double.TryParse(pair[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var w) ? w : 1.0;
+                    return (Id: pair[0].Trim(), Weight: weight, Rank: rank);
+                })
+                .OrderByDescending(x => x.Weight)
+                .ThenBy(x => x.Rank)
+                .Select(x => x.Id)
+                .FirstOrDefault() ?? Taxonomy.UnknownId;
 
             var aliases = parts.Length > 2
                 ? parts[2].Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Where(a => TextKey.Of(a) != TextKey.Of(parts[0])).ToList()
                 : [];
-            artists.Add(new ArtistEntry { Name = parts[0].Trim(), Aliases = aliases, Styles = styles, Source = Source });
+            artists.Add(new ArtistEntry { Name = parts[0].Trim(), Aliases = aliases, Style = style });
         }
 
         return new ArtistSet { Artists = artists };

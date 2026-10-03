@@ -38,8 +38,7 @@ public sealed class StyleIdentifierTests
                     new TitleEntry { Artist = "Queen", Title = "Another One Bites the Dust", Style = "disco", Aliases = ["Another One Bites The Dust (Single)"] },
                     new TitleEntry { Artist = "Moby", Title = "Porcelain", Version = "extended mix", Style = "electro" },
                 ],
-            },
-            new CorrectionSet());
+            });
         _identifier = new StyleIdentifier(_base);
     }
 
@@ -98,12 +97,13 @@ public sealed class StyleIdentifierTests
 
     [Fact]
     [Trait("Exigence", "MUS-021")]
-    public void ArtistWithSharedStyles_IsLessSure()
+    public void ArtistWithSeveralListedStyles_KeepsTheDominantOne_WithTheUsualConfidence()
     {
-        var result = Identify("Whatever", "Moby", "Deezer");
+        var result = Identify("Whatever", "Rihanna", "Deezer");
 
+        result.FamilyId.ShouldBe("pop");
         result.Method.ShouldBe(IdentificationMethod.ExactArtist);
-        result.Confidence.ShouldBe(0.7, 1e-9);
+        result.Confidence.ShouldBe(0.8, 1e-9);
     }
 
     [Fact]
@@ -225,25 +225,49 @@ public sealed class StyleIdentifierTests
 
     [Fact]
     [Trait("Exigence", "MUS-024")]
-    public void Correction_IsFirst_WithConfidenceOne()
+    public void ArtistStyleEdit_IsImmediate_AsAnyKnownArtist()
     {
-        _base.Correct("artist", "Queen", null, null, "festif", "rock", DateTimeOffset.UnixEpoch);
+        _base.SetArtistStyle("Queen", "festif");
 
         var result = Identify("Radio Ga Ga", "Queen", "Deezer");
 
         result.FamilyId.ShouldBe("festif");
-        result.Method.ShouldBe(IdentificationMethod.Correction);
-        result.Confidence.ShouldBe(1.0, 1e-9);
+        result.Method.ShouldBe(IdentificationMethod.ExactArtist);
+        result.Confidence.ShouldBe(0.8, 1e-9);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-021")]
+    public void ArtistInjectedAsUnknown_IsNotAResult_AndLetsThePlayerGenreSpeak()
+    {
+        _base.InjectUnknownArtist("Zorglub").ShouldBeTrue();
+        _base.InjectUnknownArtist("zorglub").ShouldBeFalse("déjà dans la base");
+
+        Identify("Un titre", "Zorglub", "Deezer").IsKnown.ShouldBeFalse();
+        _identifier.Identify(Normalizer.Normalize("Un titre", "Zorglub", "Deezer"), "Rock").Method.ShouldBe(IdentificationMethod.PlayerGenre);
+        _base.FindArtist("zorglub")!.Style.ShouldBe("inconnu");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-021")]
+    public void TitleWithoutItsOwnStyle_FollowsTheArtist()
+    {
+        _base.UpsertTitle(new TitleEntry { Artist = "Queen", Title = "Radio Ga Ga" });
+
+        var result = Identify("Radio Ga Ga", "Queen", "Deezer");
+
+        result.FamilyId.ShouldBe("rock");
+        result.Method.ShouldBe(IdentificationMethod.ExactArtist);
     }
 
     [Fact]
     [Trait("Exigence", "MUS-024")]
-    public void TitleCorrection_OnlyConcernsThatTitle()
+    public void TitleStyleEdit_OnlyConcernsThatTitle()
     {
-        _base.Correct("title", "Queen", "Radio Ga Ga", null, "80s", "rock", DateTimeOffset.UnixEpoch);
+        _base.SetTitleStyle("Queen", "Radio Ga Ga", null, "80s");
 
         Identify("Radio Ga Ga", "Queen", "Deezer").FamilyId.ShouldBe("80s");
-        Identify("Radio Ga Ga", "Queen", "Deezer").Method.ShouldBe(IdentificationMethod.Correction);
+        Identify("Radio Ga Ga", "Queen", "Deezer").Method.ShouldBe(IdentificationMethod.ExactTitle);
         Identify("Bohemian Rhapsody", "Queen", "Deezer").FamilyId.ShouldBe("rock");
     }
 
@@ -261,13 +285,14 @@ public sealed class StyleIdentifierTests
 
     private static ArtistEntry Artist(string name, (string, double) first, params object[] rest)
     {
-        var styles = new Dictionary<string, double> { [first.Item1] = first.Item2 };
+        // Un artiste n'a qu'un style : le plus pondéré parmi ceux listés (le premier à poids égal).
+        var styles = new List<(string, double)> { first };
         var aliases = new List<string>();
         foreach (var item in rest)
         {
             if (item is ValueTuple<string, double> style)
             {
-                styles[style.Item1] = style.Item2;
+                styles.Add(style);
             }
             else if (item is string alias)
             {
@@ -275,6 +300,6 @@ public sealed class StyleIdentifierTests
             }
         }
 
-        return new ArtistEntry { Name = name, Aliases = aliases, Styles = styles };
+        return new ArtistEntry { Name = name, Aliases = aliases, Style = styles.MaxBy(x => x.Item2).Item1 };
     }
 }

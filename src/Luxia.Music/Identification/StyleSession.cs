@@ -50,6 +50,7 @@ public sealed class StyleSession
     private StyleResult? _forced;
     private string _genres = string.Empty;
     private int _serial;
+    private bool _corrected;
 
     /// <summary>Crée la session.</summary>
     /// <param name="musicBase">Base musicale.</param>
@@ -136,6 +137,7 @@ public sealed class StyleSession
             }
 
             _genres = genres ?? string.Empty;
+            _corrected = false;
             _serial++;
             var normalized = _normalizer.Normalize(title, artist, app);
             _state = Identify(normalized, title ?? string.Empty, artist ?? string.Empty, app ?? string.Empty);
@@ -158,6 +160,7 @@ public sealed class StyleSession
                 _forced = null;
             }
 
+            _corrected = false;
             _serial++;
             _state = StyleState.None with { Serial = _serial };
             state = _state;
@@ -203,9 +206,8 @@ public sealed class StyleSession
     /// </summary>
     /// <param name="scope">Ce titre ou cet artiste.</param>
     /// <param name="familyIdOrName">Famille choisie.</param>
-    /// <param name="at">Date de la correction.</param>
     /// <returns>Un message d'erreur, ou <c>null</c> si la correction est faite.</returns>
-    public string? Correct(CorrectionScope scope, string familyIdOrName, DateTimeOffset at)
+    public string? Correct(CorrectionScope scope, string familyIdOrName)
     {
         StyleState state;
         lock (_gate)
@@ -227,15 +229,16 @@ public sealed class StyleSession
                 return "artiste inconnu : la correction a besoin d'un artiste";
             }
 
-            var old = _state.Detected.IsKnown ? _state.Detected.FamilyId : null;
-            _base.Correct(
-                scope == CorrectionScope.Title ? "title" : "artist",
-                hypothesis.ArtistDisplay,
-                scope == CorrectionScope.Title ? hypothesis.TitleDisplay : null,
-                string.Join(' ', hypothesis.Versions),
-                family.Id,
-                old,
-                at);
+            if (scope == CorrectionScope.Title)
+            {
+                _base.SetTitleStyle(hypothesis.ArtistDisplay, hypothesis.TitleDisplay, string.Join(' ', hypothesis.Versions), family.Id);
+            }
+            else
+            {
+                _base.SetArtistStyle(hypothesis.ArtistDisplay, family.Id);
+            }
+
+            _corrected = true;
             _forced = null;
             state = Recompute();
         }
@@ -258,6 +261,11 @@ public sealed class StyleSession
     private StyleState Identify(NormalizedTrack normalized, string title, string artist, string app)
     {
         var detected = _identifier.Identify(normalized, _genres);
+        if (_corrected && detected.IsKnown)
+        {
+            detected = detected with { Confidence = 1.0, Method = IdentificationMethod.Correction, Detail = "corrigé à la main" };
+        }
+
         var effective = _forced ?? detected;
         return new StyleState(true, title, artist, app, normalized, detected, effective, _forced is not null, _serial);
     }

@@ -97,7 +97,7 @@ public sealed class MusicStyleService : IDisposable
     /// <param name="scope">Ce titre ou cet artiste.</param>
     /// <param name="familyIdOrName">Famille choisie.</param>
     /// <returns>Un message d'erreur, ou <c>null</c> si la correction est faite.</returns>
-    public string? Correct(CorrectionScope scope, string familyIdOrName) => Session().Correct(scope, familyIdOrName, DateTimeOffset.Now);
+    public string? Correct(CorrectionScope scope, string familyIdOrName) => Session().Correct(scope, familyIdOrName);
 
     /// <summary>
     /// Saisie à la main du morceau (MUS-007) quand aucune application n'en fournit : identifie ce titre comme s'il venait d'un lecteur.
@@ -223,6 +223,13 @@ public sealed class MusicStyleService : IDisposable
         var reading = state.Normalized is { } normalized
             ? normalized.Hypotheses[Math.Min(state.Detected.Hypothesis, normalized.Hypotheses.Count - 1)]
             : null;
+
+        // Morceau d'un artiste absent de la base : il y est ajouté avec le style « Inconnu », à classer plus tard (filtre « Inconnu » de la Base musicale).
+        if (changed && reading?.ArtistDisplay is { Length: > 0 } unknownArtist && state.Detected.Method is IdentificationMethod.None or IdentificationMethod.PlayerGenre)
+        {
+            Session().Base.InjectUnknownArtist(unknownArtist);
+        }
+
         var kind = changed ? "morceau" : state.Forced ? "imposé" : state.Effective.Method == IdentificationMethod.Correction ? "correction" : "style";
         _bus.Publish(new StyleDetected(
             state.HasTrack ? state.Effective.FamilyId : string.Empty,

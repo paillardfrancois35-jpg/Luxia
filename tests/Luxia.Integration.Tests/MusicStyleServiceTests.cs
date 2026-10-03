@@ -75,7 +75,23 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
 
         _runtime.Music.State.StyleName.ShouldBe("Festif / Tubes de soirée");
         _runtime.Music.State.Effective.Method.ShouldBe(IdentificationMethod.Correction);
-        _runtime.Music.Base.ToCorrectionSet().Corrections.ShouldHaveSingleItem();
+        _runtime.Music.Base.FindArtist("queen")!.Style.ShouldBe("festif", "une correction est une modification de la base");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-028")]
+    public async Task TrackOfAnArtistMissingFromTheBase_InjectsTheArtistAsUnknown_OnceOnly()
+    {
+        await PlayAsync("Un titre", "Artiste Absolument Inconnu");
+
+        _runtime.Music.State.StyleName.ShouldBe("Inconnu");
+        var artist = _runtime.Music.Base.FindArtist("artiste absolument inconnu")!;
+        artist.Style.ShouldBe("inconnu");
+        artist.Code.ShouldNotBeEmpty();
+
+        await PlayAsync("Un autre titre", "Artiste Absolument Inconnu");
+
+        _runtime.Music.Base.SearchArtists("absolument", 10).ShouldHaveSingleItem();
     }
 
     [Fact]

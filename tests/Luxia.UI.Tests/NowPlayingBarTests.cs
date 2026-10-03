@@ -84,7 +84,7 @@ public sealed class NowPlayingBarTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-024")]
-    public void Correction_ChangesTheStyleAtOnce_AndWritesTheProjectFiles()
+    public void Correction_ChangesTheStyleAtOnce_AndWritesTheBase()
     {
         _vm.NowPlaying.SetManual("Radio Ga Ga", "Queen");
 
@@ -97,8 +97,47 @@ public sealed class NowPlayingBarTests : IAsyncLifetime
 
         // L'enregistrement dans le projet est différé de 1,5 s ; la fermeture du service l'écrit tout de suite.
         _host.Runtime.Music.Dispose();
-        File.Exists(Path.Combine(_host.ProjectFolder, "corrections.json")).ShouldBeTrue();
-        File.ReadAllText(Path.Combine(_host.ProjectFolder, "corrections.json")).ShouldContain("festif");
+        File.ReadAllText(Path.Combine(_host.ProjectFolder, "artistes.json")).ShouldContain("festif");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-024")]
+    public async Task CorrectingATitleOfAnUnknownArtist_AsksWhetherToApplyTheStyleToTheArtist()
+    {
+        _vm.NowPlaying.SetManual("Un titre", "Artiste Totalement Inconnu");
+        _host.Dialogs.ConfirmAnswer = true;
+
+        await _vm.NowPlaying.CorrectAsync("title:latino");
+
+        _host.Dialogs.Confirmations.ShouldHaveSingleItem().ShouldContain("Appliquer ce style à l'artiste");
+        _host.Runtime.Music.Base.FindArtist("artiste totalement inconnu")!.Style.ShouldBe("latino", "Oui : l'artiste entier");
+        _host.Runtime.Music.Base.TitlesOf("Artiste Totalement Inconnu").ShouldBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-024")]
+    public async Task CorrectingATitleOfAnUnknownArtist_NoKeepsItToThisTitle()
+    {
+        _vm.NowPlaying.SetManual("Un titre", "Artiste Totalement Inconnu");
+        _host.Dialogs.ConfirmAnswer = false;
+
+        await _vm.NowPlaying.CorrectAsync("title:latino");
+
+        _host.Runtime.Music.Base.FindArtist("artiste totalement inconnu")!.Style.ShouldBe("inconnu", "l'artiste reste à classer");
+        _host.Runtime.Music.Base.TitlesOf("Artiste Totalement Inconnu").ShouldHaveSingleItem().Style.ShouldBe("latino");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-024")]
+    public async Task CorrectingATitleOfAClassifiedArtist_AsksNothing()
+    {
+        _vm.NowPlaying.SetManual("Love of My Life", "Queen");
+
+        await _vm.NowPlaying.CorrectAsync("title:slow");
+
+        _host.Dialogs.Confirmations.ShouldBeEmpty();
+        _host.Runtime.Music.Base.FindArtist("queen")!.Style.ShouldBe("rock");
+        _host.Runtime.Music.Base.TitlesOf("Queen").ShouldContain(t => t.Style == "slow");
     }
 
     [Fact]
@@ -126,5 +165,6 @@ public sealed class NowPlayingBarTests : IAsyncLifetime
     {
         _vm.NowPlaying.Families.Count.ShouldBe(14);
         _vm.NowPlaying.Families.Select(f => f.Name).ShouldContain("Électro / Dance");
+        _vm.NowPlaying.Families.Select(f => f.Name).ShouldNotContain("Inconnu", "on n'impose ni ne corrige vers « Inconnu »");
     }
 }

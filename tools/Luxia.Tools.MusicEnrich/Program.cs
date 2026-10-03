@@ -2,13 +2,11 @@ using System.Globalization;
 using Luxia.Music.Base;
 using Luxia.Music.Classification;
 using Luxia.Music.Enrichment;
-using Luxia.Music.Identification;
-using Luxia.Music.Normalization;
 using Luxia.Persistence;
 
 // Enrichissement de la base musicale (MUS-040 à MUS-042) : à lancer à la maison, jamais en soirée (GEN-121).
-//   luxia-enrich "<dossier du projet>" [--max 100] [--journaux <dossier>] [--lastfm <clé>] [--cache <dossier>] [--hors-ligne]
-// Pour les artistes de la liste « À classer » (soirées jouées, playlists importées), interroge MusicBrainz (et Last.fm avec une clé
+//   luxia-enrich "<dossier du projet>" [--max 100] [--lastfm <clé>] [--cache <dossier>] [--hors-ligne]
+// Pour les artistes « Inconnu » de la base, interroge MusicBrainz (et Last.fm avec une clé
 // personnelle), convertit les étiquettes de genre en famille et ÉCRIT DES PROPOSITIONS dans propositions.json : rien n'entre dans la
 // base sans validation (LuXia → Base… → onglet « Propositions »).
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -16,32 +14,24 @@ CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("fr-FR");
 var options = ParseOptions(args);
 if (options.Project is null || !Directory.Exists(options.Project))
 {
-    Console.Error.WriteLine("Usage : luxia-enrich \"<dossier du projet>\" [--max 100] [--journaux <dossier>] [--lastfm <clé>] [--cache <dossier>] [--hors-ligne]");
+    Console.Error.WriteLine("Usage : luxia-enrich \"<dossier du projet>\" [--max 100] [--lastfm <clé>] [--cache <dossier>] [--hors-ligne]");
     return 1;
 }
 
 var paths = DataPaths.Current;
 var (musicBase, messages) = MusicStore.Load(options.Project);
+var previous = MusicStore.LoadProposals(options.Project);
 foreach (var message in messages)
 {
     Console.WriteLine("Base musicale : " + message);
 }
 
-var journals = options.Journals ?? paths.Logs;
-var entries = new List<EveningEntry>();
-if (Directory.Exists(journals))
-{
-    foreach (var file in Directory.EnumerateFiles(journals, "soiree-*.csv").Order(StringComparer.Ordinal))
-    {
-        entries.AddRange(EveningJournal.Parse(File.ReadAllText(file)));
-    }
-}
-
-var pending = MusicStore.LoadPending(options.Project).Items;
-var queue = ClassifyList.Build(entries, pending, musicBase, new TrackNormalizer(), new StyleIdentifier(musicBase));
-var previous = MusicStore.LoadProposals(options.Project);
-var artists = queue.Where(i => i.HasArtist).Select(i => i.Artist).Where(a => !previous.Rejected.Contains(a, StringComparer.OrdinalIgnoreCase)).ToList();
-Console.WriteLine($"{entries.Count} ligne(s) de journal, {pending.Count} titre(s) de playlist : {artists.Count} artiste(s) à classer.");
+// Les artistes à classer sont ceux de la base au style « Inconnu » (morceaux joués d'artistes absents de la base, playlists importées).
+var artists = musicBase.SearchArtists(null, int.MaxValue, Taxonomy.UnknownId)
+    .Select(a => a.Name)
+    .Where(a => !previous.Rejected.Contains(a, StringComparer.OrdinalIgnoreCase))
+    .ToList();
+Console.WriteLine($"{artists.Count} artiste(s) « Inconnu » à classer.");
 if (artists.Count == 0)
 {
     Console.WriteLine("Rien à proposer.");
@@ -84,7 +74,6 @@ return 0;
 static Options ParseOptions(string[] args)
 {
     string? project = null;
-    string? journals = null;
     string? cache = null;
     string? lastFm = null;
     var max = 100;
@@ -95,9 +84,6 @@ static Options ParseOptions(string[] args)
         {
             case "--max" when i + 1 < args.Length:
                 _ = int.TryParse(args[++i], NumberStyles.Integer, CultureInfo.InvariantCulture, out max);
-                break;
-            case "--journaux" when i + 1 < args.Length:
-                journals = args[++i];
                 break;
             case "--cache" when i + 1 < args.Length:
                 cache = args[++i];
@@ -114,7 +100,7 @@ static Options ParseOptions(string[] args)
         }
     }
 
-    return new Options(project is null ? null : Path.GetFullPath(project), Math.Max(1, max), journals, cache, lastFm, offline);
+    return new Options(project is null ? null : Path.GetFullPath(project), Math.Max(1, max), cache, lastFm, offline);
 }
 
-internal sealed record Options(string? Project, int Max, string? Journals, string? Cache, string? LastFmKey, bool Offline);
+internal sealed record Options(string? Project, int Max, string? Cache, string? LastFmKey, bool Offline);

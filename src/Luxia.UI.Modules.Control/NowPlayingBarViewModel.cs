@@ -22,6 +22,7 @@ public sealed partial class NowPlayingBarViewModel : ViewModelBase
     private const string Gray = "#8B949E";
 
     private readonly LuxiaRuntime _runtime;
+    private readonly IDialogService? _dialogs;
     private readonly JournalPanelViewModel _journal;
 
     [ObservableProperty]
@@ -61,11 +62,12 @@ public sealed partial class NowPlayingBarViewModel : ViewModelBase
     private string _emptyText = string.Empty;
 
     /// <summary>Crée le bloc sur le moteur en service.</summary>
-    public NowPlayingBarViewModel(LuxiaRuntime runtime, JournalPanelViewModel journal)
+    public NowPlayingBarViewModel(LuxiaRuntime runtime, JournalPanelViewModel journal, IDialogService? dialogs = null)
     {
         ArgumentNullException.ThrowIfNull(runtime);
         ArgumentNullException.ThrowIfNull(journal);
         _runtime = runtime;
+        _dialogs = dialogs;
         _journal = journal;
         Refresh();
     }
@@ -77,7 +79,7 @@ public sealed partial class NowPlayingBarViewModel : ViewModelBase
     public bool CanAct => HasTrack;
 
     /// <summary>Familles de styles pour les menus (charge la base musicale du projet au premier appel).</summary>
-    public IReadOnlyList<MusicFamily> Families => _runtime.Music.Families;
+    public IReadOnlyList<MusicFamily> Families => [.. _runtime.Music.Families.Where(f => f.Id != Luxia.Music.Base.Taxonomy.UnknownId)];
 
     /// <summary>Relit l'état de la lecture en cours et du style (appelé par le rafraîchissement de l'écran, 20 fois par seconde).</summary>
     public void Refresh()
@@ -122,6 +124,27 @@ public sealed partial class NowPlayingBarViewModel : ViewModelBase
                 ? $"Style détecté : {effective.FamilyName}, confiance {effective.Confidence:P0} ({effective.Detail}). « Corriger ▾ » pour le changer."
                 : "Style inconnu : le show suit l'énergie seule. « Corriger ▾ » pour l'apprendre à LuXia.";
     }
+
+    /// <summary>
+    /// Comme <see cref="Correct"/>, mais quand la correction vise « ce titre » d'un artiste encore « Inconnu », demande d'abord s'il faut
+    /// appliquer ce style à l'artiste (Oui) ou à ce titre seulement (Non) : classer un titre d'un inconnu, c'est souvent classer l'artiste.
+    /// </summary>
+    /// <param name="request">« title:identifiant » ou « artist:identifiant ».</param>
+    /// <returns>Une tâche terminée quand la correction est faite (ou abandonnée).</returns>
+    public async Task CorrectAsync(string request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        if (_dialogs is not null && request.StartsWith("title:", StringComparison.Ordinal) && Artist.Length > 0 && IsUnclassified(Artist)
+            && await _dialogs.ConfirmAsync("Artiste pas encore classé", $"« {Artist} » n'a pas encore de style dans la base.\n\nAppliquer ce style à l'artiste (tous ses titres) ?\nOui : l'artiste.  Non : ce titre seulement.").ConfigureAwait(true))
+        {
+            request = "artist:" + request["title:".Length..];
+        }
+
+        Correct(request);
+    }
+
+    private bool IsUnclassified(string artist) =>
+        _runtime.Music.Base.OwnerOf(artist) is not { } owner || owner.Style == Luxia.Music.Base.Taxonomy.UnknownId;
 
     /// <summary>Corrige le style du morceau en cours (MUS-024).</summary>
     /// <param name="request">« title:identifiant » (ce titre) ou « artist:identifiant » (cet artiste).</param>

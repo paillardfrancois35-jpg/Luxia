@@ -29,27 +29,31 @@ public sealed record Taxonomy
     public IReadOnlyList<MusicFamily> Families { get; init; } = [];
 }
 
-/// <summary>Un artiste de la base musicale (doc 21 §3.2).</summary>
+/// <summary>
+/// Un artiste de la base musicale (doc 21 §3.2, doc 50 §12j) : un code stable, un nom, des alias et <b>un seul style</b>. Les alias sont
+/// uniques dans toute la base (jamais le nom d'un autre artiste). « Inconnu » est un style comme un autre : un morceau d'un artiste absent
+/// de la base y est injecté pour être classé plus tard.
+/// </summary>
 public sealed record ArtistEntry
 {
+    /// <summary>Code stable (« A00012 »), attribué à la création ; ne change jamais, même si le nom change.</summary>
+    public string Code { get; init; } = string.Empty;
+
     /// <summary>Nom affiché.</summary>
     public string Name { get; init; } = string.Empty;
 
     /// <summary>Autres orthographes et noms courts.</summary>
     public IReadOnlyList<string> Aliases { get; init; } = [];
 
-    /// <summary>Identifiant de famille → poids (0 à 1) ; le plus fort est le style dominant.</summary>
-    public IReadOnlyDictionary<string, double> Styles { get; init; } = new Dictionary<string, double>();
-
-    /// <summary>Origine : <c>initial</c> (base livrée), <c>manuel</c>, <c>correction</c>, <c>enrichissement</c>.</summary>
-    public string Source { get; init; } = "manuel";
+    /// <summary>Identifiant de la famille (le style de l'artiste) ; <see cref="Taxonomy.UnknownId"/> si pas encore classé.</summary>
+    public string Style { get; init; } = Taxonomy.UnknownId;
 }
 
 /// <summary>Artistes de la base, enregistrés dans <c>artistes.json</c>.</summary>
 public sealed record ArtistSet
 {
-    /// <summary>Version courante du format de fichier.</summary>
-    public const int CurrentFormatVersion = 1;
+    /// <summary>Version courante du format de fichier (2 : un style par artiste, code stable, sans poids ni origine).</summary>
+    public const int CurrentFormatVersion = 2;
 
     /// <summary>Artistes.</summary>
     public IReadOnlyList<ArtistEntry> Artists { get; init; } = [];
@@ -70,57 +74,19 @@ public sealed record TitleEntry
     /// <summary>Version (« extended mix ») si le style est celui de cette version seulement ; <c>null</c> pour l'original.</summary>
     public string? Version { get; init; }
 
-    /// <summary>Identifiant de la famille.</summary>
+    /// <summary>Identifiant de la famille propre à ce titre ; vide = le titre suit le style de son artiste.</summary>
     public string Style { get; init; } = string.Empty;
 
     /// <summary>Tempo mémorisé (AUD-028) ; <c>null</c> si inconnu.</summary>
     public double? Bpm { get; init; }
-
-    /// <summary>Origine, comme pour les artistes.</summary>
-    public string Source { get; init; } = "manuel";
 }
 
 /// <summary>Titres de la base, enregistrés dans <c>titres.json</c>.</summary>
 public sealed record TitleSet
 {
-    /// <summary>Version courante du format de fichier.</summary>
-    public const int CurrentFormatVersion = 1;
+    /// <summary>Version courante du format de fichier (2 : sans origine ; le style est facultatif).</summary>
+    public const int CurrentFormatVersion = 2;
 
     /// <summary>Titres.</summary>
     public IReadOnlyList<TitleEntry> Titles { get; init; } = [];
-}
-
-/// <summary>Une correction faite en Live (MUS-024) : historique conservé.</summary>
-public sealed record StyleCorrection
-{
-    /// <summary>Date de la correction.</summary>
-    public DateTimeOffset At { get; init; }
-
-    /// <summary><c>title</c> (ce titre) ou <c>artist</c> (cet artiste).</summary>
-    public string Scope { get; init; } = "artist";
-
-    /// <summary>Artiste concerné.</summary>
-    public string Artist { get; init; } = string.Empty;
-
-    /// <summary>Titre concerné (étendue <c>title</c>).</summary>
-    public string? Title { get; init; }
-
-    /// <summary>Version du titre concernée, s'il y en a une.</summary>
-    public string? Version { get; init; }
-
-    /// <summary>Famille avant la correction ; <c>null</c> si inconnue.</summary>
-    public string? OldStyle { get; init; }
-
-    /// <summary>Famille choisie.</summary>
-    public string NewStyle { get; init; } = string.Empty;
-}
-
-/// <summary>Corrections faites en Live, enregistrées dans <c>corrections.json</c>.</summary>
-public sealed record CorrectionSet
-{
-    /// <summary>Version courante du format de fichier.</summary>
-    public const int CurrentFormatVersion = 1;
-
-    /// <summary>Corrections, de la plus ancienne à la plus récente.</summary>
-    public IReadOnlyList<StyleCorrection> Corrections { get; init; } = [];
 }
