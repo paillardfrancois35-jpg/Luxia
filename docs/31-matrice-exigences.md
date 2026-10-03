@@ -517,29 +517,29 @@
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
 | [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |
 
-## P9 – 23 exigences, 12 couvertes par des tests automatiques
+## P9 – 23 exigences, 15 couvertes par des tests automatiques
 
-> Abandonné : 1 · Partiel : 3 · Réalisé : 8 · Sans fiche : 11
+> Abandonné : 1 · Partiel : 3 · Réalisé : 12 · Sans fiche : 7
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [GEN-111](exigences/GEN-111.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-111](exigences/GEN-111.md) | I | Journal de soirée | Partiel | MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
 | [GEN-121](exigences/GEN-121.md) | I | (fiche manquante) | Sans fiche |  |
-| [LIVE-022](exigences/LIVE-022.md) | I | (fiche manquante) | Sans fiche |  |
+| [LIVE-022](exigences/LIVE-022.md) | I | Affichage du morceau en cours et du style détecté avec sa confiance | Réalisé | NowPlayingBarTests.IdentifiedTrack_ShowsTitleArtistStyleAndConfidence<br>NowPlayingBarTests.UnknownTrack_IsGray_AndTheStyleIsUnknown |
 | [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.SessionThatPlayedEarlier_TakesOverWhenTheFollowedOneDisappears<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
 | [MUS-002](exigences/MUS-002.md) | I | Événements MorceauChangé | Réalisé | NowPlayingTrackerTests.EmptyTitle_DuringATransition_KeepsTheCurrentTrack<br>NowPlayingTrackerTests.NewTrack_IsPublishedOnceAfterTheStabilization<br>NowPlayingTrackerTests.TitleThatFlickers_IsNotPublished |
 | [MUS-003](exigences/MUS-003.md) | I | Extraction titre, artiste, album, miniature, durée et position estimée | Partiel | NowPlayingTrackerTests.PlayerWithoutPosition_GivesNoPosition<br>NowPlayingTrackerTests.Position_IsInterpolatedWhilePlayingAndFrozenInPause<br>NowPlayingTrackerTests.Position_StaysWithinTheDurationAndHonoursTheRate |
 | [MUS-004](exigences/MUS-004.md) | I | Détection des publicités | Abandonné |  |
 | [MUS-005](exigences/MUS-005.md) | I | Gestion des titres YouTube | Réalisé | TrackNormalizerTests.AmbiguousPipe_KeepsBothReadings_ForTheIdentificationToDecide<br>TrackNormalizerTests.Credits_AreSplitOneByOne_AndTheFullNameIsKept<br>TrackNormalizerTests.PipeWithChannelInTheRemixTag_PutsTheTitleOnTheLeft_ThenKeepsTheOtherReading<br>TrackNormalizerTests.RawTitle_IsNormalizedAsExpected |
-| [MUS-006](exigences/MUS-006.md) | M | Si aucune application ne fournit d'informations, le système fonctionne quand même | Réalisé | BaseAndSessionTests.Clear_GivesNoStyle_AndLiftsAForcedStyle<br>BaseAndSessionTests.IdentificationRate_OnTheAnnotatedSet_IsAbove80PercentForKnownArtists_AndNoFalsePositive<br>BaseAndSessionTests.Session_WithoutTrack_HasNoStyle_AndAnUnknownTrackIsUnknown<br>MusicContextTests.NoTrack_GivesNoStyle<br>(+4) |
-| [MUS-007](exigences/MUS-007.md) | M | (fiche manquante) | Sans fiche | MusicStyleServiceTests.ManualTrack_IsIdentifiedLikeAPlayerTrack |
+| [MUS-006](exigences/MUS-006.md) | M | Si aucune application ne fournit d'informations, le système fonctionne quand même | Réalisé | BaseAndSessionTests.Clear_GivesNoStyle_AndLiftsAForcedStyle<br>BaseAndSessionTests.IdentificationRate_OnTheAnnotatedSet_IsAbove80PercentForKnownArtists_AndNoFalsePositive<br>BaseAndSessionTests.Session_WithoutTrack_HasNoStyle_AndAnUnknownTrackIsUnknown<br>MusicContextTests.NoTrack_GivesNoStyle<br>(+5) |
+| [MUS-007](exigences/MUS-007.md) | M | Saisie manuelle possible du morceau / du style depuis le Live | Réalisé | MusicStyleServiceTests.ManualTrack_IsIdentifiedLikeAPlayerTrack<br>NowPlayingBarTests.ManualEntry_IgnoresAnEmptyTitle |
 | [MUS-020](exigences/MUS-020.md) | I | Normalisation du §3 | Réalisé | TrackNormalizerTests.EmptyInput_GivesOneEmptyHypothesis<br>TrackNormalizerTests.Key_IsLowerCaseWithoutAccentsNorPunctuation<br>TrackNormalizerTests.Key_OfNull_IsEmpty<br>TrackNormalizerTests.RawTitle_IsNormalizedAsExpected<br>(+4) |
 | [MUS-021](exigences/MUS-021.md) | I | Chaîne d'identification du §3 | Réalisé | BaseAndSessionTests.IdentificationRate_OnTheAnnotatedSet_IsAbove80PercentForKnownArtists_AndNoFalsePositive<br>BaseAndSessionTests.ReplaceBase_RecomputesTheCurrentTrack<br>BaseAndSessionTests.Seed_HasSeveralHundredArtists_AllInKnownFamilies_WithoutDuplicates<br>BaseAndSessionTests.Session_PublishesTheStyleOfTheTrack_WithConfidenceAndMethod<br>(+27) |
 | [MUS-022](exigences/MUS-022.md) | I | Temps d'identification < 200 ms pour une base de 50 000 titres et 10 000 artistes | Réalisé | BaseAndSessionTests.Identification_On50000Titles_And10000Artists_TakesLessThan200Milliseconds |
-| [MUS-023](exigences/MUS-023.md) | I | Taxonomie modifiable | Partiel | BaseAndSessionTests.Taxonomy_Has14Families_FindableByIdNamePartOrLabel |
-| [MUS-024](exigences/MUS-024.md) | I | Correction en Live | Partiel | BaseAndSessionTests.Correction_ForTheArtist_IsImmediate_AndAppliesToOtherTitlesOfTheArtist<br>BaseAndSessionTests.Correction_ForTheTitle_LeavesTheOtherTitlesAlone<br>BaseAndSessionTests.Correction_NeedsATrackAnArtistAndAKnownFamily<br>MusicStyleServiceTests.Correction_IsImmediate_AndRemembered<br>(+2) |
-| [MUS-025](exigences/MUS-025.md) | I | (fiche manquante) | Sans fiche |  |
-| [MUS-026](exigences/MUS-026.md) | I | Style forcé | Réalisé | BaseAndSessionTests.ForcedStyle_BeatsTheDetection_AndEndsWithTheTrackByDefault<br>BaseAndSessionTests.ForcedStyle_CanLastAcrossTracks_UntilCancelled<br>MusicContextTests.ForcedStyle_BeatsTheDetected_AndTheSimulatedBeatsBoth<br>MusicContextTests.ForcedStyle_IsReleasedBackToTheDetection<br>(+1) |
+| [MUS-023](exigences/MUS-023.md) | I | Taxonomie modifiable | Partiel | BaseAndSessionTests.Taxonomy_Has14Families_FindableByIdNamePartOrLabel<br>NowPlayingBarTests.Menus_ListTheFamiliesOfTheTaxonomy |
+| [MUS-024](exigences/MUS-024.md) | I | Correction en Live | Réalisé | BaseAndSessionTests.Correction_ForTheArtist_IsImmediate_AndAppliesToOtherTitlesOfTheArtist<br>BaseAndSessionTests.Correction_ForTheTitle_LeavesTheOtherTitlesAlone<br>BaseAndSessionTests.Correction_NeedsATrackAnArtistAndAKnownFamily<br>MusicStyleServiceTests.Correction_IsImmediate_AndRemembered<br>(+4) |
+| [MUS-025](exigences/MUS-025.md) | I | Journal de soirée | Réalisé | MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
+| [MUS-026](exigences/MUS-026.md) | I | Style forcé | Réalisé | BaseAndSessionTests.ForcedStyle_BeatsTheDetection_AndEndsWithTheTrackByDefault<br>BaseAndSessionTests.ForcedStyle_CanLastAcrossTracks_UntilCancelled<br>MusicContextTests.ForcedStyle_BeatsTheDetected_AndTheSimulatedBeatsBoth<br>MusicContextTests.ForcedStyle_IsReleasedBackToTheDetection<br>(+2) |
 | [MUS-027](exigences/MUS-027.md) | M | (fiche manquante) | Sans fiche |  |
 | [MUS-028](exigences/MUS-028.md) | M | (fiche manquante) | Sans fiche |  |
 | [MUS-029](exigences/MUS-029.md) | S | (fiche manquante) | Sans fiche |  |

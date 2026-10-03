@@ -100,6 +100,34 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
         _runtime.Music.State.StyleName.ShouldBe("Disco / Funk / Soul");
     }
 
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    [Trait("Exigence", "GEN-111")]
+    public async Task EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+        _runtime.Music.Force("Latino");
+        await PlayAsync("Un titre; avec \"guillemets\"", "Artiste Totalement Inconnu");
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 4);
+        var lines = ReadLines(path);
+
+        lines[0].ShouldBe(EveningLog.Header);
+        lines.ShouldContain(l => l.Contains(";Radio Ga Ga;Queen;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains(";Latino;100;imposé;oui;", StringComparison.Ordinal), "le style imposé ajoute une ligne");
+        lines.ShouldContain(l => l.Contains("\"Un titre; avec \"\"guillemets\"\"\"", StringComparison.Ordinal), "les ; et les guillemets sont protégés");
+        lines.ShouldContain(l => l.Contains(";Inconnu;0;aucune;", StringComparison.Ordinal));
+        File.ReadAllBytes(path).Take(3).ShouldBe(new byte[] { 0xEF, 0xBB, 0xBF }, "UTF-8 avec marque d'ordre des octets, pour Excel");
+    }
+
+    private static string[] ReadLines(string path)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd().Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+    }
+
     private async Task PlayAsync(string title, string artist)
     {
         _media.Set(new MediaSessionInfo("Deezer", "Deezer", title, artist, string.Empty, MediaPlayback.Playing, null, null, TimeSpan.Zero));

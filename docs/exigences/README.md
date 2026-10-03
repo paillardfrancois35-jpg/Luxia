@@ -342,6 +342,7 @@
 | [GEN-108](GEN-108.md) | Taille de police réglable | P1 | S | Non réalisé |
 | [GEN-109](GEN-109.md) | Opérations longues sans figer l'interface | P1 | I | Réalisé |
 | [GEN-110](GEN-110.md) | Journal technique | P0 | I | Réalisé |
+| [GEN-111](GEN-111.md) | Journal de soirée | P9 | I | Partiel |
 | [GEN-112](GEN-112.md) | Journal des commandes consultable | P4 | M | Réalisé |
 | [GEN-113](GEN-113.md) | Enregistrement des trames d'une session | P4 | S | Partiel |
 | [GEN-114](GEN-114.md) | Menu « À propos » avec diagnostic copiable | P3 | M | Réalisé |
@@ -398,6 +399,7 @@
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-020](LIVE-020.md) | Affichage du tempo à l'écran de jeu | P7 | I | Réalisé |
 | [LIVE-021](LIVE-021.md) | Commandes de tempo à l'écran de jeu | P7 | I | Réalisé |
+| [LIVE-022](LIVE-022.md) | Affichage du morceau en cours et du style détecté avec sa confiance | P9 | I | Réalisé |
 | [LIVE-023](LIVE-023.md) | Zone Show | P8 | I | Validé |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
@@ -470,11 +472,13 @@
 | [MUS-004](MUS-004.md) | Détection des publicités | P9 | I | Abandonné |
 | [MUS-005](MUS-005.md) | Gestion des titres YouTube | P9 | I | Réalisé |
 | [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Réalisé |
+| [MUS-007](MUS-007.md) | Saisie manuelle possible du morceau / du style depuis le Live | P9 | M | Réalisé |
 | [MUS-020](MUS-020.md) | Normalisation du §3 | P9 | I | Réalisé |
 | [MUS-021](MUS-021.md) | Chaîne d'identification du §3 | P9 | I | Réalisé |
 | [MUS-022](MUS-022.md) | Temps d'identification < 200 ms pour une base de 50 000 titres et 10 000 artistes | P9 | I | Réalisé |
 | [MUS-023](MUS-023.md) | Taxonomie modifiable | P9 | I | Partiel |
-| [MUS-024](MUS-024.md) | Correction en Live | P9 | I | Partiel |
+| [MUS-024](MUS-024.md) | Correction en Live | P9 | I | Réalisé |
+| [MUS-025](MUS-025.md) | Journal de soirée | P9 | I | Réalisé |
 | [MUS-026](MUS-026.md) | Style forcé | P9 | I | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |

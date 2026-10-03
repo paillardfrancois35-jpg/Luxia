@@ -127,6 +127,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
         // Style du morceau en cours (P9, doc 21 §3) : identification du titre, style pour les shows, corrections en Live.
         Music = new MusicStyleService(Project, Engine, Bus, Clock, NowPlaying, loggers.CreateLogger<MusicStyleService>());
+        EveningLog = new EveningLog(Bus, paths.Logs, loggers.CreateLogger<EveningLog>());
 
         Engine.Send(new Messaging.Commands.SetTempoLatencyCommand(Messaging.Commands.CommandOrigin.Tool, Preferences.Current.Audio.LatencyFor(Preferences.Current.Audio.DeviceId)));
 
@@ -151,6 +152,9 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
 
     /// <summary>Style du morceau en cours : identification, style imposé, corrections en Live (P9, doc 21).</summary>
     public MusicStyleService Music { get; }
+
+    /// <summary>Journal de soirée : un fichier par jour, une ligne par morceau (GEN-111, MUS-025).</summary>
+    public EveningLog EveningLog { get; }
 
     /// <summary>
     /// Démarre ou arrête l'écoute du son joué par le PC et le mémorise dans les préférences du poste. Sans écoute, la source
@@ -554,6 +558,7 @@ public sealed partial class LuxiaRuntime : IAsyncDisposable
         Midi?.Dispose();
         Audio?.Dispose();
         Music.Dispose();
+        EveningLog.Dispose();
         NowPlaying?.Dispose();
         Loop.Stop();
         _sleepInhibitor.Dispose();

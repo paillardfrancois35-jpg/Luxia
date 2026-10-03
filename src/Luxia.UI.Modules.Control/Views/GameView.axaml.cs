@@ -67,6 +67,8 @@ public partial class GameView : UserControl
 
             menu.ShowAt(forceButton);
         };
+        WireNowPlayingButtons();
+
         // Saisie du BPM : l'affichage ne l'écrase pas pendant la frappe ; la valeur est appliquée en quittant le champ (Entrée l'applique aussi).
         var bpmBox = this.FindControl<TextBox>("BpmBox")!;
         bpmBox.GotFocus += (_, _) => ViewModel?.Tempo.BeginEdit();
@@ -78,6 +80,84 @@ public partial class GameView : UserControl
         {
             app.DataTemplates.Add(new ControlPanelTemplate());
         }
+    }
+
+    // Bloc « Morceau en cours » (P9) : menus construits au clic, avec les familles de la base musicale du projet.
+    private void WireNowPlayingButtons()
+    {
+        var correct = this.FindControl<Button>("CorrectStyleButton")!;
+        correct.Click += (_, _) =>
+        {
+            if (ViewModel?.NowPlaying is not { } bar)
+            {
+                return;
+            }
+
+            var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+            foreach (var (scope, header) in new[] { ("title", "Pour ce titre seulement ▸"), ("artist", "Pour tous les titres de cet artiste ▸") })
+            {
+                var parent = new MenuItem { Header = header };
+                foreach (var family in bar.Families)
+                {
+                    var item = new MenuItem { Header = family.Name };
+                    var request = $"{scope}:{family.Id}";
+                    item.Click += (_, _) => bar.Correct(request);
+                    parent.Items.Add(item);
+                }
+
+                menu.Items.Add(parent);
+            }
+
+            menu.ShowAt(correct);
+        };
+
+        var force = this.FindControl<Button>("ForceStyleButton")!;
+        force.Click += (_, _) =>
+        {
+            if (ViewModel?.NowPlaying is not { } bar)
+            {
+                return;
+            }
+
+            var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
+            foreach (var family in bar.Families)
+            {
+                var item = new MenuItem { Header = family.Name };
+                var id = family.Id;
+                item.Click += (_, _) => bar.Force(id);
+                menu.Items.Add(item);
+            }
+
+            menu.Items.Add(new Separator());
+            var revert = new MenuItem { Header = "↺ Revenir à la détection automatique" };
+            revert.Click += (_, _) => bar.Force(null);
+            menu.Items.Add(revert);
+            menu.ShowAt(force);
+        };
+
+        var manual = this.FindControl<Button>("ManualTrackButton")!;
+        manual.Click += (_, _) =>
+        {
+            if (ViewModel?.NowPlaying is not { } bar)
+            {
+                return;
+            }
+
+            var title = new TextBox { PlaceholderText = "Titre", Width = 280 };
+            var artist = new TextBox { PlaceholderText = "Artiste", Width = 280 };
+            var ok = new Button { Content = "Identifier ce morceau", HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right };
+            var flyout = new Flyout
+            {
+                Placement = PlacementMode.BottomEdgeAlignedRight,
+                Content = new StackPanel { Spacing = 6, Children = { new TextBlock { Text = "Morceau joué (aucun lecteur ne l'annonce)" }, title, artist, ok } },
+            };
+            ok.Click += (_, _) =>
+            {
+                bar.SetManual(title.Text, artist.Text);
+                flyout.Hide();
+            };
+            flyout.ShowAt(manual);
+        };
     }
 
     private GameViewModel? ViewModel => DataContext as GameViewModel;

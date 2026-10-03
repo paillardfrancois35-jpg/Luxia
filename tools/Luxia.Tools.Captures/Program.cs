@@ -137,6 +137,19 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Capture("Contrôle - écran de jeu resserré");
     game.Columns.IsCompact = false;
 
+    // P9 : bloc « Morceau en cours » (LIVE-022) : morceau identifié, morceau inconnu avec style imposé, titre très long.
+    runtime.Music.SetManualTrack("Radio Ga Ga", "Queen");
+    Tick(4);
+    Capture("Contrôle - morceau identifié");
+    runtime.Music.SetManualTrack("Un titre que personne ne connaît", "Artiste Totalement Inconnu");
+    runtime.Music.Force("Latino");
+    Tick(4);
+    Capture("Contrôle - morceau inconnu, style imposé");
+    runtime.Music.Force(null);
+    runtime.Music.SetManualTrack("Tous les cris les S.O.S. (Kokwak Hardstyle Remix) – version très longue avec beaucoup de mots pour vérifier la coupure du texte", "Daniel Balavoine & un invité au nom particulièrement long");
+    Tick(4);
+    Capture("Contrôle - titre long");
+
     // F8 : la même chose à 125 %.
     vm.SetUiScaleCommand.Execute("1.25");
     Capture("Contrôle - écran de jeu 125 %");
