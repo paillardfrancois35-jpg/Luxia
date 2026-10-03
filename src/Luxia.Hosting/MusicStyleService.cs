@@ -219,6 +219,7 @@ public sealed class MusicStyleService : IDisposable
             state.Forced,
             state.Title,
             state.Artist,
+            state.App,
             _clock.Now));
         StateChanged?.Invoke(this, state);
     }

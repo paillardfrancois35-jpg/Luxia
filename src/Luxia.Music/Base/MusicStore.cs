@@ -21,6 +21,10 @@ public static class MusicStore
     /// <summary>Fichier des corrections.</summary>
     public const string CorrectionsFile = "corrections.json";
 
+    /// <summary>Fichier des titres à classer venus de playlists importées.</summary>
+    public const string PendingFile = "aclasser.json";
+
+    private static readonly DocumentType<Classification.PendingSet> PendingType = new("à classer", Classification.PendingSet.CurrentFormatVersion, []);
     private static readonly DocumentType<Taxonomy> TaxonomyType = new("taxonomie", Taxonomy.CurrentFormatVersion, []);
     private static readonly DocumentType<ArtistSet> ArtistsType = new("artistes", ArtistSet.CurrentFormatVersion, []);
     private static readonly DocumentType<TitleSet> TitlesType = new("titres", TitleSet.CurrentFormatVersion, []);
@@ -50,6 +54,18 @@ public static class MusicStore
 
         return (new MusicBase(taxonomy.Value.Families.Count == 0 ? DefaultTaxonomy.Value : taxonomy.Value, artists.Value, titles.Value, corrections.Value), messages);
     }
+
+    /// <summary>Charge les titres à classer venus de playlists importées (MUS-029) ; absent = aucun.</summary>
+    /// <param name="projectFolder">Dossier du projet.</param>
+    /// <returns>Les titres en attente.</returns>
+    public static Classification.PendingSet LoadPending(string projectFolder) =>
+        ProjectPartStore.Load(projectFolder, PendingFile, PendingType, () => new Classification.PendingSet()).Value;
+
+    /// <summary>Enregistre les titres à classer venus de playlists importées.</summary>
+    /// <param name="projectFolder">Dossier du projet.</param>
+    /// <param name="pending">Titres en attente.</param>
+    public static void SavePending(string projectFolder, Classification.PendingSet pending) =>
+        ProjectPartStore.Save(projectFolder, PendingFile, pending, PendingType);
 
     /// <summary>Enregistre la base d'un projet (artistes, titres, corrections ; la taxonomie seulement si elle diffère de celle livrée).</summary>
     /// <param name="projectFolder">Dossier du projet.</param>

@@ -7,14 +7,14 @@ namespace Luxia.Hosting;
 
 /// <summary>
 /// Journal de soirée (GEN-111, MUS-025) : un fichier par jour, <c>Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv</c>, avec une ligne par
-/// morceau (heure, titre, artiste, style, confiance, méthode, style imposé, correction, show en cours). Une ligne de plus quand le style
+/// morceau (heure, titre, artiste, application, style, confiance, méthode, style imposé, show en cours). Une ligne de plus quand le style
 /// est imposé ou corrigé. Les morceaux non identifiés ou peu sûrs alimentent l'écran « À classer » (MUS-028) : le journal sert à
 /// enrichir la base musicale à la maison. Séparateur « ; », UTF-8 avec marque d'ordre des octets (ouvre dans Excel).
 /// </summary>
 public sealed class EveningLog : IDisposable
 {
     /// <summary>En-tête du fichier.</summary>
-    public const string Header = "heure;titre;artiste;style;confiance;méthode;imposé;show";
+    public const string Header = "heure;titre;artiste;application;style;confiance;méthode;imposé;show";
 
     private readonly string _folder;
     private readonly ILogger _logger;
@@ -98,6 +98,7 @@ public sealed class EveningLog : IDisposable
                 now.ToString("HH:mm:ss", CultureInfo.InvariantCulture),
                 Cell(e.Title),
                 Cell(e.Artist),
+                Cell(e.App),
                 Cell(e.FamilyName),
                 (e.Confidence * 100).ToString("0", CultureInfo.InvariantCulture),
                 Cell(e.Method),

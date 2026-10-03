@@ -8,12 +8,12 @@ namespace Luxia.Music.Base;
 /// l'identification reste sous les 200 ms même avec 50 000 titres et 10 000 artistes (MUS-022). Sûre pour plusieurs fils : une
 /// correction faite à l'écran n'attend jamais plus que la durée d'une recherche.
 /// </summary>
-public sealed class MusicBase
+public sealed partial class MusicBase
 {
     private const int MaxFuzzyCandidates = 60;
 
     private readonly object _gate = new();
-    private readonly List<ArtistRecord> _artists = [];
+    private readonly List<ArtistRecord?> _artists = [];
     private readonly Dictionary<string, int> _artistByKey = new(StringComparer.Ordinal);
     private readonly Dictionary<string, List<int>> _grams = new(StringComparer.Ordinal);
     private readonly Dictionary<string, List<TitleRecord>> _titlesByArtist = new(StringComparer.Ordinal);
@@ -68,7 +68,7 @@ public sealed class MusicBase
         {
             lock (_gate)
             {
-                return _artists.Count;
+                return _artists.Count(a => a is not null);
             }
         }
     }
@@ -120,7 +120,7 @@ public sealed class MusicBase
     {
         lock (_gate)
         {
-            return _artistByKey.TryGetValue(key, out var index) ? _artists[index].Entry : null;
+            return _artistByKey.TryGetValue(key, out var index) ? _artists[index]!.Entry : null;
         }
     }
 
@@ -147,7 +147,11 @@ public sealed class MusicBase
             var result = new List<(ArtistEntry, double)>();
             foreach (var (index, _) in counts.OrderByDescending(c => c.Value).Take(MaxFuzzyCandidates))
             {
-                var record = _artists[index];
+                if (_artists[index] is not { } record)
+                {
+                    continue;
+                }
+
                 var best = record.Keys.Max(k => FuzzyMatch.Score(key, k));
                 if (best >= threshold)
                 {
@@ -278,7 +282,7 @@ public sealed class MusicBase
     {
         lock (_gate)
         {
-            return new ArtistSet { Artists = [.. _artists.Select(a => a.Entry)] };
+            return new ArtistSet { Artists = [.. _artists.OfType<ArtistRecord>().Select(a => a.Entry)] };
         }
     }
 
@@ -312,10 +316,10 @@ public sealed class MusicBase
     }
 
     private string Canonical(string artistKey) =>
-        _artistByKey.TryGetValue(artistKey, out var index) ? _artists[index].Key : artistKey;
+        _artistByKey.TryGetValue(artistKey, out var index) ? _artists[index]!.Key : artistKey;
 
     private string CanonicalName(string artist) =>
-        _artistByKey.TryGetValue(TextKey.Of(artist), out var index) ? _artists[index].Entry.Name : artist;
+        _artistByKey.TryGetValue(TextKey.Of(artist), out var index) ? _artists[index]!.Entry.Name : artist;
 
     private void IndexFamilies()
     {
@@ -367,7 +371,7 @@ public sealed class MusicBase
 
     private void ReplaceArtist(int index, ArtistEntry entry)
     {
-        var old = _artists[index];
+        var old = _artists[index]!;
         var keys = new[] { TextKey.Of(entry.Name) }.Concat(entry.Aliases.Select(TextKey.Of)).Where(k => k.Length > 0).Distinct().ToArray();
         foreach (var key in old.Keys.Where(k => _artistByKey.TryGetValue(k, out var i) && i == index))
         {
@@ -375,7 +379,7 @@ public sealed class MusicBase
         }
 
         _artists[index] = new ArtistRecord(entry, old.Key, [.. keys.Union(old.Keys)]);
-        IndexArtist(index, _artists[index].Keys);
+        IndexArtist(index, _artists[index]!.Keys);
     }
 
     private void IndexArtist(int index, string[] keys)
@@ -401,7 +405,7 @@ public sealed class MusicBase
 
     private void AddTitle(TitleEntry entry)
     {
-        var artistKey = _artistByKey.TryGetValue(TextKey.Of(entry.Artist), out var index) ? _artists[index].Key : TextKey.Of(entry.Artist);
+        var artistKey = _artistByKey.TryGetValue(TextKey.Of(entry.Artist), out var index) ? _artists[index]!.Key : TextKey.Of(entry.Artist);
         var keys = new[] { TextKey.Of(entry.Title) }.Concat(entry.Aliases.Select(TextKey.Of)).Where(k => k.Length > 0).Distinct().ToArray();
         if (keys.Length == 0)
         {

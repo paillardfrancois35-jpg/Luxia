@@ -27,8 +27,9 @@ public sealed record TrackChanged(string Title, string Artist, string Album, str
 /// <param name="Forced">Le style a été imposé à la main.</param>
 /// <param name="Title">Titre brut du morceau.</param>
 /// <param name="Artist">Artiste brut du morceau.</param>
+/// <param name="App">Application source (« Deezer », « Chrome », « saisie manuelle »).</param>
 /// <param name="At">Instant (horloge du moteur).</param>
-public sealed record StyleDetected(string FamilyId, string FamilyName, double Confidence, string Method, bool Forced, string Title, string Artist, TimeSpan At);
+public sealed record StyleDetected(string FamilyId, string FamilyName, double Confidence, string Method, bool Forced, string Title, string Artist, string App, TimeSpan At);
 
 /// <summary>EVT-041 <c>LectureDémarrée</c> / <c>LectureEnPause</c> : la lecture du morceau suivi démarre ou s'arrête.</summary>
 /// <param name="Playing">La lecture est en cours (<c>true</c>) ; en pause ou arrêtée (<c>false</c>).</param>

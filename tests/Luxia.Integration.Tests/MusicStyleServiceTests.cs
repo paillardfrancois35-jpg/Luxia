@@ -114,7 +114,7 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
         var lines = ReadLines(path);
 
         lines[0].ShouldBe(EveningLog.Header);
-        lines.ShouldContain(l => l.Contains(";Radio Ga Ga;Queen;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains(";Radio Ga Ga;Queen;Deezer;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
         lines.ShouldContain(l => l.Contains(";Latino;100;imposé;oui;", StringComparison.Ordinal), "le style imposé ajoute une ligne");
         lines.ShouldContain(l => l.Contains("\"Un titre; avec \"\"guillemets\"\"\"", StringComparison.Ordinal), "les ; et les guillemets sont protégés");
         lines.ShouldContain(l => l.Contains(";Inconnu;0;aucune;", StringComparison.Ordinal));
