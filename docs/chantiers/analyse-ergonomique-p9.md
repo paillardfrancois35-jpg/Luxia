@@ -4,7 +4,7 @@
 > (`luxia-captures`, 1680 × 1050) **avant l'essai** : elle sera complétée par ce que l'utilisateur dira à l'essai. Statuts :
 > ⏳ proposé · ❓ décision de l'utilisateur · ✅ fait.
 
-> **Mise à jour du 2026-10-03 (après le premier essai, 1.011.072)** : les constats sur la fenêtre « Base musicale » ci-dessous portent sur l'**ancienne** fenêtre ; elle a été
+> **Mise à jour du 2026-10-03 (après le premier essai, 1.011.075)** : les constats sur la fenêtre « Base musicale » ci-dessous portent sur l'**ancienne** fenêtre ; elle a été
 > refaite en « liste + fiche » ([doc 60 §4.11](../60-ergonomie.md), ERG-040 à ERG-042) : captures [fiche](captures-p9/base-musicale-fiche.png),
 > [fiche modifiée](captures-p9/base-musicale-fiche-modifiee.png), [À classer](captures-p9/base-musicale-a-classer.png). **Reste à auditer** (Q59) : les autres écrans
 > « liste + fiche » (Bibliothèque, Installation, effets, scènes, shows) face à cette charte ; l'analyse complète est à proposer avant la validation de la v1.011.

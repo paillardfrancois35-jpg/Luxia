@@ -22,7 +22,7 @@
 | Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P7 – Audio et tempo | Validée | `p7/audio-tempo` (fusionnée dans `main`, `v1.009`) | [demos/P7-audio-tempo.md](demos/P7-audio-tempo.md) | ✅ 2026-10-02, matériel réel (essai, re-vérifications 1 à 3, lot ergonomique ; [résultats](essais/P7-resultats.md)) ; bloc BPM et écoute essayés à la main par l'utilisateur pendant le développement (« très correct, impressionnant ») |
 | P8 – Show & séquences | Validée | `p8/show-sequences` (fusionnée dans `main`, `v1.010`) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ✅ 2026-10-02, matériel réel, essai en discussion test (v1.010.079 → .104, [résultats](essais/P8-resultats.md)) puis contrôle final (1.010.116) ; réserves : ex. 5, 6, 7 non refaits après les correctifs, fumée non testée |
-| P9 – Lecture & Style | Développée | `p9/lecture-style` (v1.011 en développement) | [demos/P9-lecture-et-style.md](demos/P9-lecture-et-style.md) | 🟡 **1er essai fait le 2026-10-03** (1.011.051, [résultats](essais/P9-resultats.md) : 22 exemples conformes, 6 anomalies) ; **correctifs et refonte de la Base musicale faits** (lots 1 à 5, 1.011.072) ⏳ à re-vérifier dans la discussion test ; PoC-3 fait le 2026-10-03 ([résultats](essais/P9-poc3.md)) |
+| P9 – Lecture & Style | Développée | `p9/lecture-style` (v1.011 en développement) | [demos/P9-lecture-et-style.md](demos/P9-lecture-et-style.md) | 🟡 **1er essai fait le 2026-10-03** (1.011.051, [résultats](essais/P9-resultats.md) : 22 exemples conformes, 6 anomalies) ; **correctifs et refonte de la Base musicale faits** (lots 1 à 5, 1.011.075) ⏳ à re-vérifier dans la discussion test ; PoC-3 fait le 2026-10-03 ([résultats](essais/P9-poc3.md)) |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -335,7 +335,7 @@
   **Pièges vécus** (doc 03 §11) : l'enregistrement en UTF-8 sous PowerShell 5.1 (double encodage), les accents graves dans les chaînes (caractères de
   contrôle), un alias de commande de suppression qui masque une fonction du même nom, les fins de ligne mixtes.
 
-- **P9 – suite du premier essai (2026-10-03, discussion dev, version 1.011.072)**. Résultats : [essais/P9-resultats.md](essais/P9-resultats.md). Mandat de
+- **P9 – suite du premier essai (2026-10-03, discussion dev, version 1.011.075)**. Résultats : [essais/P9-resultats.md](essais/P9-resultats.md). Mandat de
   l'utilisateur : « tous les lots d'une traite », décisions présentées à la fin, tout sur la branche `p9/lecture-style` avant `v1.011`. Livré, un commit par lot :
   1. **Anomalies** : artistes séparés par « et », « and », « y » reconnus un à un (A) ; journal de soirée à **une ligne par événement**, titre et artiste nettoyés
      + valeurs brutes (G) ; traces des sessions média vues par Windows et renouvellement du gestionnaire après 30 s sans session (F, non reproduite) ; pause / reprise
