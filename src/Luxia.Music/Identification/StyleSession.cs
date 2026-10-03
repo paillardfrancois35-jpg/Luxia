@@ -12,7 +12,8 @@ namespace Luxia.Music.Identification;
 /// <param name="Detected">Style trouvé par la chaîne d'identification.</param>
 /// <param name="Effective">Style retenu : le style imposé à la main (CMD-062) s'il y en a un, sinon le style trouvé.</param>
 /// <param name="Forced">Le style retenu a été imposé à la main.</param>
-public sealed record StyleState(bool HasTrack, string Title, string Artist, string App, NormalizedTrack? Normalized, StyleResult Detected, StyleResult Effective, bool Forced)
+/// <param name="Serial">Numéro du morceau : augmente à chaque nouveau morceau (ou saisie) et ne change pas quand seul le style change (imposé, corrigé).</param>
+public sealed record StyleState(bool HasTrack, string Title, string Artist, string App, NormalizedTrack? Normalized, StyleResult Detected, StyleResult Effective, bool Forced, int Serial = 0)
 {
     /// <summary>Aucun morceau.</summary>
     public static StyleState None { get; } = new(false, string.Empty, string.Empty, string.Empty, null, StyleResult.Unknown, StyleResult.Unknown, false);
@@ -48,6 +49,7 @@ public sealed class StyleSession
     private StyleState _state = StyleState.None;
     private StyleResult? _forced;
     private string _genres = string.Empty;
+    private int _serial;
 
     /// <summary>Crée la session.</summary>
     /// <param name="musicBase">Base musicale.</param>
@@ -134,6 +136,7 @@ public sealed class StyleSession
             }
 
             _genres = genres ?? string.Empty;
+            _serial++;
             var normalized = _normalizer.Normalize(title, artist, app);
             _state = Identify(normalized, title ?? string.Empty, artist ?? string.Empty, app ?? string.Empty);
             state = _state;
@@ -155,7 +158,8 @@ public sealed class StyleSession
                 _forced = null;
             }
 
-            _state = StyleState.None;
+            _serial++;
+            _state = StyleState.None with { Serial = _serial };
             state = _state;
         }
 
@@ -255,6 +259,6 @@ public sealed class StyleSession
     {
         var detected = _identifier.Identify(normalized, _genres);
         var effective = _forced ?? detected;
-        return new StyleState(true, title, artist, app, normalized, detected, effective, _forced is not null);
+        return new StyleState(true, title, artist, app, normalized, detected, effective, _forced is not null, _serial);
     }
 }

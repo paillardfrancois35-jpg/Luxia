@@ -118,6 +118,7 @@
               <StackPanel Spacing="6">
                 <TextBlock Classes="section" Text="{Binding SelectedToClassify.Item.Artist}" />
                 <TextBlock Text="{Binding SelectedToClassify.TitlesText}" TextWrapping="Wrap" Foreground="#C9D1D9" />
+                <TextBlock Text="{Binding SelectedToClassify.GuessText}" Foreground="#D29922" FontSize="12" />
                 <TextBlock Text="{Binding SelectedToClassify.Item.Source, StringFormat='Origine : {0}'}" Foreground="#8B949E" FontSize="12" />
               </StackPanel>
             </Border>

@@ -55,7 +55,7 @@ public sealed class SequencingScreensTests : IAsyncLifetime
     [Trait("Exigence", "SHOW-026")]
     public void ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt()
     {
-        _game.Columns.Shows.Shows.Count.ShouldBe(7);
+        _game.Columns.Shows.Shows.Count.ShouldBe(9, "7 shows de P8 et 2 de P9");
         _game.Columns.Shows.Sequences.Count.ShouldBe(6);
         _game.Band.IsVisible.ShouldBeFalse("rien ne joue : pas de bandeau");
 

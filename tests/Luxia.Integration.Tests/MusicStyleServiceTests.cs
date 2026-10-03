@@ -1,8 +1,8 @@
 using Luxia.Hosting;
 using Luxia.Media;
 using Luxia.Messaging.Events;
-using Luxia.Persistence;
 using Luxia.Music.Identification;
+using Luxia.Persistence;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Luxia.Integration.Tests;

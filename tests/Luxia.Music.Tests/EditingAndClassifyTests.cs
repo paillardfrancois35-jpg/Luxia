@@ -283,6 +283,22 @@ public sealed class EditingAndClassifyTests
 
     [Fact]
     [Trait("Exigence", "MUS-029")]
+    public void GuideExamplePlaylist_GivesTheBilanAnnouncedInTheP9Guide()
+    {
+        // Même contenu que docs/demos/P9-exemple-playlist.csv (le guide d'essai annonce ce bilan).
+        const string csv = "artiste;titre;style\nQueen;Radio Ga Ga;\nDaft Punk;One More Time;\nLes Vagabonds Imaginaires;La java du quartier;Bal\n" +
+            "Orchestre Imaginaire;Valse du dimanche;\nAya Nakamura;Djadja;hip-hop\nUn Artiste Que Personne Ne Connaît;Son premier tube;\n" +
+            "Maître Gims;Bella;rap\nQuartet Imaginaire;Valse des imaginaires;\n";
+        var musicBase = MusicStore.Default();
+
+        var report = MusicCsv.Import(csv, musicBase, Normalizer, new StyleIdentifier(musicBase));
+
+        (report.Rows, report.TitlesSet, report.ArtistsSet, report.AlreadyKnown, report.ToClassify.Count).ShouldBe((8, 3, 0, 2, 3));
+        report.Problems.ShouldBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-029")]
     public void Pending_IsKeptInTheProjectFolder()
     {
         var folder = Path.Combine(Path.GetTempPath(), "luxia-music-" + Guid.NewGuid().ToString("N"));

@@ -733,8 +733,8 @@ titre, versions), de la plus à la moins probable : « Titre \| Artiste » et «
 ## 12j. Projet : base musicale (`taxonomie.json`, `artistes.json`, `titres.json`, `corrections.json`, `aclasser.json`, `propositions.json`, format 1)
 
 Base musicale locale (doc 21 §3.2, MUS-021 à MUS-024, P9), **dans le projet**. Tous les fichiers sont facultatifs : sans `taxonomie.json`,
-les 14 familles du doc 21 §3.4 ; sans `artistes.json`, la **base de départ** livrée avec l'application (environ 350 artistes populaires en
-soirée, source `initial`, Q48) ; sans `titres.json` ni `corrections.json`, rien. Écrits par l'application (corrections en Live) ou à la main
+les 14 familles du doc 21 §3.4 ; sans `artistes.json`, la **base de départ** livrée avec l'application (environ 460 artistes populaires en
+soirée, source `initial`, Q48) ; sans les autres fichiers, rien. Écrits par l'application (corrections en Live) ou à la main
 ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artistes`](schemas/artistes.schema.json),
 [`titres`](schemas/titres.schema.json), [`corrections`](schemas/corrections.schema.json).
 
@@ -769,7 +769,7 @@ ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artist
 | `titles[].version` | Clé de la version (« extended mix ») si le style est celui de cette version ; absent = l'original |
 | `corrections[].scope` | `title` : ce titre seulement ; `artist` : tous les titres de l'artiste (sauf ceux corrigés à part). Une correction crée ou met à jour l'entrée de l'artiste ou du titre (source `correction`) |
 
-propositions.json (items : artiste, famille proposée, confiance, source, étiquettes ; ejected : artistes refusés) reçoit les propositions de l'outil luxia-enrich (MUS-040) en attente de validation dans l'onglet « Propositions » (MUS-041) ; classer.json (items : artiste, titre, application, source playlist, passages) garde les titres des playlists importées que la base ne sait pas classer ; ceux des soirées sont relus du **journal de soirée** Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv (colonnes heure;titre;artiste;application;style;confiance;méthode;imposé;show, séparateur « ; », UTF-8 avec marque d'ordre des octets). L'import CSV (fenêtre « Base musicale ») accepte rtiste;titre;style ou les colonnes d'un export de playlist (« Track Name », « Artist Name(s) ») ; l'export donne rtiste;style;poids;alias;source.
+`propositions.json` (`items` : artiste, famille proposée, confiance, source, étiquettes ; `rejected` : artistes refusés) reçoit les propositions de l'outil `luxia-enrich` (MUS-040) en attente de validation dans l'onglet « Propositions » (MUS-041) ; `aclasser.json` (`items` : artiste, titre, application, source `playlist`, passages) garde les titres des playlists importées que la base ne sait pas classer ; ceux des soirées sont relus du **journal de soirée** `Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv` (colonnes `heure;titre;artiste;application;style;confiance;méthode;imposé;show`, séparateur « ; », UTF-8 avec marque d'ordre des octets). L'import CSV (fenêtre « Base musicale ») accepte `artiste;titre;style` ou les colonnes d'un export de playlist (« Track Name », « Artist Name(s) ») ; l'export donne `artiste;style;poids;alias;source`.
 
 Un identifiant de famille inconnu d'un artiste ou d'un titre est ignoré. L'identification est décrite au doc 21 §3.3 ; le seuil du rapprochement
 flou (0,8 par défaut) est réglable dans le code (`IdentifierOptions`).

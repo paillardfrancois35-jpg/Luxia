@@ -48,12 +48,16 @@ public sealed record ProposalRow(Proposal Proposal, string FamilyName, bool Weak
 
 /// <summary>Une ligne de la liste « À classer ».</summary>
 /// <param name="Item">Artiste (ou titre sans artiste) à classer.</param>
-public sealed record ClassifyRow(ClassifyItem Item)
+/// <param name="GuessName">Nom de la famille supposée par LuXia (confiance faible) ; <c>null</c> si aucune.</param>
+public sealed record ClassifyRow(ClassifyItem Item, string? GuessName = null)
 {
     /// <summary>Texte de la ligne : artiste, passages et supposition.</summary>
     public string Label => string.Create(
         CultureInfo.CurrentCulture,
         $"{(Item.HasArtist ? Item.Artist : "(sans artiste)")}  ·  {Item.Plays} passage(s)  ·  {Item.Titles.Count} titre(s)");
+
+    /// <summary>Supposition de LuXia quand un artiste ressemble à un artiste connu (confiance faible).</summary>
+    public string GuessText => GuessName is null ? string.Empty : string.Create(CultureInfo.CurrentCulture, $"Supposition de LuXia : {GuessName} ({Item.GuessConfidence:P0}), à confirmer");
 
     /// <summary>Titres de l'artiste, pour reconnaître de qui il s'agit.</summary>
     public string TitlesText => string.Join("  ·  ", Item.Titles.Take(8).Select(t => t.Title)) + (Item.Titles.Count > 8 ? "  …" : string.Empty);
@@ -191,7 +195,7 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
         ToClassify.Clear();
         foreach (var item in _queue)
         {
-            ToClassify.Add(new ClassifyRow(item));
+            ToClassify.Add(new ClassifyRow(item, item.GuessFamilyId is null ? null : musicBase.FamilyById(item.GuessFamilyId)?.Name));
         }
 
         SelectedToClassify = keep is null ? ToClassify.FirstOrDefault() : ToClassify.FirstOrDefault(r => r.Item.ArtistKey == keep) ?? ToClassify.FirstOrDefault();

@@ -246,3 +246,20 @@ luxia-headless scenario "samples/Show de référence" mon-scenario.txt   # verbe
 `ReferenceShowP8Tests` : chaque séquence « Phase P8 » rejouée sur toute sa longueur et chaque show (sauf le piège) 50 s au
 métronome avec la même suite d'événements simulés (énergie, drop, break, montée), comparés à `tests/assets/golden/P8-shows.txt` ;
 rampe de la couche Couleurs ; piège refusé.
+
+## Phase P9 – Lecture en cours et style (2026-10-03)
+
+| Élément | Fichier | Contenu |
+|---|---|---|
+| Shows « Phase P9 » | `shows.json` | *Style du morceau (P9)* : étape **Neutre** (intensité 50 %, bleu, lyres au plafond) ; selon le style du morceau (condition « style » : *Rock*, *Électro*, *Latino*, *Slow*, *Inconnu*) une ambiance par famille ; au **morceau suivant** (vrai changement de titre de la lecture en cours de Windows) retour à Neutre. **Piège** *Piège : style qui n'existe pas (P9)* : la condition attend « Musette » (étiquette de genre de « Bal / Traditionnel », pas une famille) : le show reste à l'attente et `valider` avertit (« écrivez plutôt « Bal » ») |
+| Base musicale | (dans l'application) | Base de départ d'environ 460 artistes en 14 familles, livrée avec LuXia ; les fichiers de la base (`artistes.json`, `titres.json`, `corrections.json`, `taxonomie.json`) ne sont créés dans le projet qu'à la première correction |
+
+### Rejouer sans musique
+
+```bash
+luxia-headless scenario "samples/Show de référence" p9.txt   # 0 show "Style du morceau (P9)" ; 3 style Rock ; 9 simuler morceau ; 10 style Électro
+```r
+
+### Non-régression
+
+`ReferenceShowP9Tests` : contenu présent, seul le piège avertit, les dix étapes du show suivent la suite de styles simulés, trames comparées à `tests/assets/golden/P9-shows.txt`.

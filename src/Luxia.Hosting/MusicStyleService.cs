@@ -30,7 +30,7 @@ public sealed class MusicStyleService : IDisposable
     private StyleSession? _session;
     private string? _folder;
     private Timer? _saveTimer;
-    private int _trackChangedPending;
+    private int _lastSerial;
     private bool _disposed;
 
     /// <summary>Crée le service (rien n'est chargé avant le premier morceau ou le premier accès à la base).</summary>
@@ -106,7 +106,6 @@ public sealed class MusicStyleService : IDisposable
     /// <param name="artist">Artiste.</param>
     public void SetManualTrack(string title, string artist)
     {
-        Interlocked.Exchange(ref _trackChangedPending, 1);
         Session().Update(title, artist, "saisie manuelle");
     }
 
@@ -142,6 +141,8 @@ public sealed class MusicStyleService : IDisposable
 
     private StyleSession Session()
     {
+        StyleSession session;
+        MusicBase? replacement = null;
         lock (_gate)
         {
             var folder = _project.Folder;
@@ -165,13 +166,22 @@ public sealed class MusicStyleService : IDisposable
             }
             else
             {
-                _session.ReplaceBase(musicBase);
+                replacement = musicBase;
             }
 
             _folder = folder;
+            session = _session;
             _logger.LogInformation("Base musicale : {Artistes} artistes, {Titres} titres", musicBase.ArtistCount, musicBase.TitleCount);
-            return _session;
         }
+
+        // Le remplacement de la base ré-identifie le morceau en cours et lève des événements : hors du verrou du service, pour qu'aucun
+        // abonné (écran, moteur) ne puisse l'attendre.
+        if (replacement is not null)
+        {
+            session.ReplaceBase(replacement);
+        }
+
+        return session;
     }
 
     private void OnTrackChanged(object? sender, TrackChange change)
@@ -181,12 +191,10 @@ public sealed class MusicStyleService : IDisposable
             var session = Session();
             if (change.Track is { } track)
             {
-                Interlocked.Exchange(ref _trackChangedPending, 1);
                 session.Update(track.Title, track.Artist, track.App, track.Genres);
             }
             else
             {
-                Interlocked.Exchange(ref _trackChangedPending, 0);
                 session.Clear();
             }
         }
@@ -206,7 +214,8 @@ public sealed class MusicStyleService : IDisposable
 
     private void OnStyleChanged(object? sender, StyleState state)
     {
-        var changed = Interlocked.Exchange(ref _trackChangedPending, 0) == 1;
+        // Un nouveau morceau (et non un style imposé ou corrigé) : le numéro de série du morceau a changé.
+        var changed = state.HasTrack && Interlocked.Exchange(ref _lastSerial, state.Serial) != state.Serial;
         var playing = _tracker?.Current.Playing ?? false;
         var detectedName = state.HasTrack ? state.Detected.FamilyName : null;
         _engine.Send(new SetMusicContextCommand(CommandOrigin.Tool, detectedName, changed, state.HasTrack && (playing || _tracker is null)));

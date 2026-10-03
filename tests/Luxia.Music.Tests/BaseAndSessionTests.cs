@@ -316,6 +316,23 @@ public sealed class BaseAndSessionTests
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-021")]
+    public void Serial_ChangesWithTheTrack_NotWithAForcedOrCorrectedStyle()
+    {
+        var session = new StyleSession(MusicStore.Default(), Normalizer);
+
+        var first = session.Update("Radio Ga Ga", "Queen", "Deezer").Serial;
+        session.Force("Latino");
+        session.State.Serial.ShouldBe(first, "un style imposé n'est pas un nouveau morceau");
+        session.Correct(CorrectionScope.Artist, "Festif", DateTimeOffset.UnixEpoch);
+        session.State.Serial.ShouldBe(first, "une correction non plus");
+
+        var second = session.Update("Radio Ga Ga", "Queen", "Deezer").Serial;
+        second.ShouldBeGreaterThan(first, "le même titre rejoué est un nouveau morceau");
+        session.Clear().Serial.ShouldBeGreaterThan(second);
+    }
+
+    [Fact]
     [Trait("Exigence", "MUS-006")]
     public void Clear_GivesNoStyle_AndLiftsAForcedStyle()
     {
