@@ -130,18 +130,20 @@ Lecture sur captures 1920 × 1080 ; **à confirmer par lecture du code** avant d
 3. **Installation** est le principal écart à la charte « liste + fiche » après la Base musicale (§8) : à inscrire au chantier, après Shows et séquences.
 4. **Rien n'est à corriger avant de valider la v1.011** : les constats de cette analyse sont des propositions pour le chantier suivant ; les écarts de la Base musicale (B1 à B4) sont mineurs.
 
-## 10. Décisions à prendre avec l'utilisateur
+## 10. Décisions de l'utilisateur (2026-10-03)
 
-| # | Décision | Recommandation |
+| # | Décision | Résultat |
 |---|---|---|
-| D1 | Live : option A (absorber dans Contrôle), B (mode plein écran) ou C (statu quo) | **A**, en lot 1 du chantier |
-| D2 | Ordre du chantier : Live, puis Shows et séquences (lots 1 à 4), puis Installation et Scènes | Oui |
-| D3 | Éditeur de show : valider le principe « lecture d'abord, détail dans un volet, modèles de départ » avant de dessiner (maquettes) | Oui : maquettes avant code |
-| D4 | Retirer le panneau « Pilote automatique » de Contrôle jusqu'à P10 (C2) | Oui (replié ou retiré) |
-| D5 | Compteur « n à classer » sur « Base… » (B1) | Oui, petit lot avant la validation ou dans le chantier |
+| D1 | Live : option A (absorber dans Contrôle) | ✅ « Option A ok pour le Live » |
+| D2 | Ordre : Live, puis Shows et séquences (lots 1 à 4), puis Installation et Scènes | ✅ recommandation retenue |
+| D3 | Éditeur de show : « lecture d'abord, détail dans un volet, modèles de départ », maquettes avant code | ✅ recommandation retenue |
+| D4 | Retirer le panneau « Pilote automatique » de Contrôle jusqu'à P10 | ✅ recommandation retenue |
+| D5 | Compteur « n à classer » sur « Base… » : dans le chantier | ✅ recommandation retenue |
+| — | Calendrier : chantier ergonomique **avant** P10 (le Directeur s'appuiera sur l'éditeur de show refait) | ✅ recommandation retenue |
 
 ## 11. Historique
 
 | Date | Entrée |
 |---|---|
 | 2026-10-03 | Version complète après les deux essais P9 : cadrage 1920 × 1080, Live et Scènes (§4), refonte des shows et séquences (§5, §6), audit liste + fiche (§8). Remplace la proposition du matin (captures 1680 × 1050, avant l'essai) : ses constats sur l'ancienne fenêtre « Base musicale » (touches 1 à 9, 0, Q, W, E, R) sont **caducs**, la fenêtre ayant été refaite. |
+| 2026-10-03 | Décisions D1 à D5 prises par l'utilisateur (§10) : Live absorbé dans Contrôle (option A), le reste selon les recommandations ; chantier ergonomique avant P10. Aucun développement n'est à finir dans P9. |
