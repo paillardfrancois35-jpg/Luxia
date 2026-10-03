@@ -114,11 +114,42 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
         var lines = ReadLines(path);
 
         lines[0].ShouldBe(EveningLog.Header);
-        lines.ShouldContain(l => l.Contains(";Radio Ga Ga;Queen;Deezer;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
-        lines.ShouldContain(l => l.Contains(";Latino;100;imposé;oui;", StringComparison.Ordinal), "le style imposé ajoute une ligne");
+        lines.ShouldContain(l => l.Contains(";morceau;Radio Ga Ga;Queen;Deezer;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains(";imposé;Radio Ga Ga;Queen;Deezer;Latino;100;imposé;oui;", StringComparison.Ordinal), "le style imposé ajoute une ligne d'événement « imposé »");
         lines.ShouldContain(l => l.Contains("\"Un titre; avec \"\"guillemets\"\"\"", StringComparison.Ordinal), "les ; et les guillemets sont protégés");
         lines.ShouldContain(l => l.Contains(";Inconnu;0;aucune;", StringComparison.Ordinal));
         File.ReadAllBytes(path).Take(3).ShouldBe(new byte[] { 0xEF, 0xBB, 0xBF }, "UTF-8 avec marque d'ordre des octets, pour Excel");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    public async Task EveningLog_WritesTheCleanArtistAndTitle_AndKeepsTheRawOnes()
+    {
+        // YouTube Music : « artiste » = nom de la chaîne, le vrai artiste est dans le titre.
+        await PlayAsync("Pink Sweat$ - At My Worst (Official Video)", "Gustixa", "Chrome");
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 2);
+        var line = ReadLines(path)[^1];
+
+        line.ShouldContain(";morceau;At My Worst;Pink Sweat$;Chrome;");
+        line.ShouldEndWith(";Pink Sweat$ - At My Worst (Official Video);Gustixa");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    public async Task EveningLog_MarksCorrectionAndStyleReturnEvents()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+        _runtime.Music.Correct(CorrectionScope.Artist, "Festif").ShouldBeNull();
+        _runtime.Music.Force("Latino");
+        _runtime.Music.Force(null);
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 5);
+        var kinds = ReadLines(path).Skip(1).Select(l => l.Split(';')[1]).ToList();
+
+        kinds.ShouldBe(["morceau", "correction", "imposé", "correction"], "le retour à la détection retombe sur la correction mémorisée");
     }
 
     private static string[] ReadLines(string path)
@@ -128,9 +159,9 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
         return reader.ReadToEnd().Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
     }
 
-    private async Task PlayAsync(string title, string artist)
+    private async Task PlayAsync(string title, string artist, string app = "Deezer")
     {
-        _media.Set(new MediaSessionInfo("Deezer", "Deezer", title, artist, string.Empty, MediaPlayback.Playing, null, null, TimeSpan.Zero));
+        _media.Set(new MediaSessionInfo(app, app, title, artist, string.Empty, MediaPlayback.Playing, null, null, TimeSpan.Zero));
         _runtime.NowPlaying!.Poll();
 
         // Le nouveau titre doit rester présent 1 s avant d'être publié (MUS-002), en temps réel.

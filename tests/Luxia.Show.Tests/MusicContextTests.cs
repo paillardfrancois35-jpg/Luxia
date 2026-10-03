@@ -123,6 +123,40 @@ public sealed class MusicContextTests
 
     [Fact]
     [Trait("Exigence", "MUS-021")]
+    public void WhileATrackIsFollowed_ASilenceOrAPause_StillRaisesTheSilenceAndResumedConditions()
+    {
+        // Décision de l'utilisateur (essai P9, ex. 12) : ses lecteurs restent ouverts en soirée ; « plus de son ou musique en pause » = fin du
+        // morceau (étape finale d'un show), la reprise du son = retour au début. Seule la condition « au morceau suivant » vient du titre réel (Q49).
+        var h = new SequencerHarness();
+        var feed = new ResumedFeed();
+        h.Engine.SetAudioFeed(feed);
+        var show = ShowWith(ConditionKind.Silence);
+        Start(show, h);
+        h.Send(new SetMusicContextCommand(CommandOrigin.Tool, "Rock", MediaActive: true));
+        h.Tick();
+
+        feed.Silence = true;
+        h.Tick();
+        h.Tick();
+
+        h.ActiveSteps(show).ShouldBe(["1"], "la pause (silence) reste une fin de morceau, même avec un lecteur suivi");
+
+        var h2 = new SequencerHarness();
+        var feed2 = new ResumedFeed();
+        h2.Engine.SetAudioFeed(feed2);
+        var show2 = ShowWith(ConditionKind.Resumed);
+        Start(show2, h2);
+        h2.Send(new SetMusicContextCommand(CommandOrigin.Tool, "Rock", MediaActive: true));
+        h2.Tick();
+        feed2.Resumed = true;
+        h2.Tick();
+        h2.Tick();
+
+        h2.ActiveSteps(show2).ShouldBe(["1"], "la reprise du son reste « le son reprend »");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-021")]
     public void WithoutAFollowedTrack_TheAudioHeuristicIsStillTheFallback()
     {
         var h = new SequencerHarness();
@@ -167,10 +201,13 @@ public sealed class MusicContextTests
     {
         public bool Resumed { get; set; }
 
+        public bool Silence { get; set; }
+
         public Luxia.Engine.Timing.AudioReading Read()
         {
-            var cues = Resumed ? Luxia.Engine.Timing.MusicCues.Resumed : Luxia.Engine.Timing.MusicCues.None;
+            var cues = (Resumed ? Luxia.Engine.Timing.MusicCues.Resumed : Luxia.Engine.Timing.MusicCues.None) | (Silence ? Luxia.Engine.Timing.MusicCues.Silence : Luxia.Engine.Timing.MusicCues.None);
             Resumed = false;
+            Silence = false;
             return new Luxia.Engine.Timing.AudioReading(true, 120, 1, true, 0, 1, 0, 0, Cues: cues);
         }
     }

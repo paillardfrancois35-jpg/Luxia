@@ -6,15 +6,16 @@ using Microsoft.Extensions.Logging;
 namespace Luxia.Hosting;
 
 /// <summary>
-/// Journal de soirée (GEN-111, MUS-025) : un fichier par jour, <c>Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv</c>, avec une ligne par
-/// morceau (heure, titre, artiste, application, style, confiance, méthode, style imposé, show en cours). Une ligne de plus quand le style
-/// est imposé ou corrigé. Les morceaux non identifiés ou peu sûrs alimentent l'écran « À classer » (MUS-028) : le journal sert à
-/// enrichir la base musicale à la maison. Séparateur « ; », UTF-8 avec marque d'ordre des octets (ouvre dans Excel).
+/// Journal de soirée (GEN-111, MUS-025) : un fichier par jour, <c>Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv</c>. Une ligne par
+/// <b>événement</b> : <c>morceau</c> (un nouveau morceau est identifié), puis <c>correction</c>, <c>imposé</c> ou <c>style</c> (retour à la
+/// détection) quand le style de ce morceau change. Colonnes : heure, événement, titre et artiste <b>nettoyés</b> (sans « Official Video »,
+/// l'artiste du titre plutôt que le nom de la chaîne YouTube), application, style, confiance, méthode, imposé, show en cours, puis le
+/// titre et l'artiste <b>bruts</b> du lecteur. Séparateur « ; », UTF-8 avec marque d'ordre des octets (ouvre dans Excel).
 /// </summary>
 public sealed class EveningLog : IDisposable
 {
     /// <summary>En-tête du fichier.</summary>
-    public const string Header = "heure;titre;artiste;application;style;confiance;méthode;imposé;show";
+    public const string Header = "heure;événement;titre;artiste;application;style;confiance;méthode;imposé;show;titre brut;artiste brut";
 
     private readonly string _folder;
     private readonly ILogger _logger;
@@ -77,6 +78,27 @@ public sealed class EveningLog : IDisposable
         }
     }
 
+    // Un fichier du jour écrit avec une ancienne liste de colonnes est mis de côté : on ne mélange pas deux formats dans un fichier.
+    private static void MoveOldFormat(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return;
+        }
+
+        string first;
+        using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        using (var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true))
+        {
+            first = reader.ReadLine() ?? string.Empty;
+        }
+
+        if (first.TrimStart('\uFEFF') != Header)
+        {
+            File.Move(path, Path.ChangeExtension(path, null) + ".ancien-format.csv", overwrite: true);
+        }
+    }
+
     private void OnStyle(StyleDetected e)
     {
         if (e.FamilyName.Length == 0 && e.Title.Length == 0)
@@ -96,14 +118,17 @@ public sealed class EveningLog : IDisposable
             var line = string.Join(
                 ';',
                 now.ToString("HH:mm:ss", CultureInfo.InvariantCulture),
-                Cell(e.Title),
-                Cell(e.Artist),
+                Cell(e.Kind),
+                Cell(e.CleanTitle.Length > 0 ? e.CleanTitle : e.Title),
+                Cell(e.CleanArtist.Length > 0 ? e.CleanArtist : e.Artist),
                 Cell(e.App),
                 Cell(e.FamilyName),
                 (e.Confidence * 100).ToString("0", CultureInfo.InvariantCulture),
                 Cell(e.Method),
                 e.Forced ? "oui" : string.Empty,
-                Cell(show));
+                Cell(show),
+                Cell(e.Title),
+                Cell(e.Artist));
             var path = FileFor(now);
             lock (_gate)
             {

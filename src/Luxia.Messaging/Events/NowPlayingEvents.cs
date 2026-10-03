@@ -29,7 +29,10 @@ public sealed record TrackChanged(string Title, string Artist, string Album, str
 /// <param name="Artist">Artiste brut du morceau.</param>
 /// <param name="App">Application source (« Deezer », « Chrome », « saisie manuelle »).</param>
 /// <param name="At">Instant (horloge du moteur).</param>
-public sealed record StyleDetected(string FamilyId, string FamilyName, double Confidence, string Method, bool Forced, string Title, string Artist, string App, TimeSpan At);
+/// <param name="Kind">Ce qui a provoqué l'événement : <c>morceau</c> (nouveau morceau), <c>correction</c>, <c>imposé</c>, <c>style</c> (retour à la détection, base remplacée).</param>
+/// <param name="CleanTitle">Titre nettoyé par la normalisation (sans « Official Video »…) ; vide sans morceau.</param>
+/// <param name="CleanArtist">Artiste retenu par la normalisation (jamais le nom de la chaîne YouTube quand l'artiste est dans le titre) ; vide sans morceau.</param>
+public sealed record StyleDetected(string FamilyId, string FamilyName, double Confidence, string Method, bool Forced, string Title, string Artist, string App, TimeSpan At, string Kind = "morceau", string CleanTitle = "", string CleanArtist = "");
 
 /// <summary>EVT-041 <c>LectureDémarrée</c> / <c>LectureEnPause</c> : la lecture du morceau suivi démarre ou s'arrête.</summary>
 /// <param name="Playing">La lecture est en cours (<c>true</c>) ; en pause ou arrêtée (<c>false</c>).</param>

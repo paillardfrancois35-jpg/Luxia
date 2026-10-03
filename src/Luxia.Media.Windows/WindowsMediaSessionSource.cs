@@ -13,6 +13,7 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
 {
     private static readonly TimeSpan SafetyRefresh = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan Debounce = TimeSpan.FromMilliseconds(120);
+    private const int EmptyBeforeRenewal = 6;
 
     private readonly ILogger _logger;
     private readonly object _gate = new();
@@ -23,6 +24,8 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
     private Timer? _safety;
     private Timer? _debounce;
     private bool _disposed;
+    private string _lastSeen = string.Empty;
+    private int _emptyRefreshes;
 
     /// <summary>Crée la source et interroge le système en arrière-plan (rien ne bloque l'appelant).</summary>
     /// <param name="logger">Journal.</param>
@@ -185,6 +188,21 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
                 _sessions = infos;
             }
 
+            // Essai P9 (exemple 8b) : un redémarrage de Chrome n'a été vu qu'une fois sur deux. On garde la trace de ce que Windows annonce
+            // (journal technique) et, après 30 s sans aucune session, on redemande le gestionnaire de sessions au système.
+            var seen = string.Join(", ", infos.Select(i => $"{i.App} ({i.Playback})"));
+            if (seen != _lastSeen)
+            {
+                _logger.LogInformation("Sessions média : {Sessions}", seen.Length == 0 ? "aucune" : seen);
+                _lastSeen = seen;
+            }
+
+            _emptyRefreshes = infos.Count == 0 ? _emptyRefreshes + 1 : 0;
+            if (infos.Count == 0 && _emptyRefreshes % EmptyBeforeRenewal == 0)
+            {
+                await RenewManagerAsync().ConfigureAwait(false);
+            }
+
             Changed?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -194,6 +212,37 @@ public sealed class WindowsMediaSessionSource : IMediaSessionSource
         finally
         {
             _refreshing.Release();
+        }
+    }
+
+    private async Task RenewManagerAsync()
+    {
+        try
+        {
+            var fresh = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync().AsTask().ConfigureAwait(false);
+            GlobalSystemMediaTransportControlsSessionManager? old;
+            lock (_gate)
+            {
+                if (_disposed)
+                {
+                    return;
+                }
+
+                old = _manager;
+                _manager = fresh;
+            }
+
+            if (old is not null)
+            {
+                old.SessionsChanged -= OnSessionsChanged;
+            }
+
+            fresh.SessionsChanged += OnSessionsChanged;
+            _logger.LogDebug("Gestionnaire de sessions média redemandé à Windows");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Gestionnaire de sessions média non renouvelé");
         }
     }
 

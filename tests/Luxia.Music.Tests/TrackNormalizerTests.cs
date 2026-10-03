@@ -97,6 +97,23 @@ public sealed class TrackNormalizerTests
         hypothesis.Credits.ShouldBe(["earth", "wind", "fire"]);
     }
 
+    [Theory]
+    [InlineData("Luis Fonsi et Daddy Yankee", new[] { "luis fonsi", "daddy yankee" })]
+    [InlineData("Post Malone et Swae Lee", new[] { "post malone", "swae lee" })]
+    [InlineData("Bebe Rexha, David Guetta", new[] { "bebe rexha", "david guetta" })]
+    [InlineData("Calvin Harris & Rihanna", new[] { "calvin harris", "rihanna" })]
+    [InlineData("Daddy Yankee and Snow", new[] { "daddy yankee", "snow" })]
+    [InlineData("Maître Gims x Vianney", new[] { "maitre gims", "vianney" })]
+    [InlineData("Queen", new[] { "queen" })]
+    [Trait("Exigence", "MUS-005")]
+    public void SeveralArtists_AreSplit_OnCommaAmpersandXAndTheWordEt(string credit, string[] expected)
+    {
+        var hypothesis = Normalizer.Normalize("Un titre", credit, "Chrome").Primary;
+
+        hypothesis.Credits.ShouldBe(expected);
+        hypothesis.Artist.ShouldBe(TextKey.Of(credit), "le nom entier reste la clé de l'artiste");
+    }
+
     [Fact]
     [Trait("Exigence", "MUS-020")]
     public void Version_IsKeptApart_AndFlaggedAsVersion()

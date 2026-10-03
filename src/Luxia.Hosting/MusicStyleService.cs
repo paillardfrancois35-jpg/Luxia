@@ -220,6 +220,10 @@ public sealed class MusicStyleService : IDisposable
         var detectedName = state.HasTrack ? state.Detected.FamilyName : null;
         _engine.Send(new SetMusicContextCommand(CommandOrigin.Tool, detectedName, changed, state.HasTrack && (playing || _tracker is null)));
         _engine.Send(new ForceStyleCommand(CommandOrigin.Tool, state.Forced ? state.Effective.FamilyName : null));
+        var reading = state.Normalized is { } normalized
+            ? normalized.Hypotheses[Math.Min(state.Detected.Hypothesis, normalized.Hypotheses.Count - 1)]
+            : null;
+        var kind = changed ? "morceau" : state.Forced ? "imposé" : state.Effective.Method == IdentificationMethod.Correction ? "correction" : "style";
         _bus.Publish(new StyleDetected(
             state.HasTrack ? state.Effective.FamilyId : string.Empty,
             state.HasTrack ? state.Effective.FamilyName : string.Empty,
@@ -229,7 +233,10 @@ public sealed class MusicStyleService : IDisposable
             state.Title,
             state.Artist,
             state.App,
-            _clock.Now));
+            _clock.Now,
+            kind,
+            reading?.TitleDisplay ?? string.Empty,
+            reading?.ArtistDisplay ?? string.Empty));
         StateChanged?.Invoke(this, state);
     }
 

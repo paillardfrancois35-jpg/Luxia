@@ -139,6 +139,20 @@ public sealed class StyleIdentifierTests
         result.Confidence.ShouldBeLessThan(0.8);
     }
 
+    [Theory]
+    [InlineData("Despacito", "Luis Fonsi et Daddy Yankee", "latino")]
+    [InlineData("Sunflower", "Post Malone et Swae Lee", "hiphop")]
+    [InlineData("Desconocido", "Daddy Yankee et Luis Fonsi", "latino")]
+    [Trait("Exigence", "MUS-021")]
+    public void SeveralArtistsSeparatedByEt_UseTheFirstKnownArtist(string title, string artist, string family)
+    {
+        var musicBase = MusicStore.Default();
+        var result = new StyleIdentifier(musicBase).Identify(Normalizer.Normalize(title, artist, "Chrome"));
+
+        result.FamilyId.ShouldBe(family);
+        result.IsKnown.ShouldBeTrue();
+    }
+
     [Fact]
     [Trait("Exigence", "MUS-021")]
     public void GenreFromThePlayer_IsTheLastResort_With04()

@@ -374,7 +374,9 @@ public sealed partial class TrackNormalizer
     [GeneratedRegex(@"(?:\s+(?:hd|hq|4k|1080p|720p|lyrics?(?:\s+video)?|paroles|(?:official|officiel)(?:\s+(?:music|lyric|audio|video|clip|vidéo|musique))*))+$", RegexOptions.IgnoreCase)]
     private static partial Regex TrailingNoise();
 
-    [GeneratedRegex(@"\s*,\s*|\s*;\s*|\s+&\s+|\s*\+\s*|\s+[xX]\s+")]
+    // Séparateurs d'artistes : « , », « ; », « & », « + », « x », et les mots « et », « and », « y » (« Luis Fonsi et Daddy Yankee »).
+    // Le nom entier reste essayé en premier par l'identification (« Simon et Garfunkel »).
+    [GeneratedRegex(@"\s*,\s*|\s*;\s*|\s+&\s+|\s*\+\s*|\s+(?:[xX]|et|and|y)\s+", RegexOptions.IgnoreCase)]
     private static partial Regex NameSeparators();
 
     [GeneratedRegex(@"-\s*topic\s*$", RegexOptions.IgnoreCase)]
