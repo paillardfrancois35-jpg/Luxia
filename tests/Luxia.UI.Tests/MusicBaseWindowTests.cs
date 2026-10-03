@@ -225,44 +225,43 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
     [Fact]
     [Trait("Exigence", "MUS-027")]
     [Trait("Exigence", "ERG-041")]
-    public async Task ChangingArtistWithAModifiedForm_AsksYesNoCancel()
+    [Trait("Exigence", "ERG-040")]
+    public void WhileTheFormIsModified_TheListIsLocked_AndTheSelectionStaysOnTheEditedArtist()
     {
         Open();
         Select("Queen");
+        _vm.IsListEnabled.ShouldBeTrue();
         _vm.FormStyle = _vm.Families.First(f => f.Id == "festif");
-        _vm.Search = string.Empty;
-        var stromae = _vm.Artists.First(a => a.Name == "ABBA");
 
-        // Annuler : on reste sur la fiche, rien n'est changé.
-        _host.Dialogs.SaveAnswer = SaveChoice.Cancel;
-        _vm.SelectedArtist = stromae;
-        await _vm.Navigation;
+        _vm.IsListEnabled.ShouldBeFalse("fiche modifiée : liste verrouillée à l'écran");
 
-        _vm.FormName.ShouldBe("Queen");
-        _vm.SelectedArtist!.Name.ShouldBe("Queen");
-        _vm.IsModified.ShouldBeTrue();
-        _host.Dialogs.SaveQuestions.ShouldHaveSingleItem().ShouldContain("Queen");
-
-        // Non : les modifications sont abandonnées, on change d'artiste.
-        _host.Dialogs.SaveAnswer = SaveChoice.Discard;
-        _vm.SelectedArtist = stromae;
-        await _vm.Navigation;
-
-        _vm.FormName.ShouldBe("ABBA");
-        _vm.IsModified.ShouldBeFalse();
-        Base.FindArtist("queen")!.Style.ShouldBe("rock");
-
-        // Oui : enregistré, puis on change d'artiste.
-        _vm.Search = "queen";
-        _vm.SelectedArtist = _vm.Artists.First(a => a.Name == "Queen");
-        _vm.FormStyle = _vm.Families.First(f => f.Id == "festif");
-        _host.Dialogs.SaveAnswer = SaveChoice.Save;
+        // Même si la sélection change par un autre chemin, elle revient sur l'artiste de la fiche (essai P9, ex. 14b).
         _vm.Search = string.Empty;
         _vm.SelectedArtist = _vm.Artists.First(a => a.Name == "ABBA");
-        await _vm.Navigation;
+        _vm.SelectedArtist!.Name.ShouldBe("Queen");
+        _vm.FormName.ShouldBe("Queen");
+        _vm.IsModified.ShouldBeTrue();
+        _vm.Message.ShouldContain("Enregistrer ou Annuler");
 
-        _vm.FormName.ShouldBe("ABBA");
-        Base.FindArtist("queen")!.Style.ShouldBe("festif");
+        // Ajouter et Dupliquer sont refusés tant que la fiche est modifiée.
+        _vm.AddArtistCommand.Execute(null);
+        _vm.DuplicateArtistCommand.Execute(null);
+        _vm.FormName.ShouldBe("Queen");
+
+        _vm.CancelFormCommand.Execute(null);
+        _vm.IsListEnabled.ShouldBeTrue();
+        _host.Dialogs.SaveQuestions.ShouldBeEmpty("plus de question au changement d'élément : la liste est verrouillée");
+    }
+
+    [Fact]
+    [Trait("Exigence", "ERG-041")]
+    public void UnknownIsTheFirstChoiceOfTheStyleLists()
+    {
+        Open();
+
+        _vm.Families[0].Id.ShouldBe("inconnu");
+        _vm.TitleStyles.Select(f => f.Id).Take(3).ShouldBe([string.Empty, "inconnu", "electro"]);
+        _vm.AssignableFamilies.ShouldNotContain(f => f.Id == "inconnu");
     }
 
     [Fact]

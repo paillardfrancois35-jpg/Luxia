@@ -35,3 +35,5 @@
 |---|---|---|---|
 | 2026-09-24 | Conception | Création | Exigence rédigée au cahier des charges (doc 18, 4. Exigences – musique et automatique). |
 | 2026-10-03 | Claude | Développement | P9 lot 4 : bloc de l'écran de jeu (hauteur fixe de 46 px, textes coupés avec info-bulle), lignes « ♫ » et « ♪ » au Journal, morceau dans l'écran Audio. Le panneau « Pilote automatique » garde ses champs « Titre en cours : — » et « Style : — » (P10, avec « Show choisi »). |
+| 2026-10-03 | Utilisateur | Test | Second essai 1.011.075, ex. 1 à 8 : bloc « Morceau en cours » conforme ; demande : garder Corriger ▾ et Imposer ▾, les rapprocher de la pastille de style et les encadrer avec elle (Base… et Saisir… restent à droite) ; dans « Saisir… », l'artiste avant le titre. |
+| 2026-10-03 | Claude | Développement | Second essai : pastille, Corriger ▾ et Imposer ▾ dans un même cadre ; « Saisir… » : champ Artiste puis champ Titre. |

@@ -186,6 +186,28 @@ public sealed class EnrichmentTests
     }
 
     [Fact]
+    [Trait("Exigence", "MUS-040")]
+    public async Task Enricher_TellsAFailedRequestApartFromNoRecognisedTag()
+    {
+        // Essai P9 (ex. 21) : une requête sans réponse s'affichait comme « aucune proposition ».
+        var source = new FakeSource("Source A", new Dictionary<string, IReadOnlyList<TagCount>?>
+        {
+            ["Artiste Muet"] = null,
+            ["Artiste Sans Etiquette"] = [new("seen live", 4)],
+            ["Artiste Rock"] = [new("rock", 9)],
+        });
+        var enricher = new Enricher([source], MusicStore.Default());
+        var lines = new List<string>();
+
+        var proposals = await enricher.ProposeAsync(["Artiste Muet", "Artiste Sans Etiquette", "Artiste Rock"], 10, new Progress<string>(lines.Add), CancellationToken.None);
+
+        proposals.ShouldHaveSingleItem().Artist.ShouldBe("Artiste Rock");
+        enricher.Unanswered.ShouldBe(["Artiste Muet"]);
+        lines.ShouldContain(l => l.Contains("Artiste Muet", StringComparison.Ordinal) && l.Contains("sans réponse", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains("Artiste Sans Etiquette", StringComparison.Ordinal) && l.Contains("aucune proposition", StringComparison.Ordinal));
+    }
+
+    [Fact]
     [Trait("Exigence", "MUS-041")]
     public void Proposals_AreKeptInTheProjectFolder_UntilValidated()
     {

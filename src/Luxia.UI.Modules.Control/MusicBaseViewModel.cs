@@ -182,7 +182,8 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
         ArgumentNullException.ThrowIfNull(dialogs);
         _runtime = runtime;
         _dialogs = dialogs;
-        Families = [.. runtime.Music.Families];
+        // « Inconnu » en premier dans les listes de styles (demande de l'utilisateur, essai P9) ; l'ordre de la taxonomie est inchangé.
+        Families = [.. runtime.Music.Families.Where(f => f.Id == Taxonomy.UnknownId), .. runtime.Music.Families.Where(f => f.Id != Taxonomy.UnknownId)];
         TitleStyles = [_sameAsArtist, .. Families];
         Aliases.CollectionChanged += (_, _) => MarkModified();
         TitleRows.CollectionChanged += (_, _) => MarkModified();
@@ -206,7 +207,7 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     /// <summary>Styles qu'on peut donner à un artiste « Inconnu » ou à une proposition : tous sauf « Inconnu » lui-même.</summary>
     public IReadOnlyList<MusicFamily> AssignableFamilies => [.. Families.Where(f => f.Id != Taxonomy.UnknownId)];
 
-    /// <summary>Choix de style d'un titre : « style de l'artiste », puis les styles.</summary>
+    /// <summary>Choix de style d'un titre : « style de l'artiste », « Inconnu », puis les styles.</summary>
     public IReadOnlyList<MusicFamily> TitleStyles { get; }
 
     /// <summary>Artistes correspondant à la recherche et au filtre.</summary>
@@ -237,13 +238,13 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     public bool HasToClassifySelection => SelectedToClassify is not null;
 
     /// <summary>
-    /// Tâche de la dernière navigation différée (changement d'artiste avec une fiche modifiée : la question Oui / Non / Annuler est posée
-    /// avant de changer) ; les tests l'attendent.
+    /// La liste (sélection, recherche, filtre, boutons) et les autres onglets sont utilisables : <c>false</c> tant que la fiche est modifiée.
+    /// On n'en sort que par Enregistrer ou Annuler (charte « liste + fiche », doc 60 §4.11 règle 4).
     /// </summary>
-    public Task Navigation { get; private set; } = Task.CompletedTask;
+    public bool IsListEnabled => !IsModified;
 
     /// <summary>
-    /// À appeler avant de quitter la fiche (autre artiste, autre onglet, fermeture) : sans modification, rend <c>true</c> ; sinon pose la
+    /// À appeler à la fermeture de la fenêtre : sans modification, rend <c>true</c> ; sinon pose la
     /// question Oui (enregistrer) / Non (abandonner) / Annuler (rester).
     /// </summary>
     /// <returns><c>true</c> si l'on peut continuer.</returns>
@@ -401,11 +402,11 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
             return;
         }
 
-        // Fiche modifiée : la sélection revient à l'artiste de la fiche, le temps de poser la question.
+        // Fiche modifiée : la liste est verrouillée à l'écran ; si la sélection change quand même, elle revient sur l'artiste de la fiche.
         _reverting = true;
         SelectedArtist = _formRow is null ? null : Artists.FirstOrDefault(a => a.Code == _formRow.Code);
         _reverting = false;
-        Navigation = GoToAsync(value);
+        Message = "Fiche en cours de modification : Enregistrer ou Annuler avant de changer d'artiste.";
     }
 
     partial void OnFormNameChanged(string value) => MarkModified();
@@ -431,19 +432,7 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     {
         SaveFormCommand.NotifyCanExecuteChanged();
         CancelFormCommand.NotifyCanExecuteChanged();
-    }
-
-    private async Task GoToAsync(ArtistRow? target)
-    {
-        if (!await CanLeaveAsync().ConfigureAwait(true))
-        {
-            return;
-        }
-
-        _reverting = true;
-        SelectedArtist = target is null ? null : Artists.FirstOrDefault(a => a.Code == target.Code);
-        _reverting = false;
-        LoadForm(SelectedArtist);
+        OnPropertyChanged(nameof(IsListEnabled));
     }
 
     /// <summary>Remplit la fiche avec un artiste de la base (ou la vide) ; la fiche n'est alors pas « modifiée ».</summary>
@@ -486,10 +475,11 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
 
     /// <summary>Commence la fiche d'un nouvel artiste (style « Inconnu »).</summary>
     [RelayCommand]
-    private async Task AddArtistAsync()
+    private void AddArtist()
     {
-        if (!await CanLeaveAsync().ConfigureAwait(true))
+        if (IsModified)
         {
+            Message = "Fiche en cours de modification : Enregistrer ou Annuler d'abord.";
             return;
         }
 
@@ -502,7 +492,7 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     /// qu'à un seul artiste).
     /// </summary>
     [RelayCommand]
-    private async Task DuplicateArtistAsync()
+    private void DuplicateArtist()
     {
         if (!HasForm || _formRow is null)
         {
@@ -510,8 +500,9 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
             return;
         }
 
-        if (!await CanLeaveAsync().ConfigureAwait(true))
+        if (IsModified)
         {
+            Message = "Fiche en cours de modification : Enregistrer ou Annuler d'abord.";
             return;
         }
 

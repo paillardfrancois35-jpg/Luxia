@@ -360,6 +360,14 @@
   travail (`tools/regenerer-show-de-travail.ps1`) — les fichiers `artistes.json` / `titres.json` d'un projet existant sont **migrés au premier chargement** (originaux en `.v1.bak`) ;
   la base de travail de l'essai contient des classements faits au hasard (essai ex. 17 et 18) : la repartir de la base livrée est conseillé.
 
+- **P9 – suite du second essai (2026-10-03, 1.011.075 → version annoncée au dernier contrôle)**. Résultats : [essais/P9-resultats.md](essais/P9-resultats.md) (exemples 0 à 25 passés,
+  aucun point bloquant). Traité, avec l'accord de l'utilisateur : show *Style du morceau (P9)* complété de **20 transitions d'ambiance à ambiance (10 → 30)** pour suivre un style
+  imposé ou corrigé en cours de titre (Q61, moteur inchangé) ; **liste verrouillée pendant la modification d'une fiche** (Q60, charte doc 60 §4.11 règle 4, mémorisée) ; pastille de style,
+  Corriger ▾ et Imposer ▾ encadrés ensemble ; « Saisir… » artiste avant titre ; essai sans musique : liste déroulante « Sans son », « Inconnu », puis les styles (Q63) et « Inconnu » en premier
+  dans les listes de styles ; `luxia-enrich` distingue une requête sans réponse de « aucune proposition » ; guide, doc 33 (règle de précision des consignes), glossaire (MusicBrainz).
+  **Laissé de côté** : style « Jeux vidéos » (Q62, ⏳ « plus tard »). **Reste** : re-vérification rapide des points modifiés (ex. 7, 8, 9, 10, 14b, 21), puis **analyse ergonomique de fin de phase**
+  (§5.6, à proposer), audit des autres écrans « liste + fiche » (Q59), gros fichier de base de l'utilisateur (Q57), validation et fusion `v1.011`.
+
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.
 

@@ -167,7 +167,7 @@ public partial class GameView : UserControl
             var flyout = new Flyout
             {
                 Placement = PlacementMode.BottomEdgeAlignedRight,
-                Content = new StackPanel { Spacing = 6, Children = { new TextBlock { Text = "Morceau joué (aucun lecteur ne l'annonce)" }, title, artist, ok } },
+                Content = new StackPanel { Spacing = 6, Children = { new TextBlock { Text = "Morceau joué (aucun lecteur ne l'annonce)" }, artist, title, ok } },
             };
             ok.Click += (_, _) =>
             {

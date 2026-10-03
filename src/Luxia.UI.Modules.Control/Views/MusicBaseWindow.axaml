@@ -27,7 +27,8 @@
       <!-- Onglet « Base » : liste des artistes à gauche (boutons toujours au même endroit), fiche à droite. -->
       <TabItem Header="Base">
         <Grid ColumnDefinitions="440,12,*" RowDefinitions="*" Margin="0,8,0,0">
-          <DockPanel>
+          <!-- Fiche modifiée : toute la liste est verrouillée (charte « liste + fiche », doc 60 §4.11) ; on sort par Enregistrer ou Annuler. -->
+          <DockPanel IsEnabled="{Binding IsListEnabled}">
             <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,8">
               <TextBox Text="{Binding Search}" PlaceholderText="Chercher un artiste (nom ou alias)" />
               <CheckBox Content="Seulement les artistes « Inconnu » (à classer)" IsChecked="{Binding UnknownOnly}" />
@@ -64,7 +65,7 @@
                       <Button Content="Annuler" Command="{Binding CancelFormCommand}" />
                       <Button Classes="accent" Content="Enregistrer" Command="{Binding SaveFormCommand}" />
                     </StackPanel>
-                    <TextBlock Text="● modifications non enregistrées" Foreground="#D29922" VerticalAlignment="Center" IsVisible="{Binding IsModified}" />
+                    <TextBlock Text="● non enregistré : liste verrouillée" TextTrimming="CharacterEllipsis" ToolTip.Tip="Modifications non enregistrées : la liste est verrouillée, Enregistrer ou Annuler pour continuer" Foreground="#D29922" VerticalAlignment="Center" IsVisible="{Binding IsModified}" />
                   </DockPanel>
 
                   <Grid ColumnDefinitions="Auto,*,Auto,260" RowDefinitions="Auto" ColumnSpacing="8">
@@ -143,7 +144,7 @@
       </TabItem>
 
       <!-- Onglet « À classer » : les artistes « Inconnu » ; un clic sur la pastille d'un style les classe. -->
-      <TabItem Header="À classer">
+      <TabItem Header="À classer" IsEnabled="{Binding IsListEnabled}">
         <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
           <TextBlock Grid.ColumnSpan="3" Text="{Binding ClassifySummary}" Foreground="#8B949E" Margin="0,0,0,8" TextWrapping="Wrap" />
           <ListBox Grid.Row="1" ItemsSource="{Binding ToClassify}" SelectedItem="{Binding SelectedToClassify}" Background="#161B22" x:Name="ClassifyList">
@@ -176,7 +177,7 @@
       </TabItem>
 
       <!-- Onglet « Propositions » (MUS-041) : ce que l'outil luxia-enrich a trouvé en ligne ; rien n'entre dans la base sans accord. -->
-      <TabItem Header="Propositions">
+      <TabItem Header="Propositions" IsEnabled="{Binding IsListEnabled}">
         <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
           <DockPanel Grid.ColumnSpan="3" Margin="0,0,0,8">
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">

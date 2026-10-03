@@ -61,6 +61,18 @@ public sealed class ReferenceShowP9Tests
     }
 
     [Fact]
+    [Trait("Exigence", "SHOW-022")]
+    public void StyleShow_FollowsAChangeOfStyleInTheMiddleOfATrack_FromAnyAmbiance()
+    {
+        // Essai P9 (ex. 10) : un style imposé ou corrigé pendant le titre fait passer d'une ambiance à l'autre, sans repasser par « Neutre ».
+        var steps = Report("0 show \"Style du morceau (P9)\"\n3 style Rock\n9 style Latino\n15 style Électro\n21 style Inconnu", 28).Lines.Where(l => l.Contains('◆', StringComparison.Ordinal)).ToList();
+        string[] expected = ["Neutre", "Rock", "Latino", "Électro", "Inconnu"];
+        var found = steps.Select(l => expected.FirstOrDefault(e => l.Contains($"« {e}", StringComparison.Ordinal))).Where(e => e is not null).ToList();
+
+        found.ShouldBe(expected);
+    }
+
+    [Fact]
     [Trait("Exigence", "SHOW-024")]
     public void Pitfall_StaysInItsWaitingStep()
     {

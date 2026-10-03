@@ -37,3 +37,4 @@
 | 2026-10-02 | Claude | Développement | Relecture : cocher « Aveugle » pendant un essai arrêtait l'essai sur l'aperçu au lieu de la sortie ; corrigé (l'essai s'arrête du côté qu'on quitte). |
 | 2026-10-02 | Utilisateur | Test | Ex. 12 (v1.010.085) : boutons Drop, Break, Montée, énergie ; carte et diagramme suivent ✅ ; interface jugée très complexe 💡. |
 | 2026-10-02 | Utilisateur | Validation | Validé avec la phase P8 (v1.010, essai v1.010.079 → .104, contrôle final v1.010.116). ex. 12. |
+| 2026-10-03 | Claude | Développement | Second essai (ex. 9) : le champ « Style » de l'essai sans musique devient une liste déroulante (« Sans son », « Inconnu », puis les styles) ; « Sans son » retire le style et fait un « morceau suivant » (retour à l'étape d'attente). Test `SequencingScreensTests.ShowEditor_TrialStyleList_OffersNoSoundThenUnknownFirst_AndTheShowFollowsEachChoice`. |

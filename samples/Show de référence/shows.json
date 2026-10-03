@@ -1043,7 +1043,7 @@
       "name": "Style du morceau (P9)",
       "color": "#58A6FF",
       "category": "Phase P9",
-      "notes": "Le show suit le STYLE du morceau en cours (lecture en cours de Windows, base musicale) : Neutre jusqu'à ce qu'un style soit identifié, puis une ambiance par famille (Rock, Électro, Latino, Slow, Inconnu) ; au morceau suivant (vrai changement de titre) il revient à Neutre et le style du nouveau titre choisit l'ambiance. Sans musique : simuler le style (exemple « Essai sans musique » du guide P9) ; pendant l'essai on peut aussi imposer le style avec « Imposer ▾ » dans l'écran de jeu.",
+      "notes": "Le show suit le STYLE du morceau en cours (lecture en cours de Windows, base musicale) : Neutre jusqu'à ce qu'un style soit identifié, puis une ambiance par famille (Rock, Électro, Latino, Slow, Inconnu) ; d'une ambiance à l'autre dès que le style change (style imposé avec « Imposer ▾ », corrigé avec « Corriger ▾ », ou nouveau morceau) ; au morceau suivant (vrai changement de titre) il revient à Neutre et le style du nouveau titre choisit l'ambiance. Sans musique : simuler le style (exemple « Essai sans musique » du guide P9).",
       "role": "main",
       "styles": [],
       "energyMin": 0,
@@ -1298,6 +1298,306 @@
           ],
           "condition": {
             "kind": "songChanged"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Électro"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Latino"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Slow"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Inconnu"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Rock"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Latino"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Slow"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Inconnu"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Rock"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Électro"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Slow"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Inconnu"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Rock"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Électro"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Latino"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Inconnu"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Rock"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Électro"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Latino"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Slow"
+            ]
           },
           "quantize": "bar"
         }

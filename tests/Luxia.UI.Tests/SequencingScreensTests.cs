@@ -234,6 +234,39 @@ public sealed class SequencingScreensTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "SHOW-027")]
+    [Trait("Exigence", "MUS-021")]
+    public void ShowEditor_TrialStyleList_OffersNoSoundThenUnknownFirst_AndTheShowFollowsEachChoice()
+    {
+        var show = _host.Runtime.Project.Shows.Shows.Single(s => s.Name == "Style du morceau (P9)");
+        _game.EditShow(show.Id);
+        var editor = _game.ShowEditor;
+        editor.IsBlind = true;
+        var simulation = editor.Simulation;
+
+        simulation.StyleChoices.Select(c => c.Label).Take(3).ShouldBe(["Sans son", "Inconnu", "Électro / Dance"]);
+        simulation.StyleChoices.ShouldNotContain(c => c.Label == "Neutre");
+
+        simulation.UseMetronome = true;
+        simulation.PlayCommand.Execute(null);
+        string Step(string style)
+        {
+            simulation.SelectedStyle = simulation.StyleChoices.First(c => c.Label.StartsWith(style, StringComparison.Ordinal));
+            Run(200);
+            editor.Refresh();
+            return simulation.Status;
+        }
+
+        Step("Rock").ShouldStartWith("Étape active : 1 Rock");
+        Step("Latino").ShouldStartWith("Étape active : 3 Latino");
+        Step("Électro").ShouldStartWith("Étape active : 2 Électro");
+        Step("Sans son").ShouldStartWith("Étape active : 0 Neutre");
+
+        editor.CancelCommand.Execute(null);
+        simulation.SelectedStyle.ShouldBe(SimulationViewModel.NoSound);
+    }
+
+    [Fact]
     [Trait("Exigence", "SHOW-020")]
     public void Lock_RefusesTheEditors()
     {

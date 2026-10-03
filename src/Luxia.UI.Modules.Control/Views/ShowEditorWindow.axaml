@@ -247,7 +247,12 @@
               <Button Content="Explosif" Classes="mini" Margin="0,0,4,4" Command="{Binding EnergyCommand}" CommandParameter="3" />
               <Button Content="celle de l'écoute" Classes="mini" Margin="0,0,16,4" Command="{Binding EnergyCommand}" CommandParameter="ecoute" />
               <TextBlock Text="Style" Classes="label" Margin="0,0,6,4" />
-              <TextBox Text="{Binding Style}" Width="160" Margin="0,0,0,4" PlaceholderText="(aucun)" ToolTip.Tip="Style simulé (la détection des styles viendra en P9)" />
+              <ComboBox ItemsSource="{Binding StyleChoices}" SelectedItem="{Binding SelectedStyle}" Width="200" Margin="0,0,0,4"
+                        ToolTip.Tip="Style simulé : « Sans son » le retire (retour à l'étape d'attente), « Inconnu » ou une famille l'impose. Il s'applique tout de suite ; « Morceau suivant » fait repasser par l'étape d'attente.">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="sq:SimulatedStyleChoice"><TextBlock Text="{Binding Label}" /></DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
             </WrapPanel>
             <TextBlock Text="{Binding Status}" Foreground="#39C5CF" TextWrapping="Wrap" />
           </StackPanel>

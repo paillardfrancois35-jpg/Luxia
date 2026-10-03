@@ -28,6 +28,12 @@ le plus solide pour les lots d'architecture. À la fin du développement, la dis
    bouton, libellé exact) ; à chaque exemple, elle **note le résultat** dans le fichier (§3) et passe au suivant. Face à
    une anomalie, elle aide à la décrire précisément (ce qui est fait, ce qui est vu, ce qui était attendu, capture), cherche
    dans le code ou la doc une explication **sans rien corriger**, la note, et propose de continuer si c'est possible.
+   **Règle de précision des consignes** (demande de l'utilisateur, second essai P9 : « précise tes tests ») : chaque consigne donnée à l'utilisateur
+   contient, dans cet ordre : (a) les **prérequis** (état de départ : quel show lancé, quelle fenêtre ouverte, quel lecteur en lecture, quelle donnée à avoir) ;
+   (b) une **séquence numérotée** d'actions, une action par numéro ; (c) les **libellés exacts** des onglets, boutons et champs, **lus dans l'écran réel**
+   (fichier `.axaml` ou capture `luxia-captures`) et non rédigés de mémoire ; on n'écrit jamais « ouvrir » pour ce qui est déjà affiché ; (d) le **résultat attendu**,
+   observable et chiffré quand c'est possible (« la puce passe à Rock 80 % »). Un exemple trop vague (« enchaîner deux morceaux au silence près ») est reformulé
+   avant d'être posé, pas après la question de l'utilisateur.
 4. Quand un correctif est nécessaire, l'utilisateur dit à la discussion **dev** : « lis `docs/essais/Pn-resultats.md` ». La
    discussion dev corrige, met à jour les fiches (entrées « Utilisateur | Test », « Validation »), compile, commite, et
    indique **la nouvelle version à vérifier** ; la discussion test la note et reprend l'exemple concerné.

@@ -229,11 +229,11 @@ Demande de l'utilisateur (essai P9, ligne 14f) : codifier une fois pour toutes l
 
 1. **Liste** à gauche, avec ses actions : **Ajouter, Dupliquer, Supprimer** (et les actions propres à la liste, ex. « Chercher les doublons ») ; les boutons sont **toujours au même endroit**, jamais déplacés selon la sélection. Une action propre à la liste ne laisse pas de panneau vide en temps normal : « Chercher les doublons » affiche un message s'il n'y en a pas, et n'ouvre le panneau de fusion que s'il y en a.
 2. **Fiche** à droite : un clic sur un élément la renseigne ; elle contient tous les champs de l'élément. Si l'élément est enfant d'un autre (clé étrangère), les champs du parent s'affichent sans pouvoir être modifiés. Un choix parmi quelques valeurs est une **liste déroulante**, pas une rangée de boutons.
-3. **Pas d'enregistrement immédiat** : un indicateur « modifications non enregistrées » s'allume dès la première saisie ; **Enregistrer** et **Annuler** (reprend l'état enregistré) ne sont actifs qu'alors. Un enregistrement refusé garde la fiche ouverte et dit pourquoi.
-4. **Changer d'élément, fermer ou quitter avec une fiche modifiée** : « Enregistrer les modifications de … ? » — **Oui** : enregistre et continue ; **Non** : abandonne et continue ; **Annuler** : reste sur la fiche. Trois boutons, toujours ce sens. Les suppressions et les remplacements gardent *Oui / Non*. Réalisation : `IDialogService.AskSaveAsync`.
+3. **Pas d'enregistrement immédiat** : un indicateur « non enregistré » s'allume dès la première saisie ; **Enregistrer** et **Annuler** (reprend l'état enregistré) ne sont actifs qu'alors. Un enregistrement refusé garde la fiche ouverte et dit pourquoi.
+4. **Fiche en cours de modification ⇒ liste verrouillée** (demande de l'utilisateur, second essai P9, ex. 14b) : la sélection, la recherche et le filtre, tous les boutons de la liste (Ajouter, Dupliquer, Supprimer, actions propres) et les autres onglets sont **grisés** ; seul moyen d'en sortir : **Enregistrer** ou **Annuler**. L'indicateur dit pourquoi la liste est grisée. La question « Enregistrer les modifications de … ? » — **Oui** : enregistre et continue ; **Non** : abandonne et continue ; **Annuler** : reste sur la fiche — ne se pose donc plus qu'à la **fermeture de la fenêtre** ou de l'écran. Les suppressions et les remplacements gardent *Oui / Non*. Réalisation : `IDialogService.AskSaveAsync`.
 5. **Niveau N+1** (titres d'un artiste, alias) : même principe que la liste, boutons identiques ; **saisie directe dans la liste** : « + » ajoute une ligne vide, et s'il en existe déjà une, aucune ligne n'est ajoutée mais le curseur va dans sa première cellule ; **Tab** passe à la cellule suivante ; une ligne restée vide n'est pas enregistrée. Si la fiche de l'élément ne peut pas s'afficher faute de place : la liste montre l'essentiel et Ajouter / Modifier / Dupliquer ouvrent une fenêtre modale dont **Valider** valide *en mémoire* l'élément porteur.
 6. **Persistance** : l'enregistrement du niveau N+1 se fait **en mémoire**, sur l'élément de la fiche en cours ; seule la persistance du niveau N (disque, base de données) est finale.
-7. **Listes déroulantes** : la liste dépliée a **la largeur du champ** ; les textes trop longs sont coupés par « … » avec une info-bulle.
+7. **Listes déroulantes** : la liste dépliée a **la largeur du champ** ; les textes trop longs sont coupés par « … » avec une info-bulle. Dans une liste de **styles**, « Inconnu » est proposé **en premier** (demande de l'utilisateur, second essai P9) ; dans l'essai sans musique d'un show : « Sans son », puis « Inconnu », puis les styles.
 
 ## 5. Composants communs (catalogue)
 
@@ -409,6 +409,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-10-03 | §4.11 révisé après le second essai P9 : fiche modifiée ⇒ **liste verrouillée** (la question Oui / Non / Annuler ne sert plus qu'à la fermeture), « Inconnu » en premier dans les listes de styles. |
 | 2026-10-03 | §4.11 : charte « liste + fiche » (essai P9, ligne 14f), règle Oui / Non / Annuler des modifications non enregistrées, liste déroulante à la largeur du champ. |
 | 2026-10-01 | §4.10 : interrupteur Audio du bloc BPM, écran Audio en une page, volet « Au rythme » simplifié et fréquence ÷8 à ×4 (lot ergonomique de P7). |
 | 2026-09-29 | §4.9 : écran de jeu et fenêtre d'édition (chantier « Contrôle 2 »), qui remplace le modèle à trois modes du §4.1 ; tailles minimales des cibles (§4.5). |

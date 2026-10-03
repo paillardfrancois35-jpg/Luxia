@@ -104,6 +104,12 @@ public sealed class Enricher
         _base = musicBase;
     }
 
+    /// <summary>
+    /// Artistes dont **aucune** source n'a répondu au dernier passage (réseau, limite de débit, réponse inattendue, ou absent du cache hors ligne) :
+    /// ce n'est pas « aucune proposition » (la source a répondu sans étiquette reconnue) ; à relancer.
+    /// </summary>
+    public IReadOnlyList<string> Unanswered { get; private set; } = [];
+
     /// <summary>Propose une famille pour chaque artiste (au plus <paramref name="max"/>) ; chaque source est interrogée jusqu'à une réponse reconnue.</summary>
     /// <param name="artists">Artistes à classer.</param>
     /// <param name="max">Nombre maximal d'artistes traités.</param>
@@ -114,13 +120,16 @@ public sealed class Enricher
     {
         ArgumentNullException.ThrowIfNull(artists);
         var proposals = new List<Proposal>();
+        var unanswered = new List<string>();
         foreach (var artist in artists.Where(a => !string.IsNullOrWhiteSpace(a)).Distinct(StringComparer.OrdinalIgnoreCase).Take(max))
         {
             cancellation.ThrowIfCancellationRequested();
             Proposal? found = null;
+            var answered = false;
             foreach (var source in _sources)
             {
                 var tags = await source.GetTagsAsync(artist, cancellation).ConfigureAwait(false);
+                answered |= tags is not null;
                 if (tags is { Count: > 0 } && TagMapper.Map(tags, _base) is { } mapped)
                 {
                     found = new Proposal { Artist = artist, Style = mapped.Family.Id, Confidence = mapped.Confidence, Source = source.Name, Tags = [.. tags.Take(8).Select(t => t.Name)] };
@@ -128,13 +137,21 @@ public sealed class Enricher
                 }
             }
 
-            progress?.Report(found is null ? $"{artist} : aucune proposition" : $"{artist} : {found.Style} ({found.Confidence:P0}, {found.Source})");
+            if (found is null && !answered)
+            {
+                unanswered.Add(artist);
+            }
+
+            progress?.Report(found is not null
+                ? $"{artist} : {found.Style} ({found.Confidence:P0}, {found.Source})"
+                : answered ? $"{artist} : aucune proposition" : $"{artist} : requête sans réponse (réseau, limite de débit ou absent du cache) : à relancer");
             if (found is not null)
             {
                 proposals.Add(found);
             }
         }
 
+        Unanswered = unanswered;
         return proposals;
     }
 }

@@ -67,6 +67,11 @@ catch (OperationCanceledException)
 
 var existing = previous.Items.Where(p => !proposals.Any(n => string.Equals(n.Artist, p.Artist, StringComparison.OrdinalIgnoreCase))).ToList();
 MusicStore.SaveProposals(options.Project, previous with { Items = [.. existing, .. proposals] });
+if (enricher.Unanswered.Count > 0)
+{
+    Console.WriteLine($"⚠ {enricher.Unanswered.Count} requête(s) sans réponse (pas « aucune proposition » : réseau, limite de débit ou, hors ligne, absent du cache) : {string.Join(", ", enricher.Unanswered)}. Relancez la commande pour les retenter.");
+}
+
 Console.WriteLine($"{proposals.Count} proposition(s) enregistrée(s) dans {Path.Combine(options.Project, MusicStore.ProposalsFile)}.");
 Console.WriteLine("À valider dans LuXia : bouton « Base… » de l'écran de jeu, onglet « Propositions » (accepter, modifier ou rejeter).");
 return 0;
