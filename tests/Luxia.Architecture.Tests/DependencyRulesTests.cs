@@ -22,6 +22,7 @@ public sealed class DependencyRulesTests
         ["Luxia.Audio"] = ["Luxia.Core", "Luxia.Engine"],
         ["Luxia.Midi"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Persistence"],
         ["Luxia.Media"] = [],
+        ["Luxia.Music"] = ["Luxia.Core", "Luxia.Persistence"],
         ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch", "Luxia.Scenes", "Luxia.Show", "Luxia.Midi", "Luxia.Audio", "Luxia.Media"],
     };
 

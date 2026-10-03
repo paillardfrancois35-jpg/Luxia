@@ -465,7 +465,9 @@
 | [MUS-002](MUS-002.md) | Événements MorceauChangé | P9 | I | Réalisé |
 | [MUS-003](MUS-003.md) | Extraction titre, artiste, album, miniature, durée et position estimée | P9 | I | Partiel |
 | [MUS-004](MUS-004.md) | Détection des publicités | P9 | I | Abandonné |
+| [MUS-005](MUS-005.md) | Gestion des titres YouTube | P9 | I | Réalisé |
 | [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Partiel |
+| [MUS-020](MUS-020.md) | Normalisation du §3 | P9 | I | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |

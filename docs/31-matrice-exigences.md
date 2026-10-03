@@ -517,23 +517,23 @@
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
 | [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |
 
-## P9 – 23 exigences, 4 couvertes par des tests automatiques
+## P9 – 23 exigences, 6 couvertes par des tests automatiques
 
-> Abandonné : 1 · Partiel : 2 · Réalisé : 2 · Sans fiche : 18
+> Abandonné : 1 · Partiel : 2 · Réalisé : 4 · Sans fiche : 16
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [GEN-111](exigences/GEN-111.md) | I | (fiche manquante) | Sans fiche |  |
 | [GEN-121](exigences/GEN-121.md) | I | (fiche manquante) | Sans fiche |  |
 | [LIVE-022](exigences/LIVE-022.md) | I | (fiche manquante) | Sans fiche |  |
-| [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
+| [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.SessionThatPlayedEarlier_TakesOverWhenTheFollowedOneDisappears<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
 | [MUS-002](exigences/MUS-002.md) | I | Événements MorceauChangé | Réalisé | NowPlayingTrackerTests.EmptyTitle_DuringATransition_KeepsTheCurrentTrack<br>NowPlayingTrackerTests.NewTrack_IsPublishedOnceAfterTheStabilization<br>NowPlayingTrackerTests.TitleThatFlickers_IsNotPublished |
 | [MUS-003](exigences/MUS-003.md) | I | Extraction titre, artiste, album, miniature, durée et position estimée | Partiel | NowPlayingTrackerTests.PlayerWithoutPosition_GivesNoPosition<br>NowPlayingTrackerTests.Position_IsInterpolatedWhilePlayingAndFrozenInPause<br>NowPlayingTrackerTests.Position_StaysWithinTheDurationAndHonoursTheRate |
 | [MUS-004](exigences/MUS-004.md) | I | Détection des publicités | Abandonné |  |
-| [MUS-005](exigences/MUS-005.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-005](exigences/MUS-005.md) | I | Gestion des titres YouTube | Réalisé | TrackNormalizerTests.AmbiguousPipe_KeepsBothReadings_ForTheIdentificationToDecide<br>TrackNormalizerTests.Credits_AreSplitOneByOne_AndTheFullNameIsKept<br>TrackNormalizerTests.PipeWithChannelInTheRemixTag_PutsTheTitleOnTheLeft_ThenKeepsTheOtherReading<br>TrackNormalizerTests.RawTitle_IsNormalizedAsExpected |
 | [MUS-006](exigences/MUS-006.md) | M | Si aucune application ne fournit d'informations, le système fonctionne quand même | Partiel | NowPlayingTrackerTests.NoSession_NothingPlays_NoEvent<br>NowPlayingTrackerTests.SessionDisappears_RaisesTrackChangedWithoutTrack |
 | [MUS-007](exigences/MUS-007.md) | M | (fiche manquante) | Sans fiche |  |
-| [MUS-020](exigences/MUS-020.md) | I | (fiche manquante) | Sans fiche |  |
+| [MUS-020](exigences/MUS-020.md) | I | Normalisation du §3 | Réalisé | TrackNormalizerTests.EmptyInput_GivesOneEmptyHypothesis<br>TrackNormalizerTests.Key_IsLowerCaseWithoutAccentsNorPunctuation<br>TrackNormalizerTests.Key_OfNull_IsEmpty<br>TrackNormalizerTests.RawTitle_IsNormalizedAsExpected<br>(+4) |
 | [MUS-021](exigences/MUS-021.md) | I | (fiche manquante) | Sans fiche |  |
 | [MUS-022](exigences/MUS-022.md) | I | (fiche manquante) | Sans fiche |  |
 | [MUS-023](exigences/MUS-023.md) | I | (fiche manquante) | Sans fiche |  |

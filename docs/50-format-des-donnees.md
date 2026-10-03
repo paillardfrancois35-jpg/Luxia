@@ -698,6 +698,38 @@ revenir à l'une d'elles. À ne pas modifier à la main.
 `%AppData%\LuXia\reprise.json` (GEN-095, MOT-102) : scènes qui jouent, masters, Grand Master, blackout, figé, écrit
 toutes les 5 s s'il a changé ; marqué « arrêt propre » à la fermeture. Après un arrêt brutal, LuXia propose de reprendre.
 
+## 12i. Projet : `normalisation.json` (format 1)
+
+Règles de normalisation des titres lus dans les lecteurs (doc 21 §3.1, MUS-005, MUS-020, P9). Facultatif : sans fichier, les règles
+livrées avec l'application s'appliquent. Schéma : [`schemas/normalisation.schema.json`](schemas/normalisation.schema.json).
+Une liste **présente** remplace la liste livrée en entier (copier la liste livrée avant d'y ajouter un mot).
+
+```json
+{
+  "formatVersion": 1,
+  "untrustedApps": ["chrome", "edge", "firefox", "brave", "opera", "vivaldi", "safari", "iexplore"],
+  "artistSuffixes": ["- topic", "vevo", "official", "officiel", "oficial"],
+  "noiseWords": ["official", "video", "audio", "lyrics", "hd", "remastered", "…"],
+  "noisePhrases": ["radio edit", "single version", "original mix", "…"],
+  "noisePrefixes": ["from ", "original motion picture", "ost", "…"],
+  "versionWords": ["remix", "mix", "live", "acoustic", "extended", "…"],
+  "guestMarkers": ["feat", "ft", "featuring", "with", "avec", "w"],
+  "fileExtensions": ["mp3", "flac", "wav", "m4a", "ogg", "wma", "aac", "opus", "aiff"]
+}
+```
+
+| Propriété | Rôle |
+|---|---|
+| `untrustedApps` | Applications dont le champ « artiste » est un **nom de chaîne** (YouTube, YouTube Music dans un navigateur) : l'artiste est cherché d'abord dans le titre (« Artiste - Titre », « Titre \| Artiste ») |
+| `artistSuffixes` | Suffixes de nom de chaîne à retirer : « Queen - Topic », « QueenVEVO », « Queen Official » |
+| `noiseWords` / `noisePhrases` / `noisePrefixes` | Mentions parasites retirées : un groupe « (…) », « […] » ou un segment après « - » ou « \| » dont **tous** les mots sont parasites (« Official Video »), qui est une expression parasite (« Radio Edit »), ou qui commence par un début parasite (« From "Rocky" ») ; tout mot commençant par « remaster » |
+| `versionWords` | Un groupe qui contient l'un de ces mots est une **version** : retirée du titre mais conservée à part (« Extended Mix », « Kokwak Hardstyle Remix », « Live at… »), car un remix peut changer de style |
+| `guestMarkers` | « feat. X », « ft. X », « (with X) » : l'invité est noté à part (artiste secondaire) |
+
+Résultat de la normalisation (code `TrackNormalizer`) : une **liste d'hypothèses** de lecture (artiste, artistes pris un à un, invités,
+titre, versions), de la plus à la moins probable : « Titre \| Artiste » et « Artiste \| Titre » se ressemblent, c'est l'identification
+(doc 21 §3.3) qui départage avec la base musicale. Toutes les clés sont en minuscules, sans accent ni ponctuation (« & » devient « et »).
+
 ## 13. Scénario de commandes `luxia-headless` (texte)
 
 Pour piloter le moteur sans interface (MOT-103) : `luxia-headless scenario <projet> fichier.txt [--duree 60] [--enregistrer f.dmxrec]`.
@@ -746,3 +778,4 @@ seule scène (GEN-132).
 | 2026-09-28 | `looks.json` (ERG-023) ; `uiScale` des préférences (F8) ; `spectacle.json` à côté de `controle.json` (dispositions de l'écran Contrôle). |
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |
+| 2026-10-03 | P9 : `normalisation.json` (§12i, MUS-020), schéma `normalisation.schema.json`. |

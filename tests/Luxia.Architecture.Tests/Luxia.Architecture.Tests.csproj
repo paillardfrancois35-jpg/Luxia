@@ -28,6 +28,7 @@
     <ProjectReference Include="../../src/Luxia.UI.Modules.Control/Luxia.UI.Modules.Control.csproj" />
     <ProjectReference Include="../../src/Luxia.UI.Modules.Audio/Luxia.UI.Modules.Audio.csproj" />
     <ProjectReference Include="../../src/Luxia.Audio/Luxia.Audio.csproj" />
+    <ProjectReference Include="../../src/Luxia.Music/Luxia.Music.csproj" />
   </ItemGroup>
 
   <ItemGroup>
