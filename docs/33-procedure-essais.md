@@ -22,7 +22,7 @@ le plus solide pour les lots d'architecture. À la fin du développement, la dis
 ## 2. Déroulement
 
 1. La discussion **dev** livre la phase : guide `docs/demos/Pn-*.md`, version à vérifier (lue dans la version du produit de
-   `src/Luxia.App/bin/Debug/net10.0/LuXia.dll`, doc 03 §11), fichier de résultats amorcé (§3).
+   `src/Luxia.App/bin/Debug/`, doc 03 §11), fichier de résultats amorcé (§3).
 2. L'utilisateur ouvre la discussion **test** avec le message du §4.
 3. La discussion **test** déroule le guide **un exemple à la fois**, en français, avec des consignes cliquables (onglet,
    bouton, libellé exact) ; à chaque exemple, elle **note le résultat** dans le fichier (§3) et passe au suivant. Face à

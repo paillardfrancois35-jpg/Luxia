@@ -1,11 +1,11 @@
 # 32 – Passation entre discussions
 
 > Point d'entrée pour reprendre le développement dans une **nouvelle discussion** sans relire tout l'historique.
-> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-02, **P8 validée** (branche
-> `p8/show-sequences` fusionnée dans `main`, étiquette `v1.010`, [guide](demos/P8-show-et-sequences.md),
-> [résultats](essais/P8-resultats.md), [analyse ergonomique](chantiers/analyse-ergonomique-p8.md)). **Prochaine étape : P9
-> « Lecture & Style »** ([doc 40](40-feuille-de-route.md)). En attente, décidés par l'utilisateur (doc 99) : largeur fixe des listes
-> déroulantes (à faire en tête de la phase suivante), refonte de l'éditeur de show (discussion dédiée), fonctions à porter dans
+> À tenir à jour à chaque fin de phase (section 1, 4 et 5). Dernière mise à jour : 2026-10-03, **P9 développée** (branche
+> `p9/lecture-style`, version de développement 1.011, [guide d'essai](demos/P9-lecture-et-style.md),
+> [résultats](essais/P9-resultats.md), [revue](chantiers/revue-fin-p9.md), [analyse ergonomique proposée](chantiers/analyse-ergonomique-p9.md)) ;
+> **P8 validée le 2026-10-02** (`v1.010`). **Prochaine étape : essai de P9 en discussion test, puis validation** ([doc 40](40-feuille-de-route.md)).
+> En attente, décidés par l'utilisateur (doc 99) : refonte de l'éditeur de show (discussion dédiée), fonctions à porter dans
 > l'écran de jeu avant de retirer les écrans Scènes et Live, « pourquoi ça ne s'allume pas », sélection du Journal pendant le jeu.
 
 ## 1. Où en est-on
@@ -22,6 +22,7 @@
 | Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P7 – Audio et tempo | Validée | `p7/audio-tempo` (fusionnée dans `main`, `v1.009`) | [demos/P7-audio-tempo.md](demos/P7-audio-tempo.md) | ✅ 2026-10-02, matériel réel (essai, re-vérifications 1 à 3, lot ergonomique ; [résultats](essais/P7-resultats.md)) ; bloc BPM et écoute essayés à la main par l'utilisateur pendant le développement (« très correct, impressionnant ») |
 | P8 – Show & séquences | Validée | `p8/show-sequences` (fusionnée dans `main`, `v1.010`) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ✅ 2026-10-02, matériel réel, essai en discussion test (v1.010.079 → .104, [résultats](essais/P8-resultats.md)) puis contrôle final (1.010.116) ; réserves : ex. 5, 6, 7 non refaits après les correctifs, fumée non testée |
+| P9 – Lecture & Style | Développée | `p9/lecture-style` (v1.011 en développement) | [demos/P9-lecture-et-style.md](demos/P9-lecture-et-style.md) | ⏳ essai à faire (Deezer, YouTube Music) ; PoC-3 fait le 2026-10-03 ([résultats](essais/P9-poc3.md)) |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -303,19 +304,36 @@
   Remarque du contrôle : la liste dépliée d'une liste déroulante change de largeur et de position selon les textes : à fixer en tête
   de la phase suivante (doc 99).
 
-- **P9 « Lecture & Style » en cours** (branche `p9/lecture-style`, version de développement **1.011**, démarrée le 2026-10-02).
-  Cadrage : questions **Q48 à Q52** toutes validées « comme recommandé » (base de départ livrée ; le changement de titre réel
-  devient la source prioritaire de « au morceau suivant » avec repli sur l'écoute — révise D38 ; pas de nouvel écran : bloc dans
-  l'écran de jeu + fenêtre « Base musicale » à deux onglets ; outil d'enrichissement en ligne en dernier lot, optionnel ; PoC-3
-  sur le poste de l'utilisateur). MUS-004 (publicités) **abandonnée** (Q43). Découpage en 7 lots, **option A** : lot 1 puis essai
-  PoC-3 avec l'utilisateur, ensuite lots 2 à 7 en autonomie et essai complet en fin de phase (discussion test, doc 33).
-  **Fait** : lot 0 (largeur fixe des listes déroulantes : 300 px, alignée à gauche, texte coupé + info-bulle, mesure dans
-  `luxia-captures`) ; lot 1 (projet `Luxia.Media` + `Luxia.Media.Windows`, EVT-040 / 041, sonde `luxia-headless media`, 13 tests ;
-  **l'application, `luxia-headless` et `luxia-captures` passent en TFM `net10.0-windows10.0.19041.0`**). **Essai PoC-3 fait (2026-10-03)** : Deezer et YouTube Music ✅, VLC / VirtualDJ / Mixxx ❌ (aucun ne s'annonce à Windows ; synthèse au doc 99 et dans [résultats](essais/P9-poc3.md)) ; **sources retenues : Deezer et YouTube Music**, ne pas rouvrir les logiciels de DJ sans demande. **Reste** : lots 2 (normalisation), 3 (base et identification),
-  4 (écran de jeu : morceau, style, correction, journal), 5 (fenêtre Base musicale), 6 (enrichissement en ligne), 7 (contenu,
-  guide, revue globale, analyse ergonomique, validation).
-  **Piège vécu** : sous Windows PowerShell 5.1, `Get-Content … | Set-Content -Encoding utf8` a double-encodé `Directory.Build.props`
-  (lu en ANSI) ; pour modifier un fichier, utiliser l'outil Edit ou lire / écrire explicitement en UTF-8 sans BOM.
+- **P9 « Lecture & Style » développée le 2026-10-03** (branche `p9/lecture-style`, version de développement **1.011**, 1.011.049 au dernier
+  contrôle). Cadrage : **Q48 à Q52** validées « comme recommandé » (base de départ livrée ; le changement de titre réel remplace la détection par
+  l'écoute pour « au morceau suivant », qui reste le repli : **D40**, révise D38 ; bloc dans l'écran de jeu et fenêtre « Base musicale » ;
+  enrichissement en ligne en dernier lot ; PoC-3 sur le poste de l'utilisateur). MUS-004 (publicités) **abandonnée** (Q43). **Sources de lecture :
+  Deezer (application) et YouTube Music (Chrome)** ; VLC, VirtualDJ et Mixxx ne s'annoncent pas à Windows (doc 99) : ne pas les rouvrir sans demande.
+  Livré, un commit par lot :
+  0. **Listes déroulantes** : style global (300 px, alignée à gauche, hauteur maximale 320 px, texte coupé par « … » et info-bulle), mesuré par `luxia-captures`.
+  1. **Lecture en cours** : projets `Luxia.Media` et `Luxia.Media.Windows` (API de contrôle des médias), `NowPlayingTracker`, EVT-040 / 041, sonde
+     `luxia-headless media`. **L'application, `luxia-headless` et `luxia-captures` passent en TFM `net10.0-windows10.0.19041.0`** (doc 03 §11).
+  2. **Normalisation** (`Luxia.Music`) : hypothèses artiste / titre, invités, versions, règles en données (`normalisation.json`, doc 50 §12i), jeu de 218 titres.
+  3. **Base et identification** : taxonomie de 14 familles, base de départ de 461 artistes, chaîne du doc 21 §3.3, rapprochement flou, corrections,
+     style imposé (CMD-062), contexte musical au moteur (CMD-063), EVT-042, service `MusicStyleService` ; 96 % d'identification sur 163 titres annotés,
+     2,9 ms sur 50 000 titres ; doc 50 §12j.
+  4. **Écran de jeu** : bloc « Morceau en cours » (style, confiance, Corriger / Imposer / Saisir…), lignes « ♫ » et « ♪ » au Journal, morceau dans
+     l'écran Audio, **journal de soirée** CSV (`Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv`).
+  5. **Fenêtre « Base musicale »** (bouton « Base… ») : onglets Base (recherche, style, alias, doublons et fusion, import et export CSV) et À classer
+     (journaux et playlists, une touche par famille).
+  6. **Enrichissement en ligne** : outil `luxia-enrich` et bibliothèque `Luxia.Music.Enrichment` (MusicBrainz, Last.fm avec clé, cache 90 jours,
+     1 requête par seconde) ; onglet « Propositions » (accepter, modifier, rejeter, en lot) ; **jamais chargé par l'application** (test d'architecture,
+     GEN-121). Testé sans réseau seulement.
+  7. **Contenu, guide, revue** : shows « Phase P9 » du show de référence (*Style du morceau (P9)*, piège *style qui n'existe pas*), avertissement de
+     `valider` pour un style qui n'est le nom d'aucune famille, trames `P9-shows.txt`, [guide d'essai](demos/P9-lecture-et-style.md) (25 exemples),
+     [résultats amorcés](essais/P9-resultats.md), [revue](chantiers/revue-fin-p9.md), [analyse ergonomique proposée](chantiers/analyse-ergonomique-p9.md).
+  Tests : **1 357**, tous verts, 0 avertissement. **Reste** : essai en discussion test (guide P9, version 1.011.NNN), correctifs, puis validation :
+  fiches « Validé », `LuxiaDevVersion` vidé et `Version` = 1.011, fusion `--no-ff` dans `main`, étiquette `v1.011`. **Demander avant** :
+  `tools/regenerer-show-de-travail.ps1` (le show de travail doit recevoir les shows « Phase P9 »). **À fournir par l'utilisateur** (Q52) : un export
+  de ses playlists pour mesurer le vrai taux d'identification (T-MUS-03). Statuts laissés « Partiel » : MUS-003 (miniature non lue), MUS-023
+  (taxonomie par fichier), GEN-111 (détail des shows joués).
+  **Pièges vécus** (doc 03 §11) : l'enregistrement en UTF-8 sous PowerShell 5.1 (double encodage), les accents graves dans les chaînes (caractères de
+  contrôle), un alias de commande de suppression qui masque une fonction du même nom, les fins de ligne mixtes.
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.

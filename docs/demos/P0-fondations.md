@@ -23,8 +23,8 @@
 dotnet build Luxia.sln
 ```
 
-L'application se lance avec `src/Luxia.App/bin/Debug/net10.0/LuXia.exe` (ou `dotnet run --project src/Luxia.App`).
-L'outil : `dotnet tools/Luxia.Tools.Headless/bin/Debug/net10.0/luxia-headless.dll` (appelé `luxia-headless` ci-dessous).
+L'application se lance avec `src/Luxia.App/bin/Debug/` (ou `dotnet run --project src/Luxia.App`).
+L'outil : `dotnet tools/Luxia.Tools.Headless/bin/Debug/` (appelé `luxia-headless` ci-dessous).
 
 **Téléverser le firmware** (une seule fois, remplace le POC) — *je ne l'ai pas fait : à faire par vous ou avec votre accord* :
 
