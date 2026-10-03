@@ -2,7 +2,7 @@
 
 | Champ | Valeur |
 |---|---|
-| **Statut** | Réalisé |
+| **Statut** | Validé |
 | **Priorité** | I |
 | **Phase** | P9 |
 | **Source** | [doc 18 – 4. Exigences – musique et automatique](../18-live.md) |
@@ -37,3 +37,5 @@
 | 2026-10-03 | Claude | Développement | P9 lot 4 : bloc de l'écran de jeu (hauteur fixe de 46 px, textes coupés avec info-bulle), lignes « ♫ » et « ♪ » au Journal, morceau dans l'écran Audio. Le panneau « Pilote automatique » garde ses champs « Titre en cours : — » et « Style : — » (P10, avec « Show choisi »). |
 | 2026-10-03 | Utilisateur | Test | Second essai 1.011.075, ex. 1 à 8 : bloc « Morceau en cours » conforme ; demande : garder Corriger ▾ et Imposer ▾, les rapprocher de la pastille de style et les encadrer avec elle (Base… et Saisir… restent à droite) ; dans « Saisir… », l'artiste avant le titre. |
 | 2026-10-03 | Claude | Développement | Second essai : pastille, Corriger ▾ et Imposer ▾ dans un même cadre ; « Saisir… » : champ Artiste puis champ Titre. |
+| 2026-10-03 | Utilisateur | Test | Contrôles ciblés 1.011.083 (essai en discussion test) : show suivant un style imposé en cours de titre, liste « Style » de l'essai sans musique, liste verrouillée pendant la modification d'une fiche, cadre pastille + Corriger + Imposer, Artiste avant Titre : ✅, aucune anomalie. |
+| 2026-10-03 | Utilisateur | Validation | Validé : P9 essayée en trois passes en discussion test (1.011.051, 1.011.075, contrôles ciblés 1.011.083), aucun point bloquant ; fusion dans `main`, étiquette `v1.011`. |
