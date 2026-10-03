@@ -213,4 +213,82 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
         csv.ShouldStartWith("artiste;style;poids;alias;source");
         csv.ShouldContain("Queen;Rock;");
     }
+
+    private void WriteProposals(params Luxia.Music.Classification.Proposal[] items) =>
+        Luxia.Music.Base.MusicStore.SaveProposals(_host.ProjectFolder, new Luxia.Music.Classification.ProposalSet { Items = items });
+
+    private static Luxia.Music.Classification.Proposal Proposal(string artist, string style, double confidence) =>
+        new() { Artist = artist, Style = style, Confidence = confidence, Source = "MusicBrainz", Tags = ["hardstyle", "electronic"] };
+
+    [Fact]
+    [Trait("Exigence", "MUS-041")]
+    public void Proposals_AreListedStrongestFirst_AndNothingEntersTheBaseBeforeAcceptance()
+    {
+        WriteProposals(Proposal("Artiste Faible", "pop", 0.55), Proposal("Artiste Sûr", "electro", 0.85));
+
+        Open();
+
+        _vm.Proposals.Select(p => p.Proposal.Artist).ShouldBe(["Artiste Sûr", "Artiste Faible"]);
+        _vm.Proposals[1].Weak.ShouldBeTrue();
+        _vm.SelectedProposal!.Proposal.Artist.ShouldBe("Artiste Sûr");
+        _vm.ProposalSummary.ShouldContain("2 proposition(s)");
+        _host.Runtime.Music.Base.FindArtist("artiste sur").ShouldBeNull();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-041")]
+    public void AcceptingAProposal_AddsTheArtistWithTheSourceEnrichment_AndRemovesIt()
+    {
+        WriteProposals(Proposal("Artiste Sûr", "electro", 0.85), Proposal("Autre Artiste", "pop", 0.8));
+        Open();
+
+        _vm.AcceptProposalCommand.Execute(null);
+
+        var artist = _host.Runtime.Music.Base.FindArtist("artiste sur")!;
+        artist.Source.ShouldBe("enrichissement");
+        artist.Styles.ShouldContainKey("electro");
+        _vm.Proposals.ShouldHaveSingleItem().Proposal.Artist.ShouldBe("Autre Artiste");
+        Luxia.Music.Base.MusicStore.LoadProposals(_host.ProjectFolder).Items.ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-041")]
+    public void AcceptingWithAnotherFamily_Modifies_AndRejecting_RemembersTheRefusal()
+    {
+        WriteProposals(Proposal("Artiste Un", "electro", 0.85), Proposal("Artiste Deux", "pop", 0.8));
+        Open();
+
+        _vm.AcceptProposalAsCommand.Execute("latino");
+        _host.Runtime.Music.Base.FindArtist("artiste un")!.Styles.ShouldContainKey("latino");
+
+        _vm.RejectProposalCommand.Execute(null);
+
+        _vm.Proposals.ShouldBeEmpty();
+        _host.Runtime.Music.Base.FindArtist("artiste deux").ShouldBeNull();
+        Luxia.Music.Base.MusicStore.LoadProposals(_host.ProjectFolder).Rejected.ShouldBe(["Artiste Deux"]);
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-041")]
+    public async Task AcceptStrong_TakesOnlyTheConfidentOnes_AfterConfirmation_AndRejectAllClears()
+    {
+        WriteProposals(Proposal("Artiste Sûr", "electro", 0.85), Proposal("Artiste Faible", "pop", 0.55));
+        Open();
+
+        _host.Dialogs.ConfirmAnswer = false;
+        await _vm.AcceptStrongCommand.ExecuteAsync(null);
+        _host.Runtime.Music.Base.FindArtist("artiste sur").ShouldBeNull("refus : rien n'entre");
+
+        _host.Dialogs.ConfirmAnswer = true;
+        await _vm.AcceptStrongCommand.ExecuteAsync(null);
+
+        _host.Runtime.Music.Base.FindArtist("artiste sur").ShouldNotBeNull();
+        _host.Runtime.Music.Base.FindArtist("artiste faible").ShouldBeNull("sous 70 % : à examiner à la main");
+        _vm.Proposals.ShouldHaveSingleItem().Proposal.Artist.ShouldBe("Artiste Faible");
+
+        await _vm.RejectAllCommand.ExecuteAsync(null);
+
+        _vm.Proposals.ShouldBeEmpty();
+        _vm.ProposalSummary.ShouldContain("Aucune proposition");
+    }
 }

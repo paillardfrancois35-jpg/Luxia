@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/propositions.schema.json",
+  "title": "LuXia – propositions.json (format 1)",
+  "description": "Propositions de famille trouvées en ligne par l'outil luxia-enrich, en attente de validation (doc 50 §12j, MUS-040, MUS-041). Rien n'entre dans la base sans accord.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artist", "style"],
+        "properties": {
+          "artist": { "type": "string" },
+          "style": { "type": "string", "description": "identifiant de famille proposée" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "source": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" }, "description": "étiquettes brutes de la source" }
+        }
+      }
+    },
+    "rejected": { "type": "array", "items": { "type": "string" }, "description": "artistes dont la proposition a été rejetée : l'outil ne les repropose pas" }
+  }
+}

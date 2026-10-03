@@ -59,10 +59,11 @@ public sealed partial class MusicBase
         return true;
     }
 
-    /// <summary>Donne un style unique à un artiste (le crée au besoin) ; l'origine est « manuel ».</summary>
+    /// <summary>Donne un style unique à un artiste (le crée au besoin).</summary>
     /// <param name="name">Nom de l'artiste.</param>
     /// <param name="familyId">Famille.</param>
-    public void SetArtistStyle(string name, string familyId)
+    /// <param name="source">Origine : « manuel » (défaut), « enrichissement »…</param>
+    public void SetArtistStyle(string name, string familyId, string source = "manuel")
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(familyId);
@@ -72,11 +73,11 @@ public sealed partial class MusicBase
             var styles = new Dictionary<string, double> { [familyId] = 1.0 };
             if (_artistByKey.TryGetValue(key, out var index) && _artists[index] is { } existing)
             {
-                ReplaceArtist(index, existing.Entry with { Styles = styles, Source = "manuel" });
+                ReplaceArtist(index, existing.Entry with { Styles = styles, Source = source });
             }
             else
             {
-                AddArtist(new ArtistEntry { Name = name.Trim(), Styles = styles, Source = "manuel" });
+                AddArtist(new ArtistEntry { Name = name.Trim(), Styles = styles, Source = source });
             }
         }
 

@@ -33,6 +33,19 @@ public sealed record DuplicateRow(string First, string Second, double Score)
     public string Label => string.Create(CultureInfo.CurrentCulture, $"{First}  =  {Second}   ({Score:P0})");
 }
 
+/// <summary>Une ligne de la liste des propositions de l'outil d'enrichissement (MUS-041).</summary>
+/// <param name="Proposal">Proposition.</param>
+/// <param name="FamilyName">Nom de la famille proposée.</param>
+/// <param name="Weak">Confiance faible (sous 70 %).</param>
+public sealed record ProposalRow(Proposal Proposal, string FamilyName, bool Weak)
+{
+    /// <summary>Texte de la ligne.</summary>
+    public string Label => string.Create(CultureInfo.CurrentCulture, $"{Proposal.Artist}  →  {FamilyName}  ·  {Proposal.Confidence:P0}  ·  {Proposal.Source}");
+
+    /// <summary>Étiquettes de la source, pour juger.</summary>
+    public string TagsText => "Étiquettes : " + string.Join(", ", Proposal.Tags);
+}
+
 /// <summary>Une ligne de la liste « À classer ».</summary>
 /// <param name="Item">Artiste (ou titre sans artiste) à classer.</param>
 public sealed record ClassifyRow(ClassifyItem Item)
@@ -92,6 +105,12 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     private string _classifySummary = string.Empty;
 
     [ObservableProperty]
+    private ProposalRow? _selectedProposal;
+
+    [ObservableProperty]
+    private string _proposalSummary = string.Empty;
+
+    [ObservableProperty]
     private int _selectedTab;
 
     /// <summary>Crée la fenêtre sur le moteur en service.</summary>
@@ -104,6 +123,7 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
         Families = [.. runtime.Music.Families];
         RefreshArtists();
         RefreshToClassify();
+        RefreshProposals();
     }
 
     /// <summary>Levé quand la fenêtre demande à choisir un fichier à importer ; la vue répond en appelant <see cref="ImportFile"/>.</summary>
@@ -126,6 +146,12 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
 
     /// <summary>Titres à classer, regroupés par artiste.</summary>
     public ObservableCollection<ClassifyRow> ToClassify { get; } = [];
+
+    /// <summary>Propositions de l'outil d'enrichissement, à valider.</summary>
+    public ObservableCollection<ProposalRow> Proposals { get; } = [];
+
+    /// <summary>Une proposition est choisie.</summary>
+    public bool HasProposalSelection => SelectedProposal is not null;
 
     /// <summary>Un artiste est choisi.</summary>
     public bool HasSelection => SelectedArtist is not null;
@@ -376,6 +402,131 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
         var index = Families.ToList().IndexOf(family);
         return index is >= 0 and < 14 ? "1234567890QWER"[index].ToString() : string.Empty;
     }
+
+    /// <summary>Relit les propositions de l'outil d'enrichissement (<c>propositions.json</c> du projet).</summary>
+    public void RefreshProposals()
+    {
+        var keep = SelectedProposal?.Proposal.Artist;
+        Proposals.Clear();
+        if (_runtime.Project.Folder is { } folder)
+        {
+            foreach (var proposal in MusicStore.LoadProposals(folder).Items.OrderByDescending(p => p.Confidence).ThenBy(p => p.Artist, StringComparer.OrdinalIgnoreCase))
+            {
+                var name = _runtime.Music.Base.FamilyById(proposal.Style)?.Name ?? proposal.Style;
+                Proposals.Add(new ProposalRow(proposal, name, proposal.Confidence < StrongProposal));
+            }
+        }
+
+        SelectedProposal = keep is null ? Proposals.FirstOrDefault() : Proposals.FirstOrDefault(p => p.Proposal.Artist == keep) ?? Proposals.FirstOrDefault();
+        ProposalSummary = Proposals.Count == 0
+            ? "Aucune proposition. L'outil luxia-enrich, lancé à la maison, en prépare pour les artistes de « À classer » ; rien n'entre dans la base sans votre accord."
+            : string.Create(CultureInfo.CurrentCulture, $"{Proposals.Count} proposition(s) à valider, dont {Proposals.Count(p => !p.Weak)} de confiance d'au moins {StrongProposal:P0}");
+    }
+
+    /// <summary>Accepte la proposition choisie telle quelle : l'artiste entre dans la base (origine « enrichissement »).</summary>
+    [RelayCommand]
+    private void AcceptProposal() => Accept(SelectedProposal, null);
+
+    /// <summary>Accepte la proposition choisie avec une autre famille (modifier).</summary>
+    /// <param name="familyId">Famille choisie.</param>
+    [RelayCommand]
+    private void AcceptProposalAs(string? familyId) => Accept(SelectedProposal, familyId);
+
+    /// <summary>Rejette la proposition choisie : elle disparaît et l'outil ne la repropose plus.</summary>
+    [RelayCommand]
+    private void RejectProposal()
+    {
+        if (SelectedProposal is not { } row || _runtime.Project.Folder is not { } folder)
+        {
+            return;
+        }
+
+        var set = MusicStore.LoadProposals(folder);
+        MusicStore.SaveProposals(folder, set with { Items = [.. set.Items.Where(p => p.Artist != row.Proposal.Artist)], Rejected = [.. set.Rejected, row.Proposal.Artist] });
+        Message = $"Proposition pour {row.Proposal.Artist} rejetée.";
+        RefreshProposals();
+    }
+
+    /// <summary>Accepte en lot toutes les propositions de confiance suffisante, après confirmation.</summary>
+    [RelayCommand]
+    private async Task AcceptStrongAsync()
+    {
+        var strong = Proposals.Where(p => !p.Weak).ToList();
+        if (strong.Count == 0)
+        {
+            Message = $"Aucune proposition de confiance d'au moins {StrongProposal:P0}.";
+            return;
+        }
+
+        if (!await _dialogs.ConfirmAsync("Accepter les propositions sûres", $"Faire entrer dans la base les {strong.Count} proposition(s) de confiance d'au moins {StrongProposal:P0} ?\n\nLes autres restent à examiner une par une.").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        foreach (var row in strong)
+        {
+            Apply(row, null);
+        }
+
+        Message = $"{strong.Count} artiste(s) ajouté(s) à la base (origine « enrichissement »).";
+        RefreshProposals();
+        RefreshArtists();
+        RefreshToClassify();
+    }
+
+    /// <summary>Rejette en lot toutes les propositions, après confirmation.</summary>
+    [RelayCommand]
+    private async Task RejectAllAsync()
+    {
+        if (Proposals.Count == 0 || _runtime.Project.Folder is not { } folder)
+        {
+            return;
+        }
+
+        if (!await _dialogs.ConfirmAsync("Rejeter toutes les propositions", $"Rejeter les {Proposals.Count} proposition(s) ? L'outil ne les reproposera pas.").ConfigureAwait(true))
+        {
+            return;
+        }
+
+        var set = MusicStore.LoadProposals(folder);
+        MusicStore.SaveProposals(folder, set with { Items = [], Rejected = [.. set.Rejected, .. set.Items.Select(p => p.Artist)] });
+        Message = "Propositions rejetées.";
+        RefreshProposals();
+    }
+
+    /// <summary>Confiance à partir de laquelle une proposition est jugée sûre (acceptation en lot).</summary>
+    public const double StrongProposal = 0.7;
+
+    private void Accept(ProposalRow? row, string? familyId)
+    {
+        if (row is null)
+        {
+            return;
+        }
+
+        if (familyId is not null && _runtime.Music.Base.FamilyById(familyId) is null)
+        {
+            return;
+        }
+
+        Apply(row, familyId);
+        Message = $"{row.Proposal.Artist} ajouté : {_runtime.Music.Base.FamilyById(familyId ?? row.Proposal.Style)?.Name ?? row.FamilyName}";
+        RefreshProposals();
+        RefreshArtists();
+        RefreshToClassify();
+    }
+
+    private void Apply(ProposalRow row, string? familyId)
+    {
+        _runtime.Music.Base.SetArtistStyle(row.Proposal.Artist, familyId ?? row.Proposal.Style, "enrichissement");
+        if (_runtime.Project.Folder is { } folder)
+        {
+            var set = MusicStore.LoadProposals(folder);
+            MusicStore.SaveProposals(folder, set with { Items = [.. set.Items.Where(p => p.Artist != row.Proposal.Artist)] });
+        }
+    }
+
+    partial void OnSelectedProposalChanged(ProposalRow? value) => OnPropertyChanged(nameof(HasProposalSelection));
 
     partial void OnSearchChanged(string value)
     {

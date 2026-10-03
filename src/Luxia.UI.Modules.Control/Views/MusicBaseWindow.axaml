@@ -8,6 +8,12 @@
         Width="1100" Height="720"
         WindowStartupLocation="CenterOwner"
         Background="#0D1117">
+  <Window.Styles>
+    <!-- Proposition peu sûre (confiance sous 70 %) : en orange, à examiner une par une. -->
+    <Style Selector="TextBlock.weak">
+      <Setter Property="Foreground" Value="#D29922" />
+    </Style>
+  </Window.Styles>
   <DockPanel Margin="12">
     <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
       <Button DockPanel.Dock="Right" Content="Fermer" x:Name="CloseButton" />
@@ -129,6 +135,49 @@
             </ItemsControl>
             <TextBlock x:Name="ShortcutsText" Foreground="#8B949E" FontSize="12" TextWrapping="Wrap" />
             <Button Content="Passer (Entrée)" Command="{Binding SkipCommand}" HorizontalAlignment="Left" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+      <!-- Onglet « Propositions » (MUS-041) : ce que l'outil luxia-enrich a trouvé en ligne ; rien n'entre dans la base sans accord. -->
+      <TabItem Header="Propositions">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+          <DockPanel Grid.ColumnSpan="3" Margin="0,0,0,8">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+              <Button Content="Accepter les propositions sûres (≥ 70 %)" Command="{Binding AcceptStrongCommand}" />
+              <Button Classes="danger" Content="Tout rejeter" Command="{Binding RejectAllCommand}" />
+            </StackPanel>
+            <TextBlock Text="{Binding ProposalSummary}" Foreground="#8B949E" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0" />
+          </DockPanel>
+          <ListBox Grid.Row="1" ItemsSource="{Binding Proposals}" SelectedItem="{Binding SelectedProposal}" Background="#161B22">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ProposalRow">
+                <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" Classes.weak="{Binding Weak}" />
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="1" Grid.Column="2" Spacing="10" IsVisible="{Binding HasProposalSelection}">
+            <Border Classes="panel">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="section" Text="{Binding SelectedProposal.Proposal.Artist}" />
+                <TextBlock Text="{Binding SelectedProposal.FamilyName, StringFormat='Famille proposée : {0}'}" />
+                <TextBlock Text="{Binding SelectedProposal.TagsText}" Foreground="#8B949E" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Button Content="Accepter" Command="{Binding AcceptProposalCommand}" Classes="accent" />
+              <Button Classes="danger" Content="Rejeter" Command="{Binding RejectProposalCommand}" />
+            </StackPanel>
+            <TextBlock Text="Ou accepter avec une autre famille :" Foreground="#8B949E" />
+            <ItemsControl ItemsSource="{Binding Families}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="mb:MusicFamily">
+                  <Button Content="{Binding Name}" Margin="0,0,6,6" Padding="10,4"
+                          Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).AcceptProposalAsCommand}" CommandParameter="{Binding Id}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
           </StackPanel>
         </Grid>
       </TabItem>

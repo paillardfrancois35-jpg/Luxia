@@ -23,6 +23,7 @@ public sealed class DependencyRulesTests
         ["Luxia.Midi"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Persistence"],
         ["Luxia.Media"] = [],
         ["Luxia.Music"] = ["Luxia.Core", "Luxia.Persistence"],
+        ["Luxia.Music.Enrichment"] = ["Luxia.Music"],
         ["Luxia.Hosting"] = ["Luxia.Core", "Luxia.Messaging", "Luxia.Engine", "Luxia.Output", "Luxia.Persistence", "Luxia.Fixtures", "Luxia.Patch", "Luxia.Scenes", "Luxia.Show", "Luxia.Midi", "Luxia.Audio", "Luxia.Media", "Luxia.Music"],
     };
 
@@ -64,6 +65,27 @@ public sealed class DependencyRulesTests
         references.ShouldNotContain("Luxia.App");
     }
 
+    /// <summary>
+    /// GEN-121 : rien d'en ligne en soirée. La bibliothèque d'enrichissement (MUS-040) n'est référencée que par l'outil
+    /// <c>luxia-enrich</c> ; ni l'hébergeur, ni les écrans, ni l'application ne la chargent.
+    /// </summary>
+    [Theory]
+    [InlineData("Luxia.Hosting")]
+    [InlineData("Luxia.UI.Controls")]
+    [InlineData("Luxia.UI.Modules.Console")]
+    [InlineData("Luxia.UI.Modules.Outputs")]
+    [InlineData("Luxia.UI.Modules.Library")]
+    [InlineData("Luxia.UI.Modules.Installation")]
+    [InlineData("Luxia.UI.Modules.Simulator")]
+    [InlineData("Luxia.UI.Modules.Scenes")]
+    [InlineData("Luxia.UI.Modules.Live")]
+    [InlineData("Luxia.UI.Modules.Control")]
+    [InlineData("Luxia.UI.Modules.Audio")]
+    [Trait("Exigence", "GEN-121")]
+    public void LiveAssemblies_NeverReferenceTheOnlineEnrichmentLibrary(string project)
+    {
+        Assembly.Load(project).GetReferencedAssemblies().Select(a => a.Name!).ShouldNotContain("Luxia.Music.Enrichment");
+    }
     [Theory]
     [MemberData(nameof(Projects))]
     [Trait("Exigence", "GEN-001")]

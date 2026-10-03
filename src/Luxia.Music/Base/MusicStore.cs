@@ -24,6 +24,10 @@ public static class MusicStore
     /// <summary>Fichier des titres à classer venus de playlists importées.</summary>
     public const string PendingFile = "aclasser.json";
 
+    /// <summary>Fichier des propositions de l'outil d'enrichissement, en attente de validation.</summary>
+    public const string ProposalsFile = "propositions.json";
+
+    private static readonly DocumentType<Classification.ProposalSet> ProposalsType = new("propositions", Classification.ProposalSet.CurrentFormatVersion, []);
     private static readonly DocumentType<Classification.PendingSet> PendingType = new("à classer", Classification.PendingSet.CurrentFormatVersion, []);
     private static readonly DocumentType<Taxonomy> TaxonomyType = new("taxonomie", Taxonomy.CurrentFormatVersion, []);
     private static readonly DocumentType<ArtistSet> ArtistsType = new("artistes", ArtistSet.CurrentFormatVersion, []);
@@ -66,6 +70,18 @@ public static class MusicStore
     /// <param name="pending">Titres en attente.</param>
     public static void SavePending(string projectFolder, Classification.PendingSet pending) =>
         ProjectPartStore.Save(projectFolder, PendingFile, pending, PendingType);
+
+    /// <summary>Charge les propositions de l'outil d'enrichissement (MUS-040) ; absent = aucune.</summary>
+    /// <param name="projectFolder">Dossier du projet.</param>
+    /// <returns>Les propositions.</returns>
+    public static Classification.ProposalSet LoadProposals(string projectFolder) =>
+        ProjectPartStore.Load(projectFolder, ProposalsFile, ProposalsType, () => new Classification.ProposalSet()).Value;
+
+    /// <summary>Enregistre les propositions en attente de validation.</summary>
+    /// <param name="projectFolder">Dossier du projet.</param>
+    /// <param name="proposals">Propositions.</param>
+    public static void SaveProposals(string projectFolder, Classification.ProposalSet proposals) =>
+        ProjectPartStore.Save(projectFolder, ProposalsFile, proposals, ProposalsType);
 
     /// <summary>Enregistre la base d'un projet (artistes, titres, corrections ; la taxonomie seulement si elle diffère de celle livrée).</summary>
     /// <param name="projectFolder">Dossier du projet.</param>

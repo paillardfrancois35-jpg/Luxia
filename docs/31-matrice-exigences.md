@@ -517,14 +517,14 @@
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
 | [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |
 
-## P9 – 23 exigences, 18 couvertes par des tests automatiques
+## P9 – 23 exigences, 22 couvertes par des tests automatiques
 
-> Abandonné : 1 · Partiel : 3 · Réalisé : 15 · Sans fiche : 4
+> Abandonné : 1 · Partiel : 3 · Réalisé : 19
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
 | [GEN-111](exigences/GEN-111.md) | I | Journal de soirée | Partiel | EditingAndClassifyTests.EveningJournal_ParsesQuotesBomAndOldFormat<br>MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
-| [GEN-121](exigences/GEN-121.md) | I | (fiche manquante) | Sans fiche |  |
+| [GEN-121](exigences/GEN-121.md) | I | Les fonctions qui utilisent Internet | Réalisé | DependencyRulesTests.LiveAssemblies_NeverReferenceTheOnlineEnrichmentLibrary |
 | [LIVE-022](exigences/LIVE-022.md) | I | Affichage du morceau en cours et du style détecté avec sa confiance | Réalisé | NowPlayingBarTests.IdentifiedTrack_ShowsTitleArtistStyleAndConfidence<br>NowPlayingBarTests.UnknownTrack_IsGray_AndTheStyleIsUnknown |
 | [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.SessionThatPlayedEarlier_TakesOverWhenTheFollowedOneDisappears<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
 | [MUS-002](exigences/MUS-002.md) | I | Événements MorceauChangé | Réalisé | NowPlayingTrackerTests.EmptyTitle_DuringATransition_KeepsTheCurrentTrack<br>NowPlayingTrackerTests.NewTrack_IsPublishedOnceAfterTheStabilization<br>NowPlayingTrackerTests.TitleThatFlickers_IsNotPublished |
@@ -543,6 +543,6 @@
 | [MUS-027](exigences/MUS-027.md) | M | Écran Base musicale | Réalisé | EditingAndClassifyTests.Alias_CannotStealAnotherArtistsName<br>EditingAndClassifyTests.Duplicates_AreFound_WithArticlesWordOrderAndTypos<br>EditingAndClassifyTests.Export_ListsEveryArtist_WithStyleAliasesAndSource<br>EditingAndClassifyTests.Merge_KeepsAliasesTitlesAndStyle_AndRemovesTheOther<br>(+10) |
 | [MUS-028](exigences/MUS-028.md) | M | Écran « À classer » | Réalisé | EditingAndClassifyTests.Queue_GroupsByArtist_MostPlayedFirst_AndHidesWhatIsKnown<br>EditingAndClassifyTests.Queue_ShrinksWhenAnArtistIsClassified_AndKeepsLowConfidenceGuesses<br>MusicBaseWindowTests.ToClassify_ListsUnknownTitlesByArtist_AndAKeyClassifiesAndAdvances<br>MusicBaseWindowTests.ToClassify_Skip_MovesOnWithoutClassifying |
 | [MUS-029](exigences/MUS-029.md) | S | Import de playlists exportées en CSV | Réalisé | EditingAndClassifyTests.Import_ClassifiesRowsWithAStyle_AndQueuesTheOthers<br>EditingAndClassifyTests.Import_UnderstandsFrenchHeaders_ArtistOnlyRows_NoHeader_AndOneColumn<br>EditingAndClassifyTests.Pending_IsKeptInTheProjectFolder<br>EditingAndClassifyTests.Queue_IncludesImportedPlaylistTitles_WithTheirSource<br>(+1) |
-| [MUS-040](exigences/MUS-040.md) | M | (fiche manquante) | Sans fiche |  |
-| [MUS-041](exigences/MUS-041.md) | M | (fiche manquante) | Sans fiche |  |
-| [MUS-042](exigences/MUS-042.md) | M | (fiche manquante) | Sans fiche |  |
+| [MUS-040](exigences/MUS-040.md) | M | Pour une liste d'artistes / titres | Réalisé | EnrichmentTests.Enricher_ProposesAFamilyPerArtist_TriesTheNextSource_AndHonoursTheLimit<br>EnrichmentTests.LastFm_ParsesTheTopTags<br>EnrichmentTests.MusicBrainz_ParsesTheTagsAndGenres_OfTheMatchingArtistOnly<br>EnrichmentTests.TagMapper_FewVotes_LowersTheConfidence_AndUnknownTagsGiveNothing<br>(+1) |
+| [MUS-041](exigences/MUS-041.md) | M | Les propositions sont validées par l'utilisateur | Réalisé | EnrichmentTests.Proposals_AreKeptInTheProjectFolder_UntilValidated<br>MusicBaseWindowTests.AcceptStrong_TakesOnlyTheConfidentOnes_AfterConfirmation_AndRejectAllClears<br>MusicBaseWindowTests.AcceptingAProposal_AddsTheArtistWithTheSourceEnrichment_AndRemovesIt<br>MusicBaseWindowTests.AcceptingWithAnotherFamily_Modifies_AndRejecting_RemembersTheRefusal<br>(+1) |
+| [MUS-042](exigences/MUS-042.md) | M | Respect des limites d'usage des services | Réalisé | EnrichmentTests.Cache_AvoidsAskingTwice_ExpiresAfter90Days_AndOfflineUsesOnlyTheCache<br>EnrichmentTests.LastFm_UsesThePersonalKey<br>EnrichmentTests.MusicBrainz_IntroducesItself_AndWaitsBetweenRequests<br>EnrichmentTests.Sources_ReturnNull_OnNetworkOrServiceErrors |

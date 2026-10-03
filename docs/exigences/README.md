@@ -352,6 +352,7 @@
 | [GEN-118](GEN-118.md) | Enregistrement robuste aux refus passagers | P4 | I | Réalisé |
 | [GEN-119](GEN-119.md) | Numéro de compilation affiché en développement | P4 | M | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
+| [GEN-121](GEN-121.md) | Les fonctions qui utilisent Internet | P9 | I | Réalisé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Réalisé |
 | [GEN-131](GEN-131.md) | Outil de validation d'un projet | P4 | I | Validé |
@@ -483,6 +484,9 @@
 | [MUS-027](MUS-027.md) | Écran Base musicale | P9 | M | Réalisé |
 | [MUS-028](MUS-028.md) | Écran « À classer » | P9 | M | Réalisé |
 | [MUS-029](MUS-029.md) | Import de playlists exportées en CSV | P9 | S | Réalisé |
+| [MUS-040](MUS-040.md) | Pour une liste d'artistes / titres | P9 | M | Réalisé |
+| [MUS-041](MUS-041.md) | Les propositions sont validées par l'utilisateur | P9 | M | Réalisé |
+| [MUS-042](MUS-042.md) | Respect des limites d'usage des services | P9 | M | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
