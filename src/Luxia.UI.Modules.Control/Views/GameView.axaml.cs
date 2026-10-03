@@ -96,7 +96,7 @@ public partial class GameView : UserControl
             }
 
             var menu = new MenuFlyout { Placement = PlacementMode.BottomEdgeAlignedRight };
-            foreach (var (scope, header) in new[] { ("title", "Pour ce titre seulement ▸"), ("artist", "Pour tous les titres de cet artiste ▸") })
+            foreach (var (scope, header) in new[] { ("title", "Pour ce titre seulement ▸"), ("artist", "Pour cet artiste ▸") })
             {
                 var parent = new MenuItem { Header = header };
                 foreach (var family in bar.Families)

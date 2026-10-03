@@ -1,6 +1,6 @@
 # Guide de découverte P9 – Lecture en cours et style
 
-> Version à essayer : **1.011.NNN** (barre de titre ; Claude annonce le numéro exact). Branche `p9/lecture-style`.
+> Version à essayer : **1.011.NNN** (barre de titre ; Claude annonce le numéro exact). Branche `p9/lecture-style`. Guide **mis à jour après le premier essai** (1.011.051) : la fenêtre « Base musicale » est refaite en « liste + fiche » ([doc 60 §4.11](../60-ergonomie.md)).
 > Procédure d'essai : [33](../33-procedure-essais.md). Résultats à noter dans [essais/P9-resultats.md](../essais/P9-resultats.md).
 > Cahier des charges : [21 – Lecture en cours et style](../21-lecture-en-cours-et-style.md) ; formats : [50 §12i et §12j](../50-format-des-donnees.md) ;
 > décisions : Q48 à Q52, D40 ([02 §19](../02-principes-et-architecture-fonctionnelle.md)). Première partie déjà essayée : [sonde PoC-3](P9-poc3-sonde.md).
@@ -8,7 +8,7 @@
 **Vocabulaire** : la **lecture en cours** est ce que Deezer ou YouTube Music annoncent à Windows (titre, artiste, position) ; le **style**
 est la **famille** que LuXia reconnaît pour ce morceau (14 familles : Électro / Dance, Rock, Latino, Slow / Ballade…, plus **Inconnu**),
 avec une **confiance** (vert ≥ 80 %, orange ≥ 50 %, rouge en dessous, gris : inconnu). Le **show** choisit son ambiance selon ce style.
-La **base musicale** (dans le projet) apprend : chaque **correction** est mémorisée. Rien ne se fait en ligne en soirée.
+La **base musicale** (dans le projet) apprend : chaque **correction** est mémorisée. Un **artiste** a **un seul style** ; un artiste joué mais absent de la base y est ajouté avec le style « **Inconnu** », à classer plus tard. Les **titres** ne sont pas livrés avec l'application (seulement ≈ 460 artistes) : ils apparaissent quand vous en corrigez un. Rien ne se fait en ligne en soirée.
 
 ## 0. Préparation
 
@@ -25,7 +25,7 @@ La **base musicale** (dans le projet) apprend : chaque **correction** est mémor
 |---|---|---|---|---|
 | *Style du morceau (P9)* | show | Le show **suit le style** : une ambiance par famille ; **retour à « Neutre » au morceau suivant** (vrai changement de titre) | oui, avec le style simulé (ex. 9) | Neutre (bleu, lyres au plafond) → **Rock** (rouge, plein feu) / **Électro** (chenillard, cercle des lyres, arc-en-ciel des barres) / **Latino** (ambre, alternance pairs / impairs) / **Slow** (blanc chaud 50 %) / **Inconnu** (une couleur par mesure, 50 %) |
 | *Piège : style qui n'existe pas (P9)* | show | **Avertissement** à la validation : « Musette » n'est le nom d'aucune famille (c'est une étiquette de « Bal / Traditionnel ») | oui | Le show se lance mais reste à l'attente ; menu **Projet → Problèmes du projet…** (ou `luxia-headless valider`) : « écrivez plutôt « Bal » » |
-| `docs/demos/P9-exemple-playlist.csv` | fichier | **Import** d'une playlist (8 lignes) | — | Bilan : 8 lignes, 3 titres classés, 2 déjà connus, 3 « à classer » |
+| `docs/demos/P9-exemple-echange.json` | fichier | **Import** d'un échange JSON : 1 style, 5 artistes, 3 alias (dont un alias refusé : « Queen » appartient déjà à Queen) | — | Bilan : 4 artistes ajoutés, 1 mis à jour, 2 alias, 1 style, 1 ligne refusée |
 
 ## 2. Lecture en cours et style
 
@@ -35,39 +35,42 @@ La **base musicale** (dans le projet) apprend : chaque **correction** est mémor
 | 2 | YouTube Music | Jouer un titre dans **YouTube Music** (Chrome), de préférence un clip « Artiste - Titre (Official Video) » ou une chaîne « XYZ - Topic » | **Artiste et titre nettoyés** (sans « Official Video », sans le nom de la chaîne) : le bloc montre l'artiste réel ; même famille que dans Deezer |
 | 3 | Pause, reprise, titre suivant | Pause (le bloc passe à « ⏸ », **le style reste**), reprise, puis passer au titre suivant | **Un seul** changement de morceau par titre ; pas de clignotement ; la position repart de zéro |
 | 4 | Titre inconnu | Jouer un titre d'un artiste peu connu | Puce **grise « Inconnu »** (pas de confiance) ; info-bulle : « le show suit l'énergie seule » |
-| 5 | **Corriger** | Sur le titre inconnu : **Corriger ▾ → Pour tous les titres de cet artiste ▸ →** une famille | Le style change **tout de suite**, confiance **100 %**, vert ; Journal « style corrigé » ; rejouer un autre titre du même artiste : même style |
-| 6 | Corriger un seul titre | Sur un titre connu : **Corriger ▾ → Pour ce titre seulement ▸ → Slow** ; passer à un autre titre de l'artiste | Le titre corrigé est « Slow », l'autre garde le style de l'artiste |
+| 5 | **Corriger** | Sur le titre inconnu : **Corriger ▾ → Pour cet artiste ▸ →** une famille | Le style change **tout de suite**, confiance **100 %**, vert ; Journal « style corrigé » ; rejouer un autre titre du même artiste : même style (confiance habituelle) |
+| 6 | Corriger un seul titre | Sur un titre connu : **Corriger ▾ → Pour ce titre seulement ▸ → Slow** ; passer à un autre titre de l'artiste. Puis sur un titre d'un **artiste encore « Inconnu »** : même menu | Le titre corrigé est « Slow », l'autre garde le style de l'artiste. Pour un artiste inconnu, LuXia demande « **Appliquer ce style à l'artiste ?** » : **Oui** = l'artiste entier, **Non** = ce titre seulement |
 | 7 | **Imposer** | **Imposer ▾ → Latino** pendant un titre Rock ; puis titre suivant | La puce dit « **imposé** » ; le show suit « Latino » ; **au titre suivant l'imposition s'arrête** ; « ↺ Revenir à la détection automatique » la lève aussi |
-| 8 | **Saisir…** | Fermer Deezer et Chrome ; **Saisir…** « Dancing Queen » / « ABBA » | « Aucun morceau » avant ; après : style **Disco / Funk / Soul** (application « saisie manuelle ») ; rien ne plante |
-| 8b | Plus de lecteur | Jouer un titre puis **fermer Deezer** | Le bloc revient à « Aucun morceau » (jamais un vieux titre) ; les shows continuent (style absent) |
+| 8 | **Saisir…** | À utiliser **seulement quand aucun lecteur ne s'annonce à Windows** (platine, VLC, DJ extérieur) : en soirée vous lancez Deezer ou YouTube Music et LuXia lit tout seul. Pour l'essai : fermer Deezer et Chrome ; **Saisir…** « Dancing Queen » / « ABBA » | « Aucun morceau » avant ; après : style **Disco / Funk / Soul** (application « saisie manuelle ») ; rien ne plante |
+| 8b | Plus de lecteur | **Lancer d'abord un show** (ex. *Style du morceau (P9)*), jouer un titre puis **fermer Deezer** (et Chrome) | Le bloc revient à « Aucun morceau » (jamais un vieux titre) ; **le show continue** (style absent). Si vous relancez ensuite Chrome et YouTube Music, le morceau doit être détecté à nouveau (le journal technique garde la trace des sessions vues par Windows) |
 
 ## 3. Le show qui suit le style
 
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
-| 9 | Essai sans musique | Ouvrir *Style du morceau (P9)* (✎ dans la colonne Shows) → **Essai sans musique** : champ « Style » (taper « Rock »), bouton **Morceau suivant** | Étape active : Neutre → **Rock** ; « Morceau suivant » : retour **Neutre** ; taper « Électro » : **Électro** ; « Inconnu » : étape **Inconnu** |
-| 10 | Avec la vraie musique | Lancer *Style du morceau (P9)* ; jouer un titre Rock, puis un titre Électro, puis un titre Latino (Deezer) | Après chaque **vrai changement de titre** le show repasse par **Neutre** puis prend l'ambiance du **nouveau style** ; bandeau « Show en cours » et Journal « ◆ étape … » à l'appui |
+| 9 | Essai sans musique | Ouvrir *Style du morceau (P9)* (✎ dans la colonne Shows) → **Essai sans musique** : champ « Style » (taper « Rock »), bouton **Morceau suivant** | Étape active : Neutre → **Rock** ; « Morceau suivant » : retour **Neutre** ; on peut taper « Electro » **sans accent** : **Électro** ; « Inconnu » : étape **Inconnu** |
+| 10 | Avec la vraie musique | Lancer *Style du morceau (P9)* ; jouer un titre Rock, puis un titre Électro, puis un titre Latino (Deezer) — essayer aussi un titre à **deux artistes** (« Luis Fonsi et Daddy Yankee », « Post Malone et Swae Lee ») | Après chaque **vrai changement de titre** le show repasse par **Neutre** puis prend l'ambiance du **nouveau style** ; les artistes séparés par « et », « & », « , », « x », « and », « y » sont reconnus un à un ; bandeau « Show en cours » et Journal « ◆ étape … » à l'appui |
 | 11 | Piège | Cliquer *Piège : style qui n'existe pas (P9)* ; ouvrir le menu **Projet → Problèmes du projet…** (ou `luxia-headless valider`) | Le show reste à son étape d'attente ; avertissement orange : « le style « Musette » ne correspond à aucune famille … écrivez plutôt « Bal » » |
-| 12 | Repli sans lecteur | Éteindre les lecteurs ; **🎧 Audio** allumé (micro ou son du PC) ; enchaîner deux morceaux au silence près | « Au morceau suivant » (écoute) fonctionne encore **sans** lecteur ; avec un lecteur en lecture, seul le changement de titre compte (Q49) |
+| 12 | Repli sans lecteur | **Sans lecteur** : éteindre les lecteurs ; **🎧 Audio** allumé (micro ou son du PC) ; enchaîner deux morceaux au silence près. **Avec un lecteur** (Deezer) et le show *Couplet / Refrain / Drop* : mettre en **pause**, puis relancer | « Au morceau suivant » (écoute) fonctionne encore **sans** lecteur ; avec un lecteur en lecture, seul le changement de titre compte (Q49). **La pause (plus de son) reste une fin de morceau** : le show passe à son étape finale, et la reprise le ramène à l'**Intro** — c'est voulu (vos lecteurs restent ouverts en soirée) |
 
 ## 4. La base musicale
 
-Bouton **Base…** du bloc « Morceau en cours » (fenêtre non bloquante).
+Bouton **Base…** du bloc « Morceau en cours » (fenêtre non bloquante). Onglet **Base** : la **liste** des artistes à gauche (ses boutons **Ajouter, Dupliquer,
+Supprimer, Chercher les doublons** sont toujours au même endroit), la **fiche** de l'artiste choisi à droite. Rien n'est enregistré avant **Enregistrer**.
 
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
-| 13 | Parcourir | Onglet **Base** : taper « queen » dans la recherche | La liste se réduit (les artistes de départ : ≈ 460) ; clic sur un artiste : ses boutons de style, ses titres connus |
-| 14 | Changer, ajouter, retirer | Changer le style d'un artiste (clic sur une famille) ; **Ajouter un artiste** (nom + famille) ; **Retirer** (confirmation) | Pris en compte tout de suite ; le titre en cours se met à jour |
-| 15 | Alias | Sur un artiste : « Autre orthographe (alias) » → **Ajouter l'alias** ; saisir ensuite ce titre avec **Saisir…** | Reconnu sous l'alias ; un alias déjà pris par un autre artiste est refusé (message) |
-| 16 | Doublons | Ajouter « Beatles Doublon » et « Doublon Beatles » ; **Chercher les doublons** ; choisir la paire ; **Garder la première fiche** | Les deux noms désignent une seule fiche (l'autre devient alias) |
-| 17 | **Importer** la playlist d'exemple | **Importer un CSV…** → `docs\demos\P9-exemple-playlist.csv` | Message : « 8 ligne(s), 3 titre(s) … classés, 2 déjà connus, 3 à classer » ; l'onglet **À classer** s'ouvre |
-| 18 | **À classer** | Onglet **À classer** : 3 artistes ; **touche 1 à 9, 0, Q, W, E, R** (une famille) ; **Entrée** pour passer | Chaque touche **classe l'artiste** et passe au suivant ; la liste se vide ; « Rien à classer » à la fin ; les morceaux inconnus joués aux exemples 4 et 8 y figurent aussi (journal de soirée) |
-| 19 | Exporter | **Exporter en CSV…** ; ouvrir dans Excel | Colonnes artiste, style, poids, alias, source ; accents corrects |
-| 20 | Journal de soirée | Ouvrir `Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv` | Une ligne par morceau : heure, titre, artiste, application, style, confiance, méthode, imposé, show |
+| 13 | Parcourir | Onglet **Base** : taper « queen » dans la recherche, cliquer l'artiste | La liste se réduit (artistes de départ : ≈ 460) ; la fiche montre le **nom**, le **style** (liste déroulante), les **alias** et les **titres** (la liste des titres est vide : les titres ne sont pas livrés, seuls ceux que vous corrigez y entrent) |
+| 14 | Modifier la fiche | Changer le **style** dans la liste déroulante ; **+** dans « Alias » et taper un alias ; **+** dans « Titres » et taper un titre, sa version, un style propre | Dès la première frappe : « ● modifications non enregistrées », **Enregistrer** et **Annuler** s'activent ; **rien n'est écrit** avant Enregistrer ; **Annuler** remet la fiche comme elle était ; **Enregistrer** met la liste et le titre en cours à jour |
+| 14b | Changer d'élément sans enregistrer | Modifier la fiche puis cliquer **un autre artiste** (ou fermer la fenêtre) | Question « Enregistrer les modifications de … ? » : **Oui** enregistre et passe à l'autre ; **Non** abandonne et passe à l'autre ; **Annuler** reste sur la fiche. Même règle dans toute l'application |
+| 14c | Ajouter, dupliquer, supprimer | **Ajouter** (nom, style, Enregistrer) ; sur un artiste **Dupliquer** (copie : style et titres, **sans les alias**, nom « … (copie) » à changer) ; **Supprimer** | Les boutons ne bougent pas quand on clique un artiste ; Supprimer demande **Oui / Non** ; le nouvel artiste est sélectionné après Enregistrer |
+| 15 | Alias | Dans la fiche, **+** deux fois de suite ; taper un alias ; taper l'alias d'un autre artiste ; Enregistrer ; saisir ensuite ce titre avec **Saisir…** | Le 2ᵉ « + » **ne crée pas une 2ᵉ ligne vide** : le curseur retourne dans la ligne vide ; **Tab** passe d'une cellule à l'autre ; un alias déjà pris par un autre artiste est **refusé** à l'enregistrement (message qui dit par qui) et la fiche reste ouverte ; reconnu sous l'alias |
+| 16 | Doublons | Ajouter « Beatles Doublon » et « Doublon Beatles » ; bouton **Chercher les doublons** de la liste | S'il n'y a aucun doublon : un message, aucun panneau. Sinon, le panneau **Doublons probables** apparaît sous la fiche : choisir la paire, **Garder la première fiche** : les deux noms désignent une seule fiche (l'autre devient alias) |
+| 17 | **Importer** un échange JSON | **Importer un JSON…** → `docs\demos\P9-exemple-echange.json` | Message : « 4 artiste(s) ajouté(s), 1 mis à jour, 2 alias, 1 style(s) ; 1 ligne(s) refusée(s) » (l'alias « Queen » est refusé : il appartient à Queen) |
+| 18 | **À classer** | Onglet **À classer** : les artistes « **Inconnu** » (dont ceux joués aux exemples 4 et 8 et l'artiste inconnu de l'import) ; cliquer la **pastille** d'un style. Dans l'onglet Base, cocher « **Seulement les artistes « Inconnu »** » | Chaque pastille **classe l'artiste** et passe au suivant ; **aucun raccourci clavier** (les touches 1 à 9, 0, Q, W, E, R ne font plus rien) ; « Rien à classer » à la fin ; le filtre de la liste donne les mêmes artistes |
+| 19 | Exporter | **Exporter en JSON…** ; ouvrir le fichier | Trois tables : `styles` (code, libellé, genres, ordre), `artists` (code, nom, style), `aliases` (alias, artiste) ; accents corrects ; pas de poids, pas de source |
+| 20 | Journal de soirée | Ouvrir `Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv` | **Une ligne par événement** (`morceau`, puis `correction`, `imposé` ou `style` si le style change pendant le titre) ; colonnes heure, événement, titre et artiste **nettoyés** (l'artiste du titre, pas le nom de la chaîne YouTube), application, style, confiance, méthode, imposé, show, puis titre brut et artiste brut du lecteur |
 
 ## 5. Enrichissement en ligne (à la maison, jamais en soirée)
 
-L'outil **`luxia-enrich`** propose une famille pour les artistes de « À classer » à partir de MusicBrainz (gratuit, sans clé). **Il ne
+L'outil **`luxia-enrich`** propose une famille pour les artistes « **Inconnu** » de la base (onglet « À classer ») à partir de MusicBrainz (gratuit, sans clé). **Il ne
 change rien dans la base** : il écrit des **propositions** que vous validez.
 
 ```powershell
@@ -76,15 +79,15 @@ change rien dans la base** : il écrit des **propositions** que vous validez.
 
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
-| 21 | Proposer | Lancer la commande ci-dessus (Internet nécessaire ; 1 requête par seconde) | Une ligne par artiste (« Artiste : famille (confiance, MusicBrainz) » ou « aucune proposition ») ; « N proposition(s) enregistrée(s) » |
-| 22 | Valider | **Base… → onglet Propositions** : **Accepter**, **accepter avec une autre famille**, **Rejeter** ; **Accepter les propositions sûres (≥ 70 %)** | L'artiste accepté entre dans la base (origine « enrichissement ») ; un rejet n'est plus reproposé ; les moins de 70 % sont en orange |
+| 21 | Proposer | **Avoir au moins un artiste « Inconnu »** (exemples 4, 8 ou 17) ; lancer la commande ci-dessus (Internet nécessaire ; 1 requête par seconde) | Une ligne par artiste (« Artiste : famille (confiance, MusicBrainz) » ou « aucune proposition ») ; « N proposition(s) enregistrée(s) » ; « Rien à proposer » s'il n'y a aucun artiste « Inconnu » |
+| 22 | Valider | **Base… → onglet Propositions** : **Accepter**, **accepter avec un autre style**, **Rejeter** ; **Accepter les propositions sûres (≥ 70 %)** | L'artiste accepté reçoit son style (il quitte « À classer ») ; un rejet n'est plus reproposé ; les moins de 70 % sont en orange |
 | 23 | Hors ligne | Relancer la commande avec `--hors-ligne` | Aucune requête : le cache (`%AppData%\LuXia\cache-enrichissement`, 90 jours) répond |
 
 ## 6. Interface
 
 | # | Exemple | À faire | À observer |
 |---|---|---|---|
-| 24 | Listes déroulantes (début de P9) | Ouvrir plusieurs listes (unité d'une durée, liste des conditions d'un show, périphérique audio) | La liste dépliée a **toujours la même largeur** (300 px), alignée à gauche du champ, **même position** quelle que soit la longueur des textes ; un texte trop long est coupé par « … » et lisible en **info-bulle** |
+| 24 | Listes déroulantes | Ouvrir plusieurs listes (unité d'une durée, liste des conditions d'un show, périphérique audio, style d'une fiche) | La liste dépliée a **exactement la largeur du champ**, alignée à gauche, **même position** quelle que soit la longueur des textes ; un texte trop long est coupé par « … » et lisible en **info-bulle** |
 | 25 | Titre long | Un titre très long (clip YouTube) | Le bloc « Morceau en cours » **ne change pas de taille** : le titre est coupé par « … », info-bulle au survol |
 
 ## 7. Retour

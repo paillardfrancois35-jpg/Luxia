@@ -22,7 +22,7 @@
 | Chantier « Contrôle 2 » – écran de jeu, fenêtre d'édition, groupes et dimmers | Validé | `ergo/controle-2` (fusionnée dans `main`, `v1.007`) | [demos/ERG2-controle-2.md](demos/ERG2-controle-2.md) | ✅ 2026-09-30, matériel réel (MK1 + MK2), essai en discussion test puis deux revérifications |
 | P7 – Audio et tempo | Validée | `p7/audio-tempo` (fusionnée dans `main`, `v1.009`) | [demos/P7-audio-tempo.md](demos/P7-audio-tempo.md) | ✅ 2026-10-02, matériel réel (essai, re-vérifications 1 à 3, lot ergonomique ; [résultats](essais/P7-resultats.md)) ; bloc BPM et écoute essayés à la main par l'utilisateur pendant le développement (« très correct, impressionnant ») |
 | P8 – Show & séquences | Validée | `p8/show-sequences` (fusionnée dans `main`, `v1.010`) | [demos/P8-show-et-sequences.md](demos/P8-show-et-sequences.md) | ✅ 2026-10-02, matériel réel, essai en discussion test (v1.010.079 → .104, [résultats](essais/P8-resultats.md)) puis contrôle final (1.010.116) ; réserves : ex. 5, 6, 7 non refaits après les correctifs, fumée non testée |
-| P9 – Lecture & Style | Développée | `p9/lecture-style` (v1.011 en développement) | [demos/P9-lecture-et-style.md](demos/P9-lecture-et-style.md) | ⏳ essai à faire (Deezer, YouTube Music) ; PoC-3 fait le 2026-10-03 ([résultats](essais/P9-poc3.md)) |
+| P9 – Lecture & Style | Développée | `p9/lecture-style` (v1.011 en développement) | [demos/P9-lecture-et-style.md](demos/P9-lecture-et-style.md) | 🟡 **1er essai fait le 2026-10-03** (1.011.051, [résultats](essais/P9-resultats.md) : 22 exemples conformes, 6 anomalies) ; **correctifs et refonte de la Base musicale faits** (lots 1 à 5, 1.011.072) ⏳ à re-vérifier dans la discussion test ; PoC-3 fait le 2026-10-03 ([résultats](essais/P9-poc3.md)) |
 | P6 – Effets | Validée | `p6/effets` (fusionnée dans `main`, `v1.006`) | [demos/P6-effets.md](demos/P6-effets.md) | ✅ 2026-09-29, matériel réel (PAR, barres, lyre 1, UV, WZYBUTA 64 canaux), exemples 1 à 13, discussion test ([essais/P6-resultats.md](essais/P6-resultats.md)) |
 
 - **P0, P1, P2 validées par l'utilisateur le 2026-09-25** (avec le matériel réel) et fusionnées dans `main` (`v1.001`).
@@ -334,6 +334,31 @@
   (taxonomie par fichier), GEN-111 (détail des shows joués).
   **Pièges vécus** (doc 03 §11) : l'enregistrement en UTF-8 sous PowerShell 5.1 (double encodage), les accents graves dans les chaînes (caractères de
   contrôle), un alias de commande de suppression qui masque une fonction du même nom, les fins de ligne mixtes.
+
+- **P9 – suite du premier essai (2026-10-03, discussion dev, version 1.011.072)**. Résultats : [essais/P9-resultats.md](essais/P9-resultats.md). Mandat de
+  l'utilisateur : « tous les lots d'une traite », décisions présentées à la fin, tout sur la branche `p9/lecture-style` avant `v1.011`. Livré, un commit par lot :
+  1. **Anomalies** : artistes séparés par « et », « and », « y » reconnus un à un (A) ; journal de soirée à **une ligne par événement**, titre et artiste nettoyés
+     + valeurs brutes (G) ; traces des sessions média vues par Windows et renouvellement du gestionnaire après 30 s sans session (F, non reproduite) ; pause / reprise
+     avec un lecteur suivi : **comportement conservé** (Final / Intro), figé par un test (B, Q58) ; fiche sans style (C) et alias invisibles (D) réglés par le lot 3 ;
+     modales (E) par le lot 4.
+  2. **Modèle de données simplifié (Q53)** : un artiste = un style, code stable, alias uniques dans toute la base, titre à style facultatif, « Inconnu » vraie
+     ligne de la taxonomie ; **poids, origine, historique des corrections supprimés** ; format 2 de `artistes.json` / `titres.json` avec **migration** (copies
+     `.v1.bak`) ; `corrections.json` et `aclasser.json` abandonnés ; **échange JSON** des trois tables (MUS-029) ; **artistes inconnus injectés** à chaque morceau
+     absent de la base (MUS-030) ; `ClassifyList`, `EveningJournal`, `PendingSet`, `MusicCsv` supprimés ; `luxia-enrich` lit les artistes « Inconnu ».
+  3. **Fenêtre « Base musicale » en « liste + fiche »** (ERG-040) : Ajouter / Dupliquer / Supprimer / Chercher les doublons toujours au même endroit, fiche
+     (nom, style en liste déroulante, alias et titres saisis dans leurs listes), Enregistrer / Annuler, Oui / Non / Annuler au changement d'élément ou à la fermeture ;
+     « À classer » = les artistes « Inconnu », pastilles sans raccourcis clavier ; liste déroulante à la largeur du champ (ERG-042) ; menu « Pour cet artiste ▸ » ;
+     « Appliquer ce style à l'artiste ? » pour un titre d'un artiste inconnu.
+  4. **Charte et audit** : doc 60 §4.11 ; `IDialogService.AskSaveAsync` (ERG-041) ; trois confirmations « modifications non enregistrées » passées à trois boutons
+     (fenêtre d'édition de scène, de show / séquence, Bibliothèque). Audit des **autres écrans** « liste + fiche » : **⏳ Q59**, à faire avec l'analyse ergonomique.
+  5. **Documentation** : fiches (MUS-021, 023 à 025, 027 à 030, 040, 041, ERG-033, 040 à 042, GEN-103), doc 21 / 50 / 60, schémas (`echange-base-musicale`,
+     `artistes`, `titres` au format 2 ; `corrections` et `aclasser` supprimés), glossaire (alias, artiste « Inconnu », code, liste + fiche, fiche), guide d'essai
+     P9 mis à jour (exemples 5, 6, 8, 8b, 9, 10, 12, 13 à 22, 24 ; nouveaux 14b et 14c), exemple `docs/demos/P9-exemple-echange.json`.
+  Tests : **1 385**, tous verts, 0 avertissement. **Reste** : **re-vérification dans la discussion test** (guide P9 mis à jour, version annoncée par Claude),
+  ⏳ **gros fichier de base de l'utilisateur** à fournir (Q57), ⏳ audit des autres écrans (Q59), **analyse ergonomique de fin de phase** à proposer (§5.6), puis
+  validation : fiches « Validé », `LuxiaDevVersion` vidé et `Version` = 1.011, fusion `--no-ff` dans `main`, étiquette `v1.011`. **Demander avant** : régénérer le show de
+  travail (`tools/regenerer-show-de-travail.ps1`) — les fichiers `artistes.json` / `titres.json` d'un projet existant sont **migrés au premier chargement** (originaux en `.v1.bak`) ;
+  la base de travail de l'essai contient des classements faits au hasard (essai ex. 17 et 18) : la repartir de la base livrée est conseillé.
 
 > **Règle permanente (demande de l'utilisateur, 2026-10-01)** : chaque fois qu'une discussion explique un terme à l'utilisateur,
 > elle lui propose de l'ajouter au [glossaire](glossaire.md) ; voir la procédure d'essais, [doc 33](33-procedure-essais.md) §2 point 5.

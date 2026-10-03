@@ -223,6 +223,18 @@ Décisions de l'utilisateur à l'essai de P7 (2026-10-01) ; analyse : [chantiers
   centre (grille mesure / temps / ½ temps, zoom, Suppr), propriétés à droite. Show : cartes à gauche (une par étape, ses transitions
   dessous), diagramme dessiné automatiquement à droite, panneau « Essai sans musique » en bas.
 
+### 4.11 Écrans « liste + fiche » (charte posée après l'essai P9, 2026-10-03)
+
+Demande de l'utilisateur (essai P9, ligne 14f) : codifier une fois pour toutes les écrans qui gèrent une liste d'éléments codifiés (artistes, modèles d'appareils, groupes…). Première application : la fenêtre « Base musicale » (v1.011) ; les autres écrans sont à auditer (Q59).
+
+1. **Liste** à gauche, avec ses actions : **Ajouter, Dupliquer, Supprimer** (et les actions propres à la liste, ex. « Chercher les doublons ») ; les boutons sont **toujours au même endroit**, jamais déplacés selon la sélection. Une action propre à la liste ne laisse pas de panneau vide en temps normal : « Chercher les doublons » affiche un message s'il n'y en a pas, et n'ouvre le panneau de fusion que s'il y en a.
+2. **Fiche** à droite : un clic sur un élément la renseigne ; elle contient tous les champs de l'élément. Si l'élément est enfant d'un autre (clé étrangère), les champs du parent s'affichent sans pouvoir être modifiés. Un choix parmi quelques valeurs est une **liste déroulante**, pas une rangée de boutons.
+3. **Pas d'enregistrement immédiat** : un indicateur « modifications non enregistrées » s'allume dès la première saisie ; **Enregistrer** et **Annuler** (reprend l'état enregistré) ne sont actifs qu'alors. Un enregistrement refusé garde la fiche ouverte et dit pourquoi.
+4. **Changer d'élément, fermer ou quitter avec une fiche modifiée** : « Enregistrer les modifications de … ? » — **Oui** : enregistre et continue ; **Non** : abandonne et continue ; **Annuler** : reste sur la fiche. Trois boutons, toujours ce sens. Les suppressions et les remplacements gardent *Oui / Non*. Réalisation : `IDialogService.AskSaveAsync`.
+5. **Niveau N+1** (titres d'un artiste, alias) : même principe que la liste, boutons identiques ; **saisie directe dans la liste** : « + » ajoute une ligne vide, et s'il en existe déjà une, aucune ligne n'est ajoutée mais le curseur va dans sa première cellule ; **Tab** passe à la cellule suivante ; une ligne restée vide n'est pas enregistrée. Si la fiche de l'élément ne peut pas s'afficher faute de place : la liste montre l'essentiel et Ajouter / Modifier / Dupliquer ouvrent une fenêtre modale dont **Valider** valide *en mémoire* l'élément porteur.
+6. **Persistance** : l'enregistrement du niveau N+1 se fait **en mémoire**, sur l'élément de la fiche en cours ; seule la persistance du niveau N (disque, base de données) est finale.
+7. **Listes déroulantes** : la liste dépliée a **la largeur du champ** ; les textes trop longs sont coupés par « … » avec une info-bulle.
+
 ## 5. Composants communs (catalogue)
 
 Tous dans `Luxia.UI.Controls`, dessinés en 2D Avalonia, chacun avec son test et sa capture dans une **galerie** (écran de
@@ -346,6 +358,9 @@ CONS-061) gardent leur identifiant et leur fiche.
 | ERG-037 | I | ERG2 | **Dimmers de groupe** : panneau « Groupes dimmer » de l'écran de jeu (un fader par groupe à dimmer) ; le moteur multiplie l'intensité des appareils **après** la fusion des couches par chaque étage de l'arbre (règle proportionnelle : Maître × G1 × G1.1) ; appareil RVB sans canal d'intensité : les canaux émetteurs sont multipliés ; retouche non enregistrée (Q37). | Tests moteur. |
 | ERG-038 | I | ERG2 | **Seconde platine MIDI** : deuxième contrôleur reconnu à part (par son port, MIDI-005) ; ses 8 premiers faders commandent les 8 premiers dimmers de groupe, dans l'ordre du panneau ; la première platine garde les couches ; affectation fixe (l'apprentissage « Affecter… », MIDI-008, reste reporté). | Tests ; essai matériel. |
 | ERG-039 | I | ERG2 | **Fader de couche = niveau de couche** (précise COU, LIVE-040) : le master d'une couche multiplie sa contribution, comme aujourd'hui ; aucun réglage de couche paramétrable par scène (Q37, Q38 point 4). | Tests. |
+| ERG-040 | M | P9 | **Écrans « liste + fiche »** (charte §4.11, demande de l'utilisateur, essai P9 ligne 14f) : liste à gauche avec Ajouter / Dupliquer / Supprimer toujours au même endroit, fiche à droite, pas d'enregistrement immédiat (indicateur de modification, Enregistrer, Annuler), listes de niveau N+1 saisies directement (« + », curseur sur la ligne vide, Tab), persistance finale au niveau N. Appliquée à la fenêtre « Base musicale » ; les autres écrans sont à auditer (Q59). | Fenêtre « Base musicale » conforme aux 7 points de la charte. |
+| ERG-041 | M | P9 | **Modifications non enregistrées : une seule règle** (charte §4.11, règle 4) : *Oui* enregistre et continue, *Non* abandonne et continue, *Annuler* reste. Les suppressions et remplacements gardent *Oui / Non*. | Audit des confirmations : fenêtres d'édition de scène, de show et de séquence, Bibliothèque, Base musicale en trois boutons. |
+| ERG-042 | M | P9 | **Liste déroulante à la largeur du champ** (essai P9 ex. 24) : la liste dépliée a exactement la largeur du champ, alignée à gauche, hauteur maximale unique ; texte trop long coupé par « … » avec info-bulle. | Largeur de la liste = largeur du champ pour chaque liste de l'application (mesure des captures). |
 
 ## 10. Prototype technique (§7.2) : réalisation et bilan
 
@@ -394,6 +409,7 @@ choix ci-dessous est donc **provisoire** : il sera revu à l'usage. Q35 est clos
 
 | Date | Modification |
 |---|---|
+| 2026-10-03 | §4.11 : charte « liste + fiche » (essai P9, ligne 14f), règle Oui / Non / Annuler des modifications non enregistrées, liste déroulante à la largeur du champ. |
 | 2026-10-01 | §4.10 : interrupteur Audio du bloc BPM, écran Audio en une page, volet « Au rythme » simplifié et fréquence ÷8 à ×4 (lot ergonomique de P7). |
 | 2026-09-29 | §4.9 : écran de jeu et fenêtre d'édition (chantier « Contrôle 2 »), qui remplace le modèle à trois modes du §4.1 ; tailles minimales des cibles (§4.5). |
 | 2026-09-28 | **Chantier validé** par l'utilisateur (1.005.237), fusionné dans `main`, étiquette `v1.005`. |

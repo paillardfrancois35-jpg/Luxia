@@ -80,6 +80,7 @@ public sealed class MusicStyleServiceTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-028")]
+    [Trait("Exigence", "MUS-030")]
     public async Task TrackOfAnArtistMissingFromTheBase_InjectsTheArtistAsUnknown_OnceOnly()
     {
         await PlayAsync("Un titre", "Artiste Absolument Inconnu");

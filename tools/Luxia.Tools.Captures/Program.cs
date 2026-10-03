@@ -150,25 +150,32 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Tick(4);
     Capture("Contrôle - titre long");
 
-    // P9 lot 5 : fenêtre « Base musicale » (MUS-027, MUS-028) avec un journal de soirée d'exemple pour l'onglet « À classer ».
-    Directory.CreateDirectory(Path.Combine(root, "Documents", "Journaux"));
-    File.WriteAllText(
-        Path.Combine(root, "Documents", "Journaux", "soiree-20261003.csv"),
-        "heure;titre;artiste;application;style;confiance;méthode;imposé;show\r\n" +
-        "21:02:10;Spider Dance;Holder, GameChops;Deezer;Inconnu;0;aucune;;\r\n" +
-        "21:06:30;Spider Dance;Holder, GameChops;Deezer;Inconnu;0;aucune;;\r\n" +
-        "21:10:00;Tous les cris les S.O.S. (Kokwak Hardstyle Remix) | Daniel Balavoine;Kokwak;Chrome;Variété française;70;artiste;;\r\n" +
-        "21:15:00;Hardstyle Anthem;Kokwak;Deezer;Inconnu;0;aucune;;\r\n" +
-        "21:20:00;Valse des imaginaires;Quartet Imaginaire;Deezer;Inconnu;0;aucune;;\r\n",
-        new System.Text.UTF8Encoding(true));
+    // P9 : fenêtre « Base musicale » en liste + fiche (MUS-027, MUS-028), avec des artistes « Inconnu » pour l'onglet « À classer ».
+    foreach (var unknown in new[] { "Holder", "Quartet Imaginaire", "Kokwak" })
+    {
+        runtime.Music.Base.InjectUnknownArtist(unknown);
+    }
+
+    runtime.Music.Base.SaveArtist(
+        runtime.Music.Base.FindArtist("queen")!.Code,
+        runtime.Music.Base.FindArtist("queen")! with { Aliases = ["Les Reines", "Queen (groupe)"] },
+        [new Luxia.Music.Base.TitleEntry { Title = "Love of My Life", Style = "slow" }, new Luxia.Music.Base.TitleEntry { Title = "Radio Ga Ga" }]);
     var musicBase = game.CreateMusicBase()!;
-    var musicWindow = new Luxia.UI.Modules.Control.Views.MusicBaseWindow { Width = 1100, Height = 720, DataContext = musicBase };
+    var musicWindow = new Luxia.UI.Modules.Control.Views.MusicBaseWindow { Width = 1100, Height = 740, DataContext = musicBase };
     musicWindow.Show();
     Tick(4);
+    musicBase.Search = "queen";
+    musicBase.SelectedArtist = musicBase.Artists.First(a => a.Name == "Queen");
+    Tick(4);
+    Capture("Base musicale - fiche", musicWindow);
+    MeasureCombos(musicWindow, "Base musicale");
+    musicBase.AddAliasRowCommand.Execute(null);
+    musicBase.Aliases[^1].Text = "Freddie et les autres";
     musicBase.Search = "bea";
     musicBase.FindDuplicatesCommand.Execute(null);
     Tick(4);
-    Capture("Base musicale - base", musicWindow);
+    Capture("Base musicale - fiche modifiée", musicWindow);
+    musicBase.CancelFormCommand.Execute(null);
     musicBase.Search = string.Empty;
     musicBase.SelectedTab = 1;
     Tick(4);

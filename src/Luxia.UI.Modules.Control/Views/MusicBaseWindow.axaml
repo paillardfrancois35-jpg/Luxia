@@ -159,7 +159,7 @@
               </StackPanel>
             </Border>
             <TextBlock Text="Clic sur un style : classe cet artiste (puis on passe au suivant) :" Foreground="#8B949E" TextWrapping="Wrap" />
-            <ItemsControl ItemsSource="{Binding Families}">
+            <ItemsControl ItemsSource="{Binding AssignableFamilies}">
               <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="mb:MusicFamily">
@@ -205,7 +205,7 @@
               <Button Classes="danger" Content="Rejeter" Command="{Binding RejectProposalCommand}" />
             </StackPanel>
             <TextBlock Text="Ou accepter avec un autre style :" Foreground="#8B949E" />
-            <ItemsControl ItemsSource="{Binding Families}">
+            <ItemsControl ItemsSource="{Binding AssignableFamilies}">
               <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
               <ItemsControl.ItemTemplate>
                 <DataTemplate x:DataType="mb:MusicFamily">

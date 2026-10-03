@@ -1,0 +1,18 @@
+{
+  "formatVersion": 1,
+  "styles": [
+    { "code": "chill", "label": "Chill / Lounge", "genres": ["lounge", "chillout"], "order": 15 }
+  ],
+  "artists": [
+    { "name": "Les Vagabonds Imaginaires", "style": "bal" },
+    { "name": "Orchestre Imaginaire", "style": "bal" },
+    { "name": "Quartet Imaginaire", "style": "chill" },
+    { "name": "Aya Nakamura", "style": "hiphop" },
+    { "name": "Un Artiste Que Personne Ne Connaît", "style": "inconnu" }
+  ],
+  "aliases": [
+    { "alias": "Vagabonds Imaginaires", "artist": "Les Vagabonds Imaginaires" },
+    { "alias": "Orchestre du Dimanche", "artist": "Orchestre Imaginaire" },
+    { "alias": "Queen", "artist": "Quartet Imaginaire" }
+  ]
+}

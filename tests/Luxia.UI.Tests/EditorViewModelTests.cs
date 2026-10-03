@@ -111,6 +111,7 @@ public sealed class EditorViewModelTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "ERG-033")]
+    [Trait("Exigence", "ERG-041")]
     public async Task TheCross_ClosesWithoutChanges_AsksBeforeLosingADraft()
     {
         _vm.Open(_chaserId);
@@ -120,16 +121,23 @@ public sealed class EditorViewModelTests : IAsyncLifetime
 
         _vm.Open(_chaserId);
         Rename("À garder");
-        _host.Dialogs.ConfirmAnswer = false;
-        (await _vm.ConfirmCloseAsync()).ShouldBeFalse("Non : la fenêtre reste ouverte");
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Cancel;
+        (await _vm.ConfirmCloseAsync()).ShouldBeFalse("Annuler : la fenêtre reste ouverte");
         _vm.IsOpen.ShouldBeTrue();
         Stored(_chaserId).Name.ShouldBe("Chenillard 4 couleurs");
-        _host.Dialogs.Confirmations.ShouldHaveSingleItem().ShouldContain("À garder");
+        _host.Dialogs.SaveQuestions.ShouldHaveSingleItem().ShouldContain("À garder");
 
-        _host.Dialogs.ConfirmAnswer = true;
-        (await _vm.ConfirmCloseAsync()).ShouldBeTrue("Oui : brouillon abandonné");
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Discard;
+        (await _vm.ConfirmCloseAsync()).ShouldBeTrue("Non : brouillon abandonné");
         _vm.IsOpen.ShouldBeFalse();
         Stored(_chaserId).Name.ShouldBe("Chenillard 4 couleurs");
+
+        _vm.Open(_chaserId);
+        Rename("À valider");
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Save;
+        (await _vm.ConfirmCloseAsync()).ShouldBeTrue("Oui : validé puis fermé");
+        _vm.IsOpen.ShouldBeFalse();
+        Stored(_chaserId).Name.ShouldBe("À valider");
     }
 
     [Fact]

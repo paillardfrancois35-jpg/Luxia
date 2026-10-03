@@ -203,6 +203,9 @@ public sealed partial class MusicBaseViewModel : ViewModelBase
     /// <summary>Styles de la taxonomie.</summary>
     public IReadOnlyList<MusicFamily> Families { get; }
 
+    /// <summary>Styles qu'on peut donner à un artiste « Inconnu » ou à une proposition : tous sauf « Inconnu » lui-même.</summary>
+    public IReadOnlyList<MusicFamily> AssignableFamilies => [.. Families.Where(f => f.Id != Taxonomy.UnknownId)];
+
     /// <summary>Choix de style d'un titre : « style de l'artiste », puis les styles.</summary>
     public IReadOnlyList<MusicFamily> TitleStyles { get; }
 

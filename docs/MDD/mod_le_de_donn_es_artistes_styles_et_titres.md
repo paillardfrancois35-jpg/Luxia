@@ -134,3 +134,22 @@ CREATE TABLE TITRE (
         ON DELETE RESTRICT
 );
 ```
+
+---
+
+## 5. Réalisation dans LuXia (v1.011, discussion dev du 2026-10-03)
+
+Ce modèle de l'utilisateur a été **analysé puis simplifié** (décisions Q53 à Q57, D41) ; la réalisation est en **JSON** dans le projet ([doc 50 §12j](../50-format-des-donnees.md)),
+pas en base SQL. Correspondance :
+
+| Modèle ci-dessus | Dans LuXia |
+|---|---|
+| `ARTISTE.CODE`, `NOM`, `STYLE_CODE` | `artistes.json` : `code` (« A00012 », stable), `name`, `style` |
+| `ARTISTE.STYLE_POIDS`, `TITRE.STYLE_POIDS` | **Supprimés** : un artiste = un style, un titre a son style ou celui de l'artiste (le poids ne servait qu'à baisser une confiance de 0,1) |
+| `ARTISTE.Commentaire`, `STYLE.Commentaire` | **Non repris** (aucun usage dans l'identification) ; à ajouter si l'utilisateur en veut |
+| `ALIAS` (`ARTISTE_CODE`, `ALIAS`) | `aliases` de l'artiste ; **un alias est unique dans toute la base** et ne peut pas être le nom d'un autre artiste (contrôlé à l'enregistrement de la fiche) |
+| `STYLE.CODE`, `LIBELLE` | `taxonomie.json` : `id`, `name` (modifiable) ; l'ordre de la liste est l'ordre d'affichage ; « Inconnu » est une vraie ligne |
+| `TITRE` (`ARTISTE_CODE`, `LIBELLE`, `STYLE_CODE`) | `titres.json` : `artist`, `title`, `version`, `style` **facultatif** ; **titres non livrés** |
+| Origine (« source »), historique des corrections | **Supprimés** (`corrections.json` et `aclasser.json` abandonnés, anciens fichiers en `.v1.bak`) |
+| Export des trois tables | **Échange JSON** `styles` / `artists` / `aliases` ([schéma](../schemas/echange-base-musicale.schema.json)) ; l'import du gros fichier de base de l'utilisateur suit ce format (⏳ Q57) |
+

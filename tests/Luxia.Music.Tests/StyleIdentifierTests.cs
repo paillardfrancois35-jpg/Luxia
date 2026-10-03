@@ -238,6 +238,7 @@ public sealed class StyleIdentifierTests
 
     [Fact]
     [Trait("Exigence", "MUS-021")]
+    [Trait("Exigence", "MUS-030")]
     public void ArtistInjectedAsUnknown_IsNotAResult_AndLetsThePlayerGenreSpeak()
     {
         _base.InjectUnknownArtist("Zorglub").ShouldBeTrue();

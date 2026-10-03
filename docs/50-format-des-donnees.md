@@ -730,29 +730,34 @@ Résultat de la normalisation (code `TrackNormalizer`) : une **liste d'hypothès
 titre, versions), de la plus à la moins probable : « Titre \| Artiste » et « Artiste \| Titre » se ressemblent, c'est l'identification
 (doc 21 §3.3) qui départage avec la base musicale. Toutes les clés sont en minuscules, sans accent ni ponctuation (« & » devient « et »).
 
-## 12j. Projet : base musicale (`taxonomie.json`, `artistes.json`, `titres.json`, `corrections.json`, `aclasser.json`, `propositions.json`, format 1)
+## 12j. Projet : base musicale (`taxonomie.json`, `artistes.json`, `titres.json`, `propositions.json` ; `artistes` et `titres` au format 2)
 
-Base musicale locale (doc 21 §3.2, MUS-021 à MUS-024, P9), **dans le projet**. Tous les fichiers sont facultatifs : sans `taxonomie.json`,
-les 14 familles du doc 21 §3.4 ; sans `artistes.json`, la **base de départ** livrée avec l'application (environ 460 artistes populaires en
-soirée, source `initial`, Q48) ; sans les autres fichiers, rien. Écrits par l'application (corrections en Live) ou à la main
-ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artistes`](schemas/artistes.schema.json),
-[`titres`](schemas/titres.schema.json), [`corrections`](schemas/corrections.schema.json).
+Base musicale locale (doc 21 §3.2, MUS-021 à MUS-024, MUS-027 à MUS-029, P9), **dans le projet**. Tous les fichiers sont facultatifs : sans `taxonomie.json`,
+les 14 familles du doc 21 §3.4 et la famille « Inconnu » ; sans `artistes.json`, la **base de départ** livrée avec l'application (environ 460
+artistes populaires en soirée, Q48) ; sans les autres fichiers, rien. Écrits par l'application (enregistrement de la fiche, corrections en Live,
+artistes inconnus injectés) ou à la main ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artistes`](schemas/artistes.schema.json),
+[`titres`](schemas/titres.schema.json), [`propositions`](schemas/propositions.schema.json), [`échange`](schemas/echange-base-musicale.schema.json).
+
+**Modèle (simplifié après l'essai P9, Q53)** : trois tables et un lien.
+
+| Table | Colonnes | Règles |
+|---|---|---|
+| **STYLE** (`taxonomie.json`) | `id` (code stable), `name` (libellé modifiable), `labels` (genres qui y renvoient) ; l'ordre de la liste est l'ordre d'affichage | « Inconnu » (`inconnu`) est une vraie ligne : le style des artistes pas encore classés |
+| **ARTISTE** (`artistes.json`) | `code` (stable, « A00012 », jamais réattribué), `name`, `style` (code du style), `aliases` | **un artiste = un style**, sans poids, sans origine, sans historique |
+| **ALIAS** (dans l'artiste) | texte | un alias est **unique dans toute la base** : jamais deux fois le même, jamais le nom d'un autre artiste ; comparé sur la forme normalisée |
+| **TITRE** (`titres.json`) | `artist` (nom), `title`, `version`, `style` **facultatif**, `aliases`, `bpm` | sans `style`, le titre suit celui de son artiste ; avec un `style`, il prime |
 
 ```json
-// artistes.json
-{ "formatVersion": 1,
+// artistes.json (format 2)
+{ "formatVersion": 2,
   "artists": [
-    { "name": "Queen", "aliases": ["The Queen"], "styles": { "rock": 0.8, "pop": 0.2 }, "source": "initial" } ] }
+    { "code": "A00001", "name": "Queen", "style": "rock", "aliases": ["The Queen"] },
+    { "code": "A00002", "name": "Artiste vu en soirée", "style": "inconnu", "aliases": [] } ] }
 
-// titres.json : le style d'un titre peut différer de celui de l'artiste
-{ "formatVersion": 1,
+// titres.json (format 2) : le style d'un titre peut différer de celui de l'artiste
+{ "formatVersion": 2,
   "titles": [
-    { "artist": "Queen", "title": "Love of My Life", "aliases": [], "style": "slow", "version": null, "bpm": 76, "source": "manuel" } ] }
-
-// corrections.json : historique des corrections faites en Live (ajout seul)
-{ "formatVersion": 1,
-  "corrections": [
-    { "at": "2026-10-03T21:12:00+02:00", "scope": "artist", "artist": "Queen", "oldStyle": "rock", "newStyle": "festif" } ] }
+    { "artist": "Queen", "title": "Love of My Life", "aliases": [], "style": "slow", "version": null, "bpm": 76 } ] }
 
 // taxonomie.json : familles et étiquettes de genre qui y renvoient
 { "formatVersion": 1,
@@ -763,13 +768,27 @@ ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artist
 |---|---|
 | `families[].id`, `name` | Identifiant stable et nom affiché ; le **nom** est la valeur de style donnée aux shows. Une condition « style » accepte le nom entier ou l'une de ses parties séparées par « / » (« Électro » pour « Électro / Dance »), sans casse ni accents |
 | `families[].labels` | Étiquettes brutes de genre (donnés par un lecteur) qui renvoient à la famille (chaîne d'identification, genre du lecteur, 0,4) |
-| `artists[].styles` | Identifiant de famille → poids (0 à 1) ; la famille dominante est le style de l'artiste ; un artiste aux styles partagés (dominant < 0,6) donne une confiance un peu plus basse |
+| `artists[].style` | Code du style de l'artiste ; `inconnu` = pas encore classé (n'est jamais un résultat d'identification : le genre du lecteur peut alors parler) |
 | `artists[].aliases` | Autres orthographes, noms courts ; comparés sur la forme normalisée (minuscules, sans accent ni ponctuation) |
-| `artists[].source`, `titles[].source` | `initial` (base livrée), `manuel`, `correction` (faite en Live ou classée dans « À classer » : **prioritaire**, confiance 1), `import` (CSV), `enrichissement` (proposition en ligne acceptée) |
 | `titles[].version` | Clé de la version (« extended mix ») si le style est celui de cette version ; absent = l'original |
-| `corrections[].scope` | `title` : ce titre seulement ; `artist` : tous les titres de l'artiste (sauf ceux corrigés à part). Une correction crée ou met à jour l'entrée de l'artiste ou du titre (source `correction`) |
 
-`propositions.json` (`items` : artiste, famille proposée, confiance, source, étiquettes ; `rejected` : artistes refusés) reçoit les propositions de l'outil `luxia-enrich` (MUS-040) en attente de validation dans l'onglet « Propositions » (MUS-041) ; `aclasser.json` (`items` : artiste, titre, application, source `playlist`, passages) garde les titres des playlists importées que la base ne sait pas classer ; ceux des soirées sont relus du **journal de soirée** `Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv` (colonnes `heure;titre;artiste;application;style;confiance;méthode;imposé;show`, séparateur « ; », UTF-8 avec marque d'ordre des octets). L'import CSV (fenêtre « Base musicale ») accepte `artiste;titre;style` ou les colonnes d'un export de playlist (« Track Name », « Artist Name(s) ») ; l'export donne `artiste;style;poids;alias;source`.
+**Migration du format 1** (au premier chargement, GEN-051) : `artistes.json` : le style dominant (poids le plus fort) devient `style`, `styles` et `source` disparaissent, un
+`code` est attribué ; `titres.json` : `source` disparaît ; `corrections.json` et `aclasser.json` sont abandonnés (copies `.v1.bak` ; les corrections étaient déjà
+appliquées aux artistes et aux titres). Les originaux sont gardés en `artistes.json.v1.bak`, `titres.json.v1.bak`, `corrections.json.v1.bak`, `aclasser.json.v1.bak`.
+
+**Artistes inconnus** : quand un morceau d'un artiste absent de la base est joué, l'artiste est **ajouté avec le style `inconnu`** (une seule fois). L'onglet « À classer »
+et le filtre « Seulement Inconnu » de la fenêtre Base musicale les listent ; en classer un lui donne son style. Une correction en Live est une modification de la base
+(artiste ou titre) ; pour le morceau en cours elle donne la confiance 1, rejouée plus tard elle est retrouvée comme un artiste ou un titre connu.
+
+**Échange JSON** (fenêtre Base musicale, boutons « Importer / Exporter en JSON… » ; schéma [`echange-base-musicale`](schemas/echange-base-musicale.schema.json), format 1) : trois tables,
+`styles` (`code`, `label`, `genres`, `order`), `artists` (`code`, `name`, `style`) et `aliases` (`alias`, `artist` = code ou nom). L'import **ajoute et met à jour** (artiste retrouvé
+par code, sinon par nom), ne supprime rien, refuse un alias déjà pris par un autre artiste et classe « Inconnu » un style qui n'existe pas (rapport des lignes refusées). Le gros
+fichier de base préparé par l'utilisateur suit ce format. Les titres ne sont pas livrés.
+
+`propositions.json` (`items` : artiste, famille proposée, confiance, source, étiquettes ; `rejected` : artistes refusés) reçoit les propositions de l'outil `luxia-enrich` (MUS-040) pour
+les artistes « Inconnu », en attente de validation dans l'onglet « Propositions » (MUS-041). Le **journal de soirée** `Documents\LuXia\Journaux\soiree-AAAAMMJJ.csv` (colonnes
+`heure;événement;titre;artiste;application;style;confiance;méthode;imposé;show;titre brut;artiste brut`, séparateur « ; », UTF-8 avec marque d'ordre des octets ; une ligne par événement :
+`morceau`, `correction`, `imposé`, `style`) ne sert plus à classer : c'est la trace de la soirée.
 
 Un identifiant de famille inconnu d'un artiste ou d'un titre est ignoré. L'identification est décrite au doc 21 §3.3 ; le seuil du rapprochement
 flou (0,8 par défaut) est réglable dans le code (`IdentifierOptions`).
@@ -824,3 +843,4 @@ seule scène (GEN-132).
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |
 | 2026-10-03 | P9 : `normalisation.json` (§12i, MUS-020), schéma `normalisation.schema.json`. |
 | 2026-10-03 | P9 : base musicale du projet (§12j) : `taxonomie.json`, `artistes.json` (base de départ livrée), `titres.json`, `corrections.json` ; schémas. |
+| 2026-10-03 | P9 (lots 2 et 3, Q53) : `artistes.json` et `titres.json` **format 2** (un style par artiste, code stable, alias uniques, style de titre facultatif, sans poids ni origine) avec migration et copies `.v1.bak` ; `corrections.json` et `aclasser.json` abandonnés ; échange JSON (`echange-base-musicale.schema.json`). |

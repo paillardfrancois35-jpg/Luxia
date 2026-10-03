@@ -58,6 +58,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-040")]
     public void SelectingAnArtist_FillsTheForm_WithoutMarkingItModified()
     {
         Base.SaveArtist(Base.FindArtist("queen")!.Code, Base.FindArtist("queen")! with { Aliases = ["Les Reines"] }, [new TitleEntry { Title = "Love of My Life", Style = "slow" }, new TitleEntry { Title = "Radio Ga Ga" }]).ShouldBeNull();
@@ -76,6 +77,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-040")]
     public void Editing_MarksModified_NothingIsWrittenBeforeSave_AndCancelRestores()
     {
         Open();
@@ -113,6 +115,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-040")]
     public void PlusButton_AddsARow_AndReusesTheEmptyOneInsteadOfAddingAnother()
     {
         Open();
@@ -196,6 +199,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-040")]
     public void Duplicate_CopiesStyleAndTitles_ButNotTheAliases()
     {
         Base.SaveArtist(Base.FindArtist("queen")!.Code, Base.FindArtist("queen")! with { Aliases = ["Les Reines"] }, [new TitleEntry { Title = "Radio Ga Ga" }]).ShouldBeNull();
@@ -220,6 +224,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-041")]
     public async Task ChangingArtistWithAModifiedForm_AsksYesNoCancel()
     {
         Open();
@@ -262,6 +267,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-041")]
     public async Task CanLeave_IsImmediateWithoutModification_AndAsksOtherwise()
     {
         Open();
@@ -302,6 +308,7 @@ public sealed class MusicBaseWindowTests : IAsyncLifetime
 
     [Fact]
     [Trait("Exigence", "MUS-027")]
+    [Trait("Exigence", "ERG-040")]
     public async Task Duplicates_NoneGivesAMessage_SomeShowThePanelAndMerge()
     {
         Open();

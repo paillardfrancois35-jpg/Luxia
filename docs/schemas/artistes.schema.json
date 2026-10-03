@@ -1,22 +1,43 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://luxia.local/schemas/artistes.schema.json",
-  "title": "LuXia – artistes.json (format 1)",
-  "description": "Artistes de la base musicale (doc 50 §12j, MUS-021). Facultatif : sans fichier, la base de départ livrée.",
+  "title": "LuXia – artistes.json (format 2)",
+  "description": "Artistes de la base musicale (doc 50 §12j, MUS-021, MUS-027). Un artiste = un style ; alias uniques dans toute la base. Facultatif : sans fichier, la base de départ livrée.",
   "type": "object",
-  "required": ["formatVersion"],
+  "required": [
+    "formatVersion"
+  ],
   "properties": {
-    "formatVersion": { "const": 1 },
+    "formatVersion": {
+      "const": 2
+    },
     "artists": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "styles"],
+        "required": [
+          "name"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "aliases": { "type": "array", "items": { "type": "string" } },
-          "styles": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }, "description": "identifiant de famille -> poids" },
-          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement", "import"] }
+          "code": {
+            "type": "string",
+            "description": "Code stable (« A00012 »), attribué à la création, jamais réutilisé"
+          },
+          "name": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string",
+            "description": "Code du style (taxonomie) ; « inconnu » = pas encore classé",
+            "default": "inconnu"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Uniques dans toute la base"
+          }
         }
       }
     }

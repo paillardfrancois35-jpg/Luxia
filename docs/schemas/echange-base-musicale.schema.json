@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/echange-base-musicale.schema.json",
+  "title": "LuXia – échange de la base musicale (format 1)",
+  "description": "Export et import JSON des trois tables STYLE, ARTISTE et ALIAS (doc 50 §12j). Un import ajoute et met à jour, il ne supprime rien.",
+  "type": "object",
+  "required": [
+    "formatVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 1
+    },
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "label"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "artists": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Vide pour un nouvel artiste (code attribué à l'import)"
+          },
+          "name": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string",
+            "description": "Code du style ; absent ou inconnu = « inconnu »"
+          }
+        }
+      }
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "alias",
+          "artist"
+        ],
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string",
+            "description": "Code de l'artiste (ou son nom)"
+          }
+        }
+      }
+    }
+  }
+}

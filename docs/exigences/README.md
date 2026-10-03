@@ -264,6 +264,9 @@
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
+| [ERG-040](ERG-040.md) | Écrans « liste + fiche » | P9 | M | Partiel |
+| [ERG-041](ERG-041.md) | Modifications non enregistrées | P9 | M | Réalisé |
+| [ERG-042](ERG-042.md) | Liste déroulante à la largeur du champ | P9 | M | Réalisé |
 | [EVT-020](EVT-020.md) | Événement Temps | P7 | I | Partiel |
 | [EVT-021](EVT-021.md) | Événement Impulsion | P7 | I | Partiel |
 | [EVT-022](EVT-022.md) | Événement ÉnergieChangée | P7 | I | Réalisé |
@@ -484,6 +487,7 @@
 | [MUS-027](MUS-027.md) | Écran Base musicale | P9 | M | Réalisé |
 | [MUS-028](MUS-028.md) | Écran « À classer » | P9 | M | Réalisé |
 | [MUS-029](MUS-029.md) | Import de playlists exportées en CSV | P9 | S | Réalisé |
+| [MUS-030](MUS-030.md) | Un morceau d'un artiste absent de la base y ajoute cet artiste avec le style « Inconnu » | P9 | M | Réalisé |
 | [MUS-040](MUS-040.md) | Pour une liste d'artistes / titres | P9 | M | Réalisé |
 | [MUS-041](MUS-041.md) | Les propositions sont validées par l'utilisateur | P9 | M | Réalisé |
 | [MUS-042](MUS-042.md) | Respect des limites d'usage des services | P9 | M | Réalisé |

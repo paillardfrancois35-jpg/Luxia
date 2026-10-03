@@ -298,15 +298,17 @@ public abstract partial class DraftEditorViewModel<T> : ViewModelBase, IDraftEdi
             return true;
         }
 
-        var abandon = await Dialogs.ConfirmAsync(
-            "Fermer la fenêtre d'édition",
-            $"« {ItemName} » a des modifications non validées.{Environment.NewLine}{Environment.NewLine}Oui : les abandonner.{Environment.NewLine}Non : garder la fenêtre ouverte (Valider ou Appliquer).").ConfigureAwait(true);
-        if (abandon)
+        switch (await Dialogs.AskSaveAsync("Fermer la fenêtre d'édition", $"« {ItemName} » a des modifications non validées.{Environment.NewLine}{Environment.NewLine}Les valider avant de fermer ?").ConfigureAwait(true))
         {
-            Close("abandonnée");
+            case SaveChoice.Save:
+                await ValidateAsync().ConfigureAwait(true);
+                return !IsOpen;
+            case SaveChoice.Discard:
+                Close("abandonnée");
+                return true;
+            default:
+                return false;
         }
-
-        return abandon;
     }
 
     /// <summary>Fermeture de l'application : le brouillon est abandonné sans question.</summary>

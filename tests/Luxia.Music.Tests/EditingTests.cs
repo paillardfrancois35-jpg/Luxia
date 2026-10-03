@@ -207,6 +207,7 @@ public sealed class EditingTests
 
     [Fact]
     [Trait("Exigence", "MUS-028")]
+    [Trait("Exigence", "MUS-030")]
     public void UnknownArtists_AreFilteredByTheUnknownStyle()
     {
         var musicBase = Small();
@@ -359,5 +360,26 @@ public sealed class EditingTests
         {
             Directory.Delete(folder, recursive: true);
         }
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-029")]
+    public void TheExampleExchangeFile_OfTheGuide_GivesTheAnnouncedReport()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "docs", "demos", "P9-exemple-echange.json")))
+        {
+            dir = dir.Parent;
+        }
+
+        dir.ShouldNotBeNull("le dépôt (docs/demos) est introuvable depuis le dossier de test");
+        var musicBase = MusicStore.Default();
+
+        var report = MusicExchange.ImportFromFile(musicBase, Path.Combine(dir.FullName, "docs", "demos", "P9-exemple-echange.json"));
+
+        (report.ArtistsAdded, report.ArtistsUpdated, report.AliasesAdded, report.StylesChanged, report.Problems.Count).ShouldBe((4, 1, 2, 1, 1));
+        musicBase.FindArtist("quartet imaginaire")!.Style.ShouldBe("chill");
+        musicBase.FindArtist("un artiste que personne ne connait")!.Style.ShouldBe("inconnu");
+        musicBase.FindArtist("queen")!.Name.ShouldBe("Queen");
     }
 }
