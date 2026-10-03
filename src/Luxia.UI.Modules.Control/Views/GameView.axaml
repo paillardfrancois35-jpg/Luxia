@@ -114,6 +114,8 @@
                   ToolTip.Tip="Le style est faux : le corriger pour ce titre ou pour cet artiste (mémorisé, il servira les prochaines fois)" />
           <Button x:Name="ForceStyleButton" Classes="target" Content="Imposer ▾" IsEnabled="{Binding CanAct}"
                   ToolTip.Tip="Imposer un style aux shows jusqu'à la fin du morceau, sans toucher à la base" />
+          <Button x:Name="MusicBaseButton" Classes="target" Content="Base…" IsEnabled="{Binding $parent[UserControl].((vm:GameViewModel)DataContext).HasProject}"
+                  ToolTip.Tip="Base musicale du projet : artistes et styles, titres à classer, doublons, import et export CSV" />
           <Button x:Name="ManualTrackButton" Classes="target" Content="Saisir…"
                   ToolTip.Tip="Aucun lecteur n'annonce le morceau : saisir le titre et l'artiste à la main" />
         </StackPanel>

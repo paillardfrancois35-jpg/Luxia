@@ -16,7 +16,7 @@
           "name": { "type": "string" },
           "aliases": { "type": "array", "items": { "type": "string" } },
           "styles": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }, "description": "identifiant de famille -> poids" },
-          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement"] }
+          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement", "import"] }
         }
       }
     }

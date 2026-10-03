@@ -19,7 +19,7 @@
           "version": { "type": ["string", "null"], "description": "clé de la version (« extended mix ») ; absent = l'original" },
           "style": { "type": "string", "description": "identifiant de famille" },
           "bpm": { "type": ["number", "null"] },
-          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement"] }
+          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement", "import"] }
         }
       }
     }

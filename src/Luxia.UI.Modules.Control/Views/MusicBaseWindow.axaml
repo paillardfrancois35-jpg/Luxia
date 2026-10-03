@@ -1,0 +1,137 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Luxia.UI.Modules.Control"
+        xmlns:mb="using:Luxia.Music.Base"
+        x:Class="Luxia.UI.Modules.Control.Views.MusicBaseWindow"
+        x:DataType="vm:MusicBaseViewModel"
+        Title="Base musicale"
+        Width="1100" Height="720"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117">
+  <DockPanel Margin="12">
+    <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+      <Button DockPanel.Dock="Right" Content="Fermer" x:Name="CloseButton" />
+      <TextBlock Text="{Binding Message}" Foreground="#58A6FF" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Message}" />
+    </DockPanel>
+
+    <TabControl SelectedIndex="{Binding SelectedTab}">
+      <!-- Onglet « Base » : chercher, classer, ajouter, retirer, alias, doublons, import / export. -->
+      <TabItem Header="Base">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*,Auto" Margin="0,8,0,0">
+          <DockPanel Grid.ColumnSpan="3" Margin="0,0,0,8">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+              <Button Content="Importer un CSV…" Command="{Binding ImportCsvCommand}"
+                      ToolTip.Tip="Colonnes artiste, titre, style (ou « Track Name », « Artist Name(s) » d'une playlist exportée). Une ligne avec un style classe l'artiste ou le titre ; sans style, elle va dans « À classer »." />
+              <Button Content="Exporter en CSV…" Command="{Binding ExportCsvCommand}" ToolTip.Tip="Les artistes de la base : artiste, style, poids, alias, source (s'ouvre dans Excel)" />
+            </StackPanel>
+            <TextBox Text="{Binding Search}" PlaceholderText="Chercher un artiste (nom ou alias)" Width="330" HorizontalAlignment="Left" />
+            <TextBlock Text="{Binding Summary}" Foreground="#8B949E" VerticalAlignment="Center" Margin="12,0,0,0" TextTrimming="CharacterEllipsis" />
+          </DockPanel>
+
+          <ListBox Grid.Row="1" ItemsSource="{Binding Artists}" SelectedItem="{Binding SelectedArtist}" Background="#161B22">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ArtistRow">
+                <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Aliases}" />
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+
+          <ScrollViewer Grid.Row="1" Grid.Column="2">
+            <StackPanel Spacing="10">
+              <Border Classes="panel">
+                <StackPanel Spacing="8">
+                  <TextBlock Classes="section" Text="{Binding SelectedArtist.Name, FallbackValue='Choisissez un artiste à gauche'}" />
+                  <TextBlock Text="{Binding SelectedArtist.Source, StringFormat='Origine : {0}'}" Foreground="#8B949E" FontSize="12" IsVisible="{Binding HasSelection}" />
+                  <TextBlock Text="Changer son style :" Foreground="#8B949E" IsVisible="{Binding HasSelection}" />
+                  <ItemsControl ItemsSource="{Binding Families}" IsVisible="{Binding HasSelection}">
+                    <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="mb:MusicFamily">
+                        <Button Content="{Binding Name}" Margin="0,0,6,6" Padding="10,4"
+                                Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).SetStyleCommand}" CommandParameter="{Binding Id}" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding HasSelection}">
+                    <TextBox Text="{Binding NewAlias}" PlaceholderText="Autre orthographe (alias)" Width="260" />
+                    <Button Content="Ajouter l'alias" Command="{Binding AddAliasCommand}" />
+                    <Button Classes="danger" Content="Retirer l'artiste" Command="{Binding RemoveArtistCommand}" Margin="20,0,0,0" />
+                  </StackPanel>
+                  <TextBlock Text="Titres connus (leur style prime sur celui de l'artiste) :" Foreground="#8B949E" IsVisible="{Binding HasSelection}" />
+                  <ListBox ItemsSource="{Binding Titles}" Height="150" Background="#0D1117" IsVisible="{Binding HasSelection}" />
+                </StackPanel>
+              </Border>
+
+              <Border Classes="panel">
+                <StackPanel Spacing="8">
+                  <TextBlock Classes="section" Text="Ajouter un artiste" />
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBox Text="{Binding NewArtist}" PlaceholderText="Nom de l'artiste" Width="240" />
+                    <ComboBox ItemsSource="{Binding Families}" SelectedItem="{Binding SelectedFamily}" Width="260" PlaceholderText="Famille">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="mb:MusicFamily"><TextBlock Text="{Binding Name}" /></DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Content="Ajouter" Command="{Binding AddArtistCommand}" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+
+              <Border Classes="panel">
+                <StackPanel Spacing="8">
+                  <TextBlock Classes="section" Text="Doublons" />
+                  <TextBlock Text="Deux fiches du même artiste (« The Beatles » et « Beatles », mots inversés, faute de frappe) se fondent en une." Foreground="#8B949E" TextWrapping="Wrap" />
+                  <Button Content="Chercher les doublons" Command="{Binding FindDuplicatesCommand}" HorizontalAlignment="Left" />
+                  <ListBox ItemsSource="{Binding Duplicates}" SelectedItem="{Binding SelectedDuplicate}" Height="130" Background="#0D1117">
+                    <ListBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:DuplicateRow"><TextBlock Text="{Binding Label}" /></DataTemplate>
+                    </ListBox.ItemTemplate>
+                  </ListBox>
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Button Content="Garder la première fiche" Command="{Binding MergeCommand}" CommandParameter="first" />
+                    <Button Content="Garder la seconde fiche" Command="{Binding MergeCommand}" CommandParameter="second" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </TabItem>
+
+      <!-- Onglet « À classer » : les titres que la base ne sait pas classer, par artiste ; une touche = une famille. -->
+      <TabItem Header="À classer">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+          <TextBlock Grid.ColumnSpan="3" Text="{Binding ClassifySummary}" Foreground="#8B949E" Margin="0,0,0,8" />
+          <ListBox Grid.Row="1" ItemsSource="{Binding ToClassify}" SelectedItem="{Binding SelectedToClassify}" Background="#161B22" x:Name="ClassifyList">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ClassifyRow"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="1" Grid.Column="2" Spacing="10" IsVisible="{Binding HasToClassifySelection}">
+            <Border Classes="panel">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="section" Text="{Binding SelectedToClassify.Item.Artist}" />
+                <TextBlock Text="{Binding SelectedToClassify.TitlesText}" TextWrapping="Wrap" Foreground="#C9D1D9" />
+                <TextBlock Text="{Binding SelectedToClassify.Item.Source, StringFormat='Origine : {0}'}" Foreground="#8B949E" FontSize="12" />
+              </StackPanel>
+            </Border>
+            <TextBlock Text="Touche ou clic : classer tous les titres de cet artiste dans la famille (puis on passe au suivant) :" Foreground="#8B949E" TextWrapping="Wrap" />
+            <ItemsControl ItemsSource="{Binding Families}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="mb:MusicFamily">
+                  <Button Margin="0,0,6,6" Padding="10,6"
+                          Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).ClassifyCommand}" CommandParameter="{Binding Id}">
+                    <TextBlock Text="{Binding Name}" />
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock x:Name="ShortcutsText" Foreground="#8B949E" FontSize="12" TextWrapping="Wrap" />
+            <Button Content="Passer (Entrée)" Command="{Binding SkipCommand}" HorizontalAlignment="Left" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

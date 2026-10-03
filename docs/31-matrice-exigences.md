@@ -517,13 +517,13 @@
 | [SHOW-030](exigences/SHOW-030.md) | M | Métadonnées du show pour le Directeur | Réalisé |  |
 | [SHOW-031](exigences/SHOW-031.md) | S | Shows secondaires parallèles | Validé | ShowExecutionTests.OnlyOneMainShow_SecondaryShowsRunAlongside<br>ShowExecutionTests.Stop_KeepsSecondaryShows_ButStopEverythingDoesNot |
 
-## P9 – 23 exigences, 15 couvertes par des tests automatiques
+## P9 – 23 exigences, 18 couvertes par des tests automatiques
 
-> Abandonné : 1 · Partiel : 3 · Réalisé : 12 · Sans fiche : 7
+> Abandonné : 1 · Partiel : 3 · Réalisé : 15 · Sans fiche : 4
 
 | Exigence | Pri. | Titre | Statut | Tests automatiques |
 |---|---|---|---|---|
-| [GEN-111](exigences/GEN-111.md) | I | Journal de soirée | Partiel | MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
+| [GEN-111](exigences/GEN-111.md) | I | Journal de soirée | Partiel | EditingAndClassifyTests.EveningJournal_ParsesQuotesBomAndOldFormat<br>MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
 | [GEN-121](exigences/GEN-121.md) | I | (fiche manquante) | Sans fiche |  |
 | [LIVE-022](exigences/LIVE-022.md) | I | Affichage du morceau en cours et du style détecté avec sa confiance | Réalisé | NowPlayingBarTests.IdentifiedTrack_ShowsTitleArtistStyleAndConfidence<br>NowPlayingBarTests.UnknownTrack_IsGray_AndTheStyleIsUnknown |
 | [MUS-001](exigences/MUS-001.md) | I | Lecture des sessions média du système | Réalisé | NowPlayingTrackerTests.NobodyPlaying_TheFollowedSessionIsKept_ThenTheLastActiveIsChosen<br>NowPlayingTrackerTests.SessionThatPlayedEarlier_TakesOverWhenTheFollowedOneDisappears<br>NowPlayingTrackerTests.TwoPlayingSessions_TheLastStartedIsFollowed |
@@ -540,9 +540,9 @@
 | [MUS-024](exigences/MUS-024.md) | I | Correction en Live | Réalisé | BaseAndSessionTests.Correction_ForTheArtist_IsImmediate_AndAppliesToOtherTitlesOfTheArtist<br>BaseAndSessionTests.Correction_ForTheTitle_LeavesTheOtherTitlesAlone<br>BaseAndSessionTests.Correction_NeedsATrackAnArtistAndAKnownFamily<br>MusicStyleServiceTests.Correction_IsImmediate_AndRemembered<br>(+4) |
 | [MUS-025](exigences/MUS-025.md) | I | Journal de soirée | Réalisé | MusicStyleServiceTests.EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod |
 | [MUS-026](exigences/MUS-026.md) | I | Style forcé | Réalisé | BaseAndSessionTests.ForcedStyle_BeatsTheDetection_AndEndsWithTheTrackByDefault<br>BaseAndSessionTests.ForcedStyle_CanLastAcrossTracks_UntilCancelled<br>MusicContextTests.ForcedStyle_BeatsTheDetected_AndTheSimulatedBeatsBoth<br>MusicContextTests.ForcedStyle_IsReleasedBackToTheDetection<br>(+2) |
-| [MUS-027](exigences/MUS-027.md) | M | (fiche manquante) | Sans fiche |  |
-| [MUS-028](exigences/MUS-028.md) | M | (fiche manquante) | Sans fiche |  |
-| [MUS-029](exigences/MUS-029.md) | S | (fiche manquante) | Sans fiche |  |
+| [MUS-027](exigences/MUS-027.md) | M | Écran Base musicale | Réalisé | EditingAndClassifyTests.Alias_CannotStealAnotherArtistsName<br>EditingAndClassifyTests.Duplicates_AreFound_WithArticlesWordOrderAndTypos<br>EditingAndClassifyTests.Export_ListsEveryArtist_WithStyleAliasesAndSource<br>EditingAndClassifyTests.Merge_KeepsAliasesTitlesAndStyle_AndRemovesTheOther<br>(+10) |
+| [MUS-028](exigences/MUS-028.md) | M | Écran « À classer » | Réalisé | EditingAndClassifyTests.Queue_GroupsByArtist_MostPlayedFirst_AndHidesWhatIsKnown<br>EditingAndClassifyTests.Queue_ShrinksWhenAnArtistIsClassified_AndKeepsLowConfidenceGuesses<br>MusicBaseWindowTests.ToClassify_ListsUnknownTitlesByArtist_AndAKeyClassifiesAndAdvances<br>MusicBaseWindowTests.ToClassify_Skip_MovesOnWithoutClassifying |
+| [MUS-029](exigences/MUS-029.md) | S | Import de playlists exportées en CSV | Réalisé | EditingAndClassifyTests.Import_ClassifiesRowsWithAStyle_AndQueuesTheOthers<br>EditingAndClassifyTests.Import_UnderstandsFrenchHeaders_ArtistOnlyRows_NoHeader_AndOneColumn<br>EditingAndClassifyTests.Pending_IsKeptInTheProjectFolder<br>EditingAndClassifyTests.Queue_IncludesImportedPlaylistTitles_WithTheirSource<br>(+1) |
 | [MUS-040](exigences/MUS-040.md) | M | (fiche manquante) | Sans fiche |  |
 | [MUS-041](exigences/MUS-041.md) | M | (fiche manquante) | Sans fiche |  |
 | [MUS-042](exigences/MUS-042.md) | M | (fiche manquante) | Sans fiche |  |

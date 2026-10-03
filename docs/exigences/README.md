@@ -480,6 +480,9 @@
 | [MUS-024](MUS-024.md) | Correction en Live | P9 | I | Réalisé |
 | [MUS-025](MUS-025.md) | Journal de soirée | P9 | I | Réalisé |
 | [MUS-026](MUS-026.md) | Style forcé | P9 | I | Réalisé |
+| [MUS-027](MUS-027.md) | Écran Base musicale | P9 | M | Réalisé |
+| [MUS-028](MUS-028.md) | Écran « À classer » | P9 | M | Réalisé |
+| [MUS-029](MUS-029.md) | Import de playlists exportées en CSV | P9 | S | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |

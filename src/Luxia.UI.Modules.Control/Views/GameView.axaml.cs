@@ -82,6 +82,8 @@ public partial class GameView : UserControl
         }
     }
 
+    private MusicBaseWindow? _musicBaseWindow;
+
     // Bloc « Morceau en cours » (P9) : menus construits au clic, avec les familles de la base musicale du projet.
     private void WireNowPlayingButtons()
     {
@@ -133,6 +135,22 @@ public partial class GameView : UserControl
             revert.Click += (_, _) => bar.Force(null);
             menu.Items.Add(revert);
             menu.ShowAt(force);
+        };
+
+        var baseButton = this.FindControl<Button>("MusicBaseButton")!;
+        baseButton.Click += (_, _) =>
+        {
+            if (_musicBaseWindow is { IsVisible: true })
+            {
+                _musicBaseWindow.Activate();
+                return;
+            }
+
+            if (ViewModel?.CreateMusicBase() is { } editor)
+            {
+                _musicBaseWindow = new MusicBaseWindow { DataContext = editor };
+                _musicBaseWindow.Show(TopLevel.GetTopLevel(this) as Window ?? throw new InvalidOperationException("Fenêtre principale absente"));
+            }
         };
 
         var manual = this.FindControl<Button>("ManualTrackButton")!;

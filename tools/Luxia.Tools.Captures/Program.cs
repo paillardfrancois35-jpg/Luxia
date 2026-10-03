@@ -150,6 +150,31 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Tick(4);
     Capture("Contrôle - titre long");
 
+    // P9 lot 5 : fenêtre « Base musicale » (MUS-027, MUS-028) avec un journal de soirée d'exemple pour l'onglet « À classer ».
+    Directory.CreateDirectory(Path.Combine(root, "Documents", "Journaux"));
+    File.WriteAllText(
+        Path.Combine(root, "Documents", "Journaux", "soiree-20261003.csv"),
+        "heure;titre;artiste;application;style;confiance;méthode;imposé;show\r\n" +
+        "21:02:10;Spider Dance;Holder, GameChops;Deezer;Inconnu;0;aucune;;\r\n" +
+        "21:06:30;Spider Dance;Holder, GameChops;Deezer;Inconnu;0;aucune;;\r\n" +
+        "21:10:00;Tous les cris les S.O.S. (Kokwak Hardstyle Remix) | Daniel Balavoine;Kokwak;Chrome;Variété française;70;artiste;;\r\n" +
+        "21:15:00;Hardstyle Anthem;Kokwak;Deezer;Inconnu;0;aucune;;\r\n" +
+        "21:20:00;Valse des imaginaires;Quartet Imaginaire;Deezer;Inconnu;0;aucune;;\r\n",
+        new System.Text.UTF8Encoding(true));
+    var musicBase = game.CreateMusicBase()!;
+    var musicWindow = new Luxia.UI.Modules.Control.Views.MusicBaseWindow { Width = 1100, Height = 720, DataContext = musicBase };
+    musicWindow.Show();
+    Tick(4);
+    musicBase.Search = "bea";
+    musicBase.FindDuplicatesCommand.Execute(null);
+    Tick(4);
+    Capture("Base musicale - base", musicWindow);
+    musicBase.Search = string.Empty;
+    musicBase.SelectedTab = 1;
+    Tick(4);
+    Capture("Base musicale - à classer", musicWindow);
+    musicWindow.Close();
+
     // F8 : la même chose à 125 %.
     vm.SetUiScaleCommand.Execute("1.25");
     Capture("Contrôle - écran de jeu 125 %");

@@ -146,6 +146,9 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         return _runtime.Project.Folder is null ? null : new LayersEditorViewModel(_runtime, _dialogs);
     }
 
+    /// <summary>Fenêtre « Base musicale » (MUS-027 à MUS-029) ; <c>null</c> sans projet (la base musicale est celle du projet).</summary>
+    public MusicBaseViewModel? CreateMusicBase() => _runtime.Project.Folder is null ? null : new MusicBaseViewModel(_runtime, _dialogs);
+
     /// <summary>Ouvre une séquence dans sa fenêtre d'édition.</summary>
     public void EditSequence(Guid id)
     {
