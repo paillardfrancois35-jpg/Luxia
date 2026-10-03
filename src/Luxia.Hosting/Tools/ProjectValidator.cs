@@ -70,7 +70,51 @@ public static class ProjectValidator
 
         // SHOW-024 : séquences et shows (références, étape initiale, étapes atteignables, boucle sans condition).
         issues.AddRange(Show.Rules.ShowRules.Validate(sequences, shows, scenes, layers));
+
+        // P9 : un style de condition ou de métadonnées qui ne correspond à aucune famille de la taxonomie ne se déclenche jamais.
+        issues.AddRange(CheckShowStyles(shows, folder));
         return issues;
+    }
+
+    // P9 (doc 21 §3.4) : les styles écrits dans les shows (conditions « style », styles visés) doivent être des familles de la taxonomie
+    // (nom entier ou une partie du nom : « Électro » pour « Électro / Dance », ou « Inconnu »).
+    private static IEnumerable<CompileIssue> CheckShowStyles(Show.Model.ShowSet shows, string folder)
+    {
+        var taxonomy = Music.Base.MusicStore.LoadTaxonomy(folder);
+        var names = new[] { Music.Base.Taxonomy.UnknownName }.Concat(taxonomy.Families.Select(f => f.Name)).ToList();
+
+        string? Problem(string style)
+        {
+            if (string.IsNullOrWhiteSpace(style) || names.Any(name => Show.Model.StyleMatching.Matches(name, style)))
+            {
+                return null;
+            }
+
+            var key = Music.Normalization.TextKey.Of(style);
+            var owner = taxonomy.Families.FirstOrDefault(f => f.Labels.Any(l => Music.Normalization.TextKey.Of(l) == key));
+            var hint = owner is null ? string.Empty : $" « {style} » est une étiquette de genre de la famille « {owner.Name} » : écrivez plutôt « {owner.Name.Split('/')[0].Trim()} ».";
+            return $"le style « {style} » ne correspond à aucune famille ({string.Join(", ", names.Take(5).Select(n => $"« {n} »"))}…) : cette condition ne sera jamais vraie.{hint}";
+        }
+
+        IEnumerable<string> StylesOf(Show.Model.ShowCondition condition) =>
+            (condition.Kind == Show.Model.ConditionKind.Style ? condition.Styles : []).Concat(condition.Conditions.SelectMany(StylesOf));
+
+        foreach (var show in shows.Shows)
+        {
+            var item = $"show « {show.Name} »";
+            foreach (var style in show.Styles.Where(s => Problem(s) is not null))
+            {
+                yield return Warning(Show.ShowStore.FileName, item, "styles", Problem(style)!);
+            }
+
+            for (var i = 0; i < show.Transitions.Count; i++)
+            {
+                foreach (var style in StylesOf(show.Transitions[i].Condition).Where(s => Problem(s) is not null).Distinct())
+                {
+                    yield return Warning(Show.ShowStore.FileName, $"{item}, transition {i + 1}", "condition.styles", Problem(style)!);
+                }
+            }
+        }
     }
 
     // EFF-001, EFF-007 : réglages d'effets hors bornes, dans les scènes et dans la bibliothèque.

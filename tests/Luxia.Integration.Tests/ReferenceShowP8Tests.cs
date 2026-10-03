@@ -33,7 +33,7 @@ public sealed class ReferenceShowP8Tests
 
         // DEMO-4 : le piège est la seule erreur des fichiers de P8.
         ProjectValidator.Validate(Folder)
-            .Where(i => i.File is SequenceStore.FileName or ShowStore.FileName)
+            .Where(i => i.File is SequenceStore.FileName or ShowStore.FileName && !i.Item.Contains("(P9)", StringComparison.Ordinal))
             .ShouldAllBe(i => i.Severity == IssueSeverity.Error && i.Item == "show « Piège : boucle sans condition »");
     }
 

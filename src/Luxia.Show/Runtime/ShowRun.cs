@@ -622,7 +622,7 @@ internal sealed class ShowRun
             case ConditionKind.EnergyLevel:
                 return music.AudioLive && music.EnergyLevel >= (condition.Min ?? 0) && music.EnergyLevel <= (condition.Max ?? 3);
             case ConditionKind.Style:
-                return music.Style is { } style && condition.Styles.Any(wanted => StyleMatches(style, wanted));
+                return music.Style is { } style && condition.Styles.Any(wanted => StyleMatching.Matches(style, wanted));
             case ConditionKind.Tempo:
                 return host.Bpm >= (condition.Min ?? 0) && host.Bpm <= (condition.Max ?? double.MaxValue);
             case ConditionKind.Random:
@@ -648,18 +648,6 @@ internal sealed class ShowRun
     }
 
     // Une chance par frontière (temps, mesure, phrase) : le premier passage ne tire pas, il note la frontière courante.
-    /// <summary>
-    /// Le style courant est celui que veut la condition : même nom, ou l'une des parties du nom de la famille (« Électro » pour
-    /// « Électro / Dance »), sans tenir compte de la casse ni des accents (P9 : les familles ont des noms composés).
-    /// </summary>
-    internal static bool StyleMatches(string current, string wanted)
-    {
-        static bool Same(string a, string b) =>
-            CultureInfo.InvariantCulture.CompareInfo.Compare(a.Trim(), b.Trim(), CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace) == 0;
-
-        return wanted.Trim().Length > 0 && (Same(current, wanted) || current.Split('/').Any(part => Same(part, wanted)));
-    }
-
     private bool RandomDraw(ShowCondition condition, ISequencerHost host)
     {
         var unit = Sequencer.UnitBeats(condition.Every == ShowQuantize.None ? ShowQuantize.Bar : condition.Every);

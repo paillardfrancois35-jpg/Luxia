@@ -59,6 +59,15 @@ public static class MusicStore
         return (new MusicBase(taxonomy.Value.Families.Count == 0 ? DefaultTaxonomy.Value : taxonomy.Value, artists.Value, titles.Value, corrections.Value), messages);
     }
 
+    /// <summary>Charge seulement la taxonomie du projet (validation des shows) ; absente = celle livrée.</summary>
+    /// <param name="projectFolder">Dossier du projet.</param>
+    /// <returns>La taxonomie.</returns>
+    public static Taxonomy LoadTaxonomy(string projectFolder)
+    {
+        var loaded = ProjectPartStore.Load(projectFolder, TaxonomyFile, TaxonomyType, () => DefaultTaxonomy.Value).Value;
+        return loaded.Families.Count == 0 ? DefaultTaxonomy.Value : loaded;
+    }
+
     /// <summary>Charge les titres à classer venus de playlists importées (MUS-029) ; absent = aucun.</summary>
     /// <param name="projectFolder">Dossier du projet.</param>
     /// <returns>Les titres en attente.</returns>

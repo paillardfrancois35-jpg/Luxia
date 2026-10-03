@@ -24,7 +24,7 @@ public sealed class MusicContextTests
     [InlineData("Inconnu", "Inconnu", true)]
     [Trait("Exigence", "SHOW-022")]
     public void StyleCondition_MatchesTheFamilyNameOrOneOfItsParts(string current, string wanted, bool expected) =>
-        ShowRun.StyleMatches(current, wanted).ShouldBe(expected);
+        StyleMatching.Matches(current, wanted).ShouldBe(expected);
 
     [Fact]
     [Trait("Exigence", "MUS-021")]

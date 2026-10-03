@@ -1037,6 +1037,332 @@
           "quantize": "bar"
         }
       ]
+    },
+    {
+      "id": "9b000009-0000-4000-8000-000000000001",
+      "name": "Style du morceau (P9)",
+      "color": "#58A6FF",
+      "category": "Phase P9",
+      "notes": "Le show suit le STYLE du morceau en cours (lecture en cours de Windows, base musicale) : Neutre jusqu'à ce qu'un style soit identifié, puis une ambiance par famille (Rock, Électro, Latino, Slow, Inconnu) ; au morceau suivant (vrai changement de titre) il revient à Neutre et le style du nouveau titre choisit l'ambiance. Sans musique : simuler le style (exemple « Essai sans musique » du guide P9) ; pendant l'essai on peut aussi imposer le style avec « Imposer ▾ » dans l'écran de jeu.",
+      "role": "main",
+      "styles": [],
+      "energyMin": 0,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "0",
+          "name": "Neutre (en attente du style)",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ],
+          "initial": true
+        },
+        {
+          "id": "1",
+          "name": "Rock",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "dfaf4fe6-0451-5e60-9a8a-effc3ae11981"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "name": "Électro",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "4d670289-af47-5117-950c-0679fa2829c2"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000008"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000001"
+            }
+          ]
+        },
+        {
+          "id": "3",
+          "name": "Latino",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7"
+            },
+            {
+              "kind": "play",
+              "sceneId": "6e6f0006-0000-4000-8000-000000000006"
+            }
+          ]
+        },
+        {
+          "id": "4",
+          "name": "Slow",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "18cee9ad-d094-5b32-ac50-f8c6ce243d83"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            },
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            }
+          ]
+        },
+        {
+          "id": "5",
+          "name": "Inconnu (l'énergie seule)",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "5ce00008-0000-4000-8000-000000000004"
+            },
+            {
+              "kind": "play",
+              "sceneId": "0a6d0760-b4b6-5009-9ee2-9de9a79458cd"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Rock"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "2"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Électro"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "3"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Latino"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "4"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Slow"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "5"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Inconnu"
+            ]
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "1"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "songChanged"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "2"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "songChanged"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "3"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "songChanged"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "4"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "songChanged"
+          },
+          "quantize": "bar"
+        },
+        {
+          "from": [
+            "5"
+          ],
+          "to": [
+            "0"
+          ],
+          "condition": {
+            "kind": "songChanged"
+          },
+          "quantize": "bar"
+        }
+      ]
+    },
+    {
+      "id": "9b000009-0000-4000-8000-000000000002",
+      "name": "Piège : style qui n'existe pas (P9)",
+      "color": "#F85149",
+      "category": "Phase P9",
+      "notes": "Piège (DEMO-4) : la condition attend le style « Musette », qui n'est le nom d'aucune famille (c'est une étiquette de genre de « Bal / Traditionnel »). Le show se lance mais ne quittera jamais l'attente ; `luxia-headless valider` et l'écran de jeu le signalent par un avertissement qui dit quoi écrire (« Bal »).",
+      "role": "main",
+      "styles": [],
+      "energyMin": 0,
+      "energyMax": 3,
+      "weight": 1,
+      "atEnd": "hold",
+      "steps": [
+        {
+          "id": "0",
+          "name": "Attente",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "2a5966aa-eb9a-518e-bdb6-42118e287168"
+            },
+            {
+              "kind": "play",
+              "sceneId": "48729862-9dd1-5b71-8ae5-fc4858b853f2"
+            }
+          ],
+          "initial": true
+        },
+        {
+          "id": "1",
+          "name": "Musette (ne viendra jamais)",
+          "actions": [
+            {
+              "kind": "play",
+              "sceneId": "7c1a0002-0000-4000-8000-000000000001"
+            },
+            {
+              "kind": "play",
+              "sceneId": "a1e8bc64-df7f-52b0-96e2-bf54ddaec2c7"
+            }
+          ]
+        }
+      ],
+      "transitions": [
+        {
+          "from": [
+            "0"
+          ],
+          "to": [
+            "1"
+          ],
+          "condition": {
+            "kind": "style",
+            "styles": [
+              "Musette"
+            ]
+          },
+          "quantize": "bar"
+        }
+      ]
     }
   ]
 }
