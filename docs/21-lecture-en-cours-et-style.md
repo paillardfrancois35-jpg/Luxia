@@ -111,11 +111,12 @@ Le **rapprochement flou** utilise une similarité tolérante (fautes, mots inver
 | MUS-022 | I | P9 | Temps d'identification < 200 ms pour une base de 50 000 titres et 10 000 artistes. | Mesure. |
 | MUS-023 | I | P9 | Taxonomie modifiable (ajouter, renommer, fusionner des familles) avec mise à jour des références. | — |
 | MUS-024 | I | P9 | **Correction en Live** (LIVE-022) : appliquer à « ce titre » ou « cet artiste » ; prise en compte immédiate ; mémorisation. | Corriger puis rejouer le titre → nouveau style. |
-| MUS-025 | I | P9 | **Journal de soirée** (GEN-111) : chaque morceau avec style, confiance, méthode, correction éventuelle. | — |
+| MUS-025 | I | P9 | **Journal de soirée** (GEN-111) : une ligne par événement (morceau, correction, imposé, style) avec titre et artiste **nettoyés**, style, confiance, méthode, et les valeurs brutes du lecteur. | — |
 | MUS-026 | I | P9 | Style forcé (CMD-062) prioritaire sur la détection jusqu'à annulation ou fin du morceau (réglable). | — |
-| MUS-027 | M | P9 | Écran **Base musicale** : recherche, édition des artistes / titres / alias / styles, fusion de doublons, import / export CSV. | — |
-| MUS-028 | M | P9 | Écran **« À classer »** : titres et artistes rencontrés (journaux de soirée) non identifiés ou à faible confiance, classables rapidement (raccourcis clavier, classement par artiste en un geste). | Classer 100 titres en < 10 min. |
-| MUS-029 | S | P9 | Import de **playlists** exportées en CSV (outils d'export des plateformes) pour pré-remplir la base avant une soirée. | — |
+| MUS-027 | M | P9 | Écran **Base musicale** en « liste + fiche » (ERG-040) : liste des artistes (recherche, filtre « Inconnu », Ajouter, Dupliquer, Supprimer, Chercher les doublons) et fiche (nom, style en liste déroulante, alias et titres saisis dans leurs listes, Enregistrer / Annuler). | — |
+| MUS-028 | M | P9 | **Artistes à classer** : les artistes « Inconnu » (ajoutés par MUS-030) sont listés dans l'onglet « À classer » (une pastille par style, sans raccourci clavier) et par le filtre « Inconnu » de la liste ; classer un **titre** d'un artiste encore inconnu demande s'il faut appliquer le style à l'artiste. | Classer 100 artistes en < 10 min. |
+| MUS-029 | S | P9 | **Export et import JSON** des trois tables (styles, artistes, alias), même format dans les deux sens ; un import ajoute et met à jour, il ne supprime rien (chargement du gros fichier de base de l'utilisateur). | Exporter puis importer dans une base vide redonne la même base. |
+| MUS-030 | M | P9 | Un morceau d'un **artiste absent de la base** y ajoute cet artiste avec le style « Inconnu » (une seule fois), pour le classer ensuite. | Jouer deux titres d'un inconnu : une seule fiche, style « Inconnu ». |
 
 ## 4. Outil d'enrichissement (à la maison)
 
@@ -134,7 +135,19 @@ Outil **séparé** (`Luxia.Tools.MusicEnrich`), lancé explicitement, jamais en 
 Sur 100 titres réels de vos soirées : taux de familles correctes proposées par chaque source en ligne et par l'IA locale ;
 temps de traitement. Détermine les sources retenues pour l'outil d'enrichissement.
 
-## 6. Tests
+## 6. Notes de réalisation (P9)
+
+| Sujet | Réalisation |
+|---|---|
+| Lecture en cours (lot 1) | Projet `Luxia.Media` : `NowPlayingTracker` (choix de la session : la dernière démarrée parmi celles qui jouent, sinon la suivie, sinon la dernière active ; changement de morceau publié après **1 s** de stabilité ; titre vide ignoré ; position interpolée selon la vitesse de lecture) sur une source abstraite `IMediaSessionSource`. Adaptateur `Luxia.Media.Windows` (API de contrôle des médias de Windows, relecture groupée après chaque événement du système + toutes les 5 s). Événements `TrackChanged` (EVT-040) et `PlaybackChanged` (EVT-041) sur le bus. Sonde `luxia-headless media` (PoC-3, [guide](demos/P9-poc3-sonde.md)). |
+| Normalisation (lot 2) | Projet `Luxia.Music` : `TrackNormalizer` produit une **liste d'hypothèses** (artiste, artistes pris un à un, invités, titre, versions) de la plus à la moins probable ; un navigateur (YouTube, YouTube Music) a un champ « artiste » qui est un nom de chaîne, donc « Artiste - Titre » et « Titre \| Artiste » sont essayés d'abord ; règles en données (`normalisation.json`, doc 50 §12i) ; jeu de 218 titres écrit à la main (T-MUS-01). Observé au PoC-3 : l'artiste est dans le titre, après « \| », et la chaîne a fait le remix. |
+| Base et identification (lot 3) | `MusicBase` (taxonomie, artistes, titres, index de trigrammes), `StyleIdentifier` (chaîne du §3.3), `FuzzyMatch`, `StyleSession` (style imposé, corrections), base de départ d'environ 460 artistes (un style chacun) ; fichiers dans le projet (doc 50 §12j). Service `MusicStyleService` (Hosting) : abonné à la lecture en cours, informe le moteur (CMD-063 : style, changement de morceau réel, lecture suivie), publie EVT-042, enregistre la base après 1,5 s ; **ajoute à la base l'artiste d'un morceau inconnu** (style « Inconnu », MUS-030). **D40 révise D38** : le titre réel est la source de « au morceau suivant » tant qu'un morceau est suivi ; l'écoute reste le repli. Mesures : 96 % d'identification sur 163 titres annotés, 0 faux positif, pire cas 2,9 ms sur 50 000 titres. |
+| Base musicale à l'écran (lots 3 et 5, refait à la suite de l'essai) | Fenêtre « Base musicale » (bouton « Base… » du bloc « Morceau en cours », Q50) à trois onglets : **Base** en « liste + fiche » ([doc 60 §4.11](60-ergonomie.md)) — liste à gauche (recherche, filtre « Inconnu », Ajouter, Dupliquer, Supprimer, Chercher les doublons ; export et import JSON), fiche à droite (nom, style en liste déroulante, alias et titres saisis dans leurs listes, Enregistrer / Annuler, question Oui / Non / Annuler au changement d'élément) ; **À classer** (les artistes « Inconnu », une pastille par style, aucun raccourci clavier) ; **Propositions** (lot 6). Modèle simplifié (Q53) : un artiste = un style, code stable, alias uniques, style de titre facultatif, sans poids ni origine ([doc 50 §12j](50-format-des-donnees.md)). |
+| Enrichissement en ligne (lot 6) | Outil séparé `luxia-enrich` (`tools/Luxia.Tools.MusicEnrich`) et bibliothèque `Luxia.Music.Enrichment` (MusicBrainz sans clé, Last.fm avec clé personnelle ; une requête par seconde ; cache de 90 jours ; `--hors-ligne`) ; il **propose**, l'utilisateur valide (GEN-121 : jamais en soirée, test d'architecture). Usage : `luxia-enrich "<dossier du projet>" [--max 100] [--lastfm <clé>] [--hors-ligne]`. |
+| Plateforme | `Luxia.Media.Windows` cible `net10.0-windows10.0.19041.0` (projection de l'API Windows) ; l'application, `luxia-headless` et `luxia-captures` aussi. Les autres projets restent en `net10.0`. |
+| Écarts | MUS-004 (publicités) **abandonnée** (Q43). La miniature (MUS-003) n'est pas lue. |
+
+## 7. Tests
 
 | Test | Type | Contenu |
 |---|---|---|

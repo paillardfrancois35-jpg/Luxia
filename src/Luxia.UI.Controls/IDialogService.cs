@@ -1,5 +1,18 @@
 namespace Luxia.UI.Controls;
 
+/// <summary>Réponse à « enregistrer les modifications ? » (charte « liste + fiche », doc 60) : trois issues, jamais deux.</summary>
+public enum SaveChoice
+{
+    /// <summary>Oui : enregistrer, puis continuer ce que l'utilisateur voulait faire.</summary>
+    Save,
+
+    /// <summary>Non : abandonner les modifications, puis continuer.</summary>
+    Discard,
+
+    /// <summary>Annuler : rester sur la fiche, rien ne change.</summary>
+    Cancel,
+}
+
 /// <summary>
 /// Boîtes de dialogue de l'Atelier, fournies par l'application aux modèles de vue.
 /// Jamais utilisées en Live (P9 : aucune question bloquante).
@@ -8,6 +21,12 @@ public interface IDialogService
 {
     /// <summary>Demande confirmation d'une action destructrice (GEN-103).</summary>
     Task<bool> ConfirmAsync(string title, string message);
+
+    /// <summary>
+    /// Des modifications ne sont pas enregistrées et l'utilisateur va quitter la fiche : Oui (enregistrer et continuer), Non (ne pas enregistrer
+    /// et continuer), Annuler (rester).
+    /// </summary>
+    Task<SaveChoice> AskSaveAsync(string title, string message);
 
     /// <summary>Affiche un texte en lecture seule, copiable (diagnostic, « À propos »).</summary>
     Task ShowInfoAsync(string title, string message);

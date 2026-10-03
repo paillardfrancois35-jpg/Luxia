@@ -142,6 +142,12 @@
 | **Impulsion** | Onset / Hit | Attaque détectée dans une bande de fréquences (kick, caisse claire, aigus). |
 | **Lecture en cours** | Now playing | Informations du morceau joué (titre, artiste…) fournies par Windows. |
 | **Style** | Genre / Style | Famille musicale utilisée pour choisir les shows. |
+| **MusicBrainz** | MusicBrainz | Base de données musicale gratuite et ouverte (musicbrainz.org). L'outil `luxia-enrich` l'interroge, à la maison, pour proposer un style aux artistes « Inconnu » d'après les étiquettes de genre qu'elle connaît ; vous validez toujours la proposition. |
+| **Alias** | Alias / Also known as | Autre écriture ou nom court qui désigne **le même artiste** dans la base musicale (« Tiesto » pour « Tiësto »). Un artiste peut en avoir plusieurs ; un alias n'appartient qu'à un seul artiste dans toute la base. |
+| **Artiste « Inconnu »** | Unknown artist | Artiste joué en soirée mais absent de la base : il y est ajouté avec le style « Inconnu » pour être classé plus tard (onglet « À classer », filtre « Inconnu »). |
+| **Code (d'un artiste)** | Artist code | Identifiant stable d'un artiste (« A00012 »), attribué à sa création ; il ne change jamais, même si le nom change. |
+| **Liste + fiche** | List and form | Façon unique de gérer une liste d'éléments codifiés : la liste à gauche (Ajouter, Dupliquer, Supprimer), la fiche à droite, enregistrement explicite (doc 60 §4.11). |
+| **Fiche** | Form / Record sheet | Partie droite d'un écran « liste + fiche » : tous les champs de l'élément choisi, modifiables jusqu'à « Enregistrer » ou « Annuler ». |
 | **Tap tempo** | Tap tempo | Saisie du tempo en tapant en rythme. |
 | **Temps / Mesure** | Beat / Bar | Unité rythmique ; une mesure = généralement 4 temps. |
 | **Verrou** | Lock / Constraint | Contrainte imposée au Directeur (pas de strobe, couleur imposée…). |

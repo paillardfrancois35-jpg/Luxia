@@ -1,0 +1,225 @@
+# T-MUS-01 : titres bruts réels (Deezer, Spotify, YouTube Music / YouTube dans un navigateur, fichiers) -> formes normalisées attendues (MUS-005, MUS-020).
+# Colonnes (séparées par des tabulations) : application | artiste brut | titre brut | artiste attendu | titre attendu | invités (;) | versions (;)
+# Les formes attendues sont celles du doc 21 §3.1, écrites à la main (minuscules, sans accent ni ponctuation) : elles ne sortent pas du code.
+# --- Lecteurs fiables (Deezer, Spotify, fichiers étiquetés) : l'artiste est celui du lecteur
+Deezer	Queen	Don't Stop Me Now	queen	dont stop me now
+Deezer	Queen	Bohemian Rhapsody (Remastered 2011)	queen	bohemian rhapsody
+Deezer	Queen	Bohemian Rhapsody - Remastered 2011	queen	bohemian rhapsody
+Deezer	Queen	Another One Bites the Dust - 2011 Remaster	queen	another one bites the dust
+Deezer	Daft Punk	One More Time	daft punk	one more time
+Deezer	Daft Punk	Harder, Better, Faster, Stronger	daft punk	harder better faster stronger
+Deezer	Daft Punk	Get Lucky (feat. Pharrell Williams & Nile Rodgers)	daft punk	get lucky	pharrell williams;nile rodgers
+Deezer	Holder, GameChops	Spider Dance	holder gamechops	spider dance
+Deezer	Gilbert Montagné	J'ai le blues de toi	gilbert montagne	jai le blues de toi
+Deezer	Michel Sardou	Les lacs du Connemara	michel sardou	les lacs du connemara
+Deezer	Daniel Balavoine	Tous les cris les S.O.S.	daniel balavoine	tous les cris les sos
+Deezer	Johnny Hallyday	Que je t'aime	johnny hallyday	que je taime
+Deezer	Céline Dion	Pour que tu m'aimes encore	celine dion	pour que tu maimes encore
+Deezer	Edith Piaf	La Vie en rose	edith piaf	la vie en rose
+Deezer	Mylène Farmer	Désenchantée	mylene farmer	desenchantee
+Deezer	Stromae	Papaoutai	stromae	papaoutai
+Deezer	Stromae	Alors on danse (Radio Edit)	stromae	alors on danse
+Deezer	Stromae	Alors on danse - Radio Edit	stromae	alors on danse
+Deezer	David Guetta feat. Sia	Titanium	david guetta	titanium	sia
+Deezer	David Guetta	Titanium (feat. Sia)	david guetta	titanium	sia
+Deezer	David Guetta	Titanium (feat. Sia) [Official Video]	david guetta	titanium	sia
+Deezer	Rihanna	We Found Love (feat. Calvin Harris)	rihanna	we found love	calvin harris
+Deezer	Calvin Harris, Rihanna	We Found Love	calvin harris rihanna	we found love
+Deezer	Calvin Harris & Rihanna	We Found Love	calvin harris et rihanna	we found love
+Deezer	Maître Gims x Vianney	La même	maitre gims x vianney	la meme
+Deezer	Earth, Wind & Fire	September	earth wind et fire	september
+Deezer	Simon & Garfunkel	The Sound of Silence	simon et garfunkel	the sound of silence
+Deezer	AC/DC	Highway to Hell	ac dc	highway to hell
+Deezer	Guns N' Roses	Sweet Child O' Mine	guns n roses	sweet child o mine
+Deezer	Mark Ronson	Uptown Funk (feat. Bruno Mars)	mark ronson	uptown funk	bruno mars
+Deezer	Bruno Mars	24K Magic	bruno mars	24k magic
+Deezer	Kylie Minogue	Can't Get You out of My Head	kylie minogue	cant get you out of my head
+Deezer	ABBA	Dancing Queen	abba	dancing queen
+Deezer	ABBA	Dancing Queen (Remastered)	abba	dancing queen
+Deezer	Boney M.	Rasputin	boney m	rasputin
+Deezer	Gloria Gaynor	I Will Survive	gloria gaynor	i will survive
+Deezer	Village People	Y.M.C.A.	village people	ymca
+Deezer	Bee Gees	Stayin' Alive	bee gees	stayin alive
+Deezer	Chic	Le Freak	chic	le freak
+Deezer	Pink Floyd	The Great Gig in the Sky	pink floyd	the great gig in the sky
+Deezer	Pink Floyd	Wish You Were Here (2011 Remastered Version)	pink floyd	wish you were here
+Deezer	Eagles	Hotel California (Live)	eagles	hotel california		live
+Deezer	Eagles	Hotel California - Live at the Forum	eagles	hotel california		live at the forum
+Deezer	Nirvana	Smells Like Teen Spirit	nirvana	smells like teen spirit
+Deezer	Nirvana	Come as You Are (Unplugged)	nirvana	come as you are		unplugged
+Deezer	Coldplay	Viva La Vida	coldplay	viva la vida
+Deezer	Adele	Someone Like You	adele	someone like you
+Deezer	Ed Sheeran	Shape of You	ed sheeran	shape of you
+Deezer	Ed Sheeran	Perfect	ed sheeran	perfect
+Deezer	Imagine Dragons	Believer	imagine dragons	believer
+Deezer	Avicii	Wake Me Up	avicii	wake me up
+Deezer	Avicii	Levels (Original Mix)	avicii	levels
+Deezer	Avicii	Levels - Original Mix	avicii	levels
+Deezer	Swedish House Mafia	Don't You Worry Child (feat. John Martin)	swedish house mafia	dont you worry child	john martin
+Deezer	Swedish House Mafia	Don't You Worry Child (Radio Edit) [feat. John Martin]	swedish house mafia	dont you worry child	john martin
+Deezer	Robin Schulz	Sugar (feat. Francesco Yates) [Robin Schulz VIP Mix]	robin schulz	sugar	francesco yates	robin schulz vip mix
+Deezer	The Weeknd	Blinding Lights	the weeknd	blinding lights
+Deezer	Dua Lipa	Don't Start Now	dua lipa	dont start now
+Deezer	Dua Lipa	Levitating (feat. DaBaby)	dua lipa	levitating	dababy
+Deezer	Lady Gaga	Bad Romance	lady gaga	bad romance
+Deezer	Madonna	Like a Prayer	madonna	like a prayer
+Deezer	Michael Jackson	Billie Jean	michael jackson	billie jean
+Deezer	Michael Jackson	Thriller (Single Version)	michael jackson	thriller
+Deezer	Prince	Kiss	prince	kiss
+Deezer	Whitney Houston	I Wanna Dance with Somebody (Who Loves Me)	whitney houston	i wanna dance with somebody who loves me
+Deezer	Cyndi Lauper	Girls Just Want to Have Fun	cyndi lauper	girls just want to have fun
+Deezer	A-ha	Take On Me	a ha	take on me
+Deezer	Europe	The Final Countdown	europe	the final countdown
+Deezer	Survivor	Eye of the Tiger	survivor	eye of the tiger
+Deezer	Bon Jovi	Livin' on a Prayer	bon jovi	livin on a prayer
+Deezer	Journey	Don't Stop Believin'	journey	dont stop believin
+Deezer	Toto	Africa	toto	africa
+Deezer	Rick Astley	Never Gonna Give You Up	rick astley	never gonna give you up
+Deezer	Shakira	Hips Don't Lie (feat. Wyclef Jean)	shakira	hips dont lie	wyclef jean
+Deezer	Shakira	Waka Waka (This Time for Africa)	shakira	waka waka this time for africa
+Deezer	Daddy Yankee	Gasolina	daddy yankee	gasolina
+Deezer	Luis Fonsi, Daddy Yankee	Despacito	luis fonsi daddy yankee	despacito
+Deezer	Luis Fonsi	Despacito (feat. Daddy Yankee)	luis fonsi	despacito	daddy yankee
+Deezer	Pitbull	Give Me Everything (feat. Ne-Yo, Afrojack & Nayer)	pitbull	give me everything	ne yo;afrojack;nayer
+Deezer	Enrique Iglesias	Bailando	enrique iglesias	bailando
+Deezer	Gipsy Kings	Bamboleo	gipsy kings	bamboleo
+Deezer	Bob Marley & The Wailers	Three Little Birds	bob marley et the wailers	three little birds
+Deezer	Bob Marley	Is This Love	bob marley	is this love
+Deezer	Elton John	I'm Still Standing	elton john	im still standing
+Deezer	Elton John & Dua Lipa	Cold Heart (PNAU Remix)	elton john et dua lipa	cold heart		pnau remix
+Deezer	Moby	Porcelain (Extended Mix)	moby	porcelain		extended mix
+Deezer	Haddaway	What Is Love (7" Mix)	haddaway	what is love		7 mix
+Deezer	Haddaway	What Is Love - 7 Mix	haddaway	what is love		7 mix
+Deezer	Snap!	Rhythm Is a Dancer	snap	rhythm is a dancer
+Deezer	2 Unlimited	No Limit	2 unlimited	no limit
+Deezer	Corona	The Rhythm of the Night	corona	the rhythm of the night
+Deezer	Eiffel 65	Blue (Da Ba Dee)	eiffel 65	blue da ba dee
+Deezer	Gigi D'Agostino	L'amour toujours	gigi dagostino	lamour toujours
+Deezer	Jean-Jacques Goldman	Au bout de mes rêves	jean jacques goldman	au bout de mes reves
+Deezer	Francis Cabrel	Je l'aime à mourir	francis cabrel	je laime a mourir
+Deezer	Renaud	Hexagone	renaud	hexagone
+Deezer	Indochine	L'aventurier	indochine	laventurier
+Deezer	Téléphone	Ça (c'est vraiment toi)	telephone	ca cest vraiment toi
+Deezer	Jacques Brel	Ne me quitte pas	jacques brel	ne me quitte pas
+Deezer	Charles Aznavour	La Bohème	charles aznavour	la boheme
+Deezer	Claude François	Alexandrie Alexandra	claude francois	alexandrie alexandra
+Deezer	Patrick Sébastien	Les sardines	patrick sebastien	les sardines
+Deezer	Mireille Mathieu	La Paloma adieu	mireille mathieu	la paloma adieu
+Deezer	Elvis Presley	Jailhouse Rock	elvis presley	jailhouse rock
+Deezer	Chuck Berry	Johnny B. Goode	chuck berry	johnny b goode
+Deezer	Bill Haley & His Comets	Rock Around the Clock	bill haley et his comets	rock around the clock
+Deezer	Chubby Checker	Let's Twist Again	chubby checker	lets twist again
+Deezer	Gilbert Montagné	On va s'aimer	gilbert montagne	on va saimer
+Deezer	Soprano	Mon Everest (feat. Marc Antoine)	soprano	mon everest	marc antoine
+Deezer	Jul	Tchikita	jul	tchikita
+Deezer	Aya Nakamura	Djadja	aya nakamura	djadja
+Deezer	Angèle	Balance ton quoi	angele	balance ton quoi
+Deezer	Indila	Dernière danse	indila	derniere danse
+Deezer	Kendji Girac	Andalouse	kendji girac	andalouse
+Deezer	Kids United	On écrit sur les murs	kids united	on ecrit sur les murs
+Deezer	Pharrell Williams	Happy (From "Despicable Me 2")	pharrell williams	happy
+Deezer	Hans Zimmer	Waltz No. 2 (Original Motion Picture Soundtrack)	hans zimmer	waltz no 2
+Deezer	Daft Punk	Around the World - Live 2007	daft punk	around the world		live 2007
+Deezer	Daft Punk	Around the World (Radio Edit) [Remastered]	daft punk	around the world
+Deezer	Queen	Bohemian Rhapsody (Official Video Remastered)	queen	bohemian rhapsody
+Deezer	Queen	Radio Ga Ga (Live Aid Live)	queen	radio ga ga		live aid live
+Deezer	Lizzo	Truth Hurts (Explicit)	lizzo	truth hurts
+Deezer	Doja Cat	Say So (Clean)	doja cat	say so
+Deezer	Dolly Parton	9 to 5	dolly parton	9 to 5
+Deezer	Daft Punk	Digital Love (Instrumental)	daft punk	digital love		instrumental
+Deezer	Journey	Don't Stop Believin' (Acoustic)	journey	dont stop believin		acoustic
+Deezer	Sia	Cheap Thrills (Sped Up)	sia	cheap thrills		sped up
+Deezer	Fleetwood Mac	Dreams (Slowed + Reverb)	fleetwood mac	dreams		slowed et reverb
+Deezer	Kavinsky	Nightcall (Nightcore)	kavinsky	nightcall		nightcore
+Deezer	Rick Astley	Never Gonna Give You Up (Karaoke Version)	rick astley	never gonna give you up		karaoke version
+# --- YouTube / YouTube Music dans un navigateur : l'artiste est le nom de la chaîne
+Chrome	Queen Official	Queen - Don't Stop Me Now (Official Video)	queen	dont stop me now
+Chrome	Queen Official	Queen - Don't Stop Me Now (Official Video) | Lyrics	queen	dont stop me now
+Chrome	QueenVEVO	Queen - Bohemian Rhapsody (Official Video Remastered)	queen	bohemian rhapsody
+Chrome	Queen - Topic	Bohemian Rhapsody	queen	bohemian rhapsody
+Chrome	Daft Punk - Topic	One More Time	daft punk	one more time
+Chrome	Daft Punk - Topic	Get Lucky (feat. Pharrell Williams & Nile Rodgers)	daft punk	get lucky	pharrell williams;nile rodgers
+Chrome	Michel Sardou - Topic	Les lacs du Connemara	michel sardou	les lacs du connemara
+Chrome	Stromae - Topic	Alors on danse	stromae	alors on danse
+Chrome	Kokwak	Tous les cris les S.O.S. (Kokwak Hardstyle Remix) | Daniel Balavoine	daniel balavoine	tous les cris les sos		kokwak hardstyle remix
+Chrome	Kokwak	Daniel Balavoine - Tous les cris les S.O.S. (Kokwak Hardstyle Remix)	daniel balavoine	tous les cris les sos		kokwak hardstyle remix
+Chrome	Mix Mashup FR	Daft Punk - Around the World (Official Audio)	daft punk	around the world
+Chrome	Pop Hits	Ed Sheeran - Shape of You [Official Music Video]	ed sheeran	shape of you
+Chrome	Pop Hits	Ed Sheeran – Shape of You (Official Video)	ed sheeran	shape of you
+Chrome	Pop Hits	Ed Sheeran — Perfect (Official Music Video)	ed sheeran	perfect
+Chrome	Pop Hits	Adele - Someone Like You (Official Music Video)	adele	someone like you
+Chrome	Pop Hits	Imagine Dragons - Believer (Lyrics)	imagine dragons	believer
+Chrome	Pop Hits	Imagine Dragons - Believer (Official Video) HD	imagine dragons	believer
+Chrome	Rock Classics	AC/DC - Highway to Hell (Official Video)	ac dc	highway to hell
+Chrome	Rock Classics	Nirvana - Smells Like Teen Spirit (Official Music Video)	nirvana	smells like teen spirit
+Chrome	Rock Classics	Guns N' Roses - Sweet Child O' Mine (Official Music Video)	guns n roses	sweet child o mine
+Chrome	Rock Classics	Bon Jovi - Livin' On A Prayer (Lyrics)	bon jovi	livin on a prayer
+Chrome	Rock Classics	Journey - Don't Stop Believin' (Live in Japan 1981) (HD)	journey	dont stop believin		live in japan 1981
+Chrome	EDM Channel	Avicii - Wake Me Up (Official Video)	avicii	wake me up
+Chrome	EDM Channel	Avicii - Levels (Official Music Video)	avicii	levels
+Chrome	EDM Channel	David Guetta - Titanium ft. Sia (Official Video)	david guetta	titanium	sia
+Chrome	EDM Channel	David Guetta ft. Sia - Titanium (Official Video)	david guetta	titanium	sia
+Chrome	EDM Channel	David Guetta feat. Sia - Titanium	david guetta	titanium	sia
+Chrome	EDM Channel	Calvin Harris - We Found Love (feat. Rihanna) (Official Video)	calvin harris	we found love	rihanna
+Chrome	EDM Channel	Calvin Harris, Rihanna - We Found Love	calvin harris rihanna	we found love
+Chrome	EDM Channel	Swedish House Mafia - Don't You Worry Child ft. John Martin	swedish house mafia	dont you worry child	john martin
+Chrome	EDM Channel	Robin Schulz - Sugar (feat. Francesco Yates) (Official Music Video)	robin schulz	sugar	francesco yates
+Chrome	Latino Hits	Luis Fonsi - Despacito ft. Daddy Yankee	luis fonsi	despacito	daddy yankee
+Chrome	Latino Hits	Luis Fonsi - Despacito (Official Music Video) ft. Daddy Yankee	luis fonsi	despacito	daddy yankee
+Chrome	Latino Hits	Shakira - Waka Waka (This Time for Africa) (Official Video)	shakira	waka waka this time for africa
+Chrome	Latino Hits	Daddy Yankee - Gasolina (Video Oficial)	daddy yankee	gasolina
+Chrome	Latino Hits	Enrique Iglesias - Bailando (Spanish Version) ft. Descemer Bueno, Gente De Zona	enrique iglesias	bailando	descemer bueno;gente de zona	spanish version
+Chrome	Vieux Tubes	Claude François - Alexandrie Alexandra (Clip Officiel)	claude francois	alexandrie alexandra
+Chrome	Vieux Tubes	Johnny Hallyday - Que je t'aime (Audio Officiel)	johnny hallyday	que je taime
+Chrome	Vieux Tubes	Jean-Jacques Goldman - Au bout de mes rêves (Clip officiel)	jean jacques goldman	au bout de mes reves
+Chrome	Vieux Tubes	Michel Sardou - Les lacs du Connemara (Paroles)	michel sardou	les lacs du connemara
+Chrome	Vieux Tubes	Francis Cabrel - Je l'aime à mourir (Paroles / Lyrics)	francis cabrel	je laime a mourir
+Chrome	Vieux Tubes	Mylène Farmer - Désenchantée (Clip Officiel HD)	mylene farmer	desenchantee
+Chrome	Vieux Tubes	Indochine - L'aventurier (Clip officiel remasterisé)	indochine	laventurier
+Chrome	Disco	Gloria Gaynor - I Will Survive (Official Video)	gloria gaynor	i will survive
+Chrome	Disco	ABBA - Dancing Queen (Official Lyric Video)	abba	dancing queen
+Chrome	Disco	Bee Gees - Stayin' Alive (Official Video)	bee gees	stayin alive
+Chrome	Disco	Chic - Le Freak (Official Audio)	chic	le freak
+Chrome	Disco	Boney M. - Rasputin (Official Video)	boney m	rasputin
+Chrome	Disco	Village People - Y.M.C.A. (Official Music Video)	village people	ymca
+Chrome	80s	A-ha - Take On Me (Official Video) [Remastered in 4K]	a ha	take on me
+Chrome	80s	Rick Astley - Never Gonna Give You Up (Official Music Video)	rick astley	never gonna give you up
+Chrome	80s	Cyndi Lauper - Girls Just Want to Have Fun (Official Video)	cyndi lauper	girls just want to have fun
+Chrome	80s	Europe - The Final Countdown (Official Video)	europe	the final countdown
+Chrome	Remix Factory	Moby - Porcelain (Extended Mix)	moby	porcelain		extended mix
+Chrome	Remix Factory	Elton John & Dua Lipa - Cold Heart (PNAU Remix) (Official Video)	elton john et dua lipa	cold heart		pnau remix
+Chrome	Remix Factory	Dua Lipa - Levitating (Club Mix) [Official Audio]	dua lipa	levitating		club mix
+Chrome	Remix Factory	The Weeknd - Blinding Lights (Slowed + Reverb)	the weeknd	blinding lights		slowed et reverb
+Chrome	Remix Factory	Calvin Harris - Summer (Acoustic Cover)	calvin harris	summer		acoustic cover
+Chrome	Remix Factory	Haddaway - What Is Love (Official Video) (7" Mix)	haddaway	what is love		7 mix
+Chrome	Mashups	Love Tonight Vs Aria Vs Give Me Everything (David Guetta Mashup) (Lee Barzola Remake)	mashups	love tonight vs aria vs give me everything		david guetta mashup;lee barzola remake
+Chrome	Chaîne perso	Mon titre préféré (Official Video)	chaine perso	mon titre prefere
+Chrome		Daft Punk - One More Time	daft punk	one more time
+Chrome		Queen | Don't Stop Me Now	queen	dont stop me now
+Chrome	Pop Hits	Ed Sheeran | Shape of You (Official Video)	ed sheeran	shape of you
+Edge	Pop Hits	Adele - Hello (Official Music Video)	adele	hello
+Edge	Adele - Topic	Hello	adele	hello
+Firefox	DJ Mix	Avicii - Levels (Official Video)	avicii	levels
+Brave	Chart Hits	Dua Lipa - Don't Start Now (Official Music Video)	dua lipa	dont start now
+# --- Fichiers locaux : nom de fichier à la place du titre
+Lecteur multimédia		01 - Queen - Don't Stop Me Now.mp3	queen	dont stop me now
+Lecteur multimédia		Daft Punk - One More Time.mp3	daft punk	one more time
+Lecteur multimédia		07. Summer.mp3		summer
+Lecteur multimédia		Summer.mp3		summer
+Lecteur multimédia		24K Magic.flac		24k magic
+Lecteur multimédia		99 Luftballons.mp3		99 luftballons
+Lecteur multimédia		Gasolina.mp3		gasolina
+Lecteur multimédia		Love Tonight Vs Aria Vs Give Me Everything (David Guetta Mashup) (Lee Barzola Remake).mp3		love tonight vs aria vs give me everything		david guetta mashup;lee barzola remake
+Lecteur multimédia	Queen	03 - Don't Stop Me Now.mp3	queen	dont stop me now
+Lecteur multimédia	Queen	Queen - Don't Stop Me Now.mp3	queen	dont stop me now
+# --- Cas limites
+Deezer	Daft Punk	One More Time (Radio Edit) (Official Video) [HD] (Remastered 2021)	daft punk	one more time
+Deezer		Titre sans artiste		titre sans artiste
+Deezer	Queen	  Don't   Stop   Me   Now  	queen	dont stop me now
+Deezer	QUEEN	DON'T STOP ME NOW	queen	dont stop me now
+Deezer	Beyoncé	Crazy in Love (feat. JAY-Z)	beyonce	crazy in love	jay z
+Deezer	Salt-N-Pepa	Push It	salt n pepa	push it
+Deezer	Florence + The Machine	Dog Days Are Over	florence et the machine	dog days are over
+Deezer	Mötley Crüe	Kickstart My Heart	motley crue	kickstart my heart
+Deezer	Sigur Rós	Hoppípolla	sigur ros	hoppipolla
+Deezer	Björk	It's Oh So Quiet	bjork	its oh so quiet

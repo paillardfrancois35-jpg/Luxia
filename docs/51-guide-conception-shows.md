@@ -40,6 +40,7 @@
 | **Variantes au hasard** | Base ; toutes les 8 mesures, tirage pondéré entre deux ou trois variantes, `avoidRepeat` ; retour à la base | *Tirage au sort (variantes)* |
 | **Ambiance parallèle** | Show `secondary: true` : UV, fumée occasionnelle (`random` par phrase) | *Ambiance UV et fumée (secondaire)* |
 | **Compteur** | Variable incrémentée à l'entrée du refrain ; au 3e, variante finale | `refrains ≥ 3` → *Final* |
+| **Suivre le style** (P9) | Une étape « Neutre » ; une transition par famille (condition `style`) vers une ambiance ; **au morceau suivant** retour à Neutre | *Style du morceau (P9)* |
 
 Règles :
 
@@ -54,6 +55,7 @@ Règles :
    qui tourne toute la soirée.
 6. Identifiants d'étapes **courts et parlants** (« 0 », « 1 », « 2a », « pont ») : ce sont eux que citent les transitions.
 7. Ordre des transitions = **priorité** : mettre l'événement rare (drop) avant le filet temporel.
+8. **Styles** (P9) : une condition `style` (et le champ `styles` d'un show) s'écrit avec le **nom d'une famille** de la base musicale (« Rock », « Latino », « Slow / Ballade »…) ou **une partie de ce nom** (« Électro » pour « Électro / Dance »), sans souci de casse ni d'accents ; « Inconnu » vise les morceaux non identifiés (l'énergie seule décide alors). Un genre comme « Musette » n'est **pas** une famille : `valider` avertit et propose le nom à écrire. **Au morceau suivant** est vrai au vrai changement de titre quand un lecteur est suivi (Deezer, YouTube Music) ; sans lecteur, l'écoute du son sert de repli (D40).
 
 ## 5. Variété et soirée
 

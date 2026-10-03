@@ -50,6 +50,11 @@
                         ToolTip.Tip="Le son joué par le PC (par défaut), la sortie d'un autre périphérique, ou une entrée : micro USB, ligne. Un micro capte aussi la salle : tempo et drops sont moins précis." />
               <Button Content="Actualiser" Command="{Binding RefreshDevicesCommand}" />
             </StackPanel>
+            <!-- P9 : le morceau annoncé par le lecteur et son style (le détail et la correction sont dans l'écran Contrôle). -->
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="Morceau" VerticalAlignment="Center" Width="100" />
+              <TextBlock Text="{Binding NowPlayingText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="640" ToolTip.Tip="{Binding NowPlayingText}" />
+            </StackPanel>
           </StackPanel>
         </Border>
 

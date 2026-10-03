@@ -622,7 +622,7 @@ internal sealed class ShowRun
             case ConditionKind.EnergyLevel:
                 return music.AudioLive && music.EnergyLevel >= (condition.Min ?? 0) && music.EnergyLevel <= (condition.Max ?? 3);
             case ConditionKind.Style:
-                return music.Style is { } style && condition.Styles.Contains(style, StringComparer.OrdinalIgnoreCase);
+                return music.Style is { } style && condition.Styles.Any(wanted => StyleMatching.Matches(style, wanted));
             case ConditionKind.Tempo:
                 return host.Bpm >= (condition.Min ?? 0) && host.Bpm <= (condition.Max ?? double.MaxValue);
             case ConditionKind.Random:

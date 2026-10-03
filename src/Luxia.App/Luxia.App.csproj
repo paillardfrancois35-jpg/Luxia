@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Plateforme Windows : lecture en cours via l'API de contrôle des médias (Luxia.Media.Windows). -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <AssemblyName>LuXia</AssemblyName>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -27,6 +29,7 @@
     <ProjectReference Include="../Luxia.Output/Luxia.Output.csproj" />
     <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
     <ProjectReference Include="../Luxia.Hosting/Luxia.Hosting.csproj" />
+    <ProjectReference Include="../Luxia.Media.Windows/Luxia.Media.Windows.csproj" />
     <ProjectReference Include="../Luxia.UI.Controls/Luxia.UI.Controls.csproj" />
     <ProjectReference Include="../Luxia.UI.Modules.Outputs/Luxia.UI.Modules.Outputs.csproj" />
     <ProjectReference Include="../Luxia.UI.Modules.Console/Luxia.UI.Modules.Console.csproj" />

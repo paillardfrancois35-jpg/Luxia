@@ -38,6 +38,22 @@
     <Style Selector="ComboBox /template/ ScrollViewer:not(:luxia)">
       <Setter Property="AllowAutoHide" Value="False" />
     </Style>
+    <!-- P9 (doc 99, analyse P8 E9 : « la liste change de largeur et de position, c'est perturbant ») : la liste dépliée a exactement la
+         largeur du champ (essai P9 : 300 px fixes étaient trop larges pour un petit champ) et une hauteur maximale unique ; les textes
+         trop longs sont coupés par « … » et lisibles en entier dans l'info-bulle de la ligne. -->
+    <Style Selector="ComboBox">
+      <Setter Property="MaxDropDownHeight" Value="320" />
+    </Style>
+    <Style Selector="ComboBox /template/ Border#PopupBorder:not(:luxia)">
+      <Setter Property="Width" Value="{Binding $parent[ComboBox].Bounds.Width}" />
+    </Style>
+    <Style Selector="ComboBox /template/ Popup#PART_Popup:not(:luxia)">
+      <Setter Property="Placement" Value="BottomEdgeAlignedLeft" />
+    </Style>
+    <Style Selector="ComboBoxItem TextBlock">
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+      <Setter Property="ToolTip.Tip" Value="{Binding $self.Text}" />
+    </Style>
     <Style Selector="ComboBoxItem">
       <Setter Property="Foreground" Value="#F0F6FC" />
     </Style>

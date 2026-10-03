@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Identification du style (doc 21 §3) : normalisation des titres, base musicale locale, chaîne d'identification. 100 % hors ligne. -->
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Persistence/Luxia.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Seed/artistes-initiaux.txt" LogicalName="Luxia.Music.Seed.artistes-initiaux.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Music.Tests" />
+  </ItemGroup>
+
+</Project>

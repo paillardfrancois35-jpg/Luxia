@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Outil d'enrichissement de la base musicale (doc 21 §4, MUS-040 à MUS-042) : lancé à la main, à la maison, jamais en Live (GEN-121). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>luxia-enrich</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Luxia.Music.Enrichment/Luxia.Music.Enrichment.csproj" />
+    <ProjectReference Include="../../src/Luxia.Persistence/Luxia.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -55,7 +55,7 @@ public sealed class SequencingScreensTests : IAsyncLifetime
     [Trait("Exigence", "SHOW-026")]
     public void ShowsColumn_LaunchesAShow_AndTheBandSuperviseIt()
     {
-        _game.Columns.Shows.Shows.Count.ShouldBe(7);
+        _game.Columns.Shows.Shows.Count.ShouldBe(9, "7 shows de P8 et 2 de P9");
         _game.Columns.Shows.Sequences.Count.ShouldBe(6);
         _game.Band.IsVisible.ShouldBeFalse("rien ne joue : pas de bandeau");
 
@@ -231,6 +231,39 @@ public sealed class SequencingScreensTests : IAsyncLifetime
         editor.CancelCommand.Execute(null);
         _host.Runtime.PreviewActive.ShouldBeFalse();
         _host.Runtime.PreviewOwnTempo.ShouldBeFalse();
+    }
+
+    [Fact]
+    [Trait("Exigence", "SHOW-027")]
+    [Trait("Exigence", "MUS-021")]
+    public void ShowEditor_TrialStyleList_OffersNoSoundThenUnknownFirst_AndTheShowFollowsEachChoice()
+    {
+        var show = _host.Runtime.Project.Shows.Shows.Single(s => s.Name == "Style du morceau (P9)");
+        _game.EditShow(show.Id);
+        var editor = _game.ShowEditor;
+        editor.IsBlind = true;
+        var simulation = editor.Simulation;
+
+        simulation.StyleChoices.Select(c => c.Label).Take(3).ShouldBe(["Sans son", "Inconnu", "Électro / Dance"]);
+        simulation.StyleChoices.ShouldNotContain(c => c.Label == "Neutre");
+
+        simulation.UseMetronome = true;
+        simulation.PlayCommand.Execute(null);
+        string Step(string style)
+        {
+            simulation.SelectedStyle = simulation.StyleChoices.First(c => c.Label.StartsWith(style, StringComparison.Ordinal));
+            Run(200);
+            editor.Refresh();
+            return simulation.Status;
+        }
+
+        Step("Rock").ShouldStartWith("Étape active : 1 Rock");
+        Step("Latino").ShouldStartWith("Étape active : 3 Latino");
+        Step("Électro").ShouldStartWith("Étape active : 2 Électro");
+        Step("Sans son").ShouldStartWith("Étape active : 0 Neutre");
+
+        editor.CancelCommand.Execute(null);
+        simulation.SelectedStyle.ShouldBe(SimulationViewModel.NoSound);
     }
 
     [Fact]

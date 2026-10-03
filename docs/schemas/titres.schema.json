@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/titres.schema.json",
+  "title": "LuXia – titres.json (format 2)",
+  "description": "Titres de la base musicale dont le style peut différer de celui de l'artiste (doc 50 §12j). Facultatif.",
+  "type": "object",
+  "required": [
+    "formatVersion"
+  ],
+  "properties": {
+    "formatVersion": {
+      "const": 2
+    },
+    "titles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artist",
+          "title"
+        ],
+        "properties": {
+          "artist": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Clé de la version (« extended mix ») ; absent = l'original"
+          },
+          "style": {
+            "type": "string",
+            "description": "Code du style propre au titre ; vide ou absent = celui de l'artiste"
+          },
+          "bpm": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

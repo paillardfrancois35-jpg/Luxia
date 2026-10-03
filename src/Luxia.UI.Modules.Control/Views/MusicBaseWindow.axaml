@@ -1,0 +1,223 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Luxia.UI.Modules.Control"
+        xmlns:mb="using:Luxia.Music.Base"
+        x:Class="Luxia.UI.Modules.Control.Views.MusicBaseWindow"
+        x:DataType="vm:MusicBaseViewModel"
+        Title="Base musicale"
+        Width="1100" Height="740"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117">
+  <Window.Styles>
+    <!-- Proposition peu sûre (confiance sous 70 %) : en orange, à examiner une par une. -->
+    <Style Selector="TextBlock.weak">
+      <Setter Property="Foreground" Value="#D29922" />
+    </Style>
+    <Style Selector="Button.small">
+      <Setter Property="Padding" Value="10,3" />
+    </Style>
+  </Window.Styles>
+  <DockPanel Margin="12">
+    <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+      <Button DockPanel.Dock="Right" Content="Fermer" x:Name="CloseButton" />
+      <TextBlock Text="{Binding Message}" Foreground="#58A6FF" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Message}" />
+    </DockPanel>
+
+    <TabControl SelectedIndex="{Binding SelectedTab}">
+      <!-- Onglet « Base » : liste des artistes à gauche (boutons toujours au même endroit), fiche à droite. -->
+      <TabItem Header="Base">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="*" Margin="0,8,0,0">
+          <!-- Fiche modifiée : toute la liste est verrouillée (charte « liste + fiche », doc 60 §4.11) ; on sort par Enregistrer ou Annuler. -->
+          <DockPanel IsEnabled="{Binding IsListEnabled}">
+            <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,8">
+              <TextBox Text="{Binding Search}" PlaceholderText="Chercher un artiste (nom ou alias)" />
+              <CheckBox Content="Seulement les artistes « Inconnu » (à classer)" IsChecked="{Binding UnknownOnly}" />
+              <WrapPanel>
+                <Button Classes="small" Content="Ajouter" Command="{Binding AddArtistCommand}" Margin="0,0,6,6" ToolTip.Tip="Commence la fiche d'un nouvel artiste" />
+                <Button Classes="small" Content="Dupliquer" Command="{Binding DuplicateArtistCommand}" Margin="0,0,6,6" ToolTip.Tip="Nouvelle fiche à partir de l'artiste choisi (style et titres ; pas les alias)" />
+                <Button Classes="small danger" Content="Supprimer" Command="{Binding RemoveArtistCommand}" Margin="0,0,6,6" />
+                <Button Classes="small" Content="Chercher les doublons" Command="{Binding FindDuplicatesCommand}" Margin="0,0,6,6" ToolTip.Tip="« The Beatles » et « Beatles », mots inversés, faute de frappe…" />
+              </WrapPanel>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="6" Margin="0,8,0,0">
+              <Button Classes="small" Content="Importer un JSON…" Command="{Binding ImportJsonCommand}"
+                      ToolTip.Tip="Styles, artistes et alias (même format que l'export). Ajoute et met à jour, ne supprime rien." />
+              <Button Classes="small" Content="Exporter en JSON…" Command="{Binding ExportJsonCommand}" ToolTip.Tip="Les trois tables : styles, artistes, alias" />
+            </StackPanel>
+            <TextBlock DockPanel.Dock="Bottom" Text="{Binding Summary}" Foreground="#8B949E" Margin="0,6,0,0" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Summary}" />
+            <ListBox ItemsSource="{Binding Artists}" SelectedItem="{Binding SelectedArtist}" Background="#161B22">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:ArtistRow">
+                  <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Aliases}" />
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+
+          <ScrollViewer Grid.Column="2">
+            <StackPanel Spacing="10">
+              <TextBlock Text="Choisissez un artiste à gauche, ou « Ajouter »." Foreground="#8B949E" IsVisible="{Binding !HasForm}" />
+
+              <Border Classes="panel" IsVisible="{Binding HasForm}">
+                <StackPanel Spacing="10">
+                  <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+                      <Button Content="Annuler" Command="{Binding CancelFormCommand}" />
+                      <Button Classes="accent" Content="Enregistrer" Command="{Binding SaveFormCommand}" />
+                    </StackPanel>
+                    <TextBlock Text="● non enregistré : liste verrouillée" TextTrimming="CharacterEllipsis" ToolTip.Tip="Modifications non enregistrées : la liste est verrouillée, Enregistrer ou Annuler pour continuer" Foreground="#D29922" VerticalAlignment="Center" IsVisible="{Binding IsModified}" />
+                  </DockPanel>
+
+                  <Grid ColumnDefinitions="Auto,*,Auto,260" RowDefinitions="Auto" ColumnSpacing="8">
+                    <TextBlock Text="Nom" VerticalAlignment="Center" Foreground="#8B949E" />
+                    <TextBox Grid.Column="1" Text="{Binding FormName}" />
+                    <TextBlock Grid.Column="2" Text="Style" VerticalAlignment="Center" Foreground="#8B949E" />
+                    <ComboBox Grid.Column="3" ItemsSource="{Binding Families}" SelectedItem="{Binding FormStyle}" HorizontalAlignment="Stretch">
+                      <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="mb:MusicFamily"><TextBlock Text="{Binding Name}" /></DataTemplate>
+                      </ComboBox.ItemTemplate>
+                    </ComboBox>
+                  </Grid>
+
+                  <!-- Alias : saisie directe dans la liste ; « + » ajoute une ligne (ou place le curseur sur la ligne vide). -->
+                  <DockPanel>
+                    <Button DockPanel.Dock="Right" Classes="small" Content="+" Command="{Binding AddAliasRowCommand}" ToolTip.Tip="Ajouter un alias (autre orthographe, nom court)" />
+                    <TextBlock Text="Alias (autres écritures du nom ; chacun n'appartient qu'à un seul artiste)" Foreground="#8B949E" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                  </DockPanel>
+                  <ItemsControl x:Name="AliasList" ItemsSource="{Binding Aliases}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:EditableText">
+                        <DockPanel Margin="0,0,0,4">
+                          <Button DockPanel.Dock="Right" Classes="small" Content="×" Margin="6,0,0,0" ToolTip.Tip="Retirer cet alias"
+                                  Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).RemoveAliasRowCommand}" CommandParameter="{Binding}" />
+                          <TextBox Text="{Binding Text}" />
+                        </DockPanel>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+
+                  <!-- Titres : le style d'un titre prime sur celui de l'artiste ; « (style de l'artiste) » = pas de style propre. -->
+                  <DockPanel>
+                    <Button DockPanel.Dock="Right" Classes="small" Content="+" Command="{Binding AddTitleRowCommand}" ToolTip.Tip="Ajouter un titre" />
+                    <TextBlock Text="Titres (leur style prime sur celui de l'artiste)" Foreground="#8B949E" VerticalAlignment="Center" />
+                  </DockPanel>
+                  <ItemsControl x:Name="TitleList" ItemsSource="{Binding TitleRows}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:TitleRow">
+                        <Grid ColumnDefinitions="*,130,200,Auto" Margin="0,0,0,4" ColumnSpacing="6">
+                          <TextBox Text="{Binding Title}" PlaceholderText="Titre" />
+                          <TextBox Grid.Column="1" Text="{Binding Version}" PlaceholderText="Version" />
+                          <ComboBox Grid.Column="2" HorizontalAlignment="Stretch" SelectedItem="{Binding Style}"
+                                    ItemsSource="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).TitleStyles}">
+                            <ComboBox.ItemTemplate>
+                              <DataTemplate x:DataType="mb:MusicFamily"><TextBlock Text="{Binding Name}" /></DataTemplate>
+                            </ComboBox.ItemTemplate>
+                          </ComboBox>
+                          <Button Grid.Column="3" Classes="small" Content="×" ToolTip.Tip="Retirer ce titre"
+                                  Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).RemoveTitleRowCommand}" CommandParameter="{Binding}" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+              </Border>
+
+              <!-- Doublons : cette partie n'apparaît que s'il y en a. -->
+              <Border Classes="panel" IsVisible="{Binding ShowDuplicates}">
+                <StackPanel Spacing="8">
+                  <TextBlock Classes="section" Text="Doublons probables" />
+                  <TextBlock Text="Deux fiches du même artiste se fondent en une : le nom retiré devient un alias, les titres sont repris." Foreground="#8B949E" TextWrapping="Wrap" />
+                  <ListBox ItemsSource="{Binding Duplicates}" SelectedItem="{Binding SelectedDuplicate}" Height="130" Background="#0D1117">
+                    <ListBox.ItemTemplate>
+                      <DataTemplate x:DataType="vm:DuplicateRow"><TextBlock Text="{Binding Label}" /></DataTemplate>
+                    </ListBox.ItemTemplate>
+                  </ListBox>
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Button Content="Garder la première fiche" Command="{Binding MergeCommand}" CommandParameter="first" />
+                    <Button Content="Garder la seconde fiche" Command="{Binding MergeCommand}" CommandParameter="second" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </TabItem>
+
+      <!-- Onglet « À classer » : les artistes « Inconnu » ; un clic sur la pastille d'un style les classe. -->
+      <TabItem Header="À classer" IsEnabled="{Binding IsListEnabled}">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+          <TextBlock Grid.ColumnSpan="3" Text="{Binding ClassifySummary}" Foreground="#8B949E" Margin="0,0,0,8" TextWrapping="Wrap" />
+          <ListBox Grid.Row="1" ItemsSource="{Binding ToClassify}" SelectedItem="{Binding SelectedToClassify}" Background="#161B22" x:Name="ClassifyList">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ArtistRow"><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" /></DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="1" Grid.Column="2" Spacing="10" IsVisible="{Binding HasToClassifySelection}">
+            <Border Classes="panel">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="section" Text="{Binding SelectedToClassify.Name}" />
+                <TextBlock Text="{Binding SelectedToClassify.Aliases}" Foreground="#8B949E" FontSize="12" />
+              </StackPanel>
+            </Border>
+            <TextBlock Text="Clic sur un style : classe cet artiste (puis on passe au suivant) :" Foreground="#8B949E" TextWrapping="Wrap" />
+            <ItemsControl ItemsSource="{Binding AssignableFamilies}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="mb:MusicFamily">
+                  <Button Margin="0,0,6,6" Padding="10,6"
+                          Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).ClassifyCommand}" CommandParameter="{Binding Id}">
+                    <TextBlock Text="{Binding Name}" />
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Passer" Command="{Binding SkipCommand}" HorizontalAlignment="Left" />
+          </StackPanel>
+        </Grid>
+      </TabItem>
+
+      <!-- Onglet « Propositions » (MUS-041) : ce que l'outil luxia-enrich a trouvé en ligne ; rien n'entre dans la base sans accord. -->
+      <TabItem Header="Propositions" IsEnabled="{Binding IsListEnabled}">
+        <Grid ColumnDefinitions="440,12,*" RowDefinitions="Auto,*" Margin="0,8,0,0">
+          <DockPanel Grid.ColumnSpan="3" Margin="0,0,0,8">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+              <Button Content="Accepter les propositions sûres (≥ 70 %)" Command="{Binding AcceptStrongCommand}" />
+              <Button Classes="danger" Content="Tout rejeter" Command="{Binding RejectAllCommand}" />
+            </StackPanel>
+            <TextBlock Text="{Binding ProposalSummary}" Foreground="#8B949E" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0" />
+          </DockPanel>
+          <ListBox Grid.Row="1" ItemsSource="{Binding Proposals}" SelectedItem="{Binding SelectedProposal}" Background="#161B22">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ProposalRow">
+                <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" Classes.weak="{Binding Weak}" />
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="1" Grid.Column="2" Spacing="10" IsVisible="{Binding HasProposalSelection}">
+            <Border Classes="panel">
+              <StackPanel Spacing="6">
+                <TextBlock Classes="section" Text="{Binding SelectedProposal.Proposal.Artist}" />
+                <TextBlock Text="{Binding SelectedProposal.FamilyName, StringFormat='Style proposé : {0}'}" />
+                <TextBlock Text="{Binding SelectedProposal.TagsText}" Foreground="#8B949E" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Button Content="Accepter" Command="{Binding AcceptProposalCommand}" Classes="accent" />
+              <Button Classes="danger" Content="Rejeter" Command="{Binding RejectProposalCommand}" />
+            </StackPanel>
+            <TextBlock Text="Ou accepter avec un autre style :" Foreground="#8B949E" />
+            <ItemsControl ItemsSource="{Binding AssignableFamilies}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="mb:MusicFamily">
+                  <Button Content="{Binding Name}" Margin="0,0,6,6" Padding="10,4"
+                          Command="{Binding $parent[Window].((vm:MusicBaseViewModel)DataContext).AcceptProposalAsCommand}" CommandParameter="{Binding Id}" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Grid>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</Window>

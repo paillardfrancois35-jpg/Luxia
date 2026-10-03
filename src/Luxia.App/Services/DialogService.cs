@@ -27,6 +27,27 @@ internal sealed class DialogService(Func<Window?> owner) : IDialogService
         return await dialog.ShowDialog<bool>(window).ConfigureAwait(true);
     }
 
+    public async Task<SaveChoice> AskSaveAsync(string title, string message)
+    {
+        var window = Owner();
+        if (window is null)
+        {
+            return SaveChoice.Cancel;
+        }
+
+        var dialog = CreateDialog(title);
+        var yes = new Button { Content = "Oui", IsDefault = true, MinWidth = 80 };
+        var no = new Button { Content = "Non", MinWidth = 80 };
+        var cancel = new Button { Content = "Annuler", IsCancel = true, MinWidth = 80 };
+        yes.Click += (_, _) => dialog.Close(SaveChoice.Save);
+        no.Click += (_, _) => dialog.Close(SaveChoice.Discard);
+        cancel.Click += (_, _) => dialog.Close(SaveChoice.Cancel);
+        var layout = Layout(new TextBlock { Text = message, TextWrapping = Avalonia.Media.TextWrapping.Wrap }, yes, no);
+        ((StackPanel)layout.Children[1]).Children.Add(cancel);
+        dialog.Content = layout;
+        return await dialog.ShowDialog<SaveChoice>(window).ConfigureAwait(true);
+    }
+
     public Task ShowInfoAsync(string title, string message) => ShowInfoCoreAsync(title, message, null);
 
     /// <summary>ERG-009 : logo de LuXia à gauche du nom et de la version (identité visuelle, docs/identite).</summary>

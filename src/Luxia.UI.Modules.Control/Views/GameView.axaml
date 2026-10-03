@@ -105,6 +105,43 @@
       </StackPanel>
     </Border>
 
+    <!-- Bloc « Morceau en cours » (P9, LIVE-022, Q50) : ce que le lecteur annonce, le style identifié et sa confiance, Corriger / Imposer /
+         Saisir. Hauteur fixe : rien ne bouge quand le morceau change ; textes coupés par « … » (info-bulles). -->
+    <Border DockPanel.Dock="Top" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1" Padding="10,4" Height="46">
+      <DockPanel DataContext="{Binding NowPlaying}" x:DataType="vm:NowPlayingBarViewModel" VerticalAlignment="Center">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+          <Button x:Name="MusicBaseButton" Classes="target" Content="Base…" IsEnabled="{Binding $parent[UserControl].((vm:GameViewModel)DataContext).HasProject}"
+                  ToolTip.Tip="Base musicale du projet : artistes et styles, artistes à classer, doublons, import et export JSON" />
+          <Button x:Name="ManualTrackButton" Classes="target" Content="Saisir…"
+                  ToolTip.Tip="Aucun lecteur n'annonce le morceau : saisir le titre et l'artiste à la main" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" IsVisible="{Binding HasTrack}">
+          <TextBlock Text="{Binding PlayIcon}" FontSize="16" VerticalAlignment="Center" Width="20" ToolTip.Tip="{Binding Source}" />
+          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="15" VerticalAlignment="Center" MaxWidth="300" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Title}" />
+          <TextBlock Text="{Binding Artist, StringFormat='— {0}'}" FontSize="14" Foreground="#C9D1D9" VerticalAlignment="Center" MaxWidth="200" TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Artist}" />
+          <TextBlock Text="{Binding Source}" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" MaxWidth="90" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{Binding Position}" FontSize="11" Foreground="#8B949E" VerticalAlignment="Center" Width="76" />
+          <!-- Le style et les deux actions qui s'y rapportent (Corriger, Imposer) sont encadrés ensemble (essai P9, ex. 7). -->
+          <Border BorderBrush="#30363D" BorderThickness="1" CornerRadius="8" Padding="6,0" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+            <Border BorderBrush="{Binding StyleColor}" BorderThickness="1" CornerRadius="12" Padding="10,2" VerticalAlignment="Center" ToolTip.Tip="{Binding StyleTip}">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="{Binding Style}" Foreground="{Binding StyleColor}" FontWeight="SemiBold" MaxWidth="200" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding Confidence}" Foreground="{Binding StyleColor}" FontSize="12" VerticalAlignment="Center" />
+                <TextBlock Text="imposé" Foreground="#58A6FF" FontSize="11" VerticalAlignment="Center" IsVisible="{Binding IsForced}" />
+              </StackPanel>
+            </Border>
+              <Button x:Name="CorrectStyleButton" Classes="target" Content="Corriger ▾" IsEnabled="{Binding CanAct}"
+                      ToolTip.Tip="Le style est faux : le corriger pour ce titre ou pour cet artiste (mémorisé, il servira les prochaines fois)" />
+              <Button x:Name="ForceStyleButton" Classes="target" Content="Imposer ▾" IsEnabled="{Binding CanAct}"
+                      ToolTip.Tip="Imposer un style aux shows jusqu'à la fin du morceau, sans toucher à la base" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+        <TextBlock Text="{Binding EmptyText}" Foreground="#8B949E" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" IsVisible="{Binding !HasTrack}" />
+      </DockPanel>
+    </Border>
+
     <!-- Bandeau « Show en cours » (P8, Q44 solution C, maquettes 9 et 10) : visible seulement quand un show ou une séquence joue. -->
     <StackPanel DockPanel.Dock="Top" DataContext="{Binding Band}" x:DataType="sq:ShowBandViewModel" IsVisible="{Binding IsVisible}">
       <Panel>

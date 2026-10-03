@@ -177,8 +177,8 @@ public sealed partial class EditorViewModel : ViewModelBase
 
     /// <summary>
     /// Fermeture demandée par la croix de la fenêtre : sans modification, la fenêtre se ferme ; avec des modifications, on demande
-    /// s'il faut les abandonner (Oui : la scène revient à l'état d'origine ; Non : la fenêtre reste, Valider et Appliquer
-    /// sont dans le pied). Renvoie vrai si la fenêtre est fermée.
+    /// Oui (valider, puis fermer), Non (abandonner : la scène revient à l'état d'origine) ou Annuler (la fenêtre reste). Renvoie vrai si la
+    /// fenêtre est fermée.
     /// </summary>
     public async Task<bool> ConfirmCloseAsync()
     {
@@ -195,17 +195,18 @@ public sealed partial class EditorViewModel : ViewModelBase
             return true;
         }
 
-        var abandon = await _dialogs.ConfirmAsync(
-            "Fermer la fenêtre d'édition",
-            $"« {SceneName} » a des modifications non validées.{Environment.NewLine}{Environment.NewLine}Oui : les abandonner (la scène revient à l'état d'origine).{Environment.NewLine}Non : garder la fenêtre ouverte (Valider ou Appliquer dans le pied de la fenêtre).").ConfigureAwait(true);
-        if (!abandon)
+        switch (await _dialogs.AskSaveAsync("Fermer la fenêtre d'édition", $"« {SceneName} » a des modifications non validées.{Environment.NewLine}{Environment.NewLine}Les valider avant de fermer ?").ConfigureAwait(true))
         {
-            return false;
+            case SaveChoice.Save:
+                Validate();
+                return !IsOpen;
+            case SaveChoice.Discard:
+                Session.DiscardDraft();
+                Close("abandonnée");
+                return true;
+            default:
+                return false;
         }
-
-        Session.DiscardDraft();
-        Close("abandonnée");
-        return true;
     }
 
     /// <summary>Ferme sans rien demander (fin de l'application) : le brouillon est abandonné.</summary>

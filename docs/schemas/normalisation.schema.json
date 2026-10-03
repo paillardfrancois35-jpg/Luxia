@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/normalisation.schema.json",
+  "title": "LuXia – normalisation.json (format 1)",
+  "description": "Règles de normalisation des titres lus dans les lecteurs (doc 21 §3.1, MUS-020, doc 50 §12i). Tout est facultatif : une liste absente reprend la liste livrée avec l'application ; une liste présente la remplace entièrement. Comparaisons faites sur la forme normalisée (minuscules, sans accent ni ponctuation).",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "untrustedApps": { "type": "array", "items": { "type": "string" }, "description": "applications dont le champ « artiste » est un nom de chaîne (navigateurs) : l'artiste est cherché d'abord dans le titre" },
+    "artistSuffixes": { "type": "array", "items": { "type": "string" }, "description": "suffixes à retirer d'un nom de chaîne (« - topic », « vevo », « official »)" },
+    "noiseWords": { "type": "array", "items": { "type": "string" }, "description": "mots qui, seuls dans un groupe (parenthèses, crochets, après un tiret), désignent une mention parasite (« Official Video »)" },
+    "noisePhrases": { "type": "array", "items": { "type": "string" }, "description": "expressions parasites entières (« radio edit »)" },
+    "noisePrefixes": { "type": "array", "items": { "type": "string" }, "description": "débuts d'un groupe parasite (« from », « original motion picture »)" },
+    "versionWords": { "type": "array", "items": { "type": "string" }, "description": "mots qui désignent une version conservée à part (« remix », « live », « extended »)" },
+    "guestMarkers": { "type": "array", "items": { "type": "string" }, "description": "mots qui introduisent un invité (« feat », « ft », « with »)" },
+    "fileExtensions": { "type": "array", "items": { "type": "string" }, "description": "extensions de fichier retirées d'un titre (« mp3 », « flac »)" }
+  }
+}

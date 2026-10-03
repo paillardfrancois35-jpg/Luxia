@@ -28,6 +28,9 @@ public sealed class JournalPanelViewModel : ViewModelBase
         runtime.Bus.Subscribe<CommandRejected>(e => Log($"✕ commande refusée : {e.Reason}"));
         runtime.Bus.Subscribe<ShowStepActivated>(e => Log($"◆ show « {e.ShowName} » : étape {e.StepId}{(string.IsNullOrWhiteSpace(e.StepName) ? string.Empty : $" « {e.StepName} »")} ({e.Reason})"));
         runtime.Bus.Subscribe<ShowStateChanged>(e => Log(e.Running ? $"▶ show « {e.ShowName} »" : $"■ show « {e.ShowName} »"));
+        // P9 : le morceau et son style (une ligne par morceau ; le style imposé ou corrigé en ajoute une).
+        runtime.Bus.Subscribe<TrackChanged>(e => Log(e.HasTrack ? $"♫ « {e.Title} » — {e.Artist} ({e.App})" : "♫ plus de morceau"));
+        runtime.Bus.Subscribe<StyleDetected>(e => Log(e.FamilyName.Length == 0 ? "♪ plus de style" : $"♪ style : {e.FamilyName} ({e.Confidence:P0}, {e.Method})"));
     }
 
     /// <summary>Lignes, la plus récente en tête.</summary>

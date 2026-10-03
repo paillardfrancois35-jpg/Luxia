@@ -119,7 +119,7 @@ Modèle par défaut du doc 17 §1.3 : **Intensité, Couleurs, Mouvements, Faisce
 | Années 80 / Disco A / B | Principal | 80's, Disco-Funk, Pop | Groove → Énergique |
 | Bal / Festif | Principal | Bal, Festif, Variété | Toutes |
 
-> Liste à ajuster selon les styles réellement joués (journaux de soirée).
+> Liste à ajuster selon les styles réellement joués (journal de soirée).
 
 ## 10. Directeur (P10)
 
@@ -139,7 +139,7 @@ budgets strobe 30 s / 5 min, fumée 3 rafales / 10 min ; retour au Directeur au 
 | P6 | Scènes à effets (arcs-en-ciel, vagues, cercles, huit, segments, têtes) — **fait le 2026-09-28** : 10 scènes « Phase P6 » (couches Effets et Mouvements), dont un piège (grand cercle ramené par la zone interdite) ; 6 thèmes dans `palettes.json` ; trames de référence `P6-scenes.txt` | Rendu |
 | P7 | Scènes « Phase P7 » — **fait le 2026-09-30** : 8 scènes (*Un PAR par temps*, *Couleur à chaque mesure*, *Flash sur le kick*, *Cercle calé sur la mesure*, *Mouvement lent à 30 BPM*, *Départ à la mesure*, *Calibration de latence*, *Lyres allumées (sans les PAR)*), trames de référence `P7-scenes.txt` (tempo fixe 120 BPM) ; la vitesse selon l'énergie se règle scène par scène | Synchro sur morceaux au choix ([guide P7](demos/P7-audio-tempo.md)) |
 | P8 | Séquences (§8), shows génériques et par style (§9) — **fait le 2026-10-02** : 6 scènes (barres dans la couche Libre ; intensité, couleur et vague séparées pour *Groove* ; blanc des PAR pour le strobe de *Bloc refrain*), 6 séquences « Phase P8 » (*Montée 16 mesures*, *Groove 8 mesures*, *Break calme 8 mesures*, *Explosion drop 4 mesures*, *Pulsation couleurs (double temps)*, *Barres et multi-têtes 8 mesures*) et 7 shows (*Couplet / Refrain / Drop*, *Tirage au sort (variantes)*, *Ambiance UV et fumée (secondaire)*, *Visite guidée (sans musique)*, *Branches parallèles et macro-étape* et son sous-show *Bloc refrain (macro-étape)*, piège *Boucle sans condition*) ; catalogue commenté au [guide P8](demos/P8-show-et-sequences.md) §1 ; trames de référence `P8-shows.txt` (120 BPM, événements simulés). Les shows **par style** (§9) attendent les styles de P9 et le Directeur de P10 | Répétition au simulateur ([guide P8](demos/P8-show-et-sequences.md)) |
-| P9 | Base musicale d'amorçage (artistes par famille), thèmes par style | Styles détectés sur une playlist |
+| P9 | **Fait le 2026-10-03** : base musicale d'amorçage livrée avec l'application (environ 460 artistes par famille, Luxia.Music/Seed/artistes-initiaux.txt, Q48) ; 2 shows « Phase P9 » : *Style du morceau (P9)* (Neutre, puis une ambiance par famille Rock / Électro / Latino / Slow / Inconnu, retour à Neutre au morceau suivant) et le piège *Piège : style qui n'existe pas (P9)* (avertissement de `valider`) ; trames de référence P9-shows.txt ; fichier d'exemple d'échange JSON (styles, artistes, alias) docs/demos/P9-exemple-echange.json. Les shows **par style** complets (§9) restent à construire avec les styles réellement joués (journal de soirée) et le Directeur de P10 | Styles détectés sur Deezer et YouTube Music ([guide P9](demos/P9-lecture-et-style.md)) |
 | P10 | Réglages du Directeur (§10), métadonnées des shows | **Jalon 2** : soirée automatique |
 | P11 | Timeline d'exemple (ouverture de bal) | Calage |
 

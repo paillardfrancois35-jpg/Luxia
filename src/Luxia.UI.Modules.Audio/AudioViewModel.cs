@@ -155,6 +155,10 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
     /// <summary>Changements de niveau d'énergie (calme, groove, énergique, explosif), du plus récent au plus ancien.</summary>
     public ObservableCollection<string> EnergyEvents { get; } = [];
 
+    /// <summary>Le morceau annoncé par le lecteur et son style (P9, LIVE-022), ou ce qu'il faut faire pour qu'il s'affiche.</summary>
+    [ObservableProperty]
+    private string _nowPlayingText = "Aucun morceau annoncé";
+
     /// <inheritdoc />
     public void Refresh()
     {
@@ -166,8 +170,17 @@ public sealed partial class AudioViewModel : ViewModelBase, IRefreshable
         Update();
     }
 
+    private void UpdateNowPlaying()
+    {
+        var state = _runtime.Music.State;
+        NowPlayingText = state.HasTrack
+            ? string.Create(System.Globalization.CultureInfo.CurrentCulture, $"« {state.Title} » — {state.Artist} · {state.Effective.FamilyName}{(state.Effective.IsKnown ? $" ({state.Effective.Confidence:P0})" : string.Empty)}")
+            : "Aucun morceau annoncé (lancez Deezer ou YouTube Music)";
+    }
+
     private void Update()
     {
+        UpdateNowPlaying();
         var audio = _runtime.Audio;
         var tempo = _runtime.Engine.Snapshot.Tempo;
         SourceText = tempo.Source switch

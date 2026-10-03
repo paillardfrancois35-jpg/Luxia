@@ -9,6 +9,11 @@ using Luxia.UI.Controls;
 
 namespace Luxia.UI.Modules.Control.Sequencing;
 
+/// <summary>Un choix de la liste « Style » de l'essai sans musique.</summary>
+/// <param name="Label">Texte affiché.</param>
+/// <param name="Value">Valeur simulée : nom du style ; vide = « Sans son » (aucun style).</param>
+public sealed record SimulatedStyleChoice(string Label, string Value);
+
 /// <summary>
 /// Essai d'une séquence ou d'un show sans musique (SHOW-007, SHOW-027) : jouer / arrêter le brouillon, métronome, événements
 /// musicaux provoqués (drop, break, montée, silence, morceau suivant), énergie et style imposés. Agit sur le moteur de sortie,
@@ -33,6 +38,9 @@ public sealed partial class SimulationViewModel : ViewModelBase
     private string _style = string.Empty;
 
     [ObservableProperty]
+    private SimulatedStyleChoice? _selectedStyle;
+
+    [ObservableProperty]
     private int _energyLevel = -1;
 
     [ObservableProperty]
@@ -53,7 +61,22 @@ public sealed partial class SimulationViewModel : ViewModelBase
         _runtime = runtime;
         _blind = blind;
         _play = play;
+
+        // « Sans son » puis « Inconnu » en premier, ensuite les styles de la base (essai P9, ex. 9).
+        StyleChoices =
+        [
+            NoSound,
+            new SimulatedStyleChoice(Luxia.Music.Base.Taxonomy.UnknownName, Luxia.Music.Base.Taxonomy.UnknownName),
+            .. runtime.Music.Families.Where(f => f.Id != Luxia.Music.Base.Taxonomy.UnknownId).Select(f => new SimulatedStyleChoice(f.Name, f.Name)),
+        ];
+        _selectedStyle = NoSound;
     }
+
+    /// <summary>Choix « Sans son » : aucun style ; le show revient à son étape d'attente au « morceau suivant » qui l'accompagne.</summary>
+    public static SimulatedStyleChoice NoSound { get; } = new("Sans son", string.Empty);
+
+    /// <summary>Choix de la liste « Style » : « Sans son », « Inconnu », puis les styles de la base.</summary>
+    public IReadOnlyList<SimulatedStyleChoice> StyleChoices { get; }
 
     /// <summary>Tempo de l'essai en clair.</summary>
     public string TempoText => UseMetronome ? "métronome" : string.Create(CultureInfo.CurrentCulture, $"celui du direct ({Target.Bpm:0} BPM)");
@@ -123,6 +146,22 @@ public sealed partial class SimulationViewModel : ViewModelBase
         }
     }
 
+    partial void OnSelectedStyleChanged(SimulatedStyleChoice? value)
+    {
+        if (_releasing || value is null)
+        {
+            return;
+        }
+
+        Style = value.Value;
+        if (value.Value.Length == 0)
+        {
+            // « Sans son » : le style disparaît et un « morceau suivant » ramène le show à son étape d'attente (Neutre).
+            Target.Send(new SimulateMusicCommand(CommandOrigin.User, SimulatedCue.SongChanged));
+            _runtime.TraceUi("Essai", "style : sans son");
+        }
+    }
+
     partial void OnStyleChanged(string value)
     {
         if (!_releasing)
@@ -161,6 +200,7 @@ public sealed partial class SimulationViewModel : ViewModelBase
         EnergyLevel = -1;
         _releasing = true;
         Style = string.Empty;
+        SelectedStyle = NoSound;
         _releasing = false;
     }
 

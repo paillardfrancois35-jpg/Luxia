@@ -77,10 +77,39 @@ void Capture(string name, Avalonia.Controls.Window? other = null)
     Console.WriteLine(path);
 }
 
+void MeasureCombos(Avalonia.Controls.Window host, string label)
+{
+    var combos = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(host).OfType<ComboBox>().Where(c => c.IsVisible && c.ItemCount > 0).ToList();
+    Console.WriteLine($"[{label}] {combos.Count} liste(s) déroulante(s)");
+    foreach (var combo in combos)
+    {
+        combo.IsDropDownOpen = true;
+        Tick(2);
+        Dispatcher.UIThread.RunJobs();
+        var popup = Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(combo).OfType<Avalonia.Controls.Primitives.Popup>().FirstOrDefault();
+        var border = popup?.Child as Avalonia.Controls.Border;
+        var origin = border?.TranslatePoint(new Avalonia.Point(0, 0), combo);
+        var inv = System.Globalization.CultureInfo.InvariantCulture;
+        var list = border is null ? "?" : string.Create(inv, $"{border.Bounds.Width:0}x{border.Bounds.Height:0}");
+        var offset = origin is { } p ? string.Create(inv, $"{p.X:0};{p.Y:0}") : "?";
+        if (border is not null && Avalonia.VisualTree.VisualExtensions.GetVisualDescendants(border).OfType<Avalonia.Controls.TextBlock>().FirstOrDefault() is { } text)
+        {
+            Console.WriteLine($"    texte : coupure {text.TextTrimming} · info-bulle « {Avalonia.Controls.ToolTip.GetTip(text)} »");
+        }
+
+        Console.WriteLine(string.Create(inv, $"  champ {combo.Bounds.Width:0}x{combo.Bounds.Height:0} · {combo.ItemCount} choix · liste {list} · décalage {offset}"));
+        combo.IsDropDownOpen = false;
+    }
+}
+
 foreach (var page in vm.Pages)
 {
     vm.SelectedPage = page;
     Capture(page.Title);
+    if (page.Page is not Luxia.UI.Modules.Control.GameViewModel)
+    {
+        MeasureCombos(window, page.Title);
+    }
 }
 
 // Écran de jeu (ERG-032) : des scènes jouent, des looks, un dimmer retouché (bandeau jaune) ; la bande ✎ vise la fenêtre d'édition.
@@ -107,6 +136,51 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
     Tick(5);
     Capture("Contrôle - écran de jeu resserré");
     game.Columns.IsCompact = false;
+
+    // P9 : bloc « Morceau en cours » (LIVE-022) : morceau identifié, morceau inconnu avec style imposé, titre très long.
+    runtime.Music.SetManualTrack("Radio Ga Ga", "Queen");
+    Tick(4);
+    Capture("Contrôle - morceau identifié");
+    runtime.Music.SetManualTrack("Un titre que personne ne connaît", "Artiste Totalement Inconnu");
+    runtime.Music.Force("Latino");
+    Tick(4);
+    Capture("Contrôle - morceau inconnu, style imposé");
+    runtime.Music.Force(null);
+    runtime.Music.SetManualTrack("Tous les cris les S.O.S. (Kokwak Hardstyle Remix) – version très longue avec beaucoup de mots pour vérifier la coupure du texte", "Daniel Balavoine & un invité au nom particulièrement long");
+    Tick(4);
+    Capture("Contrôle - titre long");
+
+    // P9 : fenêtre « Base musicale » en liste + fiche (MUS-027, MUS-028), avec des artistes « Inconnu » pour l'onglet « À classer ».
+    foreach (var unknown in new[] { "Holder", "Quartet Imaginaire", "Kokwak" })
+    {
+        runtime.Music.Base.InjectUnknownArtist(unknown);
+    }
+
+    runtime.Music.Base.SaveArtist(
+        runtime.Music.Base.FindArtist("queen")!.Code,
+        runtime.Music.Base.FindArtist("queen")! with { Aliases = ["Les Reines", "Queen (groupe)"] },
+        [new Luxia.Music.Base.TitleEntry { Title = "Love of My Life", Style = "slow" }, new Luxia.Music.Base.TitleEntry { Title = "Radio Ga Ga" }]);
+    var musicBase = game.CreateMusicBase()!;
+    var musicWindow = new Luxia.UI.Modules.Control.Views.MusicBaseWindow { Width = 1100, Height = 740, DataContext = musicBase };
+    musicWindow.Show();
+    Tick(4);
+    musicBase.Search = "queen";
+    musicBase.SelectedArtist = musicBase.Artists.First(a => a.Name == "Queen");
+    Tick(4);
+    Capture("Base musicale - fiche", musicWindow);
+    MeasureCombos(musicWindow, "Base musicale");
+    musicBase.AddAliasRowCommand.Execute(null);
+    musicBase.Aliases[^1].Text = "Freddie et les autres";
+    musicBase.Search = "bea";
+    musicBase.FindDuplicatesCommand.Execute(null);
+    Tick(4);
+    Capture("Base musicale - fiche modifiée", musicWindow);
+    musicBase.CancelFormCommand.Execute(null);
+    musicBase.Search = string.Empty;
+    musicBase.SelectedTab = 1;
+    Tick(4);
+    Capture("Base musicale - à classer", musicWindow);
+    musicWindow.Close();
 
     // F8 : la même chose à 125 %.
     vm.SetUiScaleCommand.Execute("1.25");
@@ -211,6 +285,10 @@ if (vm.Pages.FirstOrDefault(p => p.Page is Luxia.UI.Modules.Control.GameViewMode
         Capture("Liste déroulante longue", showWindow);
         conditions.IsDropDownOpen = false;
     }
+
+    // Largeur fixe des listes déroulantes (début de P9) : mesure de chaque liste dépliée de la fenêtre (largeur, décalage par rapport
+    // au champ) ; la règle veut une largeur identique d'une liste à l'autre (au moins celle du champ) et un même alignement.
+    MeasureCombos(showWindow, "Édition - show");
     game.ShowEditor.Cancel();
 }
 
@@ -341,6 +419,8 @@ internal sealed class NoSerialPorts : ISerialPortProvider
 internal sealed class NoDialogs : IDialogService
 {
     public Task<bool> ConfirmAsync(string title, string message) => Task.FromResult(false);
+
+    public Task<SaveChoice> AskSaveAsync(string title, string message) => Task.FromResult(SaveChoice.Cancel);
 
     public Task ShowInfoAsync(string title, string message) => Task.CompletedTask;
 

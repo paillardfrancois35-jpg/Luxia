@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Enrichissement en ligne de la base musicale (doc 21 §4, MUS-040 à MUS-042) : interroge des sources d'étiquettes de genre. Seul projet
+       qui parle à Internet pour la musique ; référencé par l'outil luxia-enrich, jamais par l'application (GEN-121 : rien en ligne en soirée). -->
+  <ItemGroup>
+    <ProjectReference Include="../Luxia.Music/Luxia.Music.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Luxia.Music.Tests" />
+  </ItemGroup>
+
+</Project>

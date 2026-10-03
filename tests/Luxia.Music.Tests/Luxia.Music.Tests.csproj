@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Shouldly" />
+    <ProjectReference Include="../../src/Luxia.Music/Luxia.Music.csproj" />
+    <ProjectReference Include="../../src/Luxia.Music.Enrichment/Luxia.Music.Enrichment.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

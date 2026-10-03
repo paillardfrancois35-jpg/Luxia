@@ -80,6 +80,18 @@ internal sealed class FakeDialogs : IDialogService
         return Task.FromResult(ConfirmAnswer);
     }
 
+    /// <summary>Réponse à « enregistrer les modifications ? » (Oui par défaut).</summary>
+    public SaveChoice SaveAnswer { get; set; } = SaveChoice.Save;
+
+    /// <summary>Questions « enregistrer les modifications ? » posées.</summary>
+    public List<string> SaveQuestions { get; } = [];
+
+    public Task<SaveChoice> AskSaveAsync(string title, string message)
+    {
+        SaveQuestions.Add(message);
+        return Task.FromResult(SaveAnswer);
+    }
+
     public Task<string?> AskTextAsync(string title, string prompt, string? initialValue = null) =>
         Task.FromResult(TextAnswers.Count > 0 ? TextAnswers.Dequeue() : null);
 

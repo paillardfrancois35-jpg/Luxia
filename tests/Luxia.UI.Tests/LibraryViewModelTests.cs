@@ -72,6 +72,39 @@ public sealed class LibraryViewModelTests : IAsyncLifetime
     }
 
     [Fact]
+    [Trait("Exigence", "ERG-033")]
+    [Trait("Exigence", "ERG-041")]
+    public void LeavingAModifiedModel_AsksYesNoCancel()
+    {
+        _library.NewCommand.Execute(null);
+        _library.Editor!.Model = "Mon PAR";
+        var edited = _library.Editor.Current.Id;
+        var other = _library.Groups.Single().Items.First();
+
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Cancel;
+        _library.SelectedNode = other;
+        _library.Editor!.Current.Id.ShouldBe(edited, "Annuler : on reste sur le modèle modifié");
+        _library.SelectedNode.ShouldBeNull();
+
+        // Oui : le modèle est enregistré dans la bibliothèque, puis on passe à l'autre.
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Save;
+        _library.SelectedNode = other;
+        _host.Runtime.Library.Entries.ShouldContain(e => e.Fixture.Id == edited);
+        _library.Editor!.Current.Id.ShouldBe(other.Entry.Fixture.Id);
+
+        // Non : les modifications sont abandonnées.
+        _library.NewCommand.Execute(null);
+        _library.Editor!.Model = "Éphémère";
+        var ephemeral = _library.Editor.Current.Id;
+        _host.Dialogs.SaveAnswer = Luxia.UI.Controls.SaveChoice.Discard;
+        _library.SelectedNode = other;
+
+        _library.Editor!.Current.Id.ShouldBe(other.Entry.Fixture.Id);
+        _host.Runtime.Library.Entries.ShouldNotContain(e => e.Fixture.Id == ephemeral);
+        _host.Dialogs.SaveQuestions.Count.ShouldBe(3);
+    }
+
+    [Fact]
     [Trait("Exigence", "BIB-004")]
     [Trait("Exigence", "BIB-009")]
     public void Save_BlockedByErrors_ThenSavedWithVersion()

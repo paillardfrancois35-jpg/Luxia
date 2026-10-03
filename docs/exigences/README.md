@@ -178,6 +178,8 @@
 | [CMD-051](CMD-051.md) | Commande ForcerTransition | P8 | I | Validé |
 | [CMD-052](CMD-052.md) | Commande LancerSéquence / ArrêterSéquence | P8 | I | Validé |
 | [CMD-053](CMD-053.md) | Commande SimulerMusique | P8 | I | Validé |
+| [CMD-062](CMD-062.md) | Commande ForcerStyle | P9 | I | Validé |
+| [CMD-063](CMD-063.md) | Commande FixerContexteMusical | P9 | I | Validé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -262,12 +264,18 @@
 | [ERG-037](ERG-037.md) | Dimmers de groupe | ERG2 | I | Validé |
 | [ERG-038](ERG-038.md) | Seconde platine MIDI | ERG2 | I | Validé |
 | [ERG-039](ERG-039.md) | Fader de couche = niveau de couche | ERG2 | I | Validé |
+| [ERG-040](ERG-040.md) | Écrans « liste + fiche » | P9 | M | Partiel |
+| [ERG-041](ERG-041.md) | Modifications non enregistrées | P9 | M | Validé |
+| [ERG-042](ERG-042.md) | Liste déroulante à la largeur du champ | P9 | M | Validé |
 | [EVT-020](EVT-020.md) | Événement Temps | P7 | I | Partiel |
 | [EVT-021](EVT-021.md) | Événement Impulsion | P7 | I | Partiel |
 | [EVT-022](EVT-022.md) | Événement ÉnergieChangée | P7 | I | Réalisé |
 | [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Validé |
 | [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Réalisé |
 | [EVT-030](EVT-030.md) | Événement ÉtapeShowActivée, publié par Show, reçu par Live, Journal | P8 | I | Validé |
+| [EVT-040](EVT-040.md) | Événement MorceauChangé | P9 | I | Validé |
+| [EVT-041](EVT-041.md) | Événement LectureDémarrée / LectureEnPause, publié par Lecture en cours, reçu par Directeu | P9 | I | Validé |
+| [EVT-042](EVT-042.md) | Événement StyleDétecté | P9 | I | Validé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -337,6 +345,7 @@
 | [GEN-108](GEN-108.md) | Taille de police réglable | P1 | S | Non réalisé |
 | [GEN-109](GEN-109.md) | Opérations longues sans figer l'interface | P1 | I | Réalisé |
 | [GEN-110](GEN-110.md) | Journal technique | P0 | I | Réalisé |
+| [GEN-111](GEN-111.md) | Journal de soirée | P9 | I | Partiel |
 | [GEN-112](GEN-112.md) | Journal des commandes consultable | P4 | M | Réalisé |
 | [GEN-113](GEN-113.md) | Enregistrement des trames d'une session | P4 | S | Partiel |
 | [GEN-114](GEN-114.md) | Menu « À propos » avec diagnostic copiable | P3 | M | Réalisé |
@@ -346,6 +355,7 @@
 | [GEN-118](GEN-118.md) | Enregistrement robuste aux refus passagers | P4 | I | Réalisé |
 | [GEN-119](GEN-119.md) | Numéro de compilation affiché en développement | P4 | M | Réalisé |
 | [GEN-120](GEN-120.md) | Fonctionnement hors-ligne | P0 | I | Réalisé |
+| [GEN-121](GEN-121.md) | Les fonctions qui utilisent Internet | P9 | I | Validé |
 | [GEN-122](GEN-122.md) | Sorties réseau locales autorisées (Art-Net) | P3 | M | Réalisé |
 | [GEN-130](GEN-130.md) | Format des fichiers documenté | P4 | I | Réalisé |
 | [GEN-131](GEN-131.md) | Outil de validation d'un projet | P4 | I | Validé |
@@ -393,6 +403,7 @@
 | [LIVE-011](LIVE-011.md) | Accès à l'assistant d'installation | P5 | M | Reporté (chantier ergonomie) |
 | [LIVE-020](LIVE-020.md) | Affichage du tempo à l'écran de jeu | P7 | I | Réalisé |
 | [LIVE-021](LIVE-021.md) | Commandes de tempo à l'écran de jeu | P7 | I | Réalisé |
+| [LIVE-022](LIVE-022.md) | Affichage du morceau en cours et du style détecté avec sa confiance | P9 | I | Validé |
 | [LIVE-023](LIVE-023.md) | Zone Show | P8 | I | Validé |
 | [LIVE-040](LIVE-040.md) | Raccourcis du tableau ci-dessus | P5 | I | Validé |
 | [LIVE-041](LIVE-041.md) | Raccourcis personnalisables | P5 | S | Reporté (chantier ergonomie) |
@@ -459,6 +470,27 @@
 | [MOT-101](MOT-101.md) | Événements de scène et de refus | P4 | I | Réalisé |
 | [MOT-102](MOT-102.md) | Instantané de reprise | P5 | M | Réalisé |
 | [MOT-103](MOT-103.md) | Mode sans interface piloté par scénario | P4 | M | Validé |
+| [MUS-001](MUS-001.md) | Lecture des sessions média du système | P9 | I | Validé |
+| [MUS-002](MUS-002.md) | Événements MorceauChangé | P9 | I | Validé |
+| [MUS-003](MUS-003.md) | Extraction titre, artiste, album, miniature, durée et position estimée | P9 | I | Partiel |
+| [MUS-004](MUS-004.md) | Détection des publicités | P9 | I | Abandonné |
+| [MUS-005](MUS-005.md) | Gestion des titres YouTube | P9 | I | Validé |
+| [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Validé |
+| [MUS-007](MUS-007.md) | Saisie manuelle possible du morceau / du style depuis le Live | P9 | M | Validé |
+| [MUS-020](MUS-020.md) | Normalisation du §3 | P9 | I | Validé |
+| [MUS-021](MUS-021.md) | Chaîne d'identification du §3 | P9 | I | Validé |
+| [MUS-022](MUS-022.md) | Temps d'identification < 200 ms pour une base de 50 000 titres et 10 000 artistes | P9 | I | Validé |
+| [MUS-023](MUS-023.md) | Taxonomie modifiable | P9 | I | Partiel |
+| [MUS-024](MUS-024.md) | Correction en Live | P9 | I | Validé |
+| [MUS-025](MUS-025.md) | Journal de soirée | P9 | I | Validé |
+| [MUS-026](MUS-026.md) | Style forcé | P9 | I | Validé |
+| [MUS-027](MUS-027.md) | Écran Base musicale | P9 | M | Validé |
+| [MUS-028](MUS-028.md) | Écran « À classer » | P9 | M | Validé |
+| [MUS-029](MUS-029.md) | Import de playlists exportées en CSV | P9 | S | Validé |
+| [MUS-030](MUS-030.md) | Un morceau d'un artiste absent de la base y ajoute cet artiste avec le style « Inconnu » | P9 | M | Validé |
+| [MUS-040](MUS-040.md) | Pour une liste d'artistes / titres | P9 | M | Validé |
+| [MUS-041](MUS-041.md) | Les propositions sont validées par l'utilisateur | P9 | M | Validé |
+| [MUS-042](MUS-042.md) | Respect des limites d'usage des services | P9 | M | Validé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |

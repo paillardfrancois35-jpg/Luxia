@@ -1,0 +1,217 @@
+using Luxia.Hosting;
+using Luxia.Media;
+using Luxia.Messaging.Events;
+using Luxia.Music.Identification;
+using Luxia.Persistence;
+using Microsoft.Extensions.Logging.Abstractions;
+
+namespace Luxia.Integration.Tests;
+
+/// <summary>Style du morceau en cours (P9) : de la lecture en cours de Windows (source simulée) jusqu'au bus et au moteur.</summary>
+public sealed class MusicStyleServiceTests : IAsyncLifetime
+{
+    private readonly string _root = Path.Combine(Path.GetTempPath(), "luxia-music-service", Guid.NewGuid().ToString("N"));
+    private readonly FakeMedia _media = new();
+    private LuxiaRuntime _runtime = null!;
+
+    public ValueTask InitializeAsync()
+    {
+        var paths = new DataPaths(Path.Combine(_root, "Documents"), Path.Combine(_root, "AppData"));
+        _runtime = new LuxiaRuntime(paths, NullLoggerFactory.Instance, mediaSessions: _media);
+        return ValueTask.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync() => await _runtime.DisposeAsync();
+
+    [Fact]
+    [Trait("Exigence", "MUS-021")]
+    [Trait("Exigence", "EVT-042")]
+    public async Task NewTrack_IsIdentified_AndPublishedOnTheBus()
+    {
+        var events = new List<StyleDetected>();
+        using var subscription = _runtime.Bus.Subscribe<StyleDetected>(e => { lock (events) { events.Add(e); } });
+
+        await PlayAsync("Radio Ga Ga", "Queen");
+
+        _runtime.Music.State.StyleName.ShouldBe("Rock");
+        await WaitUntilAsync(() => { lock (events) { return events.Count > 0; } });
+        StyleDetected published;
+        lock (events)
+        {
+            published = events[0];
+        }
+
+        published.FamilyName.ShouldBe("Rock");
+        published.Confidence.ShouldBeGreaterThan(0.7);
+        published.Method.ShouldBe("artiste");
+        published.Forced.ShouldBeFalse();
+        published.Title.ShouldBe("Radio Ga Ga");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-026")]
+    public async Task ForcedStyle_IsPublished_AndEndsWithTheTrack()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+
+        _runtime.Music.Force("Latino").ShouldBeTrue();
+
+        _runtime.Music.State.StyleName.ShouldBe("Latino");
+        _runtime.Music.State.Forced.ShouldBeTrue();
+
+        await PlayAsync("Dancing Queen", "ABBA");
+
+        _runtime.Music.State.Forced.ShouldBeFalse();
+        _runtime.Music.State.StyleName.ShouldBe("Disco / Funk / Soul");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-024")]
+    public async Task Correction_IsImmediate_AndRemembered()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+
+        _runtime.Music.Correct(CorrectionScope.Artist, "Festif").ShouldBeNull();
+
+        _runtime.Music.State.StyleName.ShouldBe("Festif / Tubes de soirée");
+        _runtime.Music.State.Effective.Method.ShouldBe(IdentificationMethod.Correction);
+        _runtime.Music.Base.FindArtist("queen")!.Style.ShouldBe("festif", "une correction est une modification de la base");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-028")]
+    [Trait("Exigence", "MUS-030")]
+    public async Task TrackOfAnArtistMissingFromTheBase_InjectsTheArtistAsUnknown_OnceOnly()
+    {
+        await PlayAsync("Un titre", "Artiste Absolument Inconnu");
+
+        _runtime.Music.State.StyleName.ShouldBe("Inconnu");
+        var artist = _runtime.Music.Base.FindArtist("artiste absolument inconnu")!;
+        artist.Style.ShouldBe("inconnu");
+        artist.Code.ShouldNotBeEmpty();
+
+        await PlayAsync("Un autre titre", "Artiste Absolument Inconnu");
+
+        _runtime.Music.Base.SearchArtists("absolument", 10).ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-006")]
+    public async Task NoMoreSession_GivesNoStyle()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+
+        _media.Set();
+        _runtime.NowPlaying!.Poll();
+
+        _runtime.Music.State.HasTrack.ShouldBeFalse();
+        _runtime.Music.State.StyleName.ShouldBeNull();
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-007")]
+    public void ManualTrack_IsIdentifiedLikeAPlayerTrack()
+    {
+        _runtime.Music.SetManualTrack("Dancing Queen", "ABBA");
+
+        _runtime.Music.State.StyleName.ShouldBe("Disco / Funk / Soul");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    [Trait("Exigence", "GEN-111")]
+    public async Task EveningLog_WritesOneLinePerTrack_WithStyleConfidenceAndMethod()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+        _runtime.Music.Force("Latino");
+        await PlayAsync("Un titre; avec \"guillemets\"", "Artiste Totalement Inconnu");
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 4);
+        var lines = ReadLines(path);
+
+        lines[0].ShouldBe(EveningLog.Header);
+        lines.ShouldContain(l => l.Contains(";morceau;Radio Ga Ga;Queen;Deezer;Rock;", StringComparison.Ordinal) && l.Contains(";artiste;", StringComparison.Ordinal));
+        lines.ShouldContain(l => l.Contains(";imposé;Radio Ga Ga;Queen;Deezer;Latino;100;imposé;oui;", StringComparison.Ordinal), "le style imposé ajoute une ligne d'événement « imposé »");
+        lines.ShouldContain(l => l.Contains("\"Un titre; avec \"\"guillemets\"\"\"", StringComparison.Ordinal), "les ; et les guillemets sont protégés");
+        lines.ShouldContain(l => l.Contains(";Inconnu;0;aucune;", StringComparison.Ordinal));
+        File.ReadAllBytes(path).Take(3).ShouldBe(new byte[] { 0xEF, 0xBB, 0xBF }, "UTF-8 avec marque d'ordre des octets, pour Excel");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    public async Task EveningLog_WritesTheCleanArtistAndTitle_AndKeepsTheRawOnes()
+    {
+        // YouTube Music : « artiste » = nom de la chaîne, le vrai artiste est dans le titre.
+        await PlayAsync("Pink Sweat$ - At My Worst (Official Video)", "Gustixa", "Chrome");
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 2);
+        var line = ReadLines(path)[^1];
+
+        line.ShouldContain(";morceau;At My Worst;Pink Sweat$;Chrome;");
+        line.ShouldEndWith(";Pink Sweat$ - At My Worst (Official Video);Gustixa");
+    }
+
+    [Fact]
+    [Trait("Exigence", "MUS-025")]
+    public async Task EveningLog_MarksCorrectionAndStyleReturnEvents()
+    {
+        await PlayAsync("Radio Ga Ga", "Queen");
+        _runtime.Music.Correct(CorrectionScope.Artist, "Festif").ShouldBeNull();
+        _runtime.Music.Force("Latino");
+        _runtime.Music.Force(null);
+
+        var path = _runtime.EveningLog.FileFor(DateTimeOffset.Now);
+        await WaitUntilAsync(() => File.Exists(path) && ReadLines(path).Length >= 5);
+        var kinds = ReadLines(path).Skip(1).Select(l => l.Split(';')[1]).ToList();
+
+        kinds.ShouldBe(["morceau", "correction", "imposé", "correction"], "le retour à la détection retombe sur la correction mémorisée");
+    }
+
+    private static string[] ReadLines(string path)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd().Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+    }
+
+    private async Task PlayAsync(string title, string artist, string app = "Deezer")
+    {
+        _media.Set(new MediaSessionInfo(app, app, title, artist, string.Empty, MediaPlayback.Playing, null, null, TimeSpan.Zero));
+        _runtime.NowPlaying!.Poll();
+
+        // Le nouveau titre doit rester présent 1 s avant d'être publié (MUS-002), en temps réel.
+        await Task.Delay(NowPlayingTracker.Stabilization + TimeSpan.FromMilliseconds(150));
+        _runtime.NowPlaying.Poll();
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition)
+    {
+        for (var i = 0; i < 100 && !condition(); i++)
+        {
+            await Task.Delay(50);
+        }
+
+        condition().ShouldBeTrue();
+    }
+
+    private sealed class FakeMedia : IMediaSessionSource
+    {
+        private IReadOnlyList<MediaSessionInfo> _sessions = [];
+
+        public event EventHandler? Changed
+        {
+            add { }
+            remove { }
+        }
+
+        public void Set(params MediaSessionInfo[] sessions) => _sessions = sessions;
+
+        public IReadOnlyList<MediaSessionInfo> Sessions() => _sessions;
+
+        public void Dispose()
+        {
+        }
+    }
+}

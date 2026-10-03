@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/taxonomie.schema.json",
+  "title": "LuXia – taxonomie.json (format 1)",
+  "description": "Taxonomie des familles de styles (doc 21 §3.4, MUS-023, doc 50 §12j). Facultatif : les 14 familles livrées.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "families": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "description": "nom affiché ; valeur de style donnée aux shows (une partie séparée par « / » suffit dans une condition)" },
+          "labels": { "type": "array", "items": { "type": "string" }, "description": "étiquettes brutes de genre qui renvoient à cette famille" }
+        }
+      }
+    }
+  }
+}

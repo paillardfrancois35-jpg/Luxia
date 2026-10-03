@@ -62,6 +62,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Looks = new LooksPanelViewModel(runtime, Session, dialogs, Journal);
         Dimmers = new DimmersPanelViewModel(runtime, Journal);
         Tempo = new TempoBarViewModel(runtime, Journal);
+        NowPlaying = new NowPlayingBarViewModel(runtime, Journal, dialogs);
         Editor = new EditorViewModel(runtime, dialogs, Journal);
         SequenceEditor = new Sequencing.SequenceEditorViewModel(runtime, dialogs, Journal);
         ShowEditor = new Sequencing.ShowEditorViewModel(runtime, dialogs, Journal);
@@ -99,6 +100,9 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 
     /// <summary>Bloc BPM de l'en-tête (Q42) : source, tempo, TAP, ×2, ÷2, compteur des temps.</summary>
     public TempoBarViewModel Tempo { get; }
+
+    /// <summary>Bloc « Morceau en cours » (P9, LIVE-022) : titre, artiste, style, correction, style imposé.</summary>
+    public NowPlayingBarViewModel NowPlaying { get; }
 
     /// <summary>Panneau Groupes dimmer.</summary>
     public DimmersPanelViewModel Dimmers { get; }
@@ -141,6 +145,9 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
 
         return _runtime.Project.Folder is null ? null : new LayersEditorViewModel(_runtime, _dialogs);
     }
+
+    /// <summary>Fenêtre « Base musicale » (MUS-027 à MUS-029) ; <c>null</c> sans projet (la base musicale est celle du projet).</summary>
+    public MusicBaseViewModel? CreateMusicBase() => _runtime.Project.Folder is null ? null : new MusicBaseViewModel(_runtime, _dialogs);
 
     /// <summary>Ouvre une séquence dans sa fenêtre d'édition.</summary>
     public void EditSequence(Guid id)
@@ -221,6 +228,7 @@ public sealed partial class GameViewModel : ViewModelBase, IRefreshable
         Band.Refresh();
         Dimmers.Refresh();
         Tempo.Refresh();
+        NowPlaying.Refresh();
         Journal.Refresh();
         UpdateState();
     }

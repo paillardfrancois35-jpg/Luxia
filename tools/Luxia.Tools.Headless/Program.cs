@@ -14,6 +14,7 @@ return arguments.Command switch
     "audio" => AudioCommands.Analyse(arguments),
     "audio-ecoute" => AudioCommands.Listen(arguments),
     "audio-diag" => AudioCommands.Diagnose(arguments),
+    "media" => MediaCommands.Probe(arguments),
     "lancer" => await Commands.RunAsync(arguments).ConfigureAwait(false),
     "endurance" => await Commands.EnduranceAsync(arguments).ConfigureAwait(false),
     "gigue" => await Commands.JitterAsync(arguments).ConfigureAwait(false),

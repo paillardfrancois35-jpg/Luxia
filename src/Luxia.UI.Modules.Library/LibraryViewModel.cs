@@ -314,9 +314,19 @@ public sealed partial class LibraryViewModel : ViewModelBase, IRefreshable
 
     private async Task ConfirmSwitchAsync(LibraryItemViewModel item, object? previous)
     {
-        if (await _dialogs.ConfirmAsync("Modifications non enregistrées", $"Abandonner les modifications de {Editor!.Current.DisplayName} ?").ConfigureAwait(true))
+        var target = item.Entry.Fixture.Id;
+        var choice = await _dialogs.AskSaveAsync("Modifications non enregistrées", $"Enregistrer les modifications de {Editor!.Current.DisplayName} ?").ConfigureAwait(true);
+        if (choice == SaveChoice.Save)
         {
-            OpenEditor(item.Entry);
+            Save();
+        }
+
+        if (choice == SaveChoice.Discard || (choice == SaveChoice.Save && Editor is { IsDirty: false }))
+        {
+            _changingSelection = true;
+            OpenEditor(Groups.SelectMany(g => g.Items).FirstOrDefault(i => i.Entry.Fixture.Id == target)?.Entry ?? item.Entry);
+            _changingSelection = false;
+            Select(target);
         }
         else
         {
