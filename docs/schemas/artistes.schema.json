@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/artistes.schema.json",
+  "title": "LuXia – artistes.json (format 1)",
+  "description": "Artistes de la base musicale (doc 50 §12j, MUS-021). Facultatif : sans fichier, la base de départ livrée.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "artists": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "styles"],
+        "properties": {
+          "name": { "type": "string" },
+          "aliases": { "type": "array", "items": { "type": "string" } },
+          "styles": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }, "description": "identifiant de famille -> poids" },
+          "source": { "type": "string", "enum": ["initial", "manuel", "correction", "enrichissement"] }
+        }
+      }
+    }
+  }
+}

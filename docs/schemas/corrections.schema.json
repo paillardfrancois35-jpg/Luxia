@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://luxia.local/schemas/corrections.schema.json",
+  "title": "LuXia – corrections.json (format 1)",
+  "description": "Historique des corrections de style faites en Live (doc 50 §12j, MUS-024). Ajout seul.",
+  "type": "object",
+  "required": ["formatVersion"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "corrections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "scope", "artist", "newStyle"],
+        "properties": {
+          "at": { "type": "string", "format": "date-time" },
+          "scope": { "type": "string", "enum": ["title", "artist"] },
+          "artist": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "version": { "type": ["string", "null"] },
+          "oldStyle": { "type": ["string", "null"] },
+          "newStyle": { "type": "string" }
+        }
+      }
+    }
+  }
+}

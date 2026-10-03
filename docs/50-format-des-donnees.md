@@ -730,6 +730,48 @@ Résultat de la normalisation (code `TrackNormalizer`) : une **liste d'hypothès
 titre, versions), de la plus à la moins probable : « Titre \| Artiste » et « Artiste \| Titre » se ressemblent, c'est l'identification
 (doc 21 §3.3) qui départage avec la base musicale. Toutes les clés sont en minuscules, sans accent ni ponctuation (« & » devient « et »).
 
+## 12j. Projet : base musicale (`taxonomie.json`, `artistes.json`, `titres.json`, `corrections.json`, format 1)
+
+Base musicale locale (doc 21 §3.2, MUS-021 à MUS-024, P9), **dans le projet**. Tous les fichiers sont facultatifs : sans `taxonomie.json`,
+les 14 familles du doc 21 §3.4 ; sans `artistes.json`, la **base de départ** livrée avec l'application (environ 350 artistes populaires en
+soirée, source `initial`, Q48) ; sans `titres.json` ni `corrections.json`, rien. Écrits par l'application (corrections en Live) ou à la main
+ou par une IA. Schémas : [`taxonomie`](schemas/taxonomie.schema.json), [`artistes`](schemas/artistes.schema.json),
+[`titres`](schemas/titres.schema.json), [`corrections`](schemas/corrections.schema.json).
+
+```json
+// artistes.json
+{ "formatVersion": 1,
+  "artists": [
+    { "name": "Queen", "aliases": ["The Queen"], "styles": { "rock": 0.8, "pop": 0.2 }, "source": "initial" } ] }
+
+// titres.json : le style d'un titre peut différer de celui de l'artiste
+{ "formatVersion": 1,
+  "titles": [
+    { "artist": "Queen", "title": "Love of My Life", "aliases": [], "style": "slow", "version": null, "bpm": 76, "source": "manuel" } ] }
+
+// corrections.json : historique des corrections faites en Live (ajout seul)
+{ "formatVersion": 1,
+  "corrections": [
+    { "at": "2026-10-03T21:12:00+02:00", "scope": "artist", "artist": "Queen", "oldStyle": "rock", "newStyle": "festif" } ] }
+
+// taxonomie.json : familles et étiquettes de genre qui y renvoient
+{ "formatVersion": 1,
+  "families": [ { "id": "electro", "name": "Électro / Dance", "labels": ["electro", "eurodance", "techno"] } ] }
+```
+
+| Propriété | Rôle |
+|---|---|
+| `families[].id`, `name` | Identifiant stable et nom affiché ; le **nom** est la valeur de style donnée aux shows. Une condition « style » accepte le nom entier ou l'une de ses parties séparées par « / » (« Électro » pour « Électro / Dance »), sans casse ni accents |
+| `families[].labels` | Étiquettes brutes de genre (donnés par un lecteur) qui renvoient à la famille (chaîne d'identification, genre du lecteur, 0,4) |
+| `artists[].styles` | Identifiant de famille → poids (0 à 1) ; la famille dominante est le style de l'artiste ; un artiste aux styles partagés (dominant < 0,6) donne une confiance un peu plus basse |
+| `artists[].aliases` | Autres orthographes, noms courts ; comparés sur la forme normalisée (minuscules, sans accent ni ponctuation) |
+| `artists[].source`, `titles[].source` | `initial` (base livrée), `manuel`, `correction` (faite en Live : **prioritaire**, confiance 1), `enrichissement` |
+| `titles[].version` | Clé de la version (« extended mix ») si le style est celui de cette version ; absent = l'original |
+| `corrections[].scope` | `title` : ce titre seulement ; `artist` : tous les titres de l'artiste (sauf ceux corrigés à part). Une correction crée ou met à jour l'entrée de l'artiste ou du titre (source `correction`) |
+
+Un identifiant de famille inconnu d'un artiste ou d'un titre est ignoré. L'identification est décrite au doc 21 §3.3 ; le seuil du rapprochement
+flou (0,8 par défaut) est réglable dans le code (`IdentifierOptions`).
+
 ## 13. Scénario de commandes `luxia-headless` (texte)
 
 Pour piloter le moteur sans interface (MOT-103) : `luxia-headless scenario <projet> fichier.txt [--duree 60] [--enregistrer f.dmxrec]`.
@@ -779,3 +821,4 @@ seule scène (GEN-132).
 | 2026-09-28 | Chantier ergonomique : `allowed` des zones (zone permise, F7) ; disposition des panneaux de l'écran Contrôle dans `%AppData%\LuXia\dispositions\controle.json` (enveloppe `formatVersion` 1 autour du texte de la bibliothèque Dock, propre au poste). |
 | 2026-09-27 | P5 : `sûreté.json`, `live.json`, `midi.json` (+ schémas), `forbiddenZones` des lieux, `venueId` des palettes, propriétés `kind`, `keepOnStopAll`, `restSceneId`, `families` des couches, dossier `Versions`, `reprise.json`, verbes de scénario. |
 | 2026-10-03 | P9 : `normalisation.json` (§12i, MUS-020), schéma `normalisation.schema.json`. |
+| 2026-10-03 | P9 : base musicale du projet (§12j) : `taxonomie.json`, `artistes.json` (base de départ livrée), `titres.json`, `corrections.json` ; schémas. |

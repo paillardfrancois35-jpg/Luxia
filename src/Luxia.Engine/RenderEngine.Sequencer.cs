@@ -96,7 +96,7 @@ public sealed partial class RenderEngine
         }
     }
 
-    // CMD-064 : style détecté, changement de morceau réel et présence d'une lecture suivie (lecture en cours de Windows, P9).
+    // CMD-063 : style détecté, changement de morceau réel et présence d'une lecture suivie (lecture en cours de Windows, P9).
     private void SetMusicContext(SetMusicContextCommand command)
     {
         _detectedStyle = string.IsNullOrWhiteSpace(command.Style) ? null : command.Style.Trim();

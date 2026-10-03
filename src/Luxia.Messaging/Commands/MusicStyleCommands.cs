@@ -9,7 +9,7 @@ namespace Luxia.Messaging.Commands;
 public sealed record ForceStyleCommand(CommandOrigin Origin, string? Style) : Command(Origin);
 
 /// <summary>
-/// CMD-064 <c>FixerContexteMusical</c> (P9) : ce que la lecture en cours de Windows et l'identification du style apprennent au moteur :
+/// CMD-063 <c>FixerContexteMusical</c> (P9) : ce que la lecture en cours de Windows et l'identification du style apprennent au moteur :
 /// le style détecté du morceau, un changement de morceau réel (qui devient la source de « au morceau suivant », Q49) et la présence
 /// d'une lecture suivie (la détection de changement par l'écoute n'est alors plus utilisée).
 /// </summary>

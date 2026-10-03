@@ -5,7 +5,7 @@ using Luxia.Show.Runtime;
 namespace Luxia.Show.Tests;
 
 /// <summary>
-/// Style et changement de morceau venus de la lecture en cours (P9) : CMD-062 (style imposé), CMD-064 (contexte musical), condition
+/// Style et changement de morceau venus de la lecture en cours (P9) : CMD-062 (style imposé), CMD-063 (contexte musical), condition
 /// « style » sur les noms composés des familles, « au morceau suivant » (Q49 : le titre réel remplace l'écoute, qui reste le repli).
 /// </summary>
 public sealed class MusicContextTests

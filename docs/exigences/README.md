@@ -178,6 +178,8 @@
 | [CMD-051](CMD-051.md) | Commande ForcerTransition | P8 | I | Validé |
 | [CMD-052](CMD-052.md) | Commande LancerSéquence / ArrêterSéquence | P8 | I | Validé |
 | [CMD-053](CMD-053.md) | Commande SimulerMusique | P8 | I | Validé |
+| [CMD-062](CMD-062.md) | Commande ForcerStyle | P9 | I | Réalisé |
+| [CMD-063](CMD-063.md) | Commande FixerContexteMusical | P9 | I | Réalisé |
 | [CONS-001](CONS-001.md) | Faders par pages | P1 | I | Réalisé |
 | [CONS-002](CONS-002.md) | Modes de saisie des faders | P1 | I | Réalisé |
 | [CONS-003](CONS-003.md) | Prise et libération d'un fader | P1 | I | Réalisé |
@@ -268,8 +270,9 @@
 | [EVT-023](EVT-023.md) | Événement Break / Drop, publié par Audio, reçu par Show, Directeur | P7 | I | Validé |
 | [EVT-024](EVT-024.md) | Événement TempoChangé | P7 | I | Réalisé |
 | [EVT-030](EVT-030.md) | Événement ÉtapeShowActivée, publié par Show, reçu par Live, Journal | P8 | I | Validé |
-| [EVT-040](EVT-040.md) | Événement MorceauChangé | P9 | I | Partiel |
+| [EVT-040](EVT-040.md) | Événement MorceauChangé | P9 | I | Réalisé |
 | [EVT-041](EVT-041.md) | Événement LectureDémarrée / LectureEnPause, publié par Lecture en cours, reçu par Directeu | P9 | I | Réalisé |
+| [EVT-042](EVT-042.md) | Événement StyleDétecté | P9 | I | Réalisé |
 | [GEN-001](GEN-001.md) | Moteur indépendant de l'interface et du matériel | P0 | I | Réalisé |
 | [GEN-002](GEN-002.md) | Une seule porte d'entrée : les commandes | P0 | I | Réalisé |
 | [GEN-003](GEN-003.md) | Atelier et Live indépendants | P0 | I | Réalisé |
@@ -466,8 +469,13 @@
 | [MUS-003](MUS-003.md) | Extraction titre, artiste, album, miniature, durée et position estimée | P9 | I | Partiel |
 | [MUS-004](MUS-004.md) | Détection des publicités | P9 | I | Abandonné |
 | [MUS-005](MUS-005.md) | Gestion des titres YouTube | P9 | I | Réalisé |
-| [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Partiel |
+| [MUS-006](MUS-006.md) | Si aucune application ne fournit d'informations, le système fonctionne quand même | P9 | M | Réalisé |
 | [MUS-020](MUS-020.md) | Normalisation du §3 | P9 | I | Réalisé |
+| [MUS-021](MUS-021.md) | Chaîne d'identification du §3 | P9 | I | Réalisé |
+| [MUS-022](MUS-022.md) | Temps d'identification < 200 ms pour une base de 50 000 titres et 10 000 artistes | P9 | I | Réalisé |
+| [MUS-023](MUS-023.md) | Taxonomie modifiable | P9 | I | Partiel |
+| [MUS-024](MUS-024.md) | Correction en Live | P9 | I | Partiel |
+| [MUS-026](MUS-026.md) | Style forcé | P9 | I | Réalisé |
 | [PAL-001](PAL-001.md) | Créer une palette depuis le programmeur | P4 | I | Réalisé |
 | [PAL-002](PAL-002.md) | Palettes couleur par intention | P4 | I | Validé |
 | [PAL-003](PAL-003.md) | Palettes automatiques | P4 | I | Réalisé |
